@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Card"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <TableLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/min_spacing">
+
+        <TableRow>
+
+            <TextView
+                android:id="@+id/row_account_name_stt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/name"
+                android:layout_marginEnd="@dimen/min_spacing"/>
+
+            <TextView
+                android:id="@+id/row_account_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimary"/>
+
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:id="@+id/row_account_balance_stt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/balance"
+                android:layout_marginEnd="@dimen/min_spacing"/>
+
+            <TextView
+                android:id="@+id/row_account_balance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorPrimary"/>
+
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:id="@+id/row_account_balance_date_stt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/date_of_balance"
+                android:layout_marginEnd="@dimen/min_spacing"/>
+
+            <TextView
+                android:id="@+id/row_account_balance_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorPrimary"/>
+
+        </TableRow>
+
+    </TableLayout>
+</android.support.v7.widget.CardView>

@@ -31,10 +31,10 @@ dependencies {
     compile "com.android.support:cardview-v7:${supportLibrary}"
 
     //DBFlow
-    def dbFlow = '2.2.1'
-    apt "com.raizlabs.android:DBFlow-Compiler:${dbFlow}"
-    compile "com.raizlabs.android:DBFlow-Core:${dbFlow}"
-    compile "com.raizlabs.android:DBFlow:${dbFlow}"
+    def dbFlow = '3.0.0-beta2'
+    apt "com.github.Raizlabs.DBFlow:dbflow-processor:${dbFlow}"
+    compile "com.github.Raizlabs.DBFlow:dbflow-core:${dbFlow}"
+    compile "com.github.Raizlabs.DBFlow:dbflow:${dbFlow}"
 
     //Lombok
     def lombok = '1.12.6'
@@ -42,4 +42,6 @@ dependencies {
     apt "org.projectlombok:lombok:${lombok}"
 
     compile "com.jakewharton:butterknife:7.0.1"
+
+    compile 'net.danlew:android.joda:2.9.1'
 }

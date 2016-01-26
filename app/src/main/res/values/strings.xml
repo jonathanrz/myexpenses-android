@@ -3,4 +3,8 @@
     <string name="navigation_drawer_open">Drawer Open</string>
     <string name="navigation_drawer_close">Drawer Close</string>
     <string name="accounts">Accounts</string>
+    <string name="balance">Saldo</string>
+    <string name="save">Salvar</string>
+    <string name="name">Nome</string>
+    <string name="date_of_balance">Data do balanço</string>
 </resources>
