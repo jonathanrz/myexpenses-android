@@ -9,7 +9,9 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.joda.time.DateTime;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 import br.com.jonathanzanella.myexpenses.converter.DateTimeConverter;
 import br.com.jonathanzanella.myexpenses.database.MyDatabase;
@@ -21,6 +23,8 @@ import lombok.Setter;
  */
 @Table(database = MyDatabase.class)
 public class Account extends BaseModel {
+    public static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+
     @Column
     @PrimaryKey(autoincrement = true) @Getter
     long id;

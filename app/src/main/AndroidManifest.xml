@@ -18,6 +18,8 @@
         </activity>
         <activity android:name=".activities.EditAccountActivity"
                   android:screenOrientation="portrait"/>
+        <activity android:name=".activities.ShowAccountActivity"
+            android:screenOrientation="portrait"/>
 
     </application>
 

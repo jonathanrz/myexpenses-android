@@ -1,18 +1,20 @@
 package br.com.jonathanzanella.myexpenses.adapter;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.lang.ref.WeakReference;
 import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Locale;
 
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.activities.ShowAccountActivity;
 import br.com.jonathanzanella.myexpenses.model.Account;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -21,52 +23,70 @@ import butterknife.ButterKnife;
  * Created by Jonathan Zanella on 26/01/16.
  */
 public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHolder> {
-    protected List<Account> accounts;
-    private static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+	protected List<Account> accounts;
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        @Bind(R.id.row_account_name)
-        TextView name;
-        @Bind(R.id.row_account_balance)
-        TextView balance;
-        @Bind(R.id.row_account_balance_date)
-        TextView balanceDate;
+	public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+		@Bind(R.id.row_account_name)
+		TextView name;
+		@Bind(R.id.row_account_balance)
+		TextView balance;
+		@Bind(R.id.row_account_balance_date)
+		TextView balanceDate;
 
-        public ViewHolder(View itemView) {
-            super(itemView);
+		WeakReference<AccountAdapter> adapterWeakReference;
 
-            ButterKnife.bind(this, itemView);
-        }
+		public ViewHolder(View itemView, AccountAdapter adapter) {
+			super(itemView);
+			adapterWeakReference = new WeakReference<>(adapter);
 
-        public void setData(Account acc) {
-            name.setText(acc.getName());
-            balance.setText(NumberFormat.getCurrencyInstance().format(acc.getBalance() / 100));
-            balanceDate.setText(AccountAdapter.sdf.format(acc.getBalanceDate().toDate()));
-        }
-    }
+			ButterKnife.bind(this, itemView);
 
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_account, parent, false);
-        return new ViewHolder(v);
-    }
+			itemView.setOnClickListener(this);
+		}
 
-    @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.setData(accounts.get(position));
-    }
+		public void setData(Account acc) {
+			name.setText(acc.getName());
+			balance.setText(NumberFormat.getCurrencyInstance().format(acc.getBalance() / 100));
+			balanceDate.setText(Account.sdf.format(acc.getBalanceDate().toDate()));
+		}
 
-    @Override
-    public int getItemCount() {
-        return accounts != null ? accounts.size() : 0;
-    }
+		@Override
+		public void onClick(View v) {
+			Account acc = adapterWeakReference.get().getAccount(getAdapterPosition());
+			if(acc != null) {
+                Intent i = new Intent(itemView.getContext(), ShowAccountActivity.class);
+                i.putExtra(ShowAccountActivity.KEY_ACCOUNT_ID, acc.getId());
+                itemView.getContext().startActivity(i);
+			}
+		}
+	}
 
-    public void loadData() {
-        accounts = Account.all();
-    }
+	@Override
+	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+		View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_account, parent, false);
+		return new ViewHolder(v, this);
+	}
 
-    public void addAccount(@NonNull Account acc) {
-        accounts.add(acc);
-        notifyItemInserted(accounts.size() - 1);
-    }
+	@Override
+	public void onBindViewHolder(ViewHolder holder, int position) {
+		holder.setData(accounts.get(position));
+	}
+
+	@Override
+	public int getItemCount() {
+		return accounts != null ? accounts.size() : 0;
+	}
+
+	public void loadData() {
+		accounts = Account.all();
+	}
+
+	public void addAccount(@NonNull Account acc) {
+		accounts.add(acc);
+		notifyItemInserted(accounts.size() - 1);
+	}
+
+	public @Nullable Account getAccount(int position) {
+		return accounts != null ? accounts.get(position) : null;
+	}
 }
