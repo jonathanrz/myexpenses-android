@@ -5,6 +5,11 @@
 			android:id="@+id/menu_accounts"
 			android:checked="false"
 			android:title="@string/accounts"
-			android:icon="@drawable/ic_account_black_24dp"/>
+			android:icon="@drawable/ic_account_white_24dp"/>
+		<item
+			android:id="@+id/menu_sources"
+			android:checked="false"
+			android:title="@string/sources"
+			android:icon="@drawable/ic_source_black_24dp"/>
 	</group>
 </menu>
