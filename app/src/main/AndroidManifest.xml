@@ -16,18 +16,30 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.EditAccountActivity"
-                  android:screenOrientation="portrait"/>
-        <activity android:name=".activities.ShowAccountActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activities.EditSourceActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activities.ShowSourceActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activities.EditCreditCardActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activities.ShowCreditCardActivity"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activities.EditAccountActivity"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".activities.MainActivity"/>
+        <activity
+            android:name=".activities.ShowAccountActivity"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".activities.MainActivity"/>
+        <activity
+            android:name=".activities.EditSourceActivity"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".activities.MainActivity"/>
+        <activity
+            android:name=".activities.ShowSourceActivity"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".activities.MainActivity"/>
+        <activity
+            android:name=".activities.EditCreditCardActivity"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".activities.MainActivity"/>
+        <activity
+            android:name=".activities.ShowCreditCardActivity"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".activities.MainActivity"/>
 
     </application>
 

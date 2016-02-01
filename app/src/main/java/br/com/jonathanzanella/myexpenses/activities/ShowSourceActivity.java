@@ -32,6 +32,10 @@ public class ShowSourceActivity extends BaseActivity {
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
 
+		setData();
+	}
+
+	private void setData() {
 		sourceName.setText(source.getName());
 	}
 
@@ -48,6 +52,16 @@ public class ShowSourceActivity extends BaseActivity {
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putLong(KEY_SOURCE_ID, source.getId());
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		if(source != null) {
+			source = Source.find(source.getId());
+			setData();
+		}
 	}
 
 	@Override

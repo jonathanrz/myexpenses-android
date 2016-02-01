@@ -56,7 +56,7 @@ public class CreditCardAdapter extends RecyclerView.Adapter<CreditCardAdapter.Vi
 
 	@Override
 	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-		View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_source, parent, false);
+		View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_credit_card, parent, false);
 		return new ViewHolder(v, this);
 	}
 

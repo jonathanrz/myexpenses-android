@@ -38,6 +38,10 @@ public class ShowAccountActivity extends BaseActivity {
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
 
+		setData();
+	}
+
+	private void setData() {
 		accountName.setText(account.getName());
 		accountBalance.setText(NumberFormat.getCurrencyInstance().format(account.getBalance() / 100));
 		accountBalanceDate.setText(Account.sdf.format(account.getBalanceDate().toDate()));
@@ -56,6 +60,16 @@ public class ShowAccountActivity extends BaseActivity {
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putLong(KEY_ACCOUNT_ID, account.getId());
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		if(account != null) {
+			account = Account.find(account.getId());
+			setData();
+		}
 	}
 
 	@Override

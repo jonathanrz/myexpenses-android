@@ -32,6 +32,10 @@ public class ShowCreditCardActivity extends BaseActivity {
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
 
+		setData();
+	}
+
+	private void setData() {
 		creditCardName.setText(creditCard.getName());
 	}
 
@@ -48,6 +52,16 @@ public class ShowCreditCardActivity extends BaseActivity {
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putLong(KEY_CREDIT_CARD_ID, creditCard.getId());
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		if(creditCard != null) {
+			creditCard = CreditCard.find(creditCard.getId());
+			setData();
+		}
 	}
 
 	@Override

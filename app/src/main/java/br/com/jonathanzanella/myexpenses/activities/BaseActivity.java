@@ -1,8 +1,10 @@
 package br.com.jonathanzanella.myexpenses.activities;
 
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import br.com.jonathanzanella.myexpenses.R;
 import butterknife.Bind;
@@ -21,10 +23,28 @@ public class BaseActivity extends AppCompatActivity {
 		super.onPostCreate(savedInstanceState);
 		ButterKnife.bind(this);
 
-		setSupportActionBar(toolbar);
+		if(toolbar != null) {
+			setSupportActionBar(toolbar);
+			if(!(this instanceof MainActivity))
+				displayHomeAsUp();
+		}
 
 		storeBundle(savedInstanceState);
 		storeBundle(getIntent().getExtras());
+	}
+
+	private void displayHomeAsUp() {
+		ActionBar actionBar = getSupportActionBar();
+		if(actionBar != null) {
+			actionBar.setDisplayHomeAsUpEnabled(true);
+			actionBar.setDisplayHomeAsUpEnabled(true);
+			toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					finish();
+				}
+			});
+		}
 	}
 
 	protected void storeBundle(Bundle extras) {

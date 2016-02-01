@@ -59,6 +59,17 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 		}
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		for(int i = 0; i < content.getChildCount(); i++) {
+			View v = content.getChildAt(i);
+			if(v instanceof BaseView)
+				((BaseView)v).refreshData();
+		}
+	}
+
 	private void addViewToContent(View child) {
 		content.removeAllViews();
 		child.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,

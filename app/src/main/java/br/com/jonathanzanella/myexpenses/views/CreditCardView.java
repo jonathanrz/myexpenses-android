@@ -76,4 +76,12 @@ public class CreditCardView extends BaseView {
                 break;
         }
     }
+
+    @Override
+    public void refreshData() {
+        super.refreshData();
+
+        adapter.loadData();
+        adapter.notifyDataSetChanged();
+    }
 }

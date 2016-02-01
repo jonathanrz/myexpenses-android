@@ -35,7 +35,7 @@ public abstract class BaseView extends FrameLayout {
 
 	protected abstract void init();
 
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {}
 
-	}
+	public void refreshData() {}
 }
