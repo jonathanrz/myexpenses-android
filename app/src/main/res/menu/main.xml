@@ -11,5 +11,10 @@
 			android:checked="false"
 			android:title="@string/sources"
 			android:icon="@drawable/ic_source_black_24dp"/>
+        <item
+            android:id="@+id/menu_credit_card"
+            android:checked="false"
+            android:title="@string/credit_card"
+            android:icon="@drawable/ic_credit_card_white_24dp"/>
 	</group>
 </menu>

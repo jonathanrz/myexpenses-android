@@ -8,31 +8,31 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.model.Source;
+import br.com.jonathanzanella.myexpenses.model.CreditCard;
 import butterknife.Bind;
 
 /**
  * Created by jzanella on 1/31/16.
  */
-public class ShowSourceActivity extends BaseActivity {
-	public static final String KEY_SOURCE_ID = "KeySourceId";
+public class ShowCreditCardActivity extends BaseActivity {
+	public static final String KEY_CREDIT_CARD_ID = "KeyCreateCardId";
 
-	@Bind(R.id.act_show_source_name)
-	TextView sourceName;
+	@Bind(R.id.act_show_credit_card_name)
+	TextView creditCardName;
 
-	private Source source;
+	private CreditCard creditCard;
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_show_source);
+		setContentView(R.layout.activity_show_credit_card);
 	}
 
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
 
-		sourceName.setText(source.getName());
+		creditCardName.setText(creditCard.getName());
 	}
 
 	@Override
@@ -40,14 +40,14 @@ public class ShowSourceActivity extends BaseActivity {
 		super.storeBundle(extras);
 		if(extras == null)
 			return;
-		if(extras.containsKey(KEY_SOURCE_ID))
-			source = Source.find(extras.getLong(KEY_SOURCE_ID));
+		if(extras.containsKey(KEY_CREDIT_CARD_ID))
+			creditCard = CreditCard.find(extras.getLong(KEY_CREDIT_CARD_ID));
 	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putLong(KEY_SOURCE_ID, source.getId());
+		outState.putLong(KEY_CREDIT_CARD_ID, creditCard.getId());
 	}
 
 	@Override
@@ -60,8 +60,8 @@ public class ShowSourceActivity extends BaseActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_edit:
-				Intent i = new Intent(this, EditSourceActivity.class);
-				i.putExtra(EditSourceActivity.KEY_SOURCE_ID, source.getId());
+				Intent i = new Intent(this, EditCreditCardActivity.class);
+				i.putExtra(EditCreditCardActivity.KEY_CREDIT_CARD_ID, creditCard.getId());
 				startActivity(i);
 				break;
 		}
