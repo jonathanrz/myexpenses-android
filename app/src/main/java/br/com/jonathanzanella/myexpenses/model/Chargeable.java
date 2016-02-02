@@ -6,4 +6,6 @@ package br.com.jonathanzanella.myexpenses.model;
 public interface Chargeable {
 	long getId();
 	String getName();
+	void debit(int value);
+	void save();
 }

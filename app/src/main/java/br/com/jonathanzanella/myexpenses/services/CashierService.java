@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.util.Log;
 
 import br.com.jonathanzanella.myexpenses.model.Account;
+import br.com.jonathanzanella.myexpenses.model.Chargeable;
+import br.com.jonathanzanella.myexpenses.model.Expense;
 import br.com.jonathanzanella.myexpenses.model.Receipt;
 
 /**
@@ -21,6 +23,7 @@ public class CashierService extends IntentService {
 	protected void onHandleIntent(Intent intent) {
 		Log.d(LOG_TAG, "init CashierService");
 		creditReceipts();
+		chargeExpenses();
 	}
 
 	private void creditReceipts() {
@@ -43,6 +46,27 @@ public class CashierService extends IntentService {
 			receipt.save();
 			Log.d(LOG_TAG, "updated " + a.getName() + " with " + changedValue + " from "
 					+ receipt.getSource().getName() + " id=" + receipt.getId());
+		}
+	}
+
+	private void chargeExpenses() {
+		for (Expense expense : Expense.uncharged()) {
+			Chargeable c = expense.getChargeable();
+			c.debit(expense.getValue());
+			c.save();
+			expense.setCharged(true);
+			expense.save();
+			Log.d(LOG_TAG, "charged " + expense.getValue() + " to " + c.getName() + " id=" + expense.getId());
+		}
+
+		for (Expense expense : Expense.changed()) {
+			Chargeable c = expense.getChargeable();
+			int changedValue = expense.changedValue();
+			c.debit(changedValue);
+			c.save();
+			expense.resetNewValue();
+			expense.save();
+			Log.d(LOG_TAG, "updated " + c.getName() + " with " + changedValue + " id=" + expense.getId());
 		}
 	}
 }

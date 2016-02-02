@@ -53,4 +53,9 @@ public class Account extends BaseModel implements Chargeable {
     public void credit(int value) {
         balance += value;
     }
+
+    @Override
+    public void debit(int value) {
+        balance -= value;
+    }
 }
