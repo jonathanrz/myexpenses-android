@@ -33,11 +33,23 @@
             android:screenOrientation="portrait"
             android:parentActivityName=".activities.MainActivity"/>
         <activity
+            android:name=".activities.ListSourceActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.Dialog"/>
+        <activity
             android:name=".activities.EditCreditCardActivity"
             android:screenOrientation="portrait"
             android:parentActivityName=".activities.MainActivity"/>
         <activity
             android:name=".activities.ShowCreditCardActivity"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".activities.MainActivity"/>
+        <activity
+            android:name=".activities.EditReceiptActivity"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".activities.MainActivity"/>
+        <activity
+            android:name=".activities.ShowReceiptActivity"
             android:screenOrientation="portrait"
             android:parentActivityName=".activities.MainActivity"/>
 

@@ -1,6 +1,7 @@
 package br.com.jonathanzanella.myexpenses.activities;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -15,7 +16,7 @@ import butterknife.ButterKnife;
  * Copyright (c) 2015. All rights reserved.
  */
 public class BaseActivity extends AppCompatActivity {
-	@Bind(R.id.toolbar)
+	@Bind(R.id.toolbar) @Nullable
 	Toolbar toolbar;
 
 	@Override

@@ -14,6 +14,7 @@ import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.views.AccountView;
 import br.com.jonathanzanella.myexpenses.views.BaseView;
 import br.com.jonathanzanella.myexpenses.views.CreditCardView;
+import br.com.jonathanzanella.myexpenses.views.ReceiptView;
 import br.com.jonathanzanella.myexpenses.views.SourceView;
 import butterknife.Bind;
 
@@ -93,6 +94,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 			case R.id.menu_credit_card:
 				addViewToContent(new CreditCardView(this));
 				setTitle(R.string.credit_card);
+				drawer.closeDrawers();
+				return true;
+			case R.id.menu_receipts:
+				addViewToContent(new ReceiptView(this));
+				setTitle(R.string.recepts);
 				drawer.closeDrawers();
 				return true;
 		}

@@ -10,28 +10,30 @@ import android.widget.TextView;
 import java.text.NumberFormat;
 
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.model.Account;
+import br.com.jonathanzanella.myexpenses.model.Receipt;
 import butterknife.Bind;
 
 /**
  * Created by jzanella on 1/31/16.
  */
-public class ShowAccountActivity extends BaseActivity {
-	public static final String KEY_ACCOUNT_ID = "KeyAccountId";
+public class ShowReceiptActivity extends BaseActivity {
+	public static final String KEY_RECEIPT_ID = "KeyReceiptId";
 
-	@Bind(R.id.act_show_account_name)
-	TextView accountName;
-	@Bind(R.id.act_show_account_balance)
-	TextView accountBalance;
-	@Bind(R.id.act_show_account_balance_date)
-	TextView accountBalanceDate;
+	@Bind(R.id.act_show_receipt_name)
+	TextView receiptName;
+	@Bind(R.id.act_show_receipt_date)
+	TextView receiptDate;
+	@Bind(R.id.act_show_receipt_income)
+	TextView receiptIncome;
+	@Bind(R.id.act_show_receipt_source)
+	TextView receiptSource;
 
-	private Account account;
+	private Receipt receipt;
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_show_account);
+		setContentView(R.layout.activity_show_receipt);
 	}
 
 	@Override
@@ -42,11 +44,10 @@ public class ShowAccountActivity extends BaseActivity {
 	}
 
 	private void setData() {
-		if (account != null) {
-			accountName.setText(account.getName());
-			accountBalance.setText(NumberFormat.getCurrencyInstance().format(account.getBalance() / 100));
-			accountBalanceDate.setText(Account.sdf.format(account.getBalanceDate().toDate()));
-		}
+		receiptName.setText(receipt.getName());
+		receiptDate.setText(Receipt.sdf.format(receipt.getDate().toDate()));
+		receiptIncome.setText(NumberFormat.getCurrencyInstance().format(receipt.getIncome() / 100));
+		receiptSource.setText(receipt.getSource().getName());
 	}
 
 	@Override
@@ -54,22 +55,22 @@ public class ShowAccountActivity extends BaseActivity {
 		super.storeBundle(extras);
 		if(extras == null)
 			return;
-		if(extras.containsKey(KEY_ACCOUNT_ID))
-			account = Account.find(extras.getLong(KEY_ACCOUNT_ID));
+		if(extras.containsKey(KEY_RECEIPT_ID))
+			receipt = Receipt.find(extras.getLong(KEY_RECEIPT_ID));
 	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putLong(KEY_ACCOUNT_ID, account.getId());
+		outState.putLong(KEY_RECEIPT_ID, receipt.getId());
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
 
-		if(account != null) {
-			account = Account.find(account.getId());
+		if(receipt != null) {
+			receipt = Receipt.find(receipt.getId());
 			setData();
 		}
 	}
@@ -84,8 +85,8 @@ public class ShowAccountActivity extends BaseActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_edit:
-				Intent i = new Intent(this, EditAccountActivity.class);
-				i.putExtra(EditAccountActivity.KEY_ACCOUNT_ID, account.getId());
+				Intent i = new Intent(this, EditReceiptActivity.class);
+				i.putExtra(EditReceiptActivity.KEY_RECEIPT_ID, receipt.getId());
 				startActivity(i);
 				break;
 		}

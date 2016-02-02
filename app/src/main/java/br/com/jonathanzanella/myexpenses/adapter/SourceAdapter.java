@@ -17,12 +17,16 @@ import br.com.jonathanzanella.myexpenses.activities.ShowAccountActivity;
 import br.com.jonathanzanella.myexpenses.model.Source;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import lombok.Setter;
 
 /**
  * Created by Jonathan Zanella on 26/01/16.
  */
 public class SourceAdapter extends RecyclerView.Adapter<SourceAdapter.ViewHolder> {
 	protected List<Source> sources;
+
+	@Setter
+	SourceAdapterCallback callback;
 
 	public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 		@Bind(R.id.row_source_name)
@@ -45,11 +49,16 @@ public class SourceAdapter extends RecyclerView.Adapter<SourceAdapter.ViewHolder
 
 		@Override
 		public void onClick(View v) {
-			Source source = adapterWeakReference.get().getSource(getAdapterPosition());
-			if(source != null) {
-                Intent i = new Intent(itemView.getContext(), ShowAccountActivity.class);
-                i.putExtra(ShowAccountActivity.KEY_ACCOUNT_ID, source.getId());
-                itemView.getContext().startActivity(i);
+			SourceAdapter adapter = adapterWeakReference.get();
+			Source source = adapter.getSource(getAdapterPosition());
+			if (source != null) {
+				if(adapter.callback != null) {
+					adapter.callback.onSourceSelected(source);
+				} else {
+					Intent i = new Intent(itemView.getContext(), ShowAccountActivity.class);
+					i.putExtra(ShowAccountActivity.KEY_ACCOUNT_ID, source.getId());
+					itemView.getContext().startActivity(i);
+				}
 			}
 		}
 	}

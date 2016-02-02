@@ -10,4 +10,8 @@
     <string name="edit">Editar</string>
     <string name="sources">Fontes</string>
     <string name="credit_card">Cartão de Crédito</string>
+    <string name="date">Data</string>
+    <string name="income">Valor</string>
+    <string name="source">Fonte</string>
+    <string name="recepts">Recebimentos</string>
 </resources>

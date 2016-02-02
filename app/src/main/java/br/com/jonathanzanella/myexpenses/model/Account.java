@@ -23,7 +23,7 @@ import lombok.Setter;
  */
 @Table(database = MyDatabase.class)
 public class Account extends BaseModel {
-    public static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+    public static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
 
     @Column
     @PrimaryKey(autoincrement = true) @Getter
