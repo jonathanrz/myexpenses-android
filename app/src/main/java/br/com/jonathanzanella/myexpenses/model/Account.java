@@ -49,4 +49,8 @@ public class Account extends BaseModel {
     public static Account find(long id) {
         return initQuery().where(Account_Table.id.eq(id)).querySingle();
     }
+
+    public void credit(int value) {
+        balance += value;
+    }
 }

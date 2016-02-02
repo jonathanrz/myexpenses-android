@@ -15,8 +15,10 @@ import org.joda.time.DateTime;
 import java.text.NumberFormat;
 
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.model.Account;
 import br.com.jonathanzanella.myexpenses.model.Receipt;
 import br.com.jonathanzanella.myexpenses.model.Source;
+import br.com.jonathanzanella.myexpenses.services.CashierService;
 import butterknife.Bind;
 import butterknife.OnClick;
 
@@ -26,6 +28,7 @@ import butterknife.OnClick;
 public class EditReceiptActivity extends BaseActivity {
 	public static final String KEY_RECEIPT_ID = "KeyReceiptId";
 	private static final int REQUEST_SELECT_SOURCE = 1001;
+	private static final int REQUEST_SELECT_ACCOUNT = 1002;
 
 	@Bind(R.id.act_edit_receipt_name)
 	EditText editName;
@@ -35,10 +38,13 @@ public class EditReceiptActivity extends BaseActivity {
 	EditText editIncome;
 	@Bind(R.id.act_edit_receipt_source)
 	EditText editSource;
+	@Bind(R.id.act_edit_receipt_account)
+	EditText editAccount;
 
 	private Receipt receipt;
 	private DateTime date;
 	private Source source;
+	private Account account;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +91,13 @@ public class EditReceiptActivity extends BaseActivity {
 			editSource.setText(receipt.getSource().getName());
 			source = receipt.getSource();
 			onSourceSelected();
+			account = receipt.getAccount();
+			onAccountSelected();
+		} else {
+			if(source != null)
+				onSourceSelected();
+			if(account != null)
+				onAccountSelected();
 		}
 	}
 
@@ -97,6 +110,10 @@ public class EditReceiptActivity extends BaseActivity {
 
 		if(extras.containsKey(KEY_RECEIPT_ID))
 			receipt = Receipt.find(extras.getLong(KEY_RECEIPT_ID));
+		if(extras.containsKey(ListSourceActivity.KEY_SOURCE_SELECTED_ID))
+			source = Source.find(extras.getLong(ListSourceActivity.KEY_SOURCE_SELECTED_ID));
+		if(extras.containsKey(ListAccountActivity.KEY_ACCOUNT_SELECTED_ID))
+			account = Account.find(extras.getLong(ListAccountActivity.KEY_ACCOUNT_SELECTED_ID));
 	}
 
 	@Override
@@ -104,6 +121,10 @@ public class EditReceiptActivity extends BaseActivity {
 		super.onSaveInstanceState(outState);
 		if(receipt != null)
 			outState.putLong(KEY_RECEIPT_ID, receipt.getId());
+		if(source != null)
+			outState.putLong(ListSourceActivity.KEY_SOURCE_SELECTED_ID, source.getId());
+		if(account != null)
+			outState.putLong(ListAccountActivity.KEY_ACCOUNT_SELECTED_ID, account.getId());
 	}
 
 	@Override
@@ -116,6 +137,15 @@ public class EditReceiptActivity extends BaseActivity {
 					if(source != null)
 						onSourceSelected();
 				}
+				break;
+			}
+			case REQUEST_SELECT_ACCOUNT: {
+				if(resultCode == RESULT_OK) {
+					account = Account.find(data.getLongExtra(ListAccountActivity.KEY_ACCOUNT_SELECTED_ID, 0L));
+					if(account != null)
+						onAccountSelected();
+				}
+				break;
 			}
 		}
 	}
@@ -155,9 +185,18 @@ public class EditReceiptActivity extends BaseActivity {
 		editSource.setText(source.getName());
 	}
 
+	private void onAccountSelected() {
+		editAccount.setText(account.getName());
+	}
+
 	@OnClick(R.id.act_edit_receipt_source)
 	void onSource() {
 		startActivityForResult(new Intent(this, ListSourceActivity.class), REQUEST_SELECT_SOURCE);
+	}
+
+	@OnClick(R.id.act_edit_receipt_account)
+	void onAccount() {
+		startActivityForResult(new Intent(this, ListAccountActivity.class), REQUEST_SELECT_ACCOUNT);
 	}
 
 	private void save() {
@@ -167,7 +206,10 @@ public class EditReceiptActivity extends BaseActivity {
 		receipt.setDate(date);
 		receipt.setIncome(Integer.parseInt(editIncome.getText().toString().replaceAll("[^\\d]", "")));
 		receipt.setSource(source);
+		receipt.setAccount(account);
 		receipt.save();
+
+		startService(new Intent(this, CashierService.class));
 
 		Intent i = new Intent();
 		i.putExtra(KEY_RECEIPT_ID, receipt.getId());

@@ -25,6 +25,10 @@
             android:screenOrientation="portrait"
             android:parentActivityName=".activities.MainActivity"/>
         <activity
+            android:name=".activities.ListAccountActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.Dialog"/>
+        <activity
             android:name=".activities.EditSourceActivity"
             android:screenOrientation="portrait"
             android:parentActivityName=".activities.MainActivity"/>
@@ -52,6 +56,7 @@
             android:name=".activities.ShowReceiptActivity"
             android:screenOrientation="portrait"
             android:parentActivityName=".activities.MainActivity"/>
+        <service android:name=".services.CashierService"/>
 
     </application>
 

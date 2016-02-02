@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.services.CashierService;
 import br.com.jonathanzanella.myexpenses.views.AccountView;
 import br.com.jonathanzanella.myexpenses.views.BaseView;
 import br.com.jonathanzanella.myexpenses.views.CreditCardView;
@@ -50,6 +51,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 		drawerToggle.syncState();
 
 		addViewToContent(new ResumeView(this));
+
+		startService(new Intent(this, CashierService.class));
 	}
 
 	@Override

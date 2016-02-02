@@ -27,6 +27,8 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
 	protected List<Account> accounts;
 	@Setter
 	private boolean simplified = false;
+	@Setter
+	AccountAdapterCallback callback;
 
 	public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 		@Bind(R.id.row_account_name)
@@ -55,11 +57,16 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
 
 		@Override
 		public void onClick(View v) {
-			Account acc = adapterWeakReference.get().getAccount(getAdapterPosition());
+			AccountAdapter adapter = adapterWeakReference.get();
+			Account acc = adapter.getAccount(getAdapterPosition());
 			if(acc != null) {
-                Intent i = new Intent(itemView.getContext(), ShowAccountActivity.class);
-                i.putExtra(ShowAccountActivity.KEY_ACCOUNT_ID, acc.getId());
-                itemView.getContext().startActivity(i);
+				if(adapter.callback != null) {
+					adapter.callback.onAccountSelected(acc);
+				} else {
+					Intent i = new Intent(itemView.getContext(), ShowAccountActivity.class);
+					i.putExtra(ShowAccountActivity.KEY_ACCOUNT_ID, acc.getId());
+					itemView.getContext().startActivity(i);
+				}
 			}
 		}
 	}

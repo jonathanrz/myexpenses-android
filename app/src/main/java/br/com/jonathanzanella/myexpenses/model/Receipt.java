@@ -36,14 +36,37 @@ public class Receipt extends BaseModel {
 	@Column(typeConverter = DateTimeConverter.class) @Getter @Setter
 	DateTime date;
 
-	@Column @Getter @Setter
+	@Column
 	int income;
+
+	@Column @Getter @Setter
+	int newIncome;
 
 	@Column
 	long sourceId;
 
+	@Column
+	long accountId;
+
+	@Column @Setter
+	boolean credited;
+
 	public static List<Receipt> all() {
 		return initQuery().queryList();
+	}
+
+	public static List<Receipt> uncredited() {
+		return initQuery()
+				.where(Receipt_Table.credited.eq(false))
+				.and(Receipt_Table.date.lessThanOrEq(DateTime.now()))
+				.queryList();
+	}
+
+	public static List<Receipt> changed() {
+		return initQuery()
+				.where(Receipt_Table.credited.eq(true))
+				.and(Receipt_Table.newIncome.greaterThan(0))
+				.queryList();
 	}
 
 	private static From<Receipt> initQuery() {
@@ -54,11 +77,36 @@ public class Receipt extends BaseModel {
 		return initQuery().where(Receipt_Table.id.eq(id)).querySingle();
 	}
 
+	public int getIncome() {
+		if(newIncome != 0)
+			return newIncome;
+		return income;
+	}
+
+	public void setIncome(int income) {
+		if(credited && this.income != income)
+			newIncome = income;
+		else
+			this.income = income;
+	}
+
+	public int changedValue() {
+		return newIncome - income;
+	}
+
 	public Source getSource() {
 		return Source.find(sourceId);
 	}
 
 	public void setSource(@NonNull Source s) {
 		sourceId = s.getId();
+	}
+
+	public Account getAccount() {
+		return Account.find(accountId);
+	}
+
+	public void setAccount(@NonNull Account a) {
+		accountId = a.getId();
 	}
 }

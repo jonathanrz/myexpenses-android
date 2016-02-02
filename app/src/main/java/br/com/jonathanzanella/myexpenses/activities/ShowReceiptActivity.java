@@ -27,6 +27,8 @@ public class ShowReceiptActivity extends BaseActivity {
 	TextView receiptIncome;
 	@Bind(R.id.act_show_receipt_source)
 	TextView receiptSource;
+	@Bind(R.id.act_show_receipt_account)
+	TextView receiptAccount;
 
 	private Receipt receipt;
 
@@ -48,6 +50,7 @@ public class ShowReceiptActivity extends BaseActivity {
 		receiptDate.setText(Receipt.sdf.format(receipt.getDate().toDate()));
 		receiptIncome.setText(NumberFormat.getCurrencyInstance().format(receipt.getIncome() / 100));
 		receiptSource.setText(receipt.getSource().getName());
+		receiptAccount.setText(receipt.getAccount().getName());
 	}
 
 	@Override

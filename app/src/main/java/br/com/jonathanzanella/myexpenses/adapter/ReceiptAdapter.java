@@ -34,6 +34,8 @@ public class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ViewHold
 		TextView income;
 		@Bind(R.id.row_receipt_source)
 		TextView source;
+		@Bind(R.id.row_receipt_account)
+		TextView account;
 
 		WeakReference<ReceiptAdapter> adapterWeakReference;
 
@@ -51,6 +53,7 @@ public class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ViewHold
 			date.setText(Receipt.sdf.format(receipt.getDate().toDate()));
 			income.setText(NumberFormat.getCurrencyInstance().format(receipt.getIncome() / 100));
 			source.setText(receipt.getSource().getName());
+			account.setText(receipt.getAccount().getName());
 		}
 
 		@Override

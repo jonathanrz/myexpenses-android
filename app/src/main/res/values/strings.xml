@@ -3,6 +3,7 @@
     <string name="navigation_drawer_open">Drawer Open</string>
     <string name="navigation_drawer_close">Drawer Close</string>
     <string name="accounts">Contas</string>
+    <string name="account">Conta</string>
     <string name="balance">Saldo</string>
     <string name="save">Salvar</string>
     <string name="name">Nome</string>
@@ -14,5 +15,5 @@
     <string name="income">Valor</string>
     <string name="source">Fonte</string>
     <string name="recepts">Recebimentos</string>
-    <string name="resume">Resume</string>
+    <string name="resume">Resumo</string>
 </resources>
