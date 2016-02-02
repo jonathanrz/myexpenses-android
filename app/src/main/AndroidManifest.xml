@@ -56,6 +56,18 @@
             android:name=".activities.ShowReceiptActivity"
             android:screenOrientation="portrait"
             android:parentActivityName=".activities.MainActivity"/>
+        <activity
+            android:name=".activities.EditExpenseActivity"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".activities.MainActivity"/>
+        <activity
+            android:name=".activities.ShowExpenseActivity"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".activities.MainActivity"/>
+        <activity
+            android:name=".activities.ListChargeableActivity"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".activities.MainActivity"/>
         <service android:name=".services.CashierService"/>
 
     </application>

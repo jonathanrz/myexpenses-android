@@ -51,7 +51,7 @@ public class ShowReceiptActivity extends BaseActivity {
 	private void setData() {
 		receiptName.setText(receipt.getName());
 		receiptDate.setText(Receipt.sdf.format(receipt.getDate().toDate()));
-		receiptIncome.setText(NumberFormat.getCurrencyInstance().format(receipt.getIncome() / 100));
+		receiptIncome.setText(NumberFormat.getCurrencyInstance().format(receipt.getIncome() / 100.0));
 		receiptSource.setText(receipt.getSource().getName());
 		receiptAccount.setText(receipt.getAccount().getName());
 	}

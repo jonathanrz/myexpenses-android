@@ -3,8 +3,6 @@ package br.com.jonathanzanella.myexpenses.activities;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.DatePicker;
@@ -16,6 +14,7 @@ import org.joda.time.LocalDate;
 import java.text.NumberFormat;
 
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.helper.CurrencyTextWatch;
 import br.com.jonathanzanella.myexpenses.model.Account;
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -48,36 +47,11 @@ public class EditAccountActivity extends BaseActivity {
 
 		balanceDate = LocalDate.now();
 		onBalanceDateChanged();
-		editBalance.addTextChangedListener(new TextWatcher() {
-			String current;
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				if(!s.toString().equals(current)){
-					editBalance.removeTextChangedListener(this);
-
-					String cleanString = s.toString().replaceAll("[R$,.]", "");
-
-					double parsed = Double.parseDouble(cleanString);
-					String formatted = NumberFormat.getCurrencyInstance().format((parsed/100));
-
-					current = formatted;
-					editBalance.setText(formatted);
-					editBalance.setSelection(formatted.length());
-
-					editBalance.addTextChangedListener(this);
-				}
-			}
-
-			@Override
-			public void afterTextChanged(Editable s) {}
-		});
+		editBalance.addTextChangedListener(new CurrencyTextWatch(editBalance));
 
 		if(account != null) {
 			editName.setText(account.getName());
-			editBalance.setText(NumberFormat.getCurrencyInstance().format(account.getBalance() / 100));
+			editBalance.setText(NumberFormat.getCurrencyInstance().format(account.getBalance() / 100.0));
 			editBalanceDate.setText(Account.sdf.format(account.getBalanceDate().toDate()));
 		}
 	}

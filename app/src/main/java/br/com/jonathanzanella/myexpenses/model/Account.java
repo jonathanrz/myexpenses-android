@@ -22,7 +22,7 @@ import lombok.Setter;
  * Created by Jonathan Zanella on 26/01/16.
  */
 @Table(database = MyDatabase.class)
-public class Account extends BaseModel {
+public class Account extends BaseModel implements Chargeable {
     public static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
 
     @Column

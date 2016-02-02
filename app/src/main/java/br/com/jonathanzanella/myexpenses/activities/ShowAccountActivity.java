@@ -44,7 +44,7 @@ public class ShowAccountActivity extends BaseActivity {
 	private void setData() {
 		if (account != null) {
 			accountName.setText(account.getName());
-			accountBalance.setText(NumberFormat.getCurrencyInstance().format(account.getBalance() / 100));
+			accountBalance.setText(NumberFormat.getCurrencyInstance().format(account.getBalance() / 100.0));
 			accountBalanceDate.setText(Account.sdf.format(account.getBalanceDate().toDate()));
 		}
 	}

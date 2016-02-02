@@ -15,6 +15,7 @@ import br.com.jonathanzanella.myexpenses.services.CashierService;
 import br.com.jonathanzanella.myexpenses.views.AccountView;
 import br.com.jonathanzanella.myexpenses.views.BaseView;
 import br.com.jonathanzanella.myexpenses.views.CreditCardView;
+import br.com.jonathanzanella.myexpenses.views.ExpenseView;
 import br.com.jonathanzanella.myexpenses.views.ReceiptView;
 import br.com.jonathanzanella.myexpenses.views.ResumeView;
 import br.com.jonathanzanella.myexpenses.views.SourceView;
@@ -110,6 +111,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 			case R.id.menu_receipts:
 				addViewToContent(new ReceiptView(this));
 				setTitle(R.string.recepts);
+				drawer.closeDrawers();
+				return true;
+			case R.id.menu_expenses:
+				addViewToContent(new ExpenseView(this));
+				setTitle(R.string.expenses);
 				drawer.closeDrawers();
 				return true;
 		}

@@ -3,8 +3,6 @@ package br.com.jonathanzanella.myexpenses.activities;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.DatePicker;
@@ -15,6 +13,7 @@ import org.joda.time.DateTime;
 import java.text.NumberFormat;
 
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.helper.CurrencyTextWatch;
 import br.com.jonathanzanella.myexpenses.model.Account;
 import br.com.jonathanzanella.myexpenses.model.Receipt;
 import br.com.jonathanzanella.myexpenses.model.Source;
@@ -58,32 +57,7 @@ public class EditReceiptActivity extends BaseActivity {
 
 		date = DateTime.now();
 		onBalanceDateChanged();
-		editIncome.addTextChangedListener(new TextWatcher() {
-			String current;
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				if(!s.toString().equals(current)){
-					editIncome.removeTextChangedListener(this);
-
-					String cleanString = s.toString().replaceAll("[R$,.]", "");
-
-					double parsed = Double.parseDouble(cleanString);
-					String formatted = NumberFormat.getCurrencyInstance().format((parsed/100));
-
-					current = formatted;
-					editIncome.setText(formatted);
-					editIncome.setSelection(formatted.length());
-
-					editIncome.addTextChangedListener(this);
-				}
-			}
-
-			@Override
-			public void afterTextChanged(Editable s) {}
-		});
+		editIncome.addTextChangedListener(new CurrencyTextWatch(editIncome));
 
 		if(receipt != null) {
 			editName.setText(receipt.getName());

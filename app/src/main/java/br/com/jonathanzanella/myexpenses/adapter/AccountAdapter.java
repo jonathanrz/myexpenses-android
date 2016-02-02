@@ -51,7 +51,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
 
 		public void setData(Account acc) {
 			name.setText(acc.getName());
-			balance.setText(NumberFormat.getCurrencyInstance().format(acc.getBalance() / 100));
+			balance.setText(NumberFormat.getCurrencyInstance().format(acc.getBalance() / 100.0));
 			balanceDate.setText(Account.sdf.format(acc.getBalanceDate().toDate()));
 		}
 

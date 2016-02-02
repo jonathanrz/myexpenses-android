@@ -51,7 +51,7 @@ public class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ViewHold
 		public void setData(Receipt receipt) {
 			name.setText(receipt.getName());
 			date.setText(Receipt.sdf.format(receipt.getDate().toDate()));
-			income.setText(NumberFormat.getCurrencyInstance().format(receipt.getIncome() / 100));
+			income.setText(NumberFormat.getCurrencyInstance().format(receipt.getIncome() / 100.0));
 			source.setText(receipt.getSource().getName());
 			account.setText(receipt.getAccount().getName());
 		}
