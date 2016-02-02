@@ -24,7 +24,7 @@ public class AccountView extends BaseView {
 	private AccountAdapter adapter;
 
 	@Bind(R.id.view_accounts_list)
-	RecyclerView places;
+	RecyclerView accounts;
 
 	public AccountView(Context context) {
 		super(context);
@@ -46,9 +46,9 @@ public class AccountView extends BaseView {
 		adapter = new AccountAdapter();
 		adapter.loadData();
 
-		places.setAdapter(adapter);
-		places.setLayoutManager(new GridLayoutManager(getContext(), 1));
-		places.setItemAnimator(new DefaultItemAnimator());
+		accounts.setAdapter(adapter);
+		accounts.setLayoutManager(new GridLayoutManager(getContext(), 1));
+		accounts.setItemAnimator(new DefaultItemAnimator());
 	}
 
 	@OnClick(R.id.view_accounts_fab)

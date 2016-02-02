@@ -15,6 +15,7 @@ import br.com.jonathanzanella.myexpenses.views.AccountView;
 import br.com.jonathanzanella.myexpenses.views.BaseView;
 import br.com.jonathanzanella.myexpenses.views.CreditCardView;
 import br.com.jonathanzanella.myexpenses.views.ReceiptView;
+import br.com.jonathanzanella.myexpenses.views.ResumeView;
 import br.com.jonathanzanella.myexpenses.views.SourceView;
 import butterknife.Bind;
 
@@ -47,6 +48,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 		navigationView.setNavigationItemSelectedListener(this);
 		drawer.setDrawerListener(drawerToggle);
 		drawerToggle.syncState();
+
+		addViewToContent(new ResumeView(this));
 	}
 
 	@Override
@@ -81,6 +84,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 	@Override
 	public boolean onNavigationItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+			case R.id.menu_resume:
+				addViewToContent(new ResumeView(this));
+				setTitle(R.string.app_name);
+				drawer.closeDrawers();
+				return true;
 			case R.id.menu_accounts:
 				addViewToContent(new AccountView(this));
 				setTitle(R.string.accounts);

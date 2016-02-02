@@ -18,12 +18,15 @@ import br.com.jonathanzanella.myexpenses.activities.ShowAccountActivity;
 import br.com.jonathanzanella.myexpenses.model.Account;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import lombok.Setter;
 
 /**
  * Created by Jonathan Zanella on 26/01/16.
  */
 public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHolder> {
 	protected List<Account> accounts;
+	@Setter
+	private boolean simplified = false;
 
 	public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 		@Bind(R.id.row_account_name)
@@ -63,8 +66,12 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
 
 	@Override
 	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-		View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_account, parent, false);
+		View v = LayoutInflater.from(parent.getContext()).inflate(getLayout(), parent, false);
 		return new ViewHolder(v, this);
+	}
+
+	private int getLayout() {
+		return simplified ? R.layout.row_account_simplified : R.layout.row_account;
 	}
 
 	@Override
