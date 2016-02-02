@@ -106,6 +106,8 @@ public class Expense extends BaseModel {
 	public static Chargeable findChargeable(String type, long id) {
 		if(Account.class.getName().compareTo(type) == 0)
 			return Account.find(id);
+		if(CreditCard.class.getName().compareTo(type) == 0)
+			return CreditCard.find(id);
 		return null;
 	}
 }

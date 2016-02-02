@@ -26,6 +26,42 @@
                 android:hint="@string/name"/>
 
         </android.support.design.widget.TextInputLayout>
+
+	    <android.support.design.widget.TextInputLayout
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_marginBottom="@dimen/default_spacing">
+
+		    <android.support.v7.widget.AppCompatEditText
+			    android:id="@+id/act_edit_credit_card_account"
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:inputType="none"
+			    android:clickable="true"
+			    android:focusable="false"
+			    android:hint="@string/account"/>
+
+	    </android.support.design.widget.TextInputLayout>
+
+	    <RadioGroup
+		    android:id="@+id/act_edit_credit_card_type"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content">
+
+		    <RadioButton
+			    android:id="@+id/act_edit_credit_card_type_debit"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:text="@string/debit"/>
+
+		    <RadioButton
+			    android:id="@+id/act_edit_credit_card_type_credit"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:text="@string/credit"/>
+
+	    </RadioGroup>
+
     </LinearLayout>
 
 </LinearLayout>

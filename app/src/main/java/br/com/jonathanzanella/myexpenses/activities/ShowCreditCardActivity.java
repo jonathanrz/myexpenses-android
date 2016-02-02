@@ -19,6 +19,10 @@ public class ShowCreditCardActivity extends BaseActivity {
 
 	@Bind(R.id.act_show_credit_card_name)
 	TextView creditCardName;
+	@Bind(R.id.act_show_credit_card_account)
+	TextView creditCardAccount;
+	@Bind(R.id.act_show_credit_card_type)
+	TextView creditCardType;
 
 	private CreditCard creditCard;
 
@@ -37,6 +41,15 @@ public class ShowCreditCardActivity extends BaseActivity {
 
 	private void setData() {
 		creditCardName.setText(creditCard.getName());
+		creditCardAccount.setText(creditCard.getAccount().getName());
+		switch (creditCard.getType()) {
+			case CREDIT:
+				creditCardType.setText(R.string.credit);
+				break;
+			case DEBIT:
+				creditCardType.setText(R.string.debit);
+				break;
+		}
 	}
 
 	@Override

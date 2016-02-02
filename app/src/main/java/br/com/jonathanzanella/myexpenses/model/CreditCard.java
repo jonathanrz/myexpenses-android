@@ -17,13 +17,19 @@ import lombok.Setter;
  * Created by jzanella on 1/31/16.
  */
 @Table(database = MyDatabase.class)
-public class CreditCard extends BaseModel {
+public class CreditCard extends BaseModel implements Chargeable {
 	@Column
 	@PrimaryKey(autoincrement = true) @Getter
 	long id;
 
 	@Column @Getter @Setter
 	String name;
+
+	@Column @Getter @Setter
+	CreditCardType type;
+
+	@Column
+	long accountId;
 
 	public static List<CreditCard> all() {
 		return initQuery().queryList();
@@ -35,5 +41,20 @@ public class CreditCard extends BaseModel {
 
 	public static CreditCard find(long id) {
 		return initQuery().where(Source_Table.id.eq(id)).querySingle();
+	}
+
+	public Account getAccount() {
+		return Account.find(accountId);
+	}
+
+	public void setAccount(Account account) {
+		accountId = account.getId();
+	}
+
+	@Override
+	public void debit(int value) {
+		Account a = getAccount();
+		a.debit(value);
+		a.save();
 	}
 }

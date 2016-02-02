@@ -17,6 +17,7 @@ import br.com.jonathanzanella.myexpenses.activities.ShowCreditCardActivity;
 import br.com.jonathanzanella.myexpenses.model.CreditCard;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import lombok.Setter;
 
 /**
  * Created by Jonathan Zanella on 26/01/16.
@@ -24,9 +25,16 @@ import butterknife.ButterKnife;
 public class CreditCardAdapter extends RecyclerView.Adapter<CreditCardAdapter.ViewHolder> {
 	protected List<CreditCard> cards;
 
+	@Setter
+	CreditCardAdapterCallback callback;
+
 	public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 		@Bind(R.id.row_credit_card_name)
 		TextView name;
+		@Bind(R.id.row_credit_card_account)
+		TextView account;
+		@Bind(R.id.row_credit_card_type)
+		TextView type;
 
 		WeakReference<CreditCardAdapter> adapterWeakReference;
 
@@ -41,15 +49,29 @@ public class CreditCardAdapter extends RecyclerView.Adapter<CreditCardAdapter.Vi
 
 		public void setData(CreditCard creditCard) {
 			name.setText(creditCard.getName());
+			account.setText(creditCard.getAccount().getName());
+			switch (creditCard.getType()) {
+				case CREDIT:
+					type.setText(R.string.credit);
+					break;
+				case DEBIT:
+					type.setText(R.string.debit);
+					break;
+			}
 		}
 
 		@Override
 		public void onClick(View v) {
-			CreditCard creditCard = adapterWeakReference.get().getCreditCard(getAdapterPosition());
+			CreditCardAdapter adapter = adapterWeakReference.get();
+			CreditCard creditCard = adapter.getCreditCard(getAdapterPosition());
 			if(creditCard != null) {
-                Intent i = new Intent(itemView.getContext(), ShowCreditCardActivity.class);
-                i.putExtra(ShowCreditCardActivity.KEY_CREDIT_CARD_ID, creditCard.getId());
-                itemView.getContext().startActivity(i);
+				if(adapter.callback != null) {
+					adapter.callback.onCreditCardSelected(creditCard);
+				} else {
+					Intent i = new Intent(itemView.getContext(), ShowCreditCardActivity.class);
+					i.putExtra(ShowCreditCardActivity.KEY_CREDIT_CARD_ID, creditCard.getId());
+					itemView.getContext().startActivity(i);
+				}
 			}
 		}
 	}

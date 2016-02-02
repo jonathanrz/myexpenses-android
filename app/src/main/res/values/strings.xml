@@ -20,4 +20,8 @@
     <string name="paid_with">Pago com</string>
     <string name="value">Valor</string>
     <string name="expenses">Gastos</string>
+    <string name="type">Tipo</string>
+    <string name="debit">Débito</string>
+    <string name="credit">Crédito</string>
+    <string name="cards">Cartões</string>
 </resources>

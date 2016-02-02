@@ -147,8 +147,9 @@ public class EditExpenseActivity extends BaseActivity {
 	}
 
 	@OnClick(R.id.act_edit_expense_chargeable)
-	void onSource() {
-		startActivityForResult(new Intent(this, ListChargeableActivity.class), REQUEST_SELECT_CHARGEABLE);
+	void onChargeable() {
+		if(expense == null)
+			startActivityForResult(new Intent(this, ListChargeableActivity.class), REQUEST_SELECT_CHARGEABLE);
 	}
 
 	private void save() {

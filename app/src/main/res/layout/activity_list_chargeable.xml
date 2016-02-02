@@ -4,6 +4,10 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
+	<include
+		android:id="@+id/toolbar"
+		layout="@layout/toolbar"/>
+
     <TextView
         style="@style/HeaderTitle"
         android:text="@string/accounts"/>
@@ -11,6 +15,18 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/act_chargeable_list_accounts"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="0dp"
+	    android:layout_weight="1"/>
+
+	<TextView
+		style="@style/HeaderTitle"
+		android:text="@string/cards"
+		android:layout_marginTop="@dimen/default_spacing"/>
+
+	<android.support.v7.widget.RecyclerView
+		android:id="@+id/act_chargeable_list_cards"
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		android:layout_weight="1"/>
 
 </LinearLayout>
