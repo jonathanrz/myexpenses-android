@@ -90,6 +90,11 @@ public class Receipt extends BaseModel {
 			this.income = income;
 	}
 
+	public void resetNewIncome() {
+		this.income = newIncome;
+		newIncome = 0;
+	}
+
 	public int changedValue() {
 		return newIncome - income;
 	}

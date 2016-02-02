@@ -196,7 +196,8 @@ public class EditReceiptActivity extends BaseActivity {
 
 	@OnClick(R.id.act_edit_receipt_account)
 	void onAccount() {
-		startActivityForResult(new Intent(this, ListAccountActivity.class), REQUEST_SELECT_ACCOUNT);
+		if(receipt == null)
+			startActivityForResult(new Intent(this, ListAccountActivity.class), REQUEST_SELECT_ACCOUNT);
 	}
 
 	private void save() {
