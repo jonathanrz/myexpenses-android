@@ -24,4 +24,5 @@
     <string name="debit">Débito</string>
     <string name="credit">Crédito</string>
     <string name="cards">Cartões</string>
+    <string name="total">Total</string>
 </resources>

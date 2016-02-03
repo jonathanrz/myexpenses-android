@@ -29,11 +29,11 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
 	CardAdapterCallback callback;
 
 	public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-		@Bind(R.id.row_credit_card_name)
+		@Bind(R.id.row_card_name)
 		TextView name;
-		@Bind(R.id.row_credit_card_account)
+		@Bind(R.id.row_card_account)
 		TextView account;
-		@Bind(R.id.row_credit_card_type)
+		@Bind(R.id.row_card_type)
 		TextView type;
 
 		WeakReference<CardAdapter> adapterWeakReference;
@@ -78,7 +78,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
 
 	@Override
 	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-		View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_credit_card, parent, false);
+		View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_card, parent, false);
 		return new ViewHolder(v, this);
 	}
 

@@ -46,6 +46,9 @@ public class Expense extends BaseModel {
 	@Column @Setter
 	boolean charged;
 
+	@Column @Setter
+	boolean chargeNextMonth;
+
 	public static List<Expense> all() {
 		return initQuery().queryList();
 	}
@@ -62,6 +65,30 @@ public class Expense extends BaseModel {
 				.where(Expense_Table.charged.eq(true))
 				.and(Expense_Table.newValue.greaterThan(0))
 				.queryList();
+	}
+
+	public static List<Expense> creditCardBills(Card creditCard, DateTime date) {
+		DateTime initOfMonth = date.withDate(date.getYear(), date.getMonthOfYear() - 1, 1);
+		DateTime endOfMonth = date.withDate(date.getYear(), date.getMonthOfYear(), 1);
+
+		List<Expense> bills = initQuery()
+									.where(Expense_Table.chargeableId.eq(creditCard.getId()))
+									.and(Expense_Table.chargeableType.eq(Card.class.getName()))
+									.and(Expense_Table.date.between(initOfMonth).and(endOfMonth))
+									.and(Expense_Table.chargeNextMonth.eq(true))
+									.queryList();
+
+		initOfMonth = endOfMonth;
+		endOfMonth = date.withDate(date.getYear(), date.getMonthOfYear() + 1, 1);
+
+		bills.addAll(initQuery()
+					.where(Expense_Table.chargeableId.eq(creditCard.getId()))
+					.and(Expense_Table.chargeableType.eq(Card.class.getName()))
+					.and(Expense_Table.date.between(initOfMonth).and(endOfMonth))
+					.and(Expense_Table.chargeNextMonth.eq(false))
+					.queryList());
+
+		return bills;
 	}
 
 	private static From<Expense> initQuery() {
