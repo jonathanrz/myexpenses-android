@@ -1,86 +1,45 @@
 package br.com.jonathanzanella.myexpenses.views;
 
 import android.content.Context;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 
-import org.joda.time.DateTime;
-
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.adapter.AccountAdapter;
-import br.com.jonathanzanella.myexpenses.adapter.CreditCardAdapter;
-import br.com.jonathanzanella.myexpenses.model.Card;
-import br.com.jonathanzanella.myexpenses.model.CardType;
+import br.com.jonathanzanella.myexpenses.adapter.ResumePagerAdapter;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
- * Created by jzanella onCard 2/2/16.
+ * Created by Jonathan Zanella on 03/02/16.
  */
 public class ResumeView extends BaseView {
-	@Bind(R.id.view_resume_accounts)
-	RecyclerView accounts;
-	@Bind(R.id.view_resume_credit_card_bills)
-	RecyclerView creditCardBills;
+    @Bind(R.id.view_resume__tabs)
+    TabLayout tabs;
+    @Bind(R.id.view_resume_pager)
+    ViewPager pager;
 
-	private AccountAdapter accountAdapter;
+    public ResumeView(Context context) {
+        super(context);
+    }
 
-	public ResumeView(Context context) {
-		super(context);
-	}
+    public ResumeView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
 
-	public ResumeView(Context context, AttributeSet attrs) {
-		super(context, attrs);
-	}
+    public ResumeView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+    }
 
-	public ResumeView(Context context, AttributeSet attrs, int defStyleAttr) {
-		super(context, attrs, defStyleAttr);
-	}
+    @Override
+    protected void init() {
+        inflate(getContext(), R.layout.view_resume, this);
+        ButterKnife.bind(this);
 
-	@Override
-	protected void init() {
-		inflate(getContext(), R.layout.view_resume, this);
-		ButterKnife.bind(this);
+        ResumePagerAdapter adapter = new ResumePagerAdapter(getContext());
+        pager.setAdapter(adapter);
+        pager.setCurrentItem(ResumePagerAdapter.INIT_MONTH_VISIBLE);
 
-		initAccount();
-		initCreditCard();
-	}
-
-	private void initAccount() {
-		accountAdapter = new AccountAdapter();
-		accountAdapter.setSimplified(true);
-		accountAdapter.loadData();
-
-		accounts.setAdapter(accountAdapter);
-		accounts.setHasFixedSize(true);
-		accounts.setLayoutManager(new GridLayoutManager(getContext(), 3));
-	}
-
-	private void initCreditCard() {
-		Card creditCard = null;
-		for (Card card : Card.all()) {
-			if(card.getType() == CardType.CREDIT) {
-				creditCard = card;
-				break;
-			}
-		}
-		if(creditCard == null)
-			return;
-
-		CreditCardAdapter adapter = new CreditCardAdapter();
-		adapter.loadData(creditCard, DateTime.now());
-
-		creditCardBills.setAdapter(adapter);
-		creditCardBills.setHasFixedSize(true);
-		creditCardBills.setLayoutManager(new LinearLayoutManager(getContext()));
-	}
-
-	@Override
-	public void refreshData() {
-		super.refreshData();
-		accountAdapter.loadData();
-		accountAdapter.notifyDataSetChanged();
-	}
+        tabs.setupWithViewPager(pager);
+    }
 }
