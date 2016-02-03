@@ -14,7 +14,7 @@ import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.services.CashierService;
 import br.com.jonathanzanella.myexpenses.views.AccountView;
 import br.com.jonathanzanella.myexpenses.views.BaseView;
-import br.com.jonathanzanella.myexpenses.views.CreditCardView;
+import br.com.jonathanzanella.myexpenses.views.CardView;
 import br.com.jonathanzanella.myexpenses.views.ExpenseView;
 import br.com.jonathanzanella.myexpenses.views.ReceiptView;
 import br.com.jonathanzanella.myexpenses.views.ResumeView;
@@ -104,7 +104,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 				drawer.closeDrawers();
 				return true;
 			case R.id.menu_credit_card:
-				addViewToContent(new CreditCardView(this));
+				addViewToContent(new CardView(this));
 				setTitle(R.string.credit_card);
 				drawer.closeDrawers();
 				return true;

@@ -8,28 +8,28 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.model.CreditCard;
+import br.com.jonathanzanella.myexpenses.model.Card;
 import butterknife.Bind;
 
 /**
  * Created by jzanella on 1/31/16.
  */
-public class ShowCreditCardActivity extends BaseActivity {
+public class ShowCardActivity extends BaseActivity {
 	public static final String KEY_CREDIT_CARD_ID = "KeyCreateCardId";
 
-	@Bind(R.id.act_show_credit_card_name)
-	TextView creditCardName;
-	@Bind(R.id.act_show_credit_card_account)
-	TextView creditCardAccount;
-	@Bind(R.id.act_show_credit_card_type)
-	TextView creditCardType;
+	@Bind(R.id.act_show_card_name)
+	TextView cardName;
+	@Bind(R.id.act_show_card_account)
+	TextView cardAccount;
+	@Bind(R.id.act_show_card_type)
+	TextView cardType;
 
-	private CreditCard creditCard;
+	private Card card;
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_show_credit_card);
+		setContentView(R.layout.activity_show_card);
 	}
 
 	@Override
@@ -40,14 +40,14 @@ public class ShowCreditCardActivity extends BaseActivity {
 	}
 
 	private void setData() {
-		creditCardName.setText(creditCard.getName());
-		creditCardAccount.setText(creditCard.getAccount().getName());
-		switch (creditCard.getType()) {
+		cardName.setText(card.getName());
+		cardAccount.setText(card.getAccount().getName());
+		switch (card.getType()) {
 			case CREDIT:
-				creditCardType.setText(R.string.credit);
+				cardType.setText(R.string.credit);
 				break;
 			case DEBIT:
-				creditCardType.setText(R.string.debit);
+				cardType.setText(R.string.debit);
 				break;
 		}
 	}
@@ -58,21 +58,21 @@ public class ShowCreditCardActivity extends BaseActivity {
 		if(extras == null)
 			return;
 		if(extras.containsKey(KEY_CREDIT_CARD_ID))
-			creditCard = CreditCard.find(extras.getLong(KEY_CREDIT_CARD_ID));
+			card = Card.find(extras.getLong(KEY_CREDIT_CARD_ID));
 	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putLong(KEY_CREDIT_CARD_ID, creditCard.getId());
+		outState.putLong(KEY_CREDIT_CARD_ID, card.getId());
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
 
-		if(creditCard != null) {
-			creditCard = CreditCard.find(creditCard.getId());
+		if(card != null) {
+			card = Card.find(card.getId());
 			setData();
 		}
 	}
@@ -87,8 +87,8 @@ public class ShowCreditCardActivity extends BaseActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_edit:
-				Intent i = new Intent(this, EditCreditCardActivity.class);
-				i.putExtra(EditCreditCardActivity.KEY_CREDIT_CARD_ID, creditCard.getId());
+				Intent i = new Intent(this, EditCardActivity.class);
+				i.putExtra(EditCardActivity.KEY_CARD_ID, card.getId());
 				startActivity(i);
 				break;
 		}

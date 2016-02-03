@@ -9,48 +9,48 @@ import android.widget.RadioGroup;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.model.Account;
-import br.com.jonathanzanella.myexpenses.model.CreditCard;
-import br.com.jonathanzanella.myexpenses.model.CreditCardType;
+import br.com.jonathanzanella.myexpenses.model.Card;
+import br.com.jonathanzanella.myexpenses.model.CardType;
 import butterknife.Bind;
 import butterknife.OnClick;
 
 /**
  * Created by Jonathan Zanella on 26/01/16.
  */
-public class EditCreditCardActivity extends BaseActivity {
-	public static final String KEY_CREDIT_CARD_ID = "KeyCreditCardId";
+public class EditCardActivity extends BaseActivity {
+	public static final String KEY_CARD_ID = "KeyCardId";
 	private static final int REQUEST_SELECT_ACCOUNT = 1006;
 
-	@Bind(R.id.act_edit_credit_card_name)
+	@Bind(R.id.act_edit_card_name)
 	EditText editName;
-	@Bind(R.id.act_edit_credit_card_account)
+	@Bind(R.id.act_edit_card_account)
 	EditText editAccount;
-	@Bind(R.id.act_edit_credit_card_type)
+	@Bind(R.id.act_edit_card_type)
 	RadioGroup radioType;
 
-	private CreditCard creditCard;
+	private Card card;
 	private Account account;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_edit_credit_card);
+		setContentView(R.layout.activity_edit_card);
 	}
 
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
 
-		if(creditCard != null) {
-			editName.setText(creditCard.getName());
-			account = creditCard.getAccount();
+		if(card != null) {
+			editName.setText(card.getName());
+			account = card.getAccount();
 			onAccountSelected();
-			switch (creditCard.getType()) {
+			switch (card.getType()) {
 				case CREDIT:
-					radioType.check(R.id.act_edit_credit_card_type_credit);
+					radioType.check(R.id.act_edit_card_type_credit);
 					break;
 				case DEBIT:
-					radioType.check(R.id.act_edit_credit_card_type_debit);
+					radioType.check(R.id.act_edit_card_type_debit);
 					break;
 			}
 		}
@@ -63,15 +63,15 @@ public class EditCreditCardActivity extends BaseActivity {
 		if(extras == null)
 			return;
 
-		if(extras.containsKey(KEY_CREDIT_CARD_ID))
-			creditCard = CreditCard.find(extras.getLong(KEY_CREDIT_CARD_ID));
+		if(extras.containsKey(KEY_CARD_ID))
+			card = Card.find(extras.getLong(KEY_CARD_ID));
 	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		if(creditCard != null)
-			outState.putLong(KEY_CREDIT_CARD_ID, creditCard.getId());
+		if(card != null)
+			outState.putLong(KEY_CARD_ID, card.getId());
 	}
 
 	@Override
@@ -90,9 +90,9 @@ public class EditCreditCardActivity extends BaseActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	@OnClick(R.id.act_edit_credit_card_account)
+	@OnClick(R.id.act_edit_card_account)
 	void onAccount() {
-		if(creditCard == null)
+		if(card == null)
 			startActivityForResult(new Intent(this, ListAccountActivity.class), REQUEST_SELECT_ACCOUNT);
 	}
 
@@ -116,24 +116,24 @@ public class EditCreditCardActivity extends BaseActivity {
 	}
 
 	private void save() {
-		if(creditCard == null)
-			creditCard = new CreditCard();
-		creditCard.setName(editName.getText().toString());
-		creditCard.setAccount(account);
+		if(card == null)
+			card = new Card();
+		card.setName(editName.getText().toString());
+		card.setAccount(account);
 		switch (radioType.getCheckedRadioButtonId()) {
-			case R.id.act_edit_credit_card_type_credit: {
-				creditCard.setType(CreditCardType.CREDIT);
+			case R.id.act_edit_card_type_credit: {
+				card.setType(CardType.CREDIT);
 				break;
 			}
-			case R.id.act_edit_credit_card_type_debit: {
-				creditCard.setType(CreditCardType.DEBIT);
+			case R.id.act_edit_card_type_debit: {
+				card.setType(CardType.DEBIT);
 				break;
 			}
 		}
-		creditCard.save();
+		card.save();
 
 		Intent i = new Intent();
-		i.putExtra(KEY_CREDIT_CARD_ID, creditCard.getId());
+		i.putExtra(KEY_CARD_ID, card.getId());
 		setResult(RESULT_OK, i);
 		finish();
 	}

@@ -17,7 +17,7 @@ import lombok.Setter;
  * Created by jzanella on 1/31/16.
  */
 @Table(database = MyDatabase.class)
-public class CreditCard extends BaseModel implements Chargeable {
+public class Card extends BaseModel implements Chargeable {
 	@Column
 	@PrimaryKey(autoincrement = true) @Getter
 	long id;
@@ -26,20 +26,20 @@ public class CreditCard extends BaseModel implements Chargeable {
 	String name;
 
 	@Column @Getter @Setter
-	CreditCardType type;
+	CardType type;
 
 	@Column
 	long accountId;
 
-	public static List<CreditCard> all() {
+	public static List<Card> all() {
 		return initQuery().queryList();
 	}
 
-	private static From<CreditCard> initQuery() {
-		return SQLite.select().from(CreditCard.class);
+	private static From<Card> initQuery() {
+		return SQLite.select().from(Card.class);
 	}
 
-	public static CreditCard find(long id) {
+	public static Card find(long id) {
 		return initQuery().where(Source_Table.id.eq(id)).querySingle();
 	}
 
@@ -53,7 +53,7 @@ public class CreditCard extends BaseModel implements Chargeable {
 
 	@Override
 	public void debit(int value) {
-		if(type == CreditCardType.DEBIT) {
+		if(type == CardType.DEBIT) {
 			Account a = getAccount();
 			a.debit(value);
 			a.save();

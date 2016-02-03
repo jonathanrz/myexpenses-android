@@ -26,8 +26,7 @@
             android:parentActivityName=".activities.MainActivity"/>
         <activity
             android:name=".activities.ListAccountActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.Dialog"/>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activities.EditSourceActivity"
             android:screenOrientation="portrait"
@@ -38,14 +37,13 @@
             android:parentActivityName=".activities.MainActivity"/>
         <activity
             android:name=".activities.ListSourceActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.Dialog"/>
+            android:screenOrientation="portrait"/>
         <activity
-            android:name=".activities.EditCreditCardActivity"
+            android:name=".activities.EditCardActivity"
             android:screenOrientation="portrait"
             android:parentActivityName=".activities.MainActivity"/>
         <activity
-            android:name=".activities.ShowCreditCardActivity"
+            android:name=".activities.ShowCardActivity"
             android:screenOrientation="portrait"
             android:parentActivityName=".activities.MainActivity"/>
         <activity

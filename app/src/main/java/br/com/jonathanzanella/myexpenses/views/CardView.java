@@ -9,9 +9,9 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.activities.EditCreditCardActivity;
-import br.com.jonathanzanella.myexpenses.adapter.CreditCardAdapter;
-import br.com.jonathanzanella.myexpenses.model.CreditCard;
+import br.com.jonathanzanella.myexpenses.activities.EditCardActivity;
+import br.com.jonathanzanella.myexpenses.adapter.CardAdapter;
+import br.com.jonathanzanella.myexpenses.model.Card;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -19,31 +19,31 @@ import butterknife.OnClick;
 /**
  * Created by Jonathan Zanella on 26/01/16.
  */
-public class CreditCardView extends BaseView {
-    private static final int REQUEST_ADD_CREDIT_CARD = 1005;
-    private CreditCardAdapter adapter;
+public class CardView extends BaseView {
+    private static final int REQUEST_ADD_CARD = 1005;
+    private CardAdapter adapter;
 
-    @Bind(R.id.view_credit_card_list)
+    @Bind(R.id.view_card_list)
     RecyclerView cards;
 
-    public CreditCardView(Context context) {
+    public CardView(Context context) {
         super(context);
     }
 
-    public CreditCardView(Context context, AttributeSet attrs) {
+    public CardView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public CreditCardView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public CardView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
     @Override
     protected void init() {
-        inflate(getContext(), R.layout.view_credit_card, this);
+        inflate(getContext(), R.layout.view_card, this);
         ButterKnife.bind(this);
 
-        adapter = new CreditCardAdapter();
+        adapter = new CardAdapter();
         adapter.loadData();
 
         cards.setAdapter(adapter);
@@ -51,12 +51,12 @@ public class CreditCardView extends BaseView {
         cards.setItemAnimator(new DefaultItemAnimator());
     }
 
-    @OnClick(R.id.view_credit_card_fab)
+    @OnClick(R.id.view_card_fab)
     void onFab() {
         Context ctx = getContext();
-        Intent i = new Intent(getContext(), EditCreditCardActivity.class);
+        Intent i = new Intent(getContext(), EditCardActivity.class);
         if(ctx instanceof Activity) {
-            ((Activity) ctx).startActivityForResult(i, REQUEST_ADD_CREDIT_CARD);
+            ((Activity) ctx).startActivityForResult(i, REQUEST_ADD_CARD);
         } else {
             ctx.startActivity(i);
         }
@@ -67,9 +67,9 @@ public class CreditCardView extends BaseView {
         super.onActivityResult(requestCode, resultCode, data);
 
         switch (requestCode) {
-            case REQUEST_ADD_CREDIT_CARD:
+            case REQUEST_ADD_CARD:
                 if(resultCode == Activity.RESULT_OK) {
-                    CreditCard c = CreditCard.find(data.getLongExtra(EditCreditCardActivity.KEY_CREDIT_CARD_ID, 0L));
+                    Card c = Card.find(data.getLongExtra(EditCardActivity.KEY_CARD_ID, 0L));
                     if(c != null)
                         adapter.addCreditCard(c);
                 }

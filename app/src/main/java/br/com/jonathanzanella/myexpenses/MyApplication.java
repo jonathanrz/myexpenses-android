@@ -9,6 +9,8 @@ import net.danlew.android.joda.JodaTimeAndroid;
 import org.joda.time.DateTime;
 
 import br.com.jonathanzanella.myexpenses.model.Account;
+import br.com.jonathanzanella.myexpenses.model.Card;
+import br.com.jonathanzanella.myexpenses.model.CardType;
 import br.com.jonathanzanella.myexpenses.model.Source;
 
 /**
@@ -23,12 +25,12 @@ public class MyApplication extends Application {
 		JodaTimeAndroid.init(this);
 
 		if(Account.all().size() == 0) {
+			Account bankAcc = new Account();
+			bankAcc.setBalance(100000);
+			bankAcc.setBalanceDate(DateTime.now());
+			bankAcc.setName("Banco");
+			bankAcc.save();
 			Account a = new Account();
-			a.setBalance(100000);
-			a.setBalanceDate(DateTime.now());
-			a.setName("Banco");
-			a.save();
-			a = new Account();
 			a.setBalance(1000);
 			a.setBalanceDate(DateTime.now());
 			a.setName("Bolso");
@@ -54,6 +56,17 @@ public class MyApplication extends Application {
 			s = new Source();
 			s.setName("Sparta");
 			s.save();
+
+			Card c = new Card();
+			c.setName("Nubank");
+			c.setType(CardType.CREDIT);
+			c.setAccount(bankAcc);
+			c.save();
+			c = new Card();
+			c.setName("Débito");
+			c.setType(CardType.DEBIT);
+			c.setAccount(bankAcc);
+			c.save();
 		}
 	}
 }

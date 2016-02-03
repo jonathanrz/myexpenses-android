@@ -17,14 +17,14 @@
         <TableRow>
 
             <TextView
-                android:id="@+id/act_show_credit_card_name_stt"
+                android:id="@+id/act_show_card_name_stt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/name"
                 android:layout_marginEnd="@dimen/min_spacing"/>
 
             <TextView
-                android:id="@+id/act_show_credit_card_name"
+                android:id="@+id/act_show_card_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorPrimary"/>
@@ -34,14 +34,14 @@
         <TableRow>
 
             <TextView
-                android:id="@+id/act_show_credit_card_account_stt"
+                android:id="@+id/act_show_card_account_stt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/account"
                 android:layout_marginEnd="@dimen/min_spacing"/>
 
             <TextView
-                android:id="@+id/act_show_credit_card_account"
+                android:id="@+id/act_show_card_account"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorPrimary"/>
@@ -51,14 +51,14 @@
 	    <TableRow>
 
 		    <TextView
-			    android:id="@+id/act_show_credit_card_type_stt"
+			    android:id="@+id/act_show_card_type_stt"
 			    android:layout_width="wrap_content"
 			    android:layout_height="wrap_content"
 			    android:text="@string/type"
 			    android:layout_marginEnd="@dimen/min_spacing"/>
 
 		    <TextView
-			    android:id="@+id/act_show_credit_card_type"
+			    android:id="@+id/act_show_card_type"
 			    android:layout_width="wrap_content"
 			    android:layout_height="wrap_content"
 			    android:textColor="@color/colorPrimary"/>

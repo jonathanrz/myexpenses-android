@@ -11,16 +11,16 @@ import android.support.v7.widget.RecyclerView;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.adapter.AccountAdapter;
 import br.com.jonathanzanella.myexpenses.adapter.AccountAdapterCallback;
-import br.com.jonathanzanella.myexpenses.adapter.CreditCardAdapter;
-import br.com.jonathanzanella.myexpenses.adapter.CreditCardAdapterCallback;
+import br.com.jonathanzanella.myexpenses.adapter.CardAdapter;
+import br.com.jonathanzanella.myexpenses.adapter.CardAdapterCallback;
 import br.com.jonathanzanella.myexpenses.model.Account;
-import br.com.jonathanzanella.myexpenses.model.CreditCard;
+import br.com.jonathanzanella.myexpenses.model.Card;
 import butterknife.Bind;
 
 /**
- * Created by jzanella on 2/1/16.
+ * Created by jzanella onCard 2/1/16.
  */
-public class ListChargeableActivity extends BaseActivity implements AccountAdapterCallback, CreditCardAdapterCallback {
+public class ListChargeableActivity extends BaseActivity implements AccountAdapterCallback, CardAdapterCallback {
 	public static final String KEY_CHARGEABLE_SELECTED_ID = "KeyChargeableSelectId";
 	public static final String KEY_CHARGEABLE_SELECTED_TYPE = "KeyChargeableSelectType";
 
@@ -57,7 +57,7 @@ public class ListChargeableActivity extends BaseActivity implements AccountAdapt
 	}
 
 	private void initCreditCards() {
-		CreditCardAdapter adapter = new CreditCardAdapter();
+		CardAdapter adapter = new CardAdapter();
 		adapter.setCallback(this);
 		adapter.loadData();
 
@@ -77,10 +77,10 @@ public class ListChargeableActivity extends BaseActivity implements AccountAdapt
 	}
 
 	@Override
-	public void onCreditCardSelected(CreditCard creditCard) {
+	public void onCard(Card card) {
 		Intent i = new Intent();
-		i.putExtra(KEY_CHARGEABLE_SELECTED_ID, creditCard.getId());
-		i.putExtra(KEY_CHARGEABLE_SELECTED_TYPE, creditCard.getClass().getName());
+		i.putExtra(KEY_CHARGEABLE_SELECTED_ID, card.getId());
+		i.putExtra(KEY_CHARGEABLE_SELECTED_TYPE, card.getClass().getName());
 		setResult(RESULT_OK, i);
 		finish();
 	}

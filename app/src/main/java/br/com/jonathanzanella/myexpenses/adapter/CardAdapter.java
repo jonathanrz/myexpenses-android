@@ -13,20 +13,20 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.activities.ShowCreditCardActivity;
-import br.com.jonathanzanella.myexpenses.model.CreditCard;
+import br.com.jonathanzanella.myexpenses.activities.ShowCardActivity;
+import br.com.jonathanzanella.myexpenses.model.Card;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import lombok.Setter;
 
 /**
- * Created by Jonathan Zanella on 26/01/16.
+ * Created by Jonathan Zanella onCard 26/01/16.
  */
-public class CreditCardAdapter extends RecyclerView.Adapter<CreditCardAdapter.ViewHolder> {
-	protected List<CreditCard> cards;
+public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
+	protected List<Card> cards;
 
 	@Setter
-	CreditCardAdapterCallback callback;
+	CardAdapterCallback callback;
 
 	public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 		@Bind(R.id.row_credit_card_name)
@@ -36,9 +36,9 @@ public class CreditCardAdapter extends RecyclerView.Adapter<CreditCardAdapter.Vi
 		@Bind(R.id.row_credit_card_type)
 		TextView type;
 
-		WeakReference<CreditCardAdapter> adapterWeakReference;
+		WeakReference<CardAdapter> adapterWeakReference;
 
-		public ViewHolder(View itemView, CreditCardAdapter adapter) {
+		public ViewHolder(View itemView, CardAdapter adapter) {
 			super(itemView);
 			adapterWeakReference = new WeakReference<>(adapter);
 
@@ -47,10 +47,10 @@ public class CreditCardAdapter extends RecyclerView.Adapter<CreditCardAdapter.Vi
 			itemView.setOnClickListener(this);
 		}
 
-		public void setData(CreditCard creditCard) {
-			name.setText(creditCard.getName());
-			account.setText(creditCard.getAccount().getName());
-			switch (creditCard.getType()) {
+		public void setData(Card card) {
+			name.setText(card.getName());
+			account.setText(card.getAccount().getName());
+			switch (card.getType()) {
 				case CREDIT:
 					type.setText(R.string.credit);
 					break;
@@ -62,14 +62,14 @@ public class CreditCardAdapter extends RecyclerView.Adapter<CreditCardAdapter.Vi
 
 		@Override
 		public void onClick(View v) {
-			CreditCardAdapter adapter = adapterWeakReference.get();
-			CreditCard creditCard = adapter.getCreditCard(getAdapterPosition());
-			if(creditCard != null) {
+			CardAdapter adapter = adapterWeakReference.get();
+			Card card = adapter.getCreditCard(getAdapterPosition());
+			if(card != null) {
 				if(adapter.callback != null) {
-					adapter.callback.onCreditCardSelected(creditCard);
+					adapter.callback.onCard(card);
 				} else {
-					Intent i = new Intent(itemView.getContext(), ShowCreditCardActivity.class);
-					i.putExtra(ShowCreditCardActivity.KEY_CREDIT_CARD_ID, creditCard.getId());
+					Intent i = new Intent(itemView.getContext(), ShowCardActivity.class);
+					i.putExtra(ShowCardActivity.KEY_CREDIT_CARD_ID, card.getId());
 					itemView.getContext().startActivity(i);
 				}
 			}
@@ -93,15 +93,16 @@ public class CreditCardAdapter extends RecyclerView.Adapter<CreditCardAdapter.Vi
 	}
 
 	public void loadData() {
-		cards = CreditCard.all();
+		cards = Card.all();
 	}
 
-	public void addCreditCard(@NonNull CreditCard creditCard) {
-		cards.add(creditCard);
+	public void addCreditCard(@NonNull Card card) {
+		cards.add(card);
 		notifyItemInserted(cards.size() - 1);
 	}
 
-	public @Nullable CreditCard getCreditCard(int position) {
+	public @Nullable
+	Card getCreditCard(int position) {
 		return cards != null ? cards.get(position) : null;
 	}
 }
