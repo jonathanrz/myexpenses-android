@@ -24,7 +24,7 @@
 		<item
 			android:id="@+id/menu_receipts"
 			android:checked="false"
-			android:title="@string/recepts"
+			android:title="@string/receipts"
 			android:icon="@drawable/ic_receipt_white_24dp"/>
 		<item
 			android:id="@+id/menu_expenses"

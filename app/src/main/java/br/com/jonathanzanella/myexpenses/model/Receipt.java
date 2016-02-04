@@ -69,6 +69,12 @@ public class Receipt extends BaseModel {
 				.queryList();
 	}
 
+	public static List<Receipt> monthly(DateTime month) {
+		return initQuery()
+				.where(Receipt_Table.date.between(month).and(month.plusMonths(1)))
+				.queryList();
+	}
+
 	private static From<Receipt> initQuery() {
 		return SQLite.select().from(Receipt.class);
 	}

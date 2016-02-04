@@ -1,16 +1,17 @@
 package br.com.jonathanzanella.myexpenses.views;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.AttributeSet;
 
 import org.joda.time.DateTime;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.adapter.AccountAdapter;
 import br.com.jonathanzanella.myexpenses.adapter.CreditCardAdapter;
+import br.com.jonathanzanella.myexpenses.adapter.ReceiptMonthlyResumeAdapter;
 import br.com.jonathanzanella.myexpenses.model.Card;
 import br.com.jonathanzanella.myexpenses.model.CardType;
 import butterknife.Bind;
@@ -19,24 +20,23 @@ import butterknife.ButterKnife;
 /**
  * Created by jzanella onCard 2/2/16.
  */
+@SuppressLint("ViewConstructor")
 public class MonthlyResumeView extends BaseView {
 	@Bind(R.id.view_monthly_resume_accounts)
 	RecyclerView accounts;
+	@Bind(R.id.view_monthly_resume_receipts)
+	RecyclerView receipts;
 	@Bind(R.id.view_monthly_resume_credit_card_bills)
 	RecyclerView creditCardBills;
 
 	private AccountAdapter accountAdapter;
+	private ReceiptMonthlyResumeAdapter receiptAdapter;
 
-	public MonthlyResumeView(Context context) {
+	public MonthlyResumeView(Context context, DateTime month) {
 		super(context);
-	}
 
-	public MonthlyResumeView(Context context, AttributeSet attrs) {
-		super(context, attrs);
-	}
-
-	public MonthlyResumeView(Context context, AttributeSet attrs, int defStyleAttr) {
-		super(context, attrs, defStyleAttr);
+		receiptAdapter.loadData(month);
+		receiptAdapter.notifyDataSetChanged();
 	}
 
 	@Override
@@ -45,6 +45,7 @@ public class MonthlyResumeView extends BaseView {
 		ButterKnife.bind(this);
 
 		initAccount();
+		initReceipts();
 		initCreditCard();
 	}
 
@@ -56,6 +57,14 @@ public class MonthlyResumeView extends BaseView {
 		accounts.setAdapter(accountAdapter);
 		accounts.setHasFixedSize(true);
 		accounts.setLayoutManager(new GridLayoutManager(getContext(), 3));
+	}
+
+	private void initReceipts() {
+		receiptAdapter = new ReceiptMonthlyResumeAdapter();
+
+		receipts.setAdapter(receiptAdapter);
+		receipts.setHasFixedSize(true);
+		receipts.setLayoutManager(new LinearLayoutManager(getContext()));
 	}
 
 	private void initCreditCard() {

@@ -37,7 +37,7 @@ public class ResumePagerAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup collection, int position) {
-        MonthlyResumeView view = new MonthlyResumeView(context);
+        MonthlyResumeView view = new MonthlyResumeView(context, months.get(position));
         collection.addView(view);
         return view;
     }

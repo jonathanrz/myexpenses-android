@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+			  android:layout_margin="@dimen/min_spacing">
+
+	<TextView
+		android:id="@+id/row_monthly_resume_receipt_date"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginEnd="@dimen/min_spacing"/>
+
+	<TextView
+		android:id="@+id/row_monthly_resume_receipt_source"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginEnd="@dimen/min_spacing"/>
+
+	<TextView
+		android:id="@+id/row_monthly_resume_receipt_name"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_weight="1"
+		android:layout_marginEnd="@dimen/min_spacing"/>
+
+	<TextView
+		android:id="@+id/row_monthly_resume_receipt_income"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"/>
+
+</LinearLayout>

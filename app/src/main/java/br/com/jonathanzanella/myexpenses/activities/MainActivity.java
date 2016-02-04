@@ -110,7 +110,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 				return true;
 			case R.id.menu_receipts:
 				addViewToContent(new ReceiptView(this));
-				setTitle(R.string.recepts);
+				setTitle(R.string.receipts);
 				drawer.closeDrawers();
 				return true;
 			case R.id.menu_expenses:
