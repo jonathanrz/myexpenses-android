@@ -55,6 +55,11 @@ public class Account extends BaseModel implements Chargeable {
     }
 
     @Override
+    public ChargeableType getChargeableType() {
+        return ChargeableType.ACCOUNT;
+    }
+
+    @Override
     public void debit(int value) {
         balance -= value;
     }

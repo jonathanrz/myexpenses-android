@@ -41,7 +41,7 @@ public class Expense extends BaseModel {
 	long chargeableId;
 
 	@Column
-	String chargeableType;
+	ChargeableType chargeableType;
 
 	@Column @Setter
 	boolean charged;
@@ -73,7 +73,7 @@ public class Expense extends BaseModel {
 
 		List<Expense> bills = initQuery()
 									.where(Expense_Table.chargeableId.eq(creditCard.getId()))
-									.and(Expense_Table.chargeableType.eq(Card.class.getName()))
+									.and(Expense_Table.chargeableType.eq(ChargeableType.CARD))
 									.and(Expense_Table.date.between(initOfMonth).and(endOfMonth))
 									.and(Expense_Table.chargeNextMonth.eq(true))
 									.queryList();
@@ -83,7 +83,7 @@ public class Expense extends BaseModel {
 
 		bills.addAll(initQuery()
 					.where(Expense_Table.chargeableId.eq(creditCard.getId()))
-					.and(Expense_Table.chargeableType.eq(Card.class.getName()))
+					.and(Expense_Table.chargeableType.eq(ChargeableType.CARD))
 					.and(Expense_Table.date.between(initOfMonth).and(endOfMonth))
 					.and(Expense_Table.chargeNextMonth.eq(false))
 					.queryList());
@@ -122,7 +122,7 @@ public class Expense extends BaseModel {
 	}
 
 	public void setChargeable(Chargeable chargeable) {
-		chargeableType = chargeable.getClass().getName();
+		chargeableType = chargeable.getChargeableType();
 		chargeableId = chargeable.getId();
 	}
 
@@ -130,11 +130,13 @@ public class Expense extends BaseModel {
 		return Expense.findChargeable(chargeableType, chargeableId);
 	}
 
-	public static Chargeable findChargeable(String type, long id) {
-		if(Account.class.getName().compareTo(type) == 0)
-			return Account.find(id);
-		if(Card.class.getName().compareTo(type) == 0)
-			return Card.find(id);
+	public static Chargeable findChargeable(ChargeableType type, long id) {
+		switch (type) {
+			case ACCOUNT:
+				return Account.find(id);
+			case CARD:
+				return Card.find(id);
+		}
 		return null;
 	}
 }

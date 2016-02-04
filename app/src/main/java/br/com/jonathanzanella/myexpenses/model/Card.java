@@ -52,6 +52,11 @@ public class Card extends BaseModel implements Chargeable {
 	}
 
 	@Override
+	public ChargeableType getChargeableType() {
+		return ChargeableType.CARD;
+	}
+
+	@Override
 	public void debit(int value) {
 		if(type == CardType.DEBIT) {
 			Account a = getAccount();

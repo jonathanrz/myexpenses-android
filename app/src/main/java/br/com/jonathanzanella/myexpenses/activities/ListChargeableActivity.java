@@ -71,7 +71,7 @@ public class ListChargeableActivity extends BaseActivity implements AccountAdapt
 	public void onAccountSelected(Account account) {
 		Intent i = new Intent();
 		i.putExtra(KEY_CHARGEABLE_SELECTED_ID, account.getId());
-		i.putExtra(KEY_CHARGEABLE_SELECTED_TYPE, account.getClass().getName());
+		i.putExtra(KEY_CHARGEABLE_SELECTED_TYPE, account.getChargeableType());
 		setResult(RESULT_OK, i);
 		finish();
 	}
@@ -80,7 +80,7 @@ public class ListChargeableActivity extends BaseActivity implements AccountAdapt
 	public void onCard(Card card) {
 		Intent i = new Intent();
 		i.putExtra(KEY_CHARGEABLE_SELECTED_ID, card.getId());
-		i.putExtra(KEY_CHARGEABLE_SELECTED_TYPE, card.getClass().getName());
+		i.putExtra(KEY_CHARGEABLE_SELECTED_TYPE, card.getChargeableType());
 		setResult(RESULT_OK, i);
 		finish();
 	}

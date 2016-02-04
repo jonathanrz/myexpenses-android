@@ -15,6 +15,7 @@ import java.text.NumberFormat;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.helper.CurrencyTextWatch;
 import br.com.jonathanzanella.myexpenses.model.Chargeable;
+import br.com.jonathanzanella.myexpenses.model.ChargeableType;
 import br.com.jonathanzanella.myexpenses.model.Expense;
 import br.com.jonathanzanella.myexpenses.model.Receipt;
 import br.com.jonathanzanella.myexpenses.services.CashierService;
@@ -78,7 +79,7 @@ public class EditExpenseActivity extends BaseActivity {
 			expense = Expense.find(extras.getLong(KEY_EXPENSE_ID));
 
 		if(extras.containsKey(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_TYPE)) {
-			chargeable = Expense.findChargeable(extras.getString(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_TYPE),
+			chargeable = Expense.findChargeable((ChargeableType) extras.getSerializable(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_TYPE),
 										extras.getLong(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_ID));
 		}
 	}
@@ -90,7 +91,7 @@ public class EditExpenseActivity extends BaseActivity {
 			outState.putLong(KEY_EXPENSE_ID, expense.getId());
 		if(chargeable != null) {
 			outState.putLong(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_ID, chargeable.getId());
-			outState.putString(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_TYPE, chargeable.getClass().getName());
+			outState.putSerializable(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_TYPE, chargeable.getChargeableType());
 		}
 	}
 
@@ -101,7 +102,7 @@ public class EditExpenseActivity extends BaseActivity {
 			case REQUEST_SELECT_CHARGEABLE: {
 				if(resultCode == RESULT_OK) {
 					chargeable = Expense.findChargeable(
-							data.getStringExtra(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_TYPE),
+							(ChargeableType) data.getSerializableExtra(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_TYPE),
 							data.getLongExtra(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_ID, 0L));
 					if(chargeable != null)
 						onChargeableSelected();
