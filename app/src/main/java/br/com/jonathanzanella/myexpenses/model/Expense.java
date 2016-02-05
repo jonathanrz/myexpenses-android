@@ -91,6 +91,12 @@ public class Expense extends BaseModel {
 		return bills;
 	}
 
+	public static List<Expense> monthly(DateTime month) {
+		return initQuery()
+				.where(Receipt_Table.date.between(month).and(month.plusMonths(1)))
+				.queryList();
+	}
+
 	private static From<Expense> initQuery() {
 		return SQLite.select().from(Expense.class);
 	}

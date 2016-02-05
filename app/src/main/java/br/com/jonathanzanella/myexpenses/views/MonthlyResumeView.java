@@ -10,10 +10,8 @@ import org.joda.time.DateTime;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.adapter.AccountAdapter;
-import br.com.jonathanzanella.myexpenses.adapter.CreditCardAdapter;
+import br.com.jonathanzanella.myexpenses.adapter.ExpenseMonthlyResumeAdapter;
 import br.com.jonathanzanella.myexpenses.adapter.ReceiptMonthlyResumeAdapter;
-import br.com.jonathanzanella.myexpenses.model.Card;
-import br.com.jonathanzanella.myexpenses.model.CardType;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -26,17 +24,21 @@ public class MonthlyResumeView extends BaseView {
 	RecyclerView accounts;
 	@Bind(R.id.view_monthly_resume_receipts)
 	RecyclerView receipts;
-	@Bind(R.id.view_monthly_resume_credit_card_bills)
-	RecyclerView creditCardBills;
+	@Bind(R.id.view_monthly_resume_expenses)
+	RecyclerView expenses;
 
 	private AccountAdapter accountAdapter;
 	private ReceiptMonthlyResumeAdapter receiptAdapter;
+	private ExpenseMonthlyResumeAdapter expensesAdapter;
 
 	public MonthlyResumeView(Context context, DateTime month) {
 		super(context);
 
 		receiptAdapter.loadData(month);
 		receiptAdapter.notifyDataSetChanged();
+
+		expensesAdapter.loadData(month);
+		expensesAdapter.notifyDataSetChanged();
 	}
 
 	@Override
@@ -46,7 +48,7 @@ public class MonthlyResumeView extends BaseView {
 
 		initAccount();
 		initReceipts();
-		initCreditCard();
+		initExpenses();
 	}
 
 	private void initAccount() {
@@ -67,23 +69,12 @@ public class MonthlyResumeView extends BaseView {
 		receipts.setLayoutManager(new LinearLayoutManager(getContext()));
 	}
 
-	private void initCreditCard() {
-		Card creditCard = null;
-		for (Card card : Card.all()) {
-			if(card.getType() == CardType.CREDIT) {
-				creditCard = card;
-				break;
-			}
-		}
-		if(creditCard == null)
-			return;
+	private void initExpenses() {
+		expensesAdapter = new ExpenseMonthlyResumeAdapter();
 
-		CreditCardAdapter adapter = new CreditCardAdapter();
-		adapter.loadData(creditCard, DateTime.now());
-
-		creditCardBills.setAdapter(adapter);
-		creditCardBills.setHasFixedSize(true);
-		creditCardBills.setLayoutManager(new LinearLayoutManager(getContext()));
+		expenses.setAdapter(expensesAdapter);
+		expenses.setHasFixedSize(true);
+		expenses.setLayoutManager(new LinearLayoutManager(getContext()));
 	}
 
 	@Override

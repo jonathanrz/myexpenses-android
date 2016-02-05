@@ -14,7 +14,7 @@ import butterknife.ButterKnife;
  * Created by Jonathan Zanella on 03/02/16.
  */
 public class ResumeView extends BaseView {
-    @Bind(R.id.view_resume__tabs)
+    @Bind(R.id.view_resume_tabs)
     TabLayout tabs;
     @Bind(R.id.view_resume_pager)
     ViewPager pager;

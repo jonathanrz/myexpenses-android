@@ -6,7 +6,7 @@
               android:layout_height="match_parent">
 
     <android.support.design.widget.TabLayout
-        android:id="@+id/view_resume__tabs"
+        android:id="@+id/view_resume_tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:tabMode="scrollable" />
