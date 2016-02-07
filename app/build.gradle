@@ -10,9 +10,21 @@ android {
         minSdkVersion 17
         targetSdkVersion 23
         versionCode 1
-        versionName "1.0"
+        versionName "0.1.0"
     }
     buildTypes {
+        debug {
+            applicationIdSuffix '.debug'
+            versionNameSuffix '-DEBUG'
+        }
+        beta {
+            applicationIdSuffix '.beta'
+            versionNameSuffix '-BETA'
+
+            // NB: If you want to use the default debug key for a (non-debug)
+            // build type, you need to specify it:
+            signingConfig signingConfigs.debug
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'

@@ -24,7 +24,8 @@ public class MyApplication extends Application {
 		FlowManager.init(this);
 		JodaTimeAndroid.init(this);
 
-		if(Account.all().size() == 0) {
+		//noinspection PointlessBooleanExpression
+		if(Environment.IS_DEBUG && Account.all().size() == 0) {
 			Account bankAcc = new Account();
 			bankAcc.setBalance(100000);
 			bankAcc.setBalanceDate(DateTime.now());
