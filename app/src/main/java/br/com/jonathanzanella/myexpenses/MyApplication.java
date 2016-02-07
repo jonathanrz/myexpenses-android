@@ -38,27 +38,27 @@ public class MyApplication extends Application {
 			a = new Account();
 			a.setBalance(300000);
 			a.setBalanceDate(DateTime.now());
-			a.setName("Thainara");
+			a.setName("Amigo");
 			a.save();
 
 			Source s = new Source();
-			s.setName("TW");
+			s.setName("Empresa");
 			s.save();
 			s = new Source();
-			s.setName("Thainara");
+			s.setName("Namorada");
 			s.save();
 			s = new Source();
-			s.setName("Janete");
+			s.setName("Sogra");
 			s.save();
 			s = new Source();
-			s.setName("Audrey");
+			s.setName("Irmã");
 			s.save();
 			s = new Source();
-			s.setName("Sparta");
+			s.setName("Amigo");
 			s.save();
 
 			Card c = new Card();
-			c.setName("Nubank");
+			c.setName("Crédito");
 			c.setType(CardType.CREDIT);
 			c.setAccount(bankAcc);
 			c.save();
