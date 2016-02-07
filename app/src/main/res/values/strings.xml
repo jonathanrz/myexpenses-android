@@ -25,4 +25,7 @@
     <string name="credit">Crédito</string>
     <string name="cards">Cartões</string>
     <string name="total">Total</string>
+    <string name="amount">Valor</string>
+    <string name="due_date">Vencimento</string>
+    <string name="bills">Contas</string>
 </resources>

@@ -31,5 +31,10 @@
 			android:checked="false"
 			android:title="@string/expenses"
 			android:icon="@drawable/ic_expense_white_24dp"/>
+		<item
+			android:id="@+id/menu_bills"
+			android:checked="false"
+			android:title="@string/bills"
+			android:icon="@drawable/ic_bill_white_24dp"/>
 	</group>
 </menu>

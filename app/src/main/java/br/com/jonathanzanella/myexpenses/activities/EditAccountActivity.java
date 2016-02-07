@@ -9,7 +9,6 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 
 import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
 
 import java.text.NumberFormat;
 
@@ -32,7 +31,7 @@ public class EditAccountActivity extends BaseActivity {
 	@Bind(R.id.act_edit_account_balance_date)
 	EditText editBalanceDate;
 
-	private LocalDate balanceDate;
+	private DateTime balanceDate;
 	private Account account;
 
 	@Override
@@ -45,7 +44,7 @@ public class EditAccountActivity extends BaseActivity {
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
 
-		balanceDate = LocalDate.now();
+		balanceDate = DateTime.now();
 		onBalanceDateChanged();
 		editBalance.addTextChangedListener(new CurrencyTextWatch(editBalance));
 
@@ -108,7 +107,7 @@ public class EditAccountActivity extends BaseActivity {
 			account = new Account();
 		account.setName(editName.getText().toString());
 		account.setBalance(Integer.parseInt(editBalance.getText().toString().replaceAll("[^\\d]", "")));
-		account.setBalanceDate(DateTime.now());
+		account.setBalanceDate(balanceDate);
 		account.save();
 
 		Intent i = new Intent();
