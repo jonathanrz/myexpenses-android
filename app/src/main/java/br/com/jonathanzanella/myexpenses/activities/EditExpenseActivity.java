@@ -14,6 +14,7 @@ import java.text.NumberFormat;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.helper.CurrencyTextWatch;
+import br.com.jonathanzanella.myexpenses.model.Bill;
 import br.com.jonathanzanella.myexpenses.model.Chargeable;
 import br.com.jonathanzanella.myexpenses.model.ChargeableType;
 import br.com.jonathanzanella.myexpenses.model.Expense;
@@ -28,6 +29,7 @@ import butterknife.OnClick;
 public class EditExpenseActivity extends BaseActivity {
 	public static final String KEY_EXPENSE_ID = "KeyReceiptId";
 	private static final int REQUEST_SELECT_CHARGEABLE = 1003;
+	private static final int REQUEST_SELECT_BILL = 1004;
 
 	@Bind(R.id.act_edit_expense_name)
 	EditText editName;
@@ -37,10 +39,13 @@ public class EditExpenseActivity extends BaseActivity {
 	EditText editValue;
 	@Bind(R.id.act_edit_expense_chargeable)
 	EditText editChargeable;
+	@Bind(R.id.act_edit_expense_bill)
+	EditText editBill;
 
 	private Expense expense;
 	private DateTime date;
 	private Chargeable chargeable;
+	private Bill bill;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +114,13 @@ public class EditExpenseActivity extends BaseActivity {
 				}
 				break;
 			}
+			case REQUEST_SELECT_BILL: {
+				if(resultCode == RESULT_OK) {
+					bill = Bill.find(data.getLongExtra(ListBillActivity.KEY_BILL_SELECTED_ID, 0L));
+					onBillSelected();
+				}
+				break;
+			}
 		}
 	}
 
@@ -153,6 +165,24 @@ public class EditExpenseActivity extends BaseActivity {
 			startActivityForResult(new Intent(this, ListChargeableActivity.class), REQUEST_SELECT_CHARGEABLE);
 	}
 
+	private void onBillSelected() {
+		if(bill != null) {
+			editBill.setText(bill.getName());
+			if(editName.getText().toString().isEmpty())
+				editName.setText(bill.getName());
+			if(editValue.getText().toString().isEmpty())
+				editValue.setText(NumberFormat.getCurrencyInstance().format(bill.getAmount() / 100.0));
+		} else {
+			editBill.setText("");
+		}
+	}
+
+	@OnClick(R.id.act_edit_expense_bill)
+	void onBill() {
+		if(expense == null)
+			startActivityForResult(new Intent(this, ListBillActivity.class), REQUEST_SELECT_BILL);
+	}
+
 	private void save() {
 		if(expense == null)
 			expense = new Expense();
@@ -160,6 +190,7 @@ public class EditExpenseActivity extends BaseActivity {
 		expense.setDate(date);
 		expense.setValue(Integer.parseInt(editValue.getText().toString().replaceAll("[^\\d]", "")));
 		expense.setChargeable(chargeable);
+		expense.setBill(bill);
 		expense.save();
 
 		startService(new Intent(this, CashierService.class));

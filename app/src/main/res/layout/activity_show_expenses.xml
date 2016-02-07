@@ -82,5 +82,22 @@
 
         </TableRow>
 
+        <TableRow>
+
+            <TextView
+                android:id="@+id/act_show_expense_bill_stt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/bill"
+                android:layout_marginEnd="@dimen/min_spacing"/>
+
+            <TextView
+                android:id="@+id/act_show_expense_bill"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorPrimary"/>
+
+        </TableRow>
+
     </TableLayout>
 </LinearLayout>

@@ -43,6 +43,9 @@ public class Expense extends BaseModel {
 	@Column
 	ChargeableType chargeableType;
 
+	@Column
+	long billId;
+
 	@Column @Setter
 	boolean charged;
 
@@ -134,6 +137,17 @@ public class Expense extends BaseModel {
 
 	public Chargeable getChargeable() {
 		return Expense.findChargeable(chargeableType, chargeableId);
+	}
+
+	public void setBill(Bill bill) {
+		if(bill != null)
+			billId = bill.getId();
+		else
+			billId = 0;
+	}
+
+	public Bill getBill() {
+		return Bill.find(billId);
 	}
 
 	public static Chargeable findChargeable(ChargeableType type, long id) {

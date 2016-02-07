@@ -66,10 +66,14 @@
             android:name=".activities.EditBillActivity"
             android:screenOrientation="portrait"
             android:parentActivityName=".activities.MainActivity"/>
-        <activity
-            android:name=".activities.ShowBillActivity"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".activities.MainActivity"/>
+	    <activity
+		    android:name=".activities.ShowBillActivity"
+		    android:screenOrientation="portrait"
+		    android:parentActivityName=".activities.MainActivity"/>
+	    <activity
+		    android:name=".activities.ListBillActivity"
+		    android:screenOrientation="portrait"
+		    android:parentActivityName=".activities.MainActivity"/>
         <activity
             android:name=".activities.ListChargeableActivity"
             android:screenOrientation="portrait"

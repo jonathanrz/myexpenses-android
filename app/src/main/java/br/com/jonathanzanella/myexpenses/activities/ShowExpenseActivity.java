@@ -10,6 +10,7 @@ import android.widget.TextView;
 import java.text.NumberFormat;
 
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.model.Bill;
 import br.com.jonathanzanella.myexpenses.model.Expense;
 import br.com.jonathanzanella.myexpenses.model.Receipt;
 import butterknife.Bind;
@@ -28,6 +29,8 @@ public class ShowExpenseActivity extends BaseActivity {
 	TextView expenseIncome;
 	@Bind(R.id.act_show_expense_chargeable)
 	TextView expenseChargeable;
+	@Bind(R.id.act_show_expense_bill)
+	TextView expenseBill;
 
 	private Expense expense;
 
@@ -49,6 +52,9 @@ public class ShowExpenseActivity extends BaseActivity {
 		expenseDate.setText(Receipt.sdf.format(expense.getDate().toDate()));
 		expenseIncome.setText(NumberFormat.getCurrencyInstance().format(expense.getValue() / 100.0));
 		expenseChargeable.setText(expense.getChargeable().getName());
+		Bill bill = expense.getBill();
+		if(bill != null)
+			expenseBill.setText(bill.getName());
 	}
 
 	@Override

@@ -10,7 +10,7 @@ import android.util.AttributeSet;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.activities.EditBillActivity;
-import br.com.jonathanzanella.myexpenses.adapter.BillsAdapter;
+import br.com.jonathanzanella.myexpenses.adapter.BillAdapter;
 import br.com.jonathanzanella.myexpenses.model.Bill;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -21,7 +21,7 @@ import butterknife.OnClick;
  */
 public class BillView extends BaseView {
 	private static final int REQUEST_ADD_BILL = 1003;
-	private BillsAdapter adapter;
+	private BillAdapter adapter;
 
 	@Bind(R.id.view_bills_list)
 	RecyclerView bills;
@@ -43,7 +43,7 @@ public class BillView extends BaseView {
 		inflate(getContext(), R.layout.view_bills, this);
 		ButterKnife.bind(this);
 
-		adapter = new BillsAdapter();
+		adapter = new BillAdapter();
 		adapter.loadData();
 
 		bills.setAdapter(adapter);

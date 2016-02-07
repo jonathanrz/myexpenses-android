@@ -17,12 +17,15 @@ import br.com.jonathanzanella.myexpenses.activities.ShowBillActivity;
 import br.com.jonathanzanella.myexpenses.model.Bill;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import lombok.Setter;
 
 /**
  * Created by Jonathan Zanella on 26/01/16.
  */
-public class BillsAdapter extends RecyclerView.Adapter<BillsAdapter.ViewHolder> {
+public class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder> {
 	protected List<Bill> bills;
+	@Setter
+	BillAdapterCallback callback;
 
 	public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 		@Bind(R.id.row_bill_name)
@@ -32,9 +35,9 @@ public class BillsAdapter extends RecyclerView.Adapter<BillsAdapter.ViewHolder> 
 		@Bind(R.id.row_bill_due_date)
 		TextView dueDate;
 
-		WeakReference<BillsAdapter> adapterWeakReference;
+		WeakReference<BillAdapter> adapterWeakReference;
 
-		public ViewHolder(View itemView, BillsAdapter adapter) {
+		public ViewHolder(View itemView, BillAdapter adapter) {
 			super(itemView);
 			adapterWeakReference = new WeakReference<>(adapter);
 
@@ -51,12 +54,16 @@ public class BillsAdapter extends RecyclerView.Adapter<BillsAdapter.ViewHolder> 
 
 		@Override
 		public void onClick(View v) {
-			BillsAdapter adapter = adapterWeakReference.get();
+			BillAdapter adapter = adapterWeakReference.get();
 			Bill bill = adapter.getBill(getAdapterPosition());
 			if(bill != null) {
-				Intent i = new Intent(itemView.getContext(), ShowBillActivity.class);
-				i.putExtra(ShowBillActivity.KEY_BILL_ID, bill.getId());
-				itemView.getContext().startActivity(i);
+				if(adapter.callback != null) {
+					adapter.callback.onBillSelected(bill);
+				} else {
+					Intent i = new Intent(itemView.getContext(), ShowBillActivity.class);
+					i.putExtra(ShowBillActivity.KEY_BILL_ID, bill.getId());
+					itemView.getContext().startActivity(i);
+				}
 			}
 		}
 	}

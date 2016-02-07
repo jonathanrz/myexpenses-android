@@ -100,7 +100,18 @@ public class BillMonthlyResumeAdapter extends RecyclerView.Adapter<BillMonthlyRe
 		totalValue = 0;
 
 		for (Bill bill : bills) {
-			totalValue += bill.getAmount();
+			boolean billAlreadyPaid = false;
+			for (Expense expense : expenses) {
+				Bill b = expense.getBill();
+				if(b != null && b.getId() == bill.getId()) {
+					billAlreadyPaid = true;
+					break;
+				}
+			}
+			if(billAlreadyPaid)
+				bills.remove(bill);
+			else
+				totalValue += bill.getAmount();
 		}
 	}
 }

@@ -27,5 +27,6 @@
     <string name="total">Total</string>
     <string name="amount">Valor</string>
     <string name="due_date">Vencimento</string>
+    <string name="bill">Conta</string>
     <string name="bills">Contas</string>
 </resources>
