@@ -49,7 +49,7 @@ public class Expense extends BaseModel {
 	@Column @Setter
 	boolean charged;
 
-	@Column @Setter
+	@Column @Setter @Getter
 	boolean chargeNextMonth;
 
 	public static List<Expense> all() {
@@ -94,10 +94,25 @@ public class Expense extends BaseModel {
 		return bills;
 	}
 
-	public static List<Expense> monthly(DateTime month) {
-		return initQuery()
-				.where(Receipt_Table.date.between(month).and(month.plusMonths(1)))
+	public static List<Expense> monthly(DateTime date) {
+		date = date.withDayOfMonth(1).withMillisOfDay(0);
+		DateTime initOfMonth = date.minusMonths(1);
+		DateTime endOfMonth = date;
+
+		List<Expense> bills = initQuery()
+				.where(Expense_Table.date.between(initOfMonth).and(endOfMonth))
+				.and(Expense_Table.chargeNextMonth.eq(true))
 				.queryList();
+
+		initOfMonth = endOfMonth;
+		endOfMonth = date.plusMonths(1);
+
+		bills.addAll(initQuery()
+				.where(Expense_Table.date.between(initOfMonth).and(endOfMonth))
+				.and(Expense_Table.chargeNextMonth.eq(false))
+				.queryList());
+
+		return bills;
 	}
 
 	private static From<Expense> initQuery() {

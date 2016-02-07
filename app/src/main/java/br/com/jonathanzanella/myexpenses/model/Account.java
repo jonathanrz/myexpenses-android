@@ -60,6 +60,11 @@ public class Account extends BaseModel implements Chargeable {
     }
 
     @Override
+    public boolean canBePaidNextMonth() {
+        return false;
+    }
+
+    @Override
     public void debit(int value) {
         balance -= value;
     }

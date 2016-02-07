@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 
@@ -41,6 +43,8 @@ public class EditExpenseActivity extends BaseActivity {
 	EditText editChargeable;
 	@Bind(R.id.act_edit_expense_bill)
 	EditText editBill;
+	@Bind(R.id.act_edit_expense_pay_next_month)
+	CheckBox checkPayNextMonth;
 	@Bind(R.id.act_edit_expense_repetition)
 	EditText editRepetition;
 	@Bind(R.id.act_edit_expense_installment)
@@ -71,6 +75,7 @@ public class EditExpenseActivity extends BaseActivity {
 			chargeable = expense.getChargeable();
 			editChargeable.setText(chargeable.getName());
 			onChargeableSelected();
+			checkPayNextMonth.setChecked(expense.isChargeNextMonth());
 		} else {
 			if(chargeable != null)
 				onChargeableSelected();
@@ -161,6 +166,7 @@ public class EditExpenseActivity extends BaseActivity {
 
 	private void onChargeableSelected() {
 		editChargeable.setText(chargeable.getName());
+		checkPayNextMonth.setVisibility(chargeable.canBePaidNextMonth() ? View.VISIBLE : View.GONE);
 	}
 
 	@OnClick(R.id.act_edit_expense_chargeable)
@@ -196,6 +202,7 @@ public class EditExpenseActivity extends BaseActivity {
 		expense.setValue(Integer.parseInt(editValue.getText().toString().replaceAll("[^\\d]", "")) / installment);
 		expense.setChargeable(chargeable);
 		expense.setBill(bill);
+		expense.setChargeNextMonth(checkPayNextMonth.isChecked());
 		expense.save();
 
 		int repetition = installment;

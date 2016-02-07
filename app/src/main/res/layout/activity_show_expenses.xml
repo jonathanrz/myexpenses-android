@@ -99,5 +99,17 @@
 
         </TableRow>
 
+	    <TableRow
+		    android:id="@+id/act_show_expense_charge_next_month"
+		    android:visibility="gone">
+
+		    <TextView
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:text="@string/pay_next_month"
+			    android:layout_marginEnd="@dimen/min_spacing"/>
+
+	    </TableRow>
+
     </TableLayout>
 </LinearLayout>

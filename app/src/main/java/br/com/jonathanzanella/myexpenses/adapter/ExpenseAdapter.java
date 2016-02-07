@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import java.lang.ref.WeakReference;
@@ -35,6 +36,8 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHold
 		TextView value;
 		@Bind(R.id.row_expense_chargeable)
 		TextView chargeable;
+		@Bind(R.id.row_expense_charge_next_month)
+		TableRow chargeNextMonth;
 
 		WeakReference<ExpenseAdapter> adapterWeakReference;
 
@@ -52,6 +55,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHold
 			date.setText(Receipt.sdf.format(expense.getDate().toDate()));
 			value.setText(NumberFormat.getCurrencyInstance().format(expense.getValue() / 100.0));
 			chargeable.setText(expense.getChargeable().getName());
+			chargeNextMonth.setVisibility(expense.isChargeNextMonth() ? View.VISIBLE : View.GONE);
 		}
 
 		@Override

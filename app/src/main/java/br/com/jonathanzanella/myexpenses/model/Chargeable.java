@@ -7,6 +7,7 @@ public interface Chargeable {
 	long getId();
 	ChargeableType getChargeableType();
 	String getName();
+	boolean canBePaidNextMonth();
 	void debit(int value);
 	void save();
 }

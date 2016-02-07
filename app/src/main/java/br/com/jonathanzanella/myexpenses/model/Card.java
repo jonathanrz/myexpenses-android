@@ -57,6 +57,11 @@ public class Card extends BaseModel implements Chargeable {
 	}
 
 	@Override
+	public boolean canBePaidNextMonth() {
+		return (type == CardType.CREDIT);
+	}
+
+	@Override
 	public void debit(int value) {
 		if(type == CardType.DEBIT) {
 			Account a = getAccount();

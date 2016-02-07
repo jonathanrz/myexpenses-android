@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import java.text.NumberFormat;
@@ -31,6 +33,8 @@ public class ShowExpenseActivity extends BaseActivity {
 	TextView expenseChargeable;
 	@Bind(R.id.act_show_expense_bill)
 	TextView expenseBill;
+	@Bind(R.id.act_show_expense_charge_next_month)
+	TableRow chargeNextMonth;
 
 	private Expense expense;
 
@@ -52,6 +56,7 @@ public class ShowExpenseActivity extends BaseActivity {
 		expenseDate.setText(Receipt.sdf.format(expense.getDate().toDate()));
 		expenseIncome.setText(NumberFormat.getCurrencyInstance().format(expense.getValue() / 100.0));
 		expenseChargeable.setText(expense.getChargeable().getName());
+		chargeNextMonth.setVisibility(expense.isChargeNextMonth() ? View.VISIBLE : View.GONE);
 		Bill bill = expense.getBill();
 		if(bill != null)
 			expenseBill.setText(bill.getName());
