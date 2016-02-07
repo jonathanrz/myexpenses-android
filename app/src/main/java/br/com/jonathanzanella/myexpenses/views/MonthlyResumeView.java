@@ -10,6 +10,7 @@ import org.joda.time.DateTime;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.adapter.AccountAdapter;
+import br.com.jonathanzanella.myexpenses.adapter.BillMonthlyResumeAdapter;
 import br.com.jonathanzanella.myexpenses.adapter.ExpenseMonthlyResumeAdapter;
 import br.com.jonathanzanella.myexpenses.adapter.ReceiptMonthlyResumeAdapter;
 import butterknife.Bind;
@@ -26,10 +27,13 @@ public class MonthlyResumeView extends BaseView {
 	RecyclerView receipts;
 	@Bind(R.id.view_monthly_resume_expenses)
 	RecyclerView expenses;
+	@Bind(R.id.view_monthly_resume_bills)
+	RecyclerView bills;
 
 	private AccountAdapter accountAdapter;
 	private ReceiptMonthlyResumeAdapter receiptAdapter;
 	private ExpenseMonthlyResumeAdapter expensesAdapter;
+	private BillMonthlyResumeAdapter billsAdapter;
 
 	public MonthlyResumeView(Context context, DateTime month) {
 		super(context);
@@ -39,6 +43,9 @@ public class MonthlyResumeView extends BaseView {
 
 		expensesAdapter.loadData(month);
 		expensesAdapter.notifyDataSetChanged();
+
+		billsAdapter.loadData(month);
+		billsAdapter.notifyDataSetChanged();
 	}
 
 	@Override
@@ -49,6 +56,7 @@ public class MonthlyResumeView extends BaseView {
 		initAccount();
 		initReceipts();
 		initExpenses();
+		initBills();
 	}
 
 	private void initAccount() {
@@ -75,6 +83,14 @@ public class MonthlyResumeView extends BaseView {
 		expenses.setAdapter(expensesAdapter);
 		expenses.setHasFixedSize(true);
 		expenses.setLayoutManager(new LinearLayoutManager(getContext()));
+	}
+
+	private void initBills() {
+		billsAdapter = new BillMonthlyResumeAdapter();
+
+		bills.setAdapter(billsAdapter);
+		bills.setHasFixedSize(true);
+		bills.setLayoutManager(new LinearLayoutManager(getContext()));
 	}
 
 	@Override
