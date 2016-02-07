@@ -25,6 +25,10 @@ public class ShowBillActivity extends BaseActivity {
 	TextView billAmount;
 	@Bind(R.id.act_show_bill_due_date)
 	TextView billDueDate;
+	@Bind(R.id.act_show_bill_init_date)
+	TextView billInitDate;
+	@Bind(R.id.act_show_bill_end_date)
+	TextView billEndDate;
 
 	private Bill bill;
 
@@ -46,6 +50,8 @@ public class ShowBillActivity extends BaseActivity {
 			billName.setText(bill.getName());
 			billAmount.setText(NumberFormat.getCurrencyInstance().format(bill.getAmount() / 100.0));
 			billDueDate.setText(String.valueOf(bill.getDueDate()));
+			billInitDate.setText(Bill.sdf.format(bill.getInitDate().toDate()));
+			billEndDate.setText(Bill.sdf.format(bill.getEndDate().toDate()));
 		}
 	}
 

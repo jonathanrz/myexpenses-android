@@ -29,4 +29,6 @@
     <string name="due_date">Vencimento</string>
     <string name="bill">Conta</string>
     <string name="bills">Contas</string>
+	<string name="start">Início</string>
+	<string name="end">Fim</string>
 </resources>

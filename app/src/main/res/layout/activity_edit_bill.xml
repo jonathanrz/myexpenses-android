@@ -54,6 +54,38 @@
                 android:hint="@string/due_date"/>
 
         </android.support.design.widget.TextInputLayout>
+
+	    <android.support.design.widget.TextInputLayout
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_marginBottom="@dimen/default_spacing">
+
+		    <android.support.v7.widget.AppCompatEditText
+			    android:id="@+id/act_edit_bill_init_date"
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:inputType="none"
+			    android:focusable="false"
+			    android:clickable="true"
+			    android:hint="@string/start"/>
+
+	    </android.support.design.widget.TextInputLayout>
+
+	    <android.support.design.widget.TextInputLayout
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_marginBottom="@dimen/default_spacing">
+
+		    <android.support.v7.widget.AppCompatEditText
+			    android:id="@+id/act_edit_bill_end_date"
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:inputType="none"
+			    android:focusable="false"
+			    android:clickable="true"
+			    android:hint="@string/end"/>
+
+	    </android.support.design.widget.TextInputLayout>
     </LinearLayout>
 
 </LinearLayout>

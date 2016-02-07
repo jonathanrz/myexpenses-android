@@ -95,7 +95,7 @@ public class BillMonthlyResumeAdapter extends RecyclerView.Adapter<BillMonthlyRe
 	}
 
 	public void loadData(DateTime month) {
-		bills = Bill.all();
+		bills = Bill.monthly(month);
 		List<Expense> expenses = Expense.monthly(month);
 		totalValue = 0;
 

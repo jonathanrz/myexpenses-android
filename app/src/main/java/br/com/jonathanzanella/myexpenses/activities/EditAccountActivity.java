@@ -92,7 +92,7 @@ public class EditAccountActivity extends BaseActivity {
 		new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
 			@Override
 			public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-				balanceDate = balanceDate.withYear(year).withMonthOfYear(monthOfYear + 1).withDayOfYear(dayOfMonth);
+				balanceDate = balanceDate.withYear(year).withMonthOfYear(monthOfYear + 1).withDayOfMonth(dayOfMonth);
 				onBalanceDateChanged();
 			}
 		}, balanceDate.getYear(), balanceDate.getMonthOfYear() - 1, balanceDate.getDayOfMonth()).show();

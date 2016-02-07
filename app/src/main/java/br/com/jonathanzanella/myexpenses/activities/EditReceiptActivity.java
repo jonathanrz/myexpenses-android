@@ -145,7 +145,7 @@ public class EditReceiptActivity extends BaseActivity {
 		new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
 			@Override
 			public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-				date = date.withYear(year).withMonthOfYear(monthOfYear + 1).withDayOfYear(dayOfMonth);
+				date = date.withYear(year).withMonthOfYear(monthOfYear + 1).withDayOfMonth(dayOfMonth);
 				onBalanceDateChanged();
 			}
 		}, date.getYear(), date.getMonthOfYear() - 1, date.getDayOfMonth()).show();

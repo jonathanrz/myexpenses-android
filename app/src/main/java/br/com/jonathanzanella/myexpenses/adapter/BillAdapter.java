@@ -34,6 +34,10 @@ public class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder> {
 		TextView amount;
 		@Bind(R.id.row_bill_due_date)
 		TextView dueDate;
+		@Bind(R.id.row_bill_init_date)
+		TextView initDate;
+		@Bind(R.id.row_bill_end_date)
+		TextView endDate;
 
 		WeakReference<BillAdapter> adapterWeakReference;
 
@@ -50,6 +54,8 @@ public class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder> {
 			name.setText(bill.getName());
 			amount.setText(NumberFormat.getCurrencyInstance().format(bill.getAmount() / 100.0));
 			dueDate.setText(String.valueOf(bill.getDueDate()));
+			initDate.setText(Bill.sdf.format(bill.getInitDate().toDate()));
+			endDate.setText(Bill.sdf.format(bill.getEndDate().toDate()));
 		}
 
 		@Override
