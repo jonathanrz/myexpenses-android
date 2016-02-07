@@ -120,4 +120,9 @@ public class Receipt extends BaseModel {
 	public void setAccount(@NonNull Account a) {
 		accountId = a.getId();
 	}
+
+	public void repeat() {
+		id = 0;
+		date = date.plusMonths(1);
+	}
 }

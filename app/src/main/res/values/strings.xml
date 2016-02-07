@@ -31,4 +31,6 @@
     <string name="bills">Contas</string>
 	<string name="start">Início</string>
 	<string name="end">Fim</string>
+	<string name="repetition">Repetição</string>
+	<string name="_1">1</string>
 </resources>

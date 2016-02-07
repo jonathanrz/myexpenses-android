@@ -39,6 +39,8 @@ public class EditReceiptActivity extends BaseActivity {
 	EditText editSource;
 	@Bind(R.id.act_edit_receipt_account)
 	EditText editAccount;
+	@Bind(R.id.act_edit_receipt_repetition)
+	EditText editRepetition;
 
 	private Receipt receipt;
 	private DateTime date;
@@ -183,6 +185,12 @@ public class EditReceiptActivity extends BaseActivity {
 		receipt.setSource(source);
 		receipt.setAccount(account);
 		receipt.save();
+
+		int repetition = Integer.parseInt(editRepetition.getText().toString());
+		for(int i = 1; i < repetition; i++) {
+			receipt.repeat();
+			receipt.save();
+		}
 
 		startService(new Intent(this, CashierService.class));
 
