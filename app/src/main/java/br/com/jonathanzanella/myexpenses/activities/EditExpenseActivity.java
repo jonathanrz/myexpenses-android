@@ -43,6 +43,8 @@ public class EditExpenseActivity extends BaseActivity {
 	EditText editBill;
 	@Bind(R.id.act_edit_expense_repetition)
 	EditText editRepetition;
+	@Bind(R.id.act_edit_expense_installment)
+	EditText editInstallment;
 
 	private Expense expense;
 	private DateTime date;
@@ -186,16 +188,19 @@ public class EditExpenseActivity extends BaseActivity {
 	}
 
 	private void save() {
+		int installment = Integer.parseInt(editInstallment.getText().toString());
 		if(expense == null)
 			expense = new Expense();
 		expense.setName(editName.getText().toString());
 		expense.setDate(date);
-		expense.setValue(Integer.parseInt(editValue.getText().toString().replaceAll("[^\\d]", "")));
+		expense.setValue(Integer.parseInt(editValue.getText().toString().replaceAll("[^\\d]", "")) / installment);
 		expense.setChargeable(chargeable);
 		expense.setBill(bill);
 		expense.save();
 
-		int repetition = Integer.parseInt(editRepetition.getText().toString());
+		int repetition = installment;
+		if(repetition == 1)
+			repetition = Integer.parseInt(editRepetition.getText().toString());
 		for(int i = 1; i < repetition; i++) {
 			expense.repeat();
 			expense.save();

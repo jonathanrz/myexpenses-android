@@ -8,101 +8,122 @@
         android:id="@+id/toolbar"
         layout="@layout/toolbar"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_margin="@dimen/default_spacing">
+	<ScrollView
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
 
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/default_spacing">
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="vertical"
+			android:layout_margin="@dimen/default_spacing">
 
-            <android.support.v7.widget.AppCompatEditText
-                android:id="@+id/act_edit_expense_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/name"/>
+			<android.support.design.widget.TextInputLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginBottom="@dimen/default_spacing">
 
-        </android.support.design.widget.TextInputLayout>
+				<android.support.v7.widget.AppCompatEditText
+					android:id="@+id/act_edit_expense_name"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:hint="@string/name"/>
 
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/default_spacing">
+			</android.support.design.widget.TextInputLayout>
 
-            <android.support.v7.widget.AppCompatEditText
-                android:id="@+id/act_edit_expense_date"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="none"
-                android:focusable="false"
-                android:clickable="true"
-                android:hint="@string/date"/>
+			<android.support.design.widget.TextInputLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginBottom="@dimen/default_spacing">
 
-        </android.support.design.widget.TextInputLayout>
+				<android.support.v7.widget.AppCompatEditText
+					android:id="@+id/act_edit_expense_date"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:inputType="none"
+					android:focusable="false"
+					android:clickable="true"
+					android:hint="@string/date"/>
 
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/default_spacing">
+			</android.support.design.widget.TextInputLayout>
 
-            <android.support.v7.widget.AppCompatEditText
-                android:id="@+id/act_edit_expense_value"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="number"
-                android:hint="@string/income"/>
+			<android.support.design.widget.TextInputLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginBottom="@dimen/default_spacing">
 
-        </android.support.design.widget.TextInputLayout>
+				<android.support.v7.widget.AppCompatEditText
+					android:id="@+id/act_edit_expense_value"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:inputType="number"
+					android:hint="@string/income"/>
 
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/default_spacing">
+			</android.support.design.widget.TextInputLayout>
 
-            <android.support.v7.widget.AppCompatEditText
-                android:id="@+id/act_edit_expense_chargeable"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="none"
-                android:focusable="false"
-                android:clickable="true"
-                android:hint="@string/paid_with"/>
+			<android.support.design.widget.TextInputLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginBottom="@dimen/default_spacing">
 
-        </android.support.design.widget.TextInputLayout>
+				<android.support.v7.widget.AppCompatEditText
+					android:id="@+id/act_edit_expense_chargeable"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:inputType="none"
+					android:focusable="false"
+					android:clickable="true"
+					android:hint="@string/paid_with"/>
 
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/default_spacing">
+			</android.support.design.widget.TextInputLayout>
 
-            <android.support.v7.widget.AppCompatEditText
-                android:id="@+id/act_edit_expense_bill"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="none"
-                android:focusable="false"
-                android:clickable="true"
-                android:hint="@string/bill"/>
+			<android.support.design.widget.TextInputLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginBottom="@dimen/default_spacing">
 
-        </android.support.design.widget.TextInputLayout>
+				<android.support.v7.widget.AppCompatEditText
+					android:id="@+id/act_edit_expense_bill"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:inputType="none"
+					android:focusable="false"
+					android:clickable="true"
+					android:hint="@string/bill"/>
 
-	    <android.support.design.widget.TextInputLayout
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:layout_marginBottom="@dimen/default_spacing">
+			</android.support.design.widget.TextInputLayout>
 
-		    <android.support.v7.widget.AppCompatEditText
-			    android:id="@+id/act_edit_expense_repetition"
-			    android:layout_width="match_parent"
-			    android:layout_height="wrap_content"
-			    android:inputType="number"
-			    android:text="@string/_1"
-			    android:hint="@string/repetition"/>
+			<android.support.design.widget.TextInputLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginBottom="@dimen/default_spacing">
 
-	    </android.support.design.widget.TextInputLayout>
-    </LinearLayout>
+				<android.support.v7.widget.AppCompatEditText
+					android:id="@+id/act_edit_expense_repetition"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:inputType="number"
+					android:text="@string/_1"
+					android:hint="@string/repetition"/>
+
+			</android.support.design.widget.TextInputLayout>
+
+			<android.support.design.widget.TextInputLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginBottom="@dimen/default_spacing">
+
+				<android.support.v7.widget.AppCompatEditText
+					android:id="@+id/act_edit_expense_installment"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:inputType="number"
+					android:text="@string/_1"
+					android:hint="@string/installments"/>
+
+			</android.support.design.widget.TextInputLayout>
+		</LinearLayout>
+
+	</ScrollView>
 
 </LinearLayout>
