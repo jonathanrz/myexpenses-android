@@ -88,6 +88,21 @@
                 android:hint="@string/bill"/>
 
         </android.support.design.widget.TextInputLayout>
+
+	    <android.support.design.widget.TextInputLayout
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_marginBottom="@dimen/default_spacing">
+
+		    <android.support.v7.widget.AppCompatEditText
+			    android:id="@+id/act_edit_expense_repetition"
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:inputType="number"
+			    android:text="@string/_1"
+			    android:hint="@string/repetition"/>
+
+	    </android.support.design.widget.TextInputLayout>
     </LinearLayout>
 
 </LinearLayout>

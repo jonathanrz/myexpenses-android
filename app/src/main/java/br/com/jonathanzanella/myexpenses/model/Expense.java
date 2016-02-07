@@ -159,4 +159,9 @@ public class Expense extends BaseModel {
 		}
 		return null;
 	}
+
+	public void repeat() {
+		id = 0;
+		date = date.plusMonths(1);
+	}
 }

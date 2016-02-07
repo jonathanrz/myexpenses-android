@@ -41,6 +41,8 @@ public class EditExpenseActivity extends BaseActivity {
 	EditText editChargeable;
 	@Bind(R.id.act_edit_expense_bill)
 	EditText editBill;
+	@Bind(R.id.act_edit_expense_repetition)
+	EditText editRepetition;
 
 	private Expense expense;
 	private DateTime date;
@@ -192,6 +194,12 @@ public class EditExpenseActivity extends BaseActivity {
 		expense.setChargeable(chargeable);
 		expense.setBill(bill);
 		expense.save();
+
+		int repetition = Integer.parseInt(editRepetition.getText().toString());
+		for(int i = 1; i < repetition; i++) {
+			expense.repeat();
+			expense.save();
+		}
 
 		startService(new Intent(this, CashierService.class));
 
