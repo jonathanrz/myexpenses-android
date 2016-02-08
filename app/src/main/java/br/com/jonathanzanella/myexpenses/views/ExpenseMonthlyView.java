@@ -19,28 +19,28 @@ import butterknife.OnClick;
 /**
  * Created by Jonathan Zanella on 26/01/16.
  */
-public class ExpenseView extends BaseView {
+public class ExpenseMonthlyView extends BaseView {
     private static final int REQUEST_ADD_EXPENSE = 1006;
     private ExpenseAdapter adapter;
 
-    @Bind(R.id.view_expenses_list)
+    @Bind(R.id.view_expenses_monthly_list)
     RecyclerView sources;
 
-    public ExpenseView(Context context) {
+    public ExpenseMonthlyView(Context context) {
         super(context);
     }
 
-    public ExpenseView(Context context, AttributeSet attrs) {
+    public ExpenseMonthlyView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public ExpenseView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ExpenseMonthlyView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
     @Override
     protected void init() {
-        inflate(getContext(), R.layout.view_expenses, this);
+        inflate(getContext(), R.layout.view_monthly_expenses, this);
         ButterKnife.bind(this);
 
         adapter = new ExpenseAdapter();

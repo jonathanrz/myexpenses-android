@@ -78,6 +78,10 @@
             android:name=".activities.ListChargeableActivity"
             android:screenOrientation="portrait"
             android:parentActivityName=".activities.MainActivity"/>
+	    <activity
+		    android:name=".activities.CreditCardInvoiceActivity"
+		    android:screenOrientation="portrait"
+		    android:parentActivityName=".activities.MainActivity"/>
         <service android:name=".services.CashierService"/>
 
     </application>

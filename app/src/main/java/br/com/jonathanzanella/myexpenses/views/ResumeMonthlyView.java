@@ -20,7 +20,7 @@ import butterknife.ButterKnife;
  * Created by jzanella onCard 2/2/16.
  */
 @SuppressLint("ViewConstructor")
-public class MonthlyResumeView extends BaseView {
+public class ResumeMonthlyView extends BaseView {
 	@Bind(R.id.view_monthly_resume_accounts)
 	RecyclerView accounts;
 	@Bind(R.id.view_monthly_resume_receipts)
@@ -38,10 +38,10 @@ public class MonthlyResumeView extends BaseView {
 	private BillMonthlyResumeAdapter billsAdapter;
 	private DateTime month;
 
-	public MonthlyResumeView(Context context, DateTime month) {
+	public ResumeMonthlyView(Context context, DateTime month) {
 		super(context);
 
-		singleRowHeight = getResources().getDimensionPixelSize(R.dimen.single_row_height) * 2;
+		singleRowHeight = (int) (getResources().getDimensionPixelSize(R.dimen.single_row_height) * 1.5f);
 		this.month = month;
 	}
 

@@ -1,6 +1,5 @@
 package br.com.jonathanzanella.myexpenses.adapter;
 
-import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,8 +16,7 @@ import java.util.List;
 import java.util.Locale;
 
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.activities.CreditCardInvoiceActivity;
-import br.com.jonathanzanella.myexpenses.activities.ShowExpenseActivity;
+import br.com.jonathanzanella.myexpenses.model.Card;
 import br.com.jonathanzanella.myexpenses.model.Expense;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -26,7 +24,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Jonathan Zanella on 26/01/16.
  */
-public class ExpenseMonthlyResumeAdapter extends RecyclerView.Adapter<ExpenseMonthlyResumeAdapter.ViewHolder> {
+public class CreditCardMonthlyAdapter extends RecyclerView.Adapter<CreditCardMonthlyAdapter.ViewHolder> {
 	public static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM", Locale.getDefault());
 	protected List<Expense> expenses;
 	private int totalValue;
@@ -36,7 +34,7 @@ public class ExpenseMonthlyResumeAdapter extends RecyclerView.Adapter<ExpenseMon
 		TYPE_TOTAL
 	}
 
-	public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+	public static class ViewHolder extends RecyclerView.ViewHolder {
 		@Bind(R.id.row_monthly_resume_expense_name) @Nullable
 		TextView name;
 		@Bind(R.id.row_monthly_resume_expense_date) @Nullable
@@ -46,15 +44,13 @@ public class ExpenseMonthlyResumeAdapter extends RecyclerView.Adapter<ExpenseMon
 		@Bind(R.id.row_monthly_resume_expense_source) @Nullable
 		TextView source;
 
-		WeakReference<ExpenseMonthlyResumeAdapter> adapterWeakReference;
+		WeakReference<CreditCardMonthlyAdapter> adapterWeakReference;
 
-		public ViewHolder(View itemView, ExpenseMonthlyResumeAdapter adapter) {
+		public ViewHolder(View itemView, CreditCardMonthlyAdapter adapter) {
 			super(itemView);
 			adapterWeakReference = new WeakReference<>(adapter);
 
 			ButterKnife.bind(this, itemView);
-
-			itemView.setOnClickListener(this);
 		}
 
 		public void setData(Expense expense) {
@@ -64,28 +60,11 @@ public class ExpenseMonthlyResumeAdapter extends RecyclerView.Adapter<ExpenseMon
 				date.setText(sdf.format(expense.getDate().toDate()));
 			income.setText(NumberFormat.getCurrencyInstance().format(expense.getValue() / 100.0));
 			if(source != null)
-				source.setText(expense.getChargeable().getName());
+				source.setVisibility(View.GONE);
 		}
 
 		public void setTotal(int totalValue) {
 			income.setText(NumberFormat.getCurrencyInstance().format(totalValue / 100.0));
-		}
-
-		@Override
-		public void onClick(View v) {
-			Expense expense = adapterWeakReference.get().getExpense(getAdapterPosition());
-			if(expense != null) {
-				if(expense.getCreditCard() != null) {
-					Intent i = new Intent(itemView.getContext(), CreditCardInvoiceActivity.class);
-					i.putExtra(CreditCardInvoiceActivity.KEY_CREDIT_CARD_ID, expense.getCreditCard().getId());
-					i.putExtra(CreditCardInvoiceActivity.KEY_INIT_DATE, expense.getDate());
-					itemView.getContext().startActivity(i);
-				} else {
-					Intent i = new Intent(itemView.getContext(), ShowExpenseActivity.class);
-					i.putExtra(ShowExpenseActivity.KEY_EXPENSE_ID, expense.getId());
-					itemView.getContext().startActivity(i);
-				}
-			}
 		}
 	}
 
@@ -122,16 +101,12 @@ public class ExpenseMonthlyResumeAdapter extends RecyclerView.Adapter<ExpenseMon
 		return expenses != null ? expenses.size() + 1 : 0;
 	}
 
-	public void loadData(DateTime month) {
-		expenses = Expense.monthly(month);
+	public void loadData(Card creditCard, DateTime month) {
+		expenses = Expense.creditCardBills(creditCard, month);
 		totalValue = 0;
 
 		for (Expense expense : expenses) {
 			totalValue += expense.getValue();
 		}
-	}
-
-	private Expense getExpense(int position) {
-		return expenses.get(position);
 	}
 }

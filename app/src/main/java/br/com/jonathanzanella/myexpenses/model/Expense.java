@@ -54,6 +54,9 @@ public class Expense extends BaseModel {
 	@Column @Setter @Getter
 	boolean chargeNextMonth;
 
+	@Getter
+	private Card creditCard;
+
 	public static List<Expense> all() {
 		return initQuery().queryList();
 	}
@@ -62,6 +65,7 @@ public class Expense extends BaseModel {
 		return initQuery()
 				.where(Expense_Table.charged.eq(false))
 				.and(Expense_Table.date.lessThanOrEq(DateTime.now()))
+				.and(Expense_Table.chargeableType.notEq(ChargeableType.CARD))
 				.queryList();
 	}
 
@@ -119,15 +123,18 @@ public class Expense extends BaseModel {
 				.and(Expense_Table.chargeNextMonth.eq(false))
 				.queryList());
 
+		DateTime creditCardMonth = date.minusMonths(1);
 		for (Card card : Card.creditCards()) {
 			int total = 0;
-			for (Expense expense : creditCardBills(card, date.plusMonths(1)))
+			for (Expense expense : creditCardBills(card, creditCardMonth))
 				total += expense.getValue();
+
 			Expense expense = new Expense();
 			expense.setChargeable(card);
 			expense.setName(MyApplication.getContext().getString(R.string.invoice));
-			expense.setDate(date);
+			expense.setDate(creditCardMonth);
 			expense.setValue(total);
+			expense.creditCard = card;
 			bills.add(expense);
 		}
 

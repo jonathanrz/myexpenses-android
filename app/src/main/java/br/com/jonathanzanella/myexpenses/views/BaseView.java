@@ -4,7 +4,9 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.support.design.widget.TabLayout;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.FrameLayout;
 
 /**
@@ -38,4 +40,8 @@ public abstract class BaseView extends FrameLayout {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {}
 
 	public void refreshData() {}
+
+	public void setTabs(TabLayout tabs) {
+		tabs.setVisibility(View.GONE);
+	}
 }

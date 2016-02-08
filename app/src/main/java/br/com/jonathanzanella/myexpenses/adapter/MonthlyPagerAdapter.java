@@ -12,21 +12,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import br.com.jonathanzanella.myexpenses.views.MonthlyResumeView;
+import br.com.jonathanzanella.myexpenses.views.BaseView;
 
 /**
  * Created by Jonathan Zanella on 03/02/16.
  */
-public class ResumePagerAdapter extends PagerAdapter {
+public class MonthlyPagerAdapter extends PagerAdapter {
     public static final int TOTAL_MONTHS_VISIBLE = 25;
     public static final int INIT_MONTH_VISIBLE = TOTAL_MONTHS_VISIBLE / 2;
 
     private static final SimpleDateFormat sdf = new SimpleDateFormat("MMM/yy", Locale.getDefault());
     private Context context;
     private List<DateTime> months = new ArrayList<>();
+	private MonthlyPagerAdapterBuilder builder;
 
-    public ResumePagerAdapter(Context context) {
+    public MonthlyPagerAdapter(Context context, MonthlyPagerAdapterBuilder builder) {
         this.context = context;
+	    this.builder = builder;
 
         DateTime initTime = DateTime.now().minusMonths(INIT_MONTH_VISIBLE).withTime(0,0,0,0).withDayOfMonth(1);
 
@@ -37,7 +39,7 @@ public class ResumePagerAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup collection, int position) {
-        MonthlyResumeView view = new MonthlyResumeView(context, months.get(position));
+        BaseView view = builder.buildView(context, months.get(position));
         collection.addView(view);
         view.refreshData();
         return view;
@@ -62,5 +64,16 @@ public class ResumePagerAdapter extends PagerAdapter {
     public CharSequence getPageTitle(int position) {
         return sdf.format(months.get(position).toDate());
     }
+
+	public int getDatePosition(DateTime date) {
+		for (int i = 0; i < months.size(); i++) {
+			DateTime d = months.get(i);
+			if(d.getMonthOfYear() == date.getMonthOfYear() &&
+					d.getYear() == date.getYear())
+				return i;
+		}
+
+		return 0;
+	}
 
 }

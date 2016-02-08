@@ -3,6 +3,7 @@ package br.com.jonathanzanella.myexpenses.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.MenuItem;
@@ -16,7 +17,7 @@ import br.com.jonathanzanella.myexpenses.views.AccountView;
 import br.com.jonathanzanella.myexpenses.views.BaseView;
 import br.com.jonathanzanella.myexpenses.views.BillView;
 import br.com.jonathanzanella.myexpenses.views.CardView;
-import br.com.jonathanzanella.myexpenses.views.ExpenseView;
+import br.com.jonathanzanella.myexpenses.views.ExpenseMonthlyView;
 import br.com.jonathanzanella.myexpenses.views.ReceiptView;
 import br.com.jonathanzanella.myexpenses.views.ResumeView;
 import br.com.jonathanzanella.myexpenses.views.SourceView;
@@ -32,6 +33,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 	NavigationView navigationView;
 	@Bind(R.id.act_main_content)
 	FrameLayout content;
+	@Bind(R.id.tabs)
+	TabLayout tabs;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -79,11 +82,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 		}
 	}
 
-	private void addViewToContent(View child) {
+	private void addViewToContent(BaseView child) {
 		content.removeAllViews();
 		child.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
 				ViewGroup.LayoutParams.MATCH_PARENT));
 		content.addView(child);
+		child.setTabs(tabs);
 	}
 
 	@Override
@@ -115,7 +119,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 				drawer.closeDrawers();
 				return true;
 			case R.id.menu_expenses:
-				addViewToContent(new ExpenseView(this));
+				addViewToContent(new ExpenseMonthlyView(this));
 				setTitle(R.string.expenses);
 				drawer.closeDrawers();
 				return true;

@@ -4,9 +4,13 @@ import android.content.Context;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.view.View;
+
+import org.joda.time.DateTime;
 
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.adapter.ResumePagerAdapter;
+import br.com.jonathanzanella.myexpenses.adapter.MonthlyPagerAdapter;
+import br.com.jonathanzanella.myexpenses.adapter.MonthlyPagerAdapterBuilder;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -14,8 +18,6 @@ import butterknife.ButterKnife;
  * Created by Jonathan Zanella on 03/02/16.
  */
 public class ResumeView extends BaseView {
-    @Bind(R.id.view_resume_tabs)
-    TabLayout tabs;
     @Bind(R.id.view_resume_pager)
     ViewPager pager;
 
@@ -36,10 +38,19 @@ public class ResumeView extends BaseView {
         inflate(getContext(), R.layout.view_resume, this);
         ButterKnife.bind(this);
 
-        ResumePagerAdapter adapter = new ResumePagerAdapter(getContext());
+        MonthlyPagerAdapter adapter = new MonthlyPagerAdapter(getContext(), new MonthlyPagerAdapterBuilder() {
+	        @Override
+	        public BaseView buildView(Context ctx, DateTime date) {
+		        return new ResumeMonthlyView(ctx, date);
+	        }
+        });
         pager.setAdapter(adapter);
-        pager.setCurrentItem(ResumePagerAdapter.INIT_MONTH_VISIBLE);
-
-        tabs.setupWithViewPager(pager);
+        pager.setCurrentItem(MonthlyPagerAdapter.INIT_MONTH_VISIBLE);
     }
+
+	@Override
+	public void setTabs(TabLayout tabs) {
+		tabs.setupWithViewPager(pager);
+		tabs.setVisibility(View.VISIBLE);
+	}
 }

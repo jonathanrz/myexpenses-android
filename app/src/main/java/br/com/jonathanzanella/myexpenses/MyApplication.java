@@ -3,6 +3,7 @@ package br.com.jonathanzanella.myexpenses;
 import android.app.Application;
 import android.content.Context;
 
+import com.facebook.stetho.Stetho;
 import com.raizlabs.android.dbflow.config.FlowManager;
 
 import net.danlew.android.joda.JodaTimeAndroid;
@@ -30,6 +31,7 @@ public class MyApplication extends Application {
 
 		FlowManager.init(this);
 		JodaTimeAndroid.init(this);
+		Stetho.initializeWithDefaults(this);
 
 		//noinspection PointlessBooleanExpression
 		if(Environment.IS_DEBUG && Account.all().size() == 0) {
