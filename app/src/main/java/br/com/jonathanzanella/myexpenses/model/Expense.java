@@ -73,23 +73,24 @@ public class Expense extends BaseModel {
 	}
 
 	public static List<Expense> creditCardBills(Card creditCard, DateTime date) {
-		DateTime initOfMonth = date.withDate(date.getYear(), date.getMonthOfYear() - 1, 1);
-		DateTime endOfMonth = date.withDate(date.getYear(), date.getMonthOfYear(), 1);
+		date = date.withDayOfMonth(1).withMillisOfDay(0);
+		DateTime initOfMonth = date.minusMonths(1);
+		DateTime endOfMonth = date;
 
 		List<Expense> bills = initQuery()
 									.where(Expense_Table.chargeableId.eq(creditCard.getId()))
-									.and(Expense_Table.chargeableType.eq(ChargeableType.CREDIT_CARD))
+									.and(Expense_Table.chargeableType.eq(ChargeableType.CARD))
 									.and(Expense_Table.date.between(initOfMonth).and(endOfMonth))
 									.and(Expense_Table.chargeNextMonth.eq(true))
 									.and(Expense_Table.charged.eq(false))
 									.queryList();
 
 		initOfMonth = endOfMonth;
-		endOfMonth = date.withDate(date.getYear(), date.getMonthOfYear() + 1, 1);
+		endOfMonth = date.plusMonths(1);
 
 		bills.addAll(initQuery()
 					.where(Expense_Table.chargeableId.eq(creditCard.getId()))
-					.and(Expense_Table.chargeableType.eq(ChargeableType.CREDIT_CARD))
+					.and(Expense_Table.chargeableType.eq(ChargeableType.CARD))
 					.and(Expense_Table.date.between(initOfMonth).and(endOfMonth))
 					.and(Expense_Table.chargeNextMonth.eq(false))
 					.and(Expense_Table.charged.eq(false))
@@ -105,7 +106,7 @@ public class Expense extends BaseModel {
 
 		List<Expense> bills = initQuery()
 				.where(Expense_Table.date.between(initOfMonth).and(endOfMonth))
-				.and(Expense_Table.chargeableType.notEq(ChargeableType.CREDIT_CARD))
+				.and(Expense_Table.chargeableType.notEq(ChargeableType.CARD))
 				.and(Expense_Table.chargeNextMonth.eq(true))
 				.queryList();
 
@@ -114,7 +115,7 @@ public class Expense extends BaseModel {
 
 		bills.addAll(initQuery()
 				.where(Expense_Table.date.between(initOfMonth).and(endOfMonth))
-				.and(Expense_Table.chargeableType.notEq(ChargeableType.CREDIT_CARD))
+				.and(Expense_Table.chargeableType.notEq(ChargeableType.CARD))
 				.and(Expense_Table.chargeNextMonth.eq(false))
 				.queryList());
 
@@ -127,6 +128,7 @@ public class Expense extends BaseModel {
 			expense.setName(MyApplication.getContext().getString(R.string.invoice));
 			expense.setDate(date);
 			expense.setValue(total);
+			bills.add(expense);
 		}
 
 		return bills;
@@ -187,7 +189,7 @@ public class Expense extends BaseModel {
 			case ACCOUNT:
 				return Account.find(id);
 			case DEBIT_CARD:
-			case CREDIT_CARD:
+			case CARD:
 				return Card.find(id);
 		}
 		return null;

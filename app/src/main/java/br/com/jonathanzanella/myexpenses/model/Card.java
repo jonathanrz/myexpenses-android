@@ -63,7 +63,7 @@ public class Card extends BaseModel implements Chargeable {
 	public ChargeableType getChargeableType() {
 		switch (type) {
 			case CREDIT:
-				return ChargeableType.CREDIT_CARD;
+				return ChargeableType.CARD;
 			case DEBIT:
 				return ChargeableType.DEBIT_CARD;
 		}

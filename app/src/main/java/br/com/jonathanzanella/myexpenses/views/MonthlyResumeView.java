@@ -30,22 +30,19 @@ public class MonthlyResumeView extends BaseView {
 	@Bind(R.id.view_monthly_resume_bills)
 	RecyclerView bills;
 
+	int singleRowHeight;
+
 	private AccountAdapter accountAdapter;
 	private ReceiptMonthlyResumeAdapter receiptAdapter;
 	private ExpenseMonthlyResumeAdapter expensesAdapter;
 	private BillMonthlyResumeAdapter billsAdapter;
+	private DateTime month;
 
 	public MonthlyResumeView(Context context, DateTime month) {
 		super(context);
 
-		receiptAdapter.loadData(month);
-		receiptAdapter.notifyDataSetChanged();
-
-		expensesAdapter.loadData(month);
-		expensesAdapter.notifyDataSetChanged();
-
-		billsAdapter.loadData(month);
-		billsAdapter.notifyDataSetChanged();
+		singleRowHeight = getResources().getDimensionPixelSize(R.dimen.single_row_height) * 2;
+		this.month = month;
 	}
 
 	@Override
@@ -75,6 +72,7 @@ public class MonthlyResumeView extends BaseView {
 		receipts.setAdapter(receiptAdapter);
 		receipts.setHasFixedSize(true);
 		receipts.setLayoutManager(new LinearLayoutManager(getContext()));
+		receipts.setNestedScrollingEnabled(false);
 	}
 
 	private void initExpenses() {
@@ -83,6 +81,7 @@ public class MonthlyResumeView extends BaseView {
 		expenses.setAdapter(expensesAdapter);
 		expenses.setHasFixedSize(true);
 		expenses.setLayoutManager(new LinearLayoutManager(getContext()));
+		expenses.setNestedScrollingEnabled(false);
 	}
 
 	private void initBills() {
@@ -91,6 +90,7 @@ public class MonthlyResumeView extends BaseView {
 		bills.setAdapter(billsAdapter);
 		bills.setHasFixedSize(true);
 		bills.setLayoutManager(new LinearLayoutManager(getContext()));
+		bills.setNestedScrollingEnabled(false);
 	}
 
 	@Override
@@ -98,5 +98,17 @@ public class MonthlyResumeView extends BaseView {
 		super.refreshData();
 		accountAdapter.loadData();
 		accountAdapter.notifyDataSetChanged();
+
+		receiptAdapter.loadData(month);
+		receiptAdapter.notifyDataSetChanged();
+		receipts.getLayoutParams().height = singleRowHeight * receiptAdapter.getItemCount();
+
+		expensesAdapter.loadData(month);
+		expensesAdapter.notifyDataSetChanged();
+		expenses.getLayoutParams().height = singleRowHeight * expensesAdapter.getItemCount();
+
+		billsAdapter.loadData(month);
+		billsAdapter.notifyDataSetChanged();
+		bills.getLayoutParams().height = singleRowHeight * billsAdapter.getItemCount();
 	}
 }
