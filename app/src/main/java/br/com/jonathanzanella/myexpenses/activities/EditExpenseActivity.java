@@ -14,6 +14,7 @@ import org.joda.time.DateTime;
 
 import java.text.NumberFormat;
 
+import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.helper.CurrencyTextWatch;
 import br.com.jonathanzanella.myexpenses.model.Bill;
@@ -197,7 +198,11 @@ public class EditExpenseActivity extends BaseActivity {
 		int installment = Integer.parseInt(editInstallment.getText().toString());
 		if(expense == null)
 			expense = new Expense();
-		expense.setName(editName.getText().toString());
+		String originalName = editName.getText().toString();
+		if(installment == 1)
+			expense.setName(originalName);
+		else
+			expense.setName(String.format(Environment.PTBR_LOCALE, "%s %02d/%02d", originalName, 1, installment));
 		expense.setDate(date);
 		expense.setValue(Integer.parseInt(editValue.getText().toString().replaceAll("[^\\d]", "")) / installment);
 		expense.setChargeable(chargeable);
@@ -209,6 +214,7 @@ public class EditExpenseActivity extends BaseActivity {
 		if(repetition == 1)
 			repetition = Integer.parseInt(editRepetition.getText().toString());
 		for(int i = 1; i < repetition; i++) {
+			expense.setName(String.format(Environment.PTBR_LOCALE, "%s %02d/%02d", originalName, i + 1, installment));
 			expense.repeat();
 			expense.save();
 		}
