@@ -87,6 +87,7 @@ public class Expense extends BaseModel {
 									.and(Expense_Table.date.between(initOfMonth).and(endOfMonth))
 									.and(Expense_Table.chargeNextMonth.eq(true))
 									.and(Expense_Table.charged.eq(false))
+									.orderBy(Expense_Table.date, true)
 									.queryList();
 
 		initOfMonth = endOfMonth;
@@ -98,6 +99,7 @@ public class Expense extends BaseModel {
 					.and(Expense_Table.date.between(initOfMonth).and(endOfMonth))
 					.and(Expense_Table.chargeNextMonth.eq(false))
 					.and(Expense_Table.charged.eq(false))
+					.orderBy(Expense_Table.date, true)
 					.queryList());
 
 		return bills;

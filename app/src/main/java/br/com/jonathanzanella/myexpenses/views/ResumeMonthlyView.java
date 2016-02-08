@@ -41,7 +41,7 @@ public class ResumeMonthlyView extends BaseView {
 	public ResumeMonthlyView(Context context, DateTime month) {
 		super(context);
 
-		singleRowHeight = (int) (getResources().getDimensionPixelSize(R.dimen.single_row_height) * 1.5f);
+		singleRowHeight = getResources().getDimensionPixelSize(R.dimen.single_row_height);
 		this.month = month;
 	}
 

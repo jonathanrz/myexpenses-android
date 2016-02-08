@@ -33,6 +33,10 @@ public class MyApplication extends Application {
 		JodaTimeAndroid.init(this);
 		Stetho.initializeWithDefaults(this);
 
+//		List<Expense> expenses = Expense.all();
+//		Expense e = expenses.get(expenses.size() - 1);
+//		e.delete();
+
 		//noinspection PointlessBooleanExpression
 		if(Environment.IS_DEBUG && Account.all().size() == 0) {
 			Account bankAcc = new Account();

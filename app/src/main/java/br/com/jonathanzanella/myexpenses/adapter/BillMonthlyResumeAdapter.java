@@ -99,7 +99,8 @@ public class BillMonthlyResumeAdapter extends RecyclerView.Adapter<BillMonthlyRe
 		List<Expense> expenses = Expense.expenses(month);
 		totalValue = 0;
 
-		for (Bill bill : bills) {
+		for (int i = 0; i < bills.size(); i++) {
+			Bill bill = bills.get(i);
 			boolean billAlreadyPaid = false;
 			for (Expense expense : expenses) {
 				Bill b = expense.getBill();
@@ -108,10 +109,12 @@ public class BillMonthlyResumeAdapter extends RecyclerView.Adapter<BillMonthlyRe
 					break;
 				}
 			}
-			if(billAlreadyPaid)
-				bills.remove(bill);
-			else
+			if(billAlreadyPaid) {
+				bills.remove(i);
+				i--;
+			} else {
 				totalValue += bill.getAmount();
+			}
 		}
 	}
 }
