@@ -1,5 +1,7 @@
 package br.com.jonathanzanella.myexpenses.model;
 
+import android.util.Log;
+
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
@@ -18,6 +20,7 @@ import lombok.Setter;
  */
 @Table(database = MyDatabase.class)
 public class Card extends BaseModel implements Chargeable {
+	private static final String LOG_TAG = "Card";
 	@Column
 	@PrimaryKey(autoincrement = true) @Getter
 	long id;
@@ -34,13 +37,18 @@ public class Card extends BaseModel implements Chargeable {
 	public static List<Card> all() {
 		return initQuery().queryList();
 	}
+	public static List<Card> creditCards() {
+		return initQuery()
+				.where(Card_Table.type.eq(CardType.CREDIT))
+				.queryList();
+	}
 
 	private static From<Card> initQuery() {
 		return SQLite.select().from(Card.class);
 	}
 
 	public static Card find(long id) {
-		return initQuery().where(Source_Table.id.eq(id)).querySingle();
+		return initQuery().where(Card_Table.id.eq(id)).querySingle();
 	}
 
 	public Account getAccount() {
@@ -53,7 +61,15 @@ public class Card extends BaseModel implements Chargeable {
 
 	@Override
 	public ChargeableType getChargeableType() {
-		return ChargeableType.CARD;
+		switch (type) {
+			case CREDIT:
+				return ChargeableType.CREDIT_CARD;
+			case DEBIT:
+				return ChargeableType.DEBIT_CARD;
+		}
+
+		Log.e(LOG_TAG, "new card type?");
+		return ChargeableType.DEBIT_CARD;
 	}
 
 	@Override

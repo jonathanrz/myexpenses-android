@@ -1,6 +1,7 @@
 package br.com.jonathanzanella.myexpenses;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.raizlabs.android.dbflow.config.FlowManager;
 
@@ -12,15 +13,21 @@ import br.com.jonathanzanella.myexpenses.model.Account;
 import br.com.jonathanzanella.myexpenses.model.Card;
 import br.com.jonathanzanella.myexpenses.model.CardType;
 import br.com.jonathanzanella.myexpenses.model.Source;
+import lombok.Getter;
 
 /**
  * Created by jonathan on 01/11/15.
  * Copyright (c) 2015. All rights reserved.
  */
 public class MyApplication extends Application {
+	@Getter
+	private static Context context;
+
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		MyApplication.context = getApplicationContext();
+
 		FlowManager.init(this);
 		JodaTimeAndroid.init(this);
 

@@ -11,6 +11,8 @@ import org.joda.time.DateTime;
 
 import java.util.List;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
+import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.converter.DateTimeConverter;
 import br.com.jonathanzanella.myexpenses.database.MyDatabase;
 import lombok.Getter;
@@ -76,9 +78,10 @@ public class Expense extends BaseModel {
 
 		List<Expense> bills = initQuery()
 									.where(Expense_Table.chargeableId.eq(creditCard.getId()))
-									.and(Expense_Table.chargeableType.eq(ChargeableType.CARD))
+									.and(Expense_Table.chargeableType.eq(ChargeableType.CREDIT_CARD))
 									.and(Expense_Table.date.between(initOfMonth).and(endOfMonth))
 									.and(Expense_Table.chargeNextMonth.eq(true))
+									.and(Expense_Table.charged.eq(false))
 									.queryList();
 
 		initOfMonth = endOfMonth;
@@ -86,9 +89,10 @@ public class Expense extends BaseModel {
 
 		bills.addAll(initQuery()
 					.where(Expense_Table.chargeableId.eq(creditCard.getId()))
-					.and(Expense_Table.chargeableType.eq(ChargeableType.CARD))
+					.and(Expense_Table.chargeableType.eq(ChargeableType.CREDIT_CARD))
 					.and(Expense_Table.date.between(initOfMonth).and(endOfMonth))
 					.and(Expense_Table.chargeNextMonth.eq(false))
+					.and(Expense_Table.charged.eq(false))
 					.queryList());
 
 		return bills;
@@ -101,6 +105,7 @@ public class Expense extends BaseModel {
 
 		List<Expense> bills = initQuery()
 				.where(Expense_Table.date.between(initOfMonth).and(endOfMonth))
+				.and(Expense_Table.chargeableType.notEq(ChargeableType.CREDIT_CARD))
 				.and(Expense_Table.chargeNextMonth.eq(true))
 				.queryList();
 
@@ -109,8 +114,20 @@ public class Expense extends BaseModel {
 
 		bills.addAll(initQuery()
 				.where(Expense_Table.date.between(initOfMonth).and(endOfMonth))
+				.and(Expense_Table.chargeableType.notEq(ChargeableType.CREDIT_CARD))
 				.and(Expense_Table.chargeNextMonth.eq(false))
 				.queryList());
+
+		for (Card card : Card.creditCards()) {
+			int total = 0;
+			for (Expense expense : creditCardBills(card, date.plusMonths(1)))
+				total += expense.getValue();
+			Expense expense = new Expense();
+			expense.setChargeable(card);
+			expense.setName(MyApplication.getContext().getString(R.string.invoice));
+			expense.setDate(date);
+			expense.setValue(total);
+		}
 
 		return bills;
 	}
@@ -169,7 +186,8 @@ public class Expense extends BaseModel {
 		switch (type) {
 			case ACCOUNT:
 				return Account.find(id);
-			case CARD:
+			case DEBIT_CARD:
+			case CREDIT_CARD:
 				return Card.find(id);
 		}
 		return null;
