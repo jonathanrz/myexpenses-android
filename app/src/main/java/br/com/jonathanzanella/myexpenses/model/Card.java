@@ -69,4 +69,13 @@ public class Card extends BaseModel implements Chargeable {
 			a.save();
 		}
 	}
+
+	@Override
+	public void credit(int value) {
+		if(type == CardType.DEBIT) {
+			Account a = getAccount();
+			a.credit(value);
+			a.save();
+		}
+	}
 }

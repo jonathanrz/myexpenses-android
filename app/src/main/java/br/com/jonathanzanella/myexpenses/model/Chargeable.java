@@ -9,5 +9,6 @@ public interface Chargeable {
 	String getName();
 	boolean canBePaidNextMonth();
 	void debit(int value);
+	void credit(int value);
 	void save();
 }

@@ -1,8 +1,10 @@
 package br.com.jonathanzanella.myexpenses.activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,6 +15,7 @@ import java.text.NumberFormat;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.model.Bill;
+import br.com.jonathanzanella.myexpenses.model.Chargeable;
 import br.com.jonathanzanella.myexpenses.model.Expense;
 import br.com.jonathanzanella.myexpenses.model.Receipt;
 import butterknife.Bind;
@@ -102,33 +105,33 @@ public class ShowExpenseActivity extends BaseActivity {
 				startActivity(i);
 				break;
 			}
-//			case R.id.action_delete: {
-//				new AlertDialog.Builder(this)
-//						.setTitle(android.R.string.dialog_alert_title)
-//						.setMessage(R.string.message_confirm_deletion)
-//						.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-//							@Override
-//							public void onClick(DialogInterface dialog, int which) {
-//								dialog.dismiss();
-//
-//								Account a = expense.getAccount();
-//								a.credit(expense.getIncome() * -1);
-//								a.save();
-//								expense.delete();
-//								Intent i = new Intent();
-//								setResult(RESULT_OK, i);
-//								finish();
-//							}
-//						})
-//						.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-//							@Override
-//							public void onClick(DialogInterface dialog, int which) {
-//								dialog.dismiss();
-//							}
-//						})
-//						.show();
-//				break;
-//			}
+			case R.id.action_delete: {
+				new AlertDialog.Builder(this)
+						.setTitle(android.R.string.dialog_alert_title)
+						.setMessage(R.string.message_confirm_deletion)
+						.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								dialog.dismiss();
+
+								Chargeable c = expense.getChargeable();
+								c.credit(expense.getValue() * -1);
+								c.save();
+								expense.delete();
+								Intent i = new Intent();
+								setResult(RESULT_OK, i);
+								finish();
+							}
+						})
+						.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								dialog.dismiss();
+							}
+						})
+						.show();
+				break;
+			}
 		}
 		return super.onOptionsItemSelected(item);
 	}

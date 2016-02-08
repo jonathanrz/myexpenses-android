@@ -66,8 +66,6 @@ public class EditExpenseActivity extends BaseActivity {
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
 
-		date = DateTime.now();
-		onBalanceDateChanged();
 		editValue.addTextChangedListener(new CurrencyTextWatch(editValue));
 
 		if(expense != null) {
@@ -77,7 +75,11 @@ public class EditExpenseActivity extends BaseActivity {
 			editChargeable.setText(chargeable.getName());
 			onChargeableSelected();
 			checkPayNextMonth.setChecked(expense.isChargeNextMonth());
+			date = expense.getDate();
+			onBalanceDateChanged();
 		} else {
+			date = DateTime.now();
+			onBalanceDateChanged();
 			if(chargeable != null)
 				onChargeableSelected();
 		}
