@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import org.joda.time.DateTime;
+
 import java.lang.ref.WeakReference;
 import java.text.NumberFormat;
 import java.util.List;
@@ -85,8 +87,8 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHold
 		return expenses != null ? expenses.size() : 0;
 	}
 
-	public void loadData() {
-		expenses = Expense.all();
+	public void loadData(DateTime dateTime) {
+		expenses = Expense.monthly(dateTime);
 	}
 
 	public void addExpense(@NonNull Expense expense) {

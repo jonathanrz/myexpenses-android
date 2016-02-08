@@ -110,8 +110,32 @@ public class Expense extends BaseModel {
 
 		List<Expense> bills = initQuery()
 				.where(Expense_Table.date.between(initOfMonth).and(endOfMonth))
+				.and(Expense_Table.chargeNextMonth.eq(true))
+				.orderBy(Expense_Table.date, true)
+				.queryList();
+
+		initOfMonth = endOfMonth;
+		endOfMonth = date.plusMonths(1);
+
+		bills.addAll(initQuery()
+				.where(Expense_Table.date.between(initOfMonth).and(endOfMonth))
+				.and(Expense_Table.chargeNextMonth.eq(false))
+				.orderBy(Expense_Table.date, true)
+				.queryList());
+
+		return bills;
+	}
+
+	public static List<Expense> expenses(DateTime date) {
+		date = date.withDayOfMonth(1).withMillisOfDay(0);
+		DateTime initOfMonth = date.minusMonths(1);
+		DateTime endOfMonth = date;
+
+		List<Expense> bills = initQuery()
+				.where(Expense_Table.date.between(initOfMonth).and(endOfMonth))
 				.and(Expense_Table.chargeableType.notEq(ChargeableType.CARD))
 				.and(Expense_Table.chargeNextMonth.eq(true))
+				.orderBy(Expense_Table.date, true)
 				.queryList();
 
 		initOfMonth = endOfMonth;
@@ -121,6 +145,7 @@ public class Expense extends BaseModel {
 				.where(Expense_Table.date.between(initOfMonth).and(endOfMonth))
 				.and(Expense_Table.chargeableType.notEq(ChargeableType.CARD))
 				.and(Expense_Table.chargeNextMonth.eq(false))
+				.orderBy(Expense_Table.date, true)
 				.queryList());
 
 		DateTime creditCardMonth = date.minusMonths(1);

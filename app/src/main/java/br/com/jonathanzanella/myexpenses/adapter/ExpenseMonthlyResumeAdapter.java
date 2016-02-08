@@ -123,7 +123,7 @@ public class ExpenseMonthlyResumeAdapter extends RecyclerView.Adapter<ExpenseMon
 	}
 
 	public void loadData(DateTime month) {
-		expenses = Expense.monthly(month);
+		expenses = Expense.expenses(month);
 		totalValue = 0;
 
 		for (Expense expense : expenses) {
