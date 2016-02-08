@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.joda.time.DateTime;
+
 import java.lang.ref.WeakReference;
 import java.text.NumberFormat;
 import java.util.List;
@@ -83,8 +85,8 @@ public class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ViewHold
 		return receipts != null ? receipts.size() : 0;
 	}
 
-	public void loadData() {
-		receipts = Receipt.all();
+	public void loadData(DateTime dateTime) {
+		receipts = Receipt.monthly(dateTime);
 	}
 
 	public void addReceipt(@NonNull Receipt receipt) {
