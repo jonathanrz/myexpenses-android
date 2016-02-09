@@ -36,4 +36,5 @@
 	<string name="installments">Parcelas</string>
 	<string name="pay_next_month">Ficou para o próximo mês</string>
     <string name="invoice">Fatura</string>
+    <string name="filter">Filtar</string>
 </resources>

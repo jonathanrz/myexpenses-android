@@ -14,6 +14,8 @@ import android.widget.FrameLayout;
  * Copyright (c) 2015. All rights reserved.
  */
 public abstract class BaseView extends FrameLayout {
+	protected String filter;
+
 	public BaseView(Context context) {
 		super(context);
 		init();
@@ -43,5 +45,9 @@ public abstract class BaseView extends FrameLayout {
 
 	public void setTabs(TabLayout tabs) {
 		tabs.setVisibility(View.GONE);
+	}
+
+	public void filter(String s) {
+		filter = s;
 	}
 }

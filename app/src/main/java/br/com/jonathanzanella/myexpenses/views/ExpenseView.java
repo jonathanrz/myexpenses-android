@@ -3,6 +3,7 @@ package br.com.jonathanzanella.myexpenses.views;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
@@ -26,10 +27,11 @@ import butterknife.OnClick;
 /**
  * Created by Jonathan Zanella on 03/02/16.
  */
-public class ExpenseView extends BaseView {
+public class ExpenseView extends BaseView implements ViewPager.OnPageChangeListener {
 	private static final int REQUEST_ADD_EXPENSE = 1006;
 	@Bind(R.id.view_expenses_pager)
     ViewPager pager;
+	MonthlyPagerAdapter adapter;
 
 	private Map<DateTime, WeakReference<ExpenseMonthlyView>> views = new HashMap<>();
 
@@ -50,17 +52,30 @@ public class ExpenseView extends BaseView {
         inflate(getContext(), R.layout.view_expenses, this);
         ButterKnife.bind(this);
 
-        MonthlyPagerAdapter adapter = new MonthlyPagerAdapter(getContext(), new MonthlyPagerAdapterBuilder() {
+        adapter = new MonthlyPagerAdapter(getContext(), new MonthlyPagerAdapterBuilder() {
 	        @Override
 	        public BaseView buildView(Context ctx, DateTime date) {
 		        ExpenseMonthlyView view = new ExpenseMonthlyView(ctx, date);
 		        views.put(date, new WeakReference<>(view));
+		        view.filter(filter);
 		        return view;
 	        }
         });
         pager.setAdapter(adapter);
         pager.setCurrentItem(MonthlyPagerAdapter.INIT_MONTH_VISIBLE);
+	    pager.addOnPageChangeListener(this);
     }
+
+	@Override
+	public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+
+	@Override
+	public void onPageSelected(int position) {
+		filter(filter);
+	}
+
+	@Override
+	public void onPageScrollStateChanged(int state) {}
 
 	@Override
 	public void setTabs(TabLayout tabs) {
@@ -88,15 +103,28 @@ public class ExpenseView extends BaseView {
 				if(resultCode == Activity.RESULT_OK) {
 					Expense e = Expense.find(data.getLongExtra(EditExpenseActivity.KEY_EXPENSE_ID, 0L));
 					if(e != null) {
-						WeakReference<ExpenseMonthlyView> viewRef = views.get(e.getDate());
-						if (viewRef != null) {
-							ExpenseMonthlyView view = viewRef.get();
-							if (view != null)
-								view.addExpense(e);
-						}
+						ExpenseMonthlyView view = getMonthView(e.getDate());
+						if (view != null)
+							view.addExpense(e);
 					}
 				}
 				break;
 		}
+	}
+
+	@Override
+	public void filter(String s) {
+		super.filter(s);
+		DateTime date = adapter.getDate(pager.getCurrentItem());
+		ExpenseMonthlyView view = getMonthView(date);
+		if (view != null)
+			view.filter(filter);
+	}
+
+	private @Nullable ExpenseMonthlyView getMonthView(DateTime date) {
+		WeakReference<ExpenseMonthlyView> viewRef = views.get(date);
+		if (viewRef != null)
+			return viewRef.get();
+		return null;
 	}
 }

@@ -1,11 +1,16 @@
 package br.com.jonathanzanella.myexpenses.activities;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.SearchView;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +31,7 @@ import butterknife.Bind;
 /**
  * Created by Jonathan Zanella on 25/01/16.
  */
-public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, SearchView.OnQueryTextListener {
 	@Bind(R.id.act_main_drawer)
 	DrawerLayout drawer;
 	@Bind(R.id.act_main_navigation_view)
@@ -35,6 +40,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 	FrameLayout content;
 	@Bind(R.id.tabs)
 	TabLayout tabs;
+
+	private BaseView currentView;
+	private String filter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +80,31 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 	}
 
 	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.options_menu, menu);
+
+		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+		SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+		searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+		searchView.setOnQueryTextListener(this);
+
+		return true;
+	}
+
+	@Override
+	public boolean onQueryTextSubmit(String query) {
+		return false;
+	}
+
+	@Override
+	public boolean onQueryTextChange(String newText) {
+		filter = newText;
+		currentView.filter(newText);
+		return false;
+	}
+
+	@Override
 	protected void onResume() {
 		super.onResume();
 
@@ -88,6 +121,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 				ViewGroup.LayoutParams.MATCH_PARENT));
 		content.addView(child);
 		child.setTabs(tabs);
+		child.filter(filter);
+		currentView = child;
 	}
 
 	@Override

@@ -56,4 +56,11 @@ public class ExpenseMonthlyView extends BaseView {
 	public void addExpense(@NonNull Expense expense) {
 		adapter.addExpense(expense);
 	}
+
+    @Override
+    public void filter(String s) {
+        super.filter(s);
+	    adapter.filter(s);
+	    adapter.notifyDataSetChanged();
+    }
 }

@@ -76,4 +76,7 @@ public class MonthlyPagerAdapter extends PagerAdapter {
 		return 0;
 	}
 
+	public DateTime getDate(int position) {
+		return months.get(position);
+	}
 }
