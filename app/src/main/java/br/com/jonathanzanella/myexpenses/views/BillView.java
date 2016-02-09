@@ -84,4 +84,11 @@ public class BillView extends BaseView {
 		adapter.loadData();
 		adapter.notifyDataSetChanged();
 	}
+
+	@Override
+	public void filter(String s) {
+		super.filter(s);
+		adapter.filter(s);
+		adapter.notifyDataSetChanged();
+	}
 }
