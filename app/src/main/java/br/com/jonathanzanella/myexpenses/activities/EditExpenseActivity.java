@@ -40,6 +40,8 @@ public class EditExpenseActivity extends BaseActivity {
 	EditText editDate;
 	@Bind(R.id.act_edit_expense_value)
 	EditText editValue;
+	@Bind(R.id.act_edit_expense_repayment)
+	CheckBox checkRepayment;
 	@Bind(R.id.act_edit_expense_chargeable)
 	EditText editChargeable;
 	@Bind(R.id.act_edit_expense_bill)
@@ -70,7 +72,9 @@ public class EditExpenseActivity extends BaseActivity {
 
 		if(expense != null) {
 			editName.setText(expense.getName());
-			editValue.setText(NumberFormat.getCurrencyInstance().format(expense.getValue() / 100.0));
+			editValue.setText(NumberFormat.getCurrencyInstance().format(Math.abs(expense.getValue()) / 100.0));
+			if(expense.getValue() < 0)
+				checkRepayment.setChecked(true);
 			chargeable = expense.getChargeable();
 			editChargeable.setText(chargeable.getName());
 			onChargeableSelected();
@@ -206,7 +210,10 @@ public class EditExpenseActivity extends BaseActivity {
 		else
 			expense.setName(String.format(Environment.PTBR_LOCALE, "%s %02d/%02d", originalName, 1, installment));
 		expense.setDate(date);
-		expense.setValue(Integer.parseInt(editValue.getText().toString().replaceAll("[^\\d]", "")) / installment);
+		int value = Integer.parseInt(editValue.getText().toString().replaceAll("[^\\d]", "")) / installment;
+		if(checkRepayment.isChecked())
+			value *= -1;
+		expense.setValue(value);
 		expense.setChargeable(chargeable);
 		expense.setBill(bill);
 		expense.setChargeNextMonth(checkPayNextMonth.isChecked());
