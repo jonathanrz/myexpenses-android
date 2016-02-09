@@ -28,9 +28,11 @@ public class ReceiptMonthlyResumeAdapter extends RecyclerView.Adapter<ReceiptMon
 	public static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM", Locale.getDefault());
 	protected List<Receipt> receipts;
 	private int totalValue;
+	private int totalUnreceivedValue;
 
 	private enum VIEW_TYPE {
 		TYPE_NORMAL,
+		TYPE_TOTAL_TO_PAY,
 		TYPE_TOTAL
 	}
 
@@ -78,8 +80,10 @@ public class ReceiptMonthlyResumeAdapter extends RecyclerView.Adapter<ReceiptMon
 
 	@Override
 	public int getItemViewType(int position) {
-		if(receipts != null && position == receipts.size()) {
+		if(isTotalView(position)) {
 			return VIEW_TYPE.TYPE_TOTAL.ordinal();
+		} else if(isTotalToPayView(position)) {
+			return VIEW_TYPE.TYPE_TOTAL_TO_PAY.ordinal();
 		} else {
 			return VIEW_TYPE.TYPE_NORMAL.ordinal();
 		}
@@ -90,6 +94,8 @@ public class ReceiptMonthlyResumeAdapter extends RecyclerView.Adapter<ReceiptMon
 		View v;
 		if(viewType == VIEW_TYPE.TYPE_TOTAL.ordinal())
 			v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_monthly_resume_receipt_total, parent, false);
+		else if(viewType == VIEW_TYPE.TYPE_TOTAL_TO_PAY.ordinal())
+			v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_monthly_resume_receipt_total_to_pay, parent, false);
 		else
 			v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_monthly_resume_receipt, parent, false);
 
@@ -98,23 +104,36 @@ public class ReceiptMonthlyResumeAdapter extends RecyclerView.Adapter<ReceiptMon
 
 	@Override
 	public void onBindViewHolder(ViewHolder holder, int position) {
-		if(position == receipts.size())
+		if(isTotalView(position))
 			holder.setTotal(totalValue);
+		else if(isTotalToPayView(position))
+			holder.setTotal(totalUnreceivedValue);
 		else
 			holder.setData(receipts.get(position));
 	}
 
+	private boolean isTotalView(int position) {
+		return (receipts != null && position == receipts.size() + 1);
+	}
+
+	private boolean isTotalToPayView(int position) {
+		return (receipts != null && position == receipts.size());
+	}
+
 	@Override
 	public int getItemCount() {
-		return receipts != null ? receipts.size() + 1 : 0;
+		return receipts != null ? receipts.size() + 2 : 0;
 	}
 
 	public void loadData(DateTime month) {
 		receipts = Receipt.monthly(month);
 		totalValue = 0;
+		totalUnreceivedValue = 0;
 
 		for (Receipt receipt : receipts) {
 			totalValue += receipt.getIncome();
+			if(!receipt.isCredited())
+				totalUnreceivedValue += receipt.getIncome();
 		}
 	}
 }

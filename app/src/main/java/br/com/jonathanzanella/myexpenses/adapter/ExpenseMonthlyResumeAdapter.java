@@ -31,9 +31,11 @@ public class ExpenseMonthlyResumeAdapter extends RecyclerView.Adapter<ExpenseMon
 	public static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM", Locale.getDefault());
 	protected List<Expense> expenses;
 	private int totalValue;
+	private int totalUnpaidValue;
 
 	private enum VIEW_TYPE {
 		TYPE_NORMAL,
+		TYPE_TOTAL_TO_PAY,
 		TYPE_TOTAL
 	}
 
@@ -100,8 +102,10 @@ public class ExpenseMonthlyResumeAdapter extends RecyclerView.Adapter<ExpenseMon
 
 	@Override
 	public int getItemViewType(int position) {
-		if(expenses != null && position == expenses.size()) {
+		if(isTotalView(position)) {
 			return VIEW_TYPE.TYPE_TOTAL.ordinal();
+		} else if(isTotalToPayView(position)) {
+			return VIEW_TYPE.TYPE_TOTAL_TO_PAY.ordinal();
 		} else {
 			return VIEW_TYPE.TYPE_NORMAL.ordinal();
 		}
@@ -112,6 +116,8 @@ public class ExpenseMonthlyResumeAdapter extends RecyclerView.Adapter<ExpenseMon
 		View v;
 		if(viewType == VIEW_TYPE.TYPE_TOTAL.ordinal())
 			v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_monthly_resume_expense_total, parent, false);
+		else if(viewType == VIEW_TYPE.TYPE_TOTAL_TO_PAY.ordinal())
+			v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_monthly_resume_expense_total_to_pay, parent, false);
 		else
 			v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_monthly_resume_expense, parent, false);
 
@@ -120,23 +126,36 @@ public class ExpenseMonthlyResumeAdapter extends RecyclerView.Adapter<ExpenseMon
 
 	@Override
 	public void onBindViewHolder(ViewHolder holder, int position) {
-		if(position == expenses.size())
+		if(isTotalView(position))
 			holder.setTotal(totalValue);
+		else if(isTotalToPayView(position))
+			holder.setTotal(totalUnpaidValue);
 		else
 			holder.setData(expenses.get(position));
 	}
 
+	private boolean isTotalView(int position) {
+		return (expenses != null && position == expenses.size() + 1);
+	}
+
+	private boolean isTotalToPayView(int position) {
+		return (expenses != null && position == expenses.size());
+	}
+
 	@Override
 	public int getItemCount() {
-		return expenses != null ? expenses.size() + 1 : 0;
+		return expenses != null ? expenses.size() + 2 : 0;
 	}
 
 	public void loadData(DateTime month) {
 		expenses = Expense.expenses(month);
 		totalValue = 0;
+		totalUnpaidValue = 0;
 
 		for (Expense expense : expenses) {
 			totalValue += expense.getValue();
+			if(!expense.isCharged())
+				totalUnpaidValue += expense.getValue();
 		}
 	}
 
