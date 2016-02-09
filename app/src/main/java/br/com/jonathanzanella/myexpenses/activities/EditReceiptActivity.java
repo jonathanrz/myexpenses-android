@@ -57,8 +57,6 @@ public class EditReceiptActivity extends BaseActivity {
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
 
-		date = DateTime.now();
-		onBalanceDateChanged();
 		editIncome.addTextChangedListener(new CurrencyTextWatch(editIncome));
 
 		if(receipt != null) {
@@ -69,7 +67,11 @@ public class EditReceiptActivity extends BaseActivity {
 			onSourceSelected();
 			account = receipt.getAccount();
 			onAccountSelected();
+			date = receipt.getDate();
+			onBalanceDateChanged();
 		} else {
+			date = DateTime.now();
+			onBalanceDateChanged();
 			if(source != null)
 				onSourceSelected();
 			if(account != null)
