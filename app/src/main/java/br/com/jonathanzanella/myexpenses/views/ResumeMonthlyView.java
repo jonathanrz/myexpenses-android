@@ -5,8 +5,11 @@ import android.content.Context;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.TextView;
 
 import org.joda.time.DateTime;
+
+import java.text.NumberFormat;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.adapter.AccountAdapter;
@@ -29,6 +32,12 @@ public class ResumeMonthlyView extends BaseView {
 	RecyclerView expenses;
 	@Bind(R.id.view_monthly_resume_bills)
 	RecyclerView bills;
+	@Bind(R.id.view_monthly_resume_total_receipts)
+	TextView totalReceipts;
+	@Bind(R.id.view_monthly_resume_total_expenses)
+	TextView totalExpenses;
+	@Bind(R.id.view_monthly_resume_balance)
+	TextView balance;
 
 	int singleRowHeight;
 
@@ -110,5 +119,16 @@ public class ResumeMonthlyView extends BaseView {
 		billsAdapter.loadData(month);
 		billsAdapter.notifyDataSetChanged();
 		bills.getLayoutParams().height = singleRowHeight * billsAdapter.getItemCount();
+
+		int totalReceiptsValue = receiptAdapter.getTotalValue();
+		totalReceipts.setText(NumberFormat.getCurrencyInstance().format(totalReceiptsValue / 100.0));
+		int totalExpensesValue = expensesAdapter.getTotalValue();
+		totalExpenses.setText(NumberFormat.getCurrencyInstance().format(totalExpensesValue / 100.0));
+		int balanceValue = totalReceiptsValue - totalExpensesValue;
+		balance.setText(NumberFormat.getCurrencyInstance().format(balanceValue / 100.0));
+		if(balanceValue >= 0)
+			balance.setTextColor(getResources().getColor(R.color.value_unreceived));
+		else
+			balance.setTextColor(getResources().getColor(R.color.value_unpaid));
 	}
 }

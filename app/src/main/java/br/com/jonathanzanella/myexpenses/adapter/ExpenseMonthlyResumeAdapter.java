@@ -23,6 +23,7 @@ import br.com.jonathanzanella.myexpenses.activities.ShowExpenseActivity;
 import br.com.jonathanzanella.myexpenses.model.Expense;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import lombok.Getter;
 
 /**
  * Created by Jonathan Zanella on 26/01/16.
@@ -30,6 +31,7 @@ import butterknife.ButterKnife;
 public class ExpenseMonthlyResumeAdapter extends RecyclerView.Adapter<ExpenseMonthlyResumeAdapter.ViewHolder> {
 	public static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM", Locale.getDefault());
 	protected List<Expense> expenses;
+	@Getter
 	private int totalValue;
 	private int totalUnpaidValue;
 

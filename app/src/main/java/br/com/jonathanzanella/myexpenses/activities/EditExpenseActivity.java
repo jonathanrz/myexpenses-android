@@ -76,10 +76,14 @@ public class EditExpenseActivity extends BaseActivity {
 			if(expense.getValue() < 0)
 				checkRepayment.setChecked(true);
 			chargeable = expense.getChargeable();
-			editChargeable.setText(chargeable.getName());
-			onChargeableSelected();
+			if(chargeable != null) {
+				editChargeable.setText(chargeable.getName());
+				onChargeableSelected();
+			}
 			checkPayNextMonth.setChecked(expense.isChargeNextMonth());
 			date = expense.getDate();
+			if(date == null)
+				date = DateTime.now();
 			onBalanceDateChanged();
 		} else {
 			date = DateTime.now();
@@ -178,7 +182,7 @@ public class EditExpenseActivity extends BaseActivity {
 
 	@OnClick(R.id.act_edit_expense_chargeable)
 	void onChargeable() {
-		if(expense == null)
+		if(expense == null || expense.getChargeable() == null)
 			startActivityForResult(new Intent(this, ListChargeableActivity.class), REQUEST_SELECT_CHARGEABLE);
 	}
 

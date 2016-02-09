@@ -46,8 +46,64 @@
 		<android.support.v7.widget.RecyclerView
 			android:id="@+id/view_monthly_resume_bills"
 			android:layout_width="match_parent"
+			android:layout_height="wrap_content"/>
+
+		<TextView
+			style="@style/HeaderTitle"
+			android:text="@string/balance"
+			android:layout_marginTop="@dimen/default_spacing"/>
+
+		<TableLayout
+			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:layout_marginBottom="48dp"/>
+			android:layout_marginBottom="48dp">
+
+			<TableRow>
+				<TextView
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_weight="1"
+					android:text="@string/total_receipts"
+					android:textColor="@color/color_primary_text"/>
+				<TextView
+					android:id="@+id/view_monthly_resume_total_receipts"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textColor="@color/value_unreceived"
+					android:gravity="end"/>
+			</TableRow>
+
+			<TableRow>
+				<TextView
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_weight="1"
+					android:text="@string/total_expenses"
+					android:textColor="@color/color_primary_text"/>
+				<TextView
+					android:id="@+id/view_monthly_resume_total_expenses"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textColor="@color/value_unpaid"
+					android:gravity="end"/>
+			</TableRow>
+
+			<TableRow>
+				<TextView
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_weight="1"
+					android:text="@string/balance"
+					android:textColor="@color/color_primary_text"/>
+				<TextView
+					android:id="@+id/view_monthly_resume_balance"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textColor="@color/value_unpaid"
+					android:gravity="end"/>
+			</TableRow>
+
+		</TableLayout>
 
 	</LinearLayout>
 </ScrollView>

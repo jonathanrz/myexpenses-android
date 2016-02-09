@@ -156,6 +156,9 @@ public class Expense extends BaseModel {
 			for (Expense expense : creditCardBills(card, creditCardMonth))
 				total += expense.getValue();
 
+			if(total == 0)
+				continue;
+
 			Expense expense = new Expense();
 			expense.setChargeable(card);
 			expense.setName(MyApplication.getContext().getString(R.string.invoice));
@@ -219,6 +222,9 @@ public class Expense extends BaseModel {
 	}
 
 	public static Chargeable findChargeable(ChargeableType type, long id) {
+		if(type == null || id == 0)
+			return null;
+
 		switch (type) {
 			case ACCOUNT:
 				return Account.find(id);

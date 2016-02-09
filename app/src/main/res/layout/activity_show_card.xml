@@ -11,7 +11,8 @@
 
     <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:layout_margin="@dimen/default_spacing">
 
         <TableRow>
@@ -66,4 +67,11 @@
 	    </TableRow>
 
     </TableLayout>
+
+	<Button
+		android:id="@+id/act_show_card_pay_credit_card_bill"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_margin="@dimen/default_spacing"
+		android:text="@string/pay_credit_card_bill"/>
 </LinearLayout>

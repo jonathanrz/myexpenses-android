@@ -40,4 +40,7 @@
     <string name="invoice">Fatura</string>
     <string name="filter">Filtar</string>
 	<string name="repayment">Ressarcimento</string>
+	<string name="total_receipts">Total de recebimentos:</string>
+	<string name="total_expenses">Total de gastos:</string>
+	<string name="pay_credit_card_bill">Pagar fatura do cartã0</string>
 </resources>

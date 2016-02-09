@@ -6,10 +6,17 @@ import android.support.annotation.Nullable;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import org.joda.time.DateTime;
+
+import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.model.Card;
+import br.com.jonathanzanella.myexpenses.model.Expense;
 import butterknife.Bind;
+import butterknife.OnClick;
 
 /**
  * Created by jzanella on 1/31/16.
@@ -93,5 +100,30 @@ public class ShowCardActivity extends BaseActivity {
 				break;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@OnClick(R.id.act_show_card_pay_credit_card_bill)
+	public void payCreditCardBill() {
+		List<Expense> expenses = Expense.creditCardBills(card, DateTime.now().minusMonths(1));
+		int totalExpense = 0;
+		for (Expense expense : expenses) {
+			totalExpense += expense.getValue();
+			expense.setCharged(true);
+			expense.save();
+		}
+
+		if(totalExpense == 0) {
+			Toast.makeText(this, "Fatura zerada", Toast.LENGTH_SHORT).show();
+			return;
+		}
+
+		Expense e = new Expense();
+		e.setName("Fatura " + card.getName());
+		e.setValue(totalExpense);
+		e.save();
+
+		Intent i = new Intent(this, EditExpenseActivity.class);
+		i.putExtra(EditExpenseActivity.KEY_EXPENSE_ID, e.getId());
+		startActivity(i);
 	}
 }

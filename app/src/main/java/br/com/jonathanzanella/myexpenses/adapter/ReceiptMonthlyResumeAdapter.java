@@ -20,6 +20,7 @@ import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.model.Receipt;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import lombok.Getter;
 
 /**
  * Created by Jonathan Zanella on 26/01/16.
@@ -27,6 +28,7 @@ import butterknife.ButterKnife;
 public class ReceiptMonthlyResumeAdapter extends RecyclerView.Adapter<ReceiptMonthlyResumeAdapter.ViewHolder> {
 	public static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM", Locale.getDefault());
 	protected List<Receipt> receipts;
+	@Getter
 	private int totalValue;
 	private int totalUnreceivedValue;
 
