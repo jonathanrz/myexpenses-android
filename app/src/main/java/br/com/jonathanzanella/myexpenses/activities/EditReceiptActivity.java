@@ -12,6 +12,7 @@ import org.joda.time.DateTime;
 
 import java.text.NumberFormat;
 
+import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.helper.CurrencyTextWatch;
 import br.com.jonathanzanella.myexpenses.model.Account;
@@ -41,6 +42,8 @@ public class EditReceiptActivity extends BaseActivity {
 	EditText editAccount;
 	@Bind(R.id.act_edit_receipt_repetition)
 	EditText editRepetition;
+	@Bind(R.id.act_edit_receipt_installment)
+	EditText editInstallment;
 
 	private Receipt receipt;
 	private DateTime date;
@@ -179,17 +182,26 @@ public class EditReceiptActivity extends BaseActivity {
 	}
 
 	private void save() {
+		int installment = Integer.parseInt(editInstallment.getText().toString());
 		if(receipt == null)
 			receipt = new Receipt();
-		receipt.setName(editName.getText().toString());
+		String originalName = editName.getText().toString();
+		if(installment == 1)
+			receipt.setName(originalName);
+		else
+			receipt.setName(String.format(Environment.PTBR_LOCALE, "%s %02d/%02d", originalName, 1, installment));
 		receipt.setDate(date);
 		receipt.setIncome(Integer.parseInt(editIncome.getText().toString().replaceAll("[^\\d]", "")));
 		receipt.setSource(source);
 		receipt.setAccount(account);
 		receipt.save();
 
-		int repetition = Integer.parseInt(editRepetition.getText().toString());
+		int repetition = installment;
+		if(repetition == 1)
+			repetition = Integer.parseInt(editRepetition.getText().toString());
 		for(int i = 1; i < repetition; i++) {
+			if(installment != 1)
+				receipt.setName(String.format(Environment.PTBR_LOCALE, "%s %02d/%02d", originalName, i + 1, installment));
 			receipt.repeat();
 			receipt.save();
 		}

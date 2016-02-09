@@ -216,7 +216,8 @@ public class EditExpenseActivity extends BaseActivity {
 		if(repetition == 1)
 			repetition = Integer.parseInt(editRepetition.getText().toString());
 		for(int i = 1; i < repetition; i++) {
-			expense.setName(String.format(Environment.PTBR_LOCALE, "%s %02d/%02d", originalName, i + 1, installment));
+			if(installment != 1)
+				expense.setName(String.format(Environment.PTBR_LOCALE, "%s %02d/%02d", originalName, i + 1, installment));
 			expense.repeat();
 			expense.save();
 		}
