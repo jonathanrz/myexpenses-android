@@ -48,10 +48,10 @@ public class Expense extends BaseModel {
 	@Column
 	long billId;
 
-	@Column @Setter
+	@Column @Getter @Setter
 	boolean charged;
 
-	@Column @Setter @Getter
+	@Column @Getter @Setter
 	boolean chargeNextMonth;
 
 	@Getter

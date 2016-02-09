@@ -27,7 +27,7 @@
                 android:id="@+id/act_show_account_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorPrimary"/>
+                android:textColor="@color/color_primary"/>
 
         </TableRow>
 
@@ -44,7 +44,7 @@
                 android:id="@+id/act_show_account_balance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorPrimary"/>
+                android:textColor="@color/color_primary"/>
 
         </TableRow>
 
@@ -61,7 +61,7 @@
                 android:id="@+id/act_show_account_balance_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorPrimary"/>
+                android:textColor="@color/color_primary"/>
 
         </TableRow>
 

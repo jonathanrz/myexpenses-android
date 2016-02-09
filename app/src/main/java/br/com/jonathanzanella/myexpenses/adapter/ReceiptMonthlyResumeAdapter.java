@@ -1,5 +1,6 @@
 package br.com.jonathanzanella.myexpenses.adapter;
 
+import android.support.annotation.ColorRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -58,8 +59,16 @@ public class ReceiptMonthlyResumeAdapter extends RecyclerView.Adapter<ReceiptMon
 			if(date != null)
 				date.setText(sdf.format(receipt.getDate().toDate()));
 			income.setText(NumberFormat.getCurrencyInstance().format(receipt.getIncome() / 100.0));
+			if(receipt.isCredited())
+				income.setTextColor(getColor(R.color.value_received));
+			else
+				income.setTextColor(getColor(R.color.value_unreceived));
 			if(source != null)
 				source.setText(receipt.getSource().getName());
+		}
+
+		private int getColor(@ColorRes int color) {
+			return itemView.getContext().getResources().getColor(color);
 		}
 
 		public void setTotal(int totalValue) {

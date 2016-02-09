@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/row_account_name"
             android:layout_marginStart="@dimen/default_spacing"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/color_primary"
             tools:text="R$ 1000,00"/>
 
         <TextView
@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/row_account_balance"
             android:layout_marginStart="@dimen/default_spacing"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/color_primary"
             tools:text="01/01/2001"/>
 
     </RelativeLayout>

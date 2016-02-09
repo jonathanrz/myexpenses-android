@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<color name="colorPrimary">#2196F3</color>
-	<color name="colorPrimaryDark">#1976D2</color>
-	<color name="colorPrimaryLight">#BBDEFB</color>
-	<color name="colorAccent">#FF4081</color>
-	<color name="colorText">#FFFFFF</color>
-	<color name="colorPrimaryText">#212121</color>
-	<color name="colorSecondaryText">#727272</color>
-	<color name="colorDivider">#B6B6B6</color>
-	<color name="colorSelected">#B6B6B6</color>
+	<color name="color_primary">#2196F3</color>
+	<color name="color_primary_dark">#1976D2</color>
+	<color name="color_primary_light">#BBDEFB</color>
+	<color name="color_accent">#FF4081</color>
+	<color name="color_text">#FFFFFF</color>
+	<color name="color_primary_text">#212121</color>
+	<color name="color_secondary_text">#727272</color>
+	<color name="color_divider">#B6B6B6</color>
+	<color name="color_selected">#B6B6B6</color>
+
+	<color name="value_paid">#1976D2</color>
+	<color name="value_unpaid">#c62828</color>
+	<color name="value_received">#1976D2</color>
+	<color name="value_unreceived">#00c853</color>
 </resources>

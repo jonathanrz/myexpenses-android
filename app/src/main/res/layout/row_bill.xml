@@ -24,7 +24,7 @@
                 android:id="@+id/row_bill_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-            android:textColor="@color/colorPrimary"/>
+            android:textColor="@color/color_primary"/>
 
         </TableRow>
 
@@ -41,7 +41,7 @@
                 android:id="@+id/row_bill_amount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorPrimary"/>
+                android:textColor="@color/color_primary"/>
 
         </TableRow>
 
@@ -58,7 +58,7 @@
                 android:id="@+id/row_bill_due_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorPrimary"/>
+                android:textColor="@color/color_primary"/>
 
         </TableRow>
 
@@ -75,7 +75,7 @@
                 android:id="@+id/row_bill_init_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorPrimary"/>
+                android:textColor="@color/color_primary"/>
 
         </TableRow>
 
@@ -92,7 +92,7 @@
                 android:id="@+id/row_bill_end_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorPrimary"/>
+                android:textColor="@color/color_primary"/>
 
         </TableRow>
 

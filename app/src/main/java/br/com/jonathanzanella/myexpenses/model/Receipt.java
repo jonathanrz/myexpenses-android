@@ -48,7 +48,7 @@ public class Receipt extends BaseModel {
 	@Column
 	long accountId;
 
-	@Column @Setter
+	@Column @Getter @Setter
 	boolean credited;
 
 	public static List<Receipt> all() {
