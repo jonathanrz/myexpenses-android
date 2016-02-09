@@ -9,10 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 
 import java.lang.ref.WeakReference;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.R;
@@ -26,6 +28,7 @@ import butterknife.ButterKnife;
  */
 public class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ViewHolder> {
 	protected List<Receipt> receipts;
+	protected List<Receipt> receiptsFiltered;
 
 	public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 		@Bind(R.id.row_receipt_name)
@@ -77,24 +80,39 @@ public class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ViewHold
 
 	@Override
 	public void onBindViewHolder(ViewHolder holder, int position) {
-		holder.setData(receipts.get(position));
+		holder.setData(receiptsFiltered.get(position));
 	}
 
 	@Override
 	public int getItemCount() {
-		return receipts != null ? receipts.size() : 0;
+		return receiptsFiltered != null ? receiptsFiltered.size() : 0;
 	}
 
 	public void loadData(DateTime dateTime) {
 		receipts = Receipt.monthly(dateTime);
+		receiptsFiltered = receipts;
 	}
 
 	public void addReceipt(@NonNull Receipt receipt) {
 		receipts.add(receipt);
-		notifyItemInserted(receipts.size() - 1);
+		receiptsFiltered.add(receipt);
+		notifyItemInserted(receiptsFiltered.size() - 1);
 	}
 
 	public @Nullable Receipt getReceipt(int position) {
-		return receipts != null ? receipts.get(position) : null;
+		return receiptsFiltered != null ? receiptsFiltered.get(position) : null;
+	}
+
+	public void filter(String filter) {
+		if(filter == null || filter.compareTo("") == 0) {
+			receiptsFiltered = receipts;
+			return;
+		}
+
+		receiptsFiltered = new ArrayList<>();
+		for (Receipt receipt : receipts) {
+			if(StringUtils.containsIgnoreCase(receipt.getName(), filter))
+				receiptsFiltered.add(receipt);
+		}
 	}
 }

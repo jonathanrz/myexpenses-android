@@ -58,4 +58,11 @@ public class ReceiptMonthlyView extends BaseView {
 	public void addReceipt(@NonNull Receipt receipt) {
 		adapter.addReceipt(receipt);
 	}
+
+    @Override
+    public void filter(String s) {
+        super.filter(s);
+        adapter.filter(s);
+        adapter.notifyDataSetChanged();
+    }
 }

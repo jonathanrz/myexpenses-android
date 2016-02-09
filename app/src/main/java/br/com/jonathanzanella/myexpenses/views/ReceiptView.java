@@ -3,6 +3,7 @@ package br.com.jonathanzanella.myexpenses.views;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
@@ -15,11 +16,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.activities.EditExpenseActivity;
 import br.com.jonathanzanella.myexpenses.activities.EditReceiptActivity;
 import br.com.jonathanzanella.myexpenses.adapter.MonthlyPagerAdapter;
 import br.com.jonathanzanella.myexpenses.adapter.MonthlyPagerAdapterBuilder;
-import br.com.jonathanzanella.myexpenses.model.Expense;
 import br.com.jonathanzanella.myexpenses.model.Receipt;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -28,10 +27,12 @@ import butterknife.OnClick;
 /**
  * Created by Jonathan Zanella on 03/02/16.
  */
-public class ReceiptView extends BaseView {
+public class ReceiptView extends BaseView implements ViewPager.OnPageChangeListener {
 	private static final int REQUEST_ADD_RECEIPT = 1007;
 	@Bind(R.id.view_receipts_pager)
     ViewPager pager;
+
+	private MonthlyPagerAdapter adapter;
 
 	private Map<DateTime, WeakReference<ReceiptMonthlyView>> views = new HashMap<>();
 
@@ -52,7 +53,7 @@ public class ReceiptView extends BaseView {
         inflate(getContext(), R.layout.view_receipts, this);
         ButterKnife.bind(this);
 
-        MonthlyPagerAdapter adapter = new MonthlyPagerAdapter(getContext(), new MonthlyPagerAdapterBuilder() {
+        adapter = new MonthlyPagerAdapter(getContext(), new MonthlyPagerAdapterBuilder() {
 	        @Override
 	        public BaseView buildView(Context ctx, DateTime date) {
 		        ReceiptMonthlyView view = new ReceiptMonthlyView(ctx, date);
@@ -62,7 +63,19 @@ public class ReceiptView extends BaseView {
         });
         pager.setAdapter(adapter);
         pager.setCurrentItem(MonthlyPagerAdapter.INIT_MONTH_VISIBLE);
+	    pager.addOnPageChangeListener(this);
     }
+
+	@Override
+	public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+
+	@Override
+	public void onPageSelected(int position) {
+		filter(filter);
+	}
+
+	@Override
+	public void onPageScrollStateChanged(int state) {}
 
 	@Override
 	public void setTabs(TabLayout tabs) {
@@ -100,5 +113,21 @@ public class ReceiptView extends BaseView {
 				}
 				break;
 		}
+	}
+
+	@Override
+	public void filter(String s) {
+		super.filter(s);
+		DateTime date = adapter.getDate(pager.getCurrentItem());
+		ReceiptMonthlyView view = getMonthView(date);
+		if (view != null)
+			view.filter(filter);
+	}
+
+	private @Nullable ReceiptMonthlyView getMonthView(DateTime date) {
+		WeakReference<ReceiptMonthlyView> viewRef = views.get(date);
+		if (viewRef != null)
+			return viewRef.get();
+		return null;
 	}
 }
