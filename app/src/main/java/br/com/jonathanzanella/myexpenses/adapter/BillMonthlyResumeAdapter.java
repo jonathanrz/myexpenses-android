@@ -18,12 +18,14 @@ import br.com.jonathanzanella.myexpenses.model.Bill;
 import br.com.jonathanzanella.myexpenses.model.Expense;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import lombok.Getter;
 
 /**
  * Created by Jonathan Zanella on 26/01/16.
  */
 public class BillMonthlyResumeAdapter extends RecyclerView.Adapter<BillMonthlyResumeAdapter.ViewHolder> {
 	protected List<Bill> bills;
+	@Getter
 	private int totalValue;
 
 	private enum VIEW_TYPE {

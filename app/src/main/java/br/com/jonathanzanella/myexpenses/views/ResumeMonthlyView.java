@@ -123,6 +123,7 @@ public class ResumeMonthlyView extends BaseView {
 		int totalReceiptsValue = receiptAdapter.getTotalValue();
 		totalReceipts.setText(NumberFormat.getCurrencyInstance().format(totalReceiptsValue / 100.0));
 		int totalExpensesValue = expensesAdapter.getTotalValue();
+		totalExpensesValue += billsAdapter.getTotalValue();
 		totalExpenses.setText(NumberFormat.getCurrencyInstance().format(totalExpensesValue / 100.0));
 		int balanceValue = totalReceiptsValue - totalExpensesValue;
 		balance.setText(NumberFormat.getCurrencyInstance().format(balanceValue / 100.0));
