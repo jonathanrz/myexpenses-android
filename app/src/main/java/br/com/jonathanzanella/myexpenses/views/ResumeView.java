@@ -9,8 +9,8 @@ import android.view.View;
 import org.joda.time.DateTime;
 
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.adapter.MonthlyPagerAdapter;
-import br.com.jonathanzanella.myexpenses.adapter.MonthlyPagerAdapterBuilder;
+import br.com.jonathanzanella.myexpenses.adapters.MonthlyPagerAdapter;
+import br.com.jonathanzanella.myexpenses.adapters.MonthlyPagerAdapterBuilder;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 

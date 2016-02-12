@@ -1,4 +1,4 @@
-package br.com.jonathanzanella.myexpenses.adapter;
+package br.com.jonathanzanella.myexpenses.adapters;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -19,7 +19,7 @@ import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.activities.ShowReceiptActivity;
-import br.com.jonathanzanella.myexpenses.model.Receipt;
+import br.com.jonathanzanella.myexpenses.models.Receipt;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -41,6 +41,8 @@ public class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ViewHold
 		TextView source;
 		@Bind(R.id.row_receipt_account)
 		TextView account;
+		@Bind(R.id.row_receipt_show_in_resume)
+		TextView showInResume;
 
 		WeakReference<ReceiptAdapter> adapterWeakReference;
 
@@ -59,6 +61,7 @@ public class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ViewHold
 			income.setText(NumberFormat.getCurrencyInstance().format(receipt.getIncome() / 100.0));
 			source.setText(receipt.getSource().getName());
 			account.setText(receipt.getAccount().getName());
+			showInResume.setText(receipt.isShowInResume() ? R.string.yes : R.string.no);
 		}
 
 		@Override

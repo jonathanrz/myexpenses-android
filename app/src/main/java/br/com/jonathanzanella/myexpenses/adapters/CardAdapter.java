@@ -1,4 +1,4 @@
-package br.com.jonathanzanella.myexpenses.adapter;
+package br.com.jonathanzanella.myexpenses.adapters;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -14,7 +14,7 @@ import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.activities.ShowCardActivity;
-import br.com.jonathanzanella.myexpenses.model.Card;
+import br.com.jonathanzanella.myexpenses.models.Card;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import lombok.Setter;

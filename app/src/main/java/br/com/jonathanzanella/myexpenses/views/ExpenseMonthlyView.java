@@ -10,8 +10,8 @@ import android.support.v7.widget.RecyclerView;
 import org.joda.time.DateTime;
 
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.adapter.ExpenseAdapter;
-import br.com.jonathanzanella.myexpenses.model.Expense;
+import br.com.jonathanzanella.myexpenses.adapters.ExpenseAdapter;
+import br.com.jonathanzanella.myexpenses.models.Expense;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 

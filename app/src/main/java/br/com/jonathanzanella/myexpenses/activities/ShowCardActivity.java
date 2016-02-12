@@ -13,8 +13,8 @@ import org.joda.time.DateTime;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.model.Card;
-import br.com.jonathanzanella.myexpenses.model.Expense;
+import br.com.jonathanzanella.myexpenses.models.Card;
+import br.com.jonathanzanella.myexpenses.models.Expense;
 import butterknife.Bind;
 import butterknife.OnClick;
 

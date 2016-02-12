@@ -1,4 +1,4 @@
-package br.com.jonathanzanella.myexpenses.model;
+package br.com.jonathanzanella.myexpenses.models;
 
 /**
  * Created by jzanella on 2/2/16.

@@ -8,9 +8,9 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.model.Account;
-import br.com.jonathanzanella.myexpenses.model.Card;
-import br.com.jonathanzanella.myexpenses.model.CardType;
+import br.com.jonathanzanella.myexpenses.models.Account;
+import br.com.jonathanzanella.myexpenses.models.Card;
+import br.com.jonathanzanella.myexpenses.models.CardType;
 import butterknife.Bind;
 import butterknife.OnClick;
 

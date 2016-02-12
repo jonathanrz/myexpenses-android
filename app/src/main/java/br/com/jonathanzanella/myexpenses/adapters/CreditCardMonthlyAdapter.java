@@ -1,4 +1,4 @@
-package br.com.jonathanzanella.myexpenses.adapter;
+package br.com.jonathanzanella.myexpenses.adapters;
 
 import android.support.annotation.ColorRes;
 import android.support.annotation.Nullable;
@@ -17,8 +17,8 @@ import java.util.List;
 import java.util.Locale;
 
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.model.Card;
-import br.com.jonathanzanella.myexpenses.model.Expense;
+import br.com.jonathanzanella.myexpenses.models.Card;
+import br.com.jonathanzanella.myexpenses.models.Expense;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 

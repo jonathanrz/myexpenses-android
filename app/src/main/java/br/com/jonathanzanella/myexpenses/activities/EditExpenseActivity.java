@@ -16,12 +16,12 @@ import java.text.NumberFormat;
 
 import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.helper.CurrencyTextWatch;
-import br.com.jonathanzanella.myexpenses.model.Bill;
-import br.com.jonathanzanella.myexpenses.model.Chargeable;
-import br.com.jonathanzanella.myexpenses.model.ChargeableType;
-import br.com.jonathanzanella.myexpenses.model.Expense;
-import br.com.jonathanzanella.myexpenses.model.Receipt;
+import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch;
+import br.com.jonathanzanella.myexpenses.models.Bill;
+import br.com.jonathanzanella.myexpenses.models.Chargeable;
+import br.com.jonathanzanella.myexpenses.models.ChargeableType;
+import br.com.jonathanzanella.myexpenses.models.Expense;
+import br.com.jonathanzanella.myexpenses.models.Receipt;
 import br.com.jonathanzanella.myexpenses.services.CashierService;
 import butterknife.Bind;
 import butterknife.OnClick;

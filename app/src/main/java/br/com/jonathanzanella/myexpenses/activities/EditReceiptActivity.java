@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 
@@ -14,10 +15,10 @@ import java.text.NumberFormat;
 
 import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.helper.CurrencyTextWatch;
-import br.com.jonathanzanella.myexpenses.model.Account;
-import br.com.jonathanzanella.myexpenses.model.Receipt;
-import br.com.jonathanzanella.myexpenses.model.Source;
+import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch;
+import br.com.jonathanzanella.myexpenses.models.Account;
+import br.com.jonathanzanella.myexpenses.models.Receipt;
+import br.com.jonathanzanella.myexpenses.models.Source;
 import br.com.jonathanzanella.myexpenses.services.CashierService;
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -44,6 +45,8 @@ public class EditReceiptActivity extends BaseActivity {
 	EditText editRepetition;
 	@Bind(R.id.act_edit_receipt_installment)
 	EditText editInstallment;
+	@Bind(R.id.act_edit_receipt_show_in_resume)
+	CheckBox checkShowInResume;
 
 	private Receipt receipt;
 	private DateTime date;
@@ -62,24 +65,33 @@ public class EditReceiptActivity extends BaseActivity {
 
 		editIncome.addTextChangedListener(new CurrencyTextWatch(editIncome));
 
-		if(receipt != null) {
-			editName.setText(receipt.getName());
-			editIncome.setText(NumberFormat.getCurrencyInstance().format(receipt.getIncome() / 100));
-			editSource.setText(receipt.getSource().getName());
-			source = receipt.getSource();
-			onSourceSelected();
-			account = receipt.getAccount();
-			onAccountSelected();
-			date = receipt.getDate();
-			onBalanceDateChanged();
+		if(receipt == null) {
+			initData();
 		} else {
-			date = DateTime.now();
-			onBalanceDateChanged();
-			if(source != null)
-				onSourceSelected();
-			if(account != null)
-				onAccountSelected();
+			setData();
 		}
+	}
+
+	private void initData() {
+		date = DateTime.now();
+		onBalanceDateChanged();
+		if(source != null)
+			onSourceSelected();
+		if(account != null)
+			onAccountSelected();
+	}
+
+	private void setData() {
+		editName.setText(receipt.getName());
+		editIncome.setText(NumberFormat.getCurrencyInstance().format(receipt.getIncome() / 100));
+		editSource.setText(receipt.getSource().getName());
+		source = receipt.getSource();
+		checkShowInResume.setChecked(receipt.isShowInResume());
+		onSourceSelected();
+		account = receipt.getAccount();
+		onAccountSelected();
+		date = receipt.getDate();
+		onBalanceDateChanged();
 	}
 
 	@Override
@@ -194,6 +206,7 @@ public class EditReceiptActivity extends BaseActivity {
 		receipt.setIncome(Integer.parseInt(editIncome.getText().toString().replaceAll("[^\\d]", "")));
 		receipt.setSource(source);
 		receipt.setAccount(account);
+		receipt.setShowInResume(checkShowInResume.isChecked());
 		receipt.save();
 
 		int repetition = installment;

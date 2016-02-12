@@ -1,4 +1,4 @@
-package br.com.jonathanzanella.myexpenses.helper;
+package br.com.jonathanzanella.myexpenses.helpers;
 
 import android.text.Editable;
 import android.text.TextWatcher;

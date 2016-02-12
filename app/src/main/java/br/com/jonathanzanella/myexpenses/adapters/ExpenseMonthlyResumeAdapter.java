@@ -1,4 +1,4 @@
-package br.com.jonathanzanella.myexpenses.adapter;
+package br.com.jonathanzanella.myexpenses.adapters;
 
 import android.content.Intent;
 import android.support.annotation.ColorRes;
@@ -20,7 +20,7 @@ import java.util.Locale;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.activities.CreditCardInvoiceActivity;
 import br.com.jonathanzanella.myexpenses.activities.ShowExpenseActivity;
-import br.com.jonathanzanella.myexpenses.model.Expense;
+import br.com.jonathanzanella.myexpenses.models.Expense;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package br.com.jonathanzanella.myexpenses.model;
+package br.com.jonathanzanella.myexpenses.models;
 
 import android.util.Log;
 

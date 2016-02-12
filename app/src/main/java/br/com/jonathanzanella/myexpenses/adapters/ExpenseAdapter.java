@@ -1,4 +1,4 @@
-package br.com.jonathanzanella.myexpenses.adapter;
+package br.com.jonathanzanella.myexpenses.adapters;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -20,8 +20,8 @@ import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.activities.ShowExpenseActivity;
-import br.com.jonathanzanella.myexpenses.model.Expense;
-import br.com.jonathanzanella.myexpenses.model.Receipt;
+import br.com.jonathanzanella.myexpenses.models.Expense;
+import br.com.jonathanzanella.myexpenses.models.Receipt;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 

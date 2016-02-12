@@ -7,8 +7,8 @@ import android.support.v7.widget.RecyclerView;
 import org.joda.time.DateTime;
 
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.adapter.CreditCardMonthlyAdapter;
-import br.com.jonathanzanella.myexpenses.model.Card;
+import br.com.jonathanzanella.myexpenses.adapters.CreditCardMonthlyAdapter;
+import br.com.jonathanzanella.myexpenses.models.Card;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 

@@ -10,8 +10,8 @@ import android.util.AttributeSet;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.activities.EditSourceActivity;
-import br.com.jonathanzanella.myexpenses.adapter.SourceAdapter;
-import br.com.jonathanzanella.myexpenses.model.Source;
+import br.com.jonathanzanella.myexpenses.adapters.SourceAdapter;
+import br.com.jonathanzanella.myexpenses.models.Source;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;

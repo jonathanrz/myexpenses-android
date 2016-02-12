@@ -1,4 +1,4 @@
-package br.com.jonathanzanella.myexpenses.adapter;
+package br.com.jonathanzanella.myexpenses.adapters;
 
 import android.support.annotation.ColorRes;
 import android.support.annotation.Nullable;
@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Locale;
 
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.model.Receipt;
+import br.com.jonathanzanella.myexpenses.models.Receipt;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import lombok.Getter;
@@ -128,7 +128,7 @@ public class ReceiptMonthlyResumeAdapter extends RecyclerView.Adapter<ReceiptMon
 	}
 
 	public void loadData(DateTime month) {
-		receipts = Receipt.monthly(month);
+		receipts = Receipt.resume(month);
 		totalValue = 0;
 		totalUnreceivedValue = 0;
 

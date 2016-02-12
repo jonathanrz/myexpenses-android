@@ -17,9 +17,9 @@ import java.util.Map;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.activities.EditExpenseActivity;
-import br.com.jonathanzanella.myexpenses.adapter.MonthlyPagerAdapter;
-import br.com.jonathanzanella.myexpenses.adapter.MonthlyPagerAdapterBuilder;
-import br.com.jonathanzanella.myexpenses.model.Expense;
+import br.com.jonathanzanella.myexpenses.adapters.MonthlyPagerAdapter;
+import br.com.jonathanzanella.myexpenses.adapters.MonthlyPagerAdapterBuilder;
+import br.com.jonathanzanella.myexpenses.models.Expense;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;

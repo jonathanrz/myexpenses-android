@@ -7,7 +7,7 @@ import android.view.MenuItem;
 import android.widget.EditText;
 
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.model.Source;
+import br.com.jonathanzanella.myexpenses.models.Source;
 import butterknife.Bind;
 
 /**

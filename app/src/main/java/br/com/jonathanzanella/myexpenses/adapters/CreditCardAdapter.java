@@ -1,4 +1,4 @@
-package br.com.jonathanzanella.myexpenses.adapter;
+package br.com.jonathanzanella.myexpenses.adapters;
 
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
@@ -14,9 +14,9 @@ import java.text.NumberFormat;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.model.Card;
-import br.com.jonathanzanella.myexpenses.model.Expense;
-import br.com.jonathanzanella.myexpenses.model.Receipt;
+import br.com.jonathanzanella.myexpenses.models.Card;
+import br.com.jonathanzanella.myexpenses.models.Expense;
+import br.com.jonathanzanella.myexpenses.models.Receipt;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 

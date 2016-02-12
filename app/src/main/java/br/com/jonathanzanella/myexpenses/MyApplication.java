@@ -10,10 +10,10 @@ import net.danlew.android.joda.JodaTimeAndroid;
 
 import org.joda.time.DateTime;
 
-import br.com.jonathanzanella.myexpenses.model.Account;
-import br.com.jonathanzanella.myexpenses.model.Card;
-import br.com.jonathanzanella.myexpenses.model.CardType;
-import br.com.jonathanzanella.myexpenses.model.Source;
+import br.com.jonathanzanella.myexpenses.models.Account;
+import br.com.jonathanzanella.myexpenses.models.Card;
+import br.com.jonathanzanella.myexpenses.models.CardType;
+import br.com.jonathanzanella.myexpenses.models.Source;
 import lombok.Getter;
 
 /**

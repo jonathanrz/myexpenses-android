@@ -9,9 +9,9 @@ import android.support.v4.view.ViewPager;
 import org.joda.time.DateTime;
 
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.adapter.MonthlyPagerAdapter;
-import br.com.jonathanzanella.myexpenses.adapter.MonthlyPagerAdapterBuilder;
-import br.com.jonathanzanella.myexpenses.model.Card;
+import br.com.jonathanzanella.myexpenses.adapters.MonthlyPagerAdapter;
+import br.com.jonathanzanella.myexpenses.adapters.MonthlyPagerAdapterBuilder;
+import br.com.jonathanzanella.myexpenses.models.Card;
 import br.com.jonathanzanella.myexpenses.views.BaseView;
 import br.com.jonathanzanella.myexpenses.views.CreditCardInvoiceView;
 import butterknife.Bind;

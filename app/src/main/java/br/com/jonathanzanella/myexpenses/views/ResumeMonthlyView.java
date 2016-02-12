@@ -12,10 +12,10 @@ import org.joda.time.DateTime;
 import java.text.NumberFormat;
 
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.adapter.AccountAdapter;
-import br.com.jonathanzanella.myexpenses.adapter.BillMonthlyResumeAdapter;
-import br.com.jonathanzanella.myexpenses.adapter.ExpenseMonthlyResumeAdapter;
-import br.com.jonathanzanella.myexpenses.adapter.ReceiptMonthlyResumeAdapter;
+import br.com.jonathanzanella.myexpenses.adapters.AccountAdapter;
+import br.com.jonathanzanella.myexpenses.adapters.BillMonthlyResumeAdapter;
+import br.com.jonathanzanella.myexpenses.adapters.ExpenseMonthlyResumeAdapter;
+import br.com.jonathanzanella.myexpenses.adapters.ReceiptMonthlyResumeAdapter;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 

@@ -10,7 +10,7 @@ import android.widget.TextView;
 import java.text.NumberFormat;
 
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.model.Account;
+import br.com.jonathanzanella.myexpenses.models.Account;
 import butterknife.Bind;
 
 /**

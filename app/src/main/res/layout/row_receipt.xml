@@ -96,5 +96,22 @@
 
         </TableRow>
 
+        <TableRow>
+
+            <TextView
+                android:id="@+id/row_receipt_show_in_resume_stt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/show_in_resume"
+                android:layout_marginEnd="@dimen/min_spacing"/>
+
+            <TextView
+                android:id="@+id/row_receipt_show_in_resume"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/color_primary"/>
+
+        </TableRow>
+
     </TableLayout>
 </android.support.v7.widget.CardView>

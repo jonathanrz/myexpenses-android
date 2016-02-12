@@ -1,6 +1,6 @@
-package br.com.jonathanzanella.myexpenses.adapter;
+package br.com.jonathanzanella.myexpenses.adapters;
 
-import br.com.jonathanzanella.myexpenses.model.Bill;
+import br.com.jonathanzanella.myexpenses.models.Bill;
 
 /**
  * Created by jzanella on 2/1/16.

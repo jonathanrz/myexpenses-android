@@ -9,12 +9,12 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.adapter.AccountAdapter;
-import br.com.jonathanzanella.myexpenses.adapter.AccountAdapterCallback;
-import br.com.jonathanzanella.myexpenses.adapter.CardAdapter;
-import br.com.jonathanzanella.myexpenses.adapter.CardAdapterCallback;
-import br.com.jonathanzanella.myexpenses.model.Account;
-import br.com.jonathanzanella.myexpenses.model.Card;
+import br.com.jonathanzanella.myexpenses.adapters.AccountAdapter;
+import br.com.jonathanzanella.myexpenses.adapters.AccountAdapterCallback;
+import br.com.jonathanzanella.myexpenses.adapters.CardAdapter;
+import br.com.jonathanzanella.myexpenses.adapters.CardAdapterCallback;
+import br.com.jonathanzanella.myexpenses.models.Account;
+import br.com.jonathanzanella.myexpenses.models.Card;
 import butterknife.Bind;
 
 /**

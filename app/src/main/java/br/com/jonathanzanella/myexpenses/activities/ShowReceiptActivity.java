@@ -12,8 +12,8 @@ import android.widget.TextView;
 import java.text.NumberFormat;
 
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.model.Account;
-import br.com.jonathanzanella.myexpenses.model.Receipt;
+import br.com.jonathanzanella.myexpenses.models.Account;
+import br.com.jonathanzanella.myexpenses.models.Receipt;
 import butterknife.Bind;
 
 /**
@@ -32,6 +32,8 @@ public class ShowReceiptActivity extends BaseActivity {
 	TextView receiptSource;
 	@Bind(R.id.act_show_receipt_account)
 	TextView receiptAccount;
+	@Bind(R.id.act_show_receipt_show_in_resume)
+	TextView receiptShowInResume;
 
 	private Receipt receipt;
 
@@ -54,6 +56,7 @@ public class ShowReceiptActivity extends BaseActivity {
 		receiptIncome.setText(NumberFormat.getCurrencyInstance().format(receipt.getIncome() / 100.0));
 		receiptSource.setText(receipt.getSource().getName());
 		receiptAccount.setText(receipt.getAccount().getName());
+		receiptShowInResume.setText(receipt.isShowInResume() ? R.string.yes : R.string.no);
 	}
 
 	@Override

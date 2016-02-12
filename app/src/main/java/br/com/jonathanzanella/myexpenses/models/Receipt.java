@@ -1,4 +1,4 @@
-package br.com.jonathanzanella.myexpenses.model;
+package br.com.jonathanzanella.myexpenses.models;
 
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
@@ -51,6 +51,9 @@ public class Receipt extends BaseModel {
 	@Column @Getter @Setter
 	boolean credited;
 
+	@Column @Getter @Setter
+	boolean ignoreInResume;
+
 	public static List<Receipt> all() {
 		return initQuery().queryList();
 	}
@@ -72,6 +75,13 @@ public class Receipt extends BaseModel {
 	public static List<Receipt> monthly(DateTime month) {
 		return initQuery()
 				.where(Receipt_Table.date.between(month).and(month.plusMonths(1)))
+				.queryList();
+	}
+
+	public static List<Receipt> resume(DateTime month) {
+		return initQuery()
+				.where(Receipt_Table.date.between(month).and(month.plusMonths(1)))
+				.and(Receipt_Table.ignoreInResume.is(false))
 				.queryList();
 	}
 
@@ -119,6 +129,14 @@ public class Receipt extends BaseModel {
 
 	public void setAccount(@NonNull Account a) {
 		accountId = a.getId();
+	}
+
+	public boolean isShowInResume() {
+		return !ignoreInResume;
+	}
+
+	public void setShowInResume(boolean b) {
+		ignoreInResume = !b;
 	}
 
 	public void repeat() {

@@ -10,8 +10,8 @@ import android.util.AttributeSet;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.activities.EditCardActivity;
-import br.com.jonathanzanella.myexpenses.adapter.CardAdapter;
-import br.com.jonathanzanella.myexpenses.model.Card;
+import br.com.jonathanzanella.myexpenses.adapters.CardAdapter;
+import br.com.jonathanzanella.myexpenses.models.Card;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;

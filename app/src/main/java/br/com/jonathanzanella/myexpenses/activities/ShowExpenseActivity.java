@@ -14,10 +14,10 @@ import android.widget.TextView;
 import java.text.NumberFormat;
 
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.model.Bill;
-import br.com.jonathanzanella.myexpenses.model.Chargeable;
-import br.com.jonathanzanella.myexpenses.model.Expense;
-import br.com.jonathanzanella.myexpenses.model.Receipt;
+import br.com.jonathanzanella.myexpenses.models.Bill;
+import br.com.jonathanzanella.myexpenses.models.Chargeable;
+import br.com.jonathanzanella.myexpenses.models.Expense;
+import br.com.jonathanzanella.myexpenses.models.Receipt;
 import butterknife.Bind;
 
 /**

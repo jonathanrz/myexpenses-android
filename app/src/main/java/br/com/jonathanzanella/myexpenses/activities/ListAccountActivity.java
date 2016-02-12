@@ -8,9 +8,9 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.adapter.AccountAdapter;
-import br.com.jonathanzanella.myexpenses.adapter.AccountAdapterCallback;
-import br.com.jonathanzanella.myexpenses.model.Account;
+import br.com.jonathanzanella.myexpenses.adapters.AccountAdapter;
+import br.com.jonathanzanella.myexpenses.adapters.AccountAdapterCallback;
+import br.com.jonathanzanella.myexpenses.models.Account;
 import butterknife.Bind;
 
 /**
