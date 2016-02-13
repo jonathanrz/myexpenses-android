@@ -16,6 +16,7 @@ import br.com.jonathanzanella.myexpenses.adapters.AccountAdapter;
 import br.com.jonathanzanella.myexpenses.adapters.BillMonthlyResumeAdapter;
 import br.com.jonathanzanella.myexpenses.adapters.ExpenseMonthlyResumeAdapter;
 import br.com.jonathanzanella.myexpenses.adapters.ReceiptMonthlyResumeAdapter;
+import br.com.jonathanzanella.myexpenses.models.Expense;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -112,11 +113,11 @@ public class ResumeMonthlyView extends BaseView {
 		receiptAdapter.notifyDataSetChanged();
 		receipts.getLayoutParams().height = singleRowHeight * receiptAdapter.getItemCount();
 
-		expensesAdapter.loadData(month);
+		expensesAdapter.setExpenses(Expense.expenses(month));
 		expensesAdapter.notifyDataSetChanged();
 		expenses.getLayoutParams().height = singleRowHeight * expensesAdapter.getItemCount();
 
-		billsAdapter.loadData(month);
+		billsAdapter.loadData(month, expensesAdapter.getExpenses());
 		billsAdapter.notifyDataSetChanged();
 		bills.getLayoutParams().height = singleRowHeight * billsAdapter.getItemCount();
 

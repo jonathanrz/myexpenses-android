@@ -9,8 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.joda.time.DateTime;
-
 import java.lang.ref.WeakReference;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -30,6 +28,7 @@ import lombok.Getter;
  */
 public class ExpenseMonthlyResumeAdapter extends RecyclerView.Adapter<ExpenseMonthlyResumeAdapter.ViewHolder> {
 	public static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM", Locale.getDefault());
+	@Getter
 	protected List<Expense> expenses;
 	@Getter
 	private int totalValue;
@@ -149,8 +148,8 @@ public class ExpenseMonthlyResumeAdapter extends RecyclerView.Adapter<ExpenseMon
 		return expenses != null ? expenses.size() + 2 : 0;
 	}
 
-	public void loadData(DateTime month) {
-		expenses = Expense.expenses(month);
+	public void setExpenses(List<Expense> expenses) {
+		this.expenses = expenses;
 		totalValue = 0;
 		totalUnpaidValue = 0;
 

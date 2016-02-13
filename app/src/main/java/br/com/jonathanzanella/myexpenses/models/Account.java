@@ -1,5 +1,7 @@
 package br.com.jonathanzanella.myexpenses.models;
 
+import android.support.annotation.Nullable;
+
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
@@ -67,5 +69,9 @@ public class Account extends BaseModel implements Chargeable {
     @Override
     public void debit(int value) {
         balance -= value;
+    }
+
+    public @Nullable Card getDebitCard() {
+        return Card.accountDebitCard(this);
     }
 }

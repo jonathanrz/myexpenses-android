@@ -96,27 +96,12 @@ public class BillMonthlyResumeAdapter extends RecyclerView.Adapter<BillMonthlyRe
 		return bills != null ? bills.size() + 1 : 0;
 	}
 
-	public void loadData(DateTime month) {
-		bills = Bill.monthly(month);
-		List<Expense> expenses = Expense.expenses(month);
+	public void loadData(DateTime month, List<Expense> expenses) {
+		bills = Bill.monthly(month, expenses);
 		totalValue = 0;
 
-		for (int i = 0; i < bills.size(); i++) {
-			Bill bill = bills.get(i);
-			boolean billAlreadyPaid = false;
-			for (Expense expense : expenses) {
-				Bill b = expense.getBill();
-				if(b != null && b.getId() == bill.getId()) {
-					billAlreadyPaid = true;
-					break;
-				}
-			}
-			if(billAlreadyPaid) {
-				bills.remove(i);
-				i--;
-			} else {
-				totalValue += bill.getAmount();
-			}
+		for (Bill bill : bills) {
+			totalValue += bill.getAmount();
 		}
 	}
 }

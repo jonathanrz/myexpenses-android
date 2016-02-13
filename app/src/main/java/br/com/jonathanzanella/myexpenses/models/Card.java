@@ -51,6 +51,13 @@ public class Card extends BaseModel implements Chargeable {
 		return initQuery().where(Card_Table.id.eq(id)).querySingle();
 	}
 
+	public static Card accountDebitCard(Account acc) {
+		return initQuery()
+				.where(Card_Table.accountId.eq(acc.getId()))
+				.and(Card_Table.type.eq(CardType.DEBIT))
+				.querySingle();
+	}
+
 	public Account getAccount() {
 		return Account.find(accountId);
 	}

@@ -9,61 +9,104 @@
         android:id="@+id/toolbar"
         layout="@layout/toolbar"/>
 
-    <TableLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/default_spacing">
+	<ScrollView
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
 
-        <TableRow>
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:padding="@dimen/default_spacing"
+			android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/act_show_account_name_stt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/name"
-                android:layout_marginEnd="@dimen/min_spacing"/>
+			<TableLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/act_show_account_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/color_primary"/>
+				<TableRow>
 
-        </TableRow>
+					<TextView
+						android:id="@+id/act_show_account_name_stt"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="@string/name"
+						android:layout_marginEnd="@dimen/min_spacing"/>
 
-        <TableRow>
+					<TextView
+						android:id="@+id/act_show_account_name"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:textColor="@color/color_primary"/>
 
-            <TextView
-                android:id="@+id/act_show_account_balance_stt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/balance"
-                android:layout_marginEnd="@dimen/min_spacing"/>
+				</TableRow>
 
-            <TextView
-                android:id="@+id/act_show_account_balance"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/color_primary"/>
+		        <TableRow>
 
-        </TableRow>
+		            <TextView
+		                android:id="@+id/act_show_account_balance_stt"
+		                android:layout_width="wrap_content"
+		                android:layout_height="wrap_content"
+		                android:text="@string/balance"
+		                android:layout_marginEnd="@dimen/min_spacing"/>
 
-        <TableRow>
+		            <TextView
+		                android:id="@+id/act_show_account_balance"
+		                android:layout_width="wrap_content"
+		                android:layout_height="wrap_content"
+		                android:textColor="@color/color_primary"/>
 
-            <TextView
-                android:id="@+id/act_show_account_balance_date_stt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/date_of_balance"
-                android:layout_marginEnd="@dimen/min_spacing"/>
+		        </TableRow>
 
-            <TextView
-                android:id="@+id/act_show_account_balance_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/color_primary"/>
+		        <TableRow>
 
-        </TableRow>
+		            <TextView
+		                android:id="@+id/act_show_account_balance_date_stt"
+		                android:layout_width="wrap_content"
+		                android:layout_height="wrap_content"
+		                android:text="@string/date_of_balance"
+		                android:layout_marginEnd="@dimen/min_spacing"/>
 
-    </TableLayout>
+		            <TextView
+		                android:id="@+id/act_show_account_balance_date"
+		                android:layout_width="wrap_content"
+		                android:layout_height="wrap_content"
+		                android:textColor="@color/color_primary"/>
+
+		        </TableRow>
+		    </TableLayout>
+
+		    <TextView
+		        style="@style/HeaderTitle"
+		        android:text="@string/month_transactions"
+		        android:layout_marginTop="@dimen/default_spacing"/>
+
+			<android.support.v7.widget.RecyclerView
+				android:id="@+id/act_show_account_transactions"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"/>
+
+			<TableLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="@dimen/default_spacing">
+
+				<TableRow>
+
+					<TextView
+						android:layout_width="0dp"
+						android:layout_height="wrap_content"
+						android:layout_weight="1"
+						android:text="@string/month_balance"
+						android:textStyle="bold"
+						android:layout_marginEnd="@dimen/min_spacing"/>
+
+					<TextView
+						android:id="@+id/act_show_account_month_balance"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"/>
+
+				</TableRow>
+			</TableLayout>
+		</LinearLayout>
+	</ScrollView>
 </LinearLayout>

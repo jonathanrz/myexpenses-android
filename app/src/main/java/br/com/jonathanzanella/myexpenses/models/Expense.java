@@ -9,6 +9,8 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.joda.time.DateTime;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.MyApplication;
@@ -22,7 +24,7 @@ import lombok.Setter;
  * Created by jzanella on 2/2/16.
  */
 @Table(database = MyDatabase.class)
-public class Expense extends BaseModel {
+public class Expense extends BaseModel implements Transaction {
 	@Column
 	@PrimaryKey(autoincrement = true) @Getter
 	long id;
@@ -56,6 +58,21 @@ public class Expense extends BaseModel {
 
 	@Getter
 	private Card creditCard;
+
+	@Override
+	public int getAmount() {
+		return getValue();
+	}
+
+	@Override
+	public boolean credited() {
+		return true;
+	}
+
+	@Override
+	public boolean debited() {
+		return charged;
+	}
 
 	public static List<Expense> all() {
 		return initQuery().queryList();
@@ -167,6 +184,58 @@ public class Expense extends BaseModel {
 			expense.creditCard = card;
 			bills.add(expense);
 		}
+
+		return bills;
+	}
+
+	public static List<Expense> accountExpenses(Account account, DateTime date) {
+		date = date.withDayOfMonth(1).withMillisOfDay(0);
+		DateTime initOfMonth = date.minusMonths(1);
+		DateTime endOfMonth = date;
+
+		Card card = account.getDebitCard();
+
+		List<Expense> bills = initQuery()
+				.where(Expense_Table.date.between(initOfMonth).and(endOfMonth))
+				.and(Expense_Table.chargeableType.eq(ChargeableType.ACCOUNT))
+				.and(Expense_Table.chargeableId.eq(account.getId()))
+				.and(Expense_Table.chargeNextMonth.eq(true))
+				.queryList();
+
+		if(card != null) {
+			bills.addAll(initQuery()
+					.where(Expense_Table.date.between(initOfMonth).and(endOfMonth))
+					.and(Expense_Table.chargeableType.eq(ChargeableType.DEBIT_CARD))
+					.and(Expense_Table.chargeableId.eq(card.getId()))
+					.and(Expense_Table.chargeNextMonth.eq(true))
+					.queryList());
+		}
+
+		initOfMonth = endOfMonth;
+		endOfMonth = date.plusMonths(1);
+
+		bills.addAll(initQuery()
+				.where(Expense_Table.date.between(initOfMonth).and(endOfMonth))
+				.and(Expense_Table.chargeableType.eq(ChargeableType.ACCOUNT))
+				.and(Expense_Table.chargeableId.eq(account.getId()))
+				.and(Expense_Table.chargeNextMonth.eq(false))
+				.queryList());
+
+		if(card != null) {
+			bills.addAll(initQuery()
+					.where(Expense_Table.date.between(initOfMonth).and(endOfMonth))
+					.and(Expense_Table.chargeableType.eq(ChargeableType.DEBIT_CARD))
+					.and(Expense_Table.chargeableId.eq(card.getId()))
+					.and(Expense_Table.chargeNextMonth.eq(false))
+					.queryList());
+		}
+
+		Collections.sort(bills, new Comparator<Expense>() {
+			@Override
+			public int compare(Expense lhs, Expense rhs) {
+				return (int) (lhs.getDate().getMillis() - rhs.getDate().getMillis());
+			}
+		});
 
 		return bills;
 	}

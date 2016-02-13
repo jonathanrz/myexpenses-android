@@ -23,7 +23,7 @@ import lombok.Setter;
  * Created by jzanella on 2/1/16.
  */
 @Table(database = MyDatabase.class)
-public class Receipt extends BaseModel {
+public class Receipt extends BaseModel implements Transaction{
 	public static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
 
 	@Column
@@ -54,6 +54,21 @@ public class Receipt extends BaseModel {
 	@Column @Getter @Setter
 	boolean ignoreInResume;
 
+	@Override
+	public int getAmount() {
+		return getIncome();
+	}
+
+	@Override
+	public boolean credited() {
+		return credited;
+	}
+
+	@Override
+	public boolean debited() {
+		return true;
+	}
+
 	public static List<Receipt> all() {
 		return initQuery().queryList();
 	}
@@ -75,6 +90,13 @@ public class Receipt extends BaseModel {
 	public static List<Receipt> monthly(DateTime month) {
 		return initQuery()
 				.where(Receipt_Table.date.between(month).and(month.plusMonths(1)))
+				.queryList();
+	}
+
+	public static List<Receipt> monthly(DateTime month, Account account) {
+		return initQuery()
+				.where(Receipt_Table.date.between(month).and(month.plusMonths(1)))
+				.and(Receipt_Table.accountId.eq(account.getId()))
 				.queryList();
 	}
 
