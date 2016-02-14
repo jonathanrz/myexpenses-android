@@ -7,6 +7,25 @@
 	<android.support.v7.widget.RecyclerView
 		android:id="@+id/view_overview_expenses_weekly_list"
 		android:layout_width="match_parent"
-		android:layout_height="match_parent"/>
+		android:layout_height="0dp"
+		android:layout_weight="1"/>
+
+	<TableLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content">
+
+		<TableRow>
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/week_total"
+				android:layout_marginEnd="@dimen/min_spacing"/>
+			<TextView
+				android:id="@+id/view_overview_expenses_weekly_total"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textColor="@color/color_primary"/>
+		</TableRow>
+	</TableLayout>
 
 </LinearLayout>

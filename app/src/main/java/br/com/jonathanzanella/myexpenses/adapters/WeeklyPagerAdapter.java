@@ -17,7 +17,7 @@ import br.com.jonathanzanella.myexpenses.views.BaseView;
  * Created by Jonathan Zanella on 03/02/16.
  */
 public class WeeklyPagerAdapter extends PagerAdapter {
-	public class Period {
+	public static class Period {
 		public DateTime init;
 		public DateTime end;
 

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              style="@style/ResumeRowCell">
+
+	<TextView
+		android:id="@+id/row_weekly_overview_expense_date"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginEnd="@dimen/min_spacing"/>
+
+	<TextView
+		android:id="@+id/row_weekly_overview_expense_source"
+		android:layout_width="60dp"
+		android:layout_height="wrap_content"
+		android:layout_marginEnd="@dimen/min_spacing"/>
+
+	<TextView
+		android:id="@+id/row_weekly_overview_expense_name"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_weight="1"
+		android:layout_marginEnd="@dimen/min_spacing"/>
+
+	<TextView
+		android:id="@+id/row_weekly_overview_expense_income"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"/>
+
+</LinearLayout>
