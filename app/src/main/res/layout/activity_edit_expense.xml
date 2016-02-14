@@ -108,6 +108,14 @@
 				android:text="@string/pay_next_month"
 				android:visibility="gone"/>
 
+			<CheckBox
+				android:id="@+id/act_edit_expense_show_in_overview"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginBottom="@dimen/min_spacing"
+				android:checked="true"
+				android:text="@string/show_in_overview"/>
+
 			<android.support.design.widget.TextInputLayout
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"

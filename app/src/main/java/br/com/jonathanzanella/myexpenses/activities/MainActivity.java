@@ -23,6 +23,7 @@ import br.com.jonathanzanella.myexpenses.views.BaseView;
 import br.com.jonathanzanella.myexpenses.views.BillView;
 import br.com.jonathanzanella.myexpenses.views.CardView;
 import br.com.jonathanzanella.myexpenses.views.ExpenseView;
+import br.com.jonathanzanella.myexpenses.views.OverviewExpensesView;
 import br.com.jonathanzanella.myexpenses.views.ReceiptView;
 import br.com.jonathanzanella.myexpenses.views.ResumeView;
 import br.com.jonathanzanella.myexpenses.views.SourceView;
@@ -161,6 +162,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 			case R.id.menu_bills:
 				addViewToContent(new BillView(this));
 				setTitle(R.string.bills);
+				drawer.closeDrawers();
+				return true;
+			case R.id.menu_overview:
+				addViewToContent(new OverviewExpensesView(this));
+				setTitle(R.string.overview);
 				drawer.closeDrawers();
 				return true;
 		}

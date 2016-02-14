@@ -9,12 +9,14 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.joda.time.DateTime;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.adapters.WeeklyPagerAdapter;
 import br.com.jonathanzanella.myexpenses.converter.DateTimeConverter;
 import br.com.jonathanzanella.myexpenses.database.MyDatabase;
 import lombok.Getter;
@@ -55,6 +57,9 @@ public class Expense extends BaseModel implements Transaction {
 
 	@Column @Getter @Setter
 	boolean chargeNextMonth;
+
+	@Column @Getter @Setter
+	boolean ignoreInOverview;
 
 	@Getter
 	private Card creditCard;
@@ -116,6 +121,33 @@ public class Expense extends BaseModel implements Transaction {
 		return bills;
 	}
 
+	public static List<Expense> expenses(WeeklyPagerAdapter.Period period) {
+		List<Expense> bills = new ArrayList<>();
+
+		if(period.init.getDayOfMonth() == 1) {
+			DateTime date = period.init.withDayOfMonth(1).withMillisOfDay(0);
+			DateTime initOfMonth = date.minusMonths(1);
+			DateTime endOfMonth = initOfMonth.dayOfMonth().withMaximumValue();
+
+			bills.addAll(initQuery()
+					.where(Expense_Table.date.between(initOfMonth).and(endOfMonth))
+					.and(Expense_Table.chargeableType.notEq(ChargeableType.CARD))
+					.and(Expense_Table.chargeNextMonth.eq(true))
+					.and(Expense_Table.ignoreInOverview.notEq(true))
+					.orderBy(Expense_Table.date, true)
+					.queryList());
+		}
+
+		bills.addAll(initQuery()
+				.where(Expense_Table.date.between(period.init).and(period.end))
+				.and(Expense_Table.chargeNextMonth.eq(false))
+				.and(Expense_Table.ignoreInOverview.notEq(true))
+				.orderBy(Expense_Table.date, true)
+				.queryList());
+
+		return bills;
+	}
+
 	public static List<Expense> expenses(DateTime date) {
 		date = date.withDayOfMonth(1).withMillisOfDay(0);
 		DateTime initOfMonth = date.minusMonths(1);
@@ -125,6 +157,7 @@ public class Expense extends BaseModel implements Transaction {
 				.where(Expense_Table.date.between(initOfMonth).and(endOfMonth))
 				.and(Expense_Table.chargeableType.notEq(ChargeableType.CARD))
 				.and(Expense_Table.chargeNextMonth.eq(true))
+				.and(Expense_Table.ignoreInOverview.notEq(true))
 				.orderBy(Expense_Table.date, true)
 				.queryList();
 
@@ -275,7 +308,7 @@ public class Expense extends BaseModel implements Transaction {
 		}
 	}
 
-	public void setBill(Bill bill) { //3298.44
+	public void setBill(Bill bill) {
 		if(bill != null)
 			billId = bill.getId();
 		else
@@ -303,5 +336,13 @@ public class Expense extends BaseModel implements Transaction {
 	public void repeat() {
 		id = 0;
 		date = date.plusMonths(1);
+	}
+
+	public boolean isShowInOverview() {
+		return !ignoreInOverview;
+	}
+
+	public void showInOverview(boolean b) {
+		ignoreInOverview = !b;
 	}
 }

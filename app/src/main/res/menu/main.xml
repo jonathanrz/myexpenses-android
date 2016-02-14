@@ -36,5 +36,10 @@
 			android:checked="false"
 			android:title="@string/bills"
 			android:icon="@drawable/ic_bill_white_24dp"/>
+		<item
+			android:id="@+id/menu_overview"
+			android:checked="false"
+			android:title="@string/overview"
+			android:icon="@drawable/ic_overview_white_24dp"/>
 	</group>
 </menu>
