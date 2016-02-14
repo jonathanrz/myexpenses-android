@@ -191,7 +191,8 @@ public class EditExpenseActivity extends BaseActivity {
 
 	private void onBillSelected() {
 		if(bill != null) {
-			editBill.setText(bill.getName());
+			if(editBill.getText().toString().isEmpty())
+				editBill.setText(bill.getName());
 			if(editName.getText().toString().isEmpty())
 				editName.setText(bill.getName());
 			if(editValue.getText().toString().isEmpty())
@@ -204,8 +205,7 @@ public class EditExpenseActivity extends BaseActivity {
 
 	@OnClick(R.id.act_edit_expense_bill)
 	void onBill() {
-		if(expense == null)
-			startActivityForResult(new Intent(this, ListBillActivity.class), REQUEST_SELECT_BILL);
+		startActivityForResult(new Intent(this, ListBillActivity.class), REQUEST_SELECT_BILL);
 	}
 
 	private void save() {
