@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 
 import org.joda.time.DateTime;
 
@@ -38,6 +39,9 @@ public class OverviewExpensesMonthlyView extends BaseView {
 		pager.setAdapter(adapter);
 		pager.setCurrentItem(MonthlyPagerAdapter.INIT_MONTH_VISIBLE);
 		tabs.setupWithViewPager(pager);
+
+		Log.i("teste", "position=" + adapter.getPositionOfDay(DateTime.now().getDayOfMonth()));
+		pager.setCurrentItem(adapter.getPositionOfDay(DateTime.now().getDayOfMonth()));
 	}
 
 	@Override

@@ -76,7 +76,13 @@ public class WeeklyPagerAdapter extends PagerAdapter {
         return periods.get(position).titleize();
     }
 
-	public Period getPeriod(int position) {
-		return periods.get(position);
+	public int getPositionOfDay(int day) {
+		for (int i = 0; i < periods.size(); i++) {
+			Period period = periods.get(i);
+			if(day >= period.init.getDayOfMonth()  && day <= period.end.getDayOfMonth())
+				return i;
+		}
+
+		return 0;
 	}
 }

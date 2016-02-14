@@ -133,7 +133,7 @@ public class Expense extends BaseModel implements Transaction {
 					.where(Expense_Table.date.between(initOfMonth).and(endOfMonth))
 					.and(Expense_Table.chargeableType.notEq(ChargeableType.CARD))
 					.and(Expense_Table.chargeNextMonth.eq(true))
-					.and(Expense_Table.ignoreInOverview.notEq(true))
+					.and(Expense_Table.ignoreInOverview.eq(false))
 					.orderBy(Expense_Table.date, true)
 					.queryList());
 		}
@@ -141,7 +141,7 @@ public class Expense extends BaseModel implements Transaction {
 		bills.addAll(initQuery()
 				.where(Expense_Table.date.between(period.init).and(period.end))
 				.and(Expense_Table.chargeNextMonth.eq(false))
-				.and(Expense_Table.ignoreInOverview.notEq(true))
+				.and(Expense_Table.ignoreInOverview.eq(false))
 				.orderBy(Expense_Table.date, true)
 				.queryList());
 
