@@ -22,7 +22,6 @@ import br.com.jonathanzanella.myexpenses.models.Expense;
 import br.com.jonathanzanella.myexpenses.models.Receipt;
 import br.com.jonathanzanella.myexpenses.models.Transaction;
 import butterknife.Bind;
-import butterknife.BindDimen;
 
 /**
  * Created by jzanella on 1/31/16.
@@ -40,12 +39,14 @@ public class ShowAccountActivity extends BaseActivity {
 	RecyclerView transactions;
 	@Bind(R.id.act_show_account_month_balance)
 	TextView monthBalance;
+	@Bind(R.id.act_show_account_next_month_transactions)
+	RecyclerView nextMonthTransactions;
+	@Bind(R.id.act_show_account_next_month_balance)
+	TextView nextMonthBalance;
+	@Bind(R.id.act_show_account_to_pay_credit_card)
+	TextView accountToPayCreditCard;
 
 	private Account account;
-	private TransactionAdapter adapter;
-
-	@BindDimen(R.dimen.single_row_height)
-	int singleRowHeight;
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,35 +66,40 @@ public class ShowAccountActivity extends BaseActivity {
 			accountName.setText(account.getName());
 			accountBalance.setText(NumberFormat.getCurrencyInstance().format(account.getBalance() / 100.0));
 			accountBalanceDate.setText(Account.sdf.format(account.getBalanceDate().toDate()));
+			accountToPayCreditCard.setText(account.isAccountToPayCreditCard() ? R.string.yes : R.string.no);
 
 			DateTime month = DateTime.now().withDayOfMonth(1);
-
-			adapter = new TransactionAdapter();
-			adapter.addTransactions(Receipt.monthly(month, account));
-			List<Expense> expenses = Expense.accountExpenses(account, month);
-			adapter.addTransactions(expenses);
-			adapter.addTransactions(Bill.monthly(month, expenses));
-			adapter.notifyDataSetChanged();
-
-			transactions.setAdapter(adapter);
-			transactions.setHasFixedSize(true);
-			transactions.setLayoutManager(new LinearLayoutManager(this));
-			transactions.setNestedScrollingEnabled(false);
-
-			transactions.getLayoutParams().height = singleRowHeight * adapter.getItemCount();
-
-			int balance = account.getBalance();
-			for (Transaction transaction : adapter.getTransactions()) {
-				if(!transaction.credited()) {
-					balance += transaction.getAmount();
-				} else if(!transaction.debited()) {
-					balance -= transaction.getAmount();
-				}
-			}
-
-			monthBalance.setText(NumberFormat.getCurrencyInstance().format(balance / 100.0));
-			monthBalance.setTextColor(getResources().getColor(balance >= 0 ? R.color.value_unreceived : R.color.value_unpaid));
+			int nextMonthBalance = showBalance(month, account.getBalance(), transactions, monthBalance);
+			showBalance(month.plusMonths(1), nextMonthBalance, nextMonthTransactions, this.nextMonthBalance);
 		}
+	}
+
+	private int showBalance(DateTime month, int balance, RecyclerView list, TextView balanceView) {
+		TransactionAdapter adapter = new TransactionAdapter();
+		adapter.addTransactions(Receipt.monthly(month, account));
+		List<Expense> expenses = Expense.accountExpenses(account, month);
+		adapter.addTransactions(expenses);
+		adapter.addTransactions(Bill.monthly(month, expenses));
+		adapter.notifyDataSetChanged();
+
+		list.setAdapter(adapter);
+		list.setHasFixedSize(true);
+		list.setLayoutManager(new LinearLayoutManager(this));
+		list.setNestedScrollingEnabled(false);
+
+		for (Transaction transaction : adapter.getTransactions()) {
+			if(!transaction.credited()) {
+				balance += transaction.getAmount();
+			} else if(!transaction.debited()) {
+				balance -= transaction.getAmount();
+			}
+		}
+
+		balanceView.setText(NumberFormat.getCurrencyInstance().format(balance / 100.0));
+		//noinspection deprecation
+		balanceView.setTextColor(getResources().getColor(balance >= 0 ? R.color.value_unreceived : R.color.value_unpaid));
+
+		return balance;
 	}
 
 	@Override

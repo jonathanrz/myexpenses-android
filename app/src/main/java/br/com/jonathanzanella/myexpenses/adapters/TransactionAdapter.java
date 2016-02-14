@@ -80,7 +80,9 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 		Collections.sort(this.transactions, new Comparator<Transaction>() {
 			@Override
 			public int compare(Transaction lhs, Transaction rhs) {
-				return (int) (lhs.getDate().getMillis() - rhs.getDate().getMillis());
+				if(lhs.getDate().isAfter(rhs.getDate()))
+					return 1;
+				return -1;
 			}
 		});
 	}

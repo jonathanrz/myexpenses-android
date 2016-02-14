@@ -9,6 +9,8 @@ import com.raizlabs.android.dbflow.sql.language.From;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
+import org.joda.time.DateTime;
+
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.database.MyDatabase;
@@ -100,5 +102,46 @@ public class Card extends BaseModel implements Chargeable {
 			a.credit(value);
 			a.save();
 		}
+	}
+
+	public int getInvoiceValue(DateTime month) {
+		int total = 0;
+		for (Expense expense : creditCardBills(month))
+			total += expense.getValue();
+
+		return total;
+	}
+
+	private static From<Expense> initExpenseQuery() {
+		return SQLite.select().from(Expense.class);
+	}
+
+	public List<Expense> creditCardBills(DateTime date) {
+		date = date.withDayOfMonth(1).withMillisOfDay(0);
+		DateTime initOfMonth = date.minusMonths(1);
+		DateTime endOfMonth = date;
+
+		List<Expense> bills = initExpenseQuery()
+				.where(Expense_Table.chargeableId.eq(getId()))
+				.and(Expense_Table.chargeableType.eq(ChargeableType.CARD))
+				.and(Expense_Table.date.between(initOfMonth).and(endOfMonth))
+				.and(Expense_Table.chargeNextMonth.eq(true))
+				.and(Expense_Table.charged.eq(false))
+				.orderBy(Expense_Table.date, true)
+				.queryList();
+
+		initOfMonth = endOfMonth;
+		endOfMonth = date.plusMonths(1);
+
+		bills.addAll(initExpenseQuery()
+				.where(Expense_Table.chargeableId.eq(getId()))
+				.and(Expense_Table.chargeableType.eq(ChargeableType.CARD))
+				.and(Expense_Table.date.between(initOfMonth).and(endOfMonth))
+				.and(Expense_Table.chargeNextMonth.eq(false))
+				.and(Expense_Table.charged.eq(false))
+				.orderBy(Expense_Table.date, true)
+				.queryList());
+
+		return bills;
 	}
 }

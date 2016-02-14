@@ -221,6 +221,9 @@ public class EditExpenseActivity extends BaseActivity {
 		expense.setChargeable(chargeable);
 		expense.setBill(bill);
 		expense.setChargeNextMonth(checkPayNextMonth.isChecked());
+
+		if(expense.isCharged() && date.isAfterNow())
+			expense.uncharge();
 		expense.save();
 
 		int repetition = installment;

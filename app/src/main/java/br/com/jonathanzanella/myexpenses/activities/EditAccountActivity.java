@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 
@@ -30,6 +31,8 @@ public class EditAccountActivity extends BaseActivity {
 	EditText editBalance;
 	@Bind(R.id.act_edit_account_balance_date)
 	EditText editBalanceDate;
+	@Bind(R.id.act_edit_account_to_pay_credit_card)
+	CheckBox checkToPayCreditCard;
 
 	private DateTime balanceDate;
 	private Account account;
@@ -52,6 +55,7 @@ public class EditAccountActivity extends BaseActivity {
 			editName.setText(account.getName());
 			editBalance.setText(NumberFormat.getCurrencyInstance().format(account.getBalance() / 100.0));
 			editBalanceDate.setText(Account.sdf.format(account.getBalanceDate().toDate()));
+			checkToPayCreditCard.setChecked(account.isAccountToPayCreditCard());
 		}
 	}
 
@@ -108,6 +112,7 @@ public class EditAccountActivity extends BaseActivity {
 		account.setName(editName.getText().toString());
 		account.setBalance(Integer.parseInt(editBalance.getText().toString().replaceAll("[^\\d]", "")));
 		account.setBalanceDate(balanceDate);
+		account.setAccountToPayCreditCard(checkToPayCreditCard.isChecked());
 		account.save();
 
 		Intent i = new Intent();

@@ -93,35 +93,6 @@ public class Expense extends BaseModel implements Transaction {
 				.queryList();
 	}
 
-	public static List<Expense> creditCardBills(Card creditCard, DateTime date) {
-		date = date.withDayOfMonth(1).withMillisOfDay(0);
-		DateTime initOfMonth = date.minusMonths(1);
-		DateTime endOfMonth = date;
-
-		List<Expense> bills = initQuery()
-									.where(Expense_Table.chargeableId.eq(creditCard.getId()))
-									.and(Expense_Table.chargeableType.eq(ChargeableType.CARD))
-									.and(Expense_Table.date.between(initOfMonth).and(endOfMonth))
-									.and(Expense_Table.chargeNextMonth.eq(true))
-									.and(Expense_Table.charged.eq(false))
-									.orderBy(Expense_Table.date, true)
-									.queryList();
-
-		initOfMonth = endOfMonth;
-		endOfMonth = date.plusMonths(1);
-
-		bills.addAll(initQuery()
-					.where(Expense_Table.chargeableId.eq(creditCard.getId()))
-					.and(Expense_Table.chargeableType.eq(ChargeableType.CARD))
-					.and(Expense_Table.date.between(initOfMonth).and(endOfMonth))
-					.and(Expense_Table.chargeNextMonth.eq(false))
-					.and(Expense_Table.charged.eq(false))
-					.orderBy(Expense_Table.date, true)
-					.queryList());
-
-		return bills;
-	}
-
 	public static List<Expense> monthly(DateTime date) {
 		date = date.withDayOfMonth(1).withMillisOfDay(0);
 		DateTime initOfMonth = date.minusMonths(1);
@@ -169,10 +140,7 @@ public class Expense extends BaseModel implements Transaction {
 
 		DateTime creditCardMonth = date.minusMonths(1);
 		for (Card card : Card.creditCards()) {
-			int total = 0;
-			for (Expense expense : creditCardBills(card, creditCardMonth))
-				total += expense.getValue();
-
+			int total = card.getInvoiceValue(creditCardMonth);
 			if(total == 0)
 				continue;
 
@@ -230,10 +198,29 @@ public class Expense extends BaseModel implements Transaction {
 					.queryList());
 		}
 
+		if(account.isAccountToPayCreditCard()) {
+			DateTime creditCardMonth = date.minusMonths(1);
+			for (Card creditCard : Card.creditCards()) {
+				int total = creditCard.getInvoiceValue(creditCardMonth);
+				if (total == 0)
+					continue;
+
+				Expense expense = new Expense();
+				expense.setChargeable(card);
+				expense.setName(MyApplication.getContext().getString(R.string.invoice) + " " + creditCard.getName());
+				expense.setDate(creditCardMonth);
+				expense.setValue(total);
+				expense.creditCard = card;
+				bills.add(expense);
+			}
+		}
+
 		Collections.sort(bills, new Comparator<Expense>() {
 			@Override
 			public int compare(Expense lhs, Expense rhs) {
-				return (int) (lhs.getDate().getMillis() - rhs.getDate().getMillis());
+				if(lhs.getDate().isAfter(rhs.getDate()))
+					return 1;
+				return -1;
 			}
 		});
 
@@ -279,7 +266,16 @@ public class Expense extends BaseModel implements Transaction {
 		return Expense.findChargeable(chargeableType, chargeableId);
 	}
 
-	public void setBill(Bill bill) {
+	public void uncharge() {
+		if(charged) {
+			Chargeable c = getChargeable();
+			c.credit(getValue());
+			c.save();
+			charged = false;
+		}
+	}
+
+	public void setBill(Bill bill) { //3298.44
 		if(bill != null)
 			billId = bill.getId();
 		else

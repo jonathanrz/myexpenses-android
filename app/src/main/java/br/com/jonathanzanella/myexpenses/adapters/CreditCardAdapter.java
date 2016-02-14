@@ -91,7 +91,7 @@ public class CreditCardAdapter extends RecyclerView.Adapter<CreditCardAdapter.Vi
 	}
 
 	public void loadData(Card creditCard, DateTime date) {
-		expenses = Expense.creditCardBills(creditCard, date);
+		expenses = creditCard.creditCardBills(date);
 
 		totalValue = 0;
 		for (Expense expense : expenses)

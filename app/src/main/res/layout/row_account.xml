@@ -62,5 +62,21 @@
 
         </TableRow>
 
+        <TableRow>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/account_to_pay_credit_card"
+                android:layout_marginEnd="@dimen/min_spacing"/>
+
+            <TextView
+                android:id="@+id/row_account_to_pay_credit_card"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/color_primary"/>
+
+        </TableRow>
+
     </TableLayout>
 </android.support.v7.widget.CardView>

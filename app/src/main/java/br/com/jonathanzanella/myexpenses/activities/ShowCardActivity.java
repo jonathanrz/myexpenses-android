@@ -12,6 +12,7 @@ import org.joda.time.DateTime;
 
 import java.util.List;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.models.Card;
 import br.com.jonathanzanella.myexpenses.models.Expense;
@@ -104,7 +105,7 @@ public class ShowCardActivity extends BaseActivity {
 
 	@OnClick(R.id.act_show_card_pay_credit_card_bill)
 	public void payCreditCardBill() {
-		List<Expense> expenses = Expense.creditCardBills(card, DateTime.now().minusMonths(1));
+		List<Expense> expenses = card.creditCardBills(DateTime.now().minusMonths(1));
 		int totalExpense = 0;
 		for (Expense expense : expenses) {
 			totalExpense += expense.getValue();
@@ -113,12 +114,12 @@ public class ShowCardActivity extends BaseActivity {
 		}
 
 		if(totalExpense == 0) {
-			Toast.makeText(this, "Fatura zerada", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, MyApplication.getContext().getString(R.string.empty_invoice), Toast.LENGTH_SHORT).show();
 			return;
 		}
 
 		Expense e = new Expense();
-		e.setName("Fatura " + card.getName());
+		e.setName(MyApplication.getContext().getString(R.string.invoice) + " " + card.getName());
 		e.setValue(totalExpense);
 		e.save();
 

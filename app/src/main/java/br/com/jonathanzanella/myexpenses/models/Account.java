@@ -40,6 +40,9 @@ public class Account extends BaseModel implements Chargeable {
     @Column(typeConverter = DateTimeConverter.class) @Getter @Setter
     DateTime balanceDate;
 
+    @Column @Getter @Setter
+    boolean accountToPayCreditCard;
+
     public static List<Account> all() {
         return initQuery().queryList();
     }

@@ -111,7 +111,7 @@ public class CreditCardMonthlyAdapter extends RecyclerView.Adapter<CreditCardMon
 	}
 
 	public void loadData(Card creditCard, DateTime month) {
-		expenses = Expense.creditCardBills(creditCard, month);
+		expenses = creditCard.creditCardBills(month);
 		totalValue = 0;
 
 		for (Expense expense : expenses) {

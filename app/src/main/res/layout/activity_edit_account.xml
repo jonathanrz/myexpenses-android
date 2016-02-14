@@ -56,6 +56,13 @@
                 android:hint="@string/date_of_balance"/>
 
         </android.support.design.widget.TextInputLayout>
+
+        <CheckBox
+            android:id="@+id/act_edit_account_to_pay_credit_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/account_to_pay_credit_card"
+            android:layout_marginBottom="@dimen/default_spacing"/>
     </LinearLayout>
 
 </LinearLayout>

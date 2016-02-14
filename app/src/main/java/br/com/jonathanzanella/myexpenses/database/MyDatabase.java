@@ -10,5 +10,5 @@ import com.raizlabs.android.dbflow.annotation.Database;
 public class MyDatabase {
 	public static final String NAME = "MyExpenses";
 
-	public static final int VERSION = 2;
+	public static final int VERSION = 3;
 }

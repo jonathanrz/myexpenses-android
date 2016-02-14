@@ -15,7 +15,6 @@ import java.text.NumberFormat;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.models.Bill;
-import br.com.jonathanzanella.myexpenses.models.Chargeable;
 import br.com.jonathanzanella.myexpenses.models.Expense;
 import br.com.jonathanzanella.myexpenses.models.Receipt;
 import butterknife.Bind;
@@ -114,9 +113,7 @@ public class ShowExpenseActivity extends BaseActivity {
 							public void onClick(DialogInterface dialog, int which) {
 								dialog.dismiss();
 
-								Chargeable c = expense.getChargeable();
-								c.credit(expense.getValue() * -1);
-								c.save();
+								expense.uncharge();
 								expense.delete();
 								Intent i = new Intent();
 								setResult(RESULT_OK, i);
