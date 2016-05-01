@@ -60,10 +60,10 @@ public class CreditCardMonthlyAdapter extends RecyclerView.Adapter<CreditCardMon
 			if(date != null)
 				date.setText(sdf.format(expense.getDate().toDate()));
 			income.setText(NumberFormat.getCurrencyInstance().format(expense.getValue() / 100.0));
-			if(expense.getValue() >= 0)
-				income.setText(getColor(R.color.value_unpaid));
-			else
-				income.setText(getColor(R.color.value_unreceived));
+//			if(expense.getValue() >= 0)
+//				income.setTextColor(getColor(R.color.value_unpaid));
+//			else
+//				income.setTextColor(getColor(R.color.value_unreceived));
 			if(source != null)
 				source.setVisibility(View.GONE);
 		}
