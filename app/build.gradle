@@ -5,9 +5,14 @@ android {
     compileSdkVersion 23
     buildToolsVersion "23.0.3"
 
+    dexOptions {
+        maxProcessCount 2
+        javaMaxHeapSize "2g"
+    }
+
     defaultConfig {
         applicationId "br.com.jonathanzanella.myexpenses"
-        minSdkVersion 17
+        minSdkVersion 21
         targetSdkVersion 23
         versionCode 1
         versionName "0.2.0"
