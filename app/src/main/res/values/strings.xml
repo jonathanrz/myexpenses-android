@@ -54,6 +54,7 @@
 	<string name="next_month_balance">Saldo ao final do próximo mês</string>
 	<string name="account_to_pay_credit_card">Conta usada para pagar cartão de crédito</string>
 	<string name="overview">Overview</string>
+	<string name="sync">Sincronização</string>
 	<string name="show_in_overview">Mostrar no overview</string>
 	<string name="week_total">Total da semana:</string>
 	<string name="month_total">Total do mês:</string>

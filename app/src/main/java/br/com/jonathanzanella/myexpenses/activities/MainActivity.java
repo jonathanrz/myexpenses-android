@@ -27,6 +27,7 @@ import br.com.jonathanzanella.myexpenses.views.OverviewExpensesView;
 import br.com.jonathanzanella.myexpenses.views.ReceiptView;
 import br.com.jonathanzanella.myexpenses.views.ResumeView;
 import br.com.jonathanzanella.myexpenses.views.SourceView;
+import br.com.jonathanzanella.myexpenses.views.SyncView;
 import butterknife.Bind;
 
 /**
@@ -167,6 +168,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 			case R.id.menu_overview:
 				addViewToContent(new OverviewExpensesView(this));
 				setTitle(R.string.overview);
+				drawer.closeDrawers();
+				return true;
+			case R.id.menu_sync:
+				addViewToContent(new SyncView(this));
+				setTitle(R.string.sync);
 				drawer.closeDrawers();
 				return true;
 		}

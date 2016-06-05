@@ -41,5 +41,10 @@
 			android:checked="false"
 			android:title="@string/overview"
 			android:icon="@drawable/ic_overview_white_24dp"/>
+		<item
+			android:id="@+id/menu_sync"
+			android:checked="false"
+			android:title="@string/sync"
+			android:icon="@drawable/ic_sync_white_24dp"/>
 	</group>
 </menu>
