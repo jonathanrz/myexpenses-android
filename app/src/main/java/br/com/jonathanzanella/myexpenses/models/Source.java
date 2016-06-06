@@ -1,5 +1,6 @@
 package br.com.jonathanzanella.myexpenses.models;
 
+import com.google.gson.annotations.SerializedName;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
@@ -24,6 +25,15 @@ public class Source extends BaseModel {
 
 	@Column @Getter @Setter
 	String name;
+
+	@Column @Getter @Setter @SerializedName("_id")
+	String serverId;
+
+    @Column @Getter @Setter
+    long createdAt;
+
+    @Column @Getter @Setter
+    long updatedAt;
 
 	public static List<Source> all() {
 		return initQuery().queryList();
