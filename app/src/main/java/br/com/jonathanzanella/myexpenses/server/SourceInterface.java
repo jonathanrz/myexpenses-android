@@ -4,6 +4,7 @@ import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.models.Source;
 import retrofit2.http.GET;
+import retrofit2.http.Query;
 import rx.Observable;
 
 /**
@@ -11,5 +12,5 @@ import rx.Observable;
  */
 public interface SourceInterface {
     @GET("sources")
-    Observable<List<Source>> index();
+    Observable<List<Source>> index(@Query("last-updated-at") long lastUpdatedAt);
 }

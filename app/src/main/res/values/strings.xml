@@ -58,4 +58,8 @@
 	<string name="show_in_overview">Mostrar no overview</string>
 	<string name="week_total">Total da semana:</string>
 	<string name="month_total">Total do mês:</string>
+    <string name="id">Id</string>
+    <string name="created_at">Criado em</string>
+    <string name="updated_at">Atualizado em</string>
+    <string name="data">Dados</string>
 </resources>

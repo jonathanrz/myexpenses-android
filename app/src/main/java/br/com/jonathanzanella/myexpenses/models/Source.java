@@ -18,7 +18,7 @@ import lombok.Setter;
  * Created by jzanella on 1/31/16.
  */
 @Table(database = MyDatabase.class)
-public class Source extends BaseModel {
+public class Source extends BaseModel implements UnsyncModel {
 	@Column
 	@PrimaryKey(autoincrement = true) @Getter
 	long id;
@@ -29,10 +29,10 @@ public class Source extends BaseModel {
 	@Column @Getter @Setter @SerializedName("_id")
 	String serverId;
 
-    @Column @Getter @Setter
+    @Column @Getter @Setter @SerializedName("created_at")
     long createdAt;
 
-    @Column @Getter @Setter
+    @Column @Getter @Setter @SerializedName("updated_at")
     long updatedAt;
 
 	public static List<Source> all() {
@@ -45,5 +45,17 @@ public class Source extends BaseModel {
 
 	public static Source find(long id) {
 		return initQuery().where(Source_Table.id.eq(id)).querySingle();
+	}
+
+    public static long greaterUpdatedAt() {
+        Source source = initQuery().orderBy(Source_Table.updatedAt, false).limit(1).querySingle();
+        if(source == null)
+            return 0L;
+        return source.getUpdatedAt();
+    }
+
+	@Override
+	public String getData() {
+		return "name=" + getName();
 	}
 }
