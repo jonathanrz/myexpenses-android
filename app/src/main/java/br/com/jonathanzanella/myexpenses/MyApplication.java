@@ -13,7 +13,6 @@ import org.joda.time.DateTime;
 import br.com.jonathanzanella.myexpenses.models.Account;
 import br.com.jonathanzanella.myexpenses.models.Card;
 import br.com.jonathanzanella.myexpenses.models.CardType;
-import br.com.jonathanzanella.myexpenses.models.Source;
 import lombok.Getter;
 
 /**
@@ -50,22 +49,6 @@ public class MyApplication extends Application {
 			a.setBalanceDate(DateTime.now());
 			a.setName("Amigo");
 			a.save();
-
-			Source s = new Source();
-			s.setName("Empresa");
-			s.save();
-			s = new Source();
-			s.setName("Namorada");
-			s.save();
-			s = new Source();
-			s.setName("Sogra");
-			s.save();
-			s = new Source();
-			s.setName("Irmã");
-			s.save();
-			s = new Source();
-			s.setName("Amigo");
-			s.save();
 
 			Card c = new Card();
 			c.setName("Crédito");

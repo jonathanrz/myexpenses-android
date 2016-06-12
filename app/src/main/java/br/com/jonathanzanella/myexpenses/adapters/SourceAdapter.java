@@ -13,7 +13,7 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.activities.ShowAccountActivity;
+import br.com.jonathanzanella.myexpenses.activities.ShowSourceActivity;
 import br.com.jonathanzanella.myexpenses.models.Source;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -55,8 +55,8 @@ public class SourceAdapter extends RecyclerView.Adapter<SourceAdapter.ViewHolder
 				if(adapter.callback != null) {
 					adapter.callback.onSourceSelected(source);
 				} else {
-					Intent i = new Intent(itemView.getContext(), ShowAccountActivity.class);
-					i.putExtra(ShowAccountActivity.KEY_ACCOUNT_ID, source.getId());
+					Intent i = new Intent(itemView.getContext(), ShowSourceActivity.class);
+					i.putExtra(ShowSourceActivity.KEY_SOURCE_ID, source.getId());
 					itemView.getContext().startActivity(i);
 				}
 			}
