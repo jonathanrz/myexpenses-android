@@ -86,6 +86,12 @@
         android:layout_gravity="end">
 
         <Button
+            android:id="@+id/row_unsync_model_sync_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/to_sync"/>
+
+        <Button
             android:id="@+id/row_unsync_model_save_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -39,6 +39,8 @@ public class SyncView extends BaseView {
         list.setAdapter(adapter);
         list.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        adapter.addData(Source.unsync());
+
         Observable<List<Source>> sources = new Server().sourceInterface().index(Source.greaterUpdatedAt());
         sources.observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.newThread())
@@ -46,6 +48,8 @@ public class SyncView extends BaseView {
                     @Override
                     public void onCompleted() {
                         adapter.notifyDataSetChanged();
+
+                        Log.i("UnsyncModelAdapter", "index finished");
                     }
 
                     @Override

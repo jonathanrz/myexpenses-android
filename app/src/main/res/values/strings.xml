@@ -62,4 +62,5 @@
     <string name="created_at">Criado em</string>
     <string name="updated_at">Atualizado em</string>
     <string name="data">Dados</string>
+    <string name="to_sync">Sincronizar</string>
 </resources>
