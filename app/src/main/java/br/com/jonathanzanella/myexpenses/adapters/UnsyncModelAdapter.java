@@ -2,7 +2,6 @@ package br.com.jonathanzanella.myexpenses.adapters;
 
 import android.annotation.SuppressLint;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.models.Source;
 import br.com.jonathanzanella.myexpenses.models.UnsyncModel;
-import br.com.jonathanzanella.myexpenses.server.SourceApi;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -27,7 +24,6 @@ import rx.Subscriber;
  */
 public class UnsyncModelAdapter extends RecyclerView.Adapter<UnsyncModelAdapter.ViewHolder> {
 	protected List<UnsyncModel> models = new ArrayList<>();
-    private SourceApi sourceApi = new SourceApi();
 
 	public static class ViewHolder extends RecyclerView.ViewHolder {
 		@Bind(R.id.row_unsync_model_id)
@@ -91,35 +87,28 @@ public class UnsyncModelAdapter extends RecyclerView.Adapter<UnsyncModelAdapter.
             syncBtn.setVisibility(View.GONE);
             progressBar.setVisibility(View.VISIBLE);
 
-            final Source source = (Source) itemView.getTag();
-            adapterWeakReference.get().sourceApi.save(source, new Subscriber<List<Source>>() {
+            final UnsyncModel model = (UnsyncModel) itemView.getTag();
+            model.getServerApi().save(model, new Subscriber<List<? extends UnsyncModel>>() {
+                        @Override
+                        public void onCompleted() {}
 
-                    @Override
-                    public void onCompleted() {
-                        Log.i("UnsyncModelAdapter", "update synced");
-                    }
+                        @Override
+                        public void onError(Throwable e) {}
 
-                    @Override
-                    public void onError(Throwable e) {
+                        @Override
+                        public void onNext(List<? extends UnsyncModel> unsyncModels) {
+                            UnsyncModelAdapter adapter = adapterWeakReference.get();
+                            adapter.models.remove(model);
+                            adapter.notifyDataSetChanged();
 
-                    }
-
-                    @Override
-                    public void onNext(List<Source> sources) {
-                        Log.i("UnsyncModelAdapter", "update onNext");
-
-                        UnsyncModelAdapter adapter = adapterWeakReference.get();
-                        adapter.models.remove(source);
-                        adapter.notifyDataSetChanged();
-
-                        Source serverSource = sources.get(0);
-                        source.setServerId(serverSource.getServerId());
-                        source.setCreatedAt(serverSource.getCreatedAt());
-                        source.setUpdatedAt(serverSource.getUpdatedAt());
-                        source.setSync(true);
-                        source.save();
-                    }
-                });
+                            UnsyncModel serverModel= unsyncModels.get(0);
+                            model.setServerId(serverModel.getServerId());
+                            model.setCreatedAt(serverModel.getCreatedAt());
+                            model.setUpdatedAt(serverModel.getUpdatedAt());
+                            model.setSync(true);
+                            model.save();
+                        }
+                    });
         }
 	}
 

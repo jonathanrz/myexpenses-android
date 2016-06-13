@@ -12,6 +12,8 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.database.MyDatabase;
+import br.com.jonathanzanella.myexpenses.server.SourceApi;
+import br.com.jonathanzanella.myexpenses.server.UnsyncModelApi;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,6 +22,8 @@ import lombok.Setter;
  */
 @Table(database = MyDatabase.class)
 public class Source extends BaseModel implements UnsyncModel {
+    private static final SourceApi sourceApi = new SourceApi();
+
 	@Column
 	@PrimaryKey(autoincrement = true) @Getter
 	long id;
@@ -66,4 +70,9 @@ public class Source extends BaseModel implements UnsyncModel {
 	public String getData() {
 		return "name=" + getName();
 	}
+
+    @Override
+    public UnsyncModelApi getServerApi() {
+        return sourceApi;
+    }
 }
