@@ -85,6 +85,12 @@
         android:orientation="horizontal"
         android:layout_gravity="end">
 
+        <ProgressBar
+            android:id="@+id/row_unsync_model_sync_progress"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:visibility="gone"/>
+
         <Button
             android:id="@+id/row_unsync_model_sync_btn"
             android:layout_width="wrap_content"

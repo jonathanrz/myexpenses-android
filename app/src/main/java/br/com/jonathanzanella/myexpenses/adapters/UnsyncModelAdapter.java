@@ -1,14 +1,13 @@
 package br.com.jonathanzanella.myexpenses.adapters;
 
-import android.support.annotation.Nullable;
+import android.annotation.SuppressLint;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import com.raizlabs.android.dbflow.StringUtils;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -17,20 +16,18 @@ import java.util.List;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.models.Source;
 import br.com.jonathanzanella.myexpenses.models.UnsyncModel;
-import br.com.jonathanzanella.myexpenses.server.Server;
+import br.com.jonathanzanella.myexpenses.server.SourceApi;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import rx.Observable;
 import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by Jonathan Zanella on 26/01/16.
  */
 public class UnsyncModelAdapter extends RecyclerView.Adapter<UnsyncModelAdapter.ViewHolder> {
 	protected List<UnsyncModel> models = new ArrayList<>();
+    private SourceApi sourceApi = new SourceApi();
 
 	public static class ViewHolder extends RecyclerView.ViewHolder {
 		@Bind(R.id.row_unsync_model_id)
@@ -45,6 +42,8 @@ public class UnsyncModelAdapter extends RecyclerView.Adapter<UnsyncModelAdapter.
 		TextView syncBtn;
 		@Bind(R.id.row_unsync_model_save_btn)
 		TextView saveBtn;
+        @Bind(R.id.row_unsync_model_sync_progress)
+        ProgressBar progressBar;
 
         View itemView;
 
@@ -58,10 +57,11 @@ public class UnsyncModelAdapter extends RecyclerView.Adapter<UnsyncModelAdapter.
 			ButterKnife.bind(this, itemView);
 		}
 
-		public void setData(UnsyncModel unsyncModel) {
+		@SuppressLint("DefaultLocale")
+        public void setData(UnsyncModel unsyncModel) {
 			serverId.setText(unsyncModel.getServerId());
-            createdAt.setText("" + unsyncModel.getCreatedAt());
-            updatedAt.setText("" + unsyncModel.getUpdatedAt());
+            createdAt.setText(String.format("%d", unsyncModel.getCreatedAt()));
+            updatedAt.setText(String.format("%d", unsyncModel.getUpdatedAt()));
             data.setText(unsyncModel.getData());
 
             itemView.setTag(unsyncModel);
@@ -78,6 +78,7 @@ public class UnsyncModelAdapter extends RecyclerView.Adapter<UnsyncModelAdapter.
         @OnClick(R.id.row_unsync_model_save_btn)
         void onSave() {
             UnsyncModel unsyncModel = (UnsyncModel) itemView.getTag();
+            unsyncModel.setSync(true);
             unsyncModel.save();
 
             UnsyncModelAdapter adapter = adapterWeakReference.get();
@@ -87,74 +88,38 @@ public class UnsyncModelAdapter extends RecyclerView.Adapter<UnsyncModelAdapter.
 
         @OnClick(R.id.row_unsync_model_sync_btn)
         void onSync() {
-            final UnsyncModel unsyncModel = (UnsyncModel) itemView.getTag();
-            if(StringUtils.isNotNullOrEmpty(unsyncModel.getServerId())) {
-                Observable<List<Source>> source = new Server().sourceInterface().update(unsyncModel.getServerId(), (Source) unsyncModel);
-                source.observeOn(AndroidSchedulers.mainThread())
-                        .subscribeOn(Schedulers.newThread())
-                        .subscribe(new Subscriber<List<Source>>() {
+            syncBtn.setVisibility(View.GONE);
+            progressBar.setVisibility(View.VISIBLE);
 
-                            @Override
-                            public void onCompleted() {
-                                Log.i("UnsyncModelAdapter", "update synced");
-                            }
+            final Source source = (Source) itemView.getTag();
+            adapterWeakReference.get().sourceApi.save(source, new Subscriber<List<Source>>() {
 
-                            @Override
-                            public void onError(Throwable e) {
+                    @Override
+                    public void onCompleted() {
+                        Log.i("UnsyncModelAdapter", "update synced");
+                    }
 
-                            }
+                    @Override
+                    public void onError(Throwable e) {
 
-                            @Override
-                            public void onNext(List<Source> sources) {
-                                Log.i("UnsyncModelAdapter", "update onNext");
+                    }
 
-                                UnsyncModelAdapter adapter = adapterWeakReference.get();
-                                adapter.models.remove(unsyncModel);
-                                adapter.notifyDataSetChanged();
+                    @Override
+                    public void onNext(List<Source> sources) {
+                        Log.i("UnsyncModelAdapter", "update onNext");
 
-                                Source source = sources.get(0);
-                                Source src = ((Source) unsyncModel);
-                                src.setServerId(source.getServerId());
-                                src.setCreatedAt(source.getCreatedAt());
-                                src.setUpdatedAt(source.getUpdatedAt());
-                                src.setSync(true);
-                                unsyncModel.save();
-                            }
-                        });
-            } else {
-                Observable<List<Source>> source = new Server().sourceInterface().create((Source) unsyncModel);
-                source.observeOn(AndroidSchedulers.mainThread())
-                        .subscribeOn(Schedulers.newThread())
-                        .subscribe(new Subscriber<List<Source>>() {
+                        UnsyncModelAdapter adapter = adapterWeakReference.get();
+                        adapter.models.remove(source);
+                        adapter.notifyDataSetChanged();
 
-                            @Override
-                            public void onCompleted() {
-                                Log.i("UnsyncModelAdapter", "create synced");
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-
-                            }
-
-                            @Override
-                            public void onNext(List<Source> sources) {
-                                Log.i("UnsyncModelAdapter", "create onNext");
-
-                                UnsyncModelAdapter adapter = adapterWeakReference.get();
-                                adapter.models.remove(unsyncModel);
-                                adapter.notifyDataSetChanged();
-
-                                Source source = sources.get(0);
-                                Source src = ((Source) unsyncModel);
-                                src.setServerId(source.getServerId());
-                                src.setCreatedAt(source.getCreatedAt());
-                                src.setUpdatedAt(source.getUpdatedAt());
-                                src.setSync(true);
-                                unsyncModel.save();
-                            }
-                        });
-            }
+                        Source serverSource = sources.get(0);
+                        source.setServerId(serverSource.getServerId());
+                        source.setCreatedAt(serverSource.getCreatedAt());
+                        source.setUpdatedAt(serverSource.getUpdatedAt());
+                        source.setSync(true);
+                        source.save();
+                    }
+                });
         }
 	}
 
@@ -176,9 +141,5 @@ public class UnsyncModelAdapter extends RecyclerView.Adapter<UnsyncModelAdapter.
 
 	public void addData(List<? extends UnsyncModel> models) {
         this.models.addAll(models);
-	}
-
-	public @Nullable UnsyncModel getModel(int position) {
-		return models != null ? models.get(position) : null;
 	}
 }

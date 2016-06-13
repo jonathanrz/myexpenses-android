@@ -10,13 +10,10 @@ import java.util.List;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.adapters.UnsyncModelAdapter;
 import br.com.jonathanzanella.myexpenses.models.Source;
-import br.com.jonathanzanella.myexpenses.server.Server;
+import br.com.jonathanzanella.myexpenses.server.SourceApi;
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import rx.Observable;
 import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by jzanella on 6/5/16.
@@ -25,6 +22,7 @@ public class SyncView extends BaseView {
     @Bind(R.id.view_unsync_models)
     RecyclerView list;
     UnsyncModelAdapter adapter;
+    SourceApi sourceApi;
 
     public SyncView(Context context) {
         super(context);
@@ -41,26 +39,25 @@ public class SyncView extends BaseView {
 
         adapter.addData(Source.unsync());
 
-        Observable<List<Source>> sources = new Server().sourceInterface().index(Source.greaterUpdatedAt());
-        sources.observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.newThread())
-                .subscribe(new Subscriber<List<Source>>() {
-                    @Override
-                    public void onCompleted() {
-                        adapter.notifyDataSetChanged();
+        sourceApi = new SourceApi();
 
-                        Log.i("UnsyncModelAdapter", "index finished");
-                    }
+        sourceApi.index(new Subscriber<List<Source>>() {
+                @Override
+                public void onCompleted() {
+                    adapter.notifyDataSetChanged();
 
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                    }
+                    Log.i("UnsyncModelAdapter", "index finished");
+                }
 
-                    @Override
-                    public void onNext(List<Source> sources) {
-                        adapter.addData(sources);
-                    }
-                });
+                @Override
+                public void onError(Throwable e) {
+                    e.printStackTrace();
+                }
+
+                @Override
+                public void onNext(List<Source> sources) {
+                    adapter.addData(sources);
+                }
+            });
     }
 }

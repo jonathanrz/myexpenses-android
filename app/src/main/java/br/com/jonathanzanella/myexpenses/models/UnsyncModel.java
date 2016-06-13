@@ -9,5 +9,6 @@ public interface UnsyncModel {
     long getCreatedAt();
     long getUpdatedAt();
     String getData();
+    void setSync(boolean sync);
     void save();
 }
