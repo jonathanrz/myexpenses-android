@@ -1,5 +1,7 @@
 package br.com.jonathanzanella.myexpenses.models;
 
+import android.content.Context;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.raizlabs.android.dbflow.annotation.Column;
@@ -11,6 +13,7 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import java.util.List;
 
+import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.database.MyDatabase;
 import br.com.jonathanzanella.myexpenses.server.SourceApi;
 import br.com.jonathanzanella.myexpenses.server.UnsyncModelApi;
@@ -71,7 +74,12 @@ public class Source extends BaseModel implements UnsyncModel {
 		return "name=" + getName();
 	}
 
-    @Override
+	@Override
+	public String getHeader(Context ctx) {
+		return ctx.getString(R.string.source);
+	}
+
+	@Override
     public UnsyncModelApi getServerApi() {
         return sourceApi;
     }

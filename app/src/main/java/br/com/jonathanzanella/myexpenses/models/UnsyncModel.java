@@ -1,5 +1,7 @@
 package br.com.jonathanzanella.myexpenses.models;
 
+import android.content.Context;
+
 import br.com.jonathanzanella.myexpenses.server.UnsyncModelApi;
 
 /**
@@ -16,6 +18,8 @@ public interface UnsyncModel {
     String getData();
     void setSync(boolean sync);
     void save();
+
+    String getHeader(Context ctx);
 
     UnsyncModelApi getServerApi();
 }

@@ -8,11 +8,14 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
+
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.models.Source;
 import br.com.jonathanzanella.myexpenses.models.UnsyncModel;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -22,8 +25,23 @@ import rx.Subscriber;
 /**
  * Created by Jonathan Zanella on 26/01/16.
  */
-public class UnsyncModelAdapter extends RecyclerView.Adapter<UnsyncModelAdapter.ViewHolder> {
+public class UnsyncModelAdapter extends RecyclerView.Adapter<UnsyncModelAdapter.ViewHolder>
+                                implements StickyRecyclerHeadersAdapter<UnsyncModelAdapter.HeaderViewHolder> {
 	protected List<UnsyncModel> models = new ArrayList<>();
+
+    public static class HeaderViewHolder extends RecyclerView.ViewHolder {
+        @Bind(R.id.row_unsync_model_header)
+        TextView headerView;
+
+        public HeaderViewHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+        }
+
+        public void setHeader(String header) {
+            headerView.setText(header);
+        }
+    }
 
 	public static class ViewHolder extends RecyclerView.ViewHolder {
 		@Bind(R.id.row_unsync_model_id)
@@ -123,7 +141,26 @@ public class UnsyncModelAdapter extends RecyclerView.Adapter<UnsyncModelAdapter.
 		holder.setData(models.get(position));
 	}
 
-	@Override
+    @Override
+    public long getHeaderId(int position) {
+        UnsyncModel model = models.get(position);
+        if(model instanceof Source)
+            return 1;
+        return 0;
+    }
+
+    @Override
+    public HeaderViewHolder onCreateHeaderViewHolder(ViewGroup parent) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_unsync_model_header, parent, false);
+        return new HeaderViewHolder(v);
+    }
+
+    @Override
+    public void onBindHeaderViewHolder(HeaderViewHolder holder, int position) {
+        holder.setHeader(models.get(position).getHeader(holder.headerView.getContext()));
+    }
+
+    @Override
 	public int getItemCount() {
 		return models != null ? models.size() : 0;
 	}
