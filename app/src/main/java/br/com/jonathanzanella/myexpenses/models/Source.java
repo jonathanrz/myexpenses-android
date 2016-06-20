@@ -51,7 +51,7 @@ public class Source extends BaseModel implements UnsyncModel {
 	}
 
     public static List<Source> unsync() {
-        return initQuery().where(Source_Table.sync.eq(false)).queryList();
+        return initQuery().where(Source_Table.sync.notEq(true)).queryList();
     }
 
 	private static From<Source> initQuery() {

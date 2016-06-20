@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 
 import com.facebook.stetho.Stetho;
+import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowManager;
 
 import net.danlew.android.joda.JodaTimeAndroid;
@@ -28,7 +29,7 @@ public class MyApplication extends Application {
 		super.onCreate();
 		MyApplication.context = getApplicationContext();
 
-		FlowManager.init(this);
+		FlowManager.init(new FlowConfig.Builder(this).build());
 		JodaTimeAndroid.init(this);
 		Stetho.initializeWithDefaults(this);
 

@@ -3,6 +3,7 @@ package br.com.jonathanzanella.myexpenses.server;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import br.com.jonathanzanella.myexpenses.Environment;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -20,7 +21,7 @@ public class Server {
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(gson))
 
-                .baseUrl("http://192.168.0.13:3000/")
+                .baseUrl(Environment.SERVER_URL)
                 .build();
     }
 
