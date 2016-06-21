@@ -46,17 +46,17 @@ public class Source extends BaseModel implements UnsyncModel {
 	@Column @Getter @Setter
     boolean sync;
 
+	private static From<Source> initQuery() {
+		return SQLite.select().from(Source.class);
+	}
+
 	public static List<Source> all() {
 		return initQuery().queryList();
 	}
 
     public static List<Source> unsync() {
-        return initQuery().where(Source_Table.sync.notEq(true)).queryList();
+        return initQuery().where(Source_Table.sync.eq(false)).queryList();
     }
-
-	private static From<Source> initQuery() {
-		return SQLite.select().from(Source.class);
-	}
 
 	public static Source find(long id) {
 		return initQuery().where(Source_Table.id.eq(id)).querySingle();

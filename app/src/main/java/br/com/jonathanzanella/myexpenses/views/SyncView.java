@@ -11,8 +11,10 @@ import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.adapters.UnsyncModelAdapter;
+import br.com.jonathanzanella.myexpenses.models.Account;
 import br.com.jonathanzanella.myexpenses.models.Source;
 import br.com.jonathanzanella.myexpenses.models.UnsyncModel;
+import br.com.jonathanzanella.myexpenses.server.AccountApi;
 import br.com.jonathanzanella.myexpenses.server.SourceApi;
 import br.com.jonathanzanella.myexpenses.server.UnsyncModelApi;
 import butterknife.Bind;
@@ -36,6 +38,7 @@ public class SyncView extends BaseView {
 	protected void init() {
 		apis = new ArrayList<>();
 		apis.add(new SourceApi());
+		apis.add(new AccountApi());
 
 		inflate(getContext(), R.layout.view_sync, this);
 		ButterKnife.bind(this);
@@ -53,25 +56,26 @@ public class SyncView extends BaseView {
 		});
 
 		adapter.addData(Source.unsync());
+		adapter.addData(Account.unsync());
 		adapter.notifyDataSetChanged();
 
-		Subscriber<List<? extends UnsyncModel>> subscriber = new Subscriber<List<? extends UnsyncModel>>() {
-
-			@Override
-			public void onCompleted() {
-				adapter.notifyDataSetChanged();
-			}
-
-			@Override
-			public void onError(Throwable e) {}
-
-			@Override
-			public void onNext(List<? extends UnsyncModel> unsyncModels) {
-				adapter.addData(unsyncModels);
-			}
-		};
-
 		for (UnsyncModelApi api : apis)
-			api.index(subscriber);
+			api.index(new Subscriber<List<? extends UnsyncModel>>() {
+
+				@Override
+				public void onCompleted() {
+					adapter.notifyDataSetChanged();
+				}
+
+				@Override
+				public void onError(Throwable e) {
+					e.printStackTrace();
+				}
+
+				@Override
+				public void onNext(List<? extends UnsyncModel> unsyncModels) {
+					adapter.addData(unsyncModels);
+				}
+			});
 	}
 }

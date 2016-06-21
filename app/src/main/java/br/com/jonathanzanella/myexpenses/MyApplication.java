@@ -40,16 +40,6 @@ public class MyApplication extends Application {
 			bankAcc.setBalanceDate(DateTime.now());
 			bankAcc.setName("Banco");
 			bankAcc.save();
-			Account a = new Account();
-			a.setBalance(1000);
-			a.setBalanceDate(DateTime.now());
-			a.setName("Bolso");
-			a.save();
-			a = new Account();
-			a.setBalance(300000);
-			a.setBalanceDate(DateTime.now());
-			a.setName("Amigo");
-			a.save();
 
 			Card c = new Card();
 			c.setName("Crédito");

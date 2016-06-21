@@ -28,4 +28,7 @@ public class Server {
     public SourceInterface sourceInterface() {
         return retrofit.create(SourceInterface.class);
     }
+    public AccountInterface accountInterface() {
+        return retrofit.create(AccountInterface.class);
+    }
 }
