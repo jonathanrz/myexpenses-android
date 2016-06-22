@@ -18,7 +18,7 @@ public interface AccountInterface {
     @GET("accounts")
     Observable<List<Account>> index(@Query("last-updated-at") long lastUpdatedAt);
     @POST("accounts")
-    Observable<List<Account>> create(@Body Account account);
+    Observable<Account> create(@Body Account account);
     @PUT("accounts/{id}")
-    Observable<List<Account>> update(@Path("id") String serverId, @Body Account account);
+    Observable<Account> update(@Path("id") String serverId, @Body Account account);
 }

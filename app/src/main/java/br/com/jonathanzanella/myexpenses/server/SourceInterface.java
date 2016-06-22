@@ -18,7 +18,7 @@ public interface SourceInterface {
     @GET("sources")
     Observable<List<Source>> index(@Query("last-updated-at") long lastUpdatedAt);
     @POST("sources")
-    Observable<List<Source>> create(@Body Source source);
+    Observable<Source> create(@Body Source source);
     @PUT("sources/{id}")
-    Observable<List<Source>> update(@Path("id") String serverId, @Body Source source);
+    Observable<Source> update(@Path("id") String serverId, @Body Source source);
 }

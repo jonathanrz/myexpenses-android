@@ -14,7 +14,7 @@ import rx.schedulers.Schedulers;
 /**
  * Created by jzanella on 6/12/16.
  */
-public class SourceApi implements UnsyncModelApi {
+public class SourceApi implements UnsyncModelApi<Source> {
     SourceInterface sourceInterface;
 
     private SourceInterface getInterface() {
@@ -24,7 +24,7 @@ public class SourceApi implements UnsyncModelApi {
     }
 
     @Override
-    public void index(Subscriber<List<? extends UnsyncModel>> subscriber) {
+    public void index(Subscriber<List<Source>> subscriber) {
         Observable<List<Source>> observable = getInterface().index(Source.greaterUpdatedAt());
         observable.observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.newThread())
@@ -32,9 +32,9 @@ public class SourceApi implements UnsyncModelApi {
     }
 
     @Override
-    public void save(UnsyncModel model, Subscriber<List<? extends UnsyncModel>> subscriber) {
+    public void save(UnsyncModel model, Subscriber<Source> subscriber) {
         Source source = (Source) model;
-        Observable<List<Source>> observable;
+        Observable<Source> observable;
         if(StringUtils.isNotNullOrEmpty(source.getServerId()))
             observable = getInterface().update(source.getServerId(), source);
         else

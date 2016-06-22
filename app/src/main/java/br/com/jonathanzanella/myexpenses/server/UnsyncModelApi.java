@@ -8,7 +8,7 @@ import rx.Subscriber;
 /**
  * Created by jzanella on 6/12/16.
  */
-public interface UnsyncModelApi {
-    void index(Subscriber<List<? extends UnsyncModel>> subscriber);
-    void save(UnsyncModel model, Subscriber<List<? extends UnsyncModel>> subscriber);
+public interface UnsyncModelApi<T extends UnsyncModel> {
+    void index(Subscriber<List<T>> subscriber);
+    void save(UnsyncModel model, Subscriber<T> subscriber);
 }

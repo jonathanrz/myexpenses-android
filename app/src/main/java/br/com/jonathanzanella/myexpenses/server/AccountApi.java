@@ -14,7 +14,7 @@ import rx.schedulers.Schedulers;
 /**
  * Created by jzanella on 6/12/16.
  */
-public class AccountApi implements UnsyncModelApi {
+public class AccountApi implements UnsyncModelApi<Account> {
     AccountInterface accountInterface;
 
     private AccountInterface getInterface() {
@@ -24,7 +24,7 @@ public class AccountApi implements UnsyncModelApi {
     }
 
     @Override
-    public void index(Subscriber<List<? extends UnsyncModel>> subscriber) {
+    public void index(Subscriber<List<Account>> subscriber) {
         Observable<List<Account>> observable = getInterface().index(Account.greaterUpdatedAt());
         observable.observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.newThread())
@@ -32,9 +32,9 @@ public class AccountApi implements UnsyncModelApi {
     }
 
     @Override
-    public void save(UnsyncModel model, Subscriber<List<? extends UnsyncModel>> subscriber) {
+    public void save(UnsyncModel model, Subscriber<Account> subscriber) {
         Account account = (Account) model;
-        Observable<List<Account>> observable;
+        Observable<Account> observable;
         if(StringUtils.isNotNullOrEmpty(account.getServerId()))
             observable = getInterface().update(account.getServerId(), account);
         else
