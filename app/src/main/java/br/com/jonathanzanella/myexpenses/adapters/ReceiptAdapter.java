@@ -69,7 +69,7 @@ public class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ViewHold
 			Receipt receipt = adapterWeakReference.get().getReceipt(getAdapterPosition());
 			if(receipt != null) {
                 Intent i = new Intent(itemView.getContext(), ShowReceiptActivity.class);
-                i.putExtra(ShowReceiptActivity.KEY_RECEIPT_ID, receipt.getId());
+                i.putExtra(ShowReceiptActivity.KEY_RECEIPT_UUID, receipt.getUuid());
                 itemView.getContext().startActivity(i);
 			}
 		}

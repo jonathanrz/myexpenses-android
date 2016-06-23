@@ -27,7 +27,7 @@ import butterknife.OnClick;
  * Created by Jonathan Zanella on 26/01/16.
  */
 public class EditReceiptActivity extends BaseActivity {
-	public static final String KEY_RECEIPT_ID = "KeyReceiptId";
+	public static final String KEY_RECEIPT_UUID = "KeyReceiptUuid";
 	private static final int REQUEST_SELECT_SOURCE = 1001;
 	private static final int REQUEST_SELECT_ACCOUNT = 1002;
 
@@ -101,8 +101,8 @@ public class EditReceiptActivity extends BaseActivity {
 		if(extras == null)
 			return;
 
-		if(extras.containsKey(KEY_RECEIPT_ID))
-			receipt = Receipt.find(extras.getLong(KEY_RECEIPT_ID));
+		if(extras.containsKey(KEY_RECEIPT_UUID))
+			receipt = Receipt.find(extras.getString(KEY_RECEIPT_UUID));
 		if(extras.containsKey(ListSourceActivity.KEY_SOURCE_SELECTED_UUID))
 			source = Source.find(extras.getString(ListSourceActivity.KEY_SOURCE_SELECTED_UUID));
 		if(extras.containsKey(ListAccountActivity.KEY_ACCOUNT_SELECTED_UUID))
@@ -113,7 +113,7 @@ public class EditReceiptActivity extends BaseActivity {
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		if(receipt != null)
-			outState.putLong(KEY_RECEIPT_ID, receipt.getId());
+			outState.putString(KEY_RECEIPT_UUID, receipt.getUuid());
 		if(source != null)
 			outState.putString(ListSourceActivity.KEY_SOURCE_SELECTED_UUID, source.getUuid());
 		if(account != null)
@@ -222,7 +222,7 @@ public class EditReceiptActivity extends BaseActivity {
 		startService(new Intent(this, CashierService.class));
 
 		Intent i = new Intent();
-		i.putExtra(KEY_RECEIPT_ID, receipt.getId());
+		i.putExtra(KEY_RECEIPT_UUID, receipt.getUuid());
 		setResult(RESULT_OK, i);
 		finish();
 	}

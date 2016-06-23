@@ -27,8 +27,11 @@ public class Receipt extends BaseModel implements Transaction{
 	public static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
 
 	@Column
-	@PrimaryKey(autoincrement = true) @Getter
+	@PrimaryKey(autoincrement = true)
 	long id;
+
+	@Column @Getter @Setter
+	String uuid;
 
 	@Column @Getter @Setter
 	String name;
@@ -114,8 +117,8 @@ public class Receipt extends BaseModel implements Transaction{
 		return SQLite.select().from(Receipt.class);
 	}
 
-	public static Receipt find(long id) {
-		return initQuery().where(Receipt_Table.id.eq(id)).querySingle();
+	public static Receipt find(String uuid) {
+		return initQuery().where(Receipt_Table.uuid.eq(uuid)).querySingle();
 	}
 
 	public int getIncome() {

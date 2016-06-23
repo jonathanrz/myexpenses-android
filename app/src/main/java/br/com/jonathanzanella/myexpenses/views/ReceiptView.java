@@ -101,7 +101,7 @@ public class ReceiptView extends BaseView implements ViewPager.OnPageChangeListe
 		switch (requestCode) {
 			case REQUEST_ADD_RECEIPT:
 				if(resultCode == Activity.RESULT_OK) {
-					Receipt r = Receipt.find(data.getLongExtra(EditReceiptActivity.KEY_RECEIPT_ID, 0L));
+					Receipt r = Receipt.find(data.getStringExtra(EditReceiptActivity.KEY_RECEIPT_UUID));
 					if(r != null) {
 						WeakReference<ReceiptMonthlyView> viewRef = views.get(r.getDate());
 						if (viewRef != null) {

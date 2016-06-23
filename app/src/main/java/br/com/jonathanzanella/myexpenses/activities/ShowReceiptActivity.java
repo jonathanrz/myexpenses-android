@@ -20,7 +20,7 @@ import butterknife.Bind;
  * Created by jzanella on 1/31/16.
  */
 public class ShowReceiptActivity extends BaseActivity {
-	public static final String KEY_RECEIPT_ID = "KeyReceiptId";
+	public static final String KEY_RECEIPT_UUID = "KeyReceiptUuid";
 
 	@Bind(R.id.act_show_receipt_name)
 	TextView receiptName;
@@ -64,14 +64,14 @@ public class ShowReceiptActivity extends BaseActivity {
 		super.storeBundle(extras);
 		if(extras == null)
 			return;
-		if(extras.containsKey(KEY_RECEIPT_ID))
-			receipt = Receipt.find(extras.getLong(KEY_RECEIPT_ID));
+		if(extras.containsKey(KEY_RECEIPT_UUID))
+			receipt = Receipt.find(extras.getString(KEY_RECEIPT_UUID));
 	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putLong(KEY_RECEIPT_ID, receipt.getId());
+		outState.putString(KEY_RECEIPT_UUID, receipt.getUuid());
 	}
 
 	@Override
@@ -79,7 +79,7 @@ public class ShowReceiptActivity extends BaseActivity {
 		super.onResume();
 
 		if(receipt != null) {
-			receipt = Receipt.find(receipt.getId());
+			receipt = Receipt.find(receipt.getUuid());
 			setData();
 		}
 	}
@@ -95,7 +95,7 @@ public class ShowReceiptActivity extends BaseActivity {
 		switch (item.getItemId()) {
 			case R.id.action_edit: {
 				Intent i = new Intent(this, EditReceiptActivity.class);
-				i.putExtra(EditReceiptActivity.KEY_RECEIPT_ID, receipt.getId());
+				i.putExtra(EditReceiptActivity.KEY_RECEIPT_UUID, receipt.getUuid());
 				startActivity(i);
 				break;
 			}

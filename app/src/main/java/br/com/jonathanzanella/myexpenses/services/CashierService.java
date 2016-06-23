@@ -34,7 +34,7 @@ public class CashierService extends IntentService {
 			receipt.setCredited(true);
 			receipt.save();
 			Log.d(LOG_TAG, "credited " + receipt.getIncome() + " to " + a.getName() + " from "
-					+ receipt.getSource().getName() + " id=" + receipt.getId());
+					+ receipt.getSource().getName() + " id=" + receipt.getUuid());
 		}
 
 		for (Receipt receipt : Receipt.changed()) {
@@ -45,7 +45,7 @@ public class CashierService extends IntentService {
 			receipt.resetNewIncome();
 			receipt.save();
 			Log.d(LOG_TAG, "updated " + a.getName() + " with " + changedValue + " from "
-					+ receipt.getSource().getName() + " id=" + receipt.getId());
+					+ receipt.getSource().getName() + " id=" + receipt.getUuid());
 		}
 	}
 
