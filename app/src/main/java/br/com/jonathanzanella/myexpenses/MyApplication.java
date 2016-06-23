@@ -11,6 +11,8 @@ import net.danlew.android.joda.JodaTimeAndroid;
 
 import org.joda.time.DateTime;
 
+import java.util.UUID;
+
 import br.com.jonathanzanella.myexpenses.models.Account;
 import br.com.jonathanzanella.myexpenses.models.Card;
 import br.com.jonathanzanella.myexpenses.models.CardType;

@@ -50,6 +50,9 @@ public class Account extends BaseModel implements Chargeable, UnsyncModel {
 	@Column @Getter @Setter @Expose
 	boolean accountToPayCreditCard;
 
+	@Column @Getter @Setter @Expose
+	String uuid;
+
 	@Column @Getter @Setter @Expose @SerializedName("_id")
 	String serverId;
 
@@ -113,7 +116,8 @@ public class Account extends BaseModel implements Chargeable, UnsyncModel {
 		return "name=" + name +
 				", balance=" + balance +
 				", balanceDate=" + balanceDate.getMillis() +
-				", accountToPayCreditCard=" + accountToPayCreditCard;
+				", accountToPayCreditCard=" + accountToPayCreditCard +
+				", uuid=" + uuid;
 	}
 
 	@Override
