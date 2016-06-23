@@ -68,7 +68,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
 					adapter.callback.onAccountSelected(acc);
 				} else {
 					Intent i = new Intent(itemView.getContext(), ShowAccountActivity.class);
-					i.putExtra(ShowAccountActivity.KEY_ACCOUNT_ID, acc.getId());
+					i.putExtra(ShowAccountActivity.KEY_ACCOUNT_UUID, acc.getUuid());
 					itemView.getContext().startActivity(i);
 				}
 			}

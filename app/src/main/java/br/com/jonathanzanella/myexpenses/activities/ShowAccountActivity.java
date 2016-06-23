@@ -27,7 +27,7 @@ import butterknife.Bind;
  * Created by jzanella on 1/31/16.
  */
 public class ShowAccountActivity extends BaseActivity {
-	public static final String KEY_ACCOUNT_ID = "KeyAccountId";
+	public static final String KEY_ACCOUNT_UUID = "KeyAccountUuid";
 
 	@Bind(R.id.act_show_account_name)
 	TextView accountName;
@@ -107,14 +107,14 @@ public class ShowAccountActivity extends BaseActivity {
 		super.storeBundle(extras);
 		if(extras == null)
 			return;
-		if(extras.containsKey(KEY_ACCOUNT_ID))
-			account = Account.find(extras.getLong(KEY_ACCOUNT_ID));
+		if(extras.containsKey(KEY_ACCOUNT_UUID))
+			account = Account.find(extras.getString(KEY_ACCOUNT_UUID));
 	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putLong(KEY_ACCOUNT_ID, account.getId());
+		outState.putString(KEY_ACCOUNT_UUID, account.getUuid());
 	}
 
 	@Override
@@ -122,7 +122,7 @@ public class ShowAccountActivity extends BaseActivity {
 		super.onResume();
 
 		if(account != null) {
-			account = Account.find(account.getId());
+			account = Account.find(account.getUuid());
 			setData();
 		}
 	}
@@ -138,7 +138,7 @@ public class ShowAccountActivity extends BaseActivity {
 		switch (item.getItemId()) {
 			case R.id.action_edit:
 				Intent i = new Intent(this, EditAccountActivity.class);
-				i.putExtra(EditAccountActivity.KEY_ACCOUNT_ID, account.getId());
+				i.putExtra(EditAccountActivity.KEY_ACCOUNT_UUID, account.getUuid());
 				startActivity(i);
 				break;
 		}

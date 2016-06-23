@@ -35,7 +35,7 @@ public class Account extends BaseModel implements Chargeable, UnsyncModel {
 	private static final AccountApi accountApi = new AccountApi();
 
 	@Column
-	@PrimaryKey(autoincrement = true) @Getter
+	@PrimaryKey(autoincrement = true)
 	long id;
 
 	@Column @Getter @Setter @Expose
@@ -71,10 +71,6 @@ public class Account extends BaseModel implements Chargeable, UnsyncModel {
 
 	public static List<Account> all() {
 		return initQuery().queryList();
-	}
-
-	public static Account find(long id) {
-		return initQuery().where(Account_Table.id.eq(id)).querySingle();
 	}
 
 	public static Account find(String uuid) {

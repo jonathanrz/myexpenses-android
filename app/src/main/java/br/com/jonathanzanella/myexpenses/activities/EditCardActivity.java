@@ -102,7 +102,7 @@ public class EditCardActivity extends BaseActivity {
 		switch (requestCode) {
 			case REQUEST_SELECT_ACCOUNT: {
 				if(resultCode == RESULT_OK) {
-					account = Account.find(data.getLongExtra(ListAccountActivity.KEY_ACCOUNT_SELECTED_ID, 0L));
+					account = Account.find(data.getStringExtra(ListAccountActivity.KEY_ACCOUNT_SELECTED_UUID));
 					if(account != null)
 						onAccountSelected();
 				}

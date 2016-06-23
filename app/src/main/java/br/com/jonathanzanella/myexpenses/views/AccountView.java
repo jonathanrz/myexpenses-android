@@ -69,7 +69,7 @@ public class AccountView extends BaseView {
 		switch (requestCode) {
 			case REQUEST_ADD_ACCOUNT:
 				if(resultCode == Activity.RESULT_OK) {
-					Account a = Account.find(data.getLongExtra(EditAccountActivity.KEY_ACCOUNT_ID, 0L));
+					Account a = Account.find(data.getStringExtra(EditAccountActivity.KEY_ACCOUNT_UUID));
 					if(a != null)
 						adapter.addAccount(a);
 				}

@@ -105,8 +105,8 @@ public class EditReceiptActivity extends BaseActivity {
 			receipt = Receipt.find(extras.getLong(KEY_RECEIPT_ID));
 		if(extras.containsKey(ListSourceActivity.KEY_SOURCE_SELECTED_UUID))
 			source = Source.find(extras.getString(ListSourceActivity.KEY_SOURCE_SELECTED_UUID));
-		if(extras.containsKey(ListAccountActivity.KEY_ACCOUNT_SELECTED_ID))
-			account = Account.find(extras.getLong(ListAccountActivity.KEY_ACCOUNT_SELECTED_ID));
+		if(extras.containsKey(ListAccountActivity.KEY_ACCOUNT_SELECTED_UUID))
+			account = Account.find(extras.getString(ListAccountActivity.KEY_ACCOUNT_SELECTED_UUID));
 	}
 
 	@Override
@@ -117,7 +117,7 @@ public class EditReceiptActivity extends BaseActivity {
 		if(source != null)
 			outState.putString(ListSourceActivity.KEY_SOURCE_SELECTED_UUID, source.getUuid());
 		if(account != null)
-			outState.putLong(ListAccountActivity.KEY_ACCOUNT_SELECTED_ID, account.getId());
+			outState.putString(ListAccountActivity.KEY_ACCOUNT_SELECTED_UUID, account.getUuid());
 	}
 
 	@Override
@@ -134,7 +134,7 @@ public class EditReceiptActivity extends BaseActivity {
 			}
 			case REQUEST_SELECT_ACCOUNT: {
 				if(resultCode == RESULT_OK) {
-					account = Account.find(data.getLongExtra(ListAccountActivity.KEY_ACCOUNT_SELECTED_ID, 0L));
+					account = Account.find(data.getStringExtra(ListAccountActivity.KEY_ACCOUNT_SELECTED_UUID));
 					if(account != null)
 						onAccountSelected();
 				}

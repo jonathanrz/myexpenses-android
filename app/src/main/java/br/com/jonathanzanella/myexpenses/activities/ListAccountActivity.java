@@ -17,7 +17,7 @@ import butterknife.Bind;
  * Created by jzanella on 2/1/16.
  */
 public class ListAccountActivity extends BaseActivity implements AccountAdapterCallback {
-	public static final String KEY_ACCOUNT_SELECTED_ID = "KeyAccountSelectId";
+	public static final String KEY_ACCOUNT_SELECTED_UUID = "KeyAccountSelectUuid";
 
 	@Bind(R.id.act_account_list)
 	RecyclerView accounts;
@@ -46,7 +46,7 @@ public class ListAccountActivity extends BaseActivity implements AccountAdapterC
 	@Override
 	public void onAccountSelected(Account account) {
 		Intent i = new Intent();
-		i.putExtra(KEY_ACCOUNT_SELECTED_ID, account.getId());
+		i.putExtra(KEY_ACCOUNT_SELECTED_UUID, account.getUuid());
 		setResult(RESULT_OK, i);
 		finish();
 	}

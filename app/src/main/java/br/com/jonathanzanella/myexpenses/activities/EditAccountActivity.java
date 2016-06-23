@@ -23,7 +23,7 @@ import butterknife.OnClick;
  * Created by Jonathan Zanella on 26/01/16.
  */
 public class EditAccountActivity extends BaseActivity {
-	public static final String KEY_ACCOUNT_ID = "KeyAccountId";
+	public static final String KEY_ACCOUNT_UUID = "KeyAccountUuid";
 
 	@Bind(R.id.act_edit_account_name)
 	EditText editName;
@@ -64,15 +64,15 @@ public class EditAccountActivity extends BaseActivity {
 		super.storeBundle(extras);
 		if(extras == null)
 			return;
-		if(extras.containsKey(KEY_ACCOUNT_ID))
-			account = Account.find(extras.getLong(KEY_ACCOUNT_ID));
+		if(extras.containsKey(KEY_ACCOUNT_UUID))
+			account = Account.find(extras.getString(KEY_ACCOUNT_UUID));
 	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		if(account != null)
-			outState.putLong(KEY_ACCOUNT_ID, account.getId());
+			outState.putString(KEY_ACCOUNT_UUID, account.getUuid());
 	}
 
 	@Override
@@ -116,7 +116,7 @@ public class EditAccountActivity extends BaseActivity {
 		account.save();
 
 		Intent i = new Intent();
-		i.putExtra(KEY_ACCOUNT_ID, account.getId());
+		i.putExtra(KEY_ACCOUNT_UUID, account.getUuid());
 		setResult(RESULT_OK, i);
 		finish();
 	}
