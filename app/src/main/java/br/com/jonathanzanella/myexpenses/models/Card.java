@@ -13,6 +13,7 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 import org.joda.time.DateTime;
 
 import java.util.List;
+import java.util.UUID;
 
 import br.com.jonathanzanella.myexpenses.database.MyDatabase;
 import lombok.Getter;
@@ -147,5 +148,12 @@ public class Card extends BaseModel implements Chargeable {
 				.queryList());
 
 		return bills;
+	}
+
+	@Override
+	public void save() {
+		if(id == 0 && uuid == null)
+			uuid = UUID.randomUUID().toString();
+		super.save();
 	}
 }

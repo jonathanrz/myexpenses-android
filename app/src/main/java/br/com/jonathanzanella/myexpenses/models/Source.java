@@ -12,6 +12,7 @@ import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import java.util.List;
+import java.util.UUID;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.database.MyDatabase;
@@ -93,4 +94,11 @@ public class Source extends BaseModel implements UnsyncModel {
     public UnsyncModelApi getServerApi() {
         return sourceApi;
     }
+
+	@Override
+	public void save() {
+		if(id == 0 && uuid == null)
+			uuid = UUID.randomUUID().toString();
+		super.save();
+	}
 }

@@ -17,6 +17,7 @@ import org.joda.time.DateTime;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.converter.DateTimeConverter;
@@ -114,6 +115,13 @@ public class Account extends BaseModel implements Chargeable, UnsyncModel {
 	@Override
 	public boolean isSaved() {
 		return id != 0;
+	}
+
+	@Override
+	public void save() {
+		if(id == 0 && uuid == null)
+			uuid = UUID.randomUUID().toString();
+		super.save();
 	}
 
 	@Override

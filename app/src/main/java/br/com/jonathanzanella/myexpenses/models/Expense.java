@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.UUID;
 
 import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
@@ -344,5 +345,12 @@ public class Expense extends BaseModel implements Transaction {
 
 	public void showInOverview(boolean b) {
 		ignoreInOverview = !b;
+	}
+
+	@Override
+	public void save() {
+		if(id == 0 && uuid == null)
+			uuid = UUID.randomUUID().toString();
+		super.save();
 	}
 }
