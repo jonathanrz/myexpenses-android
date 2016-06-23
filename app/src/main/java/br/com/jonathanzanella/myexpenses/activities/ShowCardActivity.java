@@ -23,7 +23,7 @@ import butterknife.OnClick;
  * Created by jzanella on 1/31/16.
  */
 public class ShowCardActivity extends BaseActivity {
-	public static final String KEY_CREDIT_CARD_ID = "KeyCreateCardId";
+	public static final String KEY_CREDIT_CARD_UUID = "KeyCreateCardUuid";
 
 	@Bind(R.id.act_show_card_name)
 	TextView cardName;
@@ -65,14 +65,14 @@ public class ShowCardActivity extends BaseActivity {
 		super.storeBundle(extras);
 		if(extras == null)
 			return;
-		if(extras.containsKey(KEY_CREDIT_CARD_ID))
-			card = Card.find(extras.getLong(KEY_CREDIT_CARD_ID));
+		if(extras.containsKey(KEY_CREDIT_CARD_UUID))
+			card = Card.find(extras.getString(KEY_CREDIT_CARD_UUID));
 	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putLong(KEY_CREDIT_CARD_ID, card.getId());
+		outState.putString(KEY_CREDIT_CARD_UUID, card.getUuid());
 	}
 
 	@Override
@@ -80,7 +80,7 @@ public class ShowCardActivity extends BaseActivity {
 		super.onResume();
 
 		if(card != null) {
-			card = Card.find(card.getId());
+			card = Card.find(card.getUuid());
 			setData();
 		}
 	}
@@ -96,7 +96,7 @@ public class ShowCardActivity extends BaseActivity {
 		switch (item.getItemId()) {
 			case R.id.action_edit:
 				Intent i = new Intent(this, EditCardActivity.class);
-				i.putExtra(EditCardActivity.KEY_CARD_ID, card.getId());
+				i.putExtra(EditCardActivity.KEY_CARD_UUID, card.getUuid());
 				startActivity(i);
 				break;
 		}

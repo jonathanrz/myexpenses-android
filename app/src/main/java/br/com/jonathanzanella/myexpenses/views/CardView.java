@@ -69,7 +69,7 @@ public class CardView extends BaseView {
         switch (requestCode) {
             case REQUEST_ADD_CARD:
                 if(resultCode == Activity.RESULT_OK) {
-                    Card c = Card.find(data.getLongExtra(EditCardActivity.KEY_CARD_ID, 0L));
+                    Card c = Card.find(data.getStringExtra(EditCardActivity.KEY_CARD_UUID));
                     if(c != null)
                         adapter.addCreditCard(c);
                 }

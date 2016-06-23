@@ -20,7 +20,7 @@ import butterknife.Bind;
  * Created by Jonathan Zanella on 08/02/16.
  */
 public class CreditCardInvoiceActivity extends BaseActivity {
-	public static final String KEY_CREDIT_CARD_ID = "KeyCreateCardId";
+	public static final String KEY_CREDIT_CARD_UUID = "KeyCreateCardUuid";
 	public static final String KEY_INIT_DATE = "KeyInitDate";
 
 	@Bind(R.id.tabs)
@@ -42,8 +42,8 @@ public class CreditCardInvoiceActivity extends BaseActivity {
 		super.storeBundle(extras);
 		if(extras == null)
 			return;
-		if(extras.containsKey(KEY_CREDIT_CARD_ID))
-			card = Card.find(extras.getLong(KEY_CREDIT_CARD_ID));
+		if(extras.containsKey(KEY_CREDIT_CARD_UUID))
+			card = Card.find(extras.getString(KEY_CREDIT_CARD_UUID));
 		if(extras.containsKey(KEY_INIT_DATE))
 			initDate = (DateTime) extras.getSerializable(KEY_INIT_DATE);
 	}

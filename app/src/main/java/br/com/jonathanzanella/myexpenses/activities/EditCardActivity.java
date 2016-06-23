@@ -18,7 +18,7 @@ import butterknife.OnClick;
  * Created by Jonathan Zanella on 26/01/16.
  */
 public class EditCardActivity extends BaseActivity {
-	public static final String KEY_CARD_ID = "KeyCardId";
+	public static final String KEY_CARD_UUID = "KeyCardUuid";
 	private static final int REQUEST_SELECT_ACCOUNT = 1006;
 
 	@Bind(R.id.act_edit_card_name)
@@ -63,15 +63,15 @@ public class EditCardActivity extends BaseActivity {
 		if(extras == null)
 			return;
 
-		if(extras.containsKey(KEY_CARD_ID))
-			card = Card.find(extras.getLong(KEY_CARD_ID));
+		if(extras.containsKey(KEY_CARD_UUID))
+			card = Card.find(extras.getString(KEY_CARD_UUID));
 	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		if(card != null)
-			outState.putLong(KEY_CARD_ID, card.getId());
+			outState.putString(KEY_CARD_UUID, card.getUuid());
 	}
 
 	@Override
@@ -133,7 +133,7 @@ public class EditCardActivity extends BaseActivity {
 		card.save();
 
 		Intent i = new Intent();
-		i.putExtra(KEY_CARD_ID, card.getId());
+		i.putExtra(KEY_CARD_UUID, card.getUuid());
 		setResult(RESULT_OK, i);
 		finish();
 	}

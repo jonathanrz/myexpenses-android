@@ -69,7 +69,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
 					adapter.callback.onCard(card);
 				} else {
 					Intent i = new Intent(itemView.getContext(), ShowCardActivity.class);
-					i.putExtra(ShowCardActivity.KEY_CREDIT_CARD_ID, card.getId());
+					i.putExtra(ShowCardActivity.KEY_CREDIT_CARD_UUID, card.getUuid());
 					itemView.getContext().startActivity(i);
 				}
 			}

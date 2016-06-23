@@ -25,7 +25,7 @@ import lombok.Setter;
 public class Card extends BaseModel implements Chargeable {
 	private static final String LOG_TAG = "Card";
 	@Column
-	@PrimaryKey(autoincrement = true) @Getter
+	@PrimaryKey(autoincrement = true)
 	long id;
 
 	@Column @Getter @Setter @Expose
@@ -51,10 +51,6 @@ public class Card extends BaseModel implements Chargeable {
 
 	private static From<Card> initQuery() {
 		return SQLite.select().from(Card.class);
-	}
-
-	public static Card find(long id) {
-		return initQuery().where(Card_Table.id.eq(id)).querySingle();
 	}
 
 	public static Card find(String uuid) {
