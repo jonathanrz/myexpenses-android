@@ -61,10 +61,6 @@ public class Source extends BaseModel implements UnsyncModel {
         return initQuery().where(Source_Table.sync.eq(false)).queryList();
     }
 
-	public static Source find(long id) {
-		return initQuery().where(Source_Table.id.eq(id)).querySingle();
-	}
-
 	public static Source find(String uuid) {
 		return initQuery().where(Source_Table.uuid.eq(uuid)).querySingle();
 	}
@@ -92,6 +88,7 @@ public class Source extends BaseModel implements UnsyncModel {
 		return ctx.getString(R.string.source);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
     public UnsyncModelApi getServerApi() {
         return sourceApi;

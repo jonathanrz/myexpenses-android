@@ -45,9 +45,6 @@ public class Receipt extends BaseModel implements Transaction{
 	@Column @Getter @Setter
 	int newIncome;
 
-	@Column
-	long sourceId;
-
 	@Column @Getter @Setter
 	String sourceUuid;
 
@@ -144,11 +141,11 @@ public class Receipt extends BaseModel implements Transaction{
 	}
 
 	public Source getSource() {
-		return Source.find(sourceId);
+		return Source.find(sourceUuid);
 	}
 
 	public void setSource(@NonNull Source s) {
-		sourceUuid= s.getUuid();
+		sourceUuid = s.getUuid();
 	}
 
 	public Account getAccount() {

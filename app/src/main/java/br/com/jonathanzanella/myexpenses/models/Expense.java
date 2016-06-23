@@ -312,7 +312,7 @@ public class Expense extends BaseModel implements Transaction {
 	}
 
 	public void setBill(Bill bill) {
-		billUuid = bill != null ? bill.getUuid() : null;
+		billUuid = (bill != null ? bill.getUuid() : null);
 	}
 
 	public Bill getBill() {

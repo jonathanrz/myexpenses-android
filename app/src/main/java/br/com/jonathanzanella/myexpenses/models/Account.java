@@ -130,6 +130,7 @@ public class Account extends BaseModel implements Chargeable, UnsyncModel {
 		return ctx.getString(R.string.account);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public UnsyncModelApi getServerApi() {
 		return accountApi;
