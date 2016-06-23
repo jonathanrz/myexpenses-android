@@ -70,7 +70,7 @@ public class ExpenseWeeklyOverviewAdapter extends RecyclerView.Adapter<ExpenseWe
 					itemView.getContext().startActivity(i);
 				} else {
 					Intent i = new Intent(itemView.getContext(), ShowExpenseActivity.class);
-					i.putExtra(ShowExpenseActivity.KEY_EXPENSE_ID, expense.getId());
+					i.putExtra(ShowExpenseActivity.KEY_EXPENSE_UUID, expense.getUuid());
 					itemView.getContext().startActivity(i);
 				}
 			}

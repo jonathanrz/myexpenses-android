@@ -56,7 +56,7 @@ public class CashierService extends IntentService {
 			c.save();
 			expense.setCharged(true);
 			expense.save();
-			Log.d(LOG_TAG, "charged " + expense.getValue() + " to " + c.getName() + " id=" + expense.getId());
+			Log.d(LOG_TAG, "charged " + expense.getValue() + " to " + c.getName() + " id=" + expense.getUuid());
 		}
 
 		for (Expense expense : Expense.changed()) {
@@ -66,7 +66,7 @@ public class CashierService extends IntentService {
 			c.save();
 			expense.resetNewValue();
 			expense.save();
-			Log.d(LOG_TAG, "updated " + c.getName() + " with " + changedValue + " id=" + expense.getId());
+			Log.d(LOG_TAG, "updated " + c.getName() + " with " + changedValue + " id=" + expense.getUuid());
 		}
 	}
 }

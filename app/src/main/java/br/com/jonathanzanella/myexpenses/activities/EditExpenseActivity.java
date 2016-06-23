@@ -30,7 +30,7 @@ import butterknife.OnClick;
  * Created by Jonathan Zanella on 26/01/16.
  */
 public class EditExpenseActivity extends BaseActivity {
-	public static final String KEY_EXPENSE_ID = "KeyReceiptId";
+	public static final String KEY_EXPENSE_UUID = "KeyReceiptUuid";
 	private static final int REQUEST_SELECT_CHARGEABLE = 1003;
 	private static final int REQUEST_SELECT_BILL = 1004;
 
@@ -103,8 +103,8 @@ public class EditExpenseActivity extends BaseActivity {
 		if(extras == null)
 			return;
 
-		if(extras.containsKey(KEY_EXPENSE_ID))
-			expense = Expense.find(extras.getLong(KEY_EXPENSE_ID));
+		if(extras.containsKey(KEY_EXPENSE_UUID))
+			expense = Expense.find(extras.getString(KEY_EXPENSE_UUID));
 
 		if(extras.containsKey(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_TYPE)) {
 			chargeable = Expense.findChargeable((ChargeableType) extras.getSerializable(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_TYPE),
@@ -116,7 +116,7 @@ public class EditExpenseActivity extends BaseActivity {
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		if(expense != null)
-			outState.putLong(KEY_EXPENSE_ID, expense.getId());
+			outState.putString(KEY_EXPENSE_UUID, expense.getUuid());
 		if(chargeable != null) {
 			outState.putString(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_UUID, chargeable.getUuid());
 			outState.putSerializable(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_TYPE, chargeable.getChargeableType());
@@ -244,7 +244,7 @@ public class EditExpenseActivity extends BaseActivity {
 		startService(new Intent(this, CashierService.class));
 
 		Intent i = new Intent();
-		i.putExtra(KEY_EXPENSE_ID, expense.getId());
+		i.putExtra(KEY_EXPENSE_UUID, expense.getUuid());
 		setResult(RESULT_OK, i);
 		finish();
 	}

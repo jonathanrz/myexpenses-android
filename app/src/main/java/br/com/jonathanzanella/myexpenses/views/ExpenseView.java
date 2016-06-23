@@ -101,7 +101,7 @@ public class ExpenseView extends BaseView implements ViewPager.OnPageChangeListe
 		switch (requestCode) {
 			case REQUEST_ADD_EXPENSE:
 				if(resultCode == Activity.RESULT_OK) {
-					Expense e = Expense.find(data.getLongExtra(EditExpenseActivity.KEY_EXPENSE_ID, 0L));
+					Expense e = Expense.find(data.getStringExtra(EditExpenseActivity.KEY_EXPENSE_UUID));
 					if(e != null) {
 						ExpenseMonthlyView view = getMonthView(e.getDate());
 						if (view != null)

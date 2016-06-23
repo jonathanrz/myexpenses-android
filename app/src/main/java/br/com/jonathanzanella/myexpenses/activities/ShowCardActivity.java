@@ -124,7 +124,7 @@ public class ShowCardActivity extends BaseActivity {
 		e.save();
 
 		Intent i = new Intent(this, EditExpenseActivity.class);
-		i.putExtra(EditExpenseActivity.KEY_EXPENSE_ID, e.getId());
+		i.putExtra(EditExpenseActivity.KEY_EXPENSE_UUID, e.getUuid());
 		startActivity(i);
 	}
 }

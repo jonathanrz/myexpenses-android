@@ -28,8 +28,11 @@ import lombok.Setter;
 @Table(database = MyDatabase.class)
 public class Expense extends BaseModel implements Transaction {
 	@Column
-	@PrimaryKey(autoincrement = true) @Getter
+	@PrimaryKey(autoincrement = true)
 	long id;
+
+	@Column @Getter @Setter
+	String uuid;
 
 	@Column @Getter @Setter
 	String name;
@@ -264,8 +267,8 @@ public class Expense extends BaseModel implements Transaction {
 		return SQLite.select().from(Expense.class);
 	}
 
-	public static Expense find(long id) {
-		return initQuery().where(Expense_Table.id.eq(id)).querySingle();
+	public static Expense find(String uuid) {
+		return initQuery().where(Expense_Table.uuid.eq(uuid)).querySingle();
 	}
 
 	public int getValue() {

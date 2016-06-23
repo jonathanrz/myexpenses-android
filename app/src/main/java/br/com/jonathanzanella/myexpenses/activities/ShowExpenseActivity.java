@@ -23,7 +23,7 @@ import butterknife.Bind;
  * Created by jzanella on 1/31/16.
  */
 public class ShowExpenseActivity extends BaseActivity {
-	public static final String KEY_EXPENSE_ID = "KeyExpenseId";
+	public static final String KEY_EXPENSE_UUID = "KeyExpenseUuid";
 
 	@Bind(R.id.act_show_expense_name)
 	TextView expenseName;
@@ -69,14 +69,14 @@ public class ShowExpenseActivity extends BaseActivity {
 		super.storeBundle(extras);
 		if(extras == null)
 			return;
-		if(extras.containsKey(KEY_EXPENSE_ID))
-			expense = Expense.find(extras.getLong(KEY_EXPENSE_ID));
+		if(extras.containsKey(KEY_EXPENSE_UUID))
+			expense = Expense.find(extras.getString(KEY_EXPENSE_UUID));
 	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putLong(KEY_EXPENSE_ID, expense.getId());
+		outState.putString(KEY_EXPENSE_UUID, expense.getUuid());
 	}
 
 	@Override
@@ -84,7 +84,7 @@ public class ShowExpenseActivity extends BaseActivity {
 		super.onResume();
 
 		if(expense != null) {
-			expense = Expense.find(expense.getId());
+			expense = Expense.find(expense.getUuid());
 			setData();
 		}
 	}
@@ -100,7 +100,7 @@ public class ShowExpenseActivity extends BaseActivity {
 		switch (item.getItemId()) {
 			case R.id.action_edit: {
 				Intent i = new Intent(this, EditExpenseActivity.class);
-				i.putExtra(EditExpenseActivity.KEY_EXPENSE_ID, expense.getId());
+				i.putExtra(EditExpenseActivity.KEY_EXPENSE_UUID, expense.getUuid());
 				startActivity(i);
 				break;
 			}
