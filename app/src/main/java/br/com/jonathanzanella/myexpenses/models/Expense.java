@@ -50,7 +50,7 @@ public class Expense extends BaseModel implements Transaction {
 	ChargeableType chargeableType;
 
 	@Column
-	long billId;
+	String billUuid;
 
 	@Column @Getter @Setter
 	boolean charged;
@@ -309,14 +309,11 @@ public class Expense extends BaseModel implements Transaction {
 	}
 
 	public void setBill(Bill bill) {
-		if(bill != null)
-			billId = bill.getId();
-		else
-			billId = 0;
+		billUuid = bill != null ? bill.getUuid() : null;
 	}
 
 	public Bill getBill() {
-		return Bill.find(billId);
+		return Bill.find(billUuid);
 	}
 
 	public static Chargeable findChargeable(ChargeableType type, String uuid) {

@@ -17,7 +17,7 @@ import butterknife.Bind;
  * Created by jzanella on 2/1/16.
  */
 public class ListBillActivity extends BaseActivity implements BillAdapterCallback {
-	public static final String KEY_BILL_SELECTED_ID = "KeyBillSelectId";
+	public static final String KEY_BILL_SELECTED_UUID = "KeyBillSelectUuid";
 
 	@Bind(R.id.act_bill_list)
 	RecyclerView bills;
@@ -45,7 +45,7 @@ public class ListBillActivity extends BaseActivity implements BillAdapterCallbac
 	@Override
 	public void onBillSelected(Bill bill) {
 		Intent i = new Intent();
-		i.putExtra(KEY_BILL_SELECTED_ID, bill.getId());
+		i.putExtra(KEY_BILL_SELECTED_UUID, bill.getUuid());
 		setResult(RESULT_OK, i);
 		finish();
 	}

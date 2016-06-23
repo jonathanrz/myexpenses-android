@@ -139,7 +139,7 @@ public class EditExpenseActivity extends BaseActivity {
 			}
 			case REQUEST_SELECT_BILL: {
 				if(resultCode == RESULT_OK) {
-					bill = Bill.find(data.getLongExtra(ListBillActivity.KEY_BILL_SELECTED_ID, 0L));
+					bill = Bill.find(data.getStringExtra(ListBillActivity.KEY_BILL_SELECTED_UUID));
 					onBillSelected();
 				}
 				break;

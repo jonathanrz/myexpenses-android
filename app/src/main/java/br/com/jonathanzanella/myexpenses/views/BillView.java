@@ -69,7 +69,7 @@ public class BillView extends BaseView {
 		switch (requestCode) {
 			case REQUEST_ADD_BILL:
 				if(resultCode == Activity.RESULT_OK) {
-					Bill b = Bill.find(data.getLongExtra(EditBillActivity.KEY_BILL_ID, 0L));
+					Bill b = Bill.find(data.getStringExtra(EditBillActivity.KEY_BILL_UUID));
 					if(b != null)
 						adapter.addBill(b);
 				}

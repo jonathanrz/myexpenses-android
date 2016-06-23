@@ -48,11 +48,13 @@ public class MyApplication extends Application {
 			c.setName("Crédito");
 			c.setType(CardType.CREDIT);
 			c.setAccount(bankAcc);
+			c.setUuid(UUID.randomUUID().toString());
 			c.save();
 			c = new Card();
 			c.setName("Débito");
 			c.setType(CardType.DEBIT);
 			c.setAccount(bankAcc);
+			c.setUuid(UUID.randomUUID().toString());
 			c.save();
 		}
 	}

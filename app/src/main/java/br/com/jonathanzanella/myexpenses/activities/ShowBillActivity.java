@@ -17,7 +17,7 @@ import butterknife.Bind;
  * Created by jzanella on 1/31/16.
  */
 public class ShowBillActivity extends BaseActivity {
-	public static final String KEY_BILL_ID = "KeyBillId";
+	public static final String KEY_BILL_UUID = "KeyBillUuid";
 
 	@Bind(R.id.act_show_bill_name)
 	TextView billName;
@@ -60,14 +60,14 @@ public class ShowBillActivity extends BaseActivity {
 		super.storeBundle(extras);
 		if(extras == null)
 			return;
-		if(extras.containsKey(KEY_BILL_ID))
-			bill = Bill.find(extras.getLong(KEY_BILL_ID));
+		if(extras.containsKey(KEY_BILL_UUID))
+			bill = Bill.find(extras.getString(KEY_BILL_UUID));
 	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putLong(KEY_BILL_ID, bill.getId());
+		outState.putString(KEY_BILL_UUID, bill.getUuid());
 	}
 
 	@Override
@@ -75,7 +75,7 @@ public class ShowBillActivity extends BaseActivity {
 		super.onResume();
 
 		if(bill != null) {
-			bill = Bill.find(bill.getId());
+			bill = Bill.find(bill.getUuid());
 			setData();
 		}
 	}
@@ -91,7 +91,7 @@ public class ShowBillActivity extends BaseActivity {
 		switch (item.getItemId()) {
 			case R.id.action_edit:
 				Intent i = new Intent(this, EditBillActivity.class);
-				i.putExtra(EditBillActivity.KEY_BILL_ID, bill.getId());
+				i.putExtra(EditBillActivity.KEY_BILL_UUID, bill.getUuid());
 				startActivity(i);
 				break;
 		}

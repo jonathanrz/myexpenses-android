@@ -1,5 +1,6 @@
 package br.com.jonathanzanella.myexpenses.models;
 
+import com.google.gson.annotations.Expose;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
@@ -26,8 +27,11 @@ public class Bill extends BaseModel implements Transaction {
 	public static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
 
 	@Column
-	@PrimaryKey(autoincrement = true) @Getter
+	@PrimaryKey(autoincrement = true)
 	long id;
+
+	@Column @Getter @Setter @Expose
+	String uuid;
 
 	@Column @Getter @Setter
 	String name;
@@ -52,8 +56,8 @@ public class Bill extends BaseModel implements Transaction {
 		return SQLite.select().from(Bill.class);
 	}
 
-	public static Bill find(long id) {
-		return initQuery().where(Bill_Table.id.eq(id)).querySingle();
+	public static Bill find(String uuid) {
+		return initQuery().where(Bill_Table.uuid.eq(uuid)).querySingle();
 	}
 
 	public static List<Bill> monthly(DateTime month, List<Expense> expenses) {
@@ -67,7 +71,7 @@ public class Bill extends BaseModel implements Transaction {
 			boolean billAlreadyPaid = false;
 			for (Expense expense : expenses) {
 				Bill b = expense.getBill();
-				if(b != null && b.getId() == bill.getId()) {
+				if(b != null && b.getUuid().equals(bill.getUuid())) {
 					billAlreadyPaid = true;
 					break;
 				}
