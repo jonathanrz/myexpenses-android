@@ -77,6 +77,10 @@ public class Account extends BaseModel implements Chargeable, UnsyncModel {
 		return initQuery().where(Account_Table.id.eq(id)).querySingle();
 	}
 
+	public static Account find(String uuid) {
+		return initQuery().where(Account_Table.uuid.eq(uuid)).querySingle();
+	}
+
 	public static List<Account> unsync() {
 		return initQuery().where(Account_Table.sync.eq(false)).queryList();
 	}

@@ -16,6 +16,7 @@ import java.util.UUID;
 import br.com.jonathanzanella.myexpenses.models.Account;
 import br.com.jonathanzanella.myexpenses.models.Card;
 import br.com.jonathanzanella.myexpenses.models.CardType;
+import br.com.jonathanzanella.myexpenses.models.Receipt;
 import lombok.Getter;
 
 /**
@@ -41,6 +42,7 @@ public class MyApplication extends Application {
 			bankAcc.setBalance(100000);
 			bankAcc.setBalanceDate(DateTime.now());
 			bankAcc.setName("Banco");
+			bankAcc.setUuid(UUID.randomUUID().toString());
 			bankAcc.save();
 
 			Card c = new Card();

@@ -5,20 +5,20 @@ import com.raizlabs.android.dbflow.sql.SQLiteType;
 import com.raizlabs.android.dbflow.sql.migration.AlterTableMigration;
 
 import br.com.jonathanzanella.myexpenses.database.MyDatabase;
-import br.com.jonathanzanella.myexpenses.models.Card;
+import br.com.jonathanzanella.myexpenses.models.Receipt;
 
 /**
  * Created by Jonathan Zanella on 12/02/16.
  */
-@Migration(version = 11, database = MyDatabase.class)
-public class Migration11 extends AlterTableMigration<Card> {
+@Migration(version = 14, database = MyDatabase.class)
+public class Migration14 extends AlterTableMigration<Receipt> {
 
-	public Migration11() {
-		super(Card.class);
+	public Migration14() {
+		super(Receipt.class);
 	}
 
 	@Override
 	public void onPreMigrate() {
-		addColumn(SQLiteType.TEXT, "accountUuid");
+		addColumn(SQLiteType.TEXT, "sourceUuid");
 	}
 }

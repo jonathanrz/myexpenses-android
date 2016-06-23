@@ -33,8 +33,8 @@ public class Card extends BaseModel implements Chargeable {
 	@Column @Getter @Setter
 	CardType type;
 
-	@Column
-	long accountId;
+	@Column @Getter @Setter
+	String accountUuid;
 
 	public static List<Card> all() {
 		return initQuery().queryList();
@@ -55,17 +55,17 @@ public class Card extends BaseModel implements Chargeable {
 
 	public static Card accountDebitCard(Account acc) {
 		return initQuery()
-				.where(Card_Table.accountId.eq(acc.getId()))
+				.where(Card_Table.accountUuid.eq(acc.getUuid()))
 				.and(Card_Table.type.eq(CardType.DEBIT))
 				.querySingle();
 	}
 
 	public Account getAccount() {
-		return Account.find(accountId);
+		return Account.find(accountUuid);
 	}
 
 	public void setAccount(Account account) {
-		accountId = account.getId();
+		accountUuid = account.getUuid();
 	}
 
 	@Override

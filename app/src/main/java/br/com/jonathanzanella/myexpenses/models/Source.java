@@ -34,6 +34,9 @@ public class Source extends BaseModel implements UnsyncModel {
 	@Column @Getter @Setter @Expose
 	String name;
 
+	@Column @Getter @Setter @Expose
+	String uuid;
+
 	@Column @Getter @Setter @Expose @SerializedName("_id")
 	String serverId;
 
@@ -71,7 +74,8 @@ public class Source extends BaseModel implements UnsyncModel {
 
 	@Override
 	public String getData() {
-		return "name=" + getName();
+		return "name=" + getName() +
+				", uuid=" + getUuid();
 	}
 
 	@Override

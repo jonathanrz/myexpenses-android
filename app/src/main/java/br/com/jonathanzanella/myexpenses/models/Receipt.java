@@ -45,8 +45,11 @@ public class Receipt extends BaseModel implements Transaction{
 	@Column
 	long sourceId;
 
-	@Column
-	long accountId;
+	@Column @Getter @Setter
+	String sourceUuid;
+
+	@Column @Getter @Setter
+	String accountUuid;
 
 	@Column @Getter @Setter
 	boolean credited;
@@ -96,7 +99,7 @@ public class Receipt extends BaseModel implements Transaction{
 	public static List<Receipt> monthly(DateTime month, Account account) {
 		return initQuery()
 				.where(Receipt_Table.date.between(month).and(month.plusMonths(1)))
-				.and(Receipt_Table.accountId.eq(account.getId()))
+				.and(Receipt_Table.accountUuid.eq(account.getUuid()))
 				.queryList();
 	}
 
@@ -146,11 +149,11 @@ public class Receipt extends BaseModel implements Transaction{
 	}
 
 	public Account getAccount() {
-		return Account.find(accountId);
+		return Account.find(accountUuid);
 	}
 
 	public void setAccount(@NonNull Account a) {
-		accountId = a.getId();
+		accountUuid = a.getUuid();
 	}
 
 	public boolean isShowInResume() {
