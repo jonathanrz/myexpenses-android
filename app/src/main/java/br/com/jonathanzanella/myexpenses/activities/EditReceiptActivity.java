@@ -103,8 +103,8 @@ public class EditReceiptActivity extends BaseActivity {
 
 		if(extras.containsKey(KEY_RECEIPT_ID))
 			receipt = Receipt.find(extras.getLong(KEY_RECEIPT_ID));
-		if(extras.containsKey(ListSourceActivity.KEY_SOURCE_SELECTED_ID))
-			source = Source.find(extras.getLong(ListSourceActivity.KEY_SOURCE_SELECTED_ID));
+		if(extras.containsKey(ListSourceActivity.KEY_SOURCE_SELECTED_UUID))
+			source = Source.find(extras.getString(ListSourceActivity.KEY_SOURCE_SELECTED_UUID));
 		if(extras.containsKey(ListAccountActivity.KEY_ACCOUNT_SELECTED_ID))
 			account = Account.find(extras.getLong(ListAccountActivity.KEY_ACCOUNT_SELECTED_ID));
 	}
@@ -115,7 +115,7 @@ public class EditReceiptActivity extends BaseActivity {
 		if(receipt != null)
 			outState.putLong(KEY_RECEIPT_ID, receipt.getId());
 		if(source != null)
-			outState.putLong(ListSourceActivity.KEY_SOURCE_SELECTED_ID, source.getId());
+			outState.putString(ListSourceActivity.KEY_SOURCE_SELECTED_UUID, source.getUuid());
 		if(account != null)
 			outState.putLong(ListAccountActivity.KEY_ACCOUNT_SELECTED_ID, account.getId());
 	}
@@ -126,7 +126,7 @@ public class EditReceiptActivity extends BaseActivity {
 		switch (requestCode) {
 			case REQUEST_SELECT_SOURCE: {
 				if(resultCode == RESULT_OK) {
-					source = Source.find(data.getLongExtra(ListSourceActivity.KEY_SOURCE_SELECTED_ID, 0L));
+					source = Source.find(data.getStringExtra(ListSourceActivity.KEY_SOURCE_SELECTED_UUID));
 					if(source != null)
 						onSourceSelected();
 				}

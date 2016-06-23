@@ -21,7 +21,7 @@ import butterknife.Bind;
  * Created by jzanella onCard 2/1/16.
  */
 public class ListChargeableActivity extends BaseActivity implements AccountAdapterCallback, CardAdapterCallback {
-	public static final String KEY_CHARGEABLE_SELECTED_ID = "KeyChargeableSelectId";
+	public static final String KEY_CHARGEABLE_SELECTED_UUID = "KeyChargeableSelectUuid";
 	public static final String KEY_CHARGEABLE_SELECTED_TYPE = "KeyChargeableSelectType";
 
 	@Bind(R.id.act_chargeable_list_accounts)
@@ -70,7 +70,7 @@ public class ListChargeableActivity extends BaseActivity implements AccountAdapt
 	@Override
 	public void onAccountSelected(Account account) {
 		Intent i = new Intent();
-		i.putExtra(KEY_CHARGEABLE_SELECTED_ID, account.getId());
+		i.putExtra(KEY_CHARGEABLE_SELECTED_UUID, account.getUuid());
 		i.putExtra(KEY_CHARGEABLE_SELECTED_TYPE, account.getChargeableType());
 		setResult(RESULT_OK, i);
 		finish();
@@ -79,7 +79,7 @@ public class ListChargeableActivity extends BaseActivity implements AccountAdapt
 	@Override
 	public void onCard(Card card) {
 		Intent i = new Intent();
-		i.putExtra(KEY_CHARGEABLE_SELECTED_ID, card.getId());
+		i.putExtra(KEY_CHARGEABLE_SELECTED_UUID, card.getUuid());
 		i.putExtra(KEY_CHARGEABLE_SELECTED_TYPE, card.getChargeableType());
 		setResult(RESULT_OK, i);
 		finish();

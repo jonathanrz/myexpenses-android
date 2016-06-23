@@ -28,7 +28,7 @@ public class Source extends BaseModel implements UnsyncModel {
     private static final SourceApi sourceApi = new SourceApi();
 
 	@Column
-	@PrimaryKey(autoincrement = true) @Getter
+	@PrimaryKey(autoincrement = true)
 	long id;
 
 	@Column @Getter @Setter @Expose
@@ -65,12 +65,21 @@ public class Source extends BaseModel implements UnsyncModel {
 		return initQuery().where(Source_Table.id.eq(id)).querySingle();
 	}
 
+	public static Source find(String uuid) {
+		return initQuery().where(Source_Table.uuid.eq(uuid)).querySingle();
+	}
+
     public static long greaterUpdatedAt() {
         Source source = initQuery().orderBy(Source_Table.updatedAt, false).limit(1).querySingle();
         if(source == null)
             return 0L;
         return source.getUpdatedAt();
     }
+
+	@Override
+	public boolean isSaved() {
+		return id != 0;
+	}
 
 	@Override
 	public String getData() {

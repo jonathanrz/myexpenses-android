@@ -44,7 +44,7 @@ public class Expense extends BaseModel implements Transaction {
 	int newValue;
 
 	@Column
-	long chargeableId;
+	String chargeableUuid;
 
 	@Column
 	ChargeableType chargeableType;
@@ -199,7 +199,7 @@ public class Expense extends BaseModel implements Transaction {
 		List<Expense> bills = initQuery()
 				.where(Expense_Table.date.between(initOfMonth).and(endOfMonth))
 				.and(Expense_Table.chargeableType.eq(ChargeableType.ACCOUNT))
-				.and(Expense_Table.chargeableId.eq(account.getId()))
+				.and(Expense_Table.chargeableUuid.eq(account.getUuid()))
 				.and(Expense_Table.chargeNextMonth.eq(true))
 				.queryList();
 
@@ -207,7 +207,7 @@ public class Expense extends BaseModel implements Transaction {
 			bills.addAll(initQuery()
 					.where(Expense_Table.date.between(initOfMonth).and(endOfMonth))
 					.and(Expense_Table.chargeableType.eq(ChargeableType.DEBIT_CARD))
-					.and(Expense_Table.chargeableId.eq(card.getId()))
+					.and(Expense_Table.chargeableUuid.eq(card.getUuid()))
 					.and(Expense_Table.chargeNextMonth.eq(true))
 					.queryList());
 		}
@@ -218,7 +218,7 @@ public class Expense extends BaseModel implements Transaction {
 		bills.addAll(initQuery()
 				.where(Expense_Table.date.between(initOfMonth).and(endOfMonth))
 				.and(Expense_Table.chargeableType.eq(ChargeableType.ACCOUNT))
-				.and(Expense_Table.chargeableId.eq(account.getId()))
+				.and(Expense_Table.chargeableUuid.eq(account.getUuid()))
 				.and(Expense_Table.chargeNextMonth.eq(false))
 				.queryList());
 
@@ -226,7 +226,7 @@ public class Expense extends BaseModel implements Transaction {
 			bills.addAll(initQuery()
 					.where(Expense_Table.date.between(initOfMonth).and(endOfMonth))
 					.and(Expense_Table.chargeableType.eq(ChargeableType.DEBIT_CARD))
-					.and(Expense_Table.chargeableId.eq(card.getId()))
+					.and(Expense_Table.chargeableUuid.eq(card.getUuid()))
 					.and(Expense_Table.chargeNextMonth.eq(false))
 					.queryList());
 		}
@@ -292,11 +292,11 @@ public class Expense extends BaseModel implements Transaction {
 
 	public void setChargeable(Chargeable chargeable) {
 		chargeableType = chargeable.getChargeableType();
-		chargeableId = chargeable.getId();
+		chargeableUuid = chargeable.getUuid();
 	}
 
 	public Chargeable getChargeable() {
-		return Expense.findChargeable(chargeableType, chargeableId);
+		return Expense.findChargeable(chargeableType, chargeableUuid);
 	}
 
 	public void uncharge() {
@@ -319,16 +319,16 @@ public class Expense extends BaseModel implements Transaction {
 		return Bill.find(billId);
 	}
 
-	public static Chargeable findChargeable(ChargeableType type, long id) {
-		if(type == null || id == 0)
+	public static Chargeable findChargeable(ChargeableType type, String uuid) {
+		if(type == null || uuid == null)
 			return null;
 
 		switch (type) {
 			case ACCOUNT:
-				return Account.find(id);
+				return Account.find(uuid);
 			case DEBIT_CARD:
 			case CARD:
-				return Card.find(id);
+				return Card.find(uuid);
 		}
 		return null;
 	}

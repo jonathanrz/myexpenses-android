@@ -56,7 +56,7 @@ public class SourceAdapter extends RecyclerView.Adapter<SourceAdapter.ViewHolder
 					adapter.callback.onSourceSelected(source);
 				} else {
 					Intent i = new Intent(itemView.getContext(), ShowSourceActivity.class);
-					i.putExtra(ShowSourceActivity.KEY_SOURCE_ID, source.getId());
+					i.putExtra(ShowSourceActivity.KEY_SOURCE_UUID, source.getUuid());
 					itemView.getContext().startActivity(i);
 				}
 			}

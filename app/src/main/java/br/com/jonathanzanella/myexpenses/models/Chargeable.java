@@ -5,6 +5,7 @@ package br.com.jonathanzanella.myexpenses.models;
  */
 public interface Chargeable {
 	long getId();
+	String getUuid();
 	ChargeableType getChargeableType();
 	String getName();
 	boolean canBePaidNextMonth();

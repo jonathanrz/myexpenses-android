@@ -82,7 +82,7 @@ public class UnsyncModelAdapter extends RecyclerView.Adapter<UnsyncModelAdapter.
             itemView.setTag(unsyncModel);
 
 			progressBar.setVisibility(View.GONE);
-			if(unsyncModel.getId() != 0) {
+			if(unsyncModel.isSaved()) {
                 saveBtn.setVisibility(View.GONE);
                 syncBtn.setVisibility(View.VISIBLE);
 			} else {

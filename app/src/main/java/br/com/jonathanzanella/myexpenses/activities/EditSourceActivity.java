@@ -14,7 +14,7 @@ import butterknife.Bind;
  * Created by Jonathan Zanella on 26/01/16.
  */
 public class EditSourceActivity extends BaseActivity {
-	public static final String KEY_SOURCE_ID = "KeySourceId";
+	public static final String KEY_SOURCE_UUID = "KeySourceUuid";
 
 	@Bind(R.id.act_edit_source_name)
 	EditText editName;
@@ -42,15 +42,15 @@ public class EditSourceActivity extends BaseActivity {
 		if(extras == null)
 			return;
 
-		if(extras.containsKey(KEY_SOURCE_ID))
-			source = Source.find(extras.getLong(KEY_SOURCE_ID));
+		if(extras.containsKey(KEY_SOURCE_UUID))
+			source = Source.find(extras.getString(KEY_SOURCE_UUID));
 	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		if(source != null)
-			outState.putLong(KEY_SOURCE_ID, source.getId());
+			outState.putString(KEY_SOURCE_UUID, source.getUuid());
 	}
 
 	@Override
@@ -77,7 +77,7 @@ public class EditSourceActivity extends BaseActivity {
 		source.save();
 
 		Intent i = new Intent();
-		i.putExtra(KEY_SOURCE_ID, source.getId());
+		i.putExtra(KEY_SOURCE_UUID, source.getUuid());
 		setResult(RESULT_OK, i);
 		finish();
 	}

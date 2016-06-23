@@ -108,7 +108,7 @@ public class EditExpenseActivity extends BaseActivity {
 
 		if(extras.containsKey(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_TYPE)) {
 			chargeable = Expense.findChargeable((ChargeableType) extras.getSerializable(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_TYPE),
-										extras.getLong(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_ID));
+										extras.getString(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_UUID));
 		}
 	}
 
@@ -118,7 +118,7 @@ public class EditExpenseActivity extends BaseActivity {
 		if(expense != null)
 			outState.putLong(KEY_EXPENSE_ID, expense.getId());
 		if(chargeable != null) {
-			outState.putLong(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_ID, chargeable.getId());
+			outState.putString(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_UUID, chargeable.getUuid());
 			outState.putSerializable(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_TYPE, chargeable.getChargeableType());
 		}
 	}
@@ -131,7 +131,7 @@ public class EditExpenseActivity extends BaseActivity {
 				if(resultCode == RESULT_OK) {
 					chargeable = Expense.findChargeable(
 							(ChargeableType) data.getSerializableExtra(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_TYPE),
-							data.getLongExtra(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_ID, 0L));
+							data.getStringExtra(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_UUID));
 					if(chargeable != null)
 						onChargeableSelected();
 				}

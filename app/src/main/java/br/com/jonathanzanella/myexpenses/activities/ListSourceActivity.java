@@ -17,7 +17,7 @@ import butterknife.Bind;
  * Created by jzanella on 2/1/16.
  */
 public class ListSourceActivity extends BaseActivity implements SourceAdapterCallback {
-	public static final String KEY_SOURCE_SELECTED_ID = "KeySourceSelectId";
+	public static final String KEY_SOURCE_SELECTED_UUID = "KeySourceSelectUuid";
 
 	@Bind(R.id.act_sources_list)
 	RecyclerView sources;
@@ -45,7 +45,7 @@ public class ListSourceActivity extends BaseActivity implements SourceAdapterCal
 	@Override
 	public void onSourceSelected(Source source) {
 		Intent i = new Intent();
-		i.putExtra(KEY_SOURCE_SELECTED_ID, source.getId());
+		i.putExtra(KEY_SOURCE_SELECTED_UUID, source.getUuid());
 		setResult(RESULT_OK, i);
 		finish();
 	}

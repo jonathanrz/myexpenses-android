@@ -116,6 +116,11 @@ public class Account extends BaseModel implements Chargeable, UnsyncModel {
 	}
 
 	@Override
+	public boolean isSaved() {
+		return id != 0;
+	}
+
+	@Override
 	public String getData() {
 		return "name=" + name +
 				", balance=" + balance +

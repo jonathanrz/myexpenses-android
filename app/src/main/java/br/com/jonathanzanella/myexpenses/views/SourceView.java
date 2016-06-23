@@ -69,7 +69,7 @@ public class SourceView extends BaseView {
         switch (requestCode) {
             case REQUEST_ADD_SOURCE:
                 if(resultCode == Activity.RESULT_OK) {
-                    Source s = Source.find(data.getLongExtra(EditSourceActivity.KEY_SOURCE_ID, 0L));
+                    Source s = Source.find(data.getStringExtra(EditSourceActivity.KEY_SOURCE_UUID));
                     if(s != null)
                         adapter.addSource(s);
                 }

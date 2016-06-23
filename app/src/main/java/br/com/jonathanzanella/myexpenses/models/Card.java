@@ -2,6 +2,7 @@ package br.com.jonathanzanella.myexpenses.models;
 
 import android.util.Log;
 
+import com.google.gson.annotations.Expose;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
@@ -27,6 +28,9 @@ public class Card extends BaseModel implements Chargeable {
 	@PrimaryKey(autoincrement = true) @Getter
 	long id;
 
+	@Column @Getter @Setter @Expose
+	String uuid;
+
 	@Column @Getter @Setter
 	String name;
 
@@ -51,6 +55,10 @@ public class Card extends BaseModel implements Chargeable {
 
 	public static Card find(long id) {
 		return initQuery().where(Card_Table.id.eq(id)).querySingle();
+	}
+
+	public static Card find(String uuid) {
+		return initQuery().where(Card_Table.uuid.eq(uuid)).querySingle();
 	}
 
 	public static Card accountDebitCard(Account acc) {
@@ -122,7 +130,7 @@ public class Card extends BaseModel implements Chargeable {
 		DateTime endOfMonth = date;
 
 		List<Expense> bills = initExpenseQuery()
-				.where(Expense_Table.chargeableId.eq(getId()))
+				.where(Expense_Table.chargeableUuid.eq(getUuid()))
 				.and(Expense_Table.chargeableType.eq(ChargeableType.CARD))
 				.and(Expense_Table.date.between(initOfMonth).and(endOfMonth))
 				.and(Expense_Table.chargeNextMonth.eq(true))
@@ -134,7 +142,7 @@ public class Card extends BaseModel implements Chargeable {
 		endOfMonth = date.plusMonths(1);
 
 		bills.addAll(initExpenseQuery()
-				.where(Expense_Table.chargeableId.eq(getId()))
+				.where(Expense_Table.chargeableUuid.eq(getUuid()))
 				.and(Expense_Table.chargeableType.eq(ChargeableType.CARD))
 				.and(Expense_Table.date.between(initOfMonth).and(endOfMonth))
 				.and(Expense_Table.chargeNextMonth.eq(false))

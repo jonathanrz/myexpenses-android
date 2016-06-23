@@ -145,7 +145,7 @@ public class Receipt extends BaseModel implements Transaction{
 	}
 
 	public void setSource(@NonNull Source s) {
-		sourceId = s.getId();
+		sourceUuid= s.getUuid();
 	}
 
 	public Account getAccount() {
