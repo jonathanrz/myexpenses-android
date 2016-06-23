@@ -1,5 +1,7 @@
 package br.com.jonathanzanella.myexpenses.server;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 

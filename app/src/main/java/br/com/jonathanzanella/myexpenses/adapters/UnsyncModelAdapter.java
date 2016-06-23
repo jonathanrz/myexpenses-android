@@ -17,6 +17,7 @@ import java.util.List;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.models.Source;
 import br.com.jonathanzanella.myexpenses.models.UnsyncModel;
+import br.com.jonathanzanella.myexpenses.server.UnsyncModelApi;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -107,7 +108,8 @@ public class UnsyncModelAdapter extends RecyclerView.Adapter<UnsyncModelAdapter.
             progressBar.setVisibility(View.VISIBLE);
 
             final UnsyncModel model = (UnsyncModel) itemView.getTag();
-            model.getServerApi().save(model, new Subscriber<List<? extends UnsyncModel>>() {
+	        UnsyncModelApi<UnsyncModel> api = model.getServerApi();
+            api.save(model, new Subscriber<UnsyncModel>() {
                         @Override
                         public void onCompleted() {}
 
@@ -115,12 +117,11 @@ public class UnsyncModelAdapter extends RecyclerView.Adapter<UnsyncModelAdapter.
                         public void onError(Throwable e) {}
 
                         @Override
-                        public void onNext(List<? extends UnsyncModel> unsyncModels) {
+                        public void onNext(UnsyncModel serverModel) {
                             UnsyncModelAdapter adapter = adapterWeakReference.get();
                             adapter.models.remove(model);
                             adapter.notifyDataSetChanged();
 
-                            UnsyncModel serverModel= unsyncModels.get(0);
                             model.setServerId(serverModel.getServerId());
                             model.setCreatedAt(serverModel.getCreatedAt());
                             model.setUpdatedAt(serverModel.getUpdatedAt());

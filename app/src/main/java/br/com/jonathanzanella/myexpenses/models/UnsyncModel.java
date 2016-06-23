@@ -21,5 +21,5 @@ public interface UnsyncModel {
 
     String getHeader(Context ctx);
 
-    UnsyncModelApi getServerApi();
+    UnsyncModelApi<UnsyncModel> getServerApi();
 }

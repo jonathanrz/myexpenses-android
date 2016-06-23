@@ -28,7 +28,7 @@ public class SyncView extends BaseView {
 	@Bind(R.id.view_unsync_models)
 	RecyclerView list;
 	UnsyncModelAdapter adapter;
-	List<UnsyncModelApi> apis;
+	List<UnsyncModelApi<? extends UnsyncModel>> apis;
 
 	public SyncView(Context context) {
 		super(context);
@@ -60,6 +60,7 @@ public class SyncView extends BaseView {
 		adapter.notifyDataSetChanged();
 
 		for (UnsyncModelApi api : apis)
+			//noinspection unchecked
 			api.index(new Subscriber<List<? extends UnsyncModel>>() {
 
 				@Override
