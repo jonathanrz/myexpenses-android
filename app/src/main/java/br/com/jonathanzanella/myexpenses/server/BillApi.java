@@ -5,7 +5,6 @@ import com.raizlabs.android.dbflow.StringUtils;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.models.Bill;
-import br.com.jonathanzanella.myexpenses.models.Source;
 import br.com.jonathanzanella.myexpenses.models.UnsyncModel;
 import rx.Observable;
 import rx.Subscriber;
@@ -26,7 +25,7 @@ public class BillApi implements UnsyncModelApi<Bill> {
 
     @Override
     public void index(Subscriber<List<Bill>> subscriber) {
-        Observable<List<Bill>> observable = getInterface().index(Source.greaterUpdatedAt());
+        Observable<List<Bill>> observable = getInterface().index(Bill.greaterUpdatedAt());
         observable.observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.newThread())
                 .subscribe(subscriber);

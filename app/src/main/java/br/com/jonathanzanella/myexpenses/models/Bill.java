@@ -80,6 +80,13 @@ public class Bill extends BaseModel implements Transaction, UnsyncModel {
 		return initQuery().where(Bill_Table.uuid.eq(uuid)).querySingle();
 	}
 
+	public static long greaterUpdatedAt() {
+		Bill bill = initQuery().orderBy(Bill_Table.updatedAt, false).limit(1).querySingle();
+		if(bill == null)
+			return 0L;
+		return bill.getUpdatedAt();
+	}
+
 	public static List<Bill> unsync() {
 		return initQuery().where(Bill_Table.sync.eq(false)).queryList();
 	}

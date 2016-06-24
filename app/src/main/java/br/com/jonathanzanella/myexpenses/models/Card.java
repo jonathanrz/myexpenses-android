@@ -1,8 +1,10 @@
 package br.com.jonathanzanella.myexpenses.models;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
@@ -15,7 +17,10 @@ import org.joda.time.DateTime;
 import java.util.List;
 import java.util.UUID;
 
+import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.database.MyDatabase;
+import br.com.jonathanzanella.myexpenses.server.CardApi;
+import br.com.jonathanzanella.myexpenses.server.UnsyncModelApi;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,8 +28,9 @@ import lombok.Setter;
  * Created by jzanella on 1/31/16.
  */
 @Table(database = MyDatabase.class)
-public class Card extends BaseModel implements Chargeable {
+public class Card extends BaseModel implements Chargeable, UnsyncModel {
 	private static final String LOG_TAG = "Card";
+	private static final CardApi cardApi = new CardApi();
 	@Column
 	@PrimaryKey(autoincrement = true)
 	long id;
@@ -32,14 +38,26 @@ public class Card extends BaseModel implements Chargeable {
 	@Column @Getter @Setter @Expose
 	String uuid;
 
-	@Column @Getter @Setter
+	@Column @Getter @Setter @Expose
 	String name;
 
-	@Column @Getter @Setter
+	@Column @Getter @Setter @Expose
 	CardType type;
 
-	@Column @Getter @Setter
+	@Column @Getter @Setter @Expose
 	String accountUuid;
+
+	@Column @Getter @Setter @Expose @SerializedName("_id")
+	String serverId;
+
+	@Column @Getter @Setter @Expose @SerializedName("created_at")
+	long createdAt;
+
+	@Column @Getter @Setter @Expose @SerializedName("updated_at")
+	long updatedAt;
+
+	@Column @Getter @Setter
+	boolean sync;
 
 	public static List<Card> all() {
 		return initQuery().queryList();
@@ -56,6 +74,17 @@ public class Card extends BaseModel implements Chargeable {
 
 	public static Card find(String uuid) {
 		return initQuery().where(Card_Table.uuid.eq(uuid)).querySingle();
+	}
+
+	public static long greaterUpdatedAt() {
+		Card card = initQuery().orderBy(Card_Table.updatedAt, false).limit(1).querySingle();
+		if(card == null)
+			return 0L;
+		return card.getUpdatedAt();
+	}
+
+	public static List<Card> unsync() {
+		return initQuery().where(Card_Table.sync.eq(false)).queryList();
 	}
 
 	public static Card accountDebitCard(Account acc) {
@@ -155,5 +184,28 @@ public class Card extends BaseModel implements Chargeable {
 		if(id == 0 && uuid == null)
 			uuid = UUID.randomUUID().toString();
 		super.save();
+	}
+
+	@Override
+	public boolean isSaved() {
+		return id != 0;
+	}
+
+	@Override
+	public String getData() {
+		return "name=" + name +
+				", type=" + type + "" +
+				", account=" + accountUuid;
+	}
+
+	@Override
+	public String getHeader(Context ctx) {
+		return ctx.getString(R.string.cards);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public UnsyncModelApi getServerApi() {
+		return cardApi;
 	}
 }

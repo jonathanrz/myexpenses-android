@@ -87,4 +87,7 @@ public class Server {
 	public BillInterface billInterface() {
 		return retrofit.create(BillInterface.class);
 	}
+	public CardInterface cardInterface() {
+		return retrofit.create(CardInterface.class);
+	}
 }
