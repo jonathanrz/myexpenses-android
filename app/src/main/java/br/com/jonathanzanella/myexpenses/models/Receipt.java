@@ -1,5 +1,9 @@
 package br.com.jonathanzanella.myexpenses.models;
 
+import android.content.Context;
+
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
@@ -14,8 +18,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
+import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.converter.DateTimeConverter;
 import br.com.jonathanzanella.myexpenses.database.MyDatabase;
+import br.com.jonathanzanella.myexpenses.server.ReceiptApi;
+import br.com.jonathanzanella.myexpenses.server.UnsyncModelApi;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -24,39 +31,52 @@ import lombok.Setter;
  * Created by jzanella on 2/1/16.
  */
 @Table(database = MyDatabase.class)
-public class Receipt extends BaseModel implements Transaction{
+public class Receipt extends BaseModel implements Transaction, UnsyncModel {
 	public static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
+	private static final ReceiptApi receiptApi = new ReceiptApi();
 
 	@Column
 	@PrimaryKey(autoincrement = true)
 	long id;
 
-	@Column @Getter @Setter
+	@Column @Getter @Setter @Expose
 	String uuid;
 
-	@Column @Getter @Setter
+	@Column @Getter @Setter @Expose
 	String name;
 
-	@Column(typeConverter = DateTimeConverter.class) @Getter @Setter
+	@Column(typeConverter = DateTimeConverter.class) @Getter @Setter @Expose
 	DateTime date;
 
-	@Column
+	@Column @Expose
 	int income;
 
-	@Column @Getter @Setter
+	@Column @Getter @Setter @Expose
 	int newIncome;
 
-	@Column @Getter @Setter
+	@Column @Getter @Setter @Expose
 	String sourceUuid;
 
-	@Column @Getter @Setter
+	@Column @Getter @Setter @Expose
 	String accountUuid;
 
-	@Column @Getter @Setter
+	@Column @Getter @Setter @Expose
 	boolean credited;
 
-	@Column @Getter @Setter
+	@Column @Getter @Setter @Expose
 	boolean ignoreInResume;
+
+	@Column @Getter @Setter @Expose @SerializedName("_id")
+	String serverId;
+
+	@Column @Getter @Setter @Expose @SerializedName("created_at")
+	long createdAt;
+
+	@Column @Getter @Setter @Expose @SerializedName("updated_at")
+	long updatedAt;
+
+	@Column @Getter @Setter
+	boolean sync;
 
 	@Override
 	public int getAmount() {
@@ -119,6 +139,17 @@ public class Receipt extends BaseModel implements Transaction{
 		return initQuery().where(Receipt_Table.uuid.eq(uuid)).querySingle();
 	}
 
+	public static long greaterUpdatedAt() {
+		Receipt receipt = initQuery().orderBy(Receipt_Table.updatedAt, false).limit(1).querySingle();
+		if(receipt == null)
+			return 0L;
+		return receipt.getUpdatedAt();
+	}
+
+	public static List<Receipt> unsync() {
+		return initQuery().where(Receipt_Table.sync.eq(false)).queryList();
+	}
+
 	public int getIncome() {
 		if(newIncome != 0)
 			return newIncome;
@@ -171,9 +202,33 @@ public class Receipt extends BaseModel implements Transaction{
 	}
 
 	@Override
+	public boolean isSaved() {
+		return id != 0;
+	}
+
+	@Override
+	public String getData() {
+		return "uuid=" + uuid +
+				", name=" + name +
+				", date=" + sdf.format(date.toDate()) +
+				", income=" + income;
+	}
+
+	@Override
 	public void save() {
 		if(id == 0 && uuid == null)
 			uuid = UUID.randomUUID().toString();
 		super.save();
+	}
+
+	@Override
+	public String getHeader(Context ctx) {
+		return ctx.getString(R.string.receipts);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public UnsyncModelApi getServerApi() {
+		return receiptApi;
 	}
 }

@@ -93,4 +93,7 @@ public class Server {
 	public ExpenseInterface expenseInterface() {
 		return retrofit.create(ExpenseInterface.class);
 	}
+	public ReceiptInterface receiptInterface() {
+		return retrofit.create(ReceiptInterface.class);
+	}
 }

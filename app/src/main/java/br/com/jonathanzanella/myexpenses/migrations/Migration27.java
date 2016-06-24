@@ -6,18 +6,18 @@ import com.raizlabs.android.dbflow.sql.migration.BaseMigration;
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
 import br.com.jonathanzanella.myexpenses.database.MyDatabase;
-import br.com.jonathanzanella.myexpenses.models.Expense;
 import br.com.jonathanzanella.myexpenses.models.Expense_Table;
+import br.com.jonathanzanella.myexpenses.models.Receipt;
 
 /**
  * Created by Jonathan Zanella on 12/02/16.
  */
-@Migration(version = 25, database = MyDatabase.class)
-public class Migration25 extends BaseMigration {
+@Migration(version = 27, database = MyDatabase.class)
+public class Migration27 extends BaseMigration {
 
 	@Override
 	public void migrate(DatabaseWrapper database) {
-		SQLite.update(Expense.class)
+		SQLite.update(Receipt.class)
 				.set(Expense_Table.sync.eq(false))
 				.execute(database);
 	}
