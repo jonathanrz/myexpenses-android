@@ -1,11 +1,19 @@
 package br.com.jonathanzanella.myexpenses.server;
 
-import android.util.Log;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+
+import org.joda.time.DateTime;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 
 import br.com.jonathanzanella.myexpenses.BuildConfig;
 import br.com.jonathanzanella.myexpenses.Environment;
@@ -23,6 +31,22 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class Server {
 	private Retrofit retrofit;
 
+	JsonSerializer<DateTime> dateTimeJsonSerializer = new JsonSerializer<DateTime>() {
+		@Override
+		public JsonElement serialize(DateTime src, Type typeOfSrc, JsonSerializationContext
+				context) {
+			return src == null ? null : new JsonPrimitive(src.getMillis());
+		}
+	};
+
+	JsonDeserializer<DateTime> dateTimeJsonDeserializer = new JsonDeserializer<DateTime>() {
+		@Override
+		public DateTime deserialize(JsonElement json, Type typeOfT,
+		                        JsonDeserializationContext context) throws JsonParseException {
+			return json == null ? null : new DateTime(json.getAsLong());
+		}
+	};
+
 	private class HeaderInterceptor implements Interceptor {
 		@Override
 		public Response intercept(Chain chain)
@@ -36,9 +60,15 @@ public class Server {
 	}
 
 	public Server() {
-		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+		Gson gson = new GsonBuilder()
+							.excludeFieldsWithoutExposeAnnotation()
+							.registerTypeAdapter(DateTime.class, dateTimeJsonSerializer)
+							.registerTypeAdapter(DateTime.class, dateTimeJsonDeserializer)
+							.create();
 
-		OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new HeaderInterceptor()).build();
+		OkHttpClient client = new OkHttpClient.Builder()
+									.addInterceptor(new HeaderInterceptor())
+									.build();
 
 		retrofit = new Retrofit.Builder()
 				.addCallAdapterFactory(RxJavaCallAdapterFactory.create())
@@ -53,5 +83,8 @@ public class Server {
 	}
 	public AccountInterface accountInterface() {
 		return retrofit.create(AccountInterface.class);
+	}
+	public BillInterface billInterface() {
+		return retrofit.create(BillInterface.class);
 	}
 }

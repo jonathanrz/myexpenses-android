@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.models.Source;
 import br.com.jonathanzanella.myexpenses.models.UnsyncModel;
 import br.com.jonathanzanella.myexpenses.server.UnsyncModelApi;
 import butterknife.Bind;
@@ -145,10 +144,7 @@ public class UnsyncModelAdapter extends RecyclerView.Adapter<UnsyncModelAdapter.
 
     @Override
     public long getHeaderId(int position) {
-        UnsyncModel model = models.get(position);
-        if(model instanceof Source)
-            return 1;
-        return 0;
+        return models.get(position).getClass().hashCode();
     }
 
     @Override

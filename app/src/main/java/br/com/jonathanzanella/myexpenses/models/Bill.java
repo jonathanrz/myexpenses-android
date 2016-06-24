@@ -1,6 +1,9 @@
 package br.com.jonathanzanella.myexpenses.models;
 
+import android.content.Context;
+
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
@@ -15,8 +18,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
+import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.converter.DateTimeConverter;
 import br.com.jonathanzanella.myexpenses.database.MyDatabase;
+import br.com.jonathanzanella.myexpenses.server.BillApi;
+import br.com.jonathanzanella.myexpenses.server.UnsyncModelApi;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,8 +30,9 @@ import lombok.Setter;
  * Created by Jonathan Zanella on 07/02/16.
  */
 @Table(database = MyDatabase.class)
-public class Bill extends BaseModel implements Transaction {
+public class Bill extends BaseModel implements Transaction, UnsyncModel {
 	public static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
+	private static final BillApi billApi = new BillApi();
 
 	@Column
 	@PrimaryKey(autoincrement = true)
@@ -34,20 +41,32 @@ public class Bill extends BaseModel implements Transaction {
 	@Column @Getter @Setter @Expose
 	String uuid;
 
-	@Column @Getter @Setter
+	@Column @Getter @Setter @Expose
 	String name;
 
-	@Column @Getter @Setter
+	@Column @Getter @Setter @Expose
 	int amount;
 
-	@Column @Getter @Setter
+	@Column @Getter @Setter @Expose
 	int dueDate;
 
-	@Column(typeConverter = DateTimeConverter.class) @Getter
+	@Column(typeConverter = DateTimeConverter.class) @Getter @Expose
 	DateTime initDate;
 
-	@Column(typeConverter = DateTimeConverter.class) @Getter
+	@Column(typeConverter = DateTimeConverter.class) @Getter @Expose
 	DateTime endDate;
+
+	@Column @Getter @Setter @Expose @SerializedName("_id")
+	String serverId;
+
+	@Column @Getter @Setter @Expose @SerializedName("created_at")
+	long createdAt;
+
+	@Column @Getter @Setter @Expose @SerializedName("updated_at")
+	long updatedAt;
+
+	@Column @Getter @Setter
+	boolean sync;
 
 	public static List<Bill> all() {
 		return initQuery().queryList();
@@ -59,6 +78,10 @@ public class Bill extends BaseModel implements Transaction {
 
 	public static Bill find(String uuid) {
 		return initQuery().where(Bill_Table.uuid.eq(uuid)).querySingle();
+	}
+
+	public static List<Bill> unsync() {
+		return initQuery().where(Bill_Table.sync.eq(false)).queryList();
 	}
 
 	public static List<Bill> monthly(DateTime month, List<Expense> expenses) {
@@ -110,9 +133,34 @@ public class Bill extends BaseModel implements Transaction {
 	}
 
 	@Override
+	public boolean isSaved() {
+		return id != 0;
+	}
+
+	@Override
+	public String getData() {
+		return "name=" + name +
+				", amount=" + amount +
+				", dueDate=" + dueDate +
+				", initDate=" + sdf.format(initDate.toDate()) +
+				", endDate="+ sdf.format(endDate.toDate());
+	}
+
+	@Override
 	public void save() {
 		if(id == 0 && uuid == null)
 			uuid = UUID.randomUUID().toString();
 		super.save();
+	}
+
+	@Override
+	public String getHeader(Context ctx) {
+		return ctx.getString(R.string.bill);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public UnsyncModelApi getServerApi() {
+		return billApi;
 	}
 }
