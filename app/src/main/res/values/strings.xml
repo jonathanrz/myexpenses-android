@@ -31,8 +31,8 @@
     <string name="total_to_receive">Total a receber</string>
     <string name="amount">Valor</string>
     <string name="due_date">Vencimento</string>
-    <string name="bill">Conta</string>
-    <string name="bills">Contas</string>
+    <string name="bill">Cobrança</string>
+    <string name="bills">Cobranças</string>
 	<string name="start">Início</string>
 	<string name="end">Fim</string>
 	<string name="repetition">Repetição</string>
