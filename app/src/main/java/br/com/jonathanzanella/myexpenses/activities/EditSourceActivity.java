@@ -73,7 +73,6 @@ public class EditSourceActivity extends BaseActivity {
 		if(source == null)
 			source = new Source();
 		source.setName(editName.getText().toString());
-		source.setSync(false);
 		source.save();
 
 		Intent i = new Intent();

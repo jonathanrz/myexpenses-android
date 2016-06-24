@@ -63,7 +63,7 @@ public class Account extends BaseModel implements Chargeable, UnsyncModel {
 	@Column @Getter @Setter @Expose @SerializedName("updated_at")
 	long updatedAt;
 
-	@Column @Getter @Setter
+	@Column
 	boolean sync;
 
 	private static From<Account> initQuery() {
@@ -121,6 +121,14 @@ public class Account extends BaseModel implements Chargeable, UnsyncModel {
 	public void save() {
 		if(id == 0 && uuid == null)
 			uuid = UUID.randomUUID().toString();
+		sync = false;
+		super.save();
+	}
+
+	@Override
+	public void syncAndSave() {
+		save();
+		sync = true;
 		super.save();
 	}
 

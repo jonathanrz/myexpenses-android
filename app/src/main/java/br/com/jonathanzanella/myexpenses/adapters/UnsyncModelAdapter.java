@@ -93,8 +93,7 @@ public class UnsyncModelAdapter extends RecyclerView.Adapter<UnsyncModelAdapter.
         @OnClick(R.id.row_unsync_model_save_btn)
         void onSave() {
             UnsyncModel unsyncModel = (UnsyncModel) itemView.getTag();
-            unsyncModel.setSync(true);
-            unsyncModel.save();
+            unsyncModel.syncAndSave();
 
             UnsyncModelAdapter adapter = adapterWeakReference.get();
             adapter.models.remove(unsyncModel);
@@ -124,8 +123,7 @@ public class UnsyncModelAdapter extends RecyclerView.Adapter<UnsyncModelAdapter.
                             model.setServerId(serverModel.getServerId());
                             model.setCreatedAt(serverModel.getCreatedAt());
                             model.setUpdatedAt(serverModel.getUpdatedAt());
-                            model.setSync(true);
-                            model.save();
+                            model.syncAndSave();
                         }
                     });
         }

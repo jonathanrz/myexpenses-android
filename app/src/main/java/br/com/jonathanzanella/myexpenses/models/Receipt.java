@@ -75,7 +75,7 @@ public class Receipt extends BaseModel implements Transaction, UnsyncModel {
 	@Column @Getter @Setter @Expose @SerializedName("updated_at")
 	long updatedAt;
 
-	@Column @Getter @Setter
+	@Column
 	boolean sync;
 
 	@Override
@@ -218,6 +218,14 @@ public class Receipt extends BaseModel implements Transaction, UnsyncModel {
 	public void save() {
 		if(id == 0 && uuid == null)
 			uuid = UUID.randomUUID().toString();
+		sync = false;
+		super.save();
+	}
+
+	@Override
+	public void syncAndSave() {
+		save();
+		sync = true;
 		super.save();
 	}
 

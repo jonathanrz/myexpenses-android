@@ -16,8 +16,7 @@ public interface UnsyncModel {
 	long getUpdatedAt();
 	void setUpdatedAt(long updatedAt);
 	String getData();
-	void setSync(boolean sync);
-	void save();
+	void syncAndSave();
 
 	String getHeader(Context ctx);
 
