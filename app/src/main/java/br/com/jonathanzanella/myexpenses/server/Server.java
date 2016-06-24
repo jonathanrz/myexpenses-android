@@ -90,4 +90,7 @@ public class Server {
 	public CardInterface cardInterface() {
 		return retrofit.create(CardInterface.class);
 	}
+	public ExpenseInterface expenseInterface() {
+		return retrofit.create(ExpenseInterface.class);
+	}
 }

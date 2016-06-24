@@ -1,5 +1,9 @@
 package br.com.jonathanzanella.myexpenses.models;
 
+import android.content.Context;
+
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
@@ -20,6 +24,8 @@ import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.adapters.WeeklyPagerAdapter;
 import br.com.jonathanzanella.myexpenses.converter.DateTimeConverter;
 import br.com.jonathanzanella.myexpenses.database.MyDatabase;
+import br.com.jonathanzanella.myexpenses.server.ExpenseApi;
+import br.com.jonathanzanella.myexpenses.server.UnsyncModelApi;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,46 +33,60 @@ import lombok.Setter;
  * Created by jzanella on 2/2/16.
  */
 @Table(database = MyDatabase.class)
-public class Expense extends BaseModel implements Transaction {
+public class Expense extends BaseModel implements Transaction, UnsyncModel {
+	private static final ExpenseApi expenseApi = new ExpenseApi();
+
 	@Column
 	@PrimaryKey(autoincrement = true)
 	long id;
 
-	@Column @Getter @Setter
+	@Column @Getter @Setter @Expose
 	String uuid;
 
-	@Column @Getter @Setter
+	@Column @Getter @Setter @Expose
 	String name;
 
-	@Column(typeConverter = DateTimeConverter.class) @Getter @Setter
+	@Column(typeConverter = DateTimeConverter.class) @Getter @Setter @Expose
 	DateTime date;
 
-	@Column
+	@Column @Expose
 	int value;
 
-	@Column
+	@Column @Expose
 	int newValue;
 
-	@Column
+	@Column @Expose
 	String chargeableUuid;
 
-	@Column
+	@Column @Expose
 	ChargeableType chargeableType;
 
-	@Column
+	@Column @Expose
 	String billUuid;
 
-	@Column @Getter @Setter
+	@Column @Getter @Setter @Expose
 	boolean charged;
 
-	@Column @Getter @Setter
+	@Column @Getter @Setter @Expose
 	boolean chargeNextMonth;
 
-	@Column @Getter @Setter
+	@Column @Getter @Setter @Expose
 	boolean ignoreInOverview;
 
 	@Getter
 	private Card creditCard;
+
+	@Column @Getter @Setter @Expose @SerializedName("_id")
+	String serverId;
+
+	@Column @Getter @Setter @Expose @SerializedName("created_at")
+	long createdAt;
+
+	@Column @Getter @Setter @Expose @SerializedName("updated_at")
+	long updatedAt;
+
+	@Column @Getter @Setter
+	boolean sync;
 
 	@Override
 	public int getAmount() {
@@ -272,6 +292,17 @@ public class Expense extends BaseModel implements Transaction {
 		return initQuery().where(Expense_Table.uuid.eq(uuid)).querySingle();
 	}
 
+	public static long greaterUpdatedAt() {
+		Expense expense = initQuery().orderBy(Expense_Table.updatedAt, false).limit(1).querySingle();
+		if(expense == null)
+			return 0L;
+		return expense.getUpdatedAt();
+	}
+
+	public static List<Expense> unsync() {
+		return initQuery().where(Expense_Table.sync.eq(false)).queryList();
+	}
+
 	public int getValue() {
 		if(newValue != 0)
 			return newValue;
@@ -348,9 +379,33 @@ public class Expense extends BaseModel implements Transaction {
 	}
 
 	@Override
+	public boolean isSaved() {
+		return id != 0;
+	}
+
+	@Override
+	public String getData() {
+		return "uuid=" + uuid + "" +
+				", name=" + name +
+				", date=" + sdf.format(date.toDate()) +
+				", value=" + value;
+	}
+
+	@Override
 	public void save() {
 		if(id == 0 && uuid == null)
 			uuid = UUID.randomUUID().toString();
 		super.save();
+	}
+
+	@Override
+	public String getHeader(Context ctx) {
+		return ctx.getString(R.string.expenses);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public UnsyncModelApi getServerApi() {
+		return expenseApi;
 	}
 }

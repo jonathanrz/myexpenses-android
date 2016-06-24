@@ -14,11 +14,13 @@ import br.com.jonathanzanella.myexpenses.adapters.UnsyncModelAdapter;
 import br.com.jonathanzanella.myexpenses.models.Account;
 import br.com.jonathanzanella.myexpenses.models.Bill;
 import br.com.jonathanzanella.myexpenses.models.Card;
+import br.com.jonathanzanella.myexpenses.models.Expense;
 import br.com.jonathanzanella.myexpenses.models.Source;
 import br.com.jonathanzanella.myexpenses.models.UnsyncModel;
 import br.com.jonathanzanella.myexpenses.server.AccountApi;
 import br.com.jonathanzanella.myexpenses.server.BillApi;
 import br.com.jonathanzanella.myexpenses.server.CardApi;
+import br.com.jonathanzanella.myexpenses.server.ExpenseApi;
 import br.com.jonathanzanella.myexpenses.server.SourceApi;
 import br.com.jonathanzanella.myexpenses.server.UnsyncModelApi;
 import butterknife.Bind;
@@ -45,6 +47,7 @@ public class SyncView extends BaseView {
 		apis.add(new AccountApi());
 		apis.add(new BillApi());
 		apis.add(new CardApi());
+		apis.add(new ExpenseApi());
 
 		inflate(getContext(), R.layout.view_sync, this);
 		ButterKnife.bind(this);
@@ -65,6 +68,7 @@ public class SyncView extends BaseView {
 		adapter.addData(Account.unsync());
 		adapter.addData(Bill.unsync());
 		adapter.addData(Card.unsync());
+		adapter.addData(Expense.unsync());
 		adapter.notifyDataSetChanged();
 
 		for (UnsyncModelApi api : apis)
