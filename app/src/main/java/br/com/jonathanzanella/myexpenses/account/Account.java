@@ -6,13 +6,13 @@ import android.support.annotation.Nullable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.NotNull;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.annotation.Unique;
 import com.raizlabs.android.dbflow.sql.language.From;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
-
-import org.joda.time.DateTime;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -24,7 +24,6 @@ import br.com.jonathanzanella.myexpenses.card.Card;
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
 import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType;
 import br.com.jonathanzanella.myexpenses.database.MyDatabase;
-import br.com.jonathanzanella.myexpenses.helpers.converter.DateTimeConverter;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi;
 import lombok.Getter;
@@ -42,22 +41,22 @@ public class Account extends BaseModel implements Chargeable, UnsyncModel {
 	@PrimaryKey(autoincrement = true)
 	long id;
 
-	@Column @Getter @Setter @Expose
+	@Column @Unique @NotNull
+	@Getter @Setter @Expose
+	String uuid;
+
+	@Column @Unique @NotNull
+	@Getter @Setter @Expose
 	String name;
 
 	@Column @Getter @Setter @Expose
 	int balance;
 
-	@Column(typeConverter = DateTimeConverter.class) @Getter @Setter @Expose
-	DateTime balanceDate;
-
 	@Column @Getter @Setter @Expose
 	boolean accountToPayCreditCard;
 
-	@Column @Getter @Setter @Expose
-	String uuid;
-
-	@Column @Getter @Setter @Expose @SerializedName("_id")
+	@Column @Unique
+	@Getter @Setter @Expose @SerializedName("_id")
 	String serverId;
 
 	@Column @Getter @Setter @Expose @SerializedName("created_at")
@@ -139,10 +138,9 @@ public class Account extends BaseModel implements Chargeable, UnsyncModel {
 	@Override
 	public String getData() {
 		return "name=" + name +
-				", balance=" + balance +
-				", balanceDate=" + balanceDate.getMillis() +
-				", accountToPayCreditCard=" + accountToPayCreditCard +
-				", uuid=" + uuid;
+				"\nbalance=" + balance +
+				"\naccountToPayCreditCard=" + accountToPayCreditCard +
+				"\nuuid=" + uuid;
 	}
 
 	@Override

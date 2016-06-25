@@ -33,8 +33,6 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
 		TextView name;
 		@Bind(R.id.row_account_balance)
 		TextView balance;
-		@Bind(R.id.row_account_balance_date)
-		TextView balanceDate;
 		@Bind(R.id.row_account_to_pay_credit_card) @Nullable
 		TextView accountToPayCreditCard;
 
@@ -52,7 +50,6 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
 		public void setData(Account acc) {
 			name.setText(acc.getName());
 			balance.setText(NumberFormat.getCurrencyInstance().format(acc.getBalance() / 100.0));
-			balanceDate.setText(Account.sdf.format(acc.getBalanceDate().toDate()));
 			if(accountToPayCreditCard != null)
 				accountToPayCreditCard.setText(acc.isAccountToPayCreditCard() ? R.string.yes : R.string.no);
 		}

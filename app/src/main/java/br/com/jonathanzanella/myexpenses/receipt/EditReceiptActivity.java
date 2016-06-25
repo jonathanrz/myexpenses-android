@@ -28,7 +28,7 @@ import butterknife.OnClick;
 /**
  * Created by Jonathan Zanella on 26/01/16.
  */
-class EditReceiptActivity extends BaseActivity {
+public class EditReceiptActivity extends BaseActivity {
 	public static final String KEY_RECEIPT_UUID = "KeyReceiptUuid";
 	private static final int REQUEST_SELECT_SOURCE = 1001;
 	private static final int REQUEST_SELECT_ACCOUNT = 1002;

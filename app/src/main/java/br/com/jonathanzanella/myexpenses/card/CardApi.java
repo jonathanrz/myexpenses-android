@@ -1,11 +1,13 @@
 package br.com.jonathanzanella.myexpenses.card;
 
+import android.util.Log;
+
 import com.raizlabs.android.dbflow.StringUtils;
 
 import java.util.List;
 
-import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
 import br.com.jonathanzanella.myexpenses.server.Server;
+import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi;
 import rx.Observable;
 import rx.Subscriber;

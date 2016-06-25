@@ -21,7 +21,7 @@ import butterknife.OnClick;
 /**
  * Created by Jonathan Zanella on 26/01/16.
  */
-class EditBillActivity extends BaseActivity {
+public class EditBillActivity extends BaseActivity {
 	public static final String KEY_BILL_UUID = "KeyBillUuid";
 
 	@Bind(R.id.act_edit_bill_name)

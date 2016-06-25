@@ -5,8 +5,10 @@ import android.content.Context;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.NotNull;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.annotation.Unique;
 import com.raizlabs.android.dbflow.sql.language.From;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
@@ -40,10 +42,12 @@ public class Bill extends BaseModel implements Transaction, UnsyncModel {
 	@PrimaryKey(autoincrement = true)
 	long id;
 
-	@Column @Getter @Setter @Expose
+	@Column @Unique @NotNull
+	@Getter @Setter @Expose
 	String uuid;
 
-	@Column @Getter @Setter @Expose
+	@Column @Unique @NotNull
+	@Getter @Setter @Expose
 	String name;
 
 	@Column @Getter @Setter @Expose
@@ -58,7 +62,8 @@ public class Bill extends BaseModel implements Transaction, UnsyncModel {
 	@Column(typeConverter = DateTimeConverter.class) @Getter @Expose
 	DateTime endDate;
 
-	@Column @Getter @Setter @Expose @SerializedName("_id")
+	@Column @Unique
+	@Getter @Setter @Expose @SerializedName("_id")
 	String serverId;
 
 	@Column @Getter @Setter @Expose @SerializedName("created_at")

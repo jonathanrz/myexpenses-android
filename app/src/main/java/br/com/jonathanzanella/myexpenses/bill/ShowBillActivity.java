@@ -16,7 +16,7 @@ import butterknife.Bind;
 /**
  * Created by jzanella on 1/31/16.
  */
-class ShowBillActivity extends BaseActivity {
+public class ShowBillActivity extends BaseActivity {
 	public static final String KEY_BILL_UUID = "KeyBillUuid";
 
 	@Bind(R.id.act_show_bill_name)

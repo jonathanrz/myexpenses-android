@@ -26,15 +26,13 @@ import butterknife.Bind;
 /**
  * Created by jzanella on 1/31/16.
  */
-class ShowAccountActivity extends BaseActivity {
+public class ShowAccountActivity extends BaseActivity {
 	public static final String KEY_ACCOUNT_UUID = "KeyAccountUuid";
 
 	@Bind(R.id.act_show_account_name)
 	TextView accountName;
 	@Bind(R.id.act_show_account_balance)
 	TextView accountBalance;
-	@Bind(R.id.act_show_account_balance_date)
-	TextView accountBalanceDate;
 	@Bind(R.id.act_show_account_transactions)
 	RecyclerView transactions;
 	@Bind(R.id.act_show_account_month_balance)
@@ -65,7 +63,6 @@ class ShowAccountActivity extends BaseActivity {
 		if (account != null) {
 			accountName.setText(account.getName());
 			accountBalance.setText(NumberFormat.getCurrencyInstance().format(account.getBalance() / 100.0));
-			accountBalanceDate.setText(Account.sdf.format(account.getBalanceDate().toDate()));
 			accountToPayCreditCard.setText(account.isAccountToPayCreditCard() ? R.string.yes : R.string.no);
 
 			DateTime month = DateTime.now().withDayOfMonth(1);

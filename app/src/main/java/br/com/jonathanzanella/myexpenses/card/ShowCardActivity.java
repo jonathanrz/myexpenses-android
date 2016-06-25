@@ -23,7 +23,7 @@ import butterknife.OnClick;
 /**
  * Created by jzanella on 1/31/16.
  */
-class ShowCardActivity extends BaseActivity {
+public class ShowCardActivity extends BaseActivity {
 	public static final String KEY_CREDIT_CARD_UUID = "KeyCreateCardUuid";
 
 	@Bind(R.id.act_show_card_name)

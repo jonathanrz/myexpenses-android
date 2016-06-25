@@ -17,7 +17,7 @@ import butterknife.OnClick;
 /**
  * Created by Jonathan Zanella on 26/01/16.
  */
-class EditCardActivity extends BaseActivity {
+public class EditCardActivity extends BaseActivity {
 	public static final String KEY_CARD_UUID = "KeyCardUuid";
 	private static final int REQUEST_SELECT_ACCOUNT = 1006;
 

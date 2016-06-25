@@ -41,22 +41,6 @@
 
         </android.support.design.widget.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/default_spacing">
-
-            <android.support.v7.widget.AppCompatEditText
-                android:id="@+id/act_edit_account_balance_date"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="none"
-                android:focusable="false"
-                android:clickable="true"
-                android:hint="@string/date_of_balance"/>
-
-        </android.support.design.widget.TextInputLayout>
-
         <CheckBox
             android:id="@+id/act_edit_account_to_pay_credit_card"
             android:layout_width="match_parent"

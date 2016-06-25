@@ -19,7 +19,7 @@ import butterknife.Bind;
 /**
  * Created by jzanella on 1/31/16.
  */
-class ShowReceiptActivity extends BaseActivity {
+public class ShowReceiptActivity extends BaseActivity {
 	public static final String KEY_RECEIPT_UUID = "KeyReceiptUuid";
 
 	@Bind(R.id.act_show_receipt_name)

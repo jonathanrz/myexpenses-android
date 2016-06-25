@@ -3,6 +3,7 @@ package br.com.jonathanzanella.myexpenses.sync;
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
@@ -11,16 +12,16 @@ import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
-import br.com.jonathanzanella.myexpenses.bill.Bill;
-import br.com.jonathanzanella.myexpenses.card.Card;
-import br.com.jonathanzanella.myexpenses.expense.Expense;
-import br.com.jonathanzanella.myexpenses.receipt.Receipt;
-import br.com.jonathanzanella.myexpenses.source.Source;
 import br.com.jonathanzanella.myexpenses.account.AccountApi;
+import br.com.jonathanzanella.myexpenses.bill.Bill;
 import br.com.jonathanzanella.myexpenses.bill.BillApi;
+import br.com.jonathanzanella.myexpenses.card.Card;
 import br.com.jonathanzanella.myexpenses.card.CardApi;
+import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseApi;
+import br.com.jonathanzanella.myexpenses.receipt.Receipt;
 import br.com.jonathanzanella.myexpenses.receipt.ReceiptApi;
+import br.com.jonathanzanella.myexpenses.source.Source;
 import br.com.jonathanzanella.myexpenses.source.SourceApi;
 import br.com.jonathanzanella.myexpenses.views.BaseView;
 import butterknife.Bind;
@@ -73,7 +74,7 @@ public class SyncView extends BaseView {
 		adapter.addData(Receipt.unsync());
 		adapter.notifyDataSetChanged();
 
-		for (UnsyncModelApi api : apis)
+		for (final UnsyncModelApi api : apis)
 			//noinspection unchecked
 			api.index(new Subscriber<List<? extends UnsyncModel>>() {
 

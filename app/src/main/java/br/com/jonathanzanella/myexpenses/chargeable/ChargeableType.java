@@ -5,6 +5,6 @@ package br.com.jonathanzanella.myexpenses.chargeable;
  */
 public enum ChargeableType {
 	ACCOUNT,
-	CARD,
-	DEBIT_CARD
+	DEBIT_CARD,
+	CREDIT_CARD
 }

@@ -6,8 +6,10 @@ import android.util.Log;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.NotNull;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.annotation.Unique;
 import com.raizlabs.android.dbflow.sql.language.From;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
@@ -40,19 +42,23 @@ public class Card extends BaseModel implements Chargeable, UnsyncModel {
 	@PrimaryKey(autoincrement = true)
 	long id;
 
-	@Column @Getter @Setter @Expose
+	@Column @Unique @NotNull
+	@Getter @Setter @Expose
 	String uuid;
 
-	@Column @Getter @Setter @Expose
+	@Column @Unique @NotNull
+	@Getter @Setter @Expose
 	String name;
 
 	@Column @Getter @Setter @Expose
 	CardType type;
 
-	@Column @Getter @Setter @Expose
+	@Column @NotNull
+	@Getter @Setter @Expose
 	String accountUuid;
 
-	@Column @Getter @Setter @Expose @SerializedName("_id")
+	@Column @Unique
+	@Getter @Setter @Expose @SerializedName("_id")
 	String serverId;
 
 	@Column @Getter @Setter @Expose @SerializedName("created_at")
@@ -111,7 +117,7 @@ public class Card extends BaseModel implements Chargeable, UnsyncModel {
 	public ChargeableType getChargeableType() {
 		switch (type) {
 			case CREDIT:
-				return ChargeableType.CARD;
+				return ChargeableType.CREDIT_CARD;
 			case DEBIT:
 				return ChargeableType.DEBIT_CARD;
 		}
@@ -162,7 +168,7 @@ public class Card extends BaseModel implements Chargeable, UnsyncModel {
 
 		List<Expense> bills = initExpenseQuery()
 				.where(Expense_Table.chargeableUuid.eq(getUuid()))
-				.and(Expense_Table.chargeableType.eq(ChargeableType.CARD))
+				.and(Expense_Table.chargeableType.eq(ChargeableType.CREDIT_CARD))
 				.and(Expense_Table.date.between(initOfMonth).and(endOfMonth))
 				.and(Expense_Table.chargeNextMonth.eq(true))
 				.and(Expense_Table.charged.eq(false))
@@ -174,7 +180,7 @@ public class Card extends BaseModel implements Chargeable, UnsyncModel {
 
 		bills.addAll(initExpenseQuery()
 				.where(Expense_Table.chargeableUuid.eq(getUuid()))
-				.and(Expense_Table.chargeableType.eq(ChargeableType.CARD))
+				.and(Expense_Table.chargeableType.eq(ChargeableType.CREDIT_CARD))
 				.and(Expense_Table.date.between(initOfMonth).and(endOfMonth))
 				.and(Expense_Table.chargeNextMonth.eq(false))
 				.and(Expense_Table.charged.eq(false))

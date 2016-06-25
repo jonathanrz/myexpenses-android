@@ -13,7 +13,7 @@ import butterknife.Bind;
 /**
  * Created by Jonathan Zanella on 26/01/16.
  */
-class EditSourceActivity extends BaseActivity {
+public class EditSourceActivity extends BaseActivity {
 	public static final String KEY_SOURCE_UUID = "KeySourceUuid";
 
 	@Bind(R.id.act_edit_source_name)

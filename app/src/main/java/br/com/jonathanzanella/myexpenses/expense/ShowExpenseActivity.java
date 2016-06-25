@@ -22,7 +22,7 @@ import butterknife.Bind;
 /**
  * Created by jzanella on 1/31/16.
  */
-class ShowExpenseActivity extends BaseActivity {
+public class ShowExpenseActivity extends BaseActivity {
 	public static final String KEY_EXPENSE_UUID = "KeyExpenseUuid";
 
 	@Bind(R.id.act_show_expense_name)
