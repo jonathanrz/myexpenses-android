@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:name=".MyApplication">
-        <activity android:name=".activities.MainActivity"
+        <activity android:name=".views.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,71 +22,71 @@
 
         </activity>
         <activity
-            android:name=".activities.EditAccountActivity"
+            android:name=".account.EditAccountActivity"
             android:screenOrientation="portrait"
-            android:parentActivityName=".activities.MainActivity"/>
+            android:parentActivityName=".views.MainActivity"/>
         <activity
-            android:name=".activities.ShowAccountActivity"
+            android:name=".account.ShowAccountActivity"
             android:screenOrientation="portrait"
-            android:parentActivityName=".activities.MainActivity"/>
+            android:parentActivityName=".views.MainActivity"/>
         <activity
-            android:name=".activities.ListAccountActivity"
+            android:name=".account.ListAccountActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activities.EditSourceActivity"
+            android:name=".source.EditSourceActivity"
             android:screenOrientation="portrait"
-            android:parentActivityName=".activities.MainActivity"/>
+            android:parentActivityName=".views.MainActivity"/>
         <activity
-            android:name=".activities.ShowSourceActivity"
+            android:name=".source.ShowSourceActivity"
             android:screenOrientation="portrait"
-            android:parentActivityName=".activities.MainActivity"/>
+            android:parentActivityName=".views.MainActivity"/>
         <activity
-            android:name=".activities.ListSourceActivity"
+            android:name=".source.ListSourceActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activities.EditCardActivity"
+            android:name=".card.EditCardActivity"
             android:screenOrientation="portrait"
-            android:parentActivityName=".activities.MainActivity"/>
+            android:parentActivityName=".views.MainActivity"/>
         <activity
-            android:name=".activities.ShowCardActivity"
+            android:name=".card.ShowCardActivity"
             android:screenOrientation="portrait"
-            android:parentActivityName=".activities.MainActivity"/>
+            android:parentActivityName=".views.MainActivity"/>
         <activity
-            android:name=".activities.EditReceiptActivity"
+            android:name=".receipt.EditReceiptActivity"
             android:screenOrientation="portrait"
-            android:parentActivityName=".activities.MainActivity"/>
+            android:parentActivityName=".views.MainActivity"/>
         <activity
-            android:name=".activities.ShowReceiptActivity"
+            android:name=".receipt.ShowReceiptActivity"
             android:screenOrientation="portrait"
-            android:parentActivityName=".activities.MainActivity"/>
+            android:parentActivityName=".views.MainActivity"/>
         <activity
-            android:name=".activities.EditExpenseActivity"
+            android:name=".expense.EditExpenseActivity"
             android:screenOrientation="portrait"
-            android:parentActivityName=".activities.MainActivity"/>
+            android:parentActivityName=".views.MainActivity"/>
         <activity
-            android:name=".activities.ShowExpenseActivity"
+            android:name=".expense.ShowExpenseActivity"
             android:screenOrientation="portrait"
-            android:parentActivityName=".activities.MainActivity"/>
+            android:parentActivityName=".views.MainActivity"/>
         <activity
-            android:name=".activities.EditBillActivity"
+            android:name=".bill.EditBillActivity"
             android:screenOrientation="portrait"
-            android:parentActivityName=".activities.MainActivity"/>
+            android:parentActivityName=".views.MainActivity"/>
 	    <activity
-		    android:name=".activities.ShowBillActivity"
+		    android:name=".bill.ShowBillActivity"
 		    android:screenOrientation="portrait"
-		    android:parentActivityName=".activities.MainActivity"/>
+		    android:parentActivityName=".views.MainActivity"/>
 	    <activity
-		    android:name=".activities.ListBillActivity"
+		    android:name=".bill.ListBillActivity"
 		    android:screenOrientation="portrait"
-		    android:parentActivityName=".activities.MainActivity"/>
+		    android:parentActivityName=".views.MainActivity"/>
         <activity
-            android:name=".activities.ListChargeableActivity"
+            android:name=".chargeable.ListChargeableActivity"
             android:screenOrientation="portrait"
-            android:parentActivityName=".activities.MainActivity"/>
+            android:parentActivityName=".views.MainActivity"/>
 	    <activity
-		    android:name=".activities.CreditCardInvoiceActivity"
+		    android:name=".card.CreditCardInvoiceActivity"
 		    android:screenOrientation="portrait"
-		    android:parentActivityName=".activities.MainActivity"/>
+		    android:parentActivityName=".views.MainActivity"/>
         <service android:name=".services.CashierService"/>
 
     </application>

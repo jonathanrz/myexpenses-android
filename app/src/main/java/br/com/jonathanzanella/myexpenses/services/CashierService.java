@@ -4,10 +4,10 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
 
-import br.com.jonathanzanella.myexpenses.models.Account;
-import br.com.jonathanzanella.myexpenses.models.Chargeable;
-import br.com.jonathanzanella.myexpenses.models.Expense;
-import br.com.jonathanzanella.myexpenses.models.Receipt;
+import br.com.jonathanzanella.myexpenses.account.Account;
+import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
+import br.com.jonathanzanella.myexpenses.expense.Expense;
+import br.com.jonathanzanella.myexpenses.receipt.Receipt;
 
 /**
  * Created by jzanella on 2/2/16.

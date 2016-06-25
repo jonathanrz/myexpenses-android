@@ -17,6 +17,12 @@ import java.lang.reflect.Type;
 
 import br.com.jonathanzanella.myexpenses.BuildConfig;
 import br.com.jonathanzanella.myexpenses.Environment;
+import br.com.jonathanzanella.myexpenses.account.AccountInterface;
+import br.com.jonathanzanella.myexpenses.bill.BillInterface;
+import br.com.jonathanzanella.myexpenses.card.CardInterface;
+import br.com.jonathanzanella.myexpenses.expense.ExpenseInterface;
+import br.com.jonathanzanella.myexpenses.receipt.ReceiptInterface;
+import br.com.jonathanzanella.myexpenses.source.SourceInterface;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
