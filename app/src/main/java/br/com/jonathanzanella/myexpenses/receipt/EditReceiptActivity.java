@@ -21,7 +21,6 @@ import br.com.jonathanzanella.myexpenses.source.ListSourceActivity;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.source.Source;
-import br.com.jonathanzanella.myexpenses.services.CashierService;
 import butterknife.Bind;
 import butterknife.OnClick;
 
@@ -220,8 +219,6 @@ public class EditReceiptActivity extends BaseActivity {
 			receipt.repeat();
 			receipt.save();
 		}
-
-		startService(new Intent(this, CashierService.class));
 
 		Intent i = new Intent();
 		i.putExtra(KEY_RECEIPT_UUID, receipt.getUuid());

@@ -1,8 +1,10 @@
 package br.com.jonathanzanella.myexpenses.resume;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.ColorRes;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +23,7 @@ import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ShowExpenseActivity;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import lombok.Getter;
 
 /**
@@ -81,6 +84,33 @@ class ExpenseMonthlyResumeAdapter extends RecyclerView.Adapter<ExpenseMonthlyRes
 
 		public void setTotal(int totalValue) {
 			income.setText(NumberFormat.getCurrencyInstance().format(totalValue / 100.0));
+		}
+
+		@OnClick(R.id.row_monthly_resume_expense_income)
+		public void onIncome() {
+			final Expense expense = adapterWeakReference.get().expenses.get(getAdapterPosition());
+			if(!expense.isCharged()) {
+				String message = income.getContext().getString(R.string.message_confirm_expense);
+				message = message.concat(" " + expense.getName() + " - " + expense.getIncomeFormatted() + "?");
+				new AlertDialog.Builder(income.getContext())
+						.setMessage(message)
+						.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialogInterface, int i) {
+								expense.debit();
+								ExpenseMonthlyResumeAdapter adapter = adapterWeakReference.get();
+								adapter.updateTotalValue();
+								adapter.notifyDataSetChanged();
+							}
+						})
+						.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialogInterface, int i) {
+								dialogInterface.dismiss();
+							}
+						})
+						.show();
+			}
 		}
 
 		@Override
@@ -150,6 +180,10 @@ class ExpenseMonthlyResumeAdapter extends RecyclerView.Adapter<ExpenseMonthlyRes
 
 	public void setExpenses(List<Expense> expenses) {
 		this.expenses = expenses;
+		updateTotalValue();
+	}
+
+	private void updateTotalValue() {
 		totalValue = 0;
 		totalUnpaidValue = 0;
 

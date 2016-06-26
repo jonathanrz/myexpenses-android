@@ -24,7 +24,6 @@ import br.com.jonathanzanella.myexpenses.bill.Bill;
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
 import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType;
 import br.com.jonathanzanella.myexpenses.receipt.Receipt;
-import br.com.jonathanzanella.myexpenses.services.CashierService;
 import butterknife.Bind;
 import butterknife.OnClick;
 
@@ -242,8 +241,6 @@ public class EditExpenseActivity extends BaseActivity {
 			expense.repeat();
 			expense.save();
 		}
-
-		startService(new Intent(this, CashierService.class));
 
 		Intent i = new Intent();
 		i.putExtra(KEY_EXPENSE_UUID, expense.getUuid());

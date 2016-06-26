@@ -159,9 +159,6 @@ class ReceiptMonthlyResumeAdapter extends RecyclerView.Adapter<ReceiptMonthlyRes
 
 	public void loadData(DateTime month) {
 		receipts = Receipt.resume(month);
-		totalValue = 0;
-		totalUnreceivedValue = 0;
-
 		updateTotalValue();
 	}
 

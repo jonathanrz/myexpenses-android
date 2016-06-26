@@ -15,6 +15,7 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.joda.time.DateTime;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -397,9 +398,21 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 	@Override
 	public String getData() {
 		return "uuid=" + uuid + "" +
-				", name=" + name +
-				", date=" + sdf.format(date.toDate()) +
-				", value=" + value;
+				"\nname=" + name +
+				"\ndate=" + sdf.format(date.toDate()) +
+				"\nvalue=" + value;
+	}
+
+	public void debit() {
+		Chargeable c = getChargeable();
+		c.debit(getValue());
+		c.save();
+		setCharged(true);
+		save();
+	}
+
+	public String getIncomeFormatted() {
+		return NumberFormat.getCurrencyInstance().format(value / 100.0);
 	}
 
 	@Override
