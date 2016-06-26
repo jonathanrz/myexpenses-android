@@ -10,8 +10,8 @@ import org.joda.time.DateTime;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
-import br.com.jonathanzanella.myexpenses.overview.MonthlyPagerAdapter;
-import br.com.jonathanzanella.myexpenses.overview.MonthlyPagerAdapterBuilder;
+import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapter;
+import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapterBuilder;
 import br.com.jonathanzanella.myexpenses.views.BaseView;
 import butterknife.Bind;
 

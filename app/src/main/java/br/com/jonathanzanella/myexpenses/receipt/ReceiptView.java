@@ -16,8 +16,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.overview.MonthlyPagerAdapter;
-import br.com.jonathanzanella.myexpenses.overview.MonthlyPagerAdapterBuilder;
+import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapter;
+import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapterBuilder;
 import br.com.jonathanzanella.myexpenses.views.BaseView;
 import butterknife.Bind;
 import butterknife.ButterKnife;

@@ -1,4 +1,4 @@
-package br.com.jonathanzanella.myexpenses.expense;
+package br.com.jonathanzanella.myexpenses.resume;
 
 import android.content.Intent;
 import android.support.annotation.ColorRes;
@@ -17,6 +17,8 @@ import java.util.Locale;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.card.CreditCardInvoiceActivity;
+import br.com.jonathanzanella.myexpenses.expense.Expense;
+import br.com.jonathanzanella.myexpenses.expense.ShowExpenseActivity;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import lombok.Getter;
@@ -24,7 +26,7 @@ import lombok.Getter;
 /**
  * Created by Jonathan Zanella on 26/01/16.
  */
-public class ExpenseMonthlyResumeAdapter extends RecyclerView.Adapter<ExpenseMonthlyResumeAdapter.ViewHolder> {
+class ExpenseMonthlyResumeAdapter extends RecyclerView.Adapter<ExpenseMonthlyResumeAdapter.ViewHolder> {
 	public static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM", Locale.getDefault());
 	@Getter
 	protected List<Expense> expenses;

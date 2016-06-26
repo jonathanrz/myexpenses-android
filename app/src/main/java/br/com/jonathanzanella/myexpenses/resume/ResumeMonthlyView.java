@@ -1,4 +1,4 @@
-package br.com.jonathanzanella.myexpenses.overview;
+package br.com.jonathanzanella.myexpenses.resume;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -14,8 +14,6 @@ import java.text.NumberFormat;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.AccountAdapter;
 import br.com.jonathanzanella.myexpenses.bill.BillMonthlyResumeAdapter;
-import br.com.jonathanzanella.myexpenses.expense.ExpenseMonthlyResumeAdapter;
-import br.com.jonathanzanella.myexpenses.receipt.ReceiptMonthlyResumeAdapter;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.views.BaseView;
 import butterknife.Bind;

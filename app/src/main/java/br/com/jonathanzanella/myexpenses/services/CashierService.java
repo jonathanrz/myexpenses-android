@@ -22,8 +22,8 @@ public class CashierService extends IntentService {
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		Log.d(LOG_TAG, "init CashierService");
-		creditReceipts();
-		chargeExpenses();
+//		creditReceipts();
+//		chargeExpenses();
 	}
 
 	private void creditReceipts() {

@@ -23,7 +23,7 @@ import br.com.jonathanzanella.myexpenses.card.CardView;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseView;
 import br.com.jonathanzanella.myexpenses.overview.OverviewExpensesView;
 import br.com.jonathanzanella.myexpenses.receipt.ReceiptView;
-import br.com.jonathanzanella.myexpenses.overview.ResumeView;
+import br.com.jonathanzanella.myexpenses.resume.ResumeView;
 import br.com.jonathanzanella.myexpenses.source.SourceView;
 import br.com.jonathanzanella.myexpenses.sync.SyncView;
 import butterknife.Bind;

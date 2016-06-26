@@ -1,7 +1,9 @@
-package br.com.jonathanzanella.myexpenses.receipt;
+package br.com.jonathanzanella.myexpenses.resume;
 
+import android.content.DialogInterface;
 import android.support.annotation.ColorRes;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,14 +19,16 @@ import java.util.List;
 import java.util.Locale;
 
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.receipt.Receipt;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import lombok.Getter;
 
 /**
  * Created by Jonathan Zanella on 26/01/16.
  */
-public class ReceiptMonthlyResumeAdapter extends RecyclerView.Adapter<ReceiptMonthlyResumeAdapter.ViewHolder> {
+class ReceiptMonthlyResumeAdapter extends RecyclerView.Adapter<ReceiptMonthlyResumeAdapter.ViewHolder> {
 	public static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM", Locale.getDefault());
 	protected List<Receipt> receipts;
 	@Getter
@@ -61,7 +65,7 @@ public class ReceiptMonthlyResumeAdapter extends RecyclerView.Adapter<ReceiptMon
 				name.setText(receipt.getName());
 			if(date != null)
 				date.setText(sdf.format(receipt.getDate().toDate()));
-			income.setText(NumberFormat.getCurrencyInstance().format(receipt.getIncome() / 100.0));
+			income.setText(receipt.getIncomeFormatted());
 			if(receipt.isCredited())
 				income.setTextColor(getColor(R.color.value_received));
 			else
@@ -76,6 +80,33 @@ public class ReceiptMonthlyResumeAdapter extends RecyclerView.Adapter<ReceiptMon
 
 		public void setTotal(int totalValue) {
 			income.setText(NumberFormat.getCurrencyInstance().format(totalValue / 100.0));
+		}
+
+		@OnClick(R.id.row_monthly_resume_receipt_income)
+		public void onIncome() {
+			final Receipt receipt = adapterWeakReference.get().receipts.get(getAdapterPosition());
+			if(!receipt.isCredited()) {
+				String message = income.getContext().getString(R.string.message_confirm_receipt);
+				message = message.concat(" " + receipt.getName() + " - " + receipt.getIncomeFormatted() + "?");
+				new AlertDialog.Builder(income.getContext())
+						.setMessage(message)
+						.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialogInterface, int i) {
+								receipt.credit();
+								ReceiptMonthlyResumeAdapter adapter = adapterWeakReference.get();
+								adapter.updateTotalValue();
+								adapter.notifyDataSetChanged();
+							}
+						})
+						.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialogInterface, int i) {
+								dialogInterface.dismiss();
+							}
+						})
+						.show();
+			}
 		}
 	}
 
@@ -131,6 +162,12 @@ public class ReceiptMonthlyResumeAdapter extends RecyclerView.Adapter<ReceiptMon
 		totalValue = 0;
 		totalUnreceivedValue = 0;
 
+		updateTotalValue();
+	}
+
+	private void updateTotalValue() {
+		totalValue = 0;
+		totalUnreceivedValue = 0;
 		for (Receipt receipt : receipts) {
 			totalValue += receipt.getIncome();
 			if(!receipt.isCredited())

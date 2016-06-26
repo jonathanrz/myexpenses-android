@@ -15,6 +15,7 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.joda.time.DateTime;
 
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
@@ -138,6 +139,7 @@ public class Receipt extends BaseModel implements Transaction, UnsyncModel {
 		return initQuery()
 				.where(Receipt_Table.date.between(month).and(month.plusMonths(1)))
 				.and(Receipt_Table.ignoreInResume.is(false))
+				.orderBy(Receipt_Table.date, true)
 				.queryList();
 	}
 
@@ -206,6 +208,10 @@ public class Receipt extends BaseModel implements Transaction, UnsyncModel {
 		ignoreInResume = !b;
 	}
 
+	public String getIncomeFormatted() {
+		return NumberFormat.getCurrencyInstance().format(income / 100.0);
+	}
+
 	public void repeat() {
 		id = 0;
 		date = date.plusMonths(1);
@@ -222,6 +228,14 @@ public class Receipt extends BaseModel implements Transaction, UnsyncModel {
 				", name=" + name +
 				", date=" + sdf.format(date.toDate()) +
 				", income=" + income;
+	}
+
+	public void credit() {
+		Account a = getAccount();
+		a.credit(getIncome());
+		a.save();
+		setCredited(true);
+		save();
 	}
 
 	@Override
