@@ -105,13 +105,6 @@ public class Receipt extends BaseModel implements Transaction, UnsyncModel {
 		return initQuery().queryList();
 	}
 
-	public static List<Receipt> uncredited() {
-		return initQuery()
-				.where(Receipt_Table.credited.eq(false))
-				.and(Receipt_Table.date.lessThanOrEq(DateTime.now()))
-				.queryList();
-	}
-
 	public static List<Receipt> monthly(DateTime month) {
 		return initQuery()
 				.where(Receipt_Table.date.between(month).and(month.plusMonths(1)))
@@ -120,7 +113,7 @@ public class Receipt extends BaseModel implements Transaction, UnsyncModel {
 
 	public static List<Receipt> monthly(DateTime month, Account account) {
 		return initQuery()
-				.where(Receipt_Table.date.between(month).and(month.plusMonths(1)))
+				.where(Receipt_Table.date.between(month).and(month.plusMonths(1).minusDays(1)))
 				.and(Receipt_Table.accountUuid.eq(account.getUuid()))
 				.queryList();
 	}

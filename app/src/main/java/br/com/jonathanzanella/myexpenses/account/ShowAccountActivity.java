@@ -7,7 +7,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -73,10 +72,7 @@ public class ShowAccountActivity extends BaseActivity {
 
 		DateTime month = DateTime.now().withDayOfMonth(1);
 		int nextMonthBalance = showBalance(month, account.getBalance(), transactions, monthBalance);
-		if(account.isAccountToPayBills())
-			showBalance(month.plusMonths(1), nextMonthBalance, nextMonthTransactions, this.nextMonthBalance);
-		else
-			nextMonthTransactionLayout.setVisibility(View.GONE);
+		showBalance(month.plusMonths(1), nextMonthBalance, nextMonthTransactions, this.nextMonthBalance);
 	}
 
 	private int showBalance(DateTime month, int balance, RecyclerView list, TextView balanceView) {
