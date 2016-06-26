@@ -85,6 +85,8 @@ public class EditReceiptActivity extends BaseActivity {
 	private void setData() {
 		editName.setText(receipt.getName());
 		editIncome.setText(NumberFormat.getCurrencyInstance().format(receipt.getIncome() / 100));
+		if(receipt.isCredited())
+			editIncome.setEnabled(false);
 		editSource.setText(receipt.getSource().getName());
 		source = receipt.getSource();
 		checkShowInResume.setChecked(receipt.isShowInResume());

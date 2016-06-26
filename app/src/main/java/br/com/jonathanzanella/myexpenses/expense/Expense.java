@@ -60,11 +60,8 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 	@Column(typeConverter = DateTimeConverter.class) @Getter @Setter @Expose
 	DateTime date;
 
-	@Column @Expose
+	@Column @Getter @Setter @Expose
 	int value;
-
-	@Column @Expose
-	int newValue;
 
 	@Column @NotNull @Expose
 	String chargeableUuid;
@@ -124,13 +121,6 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 				.where(Expense_Table.charged.eq(false))
 				.and(Expense_Table.date.lessThanOrEq(DateTime.now()))
 				.and(Expense_Table.chargeableType.notEq(ChargeableType.CREDIT_CARD))
-				.queryList();
-	}
-
-	public static List<Expense> changed() {
-		return initQuery()
-				.where(Expense_Table.charged.eq(true))
-				.and(Expense_Table.newValue.greaterThan(0))
 				.queryList();
 	}
 
@@ -313,28 +303,6 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 
 	public static List<Expense> unsync() {
 		return initQuery().where(Expense_Table.sync.eq(false)).queryList();
-	}
-
-	public int getValue() {
-		if(newValue != 0)
-			return newValue;
-		return value;
-	}
-
-	public void setValue(int value) {
-		if(charged && this.value != value)
-			newValue = value;
-		else
-			this.value = value;
-	}
-
-	public void resetNewValue() {
-		this.value = newValue;
-		newValue = 0;
-	}
-
-	public int changedValue() {
-		return newValue - value;
 	}
 
 	public void setChargeable(Chargeable chargeable) {

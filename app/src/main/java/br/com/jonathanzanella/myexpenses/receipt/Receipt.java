@@ -56,11 +56,8 @@ public class Receipt extends BaseModel implements Transaction, UnsyncModel {
 	@Column(typeConverter = DateTimeConverter.class) @Getter @Setter @Expose
 	DateTime date;
 
-	@Column @Expose
-	int income;
-
 	@Column @Getter @Setter @Expose
-	int newIncome;
+	int income;
 
 	@Column @NotNull
 	@Getter @Setter @Expose
@@ -115,13 +112,6 @@ public class Receipt extends BaseModel implements Transaction, UnsyncModel {
 				.queryList();
 	}
 
-	public static List<Receipt> changed() {
-		return initQuery()
-				.where(Receipt_Table.credited.eq(true))
-				.and(Receipt_Table.newIncome.greaterThan(0))
-				.queryList();
-	}
-
 	public static List<Receipt> monthly(DateTime month) {
 		return initQuery()
 				.where(Receipt_Table.date.between(month).and(month.plusMonths(1)))
@@ -160,28 +150,6 @@ public class Receipt extends BaseModel implements Transaction, UnsyncModel {
 
 	public static List<Receipt> unsync() {
 		return initQuery().where(Receipt_Table.sync.eq(false)).queryList();
-	}
-
-	public int getIncome() {
-		if(newIncome != 0)
-			return newIncome;
-		return income;
-	}
-
-	public void setIncome(int income) {
-		if(credited && this.income != income)
-			newIncome = income;
-		else
-			this.income = income;
-	}
-
-	public void resetNewIncome() {
-		this.income = newIncome;
-		newIncome = 0;
-	}
-
-	public int changedValue() {
-		return newIncome - income;
 	}
 
 	public Source getSource() {
