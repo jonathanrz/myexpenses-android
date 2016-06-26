@@ -110,7 +110,9 @@ public class UnsyncModelAdapter extends RecyclerView.Adapter<UnsyncModelAdapter.
                         public void onCompleted() {}
 
                         @Override
-                        public void onError(Throwable e) {}
+                        public void onError(Throwable e) {
+	                        e.printStackTrace();
+                        }
 
                         @Override
                         public void onNext(UnsyncModel serverModel) {

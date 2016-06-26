@@ -81,6 +81,9 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 	@Column @Getter @Setter @Expose
 	boolean ignoreInOverview;
 
+	@Column @Getter @Setter @Expose
+	boolean ignoreInResume;
+
 	@Getter
 	private Card creditCard;
 
@@ -179,21 +182,22 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 		DateTime initOfMonth = date.minusMonths(1);
 		DateTime endOfMonth = date;
 
-		List<Expense> bills = initQuery()
+		List<Expense> expenses = initQuery()
 				.where(Expense_Table.date.between(initOfMonth).and(endOfMonth))
 				.and(Expense_Table.chargeableType.notEq(ChargeableType.CREDIT_CARD))
 				.and(Expense_Table.chargeNextMonth.eq(true))
-				.and(Expense_Table.ignoreInOverview.notEq(true))
+				.and(Expense_Table.ignoreInResume.eq(false))
 				.orderBy(Expense_Table.date, true)
 				.queryList();
 
 		initOfMonth = endOfMonth;
 		endOfMonth = date.plusMonths(1);
 
-		bills.addAll(initQuery()
+		expenses.addAll(initQuery()
 				.where(Expense_Table.date.between(initOfMonth).and(endOfMonth))
 				.and(Expense_Table.chargeableType.notEq(ChargeableType.CREDIT_CARD))
 				.and(Expense_Table.chargeNextMonth.eq(false))
+				.and(Expense_Table.ignoreInResume.eq(false))
 				.orderBy(Expense_Table.date, true)
 				.queryList());
 
@@ -209,10 +213,10 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 			expense.setDate(creditCardMonth);
 			expense.setValue(total);
 			expense.creditCard = card;
-			bills.add(expense);
+			expenses.add(expense);
 		}
 
-		return bills;
+		return expenses;
 	}
 
 	public static List<Expense> accountExpenses(Account account, DateTime date) {
@@ -354,8 +358,16 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 		return !ignoreInOverview;
 	}
 
+	public boolean isShowInResume() {
+		return !ignoreInResume;
+	}
+
 	public void showInOverview(boolean b) {
 		ignoreInOverview = !b;
+	}
+
+	public void showInResume(boolean b) {
+		ignoreInResume = !b;
 	}
 
 	@Override

@@ -51,6 +51,8 @@ public class EditExpenseActivity extends BaseActivity {
 	CheckBox checkPayNextMonth;
 	@Bind(R.id.act_edit_expense_show_in_overview)
 	CheckBox showInOverview;
+	@Bind(R.id.act_edit_expense_show_in_resume)
+	CheckBox showInResume;
 	@Bind(R.id.act_edit_expense_repetition)
 	EditText editRepetition;
 	@Bind(R.id.act_edit_expense_installment)
@@ -89,6 +91,7 @@ public class EditExpenseActivity extends BaseActivity {
 			}
 			checkPayNextMonth.setChecked(expense.isChargeNextMonth());
 			showInOverview.setChecked(expense.isShowInOverview());
+			showInResume.setChecked(expense.isShowInResume());
 			date = expense.getDate();
 			if(date == null)
 				date = DateTime.now();
@@ -203,6 +206,7 @@ public class EditExpenseActivity extends BaseActivity {
 			if(editValue.getText().toString().isEmpty())
 				editValue.setText(NumberFormat.getCurrencyInstance().format(bill.getAmount() / 100.0));
 			showInOverview.setChecked(false);
+			showInResume.setChecked(true);
 		} else {
 			editBill.setText("");
 		}
@@ -231,6 +235,7 @@ public class EditExpenseActivity extends BaseActivity {
 		expense.setBill(bill);
 		expense.setChargeNextMonth(checkPayNextMonth.isChecked());
 		expense.showInOverview(showInOverview.isChecked());
+		expense.showInResume(showInResume.isChecked());
 
 		if(expense.isCharged() && date.isAfterNow())
 			expense.uncharge();
