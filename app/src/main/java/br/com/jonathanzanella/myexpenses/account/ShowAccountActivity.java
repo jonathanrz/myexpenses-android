@@ -7,6 +7,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.joda.time.DateTime;
@@ -15,12 +17,12 @@ import java.text.NumberFormat;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.views.BaseActivity;
-import br.com.jonathanzanella.myexpenses.transaction.TransactionAdapter;
 import br.com.jonathanzanella.myexpenses.bill.Bill;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.receipt.Receipt;
 import br.com.jonathanzanella.myexpenses.transaction.Transaction;
+import br.com.jonathanzanella.myexpenses.transaction.TransactionAdapter;
+import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
 
 /**
@@ -37,12 +39,16 @@ public class ShowAccountActivity extends BaseActivity {
 	RecyclerView transactions;
 	@Bind(R.id.act_show_account_month_balance)
 	TextView monthBalance;
+	@Bind(R.id.act_show_account_next_month_transactions_layout)
+	LinearLayout nextMonthTransactionLayout;
 	@Bind(R.id.act_show_account_next_month_transactions)
 	RecyclerView nextMonthTransactions;
 	@Bind(R.id.act_show_account_next_month_balance)
 	TextView nextMonthBalance;
 	@Bind(R.id.act_show_account_to_pay_credit_card)
 	TextView accountToPayCreditCard;
+	@Bind(R.id.act_show_account_to_pay_bills)
+	TextView accountToPayBills;
 
 	private Account account;
 
@@ -60,15 +66,17 @@ public class ShowAccountActivity extends BaseActivity {
 	}
 
 	private void setData() {
-		if (account != null) {
-			accountName.setText(account.getName());
-			accountBalance.setText(NumberFormat.getCurrencyInstance().format(account.getBalance() / 100.0));
-			accountToPayCreditCard.setText(account.isAccountToPayCreditCard() ? R.string.yes : R.string.no);
+		accountName.setText(account.getName());
+		accountBalance.setText(NumberFormat.getCurrencyInstance().format(account.getBalance() / 100.0));
+		accountToPayCreditCard.setText(account.isAccountToPayCreditCard() ? R.string.yes : R.string.no);
+		accountToPayBills.setText(account.isAccountToPayBills() ? R.string.yes : R.string.no);
 
-			DateTime month = DateTime.now().withDayOfMonth(1);
-			int nextMonthBalance = showBalance(month, account.getBalance(), transactions, monthBalance);
+		DateTime month = DateTime.now().withDayOfMonth(1);
+		int nextMonthBalance = showBalance(month, account.getBalance(), transactions, monthBalance);
+		if(account.isAccountToPayBills())
 			showBalance(month.plusMonths(1), nextMonthBalance, nextMonthTransactions, this.nextMonthBalance);
-		}
+		else
+			nextMonthTransactionLayout.setVisibility(View.GONE);
 	}
 
 	private int showBalance(DateTime month, int balance, RecyclerView list, TextView balanceView) {
@@ -76,7 +84,8 @@ public class ShowAccountActivity extends BaseActivity {
 		adapter.addTransactions(Receipt.monthly(month, account));
 		List<Expense> expenses = Expense.accountExpenses(account, month);
 		adapter.addTransactions(expenses);
-		adapter.addTransactions(Bill.monthly(month, expenses));
+		if(account.isAccountToPayBills())
+			adapter.addTransactions(Bill.monthly(month, expenses));
 		adapter.notifyDataSetChanged();
 
 		list.setAdapter(adapter);

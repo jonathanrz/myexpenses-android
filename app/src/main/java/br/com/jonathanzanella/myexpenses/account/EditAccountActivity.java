@@ -26,6 +26,8 @@ public class EditAccountActivity extends BaseActivity {
 	EditText editBalance;
 	@Bind(R.id.act_edit_account_to_pay_credit_card)
 	CheckBox checkToPayCreditCard;
+	@Bind(R.id.act_edit_account_to_pay_bills)
+	CheckBox checkToPayBill;
 
 	private Account account;
 
@@ -45,6 +47,7 @@ public class EditAccountActivity extends BaseActivity {
 			editName.setText(account.getName());
 			editBalance.setText(NumberFormat.getCurrencyInstance().format(account.getBalance() / 100.0));
 			checkToPayCreditCard.setChecked(account.isAccountToPayCreditCard());
+			checkToPayBill.setChecked(account.isAccountToPayBills());
 		}
 	}
 
@@ -86,6 +89,7 @@ public class EditAccountActivity extends BaseActivity {
 		account.setName(editName.getText().toString());
 		account.setBalance(Integer.parseInt(editBalance.getText().toString().replaceAll("[^\\d]", "")));
 		account.setAccountToPayCreditCard(checkToPayCreditCard.isChecked());
+		account.setAccountToPayBills(checkToPayBill.isChecked());
 		account.save();
 
 		Intent i = new Intent();

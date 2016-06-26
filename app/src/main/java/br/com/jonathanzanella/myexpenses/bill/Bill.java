@@ -14,6 +14,7 @@ import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -120,7 +121,7 @@ public class Bill extends BaseModel implements Transaction, UnsyncModel {
 			}
 		}
 
-		return  bills;
+		return bills;
 	}
 
 	public void setInitDate(DateTime initDate) {
@@ -133,6 +134,9 @@ public class Bill extends BaseModel implements Transaction, UnsyncModel {
 
 	@Override
 	public DateTime getDate() {
+		int lastDayOfMonth = LocalDate.now().dayOfMonth().withMaximumValue().getDayOfMonth();
+		if(dueDate > lastDayOfMonth)
+			return DateTime.now().withDayOfMonth(lastDayOfMonth);
 		return DateTime.now().withDayOfMonth(dueDate);
 	}
 
@@ -154,10 +158,10 @@ public class Bill extends BaseModel implements Transaction, UnsyncModel {
 	@Override
 	public String getData() {
 		return "name=" + name +
-				", amount=" + amount +
-				", dueDate=" + dueDate +
-				", initDate=" + sdf.format(initDate.toDate()) +
-				", endDate="+ sdf.format(endDate.toDate());
+				"\namount=" + amount +
+				"\ndueDate=" + dueDate +
+				"\ninitDate=" + sdf.format(initDate.toDate()) +
+				"\nendDate="+ sdf.format(endDate.toDate());
 	}
 
 	@Override
