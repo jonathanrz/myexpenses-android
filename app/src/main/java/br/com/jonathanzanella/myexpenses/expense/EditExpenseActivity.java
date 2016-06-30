@@ -79,7 +79,7 @@ public class EditExpenseActivity extends BaseActivity {
 			editName.setText(expense.getName());
 			editValue.setText(NumberFormat.getCurrencyInstance().format(Math.abs(expense.getValue()) / 100.0));
 			if(expense.isCharged()) {
-				editValue.setEnabled(false);
+				editValue.setTextColor(getColor(R.color.value_unpaid));
 				checkRepayment.setEnabled(false);
 			}
 			if(expense.getValue() < 0)
