@@ -38,7 +38,7 @@ public class WeeklyPagerAdapter extends PagerAdapter {
 	    while(init.getMonthOfYear() == month.getMonthOfYear()) {
 		    Period period = new Period();
 		    period.init = init;
-		    period.end = init.plusDays(6).withTime(23, 59, 59, 999);
+		    period.end = init.plusDays(6);
 		    if(period.end.getMonthOfYear() > month.getMonthOfYear()) {
 			    period.end.minusMonths(1);
 			    period.end = init.dayOfMonth().withMaximumValue();

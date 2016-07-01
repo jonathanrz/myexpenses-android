@@ -66,7 +66,7 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 	@Column @NotNull @Expose
 	String chargeableUuid;
 
-	@Column @Expose @Setter
+	@Column @Expose
 	ChargeableType chargeableType;
 
 	@Column @Expose
@@ -151,14 +151,14 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 	}
 
 	public static List<Expense> expenses(WeeklyPagerAdapter.Period period) {
-		List<Expense> bills = new ArrayList<>();
+		List<Expense> expenses = new ArrayList<>();
 
 		if(period.init.getDayOfMonth() == 1) {
 			DateTime date = period.init.withDayOfMonth(1).withMillisOfDay(0);
 			DateTime initOfMonth = date.minusMonths(1);
 			DateTime endOfMonth = initOfMonth.dayOfMonth().withMaximumValue();
 
-			bills.addAll(initQuery()
+			expenses.addAll(initQuery()
 					.where(Expense_Table.date.between(initOfMonth).and(endOfMonth))
 					.and(Expense_Table.chargeableType.eq(ChargeableType.CREDIT_CARD))
 					.and(Expense_Table.chargeNextMonth.eq(true))
@@ -167,18 +167,21 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 					.queryList());
 		}
 
-		bills.addAll(initQuery()
-				.where(Expense_Table.date.between(period.init).and(period.end))
+		DateTime init = period.init.withMillisOfDay(0);
+		DateTime end = period.end.withTime(23, 59, 59, 999);
+
+		expenses.addAll(initQuery()
+				.where(Expense_Table.date.between(init).and(end))
 				.and(Expense_Table.chargeNextMonth.eq(false))
 				.and(Expense_Table.ignoreInOverview.eq(false))
 				.orderBy(Expense_Table.date, true)
 				.queryList());
 
-		return bills;
+		return expenses;
 	}
 
 	public static List<Expense> expenses(DateTime date) {
-		date = date.withDayOfMonth(1).withMillisOfDay(0);
+		date = date.dayOfMonth().withMinimumValue();
 		DateTime initOfMonth = date.minusMonths(1);
 		DateTime endOfMonth = date;
 
@@ -191,7 +194,7 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 				.queryList();
 
 		initOfMonth = endOfMonth;
-		endOfMonth = date.plusMonths(1);
+		endOfMonth = date.dayOfMonth().withMaximumValue();
 
 		expenses.addAll(initQuery()
 				.where(Expense_Table.date.between(initOfMonth).and(endOfMonth))
