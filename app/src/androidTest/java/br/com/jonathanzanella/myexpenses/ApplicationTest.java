@@ -78,4 +78,36 @@ public class ApplicationTest {
 		assertThat(expenses.get(0).getUuid(), is(firstOfMonth.getUuid()));
 		assertThat(expenses.get(1).getUuid(), is(endOfMonth.getUuid()));
 	}
+
+	@Test
+	public void testExpensesInMonth() {
+		Expense firstOfMonth = new Expense();
+		firstOfMonth.setName("First");
+		firstOfMonth.setChargeable(account);
+		firstOfMonth.setDate(firstDayOfJune);
+		firstOfMonth.setValue(1000);
+		firstOfMonth.save();
+		expensesToDelete.add(firstOfMonth);
+
+		Expense endOfMonth = new Expense();
+		endOfMonth.setName("End");
+		endOfMonth.setChargeable(account);
+		endOfMonth.setDate(lastDayOfJune.withHourOfDay(23));
+		endOfMonth.setValue(500);
+		endOfMonth.save();
+		expensesToDelete.add(endOfMonth);
+
+		Expense firstOfJuly = new Expense();
+		firstOfJuly.setName("July");
+		firstOfJuly.setChargeable(account);
+		firstOfJuly.setDate(firstDayOfJuly);
+		firstOfJuly.setValue(200);
+		firstOfJuly.save();
+		expensesToDelete.add(firstOfJuly);
+
+		List<Expense> expenses = Expense.expenses(firstDayOfJune);
+		assertThat(expenses.size(), is(2));
+		assertThat(expenses.get(0).getUuid(), is(firstOfMonth.getUuid()));
+		assertThat(expenses.get(1).getUuid(), is(endOfMonth.getUuid()));
+	}
 }

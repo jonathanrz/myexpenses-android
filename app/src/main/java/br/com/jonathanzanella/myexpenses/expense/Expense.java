@@ -30,6 +30,7 @@ import br.com.jonathanzanella.myexpenses.card.Card;
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
 import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType;
 import br.com.jonathanzanella.myexpenses.database.MyDatabase;
+import br.com.jonathanzanella.myexpenses.helpers.DateHelper;
 import br.com.jonathanzanella.myexpenses.helpers.converter.DateTimeConverter;
 import br.com.jonathanzanella.myexpenses.overview.WeeklyPagerAdapter;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
@@ -154,9 +155,9 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 		List<Expense> expenses = new ArrayList<>();
 
 		if(period.init.getDayOfMonth() == 1) {
-			DateTime date = period.init.withDayOfMonth(1).withMillisOfDay(0);
+			DateTime date = DateHelper.firstDayOfMonth(period.init);
 			DateTime initOfMonth = date.minusMonths(1);
-			DateTime endOfMonth = initOfMonth.dayOfMonth().withMaximumValue();
+			DateTime endOfMonth = DateHelper.lastDayOfMonth(initOfMonth);
 
 			expenses.addAll(initQuery()
 					.where(Expense_Table.date.between(initOfMonth).and(endOfMonth))
@@ -167,8 +168,8 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 					.queryList());
 		}
 
-		DateTime init = period.init.withMillisOfDay(0);
-		DateTime end = period.end.withTime(23, 59, 59, 999);
+		DateTime init = DateHelper.firstDayOfMonth(period.init);
+		DateTime end = DateHelper.lastDayOfMonth(period.end);
 
 		expenses.addAll(initQuery()
 				.where(Expense_Table.date.between(init).and(end))
@@ -181,9 +182,9 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 	}
 
 	public static List<Expense> expenses(DateTime date) {
-		date = date.dayOfMonth().withMinimumValue();
-		DateTime initOfMonth = date.minusMonths(1);
-		DateTime endOfMonth = date;
+		DateTime lastMonth = date.minusMonths(1);
+		DateTime initOfMonth = DateHelper.firstDayOfMonth(lastMonth);
+		DateTime endOfMonth = DateHelper.lastDayOfMonth(lastMonth);
 
 		List<Expense> expenses = initQuery()
 				.where(Expense_Table.date.between(initOfMonth).and(endOfMonth))
@@ -193,8 +194,8 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 				.orderBy(Expense_Table.date, true)
 				.queryList();
 
-		initOfMonth = endOfMonth;
-		endOfMonth = date.dayOfMonth().withMaximumValue();
+		initOfMonth = DateHelper.firstDayOfMonth(date);
+		endOfMonth = DateHelper.lastDayOfMonth(date);
 
 		expenses.addAll(initQuery()
 				.where(Expense_Table.date.between(initOfMonth).and(endOfMonth))
