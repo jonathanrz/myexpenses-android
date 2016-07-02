@@ -4,8 +4,7 @@ apply plugin: 'com.neenbedankt.android-apt'
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.3"
-    //defined in ~/.gradle/gradle.properties
-    def MYEXPENSES_AUTH_TOKEN = '"' + MyExpensesAuthToken + '"' ?: '"Auth Token"';
+    def MYEXPENSES_AUTH_TOKEN = '"' + System.getenv("MYEXPENSES_AUTH_TOKEN") + '"' ?: '"Auth Token"';
 
     dexOptions {
         maxProcessCount 2
