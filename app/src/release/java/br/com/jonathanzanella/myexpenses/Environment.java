@@ -8,4 +8,5 @@ import java.util.Locale;
 public interface Environment {
 	boolean IS_DEBUG = false;
 	Locale PTBR_LOCALE = new Locale("pt_BR");
+	String SERVER_URL = "https://jonathanzanella-myexpenses.herokuapp.com/";
 }
