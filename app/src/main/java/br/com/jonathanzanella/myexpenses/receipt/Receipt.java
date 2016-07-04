@@ -175,6 +175,7 @@ public class Receipt extends BaseModel implements Transaction, UnsyncModel {
 
 	public void repeat() {
 		id = 0;
+		uuid = null;
 		date = date.plusMonths(1);
 	}
 

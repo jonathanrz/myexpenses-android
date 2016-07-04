@@ -120,14 +120,6 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 		return initQuery().queryList();
 	}
 
-	public static List<Expense> uncharged() {
-		return initQuery()
-				.where(Expense_Table.charged.eq(false))
-				.and(Expense_Table.date.lessThanOrEq(DateTime.now()))
-				.and(Expense_Table.chargeableType.notEq(ChargeableType.CREDIT_CARD))
-				.queryList();
-	}
-
 	public static List<Expense> monthly(DateTime date) {
 		date = date.withDayOfMonth(1).withMillisOfDay(0);
 		DateTime initOfMonth = date.minusMonths(1);
@@ -355,6 +347,7 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 
 	public void repeat() {
 		id = 0;
+		uuid = null;
 		date = date.plusMonths(1);
 	}
 
@@ -401,8 +394,11 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 
 	@Override
 	public void save() {
-		if(id == 0 && uuid == null)
-			uuid = UUID.randomUUID().toString();
+		if(id == 0 && uuid == null) {
+			do
+				uuid = UUID.randomUUID().toString();
+			while (Expense.find(uuid) != null);
+		}
 		sync = false;
 		super.save();
 	}
