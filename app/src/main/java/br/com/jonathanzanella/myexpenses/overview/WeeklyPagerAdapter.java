@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.Environment;
+import br.com.jonathanzanella.myexpenses.helpers.DateHelper;
 import br.com.jonathanzanella.myexpenses.views.BaseView;
 
 /**
@@ -33,7 +34,7 @@ public class WeeklyPagerAdapter extends PagerAdapter {
         this.context = context;
 	    this.builder = builder;
 
-	    DateTime init = month.withDayOfMonth(1);
+	    DateTime init = DateHelper.firstMillisOfDay(month.withDayOfMonth(1));
 
 	    while(init.getMonthOfYear() == month.getMonthOfYear()) {
 		    Period period = new Period();
@@ -41,7 +42,7 @@ public class WeeklyPagerAdapter extends PagerAdapter {
 		    period.end = init.plusDays(6);
 		    if(period.end.getMonthOfYear() > month.getMonthOfYear()) {
 			    period.end.minusMonths(1);
-			    period.end = init.dayOfMonth().withMaximumValue();
+			    period.end = DateHelper.lastMillisOfDay(init.dayOfMonth().withMaximumValue());
 		    }
 		    init = init.plusDays(7);
 		    periods.add(period);

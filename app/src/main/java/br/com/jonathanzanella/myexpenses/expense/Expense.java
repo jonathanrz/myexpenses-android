@@ -160,8 +160,8 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 					.queryList());
 		}
 
-		DateTime init = DateHelper.firstDayOfMonth(period.init);
-		DateTime end = DateHelper.lastDayOfMonth(period.end);
+		DateTime init = DateHelper.firstMillisOfDay(period.init);
+		DateTime end = DateHelper.lastMillisOfDay(period.end);
 
 		expenses.addAll(initQuery()
 				.where(Expense_Table.date.between(init).and(end))
