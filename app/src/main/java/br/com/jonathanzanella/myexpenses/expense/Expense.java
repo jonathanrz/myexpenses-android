@@ -121,26 +121,26 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 	}
 
 	public static List<Expense> monthly(DateTime date) {
-		date = date.withDayOfMonth(1).withMillisOfDay(0);
-		DateTime initOfMonth = date.minusMonths(1);
-		DateTime endOfMonth = date;
+		DateTime lastMonth = date.minusMonths(1);
+		DateTime initOfMonth = DateHelper.firstDayOfMonth(lastMonth);
+		DateTime endOfMonth = DateHelper.lastDayOfMonth(lastMonth);
 
-		List<Expense> bills = initQuery()
+		List<Expense> expenses = initQuery()
 				.where(Expense_Table.date.between(initOfMonth).and(endOfMonth))
 				.and(Expense_Table.chargeNextMonth.eq(true))
 				.orderBy(Expense_Table.date, true)
 				.queryList();
 
-		initOfMonth = endOfMonth;
-		endOfMonth = date.plusMonths(1);
+		initOfMonth = DateHelper.firstDayOfMonth(date);
+		endOfMonth = DateHelper.lastDayOfMonth(date);
 
-		bills.addAll(initQuery()
+		expenses.addAll(initQuery()
 				.where(Expense_Table.date.between(initOfMonth).and(endOfMonth))
 				.and(Expense_Table.chargeNextMonth.eq(false))
 				.orderBy(Expense_Table.date, true)
 				.queryList());
 
-		return bills;
+		return expenses;
 	}
 
 	public static List<Expense> expenses(WeeklyPagerAdapter.Period period) {

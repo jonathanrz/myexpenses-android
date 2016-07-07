@@ -2,6 +2,8 @@ package br.com.jonathanzanella.myexpenses;
 
 import android.support.test.runner.AndroidJUnit4;
 
+import com.raizlabs.android.dbflow.structure.BaseModel;
+
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
@@ -19,8 +21,8 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 @RunWith(AndroidJUnit4.class)
-public class ApplicationTest {
-	List<Expense> expensesToDelete = new ArrayList<>();
+public class ExpensesInPeriodTestSuite {
+	List<BaseModel> modelsToDestroy = new ArrayList<>();
 	DateTime firstDayOfJune = new DateTime(2016, 6, 1, 0, 0, 0, 0);
 	DateTime lastDayOfJune = firstDayOfJune.dayOfMonth().withMaximumValue();
 	DateTime firstDayOfJuly = firstDayOfJune.plusMonths(1);
@@ -29,17 +31,15 @@ public class ApplicationTest {
 
 	@Before
 	public void setUp() throws Exception {
-		account.setName("teste");
+		account.setName("Account");
 		account.save();
+		modelsToDestroy.add(account);
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		account.delete();
-
-		for (Expense expense : expensesToDelete) {
-			expense.delete();
-		}
+		for (BaseModel model : modelsToDestroy)
+			model.delete();
 	}
 
 	private Expense newExpense(String name, DateTime date, int value) {
@@ -55,15 +55,15 @@ public class ApplicationTest {
 	public void testExpensesInPeriod() {
 		Expense firstOfMonth = newExpense("First", firstDayOfJune, 1000);
 		firstOfMonth.save();
-		expensesToDelete.add(firstOfMonth);
+		modelsToDestroy.add(firstOfMonth);
 
 		Expense endOfMonth = newExpense("End", lastDayOfJune.withHourOfDay(23), 500);
 		endOfMonth.save();
-		expensesToDelete.add(endOfMonth);
+		modelsToDestroy.add(endOfMonth);
 
 		Expense firstOfJuly = newExpense("July", firstDayOfJuly, 200);
 		firstOfJuly.save();
-		expensesToDelete.add(firstOfJuly);
+		modelsToDestroy.add(firstOfJuly);
 
 		WeeklyPagerAdapter.Period period = new WeeklyPagerAdapter.Period();
 		period.init = firstDayOfJune;
@@ -79,23 +79,23 @@ public class ApplicationTest {
 	public void testExpensesInPeriodWeekly() {
 		Expense firstOfMonth = newExpense("First", firstDayOfJune, 1000);
 		firstOfMonth.save();
-		expensesToDelete.add(firstOfMonth);
+		modelsToDestroy.add(firstOfMonth);
 
 		Expense sixOfMonth = newExpense("Six", firstDayOfJune.plusDays(6), 850);
 		sixOfMonth.save();
-		expensesToDelete.add(sixOfMonth);
+		modelsToDestroy.add(sixOfMonth);
 
 		Expense sevenOfMonth = newExpense("Seven", firstDayOfJune.plusDays(7), 900);
 		sevenOfMonth.save();
-		expensesToDelete.add(sevenOfMonth);
+		modelsToDestroy.add(sevenOfMonth);
 
 		Expense endOfMonth = newExpense("End", lastDayOfJune.withHourOfDay(23), 500);
 		endOfMonth.save();
-		expensesToDelete.add(endOfMonth);
+		modelsToDestroy.add(endOfMonth);
 
 		Expense firstOfJuly = newExpense("July", firstDayOfJuly, 200);
 		firstOfJuly.save();
-		expensesToDelete.add(firstOfJuly);
+		modelsToDestroy.add(firstOfJuly);
 
 		WeeklyPagerAdapter.Period period = new WeeklyPagerAdapter.Period();
 		period.init = firstDayOfJune;
@@ -111,15 +111,15 @@ public class ApplicationTest {
 	public void testExpensesInMonth() {
 		Expense firstOfMonth = newExpense("First", firstDayOfJune, 1000);
 		firstOfMonth.save();
-		expensesToDelete.add(firstOfMonth);
+		modelsToDestroy.add(firstOfMonth);
 
 		Expense endOfMonth = newExpense("End", lastDayOfJune.withHourOfDay(23), 500);
 		endOfMonth.save();
-		expensesToDelete.add(endOfMonth);
+		modelsToDestroy.add(endOfMonth);
 
 		Expense firstOfJuly = newExpense("July", firstDayOfJuly, 200);
 		firstOfJuly.save();
-		expensesToDelete.add(firstOfJuly);
+		modelsToDestroy.add(firstOfJuly);
 
 		List<Expense> expenses = Expense.expenses(firstDayOfJune);
 		assertThat(expenses.size(), is(2));

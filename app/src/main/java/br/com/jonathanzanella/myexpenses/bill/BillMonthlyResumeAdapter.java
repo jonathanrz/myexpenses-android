@@ -14,7 +14,6 @@ import java.text.NumberFormat;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.expense.Expense;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import lombok.Getter;
@@ -95,8 +94,8 @@ public class BillMonthlyResumeAdapter extends RecyclerView.Adapter<BillMonthlyRe
 		return bills != null ? bills.size() + 1 : 0;
 	}
 
-	public void loadData(DateTime month, List<Expense> expenses) {
-		bills = Bill.monthly(month, expenses);
+	public void loadData(DateTime month) {
+		bills = Bill.monthly(month);
 		totalValue = 0;
 
 		for (Bill bill : bills) {

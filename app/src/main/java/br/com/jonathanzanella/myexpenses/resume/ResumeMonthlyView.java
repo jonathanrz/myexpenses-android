@@ -116,7 +116,7 @@ class ResumeMonthlyView extends BaseView {
 		expensesAdapter.notifyDataSetChanged();
 		expenses.getLayoutParams().height = singleRowHeight * expensesAdapter.getItemCount();
 
-		billsAdapter.loadData(month, expensesAdapter.getExpenses());
+		billsAdapter.loadData(month);
 		billsAdapter.notifyDataSetChanged();
 		bills.getLayoutParams().height = singleRowHeight * billsAdapter.getItemCount();
 

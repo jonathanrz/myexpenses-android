@@ -81,7 +81,7 @@ public class ShowAccountActivity extends BaseActivity {
 		List<Expense> expenses = Expense.accountExpenses(account, month);
 		adapter.addTransactions(expenses);
 		if(account.isAccountToPayBills())
-			adapter.addTransactions(Bill.monthly(month, expenses));
+			adapter.addTransactions(Bill.monthly(month));
 		adapter.notifyDataSetChanged();
 
 		list.setAdapter(adapter);

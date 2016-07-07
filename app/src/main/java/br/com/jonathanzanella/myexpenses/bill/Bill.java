@@ -99,7 +99,8 @@ public class Bill extends BaseModel implements Transaction, UnsyncModel {
 		return initQuery().where(Bill_Table.sync.eq(false)).queryList();
 	}
 
-	public static List<Bill> monthly(DateTime month, List<Expense> expenses) {
+	public static List<Bill> monthly(DateTime month) {
+		List<Expense> expenses = Expense.monthly(month);
 		List<Bill> bills = initQuery()
 				.where(Bill_Table.initDate.lessThanOrEq(month))
 				.and(Bill_Table.endDate.greaterThanOrEq(month))
