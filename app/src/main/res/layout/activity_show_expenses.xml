@@ -54,7 +54,7 @@
                 android:id="@+id/act_show_expense_value_stt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/value"
+                android:text="@string/income"
                 android:layout_marginEnd="@dimen/min_spacing"/>
 
             <TextView
@@ -64,6 +64,23 @@
                 android:textColor="@color/color_primary"/>
 
         </TableRow>
+
+	    <TableRow>
+
+		    <TextView
+			    android:id="@+id/act_show_expense_value_to_show_in_overview_stt"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:text="@string/income_to_show_in_overview"
+			    android:layout_marginEnd="@dimen/min_spacing"/>
+
+		    <TextView
+			    android:id="@+id/act_show_expense_value_to_show_in_overview"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:textColor="@color/color_primary"/>
+
+	    </TableRow>
 
         <TableRow>
 

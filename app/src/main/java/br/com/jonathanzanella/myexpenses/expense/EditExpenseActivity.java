@@ -41,6 +41,8 @@ public class EditExpenseActivity extends BaseActivity {
 	EditText editDate;
 	@Bind(R.id.act_edit_expense_value)
 	EditText editValue;
+	@Bind(R.id.act_edit_expense_value_to_show_in_overview)
+	EditText editValueToShowInOverview;
 	@Bind(R.id.act_edit_expense_repayment)
 	CheckBox checkRepayment;
 	@Bind(R.id.act_edit_expense_chargeable)
@@ -74,34 +76,53 @@ public class EditExpenseActivity extends BaseActivity {
 		super.onPostCreate(savedInstanceState);
 
 		editValue.addTextChangedListener(new CurrencyTextWatch(editValue));
+		editValueToShowInOverview.addTextChangedListener(new CurrencyTextWatch(editValueToShowInOverview));
+		editValue.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				if(editValueToShowInOverview.getText().toString().isEmpty() &&
+						!editValue.getText().toString().isEmpty()) {
+					editValueToShowInOverview.setText(editValue.getText());
+				}
+			}
+		});
 
 		if(expense != null) {
-			editName.setText(expense.getName());
-			editValue.setText(NumberFormat.getCurrencyInstance().format(Math.abs(expense.getValue()) / 100.0));
-			if(expense.isCharged()) {
-				editValue.setTextColor(getColor(R.color.value_unpaid));
-				checkRepayment.setEnabled(false);
-			}
-			if(expense.getValue() < 0)
-				checkRepayment.setChecked(true);
-			chargeable = expense.getChargeable();
-			if(chargeable != null) {
-				editChargeable.setText(chargeable.getName());
-				onChargeableSelected();
-			}
-			checkPayNextMonth.setChecked(expense.isChargeNextMonth());
-			showInOverview.setChecked(expense.isShowInOverview());
-			showInResume.setChecked(expense.isShowInResume());
-			date = expense.getDate();
-			if(date == null)
-				date = DateTime.now();
-			onBalanceDateChanged();
+			setData();
 		} else {
-			date = DateTime.now();
-			onBalanceDateChanged();
-			if(chargeable != null)
-				onChargeableSelected();
+			initData();
 		}
+	}
+
+	private void initData() {
+		date = DateTime.now();
+		onBalanceDateChanged();
+		if(chargeable != null)
+			onChargeableSelected();
+	}
+
+	private void setData() {
+		editName.setText(expense.getName());
+		editValue.setText(NumberFormat.getCurrencyInstance().format(Math.abs(expense.getValue()) / 100.0));
+		editValueToShowInOverview.setText(NumberFormat.getCurrencyInstance().format(Math.abs(expense.getValueToShowInOverview()) / 100.0));
+		if(expense.isCharged()) {
+			editValue.setTextColor(getColor(R.color.value_unpaid));
+			checkRepayment.setEnabled(false);
+		}
+		if(expense.getValue() < 0)
+			checkRepayment.setChecked(true);
+		chargeable = expense.getChargeable();
+		if(chargeable != null) {
+			editChargeable.setText(chargeable.getName());
+			onChargeableSelected();
+		}
+		checkPayNextMonth.setChecked(expense.isChargeNextMonth());
+		showInOverview.setChecked(expense.isShowInOverview());
+		showInResume.setChecked(expense.isShowInResume());
+		date = expense.getDate();
+		if(date == null)
+			date = DateTime.now();
+		onBalanceDateChanged();
 	}
 
 	@Override
@@ -228,9 +249,13 @@ public class EditExpenseActivity extends BaseActivity {
 			expense.setName(String.format(Environment.PTBR_LOCALE, "%s %02d/%02d", originalName, 1, installment));
 		expense.setDate(date);
 		int value = Integer.parseInt(editValue.getText().toString().replaceAll("[^\\d]", "")) / installment;
-		if(checkRepayment.isChecked())
+		int valueToShowInOverview = Integer.parseInt(editValueToShowInOverview.getText().toString().replaceAll("[^\\d]", "")) / installment;
+		if(checkRepayment.isChecked()) {
 			value *= -1;
+			valueToShowInOverview *= -1;
+		}
 		expense.setValue(value);
+		expense.setValueToShowInOverview(valueToShowInOverview);
 		expense.setChargeable(chargeable);
 		expense.setBill(bill);
 		expense.setChargeNextMonth(checkPayNextMonth.isChecked());

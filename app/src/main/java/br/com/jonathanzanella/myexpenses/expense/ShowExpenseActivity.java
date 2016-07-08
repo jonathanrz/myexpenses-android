@@ -31,6 +31,8 @@ public class ShowExpenseActivity extends BaseActivity {
 	TextView expenseDate;
 	@Bind(R.id.act_show_expense_value)
 	TextView expenseIncome;
+	@Bind(R.id.act_show_expense_value_to_show_in_overview)
+	TextView expenseIncomeToShowInOverview;
 	@Bind(R.id.act_show_expense_chargeable)
 	TextView expenseChargeable;
 	@Bind(R.id.act_show_expense_bill)
@@ -57,6 +59,7 @@ public class ShowExpenseActivity extends BaseActivity {
 		expenseName.setText(expense.getName());
 		expenseDate.setText(Receipt.sdf.format(expense.getDate().toDate()));
 		expenseIncome.setText(NumberFormat.getCurrencyInstance().format(expense.getValue() / 100.0));
+		expenseIncomeToShowInOverview.setText(NumberFormat.getCurrencyInstance().format(expense.getValueToShowInOverview() / 100.0));
 		expenseChargeable.setText(expense.getChargeable().getName());
 		chargeNextMonth.setVisibility(expense.isChargeNextMonth() ? View.VISIBLE : View.GONE);
 		Bill bill = expense.getBill();

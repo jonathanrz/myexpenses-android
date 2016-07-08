@@ -15,6 +15,7 @@
     <string name="credit_card">Cartões</string>
     <string name="date">Data</string>
     <string name="income">Valor</string>
+    <string name="income_to_show_in_overview">Valor para Overview</string>
     <string name="source">Fonte</string>
     <string name="receipts">Recebimentos</string>
     <string name="resume">Resumo</string>

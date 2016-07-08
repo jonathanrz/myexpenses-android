@@ -53,7 +53,7 @@ public class ExpenseWeeklyOverviewAdapter extends RecyclerView.Adapter<ExpenseWe
 		public void setData(Expense expense) {
 			name.setText(expense.getName());
 			date.setText(sdf.format(expense.getDate().toDate()));
-			income.setText(NumberFormat.getCurrencyInstance().format(expense.getValue() / 100.0));
+			income.setText(NumberFormat.getCurrencyInstance().format(expense.getValueToShowInOverview() / 100.0));
 			source.setText(expense.getChargeable().getName());
 		}
 
@@ -96,7 +96,7 @@ public class ExpenseWeeklyOverviewAdapter extends RecyclerView.Adapter<ExpenseWe
 		totalValue = 0;
 
 		for (Expense expense : expenses)
-			totalValue += expense.getValue();
+			totalValue += expense.getValueToShowInOverview();
 	}
 
 	private Expense getExpense(int position) {

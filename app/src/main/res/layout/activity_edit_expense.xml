@@ -61,6 +61,20 @@
 
 			</android.support.design.widget.TextInputLayout>
 
+			<android.support.design.widget.TextInputLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginBottom="@dimen/default_spacing">
+
+				<android.support.v7.widget.AppCompatEditText
+					android:id="@+id/act_edit_expense_value_to_show_in_overview"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:inputType="number"
+					android:hint="@string/income_to_show_in_overview"/>
+
+			</android.support.design.widget.TextInputLayout>
+
 			<CheckBox
 				android:id="@+id/act_edit_expense_repayment"
 				android:layout_width="match_parent"

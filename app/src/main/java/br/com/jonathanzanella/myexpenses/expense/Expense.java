@@ -64,6 +64,9 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 	@Column @Getter @Setter @Expose
 	int value;
 
+	@Column @Getter @Setter @Expose
+	int valueToShowInOverview;
+
 	@Column @NotNull @Expose
 	String chargeableUuid;
 

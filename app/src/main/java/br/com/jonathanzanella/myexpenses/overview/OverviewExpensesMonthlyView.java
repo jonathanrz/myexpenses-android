@@ -53,7 +53,7 @@ class OverviewExpensesMonthlyView extends BaseView {
 		period.end = month.dayOfMonth().withMaximumValue();
 		int total = 0;
 		for (Expense expense : Expense.expenses(period))
-			total += expense.getValue();
+			total += expense.getValueToShowInOverview();
 
 		monthlyTotal.setText(NumberFormat.getCurrencyInstance().format(total / 100.0));
 	}
