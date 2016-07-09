@@ -14,7 +14,6 @@ import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -24,6 +23,7 @@ import java.util.UUID;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.database.MyDatabase;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
+import br.com.jonathanzanella.myexpenses.helpers.DateHelper;
 import br.com.jonathanzanella.myexpenses.helpers.converter.DateTimeConverter;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi;
@@ -76,6 +76,8 @@ public class Bill extends BaseModel implements Transaction, UnsyncModel {
 	@Column
 	boolean sync;
 
+	private DateTime month;
+
 	public static List<Bill> all() {
 		return initQuery().queryList();
 	}
@@ -122,6 +124,9 @@ public class Bill extends BaseModel implements Transaction, UnsyncModel {
 			}
 		}
 
+		for (Bill bill : bills)
+			bill.month = month;
+
 		return bills;
 	}
 
@@ -135,10 +140,12 @@ public class Bill extends BaseModel implements Transaction, UnsyncModel {
 
 	@Override
 	public DateTime getDate() {
-		int lastDayOfMonth = LocalDate.now().dayOfMonth().withMaximumValue().getDayOfMonth();
+		if(month == null)
+			month = DateTime.now();
+		int lastDayOfMonth = DateHelper.lastDayOfMonth(month).getDayOfMonth();
 		if(dueDate > lastDayOfMonth)
-			return DateTime.now().withDayOfMonth(lastDayOfMonth);
-		return DateTime.now().withDayOfMonth(dueDate);
+			return month.withDayOfMonth(lastDayOfMonth);
+		return month.withDayOfMonth(dueDate);
 	}
 
 	@Override

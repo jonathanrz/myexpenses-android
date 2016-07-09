@@ -26,6 +26,7 @@ import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType;
 import br.com.jonathanzanella.myexpenses.database.MyDatabase;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.Expense_Table;
+import br.com.jonathanzanella.myexpenses.helpers.DateHelper;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi;
 import lombok.Getter;
@@ -161,12 +162,12 @@ public class Card extends BaseModel implements Chargeable, UnsyncModel {
 		return SQLite.select().from(Expense.class);
 	}
 
-	public List<Expense> creditCardBills(DateTime date) {
-		date = date.withDayOfMonth(1).withMillisOfDay(0);
-		DateTime initOfMonth = date.minusMonths(1);
-		DateTime endOfMonth = date;
+	public List<Expense> creditCardBills(DateTime month) {
+		DateTime lastMonth = month.minusMonths(1);
+		DateTime initOfMonth = DateHelper.firstDayOfMonth(lastMonth);
+		DateTime endOfMonth = DateHelper.lastDayOfMonth(lastMonth);
 
-		List<Expense> bills = initExpenseQuery()
+		List<Expense> expenses = initExpenseQuery()
 				.where(Expense_Table.chargeableUuid.eq(getUuid()))
 				.and(Expense_Table.chargeableType.eq(ChargeableType.CREDIT_CARD))
 				.and(Expense_Table.date.between(initOfMonth).and(endOfMonth))
@@ -175,10 +176,10 @@ public class Card extends BaseModel implements Chargeable, UnsyncModel {
 				.orderBy(Expense_Table.date, true)
 				.queryList();
 
-		initOfMonth = endOfMonth;
-		endOfMonth = date.plusMonths(1);
+		initOfMonth = DateHelper.firstDayOfMonth(month);
+		endOfMonth = DateHelper.lastDayOfMonth(month);
 
-		bills.addAll(initExpenseQuery()
+		expenses.addAll(initExpenseQuery()
 				.where(Expense_Table.chargeableUuid.eq(getUuid()))
 				.and(Expense_Table.chargeableType.eq(ChargeableType.CREDIT_CARD))
 				.and(Expense_Table.date.between(initOfMonth).and(endOfMonth))
@@ -187,7 +188,7 @@ public class Card extends BaseModel implements Chargeable, UnsyncModel {
 				.orderBy(Expense_Table.date, true)
 				.queryList());
 
-		return bills;
+		return expenses;
 	}
 
 	@Override

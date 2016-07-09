@@ -218,14 +218,14 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 		return expenses;
 	}
 
-	public static List<Expense> accountExpenses(Account account, DateTime date) {
-		date = date.withDayOfMonth(1).withMillisOfDay(0);
-		DateTime initOfMonth = date.minusMonths(1);
-		DateTime endOfMonth = date;
+	public static List<Expense> accountExpenses(Account account, DateTime month) {
+		DateTime lastMonth = month.minusMonths(1);
+		DateTime initOfMonth = DateHelper.firstDayOfMonth(lastMonth);
+		DateTime endOfMonth = DateHelper.lastDayOfMonth(lastMonth);
 
 		Card card = account.getDebitCard();
 
-		List<Expense> bills = initQuery()
+		List<Expense> expenses = initQuery()
 				.where(Expense_Table.date.between(initOfMonth).and(endOfMonth))
 				.and(Expense_Table.chargeableType.eq(ChargeableType.ACCOUNT))
 				.and(Expense_Table.chargeableUuid.eq(account.getUuid()))
@@ -233,7 +233,7 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 				.queryList();
 
 		if(card != null) {
-			bills.addAll(initQuery()
+			expenses.addAll(initQuery()
 					.where(Expense_Table.date.between(initOfMonth).and(endOfMonth))
 					.and(Expense_Table.chargeableType.eq(ChargeableType.DEBIT_CARD))
 					.and(Expense_Table.chargeableUuid.eq(card.getUuid()))
@@ -241,10 +241,10 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 					.queryList());
 		}
 
-		initOfMonth = endOfMonth;
-		endOfMonth = date.plusMonths(1);
+		initOfMonth = DateHelper.firstDayOfMonth(month);
+		endOfMonth = DateHelper.lastDayOfMonth(month);
 
-		bills.addAll(initQuery()
+		expenses.addAll(initQuery()
 				.where(Expense_Table.date.between(initOfMonth).and(endOfMonth))
 				.and(Expense_Table.chargeableType.eq(ChargeableType.ACCOUNT))
 				.and(Expense_Table.chargeableUuid.eq(account.getUuid()))
@@ -252,7 +252,7 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 				.queryList());
 
 		if(card != null) {
-			bills.addAll(initQuery()
+			expenses.addAll(initQuery()
 					.where(Expense_Table.date.between(initOfMonth).and(endOfMonth))
 					.and(Expense_Table.chargeableType.eq(ChargeableType.DEBIT_CARD))
 					.and(Expense_Table.chargeableUuid.eq(card.getUuid()))
@@ -261,7 +261,7 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 		}
 
 		if(account.isAccountToPayCreditCard()) {
-			DateTime creditCardMonth = date.minusMonths(1);
+			DateTime creditCardMonth = month.minusMonths(1);
 			for (Card creditCard : Card.creditCards()) {
 				int total = creditCard.getInvoiceValue(creditCardMonth);
 				if (total == 0)
@@ -270,14 +270,14 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 				Expense expense = new Expense();
 				expense.setChargeable(card);
 				expense.setName(MyApplication.getContext().getString(R.string.invoice) + " " + creditCard.getName());
-				expense.setDate(creditCardMonth);
+				expense.setDate(creditCardMonth.plusMonths(1));
 				expense.setValue(total);
 				expense.creditCard = card;
-				bills.add(expense);
+				expenses.add(expense);
 			}
 		}
 
-		Collections.sort(bills, new Comparator<Expense>() {
+		Collections.sort(expenses, new Comparator<Expense>() {
 			@Override
 			public int compare(Expense lhs, Expense rhs) {
 				if(lhs.getDate().isAfter(rhs.getDate()))
@@ -286,7 +286,7 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 			}
 		});
 
-		return bills;
+		return expenses;
 	}
 
 	private static From<Expense> initQuery() {
