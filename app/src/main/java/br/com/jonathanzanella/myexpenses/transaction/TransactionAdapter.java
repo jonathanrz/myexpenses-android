@@ -1,5 +1,6 @@
 package br.com.jonathanzanella.myexpenses.transaction;
 
+import android.graphics.Typeface;
 import android.support.annotation.ColorRes;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -44,12 +45,16 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 		public void setData(Transaction transaction) {
 			date.setText(Transaction.sdf.format(transaction.getDate().toDate()));
 			name.setText(transaction.getName());
+			value.setText(NumberFormat.getCurrencyInstance().format(transaction.getAmount() / 100.0));
+			value.setTypeface(null, Typeface.NORMAL);
 			if(transaction instanceof Receipt) {
 				value.setTextColor(getColor(R.color.value_unreceived));
-				value.setText(NumberFormat.getCurrencyInstance().format(transaction.getAmount() / 100.0));
+				if(!transaction.credited())
+					value.setTypeface(null, Typeface.BOLD);
 			} else if(transaction instanceof Expense || transaction instanceof Bill) {
 				value.setTextColor(getColor(R.color.value_unpaid));
-				value.setText(NumberFormat.getCurrencyInstance().format(transaction.getAmount() * -1 / 100.0));
+				if(!transaction.debited())
+					value.setTypeface(null, Typeface.BOLD);
 			}
 		}
 
