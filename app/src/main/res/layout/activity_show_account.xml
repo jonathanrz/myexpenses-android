@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content">
 
-    <include
+	<include
         android:id="@+id/toolbar"
         layout="@layout/toolbar"/>
 
 	<LinearLayout
+		android:id="@+id/act_show_account_layout"
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
+		android:layout_height="match_parent"
 		android:padding="@dimen/default_spacing"
 		android:orientation="vertical">
 
@@ -82,85 +83,12 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:textColor="@color/color_primary"/>
-
 			</TableRow>
 	    </TableLayout>
 
-	    <TextView
-	        style="@style/HeaderTitle"
-	        android:text="@string/month_transactions"
-	        android:layout_marginTop="@dimen/default_spacing"/>
-
-		<android.support.v7.widget.RecyclerView
+		<br.com.jonathanzanella.myexpenses.account.TransactionsView
 			android:id="@+id/act_show_account_transactions"
 			android:layout_width="match_parent"
-			android:layout_height="0dp"
-			android:layout_weight="1"/>
-
-		<TableLayout
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_marginTop="@dimen/default_spacing">
-
-			<TableRow>
-
-				<TextView
-					android:layout_width="0dp"
-					android:layout_height="wrap_content"
-					android:layout_weight="1"
-					android:text="@string/month_balance"
-					android:textStyle="bold"
-					android:layout_marginEnd="@dimen/min_spacing"/>
-
-				<TextView
-					android:id="@+id/act_show_account_month_balance"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:textStyle="bold"/>
-
-			</TableRow>
-		</TableLayout>
-
-		<LinearLayout
-			android:id="@+id/act_show_account_next_month_transactions_layout"
-			android:layout_width="match_parent"
-			android:layout_height="0dp"
-			android:layout_weight="1"
-			android:orientation="vertical">
-
-			<TextView
-				style="@style/HeaderTitle"
-				android:text="@string/next_month_transactions"
-				android:layout_marginTop="@dimen/default_spacing"/>
-
-			<android.support.v7.widget.RecyclerView
-				android:id="@+id/act_show_account_next_month_transactions"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"/>
-
-			<TableLayout
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_marginTop="@dimen/default_spacing">
-
-				<TableRow>
-
-					<TextView
-						android:layout_width="0dp"
-						android:layout_height="wrap_content"
-						android:layout_weight="1"
-						android:text="@string/next_month_balance"
-						android:textStyle="bold"
-						android:layout_marginEnd="@dimen/min_spacing"/>
-
-					<TextView
-						android:id="@+id/act_show_account_next_month_balance"
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						android:textStyle="bold"/>
-
-				</TableRow>
-			</TableLayout>
-		</LinearLayout>
+		    android:layout_height="wrap_content"/>
 	</LinearLayout>
 </LinearLayout>

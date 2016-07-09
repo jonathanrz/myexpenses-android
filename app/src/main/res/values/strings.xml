@@ -48,8 +48,7 @@
 	<string name="total_expenses">Total de gastos:</string>
 	<string name="pay_credit_card_bill">Pagar fatura do cartã0</string>
 	<string name="show_in_resume">Mostrar no resumo</string>
-	<string name="month_transactions">Transações do mês</string>
-	<string name="next_month_transactions">Transações do próximo mês</string>
+	<string name="month_transactions">Transações de </string>
 	<string name="forecasts">Previsoes</string>
 	<string name="month_balance">Saldo ao final do mês</string>
 	<string name="next_month_balance">Saldo ao final do próximo mês</string>
