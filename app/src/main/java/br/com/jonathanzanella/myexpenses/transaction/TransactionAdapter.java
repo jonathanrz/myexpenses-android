@@ -3,11 +3,13 @@ package br.com.jonathanzanella.myexpenses.transaction;
 import android.graphics.Typeface;
 import android.support.annotation.ColorRes;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.lang.ref.WeakReference;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,9 +19,11 @@ import java.util.List;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.bill.Bill;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
+import br.com.jonathanzanella.myexpenses.helpers.TransactionsHelper;
 import br.com.jonathanzanella.myexpenses.receipt.Receipt;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import lombok.Getter;
 
 /**
@@ -37,9 +41,12 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 		@Bind(R.id.row_transaction_value)
 		TextView value;
 
-		public ViewHolder(View itemView) {
+		private WeakReference<TransactionAdapter> adapterWeakReference;
+
+		public ViewHolder(View itemView, TransactionAdapter adapter) {
 			super(itemView);
 			ButterKnife.bind(this, itemView);
+			adapterWeakReference = new WeakReference<>(adapter);
 		}
 
 		public void setData(Transaction transaction) {
@@ -58,6 +65,19 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 			}
 		}
 
+		@OnClick(R.id.row_transaction_value)
+		public void onValue() {
+			final int adapterPosition = getAdapterPosition();
+			final TransactionAdapter adapter = adapterWeakReference.get();
+			Transaction transaction = adapter.transactions.get(adapterPosition);
+			TransactionsHelper.showConfirmTransactionDialog(transaction, date.getContext(), new TransactionsHelper.DialogCallback() {
+				@Override
+				public void onPositiveButton() {
+					adapter.notifyItemChanged(adapterPosition);
+				}
+			});
+		}
+
 		private int getColor(@ColorRes int color) {
 			return itemView.getContext().getResources().getColor(color);
 		}
@@ -66,7 +86,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 	@Override
 	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_transaction, parent, false);
-		return new ViewHolder(v);
+		return new ViewHolder(v, this);
 	}
 
 	@Override

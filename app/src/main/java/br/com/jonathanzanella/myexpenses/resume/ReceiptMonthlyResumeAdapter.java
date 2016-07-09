@@ -1,9 +1,7 @@
 package br.com.jonathanzanella.myexpenses.resume;
 
-import android.content.DialogInterface;
 import android.support.annotation.ColorRes;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +17,7 @@ import java.util.List;
 import java.util.Locale;
 
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.helpers.TransactionsHelper;
 import br.com.jonathanzanella.myexpenses.receipt.Receipt;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -85,28 +84,15 @@ class ReceiptMonthlyResumeAdapter extends RecyclerView.Adapter<ReceiptMonthlyRes
 		@OnClick(R.id.row_monthly_resume_receipt_income)
 		public void onIncome() {
 			final Receipt receipt = adapterWeakReference.get().receipts.get(getAdapterPosition());
-			if(!receipt.isCredited()) {
-				String message = income.getContext().getString(R.string.message_confirm_receipt);
-				message = message.concat(" " + receipt.getName() + " - " + receipt.getIncomeFormatted() + "?");
-				new AlertDialog.Builder(income.getContext())
-						.setMessage(message)
-						.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialogInterface, int i) {
-								receipt.credit();
-								ReceiptMonthlyResumeAdapter adapter = adapterWeakReference.get();
-								adapter.updateTotalValue();
-								adapter.notifyDataSetChanged();
-							}
-						})
-						.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialogInterface, int i) {
-								dialogInterface.dismiss();
-							}
-						})
-						.show();
-			}
+			TransactionsHelper.showConfirmTransactionDialog(receipt, income.getContext(),
+					new TransactionsHelper.DialogCallback() {
+				@Override
+				public void onPositiveButton() {
+					ReceiptMonthlyResumeAdapter adapter = adapterWeakReference.get();
+					adapter.updateTotalValue();
+					adapter.notifyDataSetChanged();
+				}
+			});
 		}
 	}
 
