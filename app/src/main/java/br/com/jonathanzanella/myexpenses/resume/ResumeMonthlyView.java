@@ -52,6 +52,7 @@ class ResumeMonthlyView extends BaseView {
 
 		singleRowHeight = getResources().getDimensionPixelSize(R.dimen.single_row_height);
 		this.month = month;
+		accountAdapter.setMonth(month);
 	}
 
 	@Override

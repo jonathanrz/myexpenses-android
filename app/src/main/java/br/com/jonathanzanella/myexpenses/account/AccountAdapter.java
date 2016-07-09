@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.joda.time.DateTime;
+
 import java.lang.ref.WeakReference;
 import java.text.NumberFormat;
 import java.util.List;
@@ -27,6 +29,8 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
 	private boolean simplified = false;
 	@Setter
 	AccountAdapterCallback callback;
+	@Setter
+	DateTime month;
 
 	public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 		@Bind(R.id.row_account_name)
@@ -64,6 +68,8 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
 				} else {
 					Intent i = new Intent(itemView.getContext(), ShowAccountActivity.class);
 					i.putExtra(ShowAccountActivity.KEY_ACCOUNT_UUID, acc.getUuid());
+					if(adapter.month != null)
+						i.putExtra(ShowAccountActivity.KEY_ACCOUNT_MONTH_TO_SHOW, adapter.month.getMillis());
 					itemView.getContext().startActivity(i);
 				}
 			}
