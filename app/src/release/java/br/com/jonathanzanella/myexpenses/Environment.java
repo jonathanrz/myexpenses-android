@@ -9,4 +9,5 @@ public interface Environment {
 	boolean IS_DEBUG = false;
 	Locale PTBR_LOCALE = new Locale("pt_BR");
 	String SERVER_URL = "https://jonathanzanella-myexpenses.herokuapp.com/";
+	String CURRENT_USER = "Jonathan";
 }

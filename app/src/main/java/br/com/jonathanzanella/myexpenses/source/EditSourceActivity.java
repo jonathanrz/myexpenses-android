@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.widget.EditText;
 
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.user.SelectUserView;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
 
@@ -18,6 +19,8 @@ public class EditSourceActivity extends BaseActivity {
 
 	@Bind(R.id.act_edit_source_name)
 	EditText editName;
+	@Bind(R.id.act_edit_source_user)
+	SelectUserView selectUserView;
 
 	private Source source;
 
@@ -31,8 +34,10 @@ public class EditSourceActivity extends BaseActivity {
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
 
-		if(source != null)
+		if(source != null) {
 			editName.setText(source.getName());
+			selectUserView.setSelectedUser(source.getUserUuid());
+		}
 	}
 
 	@Override
@@ -73,6 +78,7 @@ public class EditSourceActivity extends BaseActivity {
 		if(source == null)
 			source = new Source();
 		source.setName(editName.getText().toString());
+		source.setUserUuid(selectUserView.getSelectedUser());
 		source.save();
 
 		Intent i = new Intent();

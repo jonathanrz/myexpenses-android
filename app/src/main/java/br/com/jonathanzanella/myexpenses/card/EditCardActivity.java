@@ -10,6 +10,7 @@ import android.widget.RadioGroup;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.ListAccountActivity;
 import br.com.jonathanzanella.myexpenses.account.Account;
+import br.com.jonathanzanella.myexpenses.user.SelectUserView;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -27,6 +28,8 @@ public class EditCardActivity extends BaseActivity {
 	EditText editAccount;
 	@Bind(R.id.act_edit_card_type)
 	RadioGroup radioType;
+	@Bind(R.id.act_edit_card_user)
+	SelectUserView selectUserView;
 
 	private Card card;
 	private Account account;
@@ -53,6 +56,7 @@ public class EditCardActivity extends BaseActivity {
 					radioType.check(R.id.act_edit_card_type_debit);
 					break;
 			}
+			selectUserView.setSelectedUser(card.getUserUuid());
 		}
 	}
 
@@ -130,6 +134,7 @@ public class EditCardActivity extends BaseActivity {
 				break;
 			}
 		}
+		card.setUserUuid(selectUserView.getSelectedUser());
 		card.save();
 
 		Intent i = new Intent();

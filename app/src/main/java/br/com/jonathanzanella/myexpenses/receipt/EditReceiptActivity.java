@@ -16,6 +16,7 @@ import java.text.NumberFormat;
 import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.ListAccountActivity;
+import br.com.jonathanzanella.myexpenses.user.SelectUserView;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import br.com.jonathanzanella.myexpenses.source.ListSourceActivity;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch;
@@ -48,6 +49,8 @@ public class EditReceiptActivity extends BaseActivity {
 	EditText editInstallment;
 	@Bind(R.id.act_edit_receipt_show_in_resume)
 	CheckBox checkShowInResume;
+	@Bind(R.id.act_edit_receipt_user)
+	SelectUserView selectUserView;
 
 	private Receipt receipt;
 	private DateTime date;
@@ -95,6 +98,7 @@ public class EditReceiptActivity extends BaseActivity {
 		onAccountSelected();
 		date = receipt.getDate();
 		onBalanceDateChanged();
+		selectUserView.setSelectedUser(receipt.getUserUuid());
 	}
 
 	@Override
@@ -210,6 +214,7 @@ public class EditReceiptActivity extends BaseActivity {
 		receipt.setSource(source);
 		receipt.setAccount(account);
 		receipt.setShowInResume(checkShowInResume.isChecked());
+		receipt.setUserUuid(selectUserView.getSelectedUser());
 		receipt.save();
 
 		int repetition = installment;

@@ -13,6 +13,7 @@ import org.joda.time.DateTime;
 import java.text.NumberFormat;
 
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.user.SelectUserView;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch;
 import butterknife.Bind;
@@ -34,6 +35,8 @@ public class EditBillActivity extends BaseActivity {
 	EditText editInitDate;
 	@Bind(R.id.act_edit_bill_end_date)
 	EditText editEndDate;
+	@Bind(R.id.act_edit_bill_user)
+	SelectUserView selectUserView;
 
 	private Bill bill;
 	private DateTime initDate;
@@ -61,6 +64,7 @@ public class EditBillActivity extends BaseActivity {
 			onInitDateChanged();
 			endDate = bill.getEndDate();
 			onEndDateChanged();
+			selectUserView.setSelectedUser(bill.getUserUuid());
 		} else {
 			onInitDateChanged();
 			onEndDateChanged();
@@ -137,6 +141,7 @@ public class EditBillActivity extends BaseActivity {
 		bill.setDueDate(Integer.parseInt(editDueDate.getText().toString()));
 		bill.setInitDate(initDate);
 		bill.setEndDate(endDate);
+		bill.setUserUuid(selectUserView.getSelectedUser());
 		bill.save();
 
 		Intent i = new Intent();

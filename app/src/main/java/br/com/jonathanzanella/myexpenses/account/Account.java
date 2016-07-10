@@ -58,6 +58,9 @@ public class Account extends BaseModel implements Chargeable, UnsyncModel {
 	@Column @Getter @Setter @Expose
 	boolean accountToPayBills;
 
+	@Column @NotNull @Getter @Setter @Expose
+	String userUuid;
+
 	@Column @Unique
 	@Getter @Setter @Expose @SerializedName("_id")
 	String serverId;

@@ -42,6 +42,9 @@ public class Source extends BaseModel implements UnsyncModel {
 	@Getter @Setter @Expose
 	String uuid;
 
+	@Column @NotNull @Getter @Setter @Expose
+	String userUuid;
+
 	@Column @Unique
 	@Getter @Setter @Expose @SerializedName("_id")
 	String serverId;

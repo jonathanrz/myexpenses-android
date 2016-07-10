@@ -64,4 +64,8 @@
     <string name="updated_at">Atualizado em</string>
     <string name="data">Dados</string>
     <string name="to_sync">Sincronizar</string>
+	<string name="userJonathan">Jonathan</string>
+	<string name="userThainara">Thainara</string>
+	<string name="select_user">Selecione o usuário</string>
+	<string name="select_card_type">Selecione o tipo do cartão</string>
 </resources>

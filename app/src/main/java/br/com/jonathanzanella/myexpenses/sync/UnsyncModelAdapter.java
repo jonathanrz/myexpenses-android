@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 
@@ -112,6 +113,9 @@ public class UnsyncModelAdapter extends RecyclerView.Adapter<UnsyncModelAdapter.
                         @Override
                         public void onError(Throwable e) {
 	                        e.printStackTrace();
+	                        Toast.makeText(syncBtn.getContext(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+	                        UnsyncModelAdapter adapter = adapterWeakReference.get();
+	                        adapter.notifyItemChanged(getAdapterPosition());
                         }
 
                         @Override

@@ -16,6 +16,7 @@ import java.text.NumberFormat;
 
 import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.user.SelectUserView;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import br.com.jonathanzanella.myexpenses.chargeable.ListChargeableActivity;
 import br.com.jonathanzanella.myexpenses.bill.ListBillActivity;
@@ -59,6 +60,8 @@ public class EditExpenseActivity extends BaseActivity {
 	EditText editRepetition;
 	@Bind(R.id.act_edit_expense_installment)
 	EditText editInstallment;
+	@Bind(R.id.act_edit_expense_user)
+	SelectUserView selectUserView;
 
 	private Expense expense;
 	private DateTime date;
@@ -123,6 +126,7 @@ public class EditExpenseActivity extends BaseActivity {
 		if(date == null)
 			date = DateTime.now();
 		onBalanceDateChanged();
+		selectUserView.setSelectedUser(expense.getUserUuid());
 	}
 
 	@Override
@@ -261,6 +265,7 @@ public class EditExpenseActivity extends BaseActivity {
 		expense.setChargeNextMonth(checkPayNextMonth.isChecked());
 		expense.showInOverview(showInOverview.isChecked());
 		expense.showInResume(showInResume.isChecked());
+		expense.setUserUuid(selectUserView.getSelectedUser());
 
 		if(expense.isCharged() && date.isAfterNow())
 			expense.uncharge();

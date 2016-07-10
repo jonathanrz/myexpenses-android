@@ -88,8 +88,8 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 	@Column @Getter @Setter @Expose
 	boolean ignoreInResume;
 
-	@Getter
-	private Card creditCard;
+	@Column @NotNull @Getter @Setter @Expose
+	String userUuid;
 
 	@Column @Unique
 	@Getter @Setter @Expose @SerializedName("_id")
@@ -103,6 +103,9 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 
 	@Column
 	boolean sync;
+
+	@Getter
+	private Card creditCard;
 
 	@Override
 	public int getAmount() {

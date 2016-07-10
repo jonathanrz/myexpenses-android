@@ -73,6 +73,9 @@ public class Receipt extends BaseModel implements Transaction, UnsyncModel {
 	@Column @Getter @Setter @Expose
 	boolean ignoreInResume;
 
+	@Column @NotNull @Getter @Setter @Expose
+	String userUuid;
+
 	@Column @Unique
 	@Getter @Setter @Expose @SerializedName("_id")
 	String serverId;

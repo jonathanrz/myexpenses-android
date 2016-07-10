@@ -58,6 +58,9 @@ public class Card extends BaseModel implements Chargeable, UnsyncModel {
 	@Getter @Setter @Expose
 	String accountUuid;
 
+	@Column @NotNull @Getter @Setter @Expose
+	String userUuid;
+
 	@Column @Unique
 	@Getter @Setter @Expose @SerializedName("_id")
 	String serverId;

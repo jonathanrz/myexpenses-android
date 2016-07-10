@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
+
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@string/select_user"/>
+
+	<View
+		android:layout_width="match_parent"
+		android:layout_height="1dp"
+	    android:background="@color/color_divider"
+		android:layout_marginBottom="@dimen/min_spacing"/>
+
+	<RadioGroup
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal">
+
+		<RadioButton
+			android:id="@+id/view_select_user_jonathan"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:hint="@string/userJonathan"
+			android:layout_marginEnd="@dimen/default_spacing"/>
+
+		<RadioButton
+			android:id="@+id/view_select_user_thainara"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:hint="@string/userThainara"/>
+	</RadioGroup>
+</LinearLayout>

@@ -54,6 +54,12 @@
 			android:layout_height="wrap_content"
 			android:hint="@string/account_to_pay_bills"
 			android:layout_marginBottom="@dimen/default_spacing"/>
+
+		<br.com.jonathanzanella.myexpenses.user.SelectUserView
+			android:id="@+id/act_edit_account_user"
+			android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+			android:layout_marginBottom="@dimen/default_spacing"/>
 	</LinearLayout>
 
 </LinearLayout>

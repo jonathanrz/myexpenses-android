@@ -63,6 +63,9 @@ public class Bill extends BaseModel implements Transaction, UnsyncModel {
 	@Column(typeConverter = DateTimeConverter.class) @Getter @Expose
 	DateTime endDate;
 
+	@Column @NotNull @Getter @Setter @Expose
+	String userUuid;
+
 	@Column @Unique
 	@Getter @Setter @Expose @SerializedName("_id")
 	String serverId;

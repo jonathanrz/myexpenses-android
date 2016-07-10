@@ -2,7 +2,6 @@ package br.com.jonathanzanella.myexpenses.account;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.CheckBox;
@@ -12,6 +11,7 @@ import java.text.NumberFormat;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch;
+import br.com.jonathanzanella.myexpenses.user.SelectUserView;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
 
@@ -29,6 +29,8 @@ public class EditAccountActivity extends BaseActivity {
 	CheckBox checkToPayCreditCard;
 	@Bind(R.id.act_edit_account_to_pay_bills)
 	CheckBox checkToPayBill;
+	@Bind(R.id.act_edit_account_user)
+	SelectUserView selectUserView;
 
 	private Account account;
 
@@ -49,6 +51,7 @@ public class EditAccountActivity extends BaseActivity {
 			editBalance.setText(NumberFormat.getCurrencyInstance().format(account.getBalance() / 100.0));
 			checkToPayCreditCard.setChecked(account.isAccountToPayCreditCard());
 			checkToPayBill.setChecked(account.isAccountToPayBills());
+			selectUserView.setSelectedUser(account.getUserUuid());
 		}
 	}
 
@@ -91,6 +94,7 @@ public class EditAccountActivity extends BaseActivity {
 		account.setBalance(Integer.parseInt(editBalance.getText().toString().replaceAll("[^\\d]", "")));
 		account.setAccountToPayCreditCard(checkToPayCreditCard.isChecked());
 		account.setAccountToPayBills(checkToPayBill.isChecked());
+		account.setUserUuid(selectUserView.getSelectedUser());
 		account.save();
 
 		Intent i = new Intent();
