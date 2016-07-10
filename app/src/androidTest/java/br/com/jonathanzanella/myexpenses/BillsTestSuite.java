@@ -36,10 +36,12 @@ public class BillsTestSuite {
 	@Before
 	public void setUp() throws Exception {
 		account.setName("Account");
+		account.setUserUuid(Environment.CURRENT_USER_UUID);
 		account.save();
 		modelsToDestroy.add(account);
 
 		card.setName("CreditCard");
+		card.setUserUuid(Environment.CURRENT_USER_UUID);
 		card.setAccount(account);
 		card.setType(CardType.CREDIT);
 		card.save();
@@ -56,6 +58,7 @@ public class BillsTestSuite {
 	public void billIsPaidWhenPaidWithCreditCard() {
 		Bill bill = new Bill();
 		bill.setName("bill");
+		bill.setUserUuid(Environment.CURRENT_USER_UUID);
 		bill.setAmount(10000);
 		bill.setInitDate(firstDayOfJune);
 		bill.setEndDate(firstDayOfJune);
@@ -64,6 +67,7 @@ public class BillsTestSuite {
 
 		Expense expense = new Expense();
 		expense.setName("expense");
+		expense.setUserUuid(Environment.CURRENT_USER_UUID);
 		expense.setDate(firstDayOfJune);
 		expense.setValue(1000);
 		expense.setBill(bill);

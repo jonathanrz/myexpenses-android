@@ -32,6 +32,7 @@ public class ExpensesInPeriodTestSuite {
 	@Before
 	public void setUp() throws Exception {
 		account.setName("Account");
+		account.setUserUuid(Environment.CURRENT_USER_UUID);
 		account.save();
 		modelsToDestroy.add(account);
 	}
@@ -44,6 +45,7 @@ public class ExpensesInPeriodTestSuite {
 
 	private Expense newExpense(String name, DateTime date, int value) {
 		Expense expense = new Expense();
+		expense.setUserUuid(Environment.CURRENT_USER_UUID);
 		expense.setName(name);
 		expense.setChargeable(account);
 		expense.setDate(date);
