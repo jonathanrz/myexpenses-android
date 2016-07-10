@@ -25,9 +25,9 @@ android {
             versionNameSuffix '-DEBUG'
             buildConfigField 'String', 'MYEXPENSES_AUTH_TOKEN', MYEXPENSES_AUTH_TOKEN
         }
-        beta2 {
-            applicationIdSuffix '.beta2'
-            versionNameSuffix '-BETA2'
+        jonathan {
+            applicationIdSuffix '.jonathan'
+            versionNameSuffix '-JONATHAN'
             buildConfigField 'String', 'MYEXPENSES_AUTH_TOKEN', MYEXPENSES_AUTH_TOKEN
             debuggable true
 
