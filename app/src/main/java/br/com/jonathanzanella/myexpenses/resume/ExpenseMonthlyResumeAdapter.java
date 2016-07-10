@@ -1,7 +1,7 @@
 package br.com.jonathanzanella.myexpenses.resume;
 
 import android.content.Intent;
-import android.support.annotation.ColorRes;
+import android.graphics.Typeface;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -69,16 +69,11 @@ class ExpenseMonthlyResumeAdapter extends RecyclerView.Adapter<ExpenseMonthlyRes
 			if(date != null)
 				date.setText(sdf.format(expense.getDate().toDate()));
 			income.setText(NumberFormat.getCurrencyInstance().format(expense.getValue() / 100.0));
-			if(expense.isCharged())
-				income.setTextColor(getColor(R.color.value_paid));
-			else
-				income.setTextColor(getColor(R.color.value_unpaid));
+			income.setTypeface(null, Typeface.NORMAL);
+			if(!expense.isCharged())
+				income.setTypeface(null, Typeface.BOLD);
 			if(source != null)
 				source.setText(expense.getChargeable().getName());
-		}
-
-		private int getColor(@ColorRes int color) {
-			return itemView.getContext().getResources().getColor(color);
 		}
 
 		public void setTotal(int totalValue) {

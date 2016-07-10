@@ -7,8 +7,8 @@
 	<View
 		android:layout_width="match_parent"
 		android:layout_height="1dp"
-	    android:background="@color/color_divider"
-	    android:layout_marginTop="@dimen/min_spacing"/>
+		android:background="@color/color_divider"
+		android:layout_marginTop="@dimen/min_spacing"/>
 
 	<LinearLayout
 		android:orientation="horizontal"
@@ -18,16 +18,16 @@
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
-			android:text="@string/total_to_pay"
+			android:text="@string/total_to_receive"
 			android:textStyle="bold"
 			android:layout_marginEnd="@dimen/min_spacing"/>
 
 		<TextView
-			android:id="@+id/row_monthly_resume_expense_income"
+			android:id="@+id/row_monthly_resume_receipt_income"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:textColor="@color/value_unpaid"
-			android:textStyle="bold"/>
+			android:textStyle="bold"
+			android:textColor="@color/value_unreceived"/>
 
 	</LinearLayout>
 </LinearLayout>

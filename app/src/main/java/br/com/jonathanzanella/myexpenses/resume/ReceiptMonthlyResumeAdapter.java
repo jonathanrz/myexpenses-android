@@ -1,6 +1,6 @@
 package br.com.jonathanzanella.myexpenses.resume;
 
-import android.support.annotation.ColorRes;
+import android.graphics.Typeface;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -65,16 +65,11 @@ class ReceiptMonthlyResumeAdapter extends RecyclerView.Adapter<ReceiptMonthlyRes
 			if(date != null)
 				date.setText(sdf.format(receipt.getDate().toDate()));
 			income.setText(receipt.getIncomeFormatted());
-			if(receipt.isCredited())
-				income.setTextColor(getColor(R.color.value_received));
-			else
-				income.setTextColor(getColor(R.color.value_unreceived));
+			income.setTypeface(null, Typeface.NORMAL);
+			if(!receipt.isCredited())
+				income.setTypeface(null, Typeface.BOLD);
 			if(source != null)
 				source.setText(receipt.getSource().getName());
-		}
-
-		private int getColor(@ColorRes int color) {
-			return itemView.getContext().getResources().getColor(color);
 		}
 
 		public void setTotal(int totalValue) {
@@ -116,7 +111,7 @@ class ReceiptMonthlyResumeAdapter extends RecyclerView.Adapter<ReceiptMonthlyRes
 		if(viewType == VIEW_TYPE.TYPE_TOTAL.ordinal())
 			v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_monthly_resume_receipt_total, parent, false);
 		else if(viewType == VIEW_TYPE.TYPE_TOTAL_TO_PAY.ordinal())
-			v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_monthly_resume_receipt_total_to_pay, parent, false);
+			v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_monthly_resume_receipt_total_to_receive, parent, false);
 		else
 			v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_monthly_resume_receipt, parent, false);
 

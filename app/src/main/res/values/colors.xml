@@ -12,6 +12,8 @@
 
 	<color name="value_paid">#1976D2</color>
 	<color name="value_unpaid">#c62828</color>
+	<color name="expense">#c62828</color>
 	<color name="value_received">#1976D2</color>
 	<color name="value_unreceived">#00c853</color>
+	<color name="receipt">#00c853</color>
 </resources>
