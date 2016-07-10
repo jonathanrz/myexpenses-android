@@ -89,7 +89,7 @@ public class EditReceiptActivity extends BaseActivity {
 		editName.setText(receipt.getName());
 		editIncome.setText(NumberFormat.getCurrencyInstance().format(receipt.getIncome() / 100.0));
 		if(receipt.isCredited())
-			editIncome.setTextColor(getColor(R.color.value_unpaid));
+			editIncome.setTextColor(getResources().getColor(R.color.value_unpaid));
 		editSource.setText(receipt.getSource().getName());
 		source = receipt.getSource();
 		checkShowInResume.setChecked(receipt.isShowInResume());

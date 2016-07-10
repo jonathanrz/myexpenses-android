@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId "br.com.jonathanzanella.myexpenses"
-        minSdkVersion 23
+        minSdkVersion 19
         targetSdkVersion 23
         versionCode 1
         versionName "0.2.0"
