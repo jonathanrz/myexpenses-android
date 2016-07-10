@@ -91,7 +91,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
 	}
 
 	public void loadData() {
-		cards = Card.all();
+		cards = Card.user();
 	}
 
 	public void addCreditCard(@NonNull Card card) {

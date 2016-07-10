@@ -11,7 +11,7 @@
 
 	<TextView
 		android:id="@+id/row_monthly_resume_expense_source"
-		android:layout_width="50dp"
+		android:layout_width="@dimen/resume_source_width"
 		android:layout_height="wrap_content"
 		android:layout_marginEnd="@dimen/min_spacing"/>
 

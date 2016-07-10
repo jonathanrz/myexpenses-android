@@ -97,7 +97,7 @@ class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder> {
 	}
 
 	public void loadData() {
-		bills = Bill.all();
+		bills = Bill.user();
 		billsFiltered = bills;
 	}
 

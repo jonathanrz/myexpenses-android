@@ -35,6 +35,16 @@ android {
             // build type, you need to specify it:
             signingConfig signingConfigs.debug
         }
+        thainara {
+            applicationIdSuffix '.thainara'
+            versionNameSuffix '-THAINARA'
+            buildConfigField 'String', 'MYEXPENSES_AUTH_TOKEN', MYEXPENSES_AUTH_TOKEN
+            debuggable true
+
+            // NB: If you want to use the default debug key for a (non-debug)
+            // build type, you need to specify it:
+            signingConfig signingConfigs.debug
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'

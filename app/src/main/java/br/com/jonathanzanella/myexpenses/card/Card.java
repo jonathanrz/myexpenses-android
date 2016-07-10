@@ -19,6 +19,7 @@ import org.joda.time.DateTime;
 import java.util.List;
 import java.util.UUID;
 
+import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
@@ -77,6 +78,11 @@ public class Card extends BaseModel implements Chargeable, UnsyncModel {
 	public static List<Card> all() {
 		return initQuery().queryList();
 	}
+
+	public static List<Card> user() {
+		return initQuery().where(Card_Table.userUuid.is(Environment.CURRENT_USER_UUID)).queryList();
+	}
+
 	public static List<Card> creditCards() {
 		return initQuery()
 				.where(Card_Table.type.eq(CardType.CREDIT))

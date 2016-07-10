@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
+import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.database.MyDatabase;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
@@ -85,6 +86,10 @@ public class Bill extends BaseModel implements Transaction, UnsyncModel {
 		return initQuery().queryList();
 	}
 
+	public static List<Bill> user() {
+		return initQuery().where(Bill_Table.userUuid.is(Environment.CURRENT_USER_UUID)).queryList();
+	}
+
 	private static From<Bill> initQuery() {
 		return SQLite.select().from(Bill.class);
 	}
@@ -109,6 +114,7 @@ public class Bill extends BaseModel implements Transaction, UnsyncModel {
 		List<Bill> bills = initQuery()
 				.where(Bill_Table.initDate.lessThanOrEq(month))
 				.and(Bill_Table.endDate.greaterThanOrEq(month))
+				.and(Bill_Table.userUuid.is(Environment.CURRENT_USER_UUID))
 				.queryList();
 
 		for (int i = 0; i < bills.size(); i++) {

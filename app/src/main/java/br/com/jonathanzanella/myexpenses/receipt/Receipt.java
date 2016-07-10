@@ -21,9 +21,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
+import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.database.MyDatabase;
+import br.com.jonathanzanella.myexpenses.helpers.DateHelper;
 import br.com.jonathanzanella.myexpenses.helpers.converter.DateTimeConverter;
 import br.com.jonathanzanella.myexpenses.source.Source;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
@@ -110,7 +112,10 @@ public class Receipt extends BaseModel implements Transaction, UnsyncModel {
 
 	public static List<Receipt> monthly(DateTime month) {
 		return initQuery()
-				.where(Receipt_Table.date.between(month).and(month.plusMonths(1)))
+				.where(Receipt_Table.date
+						.between(DateHelper.firstDayOfMonth(month))
+						.and(DateHelper.lastDayOfMonth(month)))
+				.and(Receipt_Table.userUuid.is(Environment.CURRENT_USER_UUID))
 				.queryList();
 	}
 
@@ -125,6 +130,7 @@ public class Receipt extends BaseModel implements Transaction, UnsyncModel {
 		return initQuery()
 				.where(Receipt_Table.date.between(month).and(month.plusMonths(1)))
 				.and(Receipt_Table.ignoreInResume.is(false))
+				.and(Receipt_Table.userUuid.is(Environment.CURRENT_USER_UUID))
 				.orderBy(Receipt_Table.date, true)
 				.queryList();
 	}

@@ -22,6 +22,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
+import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
@@ -134,6 +135,7 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 		List<Expense> expenses = initQuery()
 				.where(Expense_Table.date.between(initOfMonth).and(endOfMonth))
 				.and(Expense_Table.chargeNextMonth.eq(true))
+				.and(Expense_Table.userUuid.is(Environment.CURRENT_USER_UUID))
 				.orderBy(Expense_Table.date, true)
 				.queryList();
 
@@ -143,6 +145,7 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 		expenses.addAll(initQuery()
 				.where(Expense_Table.date.between(initOfMonth).and(endOfMonth))
 				.and(Expense_Table.chargeNextMonth.eq(false))
+				.and(Expense_Table.userUuid.is(Environment.CURRENT_USER_UUID))
 				.orderBy(Expense_Table.date, true)
 				.queryList());
 
@@ -162,6 +165,7 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 					.and(Expense_Table.chargeableType.eq(ChargeableType.CREDIT_CARD))
 					.and(Expense_Table.chargeNextMonth.eq(true))
 					.and(Expense_Table.ignoreInOverview.eq(false))
+					.and(Expense_Table.userUuid.is(Environment.CURRENT_USER_UUID))
 					.orderBy(Expense_Table.date, true)
 					.queryList());
 		}
@@ -173,6 +177,7 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 				.where(Expense_Table.date.between(init).and(end))
 				.and(Expense_Table.chargeNextMonth.eq(false))
 				.and(Expense_Table.ignoreInOverview.eq(false))
+				.and(Expense_Table.userUuid.is(Environment.CURRENT_USER_UUID))
 				.orderBy(Expense_Table.date, true)
 				.queryList());
 
@@ -189,6 +194,7 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 				.and(Expense_Table.chargeableType.notEq(ChargeableType.CREDIT_CARD))
 				.and(Expense_Table.chargeNextMonth.eq(true))
 				.and(Expense_Table.ignoreInResume.eq(false))
+				.and(Expense_Table.userUuid.is(Environment.CURRENT_USER_UUID))
 				.orderBy(Expense_Table.date, true)
 				.queryList();
 
@@ -200,6 +206,7 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 				.and(Expense_Table.chargeableType.notEq(ChargeableType.CREDIT_CARD))
 				.and(Expense_Table.chargeNextMonth.eq(false))
 				.and(Expense_Table.ignoreInResume.eq(false))
+				.and(Expense_Table.userUuid.is(Environment.CURRENT_USER_UUID))
 				.orderBy(Expense_Table.date, true)
 				.queryList());
 

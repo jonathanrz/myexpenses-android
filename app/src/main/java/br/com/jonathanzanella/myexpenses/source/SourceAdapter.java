@@ -78,7 +78,7 @@ class SourceAdapter extends RecyclerView.Adapter<SourceAdapter.ViewHolder> {
 	}
 
 	public void loadData() {
-		sources = Source.all();
+		sources = Source.user();
 	}
 
 	public void addSource(@NonNull Source source) {

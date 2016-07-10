@@ -16,6 +16,7 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 import java.util.List;
 import java.util.UUID;
 
+import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.database.MyDatabase;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
@@ -64,6 +65,10 @@ public class Source extends BaseModel implements UnsyncModel {
 
 	public static List<Source> all() {
 		return initQuery().queryList();
+	}
+
+	public static List<Source> user() {
+		return initQuery().where(Source_Table.userUuid.is(Environment.CURRENT_USER_UUID)).queryList();
 	}
 
     public static List<Source> unsync() {
