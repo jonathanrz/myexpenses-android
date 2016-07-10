@@ -72,7 +72,7 @@ public class ExpensesInPeriodTestSuite {
 		period.end = lastDayOfJune;
 
 		List<Expense> expenses = Expense.expenses(period);
-		assertThat(expenses.size(), is(2));
+		assertThat(expenses.size(), is(1));
 		assertThat(expenses.get(0).getUuid(), is(firstOfMonth.getUuid()));
 		assertThat(expenses.get(1).getUuid(), is(endOfMonth.getUuid()));
 	}
