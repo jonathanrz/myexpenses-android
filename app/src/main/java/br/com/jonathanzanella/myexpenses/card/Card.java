@@ -182,6 +182,7 @@ public class Card extends BaseModel implements Chargeable, UnsyncModel {
 				.and(Expense_Table.date.between(initOfMonth).and(endOfMonth))
 				.and(Expense_Table.chargeNextMonth.eq(true))
 				.and(Expense_Table.charged.eq(false))
+				.and(Expense_Table.userUuid.is(Environment.CURRENT_USER_UUID))
 				.orderBy(Expense_Table.date, true)
 				.queryList();
 
@@ -194,6 +195,7 @@ public class Card extends BaseModel implements Chargeable, UnsyncModel {
 				.and(Expense_Table.date.between(initOfMonth).and(endOfMonth))
 				.and(Expense_Table.chargeNextMonth.eq(false))
 				.and(Expense_Table.charged.eq(false))
+				.and(Expense_Table.userUuid.is(Environment.CURRENT_USER_UUID))
 				.orderBy(Expense_Table.date, true)
 				.queryList());
 
