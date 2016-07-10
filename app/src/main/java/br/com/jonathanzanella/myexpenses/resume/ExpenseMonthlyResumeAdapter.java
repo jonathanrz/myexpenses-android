@@ -87,7 +87,10 @@ class ExpenseMonthlyResumeAdapter extends RecyclerView.Adapter<ExpenseMonthlyRes
 
 		@OnClick(R.id.row_monthly_resume_expense_income)
 		public void onIncome() {
-			final Expense expense = adapterWeakReference.get().expenses.get(getAdapterPosition());
+			if(getItemViewType() != VIEW_TYPE.TYPE_NORMAL.ordinal())
+				return;
+
+			final Expense expense = adapterWeakReference.get().getExpense(getAdapterPosition());
 			TransactionsHelper.showConfirmTransactionDialog(expense, income.getContext(),
 					new TransactionsHelper.DialogCallback() {
 				@Override
@@ -101,6 +104,9 @@ class ExpenseMonthlyResumeAdapter extends RecyclerView.Adapter<ExpenseMonthlyRes
 
 		@Override
 		public void onClick(View v) {
+			if(getItemViewType() != VIEW_TYPE.TYPE_NORMAL.ordinal())
+				return;
+
 			Expense expense = adapterWeakReference.get().getExpense(getAdapterPosition());
 			if(expense != null) {
 				if(expense.getCreditCard() != null) {

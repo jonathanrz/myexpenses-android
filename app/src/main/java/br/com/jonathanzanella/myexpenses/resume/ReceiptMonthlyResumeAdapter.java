@@ -83,6 +83,9 @@ class ReceiptMonthlyResumeAdapter extends RecyclerView.Adapter<ReceiptMonthlyRes
 
 		@OnClick(R.id.row_monthly_resume_receipt_income)
 		public void onIncome() {
+			if(getItemViewType() != VIEW_TYPE.TYPE_NORMAL.ordinal())
+				return;
+
 			final Receipt receipt = adapterWeakReference.get().receipts.get(getAdapterPosition());
 			TransactionsHelper.showConfirmTransactionDialog(receipt, income.getContext(),
 					new TransactionsHelper.DialogCallback() {
