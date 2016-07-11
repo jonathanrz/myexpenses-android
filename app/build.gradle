@@ -1,10 +1,12 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'testfairy'
 
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.3"
     def MYEXPENSES_AUTH_TOKEN = '"' + System.getenv("MYEXPENSES_AUTH_TOKEN") + '"' ?: '"Auth Token"';
+    def MYEXPENSES_TEST_FAIRY_TOKEN = System.getenv("MYEXPENSES_TEST_FAIRY_TOKEN") ?: '"TestFairy Token"';
 
     dexOptions {
         maxProcessCount 2
@@ -50,6 +52,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             buildConfigField 'String', 'MYEXPENSES_AUTH_TOKEN', MYEXPENSES_AUTH_TOKEN
         }
+    }
+    testfairyConfig {
+        apiKey MYEXPENSES_TEST_FAIRY_TOKEN
+        autoUpdate true
+        notify true
+        testersGroups "dev"
     }
 }
 

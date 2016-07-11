@@ -9,3 +9,5 @@ test:
     # run tests  against the emulator.
     - ./gradlew assembleDebug
     - ./gradlew connectedAndroidTest
+    - ./gradlew testfairyThainara
+    - ./gradlew testfairyJonathan
