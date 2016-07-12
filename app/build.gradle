@@ -28,6 +28,26 @@ android {
             buildConfigField 'String', 'MYEXPENSES_AUTH_TOKEN', MYEXPENSES_AUTH_TOKEN
         }
         jonathan {
+            def versionPropsFile = file('jonathan.version.properties')
+
+            if (versionPropsFile.canRead()) {
+                def Properties versionProps = new Properties()
+
+                versionProps.load(new FileInputStream(versionPropsFile))
+
+                def code = versionProps['VERSION_CODE'].toInteger() + 1
+
+                versionProps['VERSION_CODE']=code.toString()
+                versionProps.store(versionPropsFile.newWriter(), null)
+
+                defaultConfig {
+                    versionCode code
+                }
+            }
+            else {
+                throw new GradleException("Could not read jonathan.version.properties!")
+            }
+
             applicationIdSuffix '.jonathan'
             versionNameSuffix '-JONATHAN'
             buildConfigField 'String', 'MYEXPENSES_AUTH_TOKEN', MYEXPENSES_AUTH_TOKEN
@@ -38,6 +58,26 @@ android {
             signingConfig signingConfigs.debug
         }
         thainara {
+            def versionPropsFile = file('thainara.version.properties')
+
+            if (versionPropsFile.canRead()) {
+                def Properties versionProps = new Properties()
+
+                versionProps.load(new FileInputStream(versionPropsFile))
+
+                def code = versionProps['VERSION_CODE'].toInteger() + 1
+
+                versionProps['VERSION_CODE']=code.toString()
+                versionProps.store(versionPropsFile.newWriter(), null)
+
+                defaultConfig {
+                    versionCode code
+                }
+            }
+            else {
+                throw new GradleException("Could not read thainara.version.properties!")
+            }
+
             applicationIdSuffix '.thainara'
             versionNameSuffix '-THAINARA'
             buildConfigField 'String', 'MYEXPENSES_AUTH_TOKEN', MYEXPENSES_AUTH_TOKEN
@@ -55,7 +95,7 @@ android {
     }
     testfairyConfig {
         apiKey MYEXPENSES_TEST_FAIRY_TOKEN
-        autoUpdate true
+        autoUpdate false
         notify true
         testersGroups "dev"
     }
