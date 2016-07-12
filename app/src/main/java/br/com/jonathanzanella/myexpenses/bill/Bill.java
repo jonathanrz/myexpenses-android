@@ -32,6 +32,8 @@ import br.com.jonathanzanella.myexpenses.transaction.Transaction;
 import lombok.Getter;
 import lombok.Setter;
 
+import static br.com.jonathanzanella.myexpenses.log.Log.warning;
+
 /**
  * Created by Jonathan Zanella on 07/02/16.
  */
@@ -175,6 +177,7 @@ public class Bill extends BaseModel implements Transaction, UnsyncModel {
 	@Override
 	public String getData() {
 		return "name=" + name +
+				"\nuuid=" + uuid +
 				"\namount=" + amount +
 				"\ndueDate=" + dueDate +
 				"\ninitDate=" + sdf.format(initDate.toDate()) +
@@ -191,6 +194,12 @@ public class Bill extends BaseModel implements Transaction, UnsyncModel {
 
 	@Override
 	public void syncAndSave() {
+		Bill bill = Bill.find(uuid);
+		if(bill != null && bill.id != id) {
+			if(bill.getUpdatedAt() != getUpdatedAt())
+				warning("Bill overwritten", getData());
+			id = bill.id;
+		}
 		save();
 		sync = true;
 		super.save();

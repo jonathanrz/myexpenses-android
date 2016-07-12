@@ -24,6 +24,8 @@ import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi;
 import lombok.Getter;
 import lombok.Setter;
 
+import static br.com.jonathanzanella.myexpenses.log.Log.warning;
+
 /**
  * Created by jzanella on 1/31/16.
  */
@@ -94,7 +96,7 @@ public class Source extends BaseModel implements UnsyncModel {
 	@Override
 	public String getData() {
 		return "name=" + getName() +
-				", uuid=" + getUuid();
+				"\nuuid=" + getUuid();
 	}
 
 	@Override
@@ -118,6 +120,12 @@ public class Source extends BaseModel implements UnsyncModel {
 
 	@Override
 	public void syncAndSave() {
+		Source source = Source.find(uuid);
+		if(source != null && source.id != id) {
+			if(source.getUpdatedAt() != getUpdatedAt())
+				warning("Source overwritten", getData());
+			id = source.id;
+		}
 		save();
 		sync = true;
 		super.save();

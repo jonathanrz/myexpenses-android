@@ -29,6 +29,8 @@ import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi;
 import lombok.Getter;
 import lombok.Setter;
 
+import static br.com.jonathanzanella.myexpenses.log.Log.warning;
+
 /**
  * Created by Jonathan Zanella on 26/01/16.
  */
@@ -136,6 +138,12 @@ public class Account extends BaseModel implements Chargeable, UnsyncModel {
 
 	@Override
 	public void syncAndSave() {
+		Account account = Account.find(uuid);
+		if(account != null && account.id != id) {
+			if(account.getUpdatedAt() != getUpdatedAt())
+				warning("Account overwritten", getData());
+			id = account.id;
+		}
 		save();
 		sync = true;
 		super.save();
@@ -144,6 +152,7 @@ public class Account extends BaseModel implements Chargeable, UnsyncModel {
 	@Override
 	public String getData() {
 		return "name=" + name +
+				"\nuuid=" + uuid +
 				"\nbalance=" + balance +
 				"\naccountToPayCreditCard=" + accountToPayCreditCard +
 				"\nuuid=" + uuid;

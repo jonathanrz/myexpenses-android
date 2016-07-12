@@ -33,6 +33,8 @@ import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi;
 import lombok.Getter;
 import lombok.Setter;
 
+import static br.com.jonathanzanella.myexpenses.log.Log.warning;
+
 /**
  * Created by jzanella on 1/31/16.
  */
@@ -212,6 +214,12 @@ public class Card extends BaseModel implements Chargeable, UnsyncModel {
 
 	@Override
 	public void syncAndSave() {
+		Card card = Card.find(uuid);
+		if(card != null && card.id != id) {
+			if(card.getUpdatedAt() != getUpdatedAt())
+				warning("Card overwritten", getData());
+			id = card.id;
+		}
 		save();
 		sync = true;
 		super.save();
@@ -225,8 +233,9 @@ public class Card extends BaseModel implements Chargeable, UnsyncModel {
 	@Override
 	public String getData() {
 		return "name=" + name +
-				", type=" + type + "" +
-				", account=" + accountUuid;
+				"\nuuid=" + uuid +
+				"\ntype=" + type +
+				"\naccount=" + accountUuid;
 	}
 
 	@Override

@@ -35,6 +35,8 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 
+import static br.com.jonathanzanella.myexpenses.log.Log.warning;
+
 /**
  * Created by jzanella on 2/1/16.
  */
@@ -195,10 +197,10 @@ public class Receipt extends BaseModel implements Transaction, UnsyncModel {
 
 	@Override
 	public String getData() {
-		return "uuid=" + uuid +
-				", name=" + name +
-				", date=" + sdf.format(date.toDate()) +
-				", income=" + income;
+		return "name=" + name +
+				"\nuuid=" + uuid +
+				"\ndate=" + sdf.format(date.toDate()) +
+				"\nincome=" + income;
 	}
 
 	public void credit() {
@@ -219,6 +221,12 @@ public class Receipt extends BaseModel implements Transaction, UnsyncModel {
 
 	@Override
 	public void syncAndSave() {
+		Receipt receipt = Receipt.find(uuid);
+		if(receipt != null && receipt.id != id) {
+			if(receipt.getUpdatedAt() != getUpdatedAt())
+				warning("Receipt overwritten", getData());
+			id = receipt.id;
+		}
 		save();
 		sync = true;
 		super.save();

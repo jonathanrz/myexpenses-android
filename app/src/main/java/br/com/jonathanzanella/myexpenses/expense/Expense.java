@@ -40,6 +40,8 @@ import br.com.jonathanzanella.myexpenses.transaction.Transaction;
 import lombok.Getter;
 import lombok.Setter;
 
+import static br.com.jonathanzanella.myexpenses.log.Log.warning;
+
 /**
  * Created by jzanella on 2/2/16.
  */
@@ -387,8 +389,8 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 
 	@Override
 	public String getData() {
-		return "uuid=" + uuid + "" +
-				"\nname=" + name +
+		return "name=" + name + "" +
+				"\nuuid=" + uuid +
 				"\ndate=" + sdf.format(date.toDate()) +
 				"\nvalue=" + value;
 	}
@@ -418,6 +420,12 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 
 	@Override
 	public void syncAndSave() {
+		Expense expense = Expense.find(uuid);
+		if(expense != null && expense.id != id) {
+			if(expense.getUpdatedAt() != getUpdatedAt())
+				warning("Expense overwritten", getData());
+			id = expense.id;
+		}
 		save();
 		sync = true;
 		super.save();
