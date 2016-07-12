@@ -16,4 +16,9 @@
 	<color name="value_received">#1976D2</color>
 	<color name="value_unreceived">#00c853</color>
 	<color name="receipt">#00c853</color>
+
+	<color name="log_error">#FFFF0000</color>
+	<color name="log_warning">#FFFFB700</color>
+	<color name="log_info">#FFAAAAAA</color>
+	<color name="log_debug">#FF0044ff</color>
 </resources>

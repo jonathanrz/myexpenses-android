@@ -1,7 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-</LinearLayout>
+	<View
+		android:id="@+id/row_log_indicator"
+		android:layout_width="15dp"
+		android:layout_height="15dp"
+		android:layout_marginStart="@dimen/min_spacing"
+		android:layout_marginEnd="@dimen/min_spacing"
+		android:background="@color/log_debug"
+		android:layout_centerVertical="true"
+		/>
+
+	<TextView
+		android:id="@+id/row_log_title"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:textColor="@color/color_primary"
+		android:layout_toEndOf="@id/row_log_indicator"
+		android:layout_marginStart="@dimen/min_spacing"
+		android:layout_marginTop="@dimen/min_spacing"
+		tools:text="Account Overridden"/>
+
+	<TextView
+		android:id="@+id/row_log_date"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:textColor="@color/color_primary"
+		android:layout_alignParentEnd="true"
+		android:layout_marginEnd="@dimen/min_spacing"
+		android:layout_marginTop="@dimen/min_spacing"
+		tools:text="10/06/16 22:25:23:0100"/>
+
+	<TextView
+		android:id="@+id/row_log_description"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:textColor="@color/color_primary_text"
+		android:layout_toEndOf="@id/row_log_indicator"
+		android:layout_below="@id/row_log_title"
+		android:layout_margin="@dimen/min_spacing"
+		tools:text="Uuid: 000\nName: teste"/>
+
+	<View
+		android:layout_width="match_parent"
+		android:layout_height="1dp"
+		android:background="@color/color_divider"
+	    android:layout_alignParentBottom="true"/>
+
+</RelativeLayout>

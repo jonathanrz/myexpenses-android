@@ -4,5 +4,3 @@
 # myexpenses-android
 
 Android app for controlling personal bills
-
-https://circleci.com/gh/jonathanrz/myexpenses-android.png?circle-token=:circle-token

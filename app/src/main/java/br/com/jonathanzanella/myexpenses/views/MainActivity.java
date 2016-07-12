@@ -20,6 +20,7 @@ import br.com.jonathanzanella.myexpenses.account.AccountView;
 import br.com.jonathanzanella.myexpenses.bill.BillView;
 import br.com.jonathanzanella.myexpenses.card.CardView;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseView;
+import br.com.jonathanzanella.myexpenses.log.LogsView;
 import br.com.jonathanzanella.myexpenses.overview.OverviewExpensesView;
 import br.com.jonathanzanella.myexpenses.receipt.ReceiptView;
 import br.com.jonathanzanella.myexpenses.resume.ResumeView;
@@ -168,6 +169,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 			case R.id.menu_sync:
 				addViewToContent(new SyncView(this));
 				setTitle(R.string.sync);
+				drawer.closeDrawers();
+				return true;
+			case R.id.menu_log:
+				addViewToContent(new LogsView(this));
+				setTitle(R.string.log);
 				drawer.closeDrawers();
 				return true;
 		}

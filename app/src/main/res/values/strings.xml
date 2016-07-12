@@ -68,4 +68,5 @@
 	<string name="userThainara">Thainara</string>
 	<string name="select_user">Selecione o usuário</string>
 	<string name="select_card_type">Selecione o tipo do cartão</string>
+	<string name="log">Log</string>
 </resources>
