@@ -6,38 +6,33 @@ android {
     compileSdkVersion 23
     buildToolsVersion "23.0.3"
     def MYEXPENSES_AUTH_TOKEN = '"' + System.getenv("MYEXPENSES_AUTH_TOKEN") + '"' ?: '"Auth Token"';
-    def MYEXPENSES_TEST_FAIRY_TOKEN = System.getenv("MYEXPENSES_TEST_FAIRY_TOKEN") ?: '"TestFairy Token"';
 
     dexOptions {
         maxProcessCount 2
         javaMaxHeapSize "2g"
     }
 
-    def versionPropsFile = file('version.properties')
-
-    if (versionPropsFile.canRead()) {
-        def Properties versionProps = new Properties()
-
-        versionProps.load(new FileInputStream(versionPropsFile))
-
-        def code = versionProps['VERSION_CODE'].toInteger() + 1
-
-        versionProps['VERSION_CODE']=code.toString()
-        versionProps.store(versionPropsFile.newWriter(), null)
-
-        defaultConfig {
-            versionCode code
-            versionName "0.2.0.${code}"
+    signingConfigs {
+        jonathan {
+            storeFile file("jonathan.keystore")
+            storePassword System.getenv("MYEXPENSES_JONATHAN_KEY_PASS")
+            keyAlias "jonathanrz"
+            keyPassword System.getenv("MYEXPENSES_JONATHAN_KEY_PASS")
         }
-    }
-    else {
-        throw new GradleException("Could not read version.properties!")
+        thainara {
+            storeFile file("thainara.keystore")
+            storePassword System.getenv("MYEXPENSES_THAINARA_KEY_PASS")
+            keyAlias "jonathanrz"
+            keyPassword System.getenv("MYEXPENSES_THAINARA_KEY_PASS")
+        }
     }
 
     defaultConfig {
         applicationId "br.com.jonathanzanella.myexpenses"
         minSdkVersion 19
         targetSdkVersion 23
+        versionCode 10
+        versionName "0.3.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -54,7 +49,7 @@ android {
 
             // NB: If you want to use the default debug key for a (non-debug)
             // build type, you need to specify it:
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.jonathan
         }
         thainara {
             applicationIdSuffix '.thainara'
@@ -64,7 +59,7 @@ android {
 
             // NB: If you want to use the default debug key for a (non-debug)
             // build type, you need to specify it:
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.thainara
         }
         release {
             minifyEnabled false
@@ -73,7 +68,7 @@ android {
         }
     }
     testfairyConfig {
-        apiKey MYEXPENSES_TEST_FAIRY_TOKEN
+        apiKey System.getenv("MYEXPENSES_TEST_FAIRY_TOKEN")
         autoUpdate false
         notify true
         testersGroups "dev"
