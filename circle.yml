@@ -9,5 +9,5 @@ test:
     # run tests  against the emulator.
     - ./gradlew assembleDebug
     - ./gradlew connectedAndroidTest
-    - ./gradlew testfairyThainara
-    - ./gradlew testfairyJonathan
+    - if [ $CIRCLE_BRANCH = 'master' ]; then ./gradlew testfairyThainara; fi
+    - if [ $CIRCLE_BRANCH = 'master' ]; then ./gradlew testfairyJonathan; fi
