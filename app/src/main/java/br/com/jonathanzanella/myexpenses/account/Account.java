@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
+import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.card.Card;
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
@@ -132,6 +133,8 @@ public class Account extends BaseModel implements Chargeable, UnsyncModel {
 	public void save() {
 		if(id == 0 && uuid == null)
 			uuid = UUID.randomUUID().toString();
+		if(id == 0 && userUuid == null)
+			userUuid = Environment.CURRENT_USER_UUID;
 		sync = false;
 		super.save();
 	}

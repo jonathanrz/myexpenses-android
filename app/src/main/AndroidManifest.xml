@@ -87,7 +87,9 @@
 		    android:name=".card.CreditCardInvoiceActivity"
 		    android:screenOrientation="portrait"
 		    android:parentActivityName=".views.MainActivity"/>
-        <service android:name=".services.CashierService"/>
+	    <service
+		    android:name=".sync.SyncService"
+		    android:exported="false"/>
 
     </application>
 

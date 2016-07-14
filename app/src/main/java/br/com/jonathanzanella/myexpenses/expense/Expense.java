@@ -414,6 +414,8 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 				uuid = UUID.randomUUID().toString();
 			while (Expense.find(uuid) != null);
 		}
+		if(id == 0 && userUuid == null)
+			userUuid = Environment.CURRENT_USER_UUID;
 		sync = false;
 		super.save();
 	}

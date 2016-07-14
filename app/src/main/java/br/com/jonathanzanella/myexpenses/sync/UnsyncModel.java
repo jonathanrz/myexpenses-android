@@ -8,6 +8,7 @@ import android.content.Context;
 public interface UnsyncModel {
 	boolean isSaved();
 	String getServerId();
+	String getUuid();
 	void setServerId(String serverId);
 	long getCreatedAt();
 	void setCreatedAt(long createdAt);

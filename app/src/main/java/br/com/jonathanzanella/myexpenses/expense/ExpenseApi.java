@@ -45,4 +45,14 @@ public class ExpenseApi implements UnsyncModelApi<Expense> {
                 .subscribeOn(Schedulers.newThread())
                 .subscribe(subscriber);
     }
+
+    @Override
+    public List<Expense> unsyncModels() {
+        return Expense.unsync();
+    }
+
+    @Override
+    public long greaterUpdatedAt() {
+        return Expense.greaterUpdatedAt();
+    }
 }

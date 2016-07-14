@@ -45,4 +45,14 @@ public class AccountApi implements UnsyncModelApi<Account> {
 				.subscribeOn(Schedulers.newThread())
 				.subscribe(subscriber);
 	}
+
+	@Override
+	public List<Account> unsyncModels() {
+		return Account.unsync();
+	}
+
+	@Override
+	public long greaterUpdatedAt() {
+		return Account.greaterUpdatedAt();
+	}
 }

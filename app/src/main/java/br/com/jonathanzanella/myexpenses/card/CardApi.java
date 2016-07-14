@@ -1,7 +1,5 @@
 package br.com.jonathanzanella.myexpenses.card;
 
-import android.util.Log;
-
 import com.raizlabs.android.dbflow.StringUtils;
 
 import java.util.List;
@@ -46,5 +44,15 @@ public class CardApi implements UnsyncModelApi<Card> {
         observable.observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.newThread())
                 .subscribe(subscriber);
+    }
+
+    @Override
+    public List<Card> unsyncModels() {
+        return Card.unsync();
+    }
+
+    @Override
+    public long greaterUpdatedAt() {
+        return Card.greaterUpdatedAt();
     }
 }

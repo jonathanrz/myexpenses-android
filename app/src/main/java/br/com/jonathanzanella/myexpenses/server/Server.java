@@ -14,6 +14,7 @@ import org.joda.time.DateTime;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.concurrent.TimeUnit;
 
 import br.com.jonathanzanella.myexpenses.BuildConfig;
 import br.com.jonathanzanella.myexpenses.Environment;
@@ -74,6 +75,7 @@ public class Server {
 
 		OkHttpClient client = new OkHttpClient.Builder()
 									.addInterceptor(new HeaderInterceptor())
+									.connectTimeout(120, TimeUnit.SECONDS)
 									.build();
 
 		retrofit = new Retrofit.Builder()
@@ -84,6 +86,9 @@ public class Server {
 				.build();
 	}
 
+	public ServerInterface serverInterface() {
+		return retrofit.create(ServerInterface.class);
+	}
 	public SourceInterface sourceInterface() {
 		return retrofit.create(SourceInterface.class);
 	}

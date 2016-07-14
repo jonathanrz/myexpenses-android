@@ -45,4 +45,14 @@ public class BillApi implements UnsyncModelApi<Bill> {
                 .subscribeOn(Schedulers.newThread())
                 .subscribe(subscriber);
     }
+
+    @Override
+    public List<Bill> unsyncModels() {
+        return Bill.unsync();
+    }
+
+    @Override
+    public long greaterUpdatedAt() {
+        return Bill.greaterUpdatedAt();
+    }
 }

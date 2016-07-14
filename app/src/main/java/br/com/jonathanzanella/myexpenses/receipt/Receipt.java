@@ -215,6 +215,8 @@ public class Receipt extends BaseModel implements Transaction, UnsyncModel {
 	public void save() {
 		if(id == 0 && uuid == null)
 			uuid = UUID.randomUUID().toString();
+		if(id == 0 && userUuid == null)
+			userUuid = Environment.CURRENT_USER_UUID;
 		sync = false;
 		super.save();
 	}

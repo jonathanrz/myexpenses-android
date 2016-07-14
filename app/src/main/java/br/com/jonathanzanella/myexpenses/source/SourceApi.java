@@ -45,4 +45,14 @@ public class SourceApi implements UnsyncModelApi<Source> {
                 .subscribeOn(Schedulers.newThread())
                 .subscribe(subscriber);
     }
+
+    @Override
+    public List<Source> unsyncModels() {
+        return Source.unsync();
+    }
+
+    @Override
+    public long greaterUpdatedAt() {
+        return Source.greaterUpdatedAt();
+    }
 }

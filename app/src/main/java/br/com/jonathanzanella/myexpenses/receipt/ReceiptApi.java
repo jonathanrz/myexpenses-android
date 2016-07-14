@@ -45,4 +45,14 @@ public class ReceiptApi implements UnsyncModelApi<Receipt> {
                 .subscribeOn(Schedulers.newThread())
                 .subscribe(subscriber);
     }
+
+    @Override
+    public List<Receipt> unsyncModels() {
+        return Receipt.unsync();
+    }
+
+    @Override
+    public long greaterUpdatedAt() {
+        return Receipt.greaterUpdatedAt();
+    }
 }
