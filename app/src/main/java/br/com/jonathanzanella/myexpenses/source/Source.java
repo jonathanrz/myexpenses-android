@@ -121,13 +121,19 @@ public class Source extends BaseModel implements UnsyncModel {
 	}
 
 	@Override
-	public void syncAndSave() {
+	public void syncAndSave(UnsyncModel unsyncModel) {
 		Source source = Source.find(uuid);
+
 		if(source != null && source.id != id) {
 			if(source.getUpdatedAt() != getUpdatedAt())
 				warning("Source overwritten", getData());
 			id = source.id;
 		}
+
+		setServerId(unsyncModel.getServerId());
+		setCreatedAt(unsyncModel.getCreatedAt());
+		setUpdatedAt(unsyncModel.getUpdatedAt());
+
 		save();
 		sync = true;
 		super.save();

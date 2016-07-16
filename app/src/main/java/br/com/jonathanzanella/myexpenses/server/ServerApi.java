@@ -1,14 +1,16 @@
 package br.com.jonathanzanella.myexpenses.server;
 
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import java.io.IOException;
+
+import br.com.jonathanzanella.myexpenses.log.Log;
+import retrofit2.Call;
+import retrofit2.Response;
 
 /**
  * Created by jzanella on 7/13/16.
  */
 public class ServerApi {
+	private static final String LOG_TAG = ServerApi.class.getSimpleName();
 	ServerInterface serverInterface;
 
 	private ServerInterface getInterface() {
@@ -17,10 +19,20 @@ public class ServerApi {
 		return serverInterface;
 	}
 
-	public void healthCheck(Subscriber<Void> subscriber) {
-		Observable<Void> observable = getInterface().healthCheck();
-		observable.observeOn(AndroidSchedulers.mainThread())
-				.subscribeOn(Schedulers.newThread())
-				.subscribe(subscriber);
+	public boolean healthCheck() {
+		Call<Void> caller = getInterface().healthCheck();
+		try {
+			Response<Void> response = caller.execute();
+			if(response.isSuccessful()) {
+				return true;
+			} else {
+				Log.error(LOG_TAG, "Error in health-check: " + response.code() + " " + response.message());
+				return false;
+			}
+		} catch (IOException e) {
+			Log.error(LOG_TAG, "Error in health-check:" + e.getMessage());
+			e.printStackTrace();
+			return false;
+		}
 	}
 }

@@ -206,22 +206,30 @@ public class Card extends BaseModel implements Chargeable, UnsyncModel {
 
 	@Override
 	public void save() {
-		if(id == 0 && uuid == null)
-			uuid = UUID.randomUUID().toString();
-		if(id == 0 && userUuid == null)
-			userUuid = Environment.CURRENT_USER_UUID;
+		if(id == 0) {
+			if(uuid == null)
+				uuid = UUID.randomUUID().toString();
+			if(userUuid == null)
+				userUuid = Environment.CURRENT_USER_UUID;
+		}
 		sync = false;
 		super.save();
 	}
 
 	@Override
-	public void syncAndSave() {
+	public void syncAndSave(UnsyncModel unsyncModel) {
 		Card card = Card.find(uuid);
+
 		if(card != null && card.id != id) {
 			if(card.getUpdatedAt() != getUpdatedAt())
 				warning("Card overwritten", getData());
 			id = card.id;
 		}
+
+		setServerId(unsyncModel.getServerId());
+		setCreatedAt(unsyncModel.getCreatedAt());
+		setUpdatedAt(unsyncModel.getUpdatedAt());
+
 		save();
 		sync = true;
 		super.save();

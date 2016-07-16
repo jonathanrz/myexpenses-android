@@ -1,22 +1,25 @@
 package br.com.jonathanzanella.myexpenses.source;
 
+import android.support.annotation.Nullable;
+
 import com.raizlabs.android.dbflow.StringUtils;
 
+import java.io.IOException;
 import java.util.List;
 
-import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
+import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.server.Server;
+import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi;
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import retrofit2.Call;
+import retrofit2.Response;
 
 /**
  * Created by jzanella on 6/12/16.
  */
 public class SourceApi implements UnsyncModelApi<Source> {
-    SourceInterface sourceInterface;
+	private static final String LOG_TAG = SourceApi.class.getSimpleName();
+	SourceInterface sourceInterface;
 
     private SourceInterface getInterface() {
         if(sourceInterface == null)
@@ -25,25 +28,45 @@ public class SourceApi implements UnsyncModelApi<Source> {
     }
 
     @Override
-    public void index(Subscriber<List<Source>> subscriber) {
-        Observable<List<Source>> observable = getInterface().index(Source.greaterUpdatedAt());
-        observable.observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.newThread())
-                .subscribe(subscriber);
+    public @Nullable List<Source> index() {
+        Call<List<Source>> caller = getInterface().index(Source.greaterUpdatedAt());
+
+        try {
+            Response<List<Source>> response = caller.execute();
+            if(response.isSuccessful()) {
+                return response.body();
+            } else {
+                Log.error(LOG_TAG, "Index request error: " + response.message());
+            }
+        } catch (IOException e) {
+            Log.error(LOG_TAG, "Index request error: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     @Override
-    public void save(UnsyncModel model, Subscriber<Source> subscriber) {
+    public void save(UnsyncModel model) {
         Source source = (Source) model;
-        Observable<Source> observable;
+        Call<Source> caller;
         if(StringUtils.isNotNullOrEmpty(source.getServerId()))
-            observable = getInterface().update(source.getServerId(), source);
+            caller = getInterface().update(source.getServerId(), source);
         else
-            observable = getInterface().create(source);
+            caller = getInterface().create(source);
 
-        observable.observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.newThread())
-                .subscribe(subscriber);
+        try {
+            Response<Source> response = caller.execute();
+            if(response.isSuccessful()) {
+                model.syncAndSave(response.body());
+	            Log.info(LOG_TAG, "Updated: " + source.getData());
+            } else {
+                Log.error(LOG_TAG, "Save request error: " + response.message() + " uuid: " + source.getUuid());
+            }
+        } catch (IOException e) {
+            Log.error(LOG_TAG, "Save request error: " + e.getMessage() + " uuid: " + source.getUuid());
+            e.printStackTrace();
+        }
     }
 
     @Override

@@ -421,13 +421,19 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 	}
 
 	@Override
-	public void syncAndSave() {
+	public void syncAndSave(UnsyncModel unsyncModel) {
 		Expense expense = Expense.find(uuid);
+
 		if(expense != null && expense.id != id) {
 			if(expense.getUpdatedAt() != getUpdatedAt())
 				warning("Expense overwritten", getData());
 			id = expense.id;
 		}
+
+		setServerId(unsyncModel.getServerId());
+		setCreatedAt(unsyncModel.getCreatedAt());
+		setUpdatedAt(unsyncModel.getUpdatedAt());
+
 		save();
 		sync = true;
 		super.save();

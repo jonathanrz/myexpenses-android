@@ -195,13 +195,19 @@ public class Bill extends BaseModel implements Transaction, UnsyncModel {
 	}
 
 	@Override
-	public void syncAndSave() {
+	public void syncAndSave(UnsyncModel unsyncModel) {
 		Bill bill = Bill.find(uuid);
+
 		if(bill != null && bill.id != id) {
 			if(bill.getUpdatedAt() != getUpdatedAt())
 				warning("Bill overwritten", getData());
 			id = bill.id;
 		}
+
+		setServerId(unsyncModel.getServerId());
+		setCreatedAt(unsyncModel.getCreatedAt());
+		setUpdatedAt(unsyncModel.getUpdatedAt());
+
 		save();
 		sync = true;
 		super.save();

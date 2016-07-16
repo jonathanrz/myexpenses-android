@@ -14,7 +14,6 @@ import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.receipt.ReceiptApi;
 import br.com.jonathanzanella.myexpenses.server.ServerApi;
 import br.com.jonathanzanella.myexpenses.source.SourceApi;
-import rx.Subscriber;
 
 /**
  * Created by jzanella on 7/13/16.
@@ -37,49 +36,37 @@ public class SyncService extends IntentService {
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		Log.debug(LOG_TAG, "init SyncService");
-		new ServerApi().healthCheck(new Subscriber<Void>() {
-			@Override
-			public void onCompleted() {
-				for (UnsyncModelApi<? extends UnsyncModel> api : apis) {
-					syncApi(api);
-				}
+		if(new ServerApi().healthCheck()) {
+			for (UnsyncModelApi<? extends UnsyncModel> api : apis) {
+				syncApi(api);
 			}
-
-			@Override
-			public void onError(Throwable e) {
-				Log.error(LOG_TAG, "Error in health check: " + e.getMessage());
-				e.printStackTrace();
-			}
-
-			@Override
-			public void onNext(Void v) {
-				Log.debug(LOG_TAG, "finished health check");
-			}
-		});
+		} else {
+			Log.debug(LOG_TAG, "error in health check");
+		}
+		Log.debug(LOG_TAG, "end SyncService");
 	}
 
-	private void syncApi(final UnsyncModelApi api) {
-		Log.info(LOG_TAG, "init sync of " + api.getClass().getSimpleName());
-		//noinspection unchecked
-		api.index(new Subscriber<List<? extends UnsyncModel>>() {
-			@Override
-			public void onCompleted() {
-				Log.info(LOG_TAG, "finished sync of " + api.getClass().getSimpleName());
+	private void syncApi(final UnsyncModelApi<? extends UnsyncModel> api) {
+		Log.debug(LOG_TAG, "init sync of " + api.getClass().getSimpleName());
+		List<? extends UnsyncModel> unsyncModels = api.index();
+		if(unsyncModels != null) {
+			for (UnsyncModel unsyncModel : unsyncModels) {
+				unsyncModel.syncAndSave(unsyncModel);
+				Log.info(LOG_TAG, unsyncModel.getClass().getSimpleName() + " saved\n" + unsyncModel.getData());
 			}
 
-			@Override
-			public void onError(Throwable e) {
-				Log.error(LOG_TAG, api.getClass().toString() + "#index error: " + e.getMessage());
-				e.printStackTrace();
-			}
+			syncLocalData(api);
+			Log.debug(LOG_TAG, "finished sync of " + api.getClass().getSimpleName());
+		} else {
+			Log.error(LOG_TAG, "error syncing " + api.getClass().getSimpleName());
+		}
+	}
 
-			@Override
-			public void onNext(List<? extends UnsyncModel> unsyncModels) {
-				for (UnsyncModel unsyncModel : unsyncModels) {
-					unsyncModel.syncAndSave();
-					Log.debug(LOG_TAG, unsyncModel.getClass().getSimpleName() + " saved\nuuid: " + unsyncModel.getUuid());
-				}
-			}
-		});
+	private void syncLocalData(final UnsyncModelApi<? extends UnsyncModel> api) {
+		Log.debug(LOG_TAG, "init of syncLocalData of " + api.getClass().getSimpleName());
+		for (UnsyncModel unsyncModel : api.unsyncModels()) {
+			api.save(unsyncModel);
+		}
+		Log.debug(LOG_TAG, "end of syncLocalData of " + api.getClass().getSimpleName());
 	}
 }
