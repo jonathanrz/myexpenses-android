@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:orientation="horizontal">
+
+	<android.support.v7.widget.AppCompatEditText
+		android:id="@+id/view_datetime_date"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:inputType="none"
+		android:focusable="false"
+		android:clickable="true"
+		android:hint="@string/date"/>
+
+	<android.support.v7.widget.AppCompatEditText
+		android:id="@+id/view_datetime_hour"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:inputType="none"
+		android:focusable="false"
+		android:clickable="true"
+		android:hint="@string/hour"/>
+
+</LinearLayout>
