@@ -45,7 +45,8 @@
 			android:id="@+id/menu_sync"
 			android:checked="false"
 			android:title="@string/sync"
-			android:icon="@drawable/ic_sync_white_24dp"/>
+			android:icon="@drawable/ic_sync_white_24dp"
+			android:visible="false"/>
 		<item
 			android:id="@+id/menu_log"
 			android:checked="false"

@@ -50,7 +50,7 @@ public class SyncService extends GcmTaskService {
 				.setRequiredNetwork(PeriodicTask.NETWORK_STATE_UNMETERED)
 				.setPeriod(Environment.SYNC_PERIODIC_EXECUTION_FREQUENCY)
 				.setFlex(Environment.SYNC_FLEX_EXECUTION)
-				.setUpdateCurrent(false)
+				.setUpdateCurrent(true)
 				.setPersisted(true)
 				.setRequiresCharging(false)
 				.build());
@@ -65,6 +65,7 @@ public class SyncService extends GcmTaskService {
 		SyncServiceNotification notification = new SyncServiceNotification(this, NOTIFICATION_ID++, apis.size());
 
 		if(new ServerApi().healthCheck()) {
+			notification.incrementProgress();
 			for (UnsyncModelApi<? extends UnsyncModel> api : apis) {
 				syncApi(api);
 				notification.incrementProgress();

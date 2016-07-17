@@ -39,7 +39,6 @@ public class MyApplication extends Application {
 				.setRequiredNetwork(PeriodicTask.NETWORK_STATE_UNMETERED)
 				.setExecutionWindow(0, 30)
 				.setUpdateCurrent(true)
-				.setPersisted(true)
 				.setRequiresCharging(false)
 				.build());
 	}

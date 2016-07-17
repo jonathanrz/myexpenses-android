@@ -76,6 +76,7 @@ public class Server {
 		OkHttpClient client = new OkHttpClient.Builder()
 									.addInterceptor(new HeaderInterceptor())
 									.connectTimeout(120, TimeUnit.SECONDS)
+									.readTimeout(120, TimeUnit.SECONDS)
 									.build();
 
 		retrofit = new Retrofit.Builder()

@@ -25,7 +25,7 @@ class SyncServiceNotification {
 
 	SyncServiceNotification(Context ctx, int notificationId, int totalProgress) {
 		this.notificationId = notificationId;
-		this.currentProgress = 1;
+		this.currentProgress = 0;
 		this.totalProgress = totalProgress;
 
 		notifyMgr = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
