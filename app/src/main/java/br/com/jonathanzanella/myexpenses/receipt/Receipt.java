@@ -215,18 +215,26 @@ public class Receipt extends BaseModel implements Transaction, UnsyncModel {
 	public void save() {
 		if(id == 0 && uuid == null)
 			uuid = UUID.randomUUID().toString();
+		if(id == 0 && userUuid == null)
+			userUuid = Environment.CURRENT_USER_UUID;
 		sync = false;
 		super.save();
 	}
 
 	@Override
-	public void syncAndSave() {
+	public void syncAndSave(UnsyncModel unsyncModel) {
 		Receipt receipt = Receipt.find(uuid);
+
 		if(receipt != null && receipt.id != id) {
 			if(receipt.getUpdatedAt() != getUpdatedAt())
 				warning("Receipt overwritten", getData());
 			id = receipt.id;
 		}
+
+		setServerId(unsyncModel.getServerId());
+		setCreatedAt(unsyncModel.getCreatedAt());
+		setUpdatedAt(unsyncModel.getUpdatedAt());
+
 		save();
 		sync = true;
 		super.save();

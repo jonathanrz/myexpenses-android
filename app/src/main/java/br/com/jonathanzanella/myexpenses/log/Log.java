@@ -80,18 +80,22 @@ public class Log extends BaseModel {
 
 	public static void debug(String title, String description) {
 		log(title, description, TYPE.DEBUG);
+		android.util.Log.d(title, description);
 	}
 
 	public static void info(String title, String description) {
 		log(title, description, TYPE.INFO);
+		android.util.Log.i(title, description);
 	}
 
 	public static void warning(String title, String description) {
 		log(title, description, TYPE.WARNING);
+		android.util.Log.w(title, description);
 	}
 
 	public static void error(String title, String description) {
 		log(title, description, TYPE.ERROR);
+		android.util.Log.e(title, description);
 	}
 
 	private static From<Log> initQuery() {
