@@ -13,4 +13,6 @@ public interface Environment {
 	String SERVER_URL = "https://jonathanzanella-myexpenses.herokuapp.com/";
 	String CURRENT_USER = "Thainara";
 	String CURRENT_USER_UUID = Users.THAINARA;
+	long SYNC_PERIODIC_EXECUTION_FREQUENCY = 4L * 60L * 60L;
+	long SYNC_FLEX_EXECUTION = 2L * 60L * 60L;
 }
