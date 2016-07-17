@@ -37,7 +37,7 @@ public class LogAdapter extends RecyclerView.Adapter<LogAdapter.ViewHolder> {
 		}
 
 		public void setData(Log log) {
-			indicator.setBackgroundColor(indicator.getContext().getResources().getColor(log.getType().getColor()));
+			indicator.setBackgroundColor(indicator.getContext().getResources().getColor(log.getLogLevel().getColor()));
 			title.setText(log.getTitle());
 			date.setText(Log.sdf.format(log.getDate().toDate()));
 			description.setText(log.getDescription());
@@ -60,7 +60,7 @@ public class LogAdapter extends RecyclerView.Adapter<LogAdapter.ViewHolder> {
 		return logs != null ? logs.size() : 0;
 	}
 
-	public void loadData(DateTime initDate, DateTime endDate) {
-		logs = Log.filter(initDate, endDate);
+	public void loadData(DateTime initDate, DateTime endDate, Log.LOG_LEVEL logLevel) {
+		logs = Log.filter(initDate, endDate, logLevel);
 	}
 }

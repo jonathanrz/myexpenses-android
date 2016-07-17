@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-			 android:orientation="vertical"
-			 android:layout_width="match_parent"
-			 android:layout_height="match_parent">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content">
 
 	<TableLayout
 		android:layout_width="match_parent"
@@ -42,11 +43,54 @@
 
 		</TableRow>
 
+		<TableRow android:layout_marginBottom="@dimen/min_spacing">
+
+			<TextView
+				android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+				android:layout_gravity="center_vertical"
+				android:text="@string/log_level"
+				android:layout_marginEnd="@dimen/min_spacing"/>
+
+			<RadioGroup
+				android:id="@+id/view_logs_log_level"
+				android:orientation="horizontal"
+	            tools:ignore="SmallSp">
+
+				<RadioButton
+					android:id="@+id/view_logs_log_level_error"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="@string/error"
+					android:textSize="10sp"/>
+				<RadioButton
+					android:id="@+id/view_logs_log_level_warning"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="@string/warning"
+					android:textSize="10sp"/>
+				<RadioButton
+					android:id="@+id/view_logs_log_level_info"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="@string/info"
+					android:checked="true"
+					android:textSize="10sp"/>
+				<RadioButton
+					android:id="@+id/view_logs_log_level_debug"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="@string/debug"
+					android:textSize="10sp"/>
+			</RadioGroup>
+
+		</TableRow>
+
 	</TableLayout>
 
 	<android.support.v7.widget.RecyclerView
 		android:id="@+id/view_logs_list"
 		android:layout_width="match_parent"
-		android:layout_height="match_parent"/>
+		android:layout_height="wrap_content"/>
 
 </LinearLayout>

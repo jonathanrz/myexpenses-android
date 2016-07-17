@@ -11,6 +11,7 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 import org.joda.time.DateTime;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -27,7 +28,7 @@ public class Log extends BaseModel {
 	public static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy HH:mm:ss:SSSS", Locale.getDefault());
 	private static final String TAG = "Log";
 
-	enum TYPE {
+	enum LOG_LEVEL {
 		DEBUG,
 		INFO,
 		WARNING,
@@ -48,6 +49,21 @@ public class Log extends BaseModel {
 			android.util.Log.e(TAG, "new log type?");
 			return R.color.log_debug;
 		}
+
+		public List<LOG_LEVEL> getLogLevels() {
+			List<LOG_LEVEL> logLevels = new ArrayList<>();
+			switch (this) {
+				case DEBUG:
+					logLevels.add(LOG_LEVEL.DEBUG);
+				case INFO:
+					logLevels.add(LOG_LEVEL.INFO);
+				case WARNING:
+					logLevels.add(LOG_LEVEL.WARNING);
+				case ERROR:
+					logLevels.add(LOG_LEVEL.ERROR);
+			}
+			return logLevels;
+		}
 	}
 
 	@Column
@@ -63,38 +79,42 @@ public class Log extends BaseModel {
 	@Column(typeConverter = DateTimeConverter.class) @NotNull @Getter
 	DateTime date;
 
-	@Column @NotNull @Getter
-	TYPE type;
+	@Column @NotNull
+	LOG_LEVEL type;
 
 	Log() {
 	}
 
-	private static void log(String title, String description, TYPE type) {
+	public LOG_LEVEL getLogLevel() {
+		return type;
+	}
+
+	private static void log(String title, String description, LOG_LEVEL logLevel) {
 		Log log = new Log();
 		log.title = title;
 		log.description = description;
 		log.date = DateTime.now();
-		log.type = type;
+		log.type = logLevel;
 		log.save();
 	}
 
 	public static void debug(String title, String description) {
-		log(title, description, TYPE.DEBUG);
+		log(title, description, LOG_LEVEL.DEBUG);
 		android.util.Log.d(title, description);
 	}
 
 	public static void info(String title, String description) {
-		log(title, description, TYPE.INFO);
+		log(title, description, LOG_LEVEL.INFO);
 		android.util.Log.i(title, description);
 	}
 
 	public static void warning(String title, String description) {
-		log(title, description, TYPE.WARNING);
+		log(title, description, LOG_LEVEL.WARNING);
 		android.util.Log.w(title, description);
 	}
 
 	public static void error(String title, String description) {
-		log(title, description, TYPE.ERROR);
+		log(title, description, LOG_LEVEL.ERROR);
 		android.util.Log.e(title, description);
 	}
 
@@ -106,7 +126,9 @@ public class Log extends BaseModel {
 		return initQuery().queryList();
 	}
 
-	public static List<Log> filter(DateTime initDate, DateTime endDate) {
-		return initQuery().where(Log_Table.date.between(initDate).and(endDate)).queryList();
+	public static List<Log> filter(DateTime initDate, DateTime endDate, LOG_LEVEL logLevel) {
+		return initQuery()
+				.where(Log_Table.date.between(initDate).and(endDate))
+				.and(Log_Table.type.in(logLevel.getLogLevels())).queryList();
 	}
 }
