@@ -16,15 +16,14 @@ import java.text.NumberFormat;
 
 import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.user.SelectUserView;
-import br.com.jonathanzanella.myexpenses.views.BaseActivity;
-import br.com.jonathanzanella.myexpenses.chargeable.ListChargeableActivity;
-import br.com.jonathanzanella.myexpenses.bill.ListBillActivity;
-import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch;
 import br.com.jonathanzanella.myexpenses.bill.Bill;
+import br.com.jonathanzanella.myexpenses.bill.ListBillActivity;
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
 import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType;
-import br.com.jonathanzanella.myexpenses.receipt.Receipt;
+import br.com.jonathanzanella.myexpenses.chargeable.ListChargeableActivity;
+import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch;
+import br.com.jonathanzanella.myexpenses.user.SelectUserView;
+import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
 import butterknife.OnClick;
 
@@ -208,7 +207,7 @@ public class EditExpenseActivity extends BaseActivity {
 	}
 
 	private void onBalanceDateChanged() {
-		editDate.setText(Receipt.sdf.format(date.toDate()));
+		editDate.setText(Expense.sdf.format(date.toDate()));
 	}
 
 	private void onChargeableSelected() {

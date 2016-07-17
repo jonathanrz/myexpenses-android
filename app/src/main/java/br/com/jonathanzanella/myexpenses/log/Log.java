@@ -105,4 +105,8 @@ public class Log extends BaseModel {
 	public static List<Log> all() {
 		return initQuery().queryList();
 	}
+
+	public static List<Log> filter(DateTime initDate, DateTime endDate) {
+		return initQuery().where(Log_Table.date.between(initDate).and(endDate)).queryList();
+	}
 }

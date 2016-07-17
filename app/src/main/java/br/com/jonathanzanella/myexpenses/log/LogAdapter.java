@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.joda.time.DateTime;
+
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.R;
@@ -58,7 +60,7 @@ public class LogAdapter extends RecyclerView.Adapter<LogAdapter.ViewHolder> {
 		return logs != null ? logs.size() : 0;
 	}
 
-	public void loadData() {
-		logs = Log.all();
+	public void loadData(DateTime initDate, DateTime endDate) {
+		logs = Log.filter(initDate, endDate);
 	}
 }

@@ -14,6 +14,7 @@
     <string name="sources">Fontes</string>
     <string name="credit_card">Cartões</string>
     <string name="date">Data</string>
+    <string name="hour">Hora</string>
     <string name="income">Valor</string>
     <string name="income_to_show_in_overview">Valor para Overview</string>
     <string name="source">Fonte</string>
@@ -69,4 +70,6 @@
 	<string name="select_user">Selecione o usuário</string>
 	<string name="select_card_type">Selecione o tipo do cartão</string>
 	<string name="log">Log</string>
+	<string name="init_date">Data de início:</string>
+	<string name="end_date">Data de fim:</string>
 </resources>

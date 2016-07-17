@@ -1,12 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:orientation="vertical"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			 android:orientation="vertical"
+			 android:layout_width="match_parent"
+			 android:layout_height="match_parent">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/view_logs_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+	<TableLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal"
+		android:layout_margin="@dimen/min_spacing">
 
-</FrameLayout>
+		<TableRow android:layout_marginBottom="@dimen/min_spacing">
+
+			<TextView
+				android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+				android:layout_gravity="center_vertical"
+				android:text="@string/init_date"
+				android:layout_marginEnd="@dimen/min_spacing"/>
+
+			<br.com.jonathanzanella.myexpenses.views.DateTimeView
+				android:id="@+id/view_log_init_time"
+				android:layout_height="wrap_content"
+				android:layout_width="wrap_content"/>
+
+		</TableRow>
+
+		<TableRow android:layout_marginBottom="@dimen/min_spacing">
+
+			<TextView
+				android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+				android:layout_gravity="center_vertical"
+				android:text="@string/end_date"
+				android:layout_marginEnd="@dimen/min_spacing"/>
+
+			<br.com.jonathanzanella.myexpenses.views.DateTimeView
+				android:id="@+id/view_log_end_time"
+				android:layout_height="wrap_content"
+				android:layout_width="wrap_content"/>
+
+		</TableRow>
+
+	</TableLayout>
+
+	<android.support.v7.widget.RecyclerView
+		android:id="@+id/view_logs_list"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"/>
+
+</LinearLayout>
