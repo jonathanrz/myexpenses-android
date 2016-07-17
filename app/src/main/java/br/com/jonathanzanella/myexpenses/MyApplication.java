@@ -2,7 +2,6 @@ package br.com.jonathanzanella.myexpenses;
 
 import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
 
 import com.facebook.stetho.Stetho;
 import com.google.android.gms.gcm.GcmNetworkManager;
@@ -43,7 +42,5 @@ public class MyApplication extends Application {
 				.setPersisted(true)
 				.setRequiresCharging(false)
 				.build());
-
-		startService(new Intent(this, SyncService.class));
 	}
 }
