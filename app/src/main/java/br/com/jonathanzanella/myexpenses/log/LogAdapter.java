@@ -6,6 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.R;
@@ -17,6 +21,7 @@ import butterknife.ButterKnife;
  */
 public class LogAdapter extends RecyclerView.Adapter<LogAdapter.ViewHolder> {
 	protected List<Log> logs;
+	protected List<Log> filteredLogs;
 
 	public static class ViewHolder extends RecyclerView.ViewHolder {
 		@Bind(R.id.row_log_indicator)
@@ -35,7 +40,7 @@ public class LogAdapter extends RecyclerView.Adapter<LogAdapter.ViewHolder> {
 		}
 
 		public void setData(Log log) {
-			indicator.setBackgroundColor(indicator.getContext().getResources().getColor(log.getType().getColor()));
+			indicator.setBackgroundColor(indicator.getContext().getResources().getColor(log.getLogLevel().getColor()));
 			title.setText(log.getTitle());
 			date.setText(Log.sdf.format(log.getDate().toDate()));
 			description.setText(log.getDescription());
@@ -50,15 +55,27 @@ public class LogAdapter extends RecyclerView.Adapter<LogAdapter.ViewHolder> {
 
 	@Override
 	public void onBindViewHolder(ViewHolder holder, int position) {
-		holder.setData(logs.get(position));
+		holder.setData(filteredLogs.get(position));
 	}
 
 	@Override
 	public int getItemCount() {
-		return logs != null ? logs.size() : 0;
+		return filteredLogs != null ? filteredLogs.size() : 0;
 	}
 
-	public void loadData() {
-		logs = Log.all();
+	public void loadData(DateTime initDate, DateTime endDate, Log.LOG_LEVEL logLevel, String filter) {
+		logs = Log.filter(initDate, endDate, logLevel);
+
+		filteredLogs = new ArrayList<>();
+		if(StringUtils.isNotEmpty(filter)) {
+			for (Log log : logs) {
+				if(StringUtils.containsIgnoreCase(log.getTitle(), filter) ||
+						StringUtils.containsIgnoreCase(log.getDescription(), filter)) {
+					filteredLogs.add(log);
+				}
+			}
+		} else {
+			filteredLogs = logs;
+		}
 	}
 }
