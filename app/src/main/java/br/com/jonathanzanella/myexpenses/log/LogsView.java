@@ -34,6 +34,7 @@ public class LogsView extends BaseView implements DateTimeView.Listener {
 	RadioGroup logLevel;
 
 	private LogAdapter adapter;
+	private String filter;
 
 	public LogsView(Context context) {
 		super(context);
@@ -63,7 +64,7 @@ public class LogsView extends BaseView implements DateTimeView.Listener {
 		endTime.setDate(DateTime.now());
 		endTime.setListener(this);
 
-		adapter.loadData(initTime.getCurrentTime(), endTime.getCurrentTime(), getLogLevel());
+		refreshAdapter();
 	}
 
 	@Override
@@ -78,7 +79,7 @@ public class LogsView extends BaseView implements DateTimeView.Listener {
 	}
 
 	private void refreshAdapter() {
-		adapter.loadData(initTime.getCurrentTime(), endTime.getCurrentTime(), getLogLevel());
+		adapter.loadData(initTime.getCurrentTime(), endTime.getCurrentTime(), getLogLevel(), filter);
 		adapter.notifyDataSetChanged();
 	}
 
@@ -96,5 +97,12 @@ public class LogsView extends BaseView implements DateTimeView.Listener {
 
 		Log.error(LOG_TAG, "new log level?");
 		return Log.LOG_LEVEL.DEBUG;
+	}
+
+	@Override
+	public void filter(String s) {
+		super.filter(s);
+		filter = s;
+		refreshAdapter();
 	}
 }
