@@ -1,5 +1,7 @@
 package br.com.jonathanzanella.myexpenses.sync;
 
+import android.content.Intent;
+
 import com.google.android.gms.gcm.GcmNetworkManager;
 import com.google.android.gms.gcm.GcmTaskService;
 import com.google.android.gms.gcm.PeriodicTask;
@@ -22,6 +24,7 @@ import br.com.jonathanzanella.myexpenses.source.SourceApi;
  * Created by jzanella on 7/13/16.
  */
 public class SyncService extends GcmTaskService {
+	public static final String KEY_EXECUTE_SYNC = "KeyExecuteSync";
 	private static int NOTIFICATION_ID = 1;
 	private static final String LOG_TAG = SyncService.class.getSimpleName();
 	private List<UnsyncModelApi<? extends UnsyncModel>> apis;
@@ -43,6 +46,9 @@ public class SyncService extends GcmTaskService {
 	}
 
 	private void selfSchedule() {
+		if(getBaseContext() == null)
+			return;
+
 		GcmNetworkManager.getInstance(this)
 				.schedule(new PeriodicTask.Builder()
 				.setService(SyncService.class)
@@ -57,8 +63,23 @@ public class SyncService extends GcmTaskService {
 	}
 
 	@Override
+	public int onStartCommand(Intent intent, int i, int i1) {
+		if(intent.getExtras() != null && intent.getExtras().containsKey(KEY_EXECUTE_SYNC)) {
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					onRunTask(null);
+				}
+			}).start();
+			return START_NOT_STICKY;
+		} else {
+			return super.onStartCommand(intent, i, i1);
+		}
+	}
+
+	@Override
 	public int onRunTask(TaskParams taskParams) {
-		Log.debug(LOG_TAG, "init SyncService, task: " + taskParams.getTag());
+		Log.debug(LOG_TAG, "init SyncService, task: " + (taskParams != null ? taskParams.getTag() : "without task"));
 		totalSaved = 0;
 		totalUpdated = 0;
 
