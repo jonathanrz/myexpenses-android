@@ -107,6 +107,9 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 	@Column
 	boolean sync;
 
+	@Column
+	boolean removed;
+
 	@Getter
 	private Card creditCard;
 
@@ -138,6 +141,7 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 				.where(Expense_Table.date.between(initOfMonth).and(endOfMonth))
 				.and(Expense_Table.chargeNextMonth.eq(true))
 				.and(Expense_Table.userUuid.is(Environment.CURRENT_USER_UUID))
+				.and(Expense_Table.removed.is(false))
 				.orderBy(Expense_Table.date, true)
 				.queryList();
 
@@ -148,6 +152,7 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 				.where(Expense_Table.date.between(initOfMonth).and(endOfMonth))
 				.and(Expense_Table.chargeNextMonth.eq(false))
 				.and(Expense_Table.userUuid.is(Environment.CURRENT_USER_UUID))
+				.and(Expense_Table.removed.is(false))
 				.orderBy(Expense_Table.date, true)
 				.queryList());
 
@@ -168,6 +173,7 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 					.and(Expense_Table.chargeNextMonth.eq(true))
 					.and(Expense_Table.ignoreInOverview.eq(false))
 					.and(Expense_Table.userUuid.is(Environment.CURRENT_USER_UUID))
+					.and(Expense_Table.removed.is(false))
 					.orderBy(Expense_Table.date, true)
 					.queryList());
 		}
@@ -180,6 +186,7 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 				.and(Expense_Table.chargeNextMonth.eq(false))
 				.and(Expense_Table.ignoreInOverview.eq(false))
 				.and(Expense_Table.userUuid.is(Environment.CURRENT_USER_UUID))
+				.and(Expense_Table.removed.is(false))
 				.orderBy(Expense_Table.date, true)
 				.queryList());
 
@@ -197,6 +204,7 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 				.and(Expense_Table.chargeNextMonth.eq(true))
 				.and(Expense_Table.ignoreInResume.eq(false))
 				.and(Expense_Table.userUuid.is(Environment.CURRENT_USER_UUID))
+				.and(Expense_Table.removed.is(false))
 				.orderBy(Expense_Table.date, true)
 				.queryList();
 
@@ -209,6 +217,7 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 				.and(Expense_Table.chargeNextMonth.eq(false))
 				.and(Expense_Table.ignoreInResume.eq(false))
 				.and(Expense_Table.userUuid.is(Environment.CURRENT_USER_UUID))
+				.and(Expense_Table.removed.is(false))
 				.orderBy(Expense_Table.date, true)
 				.queryList());
 
@@ -242,6 +251,7 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 				.and(Expense_Table.chargeableType.eq(ChargeableType.ACCOUNT))
 				.and(Expense_Table.chargeableUuid.eq(account.getUuid()))
 				.and(Expense_Table.chargeNextMonth.eq(true))
+				.and(Expense_Table.removed.is(false))
 				.queryList();
 
 		if(card != null) {
@@ -250,6 +260,7 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 					.and(Expense_Table.chargeableType.eq(ChargeableType.DEBIT_CARD))
 					.and(Expense_Table.chargeableUuid.eq(card.getUuid()))
 					.and(Expense_Table.chargeNextMonth.eq(true))
+					.and(Expense_Table.removed.is(false))
 					.queryList());
 		}
 
@@ -261,6 +272,7 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 				.and(Expense_Table.chargeableType.eq(ChargeableType.ACCOUNT))
 				.and(Expense_Table.chargeableUuid.eq(account.getUuid()))
 				.and(Expense_Table.chargeNextMonth.eq(false))
+				.and(Expense_Table.removed.is(false))
 				.queryList());
 
 		if(card != null) {
@@ -269,6 +281,7 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 					.and(Expense_Table.chargeableType.eq(ChargeableType.DEBIT_CARD))
 					.and(Expense_Table.chargeableUuid.eq(card.getUuid()))
 					.and(Expense_Table.chargeNextMonth.eq(false))
+					.and(Expense_Table.removed.is(false))
 					.queryList());
 		}
 
@@ -392,7 +405,8 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 		return "name=" + name + "" +
 				"\nuuid=" + uuid +
 				"\ndate=" + sdf.format(date.toDate()) +
-				"\nvalue=" + value;
+				"\nvalue=" + value +
+				"\nremoved=" + removed;
 	}
 
 	public void debit() {
@@ -437,6 +451,12 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 		save();
 		sync = true;
 		super.save();
+	}
+
+	@Override
+	public void delete() {
+		removed = true;
+		save();
 	}
 
 	@Override
