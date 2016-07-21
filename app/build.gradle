@@ -3,8 +3,8 @@ apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'testfairy'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    compileSdkVersion 24
+    buildToolsVersion "24.0.0"
     def MYEXPENSES_AUTH_TOKEN = '"' + System.getenv("MYEXPENSES_AUTH_TOKEN") + '"' ?: '"Auth Token"';
 
     dexOptions {
@@ -30,7 +30,7 @@ android {
     defaultConfig {
         applicationId "br.com.jonathanzanella.myexpenses"
         minSdkVersion 19
-        targetSdkVersion 23
+        targetSdkVersion 24
         versionCode 10
         versionName "0.4.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -79,7 +79,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
     //Support Library
-    def supportLibrary = '23.1.1'
+    def supportLibrary = '24.1.0'
     compile "com.android.support:appcompat-v7:${supportLibrary}"
     compile "com.android.support:design:${supportLibrary}"
     compile "com.android.support:cardview-v7:${supportLibrary}"
