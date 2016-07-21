@@ -93,6 +93,9 @@ public class Receipt extends BaseModel implements Transaction, UnsyncModel {
 	@Column
 	boolean sync;
 
+	@Column
+	boolean removed;
+
 	@Override
 	public int getAmount() {
 		return getIncome();
@@ -116,7 +119,8 @@ public class Receipt extends BaseModel implements Transaction, UnsyncModel {
 		return initQuery()
 				.where(Receipt_Table.date
 						.between(DateHelper.firstDayOfMonth(month))
-						.and(DateHelper.lastDayOfMonth(month)))
+						.and(DateHelper.lastDayOfMonth(month))
+				.and(Receipt_Table.removed.is(false)))
 				.and(Receipt_Table.userUuid.is(Environment.CURRENT_USER_UUID))
 				.queryList();
 	}
@@ -125,6 +129,7 @@ public class Receipt extends BaseModel implements Transaction, UnsyncModel {
 		return initQuery()
 				.where(Receipt_Table.date.between(month).and(month.plusMonths(1).minusDays(1)))
 				.and(Receipt_Table.accountUuid.eq(account.getUuid()))
+				.and(Receipt_Table.removed.is(false))
 				.queryList();
 	}
 
@@ -133,6 +138,7 @@ public class Receipt extends BaseModel implements Transaction, UnsyncModel {
 				.where(Receipt_Table.date.between(month).and(month.plusMonths(1)))
 				.and(Receipt_Table.ignoreInResume.is(false))
 				.and(Receipt_Table.userUuid.is(Environment.CURRENT_USER_UUID))
+				.and(Receipt_Table.removed.is(false))
 				.orderBy(Receipt_Table.date, true)
 				.queryList();
 	}
@@ -238,6 +244,12 @@ public class Receipt extends BaseModel implements Transaction, UnsyncModel {
 		save();
 		sync = true;
 		super.save();
+	}
+
+	@Override
+	public void delete() {
+		removed = true;
+		save();
 	}
 
 	@Override
