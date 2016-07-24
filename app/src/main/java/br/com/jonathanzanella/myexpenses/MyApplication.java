@@ -11,6 +11,7 @@ import com.raizlabs.android.dbflow.config.FlowManager;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
+import br.com.jonathanzanella.myexpenses.database.MyDatabase;
 import br.com.jonathanzanella.myexpenses.sync.SyncService;
 import lombok.Getter;
 
@@ -21,10 +22,13 @@ import lombok.Getter;
 public class MyApplication extends Application {
 	@Getter
 	private static Context context;
+	@Getter
+	private static MyApplication application;
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		MyApplication.application = this;
 		MyApplication.context = getApplicationContext();
 
 		FlowManager.init(new FlowConfig.Builder(this).build());
@@ -42,5 +46,9 @@ public class MyApplication extends Application {
 						.setPersisted(true)
 						.setRequiresCharging(false)
 						.build());
+	}
+
+	public void resetDatabase() {
+		FlowManager.getDatabase(MyDatabase.NAME).reset(this);
 	}
 }
