@@ -47,11 +47,14 @@ public class EditAccountActivity extends BaseActivity {
 		editBalance.addTextChangedListener(new CurrencyTextWatch(editBalance));
 
 		if(account != null) {
+			setTitle(R.string.edit_account_title);
 			editName.setText(account.getName());
 			editBalance.setText(NumberFormat.getCurrencyInstance().format(account.getBalance() / 100.0));
 			checkToPayCreditCard.setChecked(account.isAccountToPayCreditCard());
 			checkToPayBill.setChecked(account.isAccountToPayBills());
 			selectUserView.setSelectedUser(account.getUserUuid());
+		} else {
+			setTitle(R.string.new_account_title);
 		}
 	}
 
