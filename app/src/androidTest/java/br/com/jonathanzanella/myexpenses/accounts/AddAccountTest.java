@@ -20,11 +20,9 @@ import br.com.jonathanzanella.myexpenses.helpers.UIHelper;
 import br.com.jonathanzanella.myexpenses.views.MainActivity;
 
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.allOf;
 
 /**
  * Created by jzanella on 7/24/16.
@@ -52,9 +50,7 @@ public class AddAccountTest {
 	public void addNewAccount() {
 		activityTestRule.launchActivity(new Intent());
 
-		UIHelper.openMenu();
-
-		onView(allOf(withId(R.id.design_menu_item_text), withText(R.string.accounts))).perform(click());
+		UIHelper.openMenuAndClickItem(R.string.accounts);
 
 		final String accountsTitle = getContext().getString(R.string.accounts);
 		UIHelper.matchToolbarTitle(accountsTitle);
