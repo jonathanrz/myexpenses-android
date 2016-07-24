@@ -1,5 +1,7 @@
 package br.com.jonathanzanella.myexpenses;
 
+import android.content.Context;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.joda.time.DateTime;
@@ -12,6 +14,7 @@ import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
+import br.com.jonathanzanella.myexpenses.helpers.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.overview.WeeklyPagerAdapter;
 
 import static org.hamcrest.core.Is.is;
@@ -34,7 +37,7 @@ public class ExpensesInPeriodTestSuite {
 
 	@After
 	public void tearDown() throws Exception {
-		MyApplication.getApplication().resetDatabase();
+		DatabaseHelper.reset(getContext());
 	}
 
 	private Expense newExpense(String name, DateTime date, int value) {
@@ -110,5 +113,9 @@ public class ExpensesInPeriodTestSuite {
 		assertThat(expenses.size(), is(2));
 		assertThat(expenses.get(0).getUuid(), is(firstOfMonth.getUuid()));
 		assertThat(expenses.get(1).getUuid(), is(endOfMonth.getUuid()));
+	}
+
+	private Context getContext() {
+		return InstrumentationRegistry.getTargetContext();
 	}
 }
