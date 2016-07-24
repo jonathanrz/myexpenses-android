@@ -1,5 +1,6 @@
 package br.com.jonathanzanella.myexpenses.accounts;
 
+import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
@@ -40,6 +41,7 @@ public class AddAccountTest {
 
 	@Test
 	public void addNewAccount() {
+		activityTestRule.launchActivity(new Intent());
 		UIHelper.openMenu();
 
 		onView(allOf(withId(R.id.design_menu_item_text), withText(R.string.accounts))).perform(click());

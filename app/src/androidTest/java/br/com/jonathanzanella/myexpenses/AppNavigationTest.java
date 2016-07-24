@@ -13,11 +13,9 @@ import org.junit.runner.RunWith;
 import br.com.jonathanzanella.myexpenses.views.MainActivity;
 
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.contrib.DrawerMatchers.isClosed;
 import static android.support.test.espresso.contrib.DrawerMatchers.isOpen;
-import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 /**
@@ -31,11 +29,10 @@ public class AppNavigationTest {
 
 	@Test
 	public void clickOnAndroidHomeIcon_OpensNavigation() {
-		Intent i = new Intent();
-		activityTestRule.launchActivity(i);
+		activityTestRule.launchActivity(new Intent());
 
 		onView(withId(R.id.act_main_drawer)).check(matches(isClosed(Gravity.START)));
-		onView(withContentDescription("Drawer Open")).perform(click());
+		UIHelper.openMenu();
 		onView(withId(R.id.act_main_drawer)).check(matches(isOpen(Gravity.START)));
 	}
 }
