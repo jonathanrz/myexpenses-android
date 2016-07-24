@@ -30,7 +30,12 @@ public class AppNavigationTest {
 
 	@Test
 	public void clickOnAndroidHomeIcon_OpensNavigation() {
+<<<<<<< 97d0e362a8aac5cc9c1081f2d50ba0e286d435b0
 		activityTestRule.launchActivity(new Intent());
+=======
+		Intent i = new Intent();
+		activityTestRule.launchActivity(i);
+>>>>>>> Add new account test
 
 		onView(withId(R.id.act_main_drawer)).check(matches(isClosed(Gravity.START)));
 		UIHelper.openMenu();
