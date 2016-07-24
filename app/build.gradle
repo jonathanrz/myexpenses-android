@@ -141,6 +141,7 @@ dependencies {
         exclude module: 'recyclerview-v7'
     }
     androidTestCompile "com.android.support.test.espresso:espresso-intents:$rootProject.ext.espressoVersion"
+    androidTestCompile "com.android.support.test.uiautomator:uiautomator-v18:$rootProject.ext.uiAutomatorVersion"
 }
 
 configurations.all {
