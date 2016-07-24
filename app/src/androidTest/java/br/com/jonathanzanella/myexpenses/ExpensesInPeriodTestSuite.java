@@ -7,6 +7,7 @@ import android.support.test.runner.AndroidJUnit4;
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -21,6 +22,7 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 @RunWith(AndroidJUnit4.class)
+@Ignore
 public class ExpensesInPeriodTestSuite {
 	DateTime firstDayOfJune = new DateTime(2016, 6, 1, 0, 0, 0, 0);
 	DateTime lastDayOfJune = firstDayOfJune.dayOfMonth().withMaximumValue();
