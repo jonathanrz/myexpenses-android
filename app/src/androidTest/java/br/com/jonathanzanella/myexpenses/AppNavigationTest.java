@@ -34,6 +34,7 @@ public class AppNavigationTest {
 
 		onView(withId(R.id.act_main_drawer)).check(matches(isClosed(Gravity.START)));
 		UIHelper.openMenu();
+
 		onView(withId(R.id.act_main_drawer)).check(matches(isOpen(Gravity.START)));
 	}
 }
