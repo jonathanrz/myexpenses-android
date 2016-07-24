@@ -27,3 +27,6 @@ before_script:
    - adb shell input keyevent 82 &
 
 script: ./.travis-script.sh
+
+notifications:
+  slack: myexpenses:FExuKgaFD3itm8F65dz2kjyT
