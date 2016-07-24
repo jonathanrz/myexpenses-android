@@ -7,4 +7,4 @@
 	android:layout_height="wrap_content"
 	android:background="@color/color_primary"
 	app:titleTextColor="@android:color/white"
-	app:theme="@style/ThemeOverlay.AppCompat.ActionBar" />
+	app:theme="@style/ThemeOverlay.AppCompat.Dark" />
