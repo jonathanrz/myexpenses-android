@@ -1,5 +1,6 @@
 package br.com.jonathanzanella.myexpenses;
 
+import android.content.Intent;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -30,6 +31,9 @@ public class AppNavigationTest {
 
 	@Test
 	public void clickOnAndroidHomeIcon_OpensNavigation() {
+		Intent i = new Intent();
+		activityTestRule.launchActivity(i);
+
 		onView(withId(R.id.act_main_drawer)).check(matches(isClosed(Gravity.START)));
 		onView(withContentDescription("Drawer Open")).perform(click());
 		onView(withId(R.id.act_main_drawer)).check(matches(isOpen(Gravity.START)));
