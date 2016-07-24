@@ -1,5 +1,7 @@
 package br.com.jonathanzanella.myexpenses;
 
+import android.content.Context;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.joda.time.DateTime;
@@ -13,6 +15,7 @@ import br.com.jonathanzanella.myexpenses.bill.Bill;
 import br.com.jonathanzanella.myexpenses.card.Card;
 import br.com.jonathanzanella.myexpenses.card.CardType;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
+import br.com.jonathanzanella.myexpenses.helpers.DatabaseHelper;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -42,7 +45,7 @@ public class BillsTestSuite {
 
 	@After
 	public void tearDown() throws Exception {
-		MyApplication.getApplication().resetDatabase();
+		DatabaseHelper.reset(getContext());
 	}
 
 	@Test
@@ -65,5 +68,9 @@ public class BillsTestSuite {
 		expense.save();
 
 		assertThat(Bill.monthly(firstDayOfJune).size(), is(0));
+	}
+
+	private Context getContext() {
+		return InstrumentationRegistry.getTargetContext();
 	}
 }
