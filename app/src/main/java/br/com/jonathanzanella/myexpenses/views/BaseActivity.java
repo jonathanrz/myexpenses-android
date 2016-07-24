@@ -47,7 +47,7 @@ public class BaseActivity extends AppCompatActivity {
 			});
 		}
 	}
-
+	
 	protected void storeBundle(Bundle extras) {
 	}
 }
