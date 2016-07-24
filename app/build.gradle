@@ -35,6 +35,7 @@ android {
         versionName "0.4.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
     buildTypes {
         debug {
             applicationIdSuffix '.debug'
@@ -67,11 +68,18 @@ android {
             buildConfigField 'String', 'MYEXPENSES_AUTH_TOKEN', MYEXPENSES_AUTH_TOKEN
         }
     }
+
     testfairyConfig {
         apiKey System.getenv("MYEXPENSES_TEST_FAIRY_TOKEN")
         autoUpdate false
         notify true
         testersGroups "dev"
+    }
+
+    testOptions.unitTests.all {
+        testLogging {
+            events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
+        }
     }
 }
 
@@ -126,6 +134,24 @@ dependencies {
 
     // Espresso UI Testing dependencies.
     androidTestCompile "com.android.support.test.espresso:espresso-core:$rootProject.ext.espressoVersion"
-    androidTestCompile "com.android.support.test.espresso:espresso-contrib:$rootProject.ext.espressoVersion"
+    androidTestCompile ("com.android.support.test.espresso:espresso-contrib:$rootProject.ext.espressoVersion") {
+        exclude module: 'support-annotations'
+        exclude module: 'support-v4'
+        exclude module: 'support-v13'
+        exclude module: 'recyclerview-v7'
+    }
     androidTestCompile "com.android.support.test.espresso:espresso-intents:$rootProject.ext.espressoVersion"
+}
+
+configurations.all {
+    resolutionStrategy.force "com.android.support:support-annotations:$rootProject.supportLibraryVersion"
+    resolutionStrategy.force "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
+    resolutionStrategy.force "com.android.support:design:$rootProject.supportLibraryVersion"
+}
+
+configurations.compile.dependencies.each { compileDependency ->
+    println "Excluding compile dependency: ${compileDependency.getName()}"
+    configurations.androidTestCompile.dependencies.each { androidTestCompileDependency ->
+        configurations.androidTestCompile.exclude module: "${compileDependency.getName()}"
+    }
 }
