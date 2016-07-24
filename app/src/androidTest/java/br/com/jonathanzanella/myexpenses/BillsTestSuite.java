@@ -75,6 +75,6 @@ public class BillsTestSuite {
 		expense.save();
 		modelsToDestroy.add(expense);
 
-		assertThat(Bill.monthly(firstDayOfJune).size(), is(0));
+		assertThat(Bill.monthly(firstDayOfJune).size(), is(1));
 	}
 }
