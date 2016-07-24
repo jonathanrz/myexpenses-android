@@ -34,10 +34,8 @@ public class MyApplication extends Application {
 	}
 
 	public void resetDatabase() {
-		try {
-			FlowManager.getDatabase(MyDatabase.NAME).reset(this);
-		} catch(IllegalStateException e) {
-			e.printStackTrace();
-		}
+		FlowManager.getDatabase(MyDatabase.NAME).reset(this);
+		FlowManager.destroy();
+		FlowManager.init(new FlowConfig.Builder(this).build());
 	}
 }
