@@ -1,17 +1,23 @@
-package br.com.jonathanzanella.myexpenses;
+package br.com.jonathanzanella.myexpenses.helpers;
 
+import android.support.annotation.StringRes;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.matcher.BoundedMatcher;
+import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.v7.widget.Toolbar;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
+
+import br.com.jonathanzanella.myexpenses.R;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.core.Is.is;
 
 /**
@@ -20,6 +26,15 @@ import static org.hamcrest.core.Is.is;
 public class UIHelper {
 	public static void openMenu() {
 		onView(withContentDescription("Drawer Open")).perform(click());
+	}
+
+	public static void clickMenuItem(@StringRes int menuText) {
+		onView(allOf(ViewMatchers.withId(R.id.design_menu_item_text), withText(menuText))).perform(click());
+	}
+
+	public static void openMenuAndClickItem(@StringRes int menuText) {
+		openMenu();
+		clickMenuItem(menuText);
 	}
 
 	public static ViewInteraction matchToolbarTitle(CharSequence title) {

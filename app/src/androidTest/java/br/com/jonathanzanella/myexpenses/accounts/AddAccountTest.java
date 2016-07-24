@@ -1,5 +1,6 @@
 package br.com.jonathanzanella.myexpenses.accounts;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.LargeTest;
@@ -11,9 +12,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.UIHelper;
+import br.com.jonathanzanella.myexpenses.helpers.DatabaseHelper;
+import br.com.jonathanzanella.myexpenses.helpers.UIHelper;
 import br.com.jonathanzanella.myexpenses.views.MainActivity;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -22,7 +23,6 @@ import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.allOf;
 
 /**
  * Created by jzanella on 7/24/16.
@@ -36,22 +36,20 @@ public class AddAccountTest {
 
 	@After
 	public void tearDown() throws Exception {
-		MyApplication.getApplication().resetDatabase();
+		DatabaseHelper.reset(getContext());
 	}
 
 	@Test
 	public void addNewAccount() {
 		activityTestRule.launchActivity(new Intent());
-		UIHelper.openMenu();
+		UIHelper.openMenuAndClickItem(R.string.accounts);
 
-		onView(allOf(withId(R.id.design_menu_item_text), withText(R.string.accounts))).perform(click());
-
-		final String accountsTitle = InstrumentationRegistry.getTargetContext().getString(R.string.accounts);
+		final String accountsTitle = getContext().getString(R.string.accounts);
 		UIHelper.matchToolbarTitle(accountsTitle);
 
 		onView(withId(R.id.view_accounts_fab)).perform(click());
 
-		final String newAccountTitle = InstrumentationRegistry.getTargetContext().getString(R.string.new_account_title);
+		final String newAccountTitle = getContext().getString(R.string.new_account_title);
 		UIHelper.matchToolbarTitle(newAccountTitle);
 
 		final String accountTitle = "Test";
@@ -62,5 +60,9 @@ public class AddAccountTest {
 		UIHelper.matchToolbarTitle(accountsTitle);
 
 		onView(withId(R.id.row_account_name)).check(matches(withText(accountTitle)));
+	}
+
+	private Context getContext() {
+		return InstrumentationRegistry.getTargetContext();
 	}
 }
