@@ -20,8 +20,6 @@ import br.com.jonathanzanella.myexpenses.helpers.UIHelper;
 import br.com.jonathanzanella.myexpenses.views.MainActivity;
 
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
@@ -56,15 +54,15 @@ public class AddAccountTest {
 		final String accountsTitle = getContext().getString(R.string.accounts);
 		UIHelper.matchToolbarTitle(accountsTitle);
 
-		onView(withId(R.id.view_accounts_fab)).perform(click());
+		UIHelper.clickIntoView(R.id.view_accounts_fab);
 
 		final String newAccountTitle = getContext().getString(R.string.new_account_title);
 		UIHelper.matchToolbarTitle(newAccountTitle);
 
 		final String accountTitle = "Test";
-		onView(withId(R.id.act_edit_account_name)).perform(typeText(accountTitle));
-		onView(withId(R.id.act_edit_account_balance)).perform(typeText("100"));
-		onView(withId(R.id.action_save)).perform(click());
+		UIHelper.typeTextIntoView(R.id.act_edit_account_name, accountTitle);
+		UIHelper.typeTextIntoView(R.id.act_edit_account_balance, "100");
+		UIHelper.clickIntoView(R.id.action_save);
 
 		UIHelper.matchToolbarTitle(accountsTitle);
 
