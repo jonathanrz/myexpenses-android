@@ -6,8 +6,8 @@ buildscript {
         maven { url 'https://www.testfairy.com/maven' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.1.2'
-        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+        classpath 'com.android.tools.build:gradle:2.2.0-alpha6'
+//        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
         classpath 'com.testfairy.plugins.gradle:testfairy:1.12'
 
         // NOTE: Do not place your application dependencies here; they belong
@@ -28,10 +28,10 @@ task clean(type: Delete) {
 
 ext {
     // Sdk and tools
-    minSdkVersion = 19
+    minSdkVersion = 21
     targetSdkVersion = 24
     compileSdkVersion = 24
-    buildToolsVersion = '24.0.0'
+    buildToolsVersion = '24.0.1'
 
     // App dependencies
     butterKnifeVersion = '7.0.1'
