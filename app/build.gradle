@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'testfairy'
 
 android {
@@ -34,6 +33,14 @@ android {
         versionCode 10
         versionName "0.4.3"
         testInstrumentationRunner "br.com.jonathanzanella.myexpenses.MyTestRunner"
+
+        jackOptions {
+            enabled true
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     buildTypes {
@@ -97,13 +104,13 @@ dependencies {
     compile "com.google.android.gms:play-services-gcm:$rootProject.playServicesVersion"
 
     //DBFlow
-    apt "com.github.Raizlabs.DBFlow:dbflow-processor:$rootProject.dbFlowVersion"
+    annotationProcessor "com.github.Raizlabs.DBFlow:dbflow-processor:$rootProject.dbFlowVersion"
     compile "com.github.Raizlabs.DBFlow:dbflow-core:$rootProject.dbFlowVersion"
     compile "com.github.Raizlabs.DBFlow:dbflow:$rootProject.dbFlowVersion"
 
     //Lombok
     provided "org.projectlombok:lombok:$rootProject.lombokVersion"
-    apt "org.projectlombok:lombok:$rootProject.lombokVersion"
+    annotationProcessor "org.projectlombok:lombok:$rootProject.lombokVersion"
 
     //retrofit
     compile "com.squareup.retrofit2:retrofit:$rootProject.retrofitVersion"
@@ -115,6 +122,7 @@ dependencies {
     compile "io.reactivex:rxjava:$rootProject.rxJavaVersion"
 
     compile "com.jakewharton:butterknife:$rootProject.butterKnifeVersion"
+    annotationProcessor "com.jakewharton:butterknife:$rootProject.butterKnifeVersion"
     compile "net.danlew:android.joda:$rootProject.jodaVersion"
     compile "com.facebook.stetho:stetho:$rootProject.stethoVersion"
     compile "org.apache.commons:commons-lang$rootProject.commonsLangVersion"
