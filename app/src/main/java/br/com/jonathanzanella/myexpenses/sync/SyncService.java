@@ -4,11 +4,13 @@ import android.content.Intent;
 
 import com.google.android.gms.gcm.GcmNetworkManager;
 import com.google.android.gms.gcm.GcmTaskService;
+import com.google.android.gms.gcm.PeriodicTask;
 import com.google.android.gms.gcm.TaskParams;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.account.AccountApi;
 import br.com.jonathanzanella.myexpenses.bill.BillApi;
 import br.com.jonathanzanella.myexpenses.card.CardApi;
@@ -39,6 +41,20 @@ public class SyncService extends GcmTaskService {
 		apis.add(new ExpenseApi());
 		apis.add(new ReceiptApi());
 		apis.add(new SourceApi());
+	}
+
+	private void selfSchedule() {
+		GcmNetworkManager.getInstance(this)
+				.schedule(new PeriodicTask.Builder()
+						.setService(SyncService.class)
+						.setTag(SyncService.class.getSimpleName() + "-Periodic")
+						.setRequiredNetwork(PeriodicTask.NETWORK_STATE_UNMETERED)
+						.setPeriod(Environment.SYNC_PERIODIC_EXECUTION_FREQUENCY)
+						.setFlex(Environment.SYNC_FLEX_EXECUTION)
+						.setUpdateCurrent(true)
+						.setPersisted(true)
+						.setRequiresCharging(false)
+						.build());
 	}
 
 	@Override
@@ -78,6 +94,7 @@ public class SyncService extends GcmTaskService {
 		notification.showFinishedJobNotification(this, totalSaved, totalUpdated);
 
 		Log.debug(LOG_TAG, "end SyncService");
+		selfSchedule();
 		return GcmNetworkManager.RESULT_SUCCESS;
 	}
 
