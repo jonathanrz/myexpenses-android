@@ -15,7 +15,6 @@ import br.com.jonathanzanella.myexpenses.R;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
@@ -35,7 +34,6 @@ public class UIHelper {
 
 	public static void clickMenuItem(@StringRes int menuText) {
 		onView(allOf(ViewMatchers.withId(R.id.design_menu_item_text), withText(menuText)))
-				.perform(scrollTo())
 				.perform(click());
 	}
 
@@ -62,10 +60,10 @@ public class UIHelper {
 	}
 
 	public static void typeTextIntoView(@IdRes int view, String text) {
-		onView(withId(view)).perform(scrollTo()).perform(typeText(text)).perform(closeSoftKeyboard());
+		onView(withId(view)).perform(typeText(text)).perform(closeSoftKeyboard());
 	}
 
 	public static void clickIntoView(@IdRes int view) {
-		onView(withId(view)).perform(scrollTo()).perform(click());
+		onView(withId(view)).perform(click());
 	}
 }
