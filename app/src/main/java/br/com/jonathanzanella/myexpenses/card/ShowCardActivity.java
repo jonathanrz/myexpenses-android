@@ -1,6 +1,8 @@
 package br.com.jonathanzanella.myexpenses.card;
 
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.Menu;
@@ -106,27 +108,42 @@ public class ShowCardActivity extends BaseActivity {
 
 	@OnClick(R.id.act_show_card_pay_credit_card_bill)
 	public void payCreditCardBill() {
-		List<Expense> expenses = card.creditCardBills(DateTime.now().minusMonths(1));
-		int totalExpense = 0;
-		for (Expense expense : expenses) {
-			totalExpense += expense.getValue();
-			expense.setCharged(true);
-			expense.save();
-		}
+		new AsyncTask<Void, Void, Expense>() {
+			@Override
+			protected Expense doInBackground(Void... voids) {
+				List<Expense> expenses = card.creditCardBills(DateTime.now().minusMonths(1));
+				int totalExpense = 0;
+				for (Expense expense : expenses) {
+					totalExpense += expense.getValue();
+					expense.setCharged(true);
+					expense.save();
+				}
 
-		if(totalExpense == 0) {
-			Toast.makeText(this, MyApplication.getContext().getString(R.string.empty_invoice), Toast.LENGTH_SHORT).show();
-			return;
-		}
+				if(totalExpense == 0)
+					return null;
 
-		Expense e = new Expense();
-		e.setName(MyApplication.getContext().getString(R.string.invoice) + " " + card.getName());
-		e.setValue(totalExpense);
-		e.setChargeable(card.getAccount());
-		e.save();
+				Expense e = new Expense();
+				e.setName(MyApplication.getContext().getString(R.string.invoice) + " " + card.getName());
+				e.setValue(totalExpense);
+				e.setChargeable(card.getAccount());
+				e.save();
 
-		Intent i = new Intent(this, EditExpenseActivity.class);
-		i.putExtra(EditExpenseActivity.KEY_EXPENSE_UUID, e.getUuid());
-		startActivity(i);
+				return e;
+			}
+
+			@Override
+			protected void onPostExecute(Expense expense) {
+				super.onPostExecute(expense);
+				if(expense != null) {
+					Intent i = new Intent(ShowCardActivity.this, EditExpenseActivity.class);
+					i.putExtra(EditExpenseActivity.KEY_EXPENSE_UUID, expense.getUuid());
+					startActivity(i);
+				} else {
+					Context ctx = ShowCardActivity.this;
+					Toast.makeText(ctx, ctx.getString(R.string.empty_invoice), Toast.LENGTH_SHORT).show();
+				}
+			}
+		}.execute();
+
 	}
 }
