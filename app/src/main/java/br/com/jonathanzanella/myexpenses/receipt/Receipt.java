@@ -119,8 +119,8 @@ public class Receipt extends BaseModel implements Transaction, UnsyncModel {
 		return initQuery()
 				.where(Receipt_Table.date
 						.between(DateHelper.firstDayOfMonth(month))
-						.and(DateHelper.lastDayOfMonth(month))
-				.and(Receipt_Table.removed.is(false)))
+						.and(DateHelper.lastDayOfMonth(month)))
+				.and(Receipt_Table.removed.is(false))
 				.and(Receipt_Table.userUuid.is(Environment.CURRENT_USER_UUID))
 				.queryList();
 	}
