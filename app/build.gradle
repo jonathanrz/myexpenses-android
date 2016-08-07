@@ -3,8 +3,8 @@ apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'testfairy'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
     def MYEXPENSES_AUTH_TOKEN = '"' + System.getenv("MYEXPENSES_AUTH_TOKEN") + '"' ?: '"Auth Token"';
 
     dexOptions {
@@ -29,12 +29,13 @@ android {
 
     defaultConfig {
         applicationId "br.com.jonathanzanella.myexpenses"
-        minSdkVersion 19
-        targetSdkVersion 23
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 10
         versionName "0.4.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
     buildTypes {
         debug {
             applicationIdSuffix '.debug'
@@ -67,11 +68,18 @@ android {
             buildConfigField 'String', 'MYEXPENSES_AUTH_TOKEN', MYEXPENSES_AUTH_TOKEN
         }
     }
+
     testfairyConfig {
         apiKey System.getenv("MYEXPENSES_TEST_FAIRY_TOKEN")
         autoUpdate false
         notify true
         testersGroups "dev"
+    }
+
+    testOptions.unitTests.all {
+        testLogging {
+            events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
+        }
     }
 }
 
@@ -79,47 +87,72 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
     //Support Library
-    def supportLibrary = '23.1.1'
-    compile "com.android.support:appcompat-v7:${supportLibrary}"
-    compile "com.android.support:design:${supportLibrary}"
-    compile "com.android.support:cardview-v7:${supportLibrary}"
-    compile "com.android.support:support-annotations:${supportLibrary}"
-    androidTestCompile "com.android.support:support-annotations:${supportLibrary}"
+    compile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
+    compile "com.android.support:design:$rootProject.supportLibraryVersion"
+    compile "com.android.support:cardview-v7:$rootProject.supportLibraryVersion"
+    compile "com.android.support:support-annotations:$rootProject.supportLibraryVersion"
+    androidTestCompile "com.android.support:support-annotations:$rootProject.supportLibraryVersion"
 
-    def playServices = '9.0.0'
-    compile "com.google.android.gms:play-services-gcm:${playServices}"
+    //Play Services
+    compile "com.google.android.gms:play-services-gcm:$rootProject.playServicesVersion"
 
     //DBFlow
-    def dbFlow = '3.0.1'
-    apt "com.github.Raizlabs.DBFlow:dbflow-processor:${dbFlow}"
-    compile "com.github.Raizlabs.DBFlow:dbflow-core:${dbFlow}"
-    compile "com.github.Raizlabs.DBFlow:dbflow:${dbFlow}"
+    apt "com.github.Raizlabs.DBFlow:dbflow-processor:$rootProject.dbFlowVersion"
+    compile "com.github.Raizlabs.DBFlow:dbflow-core:$rootProject.dbFlowVersion"
+    compile "com.github.Raizlabs.DBFlow:dbflow:$rootProject.dbFlowVersion"
 
     //Lombok
-    def lombok = '1.12.6'
-    provided "org.projectlombok:lombok:${lombok}"
-    apt "org.projectlombok:lombok:${lombok}"
+    provided "org.projectlombok:lombok:$rootProject.lombokVersion"
+    apt "org.projectlombok:lombok:$rootProject.lombokVersion"
 
     //retrofit
-    def retrofit = '2.0.2'
-    compile "com.squareup.retrofit2:retrofit:${retrofit}"
-    compile "com.squareup.retrofit2:converter-gson:${retrofit}"
-    compile "com.squareup.retrofit2:adapter-rxjava:${retrofit}"
+    compile "com.squareup.retrofit2:retrofit:$rootProject.retrofitVersion"
+    compile "com.squareup.retrofit2:converter-gson:$rootProject.retrofitVersion"
+    compile "com.squareup.retrofit2:adapter-rxjava:$rootProject.retrofitVersion"
+
     //RxAndroid
-    compile 'io.reactivex:rxandroid:1.0.1'
-    compile 'io.reactivex:rxjava:1.0.14'
+    compile "io.reactivex:rxandroid:$rootProject.rxAndroidVersion"
+    compile "io.reactivex:rxjava:$rootProject.rxJavaVersion"
 
-    compile "com.jakewharton:butterknife:7.0.1"
-    compile 'net.danlew:android.joda:2.9.1'
-    compile 'com.facebook.stetho:stetho:1.3.0'
-    compile 'org.apache.commons:commons-lang3:3.4'
-    compile 'com.timehop.stickyheadersrecyclerview:library:0.4.3@aar'
+    compile "com.jakewharton:butterknife:$rootProject.butterKnifeVersion"
+    compile "net.danlew:android.joda:$rootProject.jodaVersion"
+    compile "com.facebook.stetho:stetho:$rootProject.stethoVersion"
+    compile "org.apache.commons:commons-lang$rootProject.commonsLangVersion"
+    compile "com.timehop.stickyheadersrecyclerview:library:$rootProject.stickyHeadersVersion"
+    compile "com.android.support.test.espresso:espresso-idling-resource:$rootProject.ext.espressoVersion"
 
-    //tests
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.mockito:mockito-core:1.10.19'
-    androidTestCompile 'com.android.support.test:runner:0.4'
-    androidTestCompile 'com.android.support.test:rules:0.4'
-    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
-    androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2'
+    // Dependencies for local unit tests
+    testCompile "junit:junit:$rootProject.junitVersion"
+    testCompile "org.mockito:mockito-all:$rootProject.mockitoVersion"
+    testCompile "org.hamcrest:hamcrest-all:$rootProject.ext.hamcrestVersion"
+    testCompile "org.powermock:powermock-module-junit4:$rootProject.ext.powerMockito"
+    testCompile "org.powermock:powermock-api-mockito:$rootProject.ext.powerMockito"
+
+    // Android Testing Support Library's runner and rules
+    androidTestCompile "com.android.support.test:runner:$rootProject.ext.runnerVersion"
+    androidTestCompile "com.android.support.test:rules:$rootProject.ext.rulesVersion"
+
+    // Espresso UI Testing dependencies.
+    androidTestCompile "com.android.support.test.espresso:espresso-core:$rootProject.ext.espressoVersion"
+    androidTestCompile ("com.android.support.test.espresso:espresso-contrib:$rootProject.ext.espressoVersion") {
+        exclude module: 'support-annotations'
+        exclude module: 'support-v4'
+        exclude module: 'support-v13'
+        exclude module: 'recyclerview-v7'
+    }
+    androidTestCompile "com.android.support.test.espresso:espresso-intents:$rootProject.ext.espressoVersion"
+    androidTestCompile "com.android.support.test.uiautomator:uiautomator-v18:$rootProject.ext.uiAutomatorVersion"
+}
+
+configurations.all {
+    resolutionStrategy.force "com.android.support:support-annotations:$rootProject.supportLibraryVersion"
+    resolutionStrategy.force "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
+    resolutionStrategy.force "com.android.support:design:$rootProject.supportLibraryVersion"
+}
+
+configurations.compile.dependencies.each { compileDependency ->
+    println "Excluding compile dependency: ${compileDependency.getName()}"
+    configurations.androidTestCompile.dependencies.each { androidTestCompileDependency ->
+        configurations.androidTestCompile.exclude module: "${compileDependency.getName()}"
+    }
 }
