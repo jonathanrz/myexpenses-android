@@ -1,6 +1,5 @@
 package br.com.jonathanzanella.myexpenses.helpers;
 
-import android.support.annotation.IdRes;
 import android.support.annotation.StringRes;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.matcher.BoundedMatcher;
@@ -14,13 +13,9 @@ import br.com.jonathanzanella.myexpenses.R;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static android.support.test.espresso.action.ViewActions.scrollTo;
-import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.core.Is.is;
@@ -34,9 +29,7 @@ public class UIHelper {
 	}
 
 	public static void clickMenuItem(@StringRes int menuText) {
-		onView(allOf(ViewMatchers.withId(R.id.design_menu_item_text), withText(menuText)))
-				.perform(scrollTo())
-				.perform(click());
+		onView(allOf(ViewMatchers.withId(R.id.design_menu_item_text), withText(menuText))).perform(click());
 	}
 
 	public static void openMenuAndClickItem(@StringRes int menuText) {
@@ -59,13 +52,5 @@ public class UIHelper {
 				textMatcher.describeTo(description);
 			}
 		};
-	}
-
-	public static void typeTextIntoView(@IdRes int view, String text) {
-		onView(withId(view)).perform(scrollTo()).perform(typeText(text)).perform(closeSoftKeyboard());
-	}
-
-	public static void clickIntoView(@IdRes int view) {
-		onView(withId(view)).perform(scrollTo()).perform(click());
 	}
 }
