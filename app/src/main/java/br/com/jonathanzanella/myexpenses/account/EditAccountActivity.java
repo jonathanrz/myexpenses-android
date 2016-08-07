@@ -7,13 +7,13 @@ import android.view.MenuItem;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
-import java.text.NumberFormat;
-
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch;
 import br.com.jonathanzanella.myexpenses.user.SelectUserView;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
+
+import static java.text.NumberFormat.getCurrencyInstance;
 
 /**
  * Created by Jonathan Zanella on 26/01/16.
@@ -25,6 +25,8 @@ public class EditAccountActivity extends BaseActivity {
 	EditText editName;
 	@Bind(R.id.act_edit_account_balance)
 	EditText editBalance;
+	@Bind(R.id.act_edit_account_negative)
+	CheckBox checkAccountBalanceNegative;
 	@Bind(R.id.act_edit_account_to_pay_credit_card)
 	CheckBox checkToPayCreditCard;
 	@Bind(R.id.act_edit_account_to_pay_bills)
@@ -49,7 +51,14 @@ public class EditAccountActivity extends BaseActivity {
 		if(account != null) {
 			setTitle(R.string.edit_account_title);
 			editName.setText(account.getName());
-			editBalance.setText(NumberFormat.getCurrencyInstance().format(account.getBalance() / 100.0));
+			int balance = account.getBalance();
+			if(balance > 0) {
+				editBalance.setText(getCurrencyInstance().format(balance / 100.0));
+				checkAccountBalanceNegative.setChecked(false);
+			} else {
+				editBalance.setText(getCurrencyInstance().format(balance * -1 / 100.0));
+				checkAccountBalanceNegative.setChecked(true);
+			}
 			checkToPayCreditCard.setChecked(account.isAccountToPayCreditCard());
 			checkToPayBill.setChecked(account.isAccountToPayBills());
 			selectUserView.setSelectedUser(account.getUserUuid());
@@ -94,7 +103,11 @@ public class EditAccountActivity extends BaseActivity {
 		if(account == null)
 			account = new Account();
 		account.setName(editName.getText().toString());
-		account.setBalance(Integer.parseInt(editBalance.getText().toString().replaceAll("[^\\d]", "")));
+		int balance = Integer.parseInt(editBalance.getText().toString().replaceAll("[^\\d]", ""));
+		if(checkAccountBalanceNegative.isChecked())
+			account.setBalance(balance * -1);
+		else
+			account.setBalance(balance);
 		account.setAccountToPayCreditCard(checkToPayCreditCard.isChecked());
 		account.setAccountToPayBills(checkToPayBill.isChecked());
 		account.setUserUuid(selectUserView.getSelectedUser());

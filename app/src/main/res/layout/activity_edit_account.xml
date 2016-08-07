@@ -30,7 +30,7 @@
 		<android.support.design.widget.TextInputLayout
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:layout_marginBottom="@dimen/default_spacing">
+			android:layout_marginBottom="@dimen/min_spacing">
 
 			<android.support.v7.widget.AppCompatEditText
 				android:id="@+id/act_edit_account_balance"
@@ -40,6 +40,13 @@
 				android:hint="@string/balance"/>
 
 		</android.support.design.widget.TextInputLayout>
+
+		<CheckBox
+			android:id="@+id/act_edit_account_negative"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:hint="@string/negative"
+			android:layout_marginBottom="@dimen/default_spacing"/>
 
 		<CheckBox
 			android:id="@+id/act_edit_account_to_pay_credit_card"
