@@ -122,6 +122,7 @@ public class ShowCardActivity extends BaseActivity {
 		Expense e = new Expense();
 		e.setName(MyApplication.getContext().getString(R.string.invoice) + " " + card.getName());
 		e.setValue(totalExpense);
+		e.setChargeable(card.getAccount());
 		e.save();
 
 		Intent i = new Intent(this, EditExpenseActivity.class);
