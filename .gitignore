@@ -3,6 +3,7 @@
 /local.properties
 /.idea
 .idea/*
+.java-version
 .DS_Store
 /build
 /captures
