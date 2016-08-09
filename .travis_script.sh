@@ -1,7 +1,7 @@
 #!/bin/bash
 set -ev
-./gradlew assembleDebugAndroidTest
-./gradlew connectedDebugAndroidTest
+./gradlew assembleAndroidTest
+./gradlew connectedAndroidTest
 if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then
 	./gradlew testfairyJonathan
 fi
