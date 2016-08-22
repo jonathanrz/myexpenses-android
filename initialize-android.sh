@@ -23,7 +23,7 @@ if [ ! -e ${INITIALIZATION_FILE} ]; then
   echo y | android update sdk --no-ui --filter extra-android-support --all > /dev/null
 
   # uncomment these if you are using maven/gradle to build your android project
-  # echo y | android update sdk --no-ui --filter extra-google-m2repository --all > /dev/null
+  echo y | android update sdk --no-ui --filter extra-google-m2repository --all > /dev/null
   echo y | android update sdk --no-ui --filter extra-android-m2repository --all > /dev/null
 
   # Specify at least one system image if you want to run emulator tests
