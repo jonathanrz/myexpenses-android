@@ -8,7 +8,7 @@ INITIALIZATION_FILE="$ANDROID_HOME/.initialized-dependencies-$(git log -n 1 --fo
 
 if [ ! -e ${INITIALIZATION_FILE} ]; then
   # fetch and initialize $ANDROID_HOME
-  ./download-android
+  ./download-android.sh
   # Use the latest android sdk tools
   echo y | android update sdk --no-ui --filter platform-tool > /dev/null
   echo y | android update sdk --no-ui --filter tool > /dev/null
