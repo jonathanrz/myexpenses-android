@@ -34,7 +34,7 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 10
         versionName "0.4.3.$commitCount"
-        testInstrumentationRunner "br.com.jonathanzanella.myexpenses.MyTestRunner"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         jackOptions {
             enabled false
