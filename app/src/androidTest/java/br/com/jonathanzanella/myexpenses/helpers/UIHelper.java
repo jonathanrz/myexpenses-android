@@ -1,9 +1,9 @@
 package br.com.jonathanzanella.myexpenses.helpers;
 
+import android.support.annotation.IdRes;
 import android.support.annotation.StringRes;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.matcher.BoundedMatcher;
-import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.v7.widget.Toolbar;
 
 import org.hamcrest.Description;
@@ -13,15 +13,13 @@ import br.com.jonathanzanella.myexpenses.R;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
-<<<<<<< 81292bd54327cc41c77e1db556b0a1c578cf4e4d
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.action.ViewActions.typeText;
-=======
->>>>>>> Merge
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.core.Is.is;
@@ -35,13 +33,7 @@ public class UIHelper {
 	}
 
 	public static void clickMenuItem(@StringRes int menuText) {
-<<<<<<< 81292bd54327cc41c77e1db556b0a1c578cf4e4d
-		onView(allOf(ViewMatchers.withId(R.id.design_menu_item_text), withText(menuText)))
-				.perform(scrollTo())
-				.perform(click());
-=======
-		onView(allOf(ViewMatchers.withId(R.id.design_menu_item_text), withText(menuText))).perform(click());
->>>>>>> Merge
+		onView(allOf(withId(R.id.design_menu_item_text), withText(menuText))).perform(click());
 	}
 
 	public static void openMenuAndClickItem(@StringRes int menuText) {
@@ -65,7 +57,6 @@ public class UIHelper {
 			}
 		};
 	}
-<<<<<<< 81292bd54327cc41c77e1db556b0a1c578cf4e4d
 
 	public static void typeTextIntoView(@IdRes int view, String text) {
 		onView(withId(view)).perform(scrollTo()).perform(typeText(text)).perform(closeSoftKeyboard());
@@ -74,6 +65,4 @@ public class UIHelper {
 	public static void clickIntoView(@IdRes int view) {
 		onView(withId(view)).perform(scrollTo()).perform(click());
 	}
-=======
->>>>>>> Merge
 }
