@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'testfairy'
+apply plugin: 'jacoco-android'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -49,6 +50,7 @@ android {
             applicationIdSuffix '.debug'
             versionNameSuffix '-DEBUG'
             buildConfigField 'String', 'MYEXPENSES_AUTH_TOKEN', MYEXPENSES_AUTH_TOKEN
+            testCoverageEnabled true
         }
         jonathan {
             applicationIdSuffix '.jonathan'
