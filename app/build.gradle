@@ -6,7 +6,6 @@ android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
     def MYEXPENSES_AUTH_TOKEN = '"' + System.getenv("MYEXPENSES_AUTH_TOKEN") + '"' ?: '"Auth Token"';
-    def commitCount = gitCommitCount
 
     dexOptions {
         maxProcessCount 2
@@ -33,7 +32,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 10
-        versionName "0.4.3.$commitCount"
+        versionName "0.4.3.$rootProject.ext.gitCommitCount()"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         jackOptions {
