@@ -72,14 +72,14 @@ ext.gitCommitCount = {
     }
 }
 
-ext.getVersionName = { ->
+ext.getVersionName = {
     try {
-        def branchout = new ByteArrayOutputStream()
+        def stdout = new ByteArrayOutputStream()
         exec {
             commandLine 'git', 'rev-parse', '--abbrev-ref', 'HEAD'
             standardOutput = branchout
         }
-        def branch = branchout.toString().trim()
+        def branch = stdout.toString().trim()
 
         if (branch.equals("master")) {
             return gitCommitCount();
@@ -88,6 +88,6 @@ ext.getVersionName = { ->
         }
     }
     catch (ignored) {
-        return null;
+        return 0;
     }
 }
