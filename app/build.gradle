@@ -132,6 +132,7 @@ dependencies {
     compile "org.apache.commons:commons-lang$rootProject.commonsLangVersion"
     compile "com.timehop.stickyheadersrecyclerview:library:$rootProject.stickyHeadersVersion"
     compile "com.android.support.test.espresso:espresso-idling-resource:$rootProject.ext.espressoVersion"
+    compile "com.github.andrzejchm:DroidMVP:$rootProject.ext.droidMVP"
 
     // Dependencies for local unit tests
     testCompile "junit:junit:$rootProject.junitVersion"
