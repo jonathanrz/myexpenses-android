@@ -70,3 +70,23 @@ ext.gitCommitCount = {
         return 0;
     }
 }
+
+ext.getVersionName = { ->
+    try {
+        def branchout = new ByteArrayOutputStream()
+        exec {
+            commandLine 'git', 'rev-parse', '--abbrev-ref', 'HEAD'
+            standardOutput = branchout
+        }
+        def branch = branchout.toString().trim()
+
+        if (branch.equals("master")) {
+            return gitCommitCount();
+        } else {
+            return branch;
+        }
+    }
+    catch (ignored) {
+        return null;
+    }
+}
