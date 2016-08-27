@@ -8,7 +8,7 @@ import android.support.annotation.StringRes;
 
 interface SourceContract {
 	interface Presenter {
-		void viewCreated();
+		void viewUpdated(boolean invalidateCache);
 		void loadSource(String uuid);
 		void save();
 		String getUuid();

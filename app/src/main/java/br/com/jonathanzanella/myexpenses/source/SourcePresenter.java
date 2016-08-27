@@ -17,8 +17,10 @@ class SourcePresenter implements SourceContract.Presenter {
 	}
 
 	@Override
-	public void viewCreated() {
+	public void viewUpdated(boolean invalidateCache) {
 		if (source != null) {
+			if(invalidateCache)
+				source = repository.find(source.getUuid());
 			view.setTitle(R.string.edit_source_title);
 			view.showSource(source);
 		} else {
