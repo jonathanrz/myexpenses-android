@@ -77,6 +77,7 @@ public class Source extends BaseModel implements UnsyncModel {
         return initQuery().where(Source_Table.sync.eq(false)).queryList();
     }
 
+	@Deprecated
 	public static Source find(String uuid) {
 		return initQuery().where(Source_Table.uuid.eq(uuid)).querySingle();
 	}
