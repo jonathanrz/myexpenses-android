@@ -21,6 +21,7 @@ import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.database.MyDatabase;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -30,6 +31,7 @@ import static br.com.jonathanzanella.myexpenses.log.Log.warning;
  * Created by jzanella on 1/31/16.
  */
 @Table(database = MyDatabase.class)
+@EqualsAndHashCode
 public class Source extends BaseModel implements UnsyncModel {
     private static final SourceApi sourceApi = new SourceApi();
 
