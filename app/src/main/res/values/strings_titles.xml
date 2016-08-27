@@ -2,4 +2,6 @@
 <resources>
 	<string name="new_account_title">Nova Conta</string>
 	<string name="edit_account_title">Editar Conta</string>
+	<string name="new_source_title">Nova Fonte</string>
+	<string name="edit_source_title">Editar Fonte</string>
 </resources>

@@ -1,5 +1,7 @@
 package br.com.jonathanzanella.myexpenses.source;
 
+import br.com.jonathanzanella.myexpenses.R;
+
 /**
  * Created by jzanella on 8/27/16.
  */
@@ -16,8 +18,12 @@ class SourcePresenter implements SourceContract.Presenter {
 
 	@Override
 	public void viewCreated() {
-		if (source != null)
+		if (source != null) {
+			view.setTitle(R.string.edit_source_title);
 			view.showSource(source);
+		} else {
+			view.setTitle(R.string.new_source_title);
+		}
 	}
 
 	@Override

@@ -16,11 +16,11 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class SourcePresenterTest {
 	private static final String UUID = "uuid";
 	@Mock
-	SourceRepository repository;
+	private SourceRepository repository;
 	@Mock
-	SourceContract.View view;
+	private SourceContract.View view;
 
-	SourcePresenter presenter;
+	private SourcePresenter presenter;
 
 	@Before
 	public void setUp() throws Exception {
