@@ -44,6 +44,7 @@ ext {
     junitVersion = '4.12'
     lombokVersion = '1.12.6'
     mockitoVersion = '1.10.19'
+    multiDex = '1.0.1'
     playServicesVersion = '9.4.0'
     powerMockito = '1.6.2'
     retrofitVersion = '2.0.2'
