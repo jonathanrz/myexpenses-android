@@ -32,7 +32,6 @@ public class ListSourceActivity extends BaseActivity implements SourceAdapterCal
 
 		SourceAdapter adapter = new SourceAdapter();
 		adapter.setCallback(this);
-		adapter.loadData();
 
 		sources.setAdapter(adapter);
 		sources.setHasFixedSize(true);

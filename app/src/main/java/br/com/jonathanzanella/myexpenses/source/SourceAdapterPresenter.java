@@ -23,7 +23,9 @@ class SourceAdapterPresenter {
 		sources = repository.userSources();
 	}
 
-	public List<Source> getSources() {
+	List<Source> getSources(boolean invalidateCache) {
+		if(invalidateCache)
+			loadSources();
 		return Collections.unmodifiableList(sources);
 	}
 

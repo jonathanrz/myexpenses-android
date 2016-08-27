@@ -64,7 +64,11 @@ class SourceAdapter extends RecyclerView.Adapter<SourceAdapter.ViewHolder> {
 
 	SourceAdapter() {
 		presenter = new SourceAdapterPresenter(this, new SourceRepository());
-		sources = presenter.getSources();
+		sources = presenter.getSources(false);
+	}
+
+	void refreshData() {
+		sources = presenter.getSources(true);
 	}
 
 	@Override
@@ -85,7 +89,7 @@ class SourceAdapter extends RecyclerView.Adapter<SourceAdapter.ViewHolder> {
 
 	void addSource(@NonNull Source source) {
 		presenter.addSource(source);
-		sources = presenter.getSources();
+		sources = presenter.getSources(false);
 	}
 
 	@Nullable

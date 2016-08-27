@@ -42,7 +42,6 @@ public class SourceView extends BaseView {
         ButterKnife.bind(this);
 
         adapter = new SourceAdapter();
-        adapter.loadData();
 
         sources.setAdapter(adapter);
         sources.setLayoutManager(new GridLayoutManager(getContext(), 1));
@@ -79,7 +78,7 @@ public class SourceView extends BaseView {
     public void refreshData() {
         super.refreshData();
 
-        adapter.loadData();
+        adapter.refreshData();
         adapter.notifyDataSetChanged();
     }
 }
