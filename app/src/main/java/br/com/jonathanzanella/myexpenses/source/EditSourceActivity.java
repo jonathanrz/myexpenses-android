@@ -28,7 +28,7 @@ public class EditSourceActivity extends BaseActivity implements SourceContract.V
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edit_source);
-		presenter = new SourcePresenter(this);
+		presenter = new SourcePresenter(this, new SourceRepository());
 	}
 
 	@Override

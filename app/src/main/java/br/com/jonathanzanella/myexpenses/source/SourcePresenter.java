@@ -6,11 +6,12 @@ package br.com.jonathanzanella.myexpenses.source;
 
 class SourcePresenter implements SourceContract.Presenter {
 	private SourceContract.View view;
-	private SourceRepository repository = new SourceRepository();
+	private SourceRepository repository;
 	private Source source;
 
-	SourcePresenter(SourceContract.View view) {
+	SourcePresenter(SourceContract.View view, SourceRepository repository) {
 		this.view = view;
+		this.repository = repository;
 	}
 
 	@Override
@@ -32,6 +33,7 @@ class SourcePresenter implements SourceContract.Presenter {
 			source = new Source();
 		view.fillSource(source);
 		repository.save(source);
+		view.finishView();
 	}
 
 	@Override
