@@ -21,7 +21,8 @@ import lombok.Setter;
  * Created by Jonathan Zanella on 26/01/16.
  */
 class SourceAdapter extends RecyclerView.Adapter<SourceAdapter.ViewHolder> {
-	protected List<Source> sources;
+	private SourceAdapterPresenter presenter;
+	private List<Source> sources;
 
 	@Setter
 	SourceAdapterCallback callback;
@@ -61,6 +62,11 @@ class SourceAdapter extends RecyclerView.Adapter<SourceAdapter.ViewHolder> {
 		}
 	}
 
+	SourceAdapter() {
+		presenter = new SourceAdapterPresenter(this, new SourceRepository());
+		sources = presenter.getSources();
+	}
+
 	@Override
 	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_source, parent, false);
@@ -74,19 +80,16 @@ class SourceAdapter extends RecyclerView.Adapter<SourceAdapter.ViewHolder> {
 
 	@Override
 	public int getItemCount() {
-		return sources != null ? sources.size() : 0;
+		return sources.size();
 	}
 
-	public void loadData() {
-		sources = Source.user();
+	void addSource(@NonNull Source source) {
+		presenter.addSource(source);
+		sources = presenter.getSources();
 	}
 
-	public void addSource(@NonNull Source source) {
-		sources.add(source);
-		notifyItemInserted(sources.size() - 1);
-	}
-
-	public @Nullable Source getSource(int position) {
+	@Nullable
+	private Source getSource(int position) {
 		return sources != null ? sources.get(position) : null;
 	}
 }

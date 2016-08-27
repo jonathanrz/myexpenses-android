@@ -7,13 +7,6 @@ import android.support.annotation.StringRes;
  */
 
 interface SourceContract {
-	interface Presenter {
-		void viewUpdated(boolean invalidateCache);
-		void loadSource(String uuid);
-		void save();
-		String getUuid();
-	}
-
 	interface View {
 		void setTitle(@StringRes int string);
 		void showSource(Source source);

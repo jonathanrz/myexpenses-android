@@ -6,7 +6,7 @@ import br.com.jonathanzanella.myexpenses.R;
  * Created by jzanella on 8/27/16.
  */
 
-class SourcePresenter implements SourceContract.Presenter {
+class SourcePresenter {
 	private SourceContract.View view;
 	private SourceRepository repository;
 	private Source source;
@@ -16,8 +16,7 @@ class SourcePresenter implements SourceContract.Presenter {
 		this.repository = repository;
 	}
 
-	@Override
-	public void viewUpdated(boolean invalidateCache) {
+	void viewUpdated(boolean invalidateCache) {
 		if (source != null) {
 			if(invalidateCache)
 				source = repository.find(source.getUuid());
@@ -28,15 +27,13 @@ class SourcePresenter implements SourceContract.Presenter {
 		}
 	}
 
-	@Override
-	public void loadSource(String uuid) {
+	void loadSource(String uuid) {
 		source = repository.find(uuid);
 		if(source == null)
 			throw new SourceNotFoundException(uuid);
 	}
 
-	@Override
-	public void save() {
+	void save() {
 		if(source == null)
 			source = new Source();
 		view.fillSource(source);
@@ -44,8 +41,7 @@ class SourcePresenter implements SourceContract.Presenter {
 		view.finishView();
 	}
 
-	@Override
-	public String getUuid() {
+	String getUuid() {
 		return source != null ? source.getUuid() : null;
 	}
 }
