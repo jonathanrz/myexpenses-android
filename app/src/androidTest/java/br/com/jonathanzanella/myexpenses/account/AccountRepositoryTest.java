@@ -64,9 +64,9 @@ public class AccountRepositoryTest {
 		wrongAccount.setUserUuid("wrong");
 		repository.save(wrongAccount);
 
-		List<Account> sources = repository.userAccounts();
-		assertThat(sources.size(), is(1));
-		assertTrue(sources.contains(correctAccount));
-		assertFalse(sources.contains(wrongAccount));
+		List<Account> accounts = repository.userAccounts();
+		assertThat(accounts.size(), is(1));
+		assertTrue(accounts.contains(correctAccount));
+		assertFalse(accounts.contains(wrongAccount));
 	}
 }
