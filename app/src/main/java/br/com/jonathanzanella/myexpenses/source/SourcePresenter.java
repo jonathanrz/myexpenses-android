@@ -3,7 +3,6 @@ package br.com.jonathanzanella.myexpenses.source;
 import android.support.annotation.Nullable;
 
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.account.AccountContract;
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
@@ -21,7 +20,7 @@ class SourcePresenter {
 
 	SourcePresenter(SourceContract.View view, SourceRepository repository) {
 		this.view = view;
-		if(view instanceof AccountContract.EditView)
+		if(view instanceof SourceContract.EditView)
 			editView = (SourceContract.EditView) view;
 		this.repository = repository;
 	}

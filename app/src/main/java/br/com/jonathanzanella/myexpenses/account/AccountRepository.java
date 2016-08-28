@@ -1,0 +1,36 @@
+package br.com.jonathanzanella.myexpenses.account;
+
+import com.raizlabs.android.dbflow.sql.language.From;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
+
+import java.util.List;
+
+import br.com.jonathanzanella.myexpenses.Environment;
+import br.com.jonathanzanella.myexpenses.validations.OperationResult;
+
+/**
+ * Created by jzanella on 8/27/16.
+ */
+
+class AccountRepository {
+	private From<Account> initQuery() {
+		return SQLite.select().from(Account.class);
+	}
+
+	Account find(String uuid) {
+		return initQuery().where(Account_Table.uuid.eq(uuid)).querySingle();
+	}
+
+	List<Account> userAccounts() {
+		return initQuery().where(Account_Table.userUuid.is(Environment.CURRENT_USER_UUID)).queryList();
+	}
+
+	OperationResult save(Account account) {
+		OperationResult result = new OperationResult();
+//		if(StringUtils.isEmpty(account.getName()))
+//			result.addError(ValidationError.NAME);
+		if(result.isValid())
+			account.save();
+		return result;
+	}
+}
