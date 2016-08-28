@@ -52,7 +52,7 @@ public class AddAccountTest {
 	}
 
 	@Test
-	public void addNewAccount() {
+	public void add_new_account() {
 		activityTestRule.launchActivity(new Intent());
 
 		openMenuAndClickItem(R.string.accounts);

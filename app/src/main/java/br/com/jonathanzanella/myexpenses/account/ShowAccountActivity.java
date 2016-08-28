@@ -19,7 +19,7 @@ import butterknife.Bind;
 /**
  * Created by jzanella on 1/31/16.
  */
-public class ShowAccountActivity extends BaseActivity {
+public class ShowAccountActivity extends BaseActivity implements AccountContract.View {
 	public static final String KEY_ACCOUNT_UUID = "KeyAccountUuid";
 	public static final String KEY_ACCOUNT_MONTH_TO_SHOW = "KeyAccountMonthToShow";
 
@@ -34,32 +34,16 @@ public class ShowAccountActivity extends BaseActivity {
 	@Bind(R.id.act_show_account_transactions)
 	TransactionsView transactionsView;
 
-	private Account account;
+	private AccountPresenter presenter = new AccountPresenter(new AccountRepository());
 	private DateTime monthToShow;
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_show_account);
-	}
-
-	@Override
-	protected void onPostCreate(Bundle savedInstanceState) {
-		super.onPostCreate(savedInstanceState);
 
 		if(monthToShow == null)
 			monthToShow = DateHelper.firstDayOfMonth(DateTime.now());
-
-		setData();
-	}
-
-	private void setData() {
-		accountName.setText(account.getName());
-		accountBalance.setText(NumberFormat.getCurrencyInstance().format(account.getBalance() / 100.0));
-		accountToPayCreditCard.setText(account.isAccountToPayCreditCard() ? R.string.yes : R.string.no);
-		accountToPayBills.setText(account.isAccountToPayBills() ? R.string.yes : R.string.no);
-
-		transactionsView.showTransactions(account, monthToShow);
 	}
 
 	@Override
@@ -67,26 +51,34 @@ public class ShowAccountActivity extends BaseActivity {
 		super.storeBundle(extras);
 		if(extras == null)
 			return;
-		if(extras.containsKey(KEY_ACCOUNT_UUID))
-			account = Account.find(extras.getString(KEY_ACCOUNT_UUID));
+		presenter.loadAccount(extras.getString(KEY_ACCOUNT_UUID));
 		if(extras.containsKey(KEY_ACCOUNT_MONTH_TO_SHOW))
 			monthToShow = DateHelper.firstDayOfMonth(new DateTime(extras.getLong(KEY_ACCOUNT_MONTH_TO_SHOW)));
 	}
 
 	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		outState.putString(KEY_ACCOUNT_UUID, account.getUuid());
+	protected void onPostCreate(Bundle savedInstanceState) {
+		super.onPostCreate(savedInstanceState);
+		presenter.viewUpdated(false);
 	}
 
 	@Override
-	protected void onResume() {
-		super.onResume();
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putString(KEY_ACCOUNT_UUID, presenter.getUuid());
+		outState.putLong(KEY_ACCOUNT_MONTH_TO_SHOW, monthToShow.getMillis());
+	}
 
-		if(account != null) {
-			account = Account.find(account.getUuid());
-			setData();
-		}
+	@Override
+	protected void onStart() {
+		super.onStart();
+		presenter.attachView(this);
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		presenter.detachView();
 	}
 
 	@Override
@@ -100,10 +92,20 @@ public class ShowAccountActivity extends BaseActivity {
 		switch (item.getItemId()) {
 			case R.id.action_edit:
 				Intent i = new Intent(this, EditAccountActivity.class);
-				i.putExtra(EditAccountActivity.KEY_ACCOUNT_UUID, account.getUuid());
+				i.putExtra(EditAccountActivity.KEY_ACCOUNT_UUID, presenter.getUuid());
 				startActivity(i);
 				break;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public void showAccount(Account account) {
+		accountName.setText(account.getName());
+		accountBalance.setText(NumberFormat.getCurrencyInstance().format(account.getBalance() / 100.0));
+		accountToPayCreditCard.setText(account.isAccountToPayCreditCard() ? R.string.yes : R.string.no);
+		accountToPayBills.setText(account.isAccountToPayBills() ? R.string.yes : R.string.no);
+
+		transactionsView.showTransactions(account, monthToShow);
 	}
 }

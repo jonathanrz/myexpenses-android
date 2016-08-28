@@ -40,8 +40,12 @@ class AccountPresenter {
 		if (account != null) {
 			if(invalidateCache)
 				account = repository.find(account.getUuid());
-			if(editView != null)
+			if(editView != null) {
 				editView.setTitle(R.string.edit_account_title);
+			} else {
+				String title = view.getContext().getString(R.string.account);
+				view.setTitle(title.concat(" ").concat(account.getName()));
+			}
 			view.showAccount(account);
 		} else {
 			if(editView != null)
