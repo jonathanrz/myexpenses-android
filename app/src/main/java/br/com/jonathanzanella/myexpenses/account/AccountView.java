@@ -9,9 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.account.EditAccountActivity;
-import br.com.jonathanzanella.myexpenses.account.AccountAdapter;
-import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.views.BaseView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -45,7 +42,6 @@ public class AccountView extends BaseView {
 		ButterKnife.bind(this);
 
 		adapter = new AccountAdapter();
-		adapter.loadData();
 
 		accounts.setAdapter(adapter);
 		accounts.setLayoutManager(new GridLayoutManager(getContext(), 1));
@@ -82,7 +78,7 @@ public class AccountView extends BaseView {
 	public void refreshData() {
 		super.refreshData();
 
-		adapter.loadData();
+		adapter.refreshData();
 		adapter.notifyDataSetChanged();
 	}
 }

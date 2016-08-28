@@ -69,7 +69,6 @@ class ResumeMonthlyView extends BaseView {
 	private void initAccount() {
 		accountAdapter = new AccountAdapter();
 		accountAdapter.setSimplified(true);
-		accountAdapter.loadData();
 
 		accounts.setAdapter(accountAdapter);
 		accounts.setHasFixedSize(true);
@@ -106,7 +105,7 @@ class ResumeMonthlyView extends BaseView {
 	@Override
 	public void refreshData() {
 		super.refreshData();
-		accountAdapter.loadData();
+		accountAdapter.refreshData();
 		accountAdapter.notifyDataSetChanged();
 
 		receiptAdapter.loadData(month);

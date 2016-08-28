@@ -28,7 +28,8 @@ public class AccountPresenterTest {
 	@Before
 	public void setUp() throws Exception {
 		initMocks(this);
-		presenter = new AccountPresenter(view, repository);
+		presenter = new AccountPresenter(repository);
+		presenter.attachView(view);
 	}
 
 	@Test(expected = AccountNotFoundException.class)

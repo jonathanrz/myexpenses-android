@@ -28,7 +28,8 @@ public class SourcePresenterTest {
 	@Before
 	public void setUp() throws Exception {
 		initMocks(this);
-		presenter = new SourcePresenter(view, repository);
+		presenter = new SourcePresenter(repository);
+		presenter.attachView(view);
 	}
 
 	@Test(expected = SourceNotFoundException.class)
