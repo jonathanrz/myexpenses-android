@@ -8,19 +8,22 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.account.ListAccountActivity;
 import br.com.jonathanzanella.myexpenses.account.Account;
+import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.user.SelectUserView;
+import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
 import butterknife.OnClick;
 
+import static br.com.jonathanzanella.myexpenses.card.CardType.CREDIT;
+import static br.com.jonathanzanella.myexpenses.card.CardType.DEBIT;
+
 /**
  * Created by Jonathan Zanella on 26/01/16.
  */
-public class EditCardActivity extends BaseActivity {
+public class EditCardActivity extends BaseActivity implements CardContract.EditView {
 	public static final String KEY_CARD_UUID = "KeyCardUuid";
-	private static final int REQUEST_SELECT_ACCOUNT = 1006;
 
 	@Bind(R.id.act_edit_card_name)
 	EditText editName;
@@ -31,8 +34,7 @@ public class EditCardActivity extends BaseActivity {
 	@Bind(R.id.act_edit_card_user)
 	SelectUserView selectUserView;
 
-	private Card card;
-	private Account account;
+	private CardPresenter presenter = new CardPresenter(new CardRepository(), new AccountRepository());
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -43,39 +45,35 @@ public class EditCardActivity extends BaseActivity {
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
-
-		if(card != null) {
-			editName.setText(card.getName());
-			account = card.getAccount();
-			onAccountSelected();
-			switch (card.getType()) {
-				case CREDIT:
-					radioType.check(R.id.act_edit_card_type_credit);
-					break;
-				case DEBIT:
-					radioType.check(R.id.act_edit_card_type_debit);
-					break;
-			}
-			selectUserView.setSelectedUser(card.getUserUuid());
-		}
+		presenter.viewUpdated(false);
 	}
 
 	@Override
 	protected void storeBundle(Bundle extras) {
 		super.storeBundle(extras);
 
-		if(extras == null)
-			return;
-
-		if(extras.containsKey(KEY_CARD_UUID))
-			card = Card.find(extras.getString(KEY_CARD_UUID));
+		if(extras != null && extras.containsKey(KEY_CARD_UUID))
+			presenter.loadCard(extras.getString(KEY_CARD_UUID));
 	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		if(card != null)
-			outState.putString(KEY_CARD_UUID, card.getUuid());
+		String uuidCard = presenter.getUuid();
+		if(uuidCard != null)
+			outState.putString(KEY_CARD_UUID, uuidCard);
+	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		presenter.attachView(this);
+	}
+
+	@Override
+	protected void onStop() {
+		presenter.detachView();
+		super.onStop();
 	}
 
 	@Override
@@ -88,7 +86,7 @@ public class EditCardActivity extends BaseActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_save:
-				save();
+				presenter.save();
 				break;
 		}
 		return super.onOptionsItemSelected(item);
@@ -96,50 +94,61 @@ public class EditCardActivity extends BaseActivity {
 
 	@OnClick(R.id.act_edit_card_account)
 	void onAccount() {
-		if(card == null)
-			startActivityForResult(new Intent(this, ListAccountActivity.class), REQUEST_SELECT_ACCOUNT);
+		presenter.showSelectAccountActivity(this);
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		switch (requestCode) {
-			case REQUEST_SELECT_ACCOUNT: {
-				if(resultCode == RESULT_OK) {
-					account = Account.find(data.getStringExtra(ListAccountActivity.KEY_ACCOUNT_SELECTED_UUID));
-					if(account != null)
-						onAccountSelected();
-				}
-				break;
-			}
-		}
+		presenter.onActivityResult(requestCode, resultCode, data);
 	}
 
-	private void onAccountSelected() {
+	@Override
+	public void onAccountSelected(Account account) {
 		editAccount.setText(account.getName());
 	}
 
-	private void save() {
-		if(card == null)
-			card = new Card();
+	@Override
+	public void showCard(Card card) {
+		editName.setText(card.getName());
+		switch (card.getType()) {
+			case CREDIT:
+				radioType.check(R.id.act_edit_card_type_credit);
+				break;
+			case DEBIT:
+				radioType.check(R.id.act_edit_card_type_debit);
+				break;
+		}
+		selectUserView.setSelectedUser(card.getUserUuid());
+	}
+
+	@Override
+	public Card fillCard(Card card) {
 		card.setName(editName.getText().toString());
-		card.setAccount(account);
 		switch (radioType.getCheckedRadioButtonId()) {
 			case R.id.act_edit_card_type_credit: {
-				card.setType(CardType.CREDIT);
+				card.setType(CREDIT);
 				break;
 			}
 			case R.id.act_edit_card_type_debit: {
-				card.setType(CardType.DEBIT);
+				card.setType(DEBIT);
 				break;
 			}
 		}
 		card.setUserUuid(selectUserView.getSelectedUser());
-		card.save();
+		return card;
+	}
 
+	@Override
+	public void finishView() {
 		Intent i = new Intent();
-		i.putExtra(KEY_CARD_UUID, card.getUuid());
+		i.putExtra(KEY_CARD_UUID, presenter.getUuid());
 		setResult(RESULT_OK, i);
 		finish();
+	}
+
+	@Override
+	public void showError(ValidationError error) {
+
 	}
 }

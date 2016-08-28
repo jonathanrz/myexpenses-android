@@ -1,4 +1,4 @@
-package br.com.jonathanzanella.myexpenses.account;
+package br.com.jonathanzanella.myexpenses.card;
 
 import com.raizlabs.android.dbflow.sql.language.From;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
@@ -15,25 +15,25 @@ import br.com.jonathanzanella.myexpenses.validations.ValidationError;
  * Created by jzanella on 8/27/16.
  */
 
-public class AccountRepository {
-	private From<Account> initQuery() {
-		return SQLite.select().from(Account.class);
+class CardRepository {
+	private From<Card> initQuery() {
+		return SQLite.select().from(Card.class);
 	}
 
-	public Account find(String uuid) {
-		return initQuery().where(Account_Table.uuid.eq(uuid)).querySingle();
+	Card find(String uuid) {
+		return initQuery().where(Card_Table.uuid.eq(uuid)).querySingle();
 	}
 
-	List<Account> userAccounts() {
-		return initQuery().where(Account_Table.userUuid.is(Environment.CURRENT_USER_UUID)).queryList();
+	List<Card> userCards() {
+		return initQuery().where(Card_Table.userUuid.is(Environment.CURRENT_USER_UUID)).queryList();
 	}
 
-	OperationResult save(Account account) {
+	OperationResult save(Card card) {
 		OperationResult result = new OperationResult();
-		if(StringUtils.isEmpty(account.getName()))
+		if(StringUtils.isEmpty(card.getName()))
 			result.addError(ValidationError.NAME);
 		if(result.isValid())
-			account.save();
+			card.save();
 		return result;
 	}
 }
