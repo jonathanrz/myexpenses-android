@@ -5,9 +5,12 @@ import android.support.annotation.StringRes;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.matcher.BoundedMatcher;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.EditText;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
+import org.hamcrest.TypeSafeMatcher;
 
 import br.com.jonathanzanella.myexpenses.R;
 
@@ -16,6 +19,7 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.core.deps.guava.base.Preconditions.checkNotNull;
 import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -63,5 +67,35 @@ public class UIHelper {
 
 	public static void clickIntoView(@IdRes int view) {
 		onView(withId(view)).perform(click());
+	}
+
+	public static void matchErrorMessage(@IdRes int view, String errorMessage) {
+		onView(withId(view)).check(matches(hasErrorText(errorMessage)));
+	}
+
+	private static Matcher<? super View> hasErrorText(String expectedError) {
+		return new ErrorTextMatcher(expectedError);
+	}
+
+	private static class ErrorTextMatcher extends TypeSafeMatcher<View> {
+		private final String expectedError;
+
+		private ErrorTextMatcher(String expectedError) {
+			this.expectedError = checkNotNull(expectedError);
+		}
+
+		@Override
+		public boolean matchesSafely(View view) {
+			if (!(view instanceof EditText)) {
+				return false;
+			}
+			EditText editText = (EditText) view;
+			return expectedError.equals(editText.getError());
+		}
+
+		@Override
+		public void describeTo(Description description) {
+			description.appendText("with error: " + expectedError);
+		}
 	}
 }

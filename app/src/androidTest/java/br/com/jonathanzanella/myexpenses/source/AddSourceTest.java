@@ -16,13 +16,17 @@ import org.junit.runner.RunWith;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.helpers.DatabaseHelper;
-import br.com.jonathanzanella.myexpenses.helpers.UIHelper;
 import br.com.jonathanzanella.myexpenses.views.MainActivity;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.clickIntoView;
+import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchErrorMessage;
+import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle;
+import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.openMenuAndClickItem;
+import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.typeTextIntoView;
 
 /**
  * Created by jzanella on 7/24/16.
@@ -32,7 +36,9 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 public class AddSourceTest {
 
 	@Rule
-	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
+	public ActivityTestRule<MainActivity> mainActivityTestRule = new ActivityTestRule<>(MainActivity.class);
+	@Rule
+	public ActivityTestRule<EditSourceActivity> editSourceActivityTestRule = new ActivityTestRule<>(EditSourceActivity.class);
 
 	@Before
 	public void setUp() throws Exception {
@@ -47,26 +53,39 @@ public class AddSourceTest {
 	}
 
 	@Test
-	public void addNewSource() {
-		activityTestRule.launchActivity(new Intent());
+	public void add_new_source() {
+		mainActivityTestRule.launchActivity(new Intent());
 
-		UIHelper.openMenuAndClickItem(R.string.sources);
+		openMenuAndClickItem(R.string.sources);
 
-		final String accountsTitle = getContext().getString(R.string.sources);
-		UIHelper.matchToolbarTitle(accountsTitle);
+		final String sourcesTitle = getContext().getString(R.string.sources);
+		matchToolbarTitle(sourcesTitle);
 
-		UIHelper.clickIntoView(R.id.view_sources_fab);
+		clickIntoView(R.id.view_sources_fab);
 
 		final String newSourceTitle = getContext().getString(R.string.new_source_title);
-		UIHelper.matchToolbarTitle(newSourceTitle);
+		matchToolbarTitle(newSourceTitle);
 
 		final String sourceTitle = "Test";
-		UIHelper.typeTextIntoView(R.id.act_edit_source_name, sourceTitle);
-		UIHelper.clickIntoView(R.id.action_save);
+		typeTextIntoView(R.id.act_edit_source_name, sourceTitle);
+		clickIntoView(R.id.action_save);
 
-		UIHelper.matchToolbarTitle(accountsTitle);
+		matchToolbarTitle(sourcesTitle);
 
 		onView(withId(R.id.row_source_name)).check(matches(withText(sourceTitle)));
+	}
+
+	@Test
+	public void add_new_source_shows_error_with_empty_name() {
+		editSourceActivityTestRule.launchActivity(new Intent());
+
+		final String newSourceTitle = getContext().getString(R.string.new_source_title);
+		matchToolbarTitle(newSourceTitle);
+
+		clickIntoView(R.id.action_save);
+
+		final String errorMessage = getContext().getString(R.string.error_message_name_not_informed);
+		matchErrorMessage(R.id.act_edit_source_name, errorMessage);
 	}
 
 	private Context getContext() {
