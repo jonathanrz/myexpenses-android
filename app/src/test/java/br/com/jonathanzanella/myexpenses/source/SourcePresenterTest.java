@@ -21,7 +21,7 @@ public class SourcePresenterTest {
 	@Mock
 	private SourceRepository repository;
 	@Mock
-	private SourceContract.View view;
+	private SourceContract.EditView view;
 
 	private SourcePresenter presenter;
 

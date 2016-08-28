@@ -1,6 +1,10 @@
 package br.com.jonathanzanella.myexpenses.source;
 
+import android.support.annotation.Nullable;
+
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.account.AccountContract;
+import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
@@ -10,11 +14,15 @@ import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
 class SourcePresenter {
 	private SourceContract.View view;
+	@Nullable
+	private SourceContract.EditView editView;
 	private SourceRepository repository;
 	private Source source;
 
 	SourcePresenter(SourceContract.View view, SourceRepository repository) {
 		this.view = view;
+		if(view instanceof AccountContract.EditView)
+			editView = (SourceContract.EditView) view;
 		this.repository = repository;
 	}
 
@@ -22,10 +30,12 @@ class SourcePresenter {
 		if (source != null) {
 			if(invalidateCache)
 				source = repository.find(source.getUuid());
-			view.setTitle(R.string.edit_source_title);
+			if(editView != null)
+				editView.setTitle(R.string.edit_source_title);
 			view.showSource(source);
 		} else {
-			view.setTitle(R.string.new_source_title);
+			if(editView != null)
+				editView.setTitle(R.string.new_source_title);
 		}
 	}
 
@@ -36,16 +46,18 @@ class SourcePresenter {
 	}
 
 	void save() {
+		if(editView == null)
+			throw new InvalidMethodCallException("save", getClass().toString(), "View should be a Edit View");
 		if(source == null)
 			source = new Source();
-		source = view.fillSource(source);
+		source = editView.fillSource(source);
 		OperationResult result = repository.save(source);
 
 		if(result.isValid()) {
-			view.finishView();
+			editView.finishView();
 		} else {
 			for (ValidationError validationError : result.getErrors())
-				view.showError(validationError);
+				editView.showError(validationError);
 		}
 	}
 

@@ -16,7 +16,7 @@ import butterknife.Bind;
 /**
  * Created by Jonathan Zanella on 26/01/16.
  */
-public class EditSourceActivity extends BaseActivity implements SourceContract.View {
+public class EditSourceActivity extends BaseActivity implements SourceContract.EditView {
 	public static final String KEY_SOURCE_UUID = "KeySourceUuid";
 
 	@Bind(R.id.act_edit_source_name)
