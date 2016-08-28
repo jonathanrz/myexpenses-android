@@ -44,10 +44,15 @@ public class ShowSourceActivity extends BaseActivity implements SourceContract.V
 	}
 
 	@Override
+	protected void onPostCreate(Bundle savedInstanceState) {
+		super.onPostCreate(savedInstanceState);
+		presenter.viewUpdated(false);
+	}
+
+	@Override
 	protected void onStart() {
 		super.onStart();
 		presenter.attachView(this);
-		presenter.viewUpdated(false);
 	}
 
 	@Override

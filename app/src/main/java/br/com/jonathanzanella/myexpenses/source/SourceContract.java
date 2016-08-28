@@ -1,5 +1,6 @@
 package br.com.jonathanzanella.myexpenses.source;
 
+import android.content.Context;
 import android.support.annotation.StringRes;
 
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
@@ -10,11 +11,13 @@ import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
 interface SourceContract {
 	interface View {
+		Context getContext();
+		void setTitle(@StringRes int string);
+		void setTitle(String string);
 		void showSource(Source source);
 	}
 
 	interface EditView extends View {
-		void setTitle(@StringRes int string);
 		Source fillSource(Source source);
 		void finishView();
 		void showError(ValidationError error);

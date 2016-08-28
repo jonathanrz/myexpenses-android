@@ -40,8 +40,12 @@ class SourcePresenter {
 		if (source != null) {
 			if(invalidateCache)
 				source = repository.find(source.getUuid());
-			if(editView != null)
+			if(editView != null) {
 				editView.setTitle(R.string.edit_source_title);
+			} else {
+				String title = view.getContext().getString(R.string.source);
+				view.setTitle(title.concat(" ").concat(source.getName()));
+			}
 			view.showSource(source);
 		} else {
 			if(editView != null)
