@@ -1,4 +1,4 @@
-package br.com.jonathanzanella.myexpenses.accounts;
+package br.com.jonathanzanella.myexpenses.account;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,7 +15,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.account.EditAccountActivity;
 import br.com.jonathanzanella.myexpenses.helpers.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.views.MainActivity;
 
