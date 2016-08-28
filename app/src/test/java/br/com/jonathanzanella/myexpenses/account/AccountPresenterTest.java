@@ -1,7 +1,6 @@
 package br.com.jonathanzanella.myexpenses.account;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -51,7 +50,6 @@ public class AccountPresenterTest {
 	}
 
 	@Test
-	@Ignore
 	public void call_view_with_errors() {
 		OperationResult result = new OperationResult();
 		result.addError(ValidationError.NAME);

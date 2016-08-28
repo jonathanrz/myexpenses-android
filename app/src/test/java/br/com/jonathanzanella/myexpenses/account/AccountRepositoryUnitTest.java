@@ -1,4 +1,4 @@
-package br.com.jonathanzanella.myexpenses.source;
+package br.com.jonathanzanella.myexpenses.account;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -15,11 +15,11 @@ import static org.mockito.MockitoAnnotations.initMocks;
 /**
  * Created by jzanella on 8/27/16.
  */
-public class SourceRepositoryUnitTest {
-	private SourceRepository repository = new SourceRepository();
+public class AccountRepositoryUnitTest {
+	private AccountRepository repository = new AccountRepository();
 
 	@Mock
-	private Source source;
+	private Account account;
 
 	@Before
 	public void setUp() throws Exception {
@@ -27,10 +27,10 @@ public class SourceRepositoryUnitTest {
 	}
 
 	@Test
-	public void return_with_error_when_tried_to_save_source_without_name() throws Exception {
-		when(source.getName()).thenReturn(null);
+	public void return_with_error_when_tried_to_save_account_without_name() throws Exception {
+		when(account.getName()).thenReturn(null);
 
-		OperationResult result = repository.save(source);
+		OperationResult result = repository.save(account);
 
 		assertFalse(result.isValid());
 		assertTrue(result.getErrors().contains(ValidationError.NAME));
