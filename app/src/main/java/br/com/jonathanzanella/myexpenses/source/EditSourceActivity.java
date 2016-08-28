@@ -7,7 +7,9 @@ import android.view.MenuItem;
 import android.widget.EditText;
 
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.user.SelectUserView;
+import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
 
@@ -52,9 +54,10 @@ public class EditSourceActivity extends BaseActivity implements SourceContract.V
 	}
 
 	@Override
-	public void fillSource(Source source) {
+	public Source fillSource(Source source) {
 		source.setName(editName.getText().toString());
 		source.setUserUuid(selectUserView.getSelectedUser());
+		return source;
 	}
 
 	@Override
@@ -63,6 +66,17 @@ public class EditSourceActivity extends BaseActivity implements SourceContract.V
 		i.putExtra(KEY_SOURCE_UUID, presenter.getUuid());
 		setResult(RESULT_OK, i);
 		finish();
+	}
+
+	@Override
+	public void showError(ValidationError error) {
+		switch (error) {
+			case NAME:
+				editName.setError(getString(error.getMessage()));
+				break;
+			default:
+				Log.error(EditSourceActivity.class.getName(), "Validation unrecognized, field:" + error);
+		}
 	}
 
 	@Override

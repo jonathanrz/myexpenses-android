@@ -1,6 +1,8 @@
 package br.com.jonathanzanella.myexpenses.source;
 
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.validations.OperationResult;
+import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
 /**
  * Created by jzanella on 8/27/16.
@@ -36,9 +38,15 @@ class SourcePresenter {
 	void save() {
 		if(source == null)
 			source = new Source();
-		view.fillSource(source);
-		repository.save(source);
-		view.finishView();
+		source = view.fillSource(source);
+		OperationResult result = repository.save(source);
+
+		if(result.isValid()) {
+			view.finishView();
+		} else {
+			for (ValidationError validationError : result.getErrors())
+				view.showError(validationError);
+		}
 	}
 
 	String getUuid() {

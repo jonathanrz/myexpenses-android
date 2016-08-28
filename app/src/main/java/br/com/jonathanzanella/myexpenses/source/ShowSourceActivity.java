@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException;
+import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
 
@@ -84,12 +85,17 @@ public class ShowSourceActivity extends BaseActivity implements SourceContract.V
 	}
 
 	@Override
-	public void fillSource(Source source) {
+	public Source fillSource(Source source) {
 		throw new InvalidMethodCallException("fillSource", "ShowSourceActivity");
 	}
 
 	@Override
 	public void finishView() {
 		throw new InvalidMethodCallException("finishView", "ShowSourceActivity");
+	}
+
+	@Override
+	public void showError(ValidationError error) {
+		throw new InvalidMethodCallException("showError", "ShowSourceActivity");
 	}
 }
