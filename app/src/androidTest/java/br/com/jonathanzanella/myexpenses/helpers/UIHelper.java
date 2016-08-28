@@ -10,7 +10,6 @@ import android.widget.EditText;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeMatcher;
 
 import br.com.jonathanzanella.myexpenses.R;
 
@@ -19,7 +18,6 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.core.deps.guava.base.Preconditions.checkNotNull;
 import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -73,29 +71,23 @@ public class UIHelper {
 		onView(withId(view)).check(matches(hasErrorText(errorMessage)));
 	}
 
-	private static Matcher<? super View> hasErrorText(String expectedError) {
-		return new ErrorTextMatcher(expectedError);
-	}
+	private static Matcher<View> hasErrorText(final String expectedError) {
+		return new BoundedMatcher<View, View>(View.class) {
 
-	private static class ErrorTextMatcher extends TypeSafeMatcher<View> {
-		private final String expectedError;
-
-		private ErrorTextMatcher(String expectedError) {
-			this.expectedError = checkNotNull(expectedError);
-		}
-
-		@Override
-		public boolean matchesSafely(View view) {
-			if (!(view instanceof EditText)) {
-				return false;
+			@Override
+			public void describeTo(Description description) {
+				description.appendText("with error: " + expectedError);
 			}
-			EditText editText = (EditText) view;
-			return expectedError.equals(editText.getError());
-		}
 
-		@Override
-		public void describeTo(Description description) {
-			description.appendText("with error: " + expectedError);
-		}
+			@Override
+			protected boolean matchesSafely(View view) {
+				if (!(view instanceof EditText))
+					return false;
+
+				EditText editText = (EditText) view;
+
+				return expectedError.equals(editText.getError());
+			}
+		};
 	}
 }
