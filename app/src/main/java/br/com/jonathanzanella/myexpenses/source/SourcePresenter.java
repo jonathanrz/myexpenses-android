@@ -18,11 +18,22 @@ class SourcePresenter {
 	private SourceRepository repository;
 	private Source source;
 
-	SourcePresenter(SourceContract.View view, SourceRepository repository) {
-		this.view = view;
-		if(view instanceof SourceContract.EditView)
-			editView = (SourceContract.EditView) view;
+	SourcePresenter(SourceRepository repository) {
 		this.repository = repository;
+	}
+
+	void attachView(SourceContract.View view) {
+		this.view = view;
+	}
+
+	void attachView(SourceContract.EditView view) {
+		this.view = view;
+		this.editView = view;
+	}
+
+	void detachView() {
+		this.view = null;
+		this.editView = null;
 	}
 
 	void viewUpdated(boolean invalidateCache) {

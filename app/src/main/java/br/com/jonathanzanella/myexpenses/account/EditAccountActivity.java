@@ -38,13 +38,18 @@ public class EditAccountActivity extends BaseActivity implements AccountContract
 	@Bind(R.id.act_edit_account_user)
 	SelectUserView selectUserView;
 
-	private AccountPresenter presenter;
+	private AccountPresenter presenter = new AccountPresenter(new AccountRepository());
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edit_account);
-		presenter = new AccountPresenter(this, new AccountRepository());
+	}
+
+	@Override
+	protected void onPostCreate(Bundle savedInstanceState) {
+		super.onPostCreate(savedInstanceState);
+		editBalance.addTextChangedListener(new CurrencyTextWatch(editBalance));
 	}
 
 	@Override
@@ -56,19 +61,24 @@ public class EditAccountActivity extends BaseActivity implements AccountContract
 	}
 
 	@Override
-	protected void onPostCreate(Bundle savedInstanceState) {
-		super.onPostCreate(savedInstanceState);
-
-		presenter.viewUpdated(false);
-		editBalance.addTextChangedListener(new CurrencyTextWatch(editBalance));
-	}
-
-	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		String uuid = presenter.getUuid();
 		if(uuid != null)
 			outState.putString(KEY_ACCOUNT_UUID, uuid);
+	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		presenter.attachView(this);
+		presenter.viewUpdated(false);
+	}
+
+	@Override
+	protected void onStop() {
+		presenter.detachView();
+		super.onStop();
 	}
 
 	@Override
@@ -103,11 +113,19 @@ public class EditAccountActivity extends BaseActivity implements AccountContract
 	}
 
 	@Override
-	public void finishView() {
-		Intent i = new Intent();
-		i.putExtra(KEY_ACCOUNT_UUID, presenter.getUuid());
-		setResult(RESULT_OK, i);
-		finish();
+	public void showAccount(Account account) {
+		editName.setText(account.getName());
+		int balance = account.getBalance();
+		if(balance > 0) {
+			editBalance.setText(getCurrencyInstance().format(balance / 100.0));
+			checkAccountBalanceNegative.setChecked(false);
+		} else {
+			editBalance.setText(getCurrencyInstance().format(balance * -1 / 100.0));
+			checkAccountBalanceNegative.setChecked(true);
+		}
+		checkToPayCreditCard.setChecked(account.isAccountToPayCreditCard());
+		checkToPayBill.setChecked(account.isAccountToPayBills());
+		selectUserView.setSelectedUser(account.getUserUuid());
 	}
 
 	@Override
@@ -122,18 +140,10 @@ public class EditAccountActivity extends BaseActivity implements AccountContract
 	}
 
 	@Override
-	public void showAccount(Account account) {
-		editName.setText(account.getName());
-		int balance = account.getBalance();
-		if(balance > 0) {
-			editBalance.setText(getCurrencyInstance().format(balance / 100.0));
-			checkAccountBalanceNegative.setChecked(false);
-		} else {
-			editBalance.setText(getCurrencyInstance().format(balance * -1 / 100.0));
-			checkAccountBalanceNegative.setChecked(true);
-		}
-		checkToPayCreditCard.setChecked(account.isAccountToPayCreditCard());
-		checkToPayBill.setChecked(account.isAccountToPayBills());
-		selectUserView.setSelectedUser(account.getUserUuid());
+	public void finishView() {
+		Intent i = new Intent();
+		i.putExtra(KEY_ACCOUNT_UUID, presenter.getUuid());
+		setResult(RESULT_OK, i);
+		finish();
 	}
 }

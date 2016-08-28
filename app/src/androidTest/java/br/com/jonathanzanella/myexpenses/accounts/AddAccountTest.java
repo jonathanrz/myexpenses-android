@@ -17,7 +17,6 @@ import org.junit.runner.RunWith;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.EditAccountActivity;
 import br.com.jonathanzanella.myexpenses.helpers.DatabaseHelper;
-import br.com.jonathanzanella.myexpenses.helpers.UIHelper;
 import br.com.jonathanzanella.myexpenses.views.MainActivity;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -27,6 +26,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.clickIntoView;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchErrorMessage;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle;
+import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.openMenuAndClickItem;
+import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.typeTextIntoView;
 
 /**
  * Created by jzanella on 7/24/16.
@@ -34,7 +35,6 @@ import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTit
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class AddAccountTest {
-
 	@Rule
 	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
 	@Rule
@@ -56,24 +56,24 @@ public class AddAccountTest {
 	public void addNewAccount() {
 		activityTestRule.launchActivity(new Intent());
 
-		UIHelper.openMenuAndClickItem(R.string.accounts);
+		openMenuAndClickItem(R.string.accounts);
 
 		final String accountsTitle = getContext().getString(R.string.accounts);
 		matchToolbarTitle(accountsTitle);
 
-		UIHelper.clickIntoView(R.id.view_accounts_fab);
+		clickIntoView(R.id.view_accounts_fab);
 
 		final String newAccountTitle = getContext().getString(R.string.new_account_title);
 		matchToolbarTitle(newAccountTitle);
 
 		final String accountTitle = "Test";
-		UIHelper.typeTextIntoView(R.id.act_edit_account_name, accountTitle);
-		UIHelper.typeTextIntoView(R.id.act_edit_account_balance, "100");
-		UIHelper.clickIntoView(R.id.action_save);
+		typeTextIntoView(R.id.act_edit_account_name, accountTitle);
+		clickIntoView(R.id.action_save);
 
 		matchToolbarTitle(accountsTitle);
 
 		onView(withId(R.id.row_account_name)).check(matches(withText(accountTitle)));
+		onView(withId(R.id.row_account_balance)).check(matches(withText("R$0,00")));
 	}
 
 	@Test

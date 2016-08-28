@@ -24,13 +24,12 @@ public class EditSourceActivity extends BaseActivity implements SourceContract.E
 	@Bind(R.id.act_edit_source_user)
 	SelectUserView selectUserView;
 
-	private SourcePresenter presenter;
+	private SourcePresenter presenter = new SourcePresenter(new SourceRepository());
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edit_source);
-		presenter = new SourcePresenter(this, new SourceRepository());
 	}
 
 	@Override
@@ -42,9 +41,16 @@ public class EditSourceActivity extends BaseActivity implements SourceContract.E
 	}
 
 	@Override
-	protected void onPostCreate(Bundle savedInstanceState) {
-		super.onPostCreate(savedInstanceState);
+	protected void onStart() {
+		super.onStart();
+		presenter.attachView(this);
 		presenter.viewUpdated(false);
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		presenter.detachView();
 	}
 
 	@Override

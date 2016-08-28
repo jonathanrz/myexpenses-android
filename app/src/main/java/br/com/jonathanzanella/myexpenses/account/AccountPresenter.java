@@ -18,11 +18,22 @@ class AccountPresenter {
 	private AccountRepository repository;
 	private Account account;
 
-	AccountPresenter(AccountContract.View view, AccountRepository repository) {
-		this.view = view;
-		if(view instanceof AccountContract.EditView)
-			editView = (AccountContract.EditView) view;
+	AccountPresenter(AccountRepository repository) {
 		this.repository = repository;
+	}
+
+	void attachView(AccountContract.View view) {
+		this.view = view;
+	}
+
+	void attachView(AccountContract.EditView view) {
+		this.view = view;
+		this.editView = view;
+	}
+
+	void detachView() {
+		this.view = null;
+		this.editView = null;
 	}
 
 	void viewUpdated(boolean invalidateCache) {
