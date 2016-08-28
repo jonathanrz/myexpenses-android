@@ -8,8 +8,6 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException;
-import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
 
@@ -22,21 +20,12 @@ public class ShowSourceActivity extends BaseActivity implements SourceContract.V
 	@Bind(R.id.act_show_source_name)
 	TextView sourceName;
 
-	private SourcePresenter presenter;
+	private SourcePresenter presenter = new SourcePresenter(new SourceRepository());
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_show_source);
-
-		presenter = new SourcePresenter(this, new SourceRepository());
-	}
-
-	@Override
-	protected void onPostCreate(Bundle savedInstanceState) {
-		super.onPostCreate(savedInstanceState);
-
-		presenter.viewUpdated(false);
 	}
 
 	@Override
@@ -55,10 +44,21 @@ public class ShowSourceActivity extends BaseActivity implements SourceContract.V
 	}
 
 	@Override
-	protected void onResume() {
-		super.onResume();
+	protected void onPostCreate(Bundle savedInstanceState) {
+		super.onPostCreate(savedInstanceState);
+		presenter.viewUpdated(false);
+	}
 
-		presenter.viewUpdated(true);
+	@Override
+	protected void onStart() {
+		super.onStart();
+		presenter.attachView(this);
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		presenter.detachView();
 	}
 
 	@Override
@@ -82,20 +82,5 @@ public class ShowSourceActivity extends BaseActivity implements SourceContract.V
 	@Override
 	public void showSource(Source source) {
 		sourceName.setText(source.getName());
-	}
-
-	@Override
-	public Source fillSource(Source source) {
-		throw new InvalidMethodCallException("fillSource", "ShowSourceActivity");
-	}
-
-	@Override
-	public void finishView() {
-		throw new InvalidMethodCallException("finishView", "ShowSourceActivity");
-	}
-
-	@Override
-	public void showError(ValidationError error) {
-		throw new InvalidMethodCallException("showError", "ShowSourceActivity");
 	}
 }

@@ -1,4 +1,4 @@
-package br.com.jonathanzanella.myexpenses.source;
+package br.com.jonathanzanella.myexpenses.account;
 
 import android.support.annotation.Nullable;
 
@@ -11,22 +11,22 @@ import br.com.jonathanzanella.myexpenses.validations.ValidationError;
  * Created by jzanella on 8/27/16.
  */
 
-class SourcePresenter {
-	private SourceContract.View view;
+class AccountPresenter {
+	private AccountContract.View view;
 	@Nullable
-	private SourceContract.EditView editView;
-	private SourceRepository repository;
-	private Source source;
+	private AccountContract.EditView editView;
+	private AccountRepository repository;
+	private Account account;
 
-	SourcePresenter(SourceRepository repository) {
+	AccountPresenter(AccountRepository repository) {
 		this.repository = repository;
 	}
 
-	void attachView(SourceContract.View view) {
+	void attachView(AccountContract.View view) {
 		this.view = view;
 	}
 
-	void attachView(SourceContract.EditView view) {
+	void attachView(AccountContract.EditView view) {
 		this.view = view;
 		this.editView = view;
 	}
@@ -37,35 +37,35 @@ class SourcePresenter {
 	}
 
 	void viewUpdated(boolean invalidateCache) {
-		if (source != null) {
+		if (account != null) {
 			if(invalidateCache)
-				source = repository.find(source.getUuid());
+				account = repository.find(account.getUuid());
 			if(editView != null) {
-				editView.setTitle(R.string.edit_source_title);
+				editView.setTitle(R.string.edit_account_title);
 			} else {
-				String title = view.getContext().getString(R.string.source);
-				view.setTitle(title.concat(" ").concat(source.getName()));
+				String title = view.getContext().getString(R.string.account);
+				view.setTitle(title.concat(" ").concat(account.getName()));
 			}
-			view.showSource(source);
+			view.showAccount(account);
 		} else {
 			if(editView != null)
-				editView.setTitle(R.string.new_source_title);
+				editView.setTitle(R.string.new_account_title);
 		}
 	}
 
-	void loadSource(String uuid) {
-		source = repository.find(uuid);
-		if(source == null)
-			throw new SourceNotFoundException(uuid);
+	void loadAccount(String uuid) {
+		account = repository.find(uuid);
+		if(account == null)
+			throw new AccountNotFoundException(uuid);
 	}
 
 	void save() {
 		if(editView == null)
 			throw new InvalidMethodCallException("save", getClass().toString(), "View should be a Edit View");
-		if(source == null)
-			source = new Source();
-		source = editView.fillSource(source);
-		OperationResult result = repository.save(source);
+		if(account == null)
+			account = new Account();
+		account = editView.fillAccount(account);
+		OperationResult result = repository.save(account);
 
 		if(result.isValid()) {
 			editView.finishView();
@@ -76,6 +76,6 @@ class SourcePresenter {
 	}
 
 	String getUuid() {
-		return source != null ? source.getUuid() : null;
+		return account != null ? account.getUuid() : null;
 	}
 }

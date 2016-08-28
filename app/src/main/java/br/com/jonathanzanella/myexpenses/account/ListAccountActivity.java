@@ -33,7 +33,6 @@ public class ListAccountActivity extends BaseActivity implements AccountAdapterC
 		AccountAdapter adapter = new AccountAdapter();
 		adapter.setCallback(this);
 		adapter.setSimplified(true);
-		adapter.loadData();
 
 		accounts.setAdapter(adapter);
 		accounts.setHasFixedSize(true);

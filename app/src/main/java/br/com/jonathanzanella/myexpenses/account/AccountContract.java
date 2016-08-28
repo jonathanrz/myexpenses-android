@@ -1,4 +1,4 @@
-package br.com.jonathanzanella.myexpenses.source;
+package br.com.jonathanzanella.myexpenses.account;
 
 import android.content.Context;
 import android.support.annotation.StringRes;
@@ -6,19 +6,19 @@ import android.support.annotation.StringRes;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
 /**
- * Created by jzanella on 8/27/16.
+ * Created by jzanella on 8/28/16.
  */
 
-interface SourceContract {
+interface AccountContract {
 	interface View {
 		Context getContext();
 		void setTitle(@StringRes int string);
 		void setTitle(String string);
-		void showSource(Source source);
+		void showAccount(Account account);
 	}
 
 	interface EditView extends View {
-		Source fillSource(Source source);
+		Account fillAccount(Account account);
 		void finishView();
 		void showError(ValidationError error);
 	}

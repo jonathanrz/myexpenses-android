@@ -34,7 +34,6 @@ import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.typeTextIntoVie
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class AddSourceTest {
-
 	@Rule
 	public ActivityTestRule<MainActivity> mainActivityTestRule = new ActivityTestRule<>(MainActivity.class);
 	@Rule

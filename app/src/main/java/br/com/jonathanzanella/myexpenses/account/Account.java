@@ -27,6 +27,7 @@ import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType;
 import br.com.jonathanzanella.myexpenses.database.MyDatabase;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -36,6 +37,7 @@ import static br.com.jonathanzanella.myexpenses.log.Log.warning;
  * Created by Jonathan Zanella on 26/01/16.
  */
 @Table(database = MyDatabase.class)
+@EqualsAndHashCode
 public class Account extends BaseModel implements Chargeable, UnsyncModel {
 	public static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
 	private static final AccountApi accountApi = new AccountApi();

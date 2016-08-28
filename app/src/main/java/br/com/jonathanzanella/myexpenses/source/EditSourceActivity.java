@@ -16,7 +16,7 @@ import butterknife.Bind;
 /**
  * Created by Jonathan Zanella on 26/01/16.
  */
-public class EditSourceActivity extends BaseActivity implements SourceContract.View {
+public class EditSourceActivity extends BaseActivity implements SourceContract.EditView {
 	public static final String KEY_SOURCE_UUID = "KeySourceUuid";
 
 	@Bind(R.id.act_edit_source_name)
@@ -24,13 +24,12 @@ public class EditSourceActivity extends BaseActivity implements SourceContract.V
 	@Bind(R.id.act_edit_source_user)
 	SelectUserView selectUserView;
 
-	private SourcePresenter presenter;
+	private SourcePresenter presenter = new SourcePresenter(new SourceRepository());
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edit_source);
-		presenter = new SourcePresenter(this, new SourceRepository());
 	}
 
 	@Override
@@ -45,6 +44,18 @@ public class EditSourceActivity extends BaseActivity implements SourceContract.V
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
 		presenter.viewUpdated(false);
+	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		presenter.attachView(this);
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		presenter.detachView();
 	}
 
 	@Override
@@ -75,7 +86,7 @@ public class EditSourceActivity extends BaseActivity implements SourceContract.V
 				editName.setError(getString(error.getMessage()));
 				break;
 			default:
-				Log.error(EditSourceActivity.class.getName(), "Validation unrecognized, field:" + error);
+				Log.error(this.getClass().getName(), "Validation unrecognized, field:" + error);
 		}
 	}
 

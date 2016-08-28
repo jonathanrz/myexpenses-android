@@ -1,5 +1,6 @@
 package br.com.jonathanzanella.myexpenses.views;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
@@ -39,7 +40,8 @@ public class BaseActivity extends AppCompatActivity {
 		if(actionBar != null) {
 			actionBar.setDisplayHomeAsUpEnabled(true);
 			actionBar.setDisplayHomeAsUpEnabled(true);
-			toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+			if(toolbar != null)
+				toolbar.setNavigationOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					finish();
@@ -49,5 +51,14 @@ public class BaseActivity extends AppCompatActivity {
 	}
 	
 	protected void storeBundle(Bundle extras) {
+	}
+
+	public Context getContext() {
+		return this;
+	}
+
+	public void setTitle(String string) {
+		if(toolbar != null)
+			toolbar.setTitle(string);
 	}
 }

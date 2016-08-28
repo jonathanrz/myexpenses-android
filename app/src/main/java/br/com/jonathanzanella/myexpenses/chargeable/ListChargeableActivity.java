@@ -49,7 +49,6 @@ public class ListChargeableActivity extends BaseActivity implements AccountAdapt
 		AccountAdapter adapter = new AccountAdapter();
 		adapter.setCallback(this);
 		adapter.setSimplified(true);
-		adapter.loadData();
 
 		accounts.setAdapter(adapter);
 		accounts.setHasFixedSize(true);

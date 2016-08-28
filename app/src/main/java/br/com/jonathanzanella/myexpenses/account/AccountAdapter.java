@@ -24,7 +24,9 @@ import lombok.Setter;
  * Created by Jonathan Zanella on 26/01/16.
  */
 public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHolder> {
+	private AccountAdapterPresenter presenter;
 	protected List<Account> accounts;
+
 	@Setter
 	private boolean simplified = false;
 	@Setter
@@ -76,6 +78,15 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
 		}
 	}
 
+	public AccountAdapter() {
+		presenter = new AccountAdapterPresenter(this, new AccountRepository());
+		accounts = presenter.getAccounts(false);
+	}
+
+	public void refreshData() {
+		accounts = presenter.getAccounts(true);
+	}
+
 	@Override
 	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		View v = LayoutInflater.from(parent.getContext()).inflate(getLayout(), parent, false);
@@ -96,13 +107,9 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
 		return accounts != null ? accounts.size() : 0;
 	}
 
-	public void loadData() {
-		accounts = Account.all();
-	}
-
-	public void addAccount(@NonNull Account acc) {
-		accounts.add(acc);
-		notifyItemInserted(accounts.size() - 1);
+	void addAccount(@NonNull Account acc) {
+		presenter.addAccount(acc);
+		accounts = presenter.getAccounts(false);
 	}
 
 	public @Nullable Account getAccount(int position) {

@@ -7,9 +7,13 @@ import android.view.MenuItem;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
+import org.apache.commons.lang3.StringUtils;
+
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch;
+import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.user.SelectUserView;
+import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
 
@@ -18,7 +22,7 @@ import static java.text.NumberFormat.getCurrencyInstance;
 /**
  * Created by Jonathan Zanella on 26/01/16.
  */
-public class EditAccountActivity extends BaseActivity {
+public class EditAccountActivity extends BaseActivity implements AccountContract.EditView {
 	public static final String KEY_ACCOUNT_UUID = "KeyAccountUuid";
 
 	@Bind(R.id.act_edit_account_name)
@@ -34,7 +38,7 @@ public class EditAccountActivity extends BaseActivity {
 	@Bind(R.id.act_edit_account_user)
 	SelectUserView selectUserView;
 
-	private Account account;
+	private AccountPresenter presenter = new AccountPresenter(new AccountRepository());
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -45,42 +49,36 @@ public class EditAccountActivity extends BaseActivity {
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
-
 		editBalance.addTextChangedListener(new CurrencyTextWatch(editBalance));
-
-		if(account != null) {
-			setTitle(R.string.edit_account_title);
-			editName.setText(account.getName());
-			int balance = account.getBalance();
-			if(balance > 0) {
-				editBalance.setText(getCurrencyInstance().format(balance / 100.0));
-				checkAccountBalanceNegative.setChecked(false);
-			} else {
-				editBalance.setText(getCurrencyInstance().format(balance * -1 / 100.0));
-				checkAccountBalanceNegative.setChecked(true);
-			}
-			checkToPayCreditCard.setChecked(account.isAccountToPayCreditCard());
-			checkToPayBill.setChecked(account.isAccountToPayBills());
-			selectUserView.setSelectedUser(account.getUserUuid());
-		} else {
-			setTitle(R.string.new_account_title);
-		}
 	}
 
 	@Override
 	protected void storeBundle(Bundle extras) {
 		super.storeBundle(extras);
-		if(extras == null)
-			return;
-		if(extras.containsKey(KEY_ACCOUNT_UUID))
-			account = Account.find(extras.getString(KEY_ACCOUNT_UUID));
+
+		if(extras != null && extras.containsKey(KEY_ACCOUNT_UUID))
+			presenter.loadAccount(extras.getString(KEY_ACCOUNT_UUID));
 	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		if(account != null)
-			outState.putString(KEY_ACCOUNT_UUID, account.getUuid());
+		String uuid = presenter.getUuid();
+		if(uuid != null)
+			outState.putString(KEY_ACCOUNT_UUID, uuid);
+	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		presenter.attachView(this);
+		presenter.viewUpdated(false);
+	}
+
+	@Override
+	protected void onStop() {
+		presenter.detachView();
+		super.onStop();
 	}
 
 	@Override
@@ -93,17 +91,17 @@ public class EditAccountActivity extends BaseActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_save:
-				save();
+				presenter.save();
 				break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
-	private void save() {
-		if(account == null)
-			account = new Account();
+	@Override
+	public Account fillAccount(Account account) {
 		account.setName(editName.getText().toString());
-		int balance = Integer.parseInt(editBalance.getText().toString().replaceAll("[^\\d]", ""));
+		String balanceText = editBalance.getText().toString().replaceAll("[^\\d]", "");
+		int balance = StringUtils.isEmpty(balanceText) ? 0 : Integer.parseInt(balanceText);
 		if(checkAccountBalanceNegative.isChecked())
 			account.setBalance(balance * -1);
 		else
@@ -111,10 +109,40 @@ public class EditAccountActivity extends BaseActivity {
 		account.setAccountToPayCreditCard(checkToPayCreditCard.isChecked());
 		account.setAccountToPayBills(checkToPayBill.isChecked());
 		account.setUserUuid(selectUserView.getSelectedUser());
-		account.save();
+		return account;
+	}
 
+	@Override
+	public void showAccount(Account account) {
+		editName.setText(account.getName());
+		int balance = account.getBalance();
+		if(balance > 0) {
+			editBalance.setText(getCurrencyInstance().format(balance / 100.0));
+			checkAccountBalanceNegative.setChecked(false);
+		} else {
+			editBalance.setText(getCurrencyInstance().format(balance * -1 / 100.0));
+			checkAccountBalanceNegative.setChecked(true);
+		}
+		checkToPayCreditCard.setChecked(account.isAccountToPayCreditCard());
+		checkToPayBill.setChecked(account.isAccountToPayBills());
+		selectUserView.setSelectedUser(account.getUserUuid());
+	}
+
+	@Override
+	public void showError(ValidationError error) {
+		switch (error) {
+			case NAME:
+				editName.setError(getString(error.getMessage()));
+				break;
+			default:
+				Log.error(this.getClass().getName(), "Validation unrecognized, field:" + error);
+		}
+	}
+
+	@Override
+	public void finishView() {
 		Intent i = new Intent();
-		i.putExtra(KEY_ACCOUNT_UUID, account.getUuid());
+		i.putExtra(KEY_ACCOUNT_UUID, presenter.getUuid());
 		setResult(RESULT_OK, i);
 		finish();
 	}
