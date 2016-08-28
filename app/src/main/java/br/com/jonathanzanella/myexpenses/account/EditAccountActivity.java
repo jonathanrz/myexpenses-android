@@ -7,8 +7,11 @@ import android.view.MenuItem;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
+import org.apache.commons.lang3.StringUtils;
+
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch;
+import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.user.SelectUserView;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
@@ -56,6 +59,7 @@ public class EditAccountActivity extends BaseActivity implements AccountContract
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
 
+		presenter.viewUpdated(false);
 		editBalance.addTextChangedListener(new CurrencyTextWatch(editBalance));
 	}
 
@@ -86,7 +90,8 @@ public class EditAccountActivity extends BaseActivity implements AccountContract
 	@Override
 	public Account fillAccount(Account account) {
 		account.setName(editName.getText().toString());
-		int balance = Integer.parseInt(editBalance.getText().toString().replaceAll("[^\\d]", ""));
+		String balanceText = editBalance.getText().toString().replaceAll("[^\\d]", "");
+		int balance = StringUtils.isEmpty(balanceText) ? 0 : Integer.parseInt(balanceText);
 		if(checkAccountBalanceNegative.isChecked())
 			account.setBalance(balance * -1);
 		else
@@ -107,7 +112,13 @@ public class EditAccountActivity extends BaseActivity implements AccountContract
 
 	@Override
 	public void showError(ValidationError error) {
-
+		switch (error) {
+			case NAME:
+				editName.setError(getString(error.getMessage()));
+				break;
+			default:
+				Log.error(this.getClass().getName(), "Validation unrecognized, field:" + error);
+		}
 	}
 
 	@Override

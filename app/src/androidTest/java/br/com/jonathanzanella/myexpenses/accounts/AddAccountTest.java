@@ -15,6 +15,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.account.EditAccountActivity;
 import br.com.jonathanzanella.myexpenses.helpers.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.helpers.UIHelper;
 import br.com.jonathanzanella.myexpenses.views.MainActivity;
@@ -23,6 +24,9 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.clickIntoView;
+import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchErrorMessage;
+import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle;
 
 /**
  * Created by jzanella on 7/24/16.
@@ -33,6 +37,8 @@ public class AddAccountTest {
 
 	@Rule
 	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
+	@Rule
+	public ActivityTestRule<EditAccountActivity> editAccountActivityTestRule = new ActivityTestRule<>(EditAccountActivity.class);
 
 	@Before
 	public void setUp() throws Exception {
@@ -53,21 +59,34 @@ public class AddAccountTest {
 		UIHelper.openMenuAndClickItem(R.string.accounts);
 
 		final String accountsTitle = getContext().getString(R.string.accounts);
-		UIHelper.matchToolbarTitle(accountsTitle);
+		matchToolbarTitle(accountsTitle);
 
 		UIHelper.clickIntoView(R.id.view_accounts_fab);
 
 		final String newAccountTitle = getContext().getString(R.string.new_account_title);
-		UIHelper.matchToolbarTitle(newAccountTitle);
+		matchToolbarTitle(newAccountTitle);
 
 		final String accountTitle = "Test";
 		UIHelper.typeTextIntoView(R.id.act_edit_account_name, accountTitle);
 		UIHelper.typeTextIntoView(R.id.act_edit_account_balance, "100");
 		UIHelper.clickIntoView(R.id.action_save);
 
-		UIHelper.matchToolbarTitle(accountsTitle);
+		matchToolbarTitle(accountsTitle);
 
 		onView(withId(R.id.row_account_name)).check(matches(withText(accountTitle)));
+	}
+
+	@Test
+	public void add_new_account_shows_error_with_empty_name() {
+		editAccountActivityTestRule.launchActivity(new Intent());
+
+		final String newAccountTitle = getContext().getString(R.string.new_account_title);
+		matchToolbarTitle(newAccountTitle);
+
+		clickIntoView(R.id.action_save);
+
+		final String errorMessage = getContext().getString(R.string.error_message_name_not_informed);
+		matchErrorMessage(R.id.act_edit_account_name, errorMessage);
 	}
 
 	private Context getContext() {

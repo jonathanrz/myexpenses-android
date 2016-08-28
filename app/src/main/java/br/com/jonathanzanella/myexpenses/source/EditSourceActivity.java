@@ -75,7 +75,7 @@ public class EditSourceActivity extends BaseActivity implements SourceContract.E
 				editName.setError(getString(error.getMessage()));
 				break;
 			default:
-				Log.error(EditSourceActivity.class.getName(), "Validation unrecognized, field:" + error);
+				Log.error(this.getClass().getName(), "Validation unrecognized, field:" + error);
 		}
 	}
 
