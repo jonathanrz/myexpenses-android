@@ -28,7 +28,7 @@ public class AccountRepository {
 		return initQuery().where(Account_Table.userUuid.is(Environment.CURRENT_USER_UUID)).queryList();
 	}
 
-	OperationResult save(Account account) {
+	public OperationResult save(Account account) {
 		OperationResult result = new OperationResult();
 		if(StringUtils.isEmpty(account.getName()))
 			result.addError(ValidationError.NAME);

@@ -7,6 +7,7 @@ import android.support.test.espresso.matcher.BoundedMatcher;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RadioButton;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -19,6 +20,7 @@ import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
@@ -33,7 +35,7 @@ public class UIHelper {
 		onView(withContentDescription("Drawer Open")).perform(click());
 	}
 
-	public static void clickMenuItem(@StringRes int menuText) {
+	private static void clickMenuItem(@StringRes int menuText) {
 		onView(allOf(withId(R.id.design_menu_item_text), withText(menuText))).perform(click());
 	}
 
@@ -67,6 +69,15 @@ public class UIHelper {
 		onView(withId(view)).perform(click());
 	}
 
+	public static void clickIntoView(String text) {
+		onView(withText(text)).perform(click());
+	}
+
+	public static void checkSnackbarText(String text) {
+		onView(allOf(withId(android.support.design.R.id.snackbar_text), withText(text)))
+				.check(matches(isDisplayed()));
+	}
+
 	public static void matchErrorMessage(@IdRes int view, String errorMessage) {
 		onView(withId(view)).check(matches(hasErrorText(errorMessage)));
 	}
@@ -81,12 +92,12 @@ public class UIHelper {
 
 			@Override
 			protected boolean matchesSafely(View view) {
-				if (!(view instanceof EditText))
+				if (view instanceof EditText)
+					return expectedError.equals(((EditText) view).getError());
+				else if(view instanceof RadioButton)
+					return expectedError.equals(((RadioButton) view).getError());
+				else
 					return false;
-
-				EditText editText = (EditText) view;
-
-				return expectedError.equals(editText.getError());
 			}
 		};
 	}

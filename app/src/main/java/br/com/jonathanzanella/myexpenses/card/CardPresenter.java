@@ -4,11 +4,17 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 
+import org.joda.time.DateTime;
+
+import java.util.List;
+
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.account.ListAccountActivity;
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException;
+import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
@@ -53,9 +59,9 @@ class CardPresenter {
 			if(invalidateCache)
 				card = repository.find(card.getUuid());
 			if(editView != null) {
-				editView.setTitle(R.string.edit_account_title);
+				editView.setTitle(R.string.edit_card_title);
 			} else {
-				String title = view.getContext().getString(R.string.account);
+				String title = view.getContext().getString(R.string.card);
 				view.setTitle(title.concat(" ").concat(card.getName()));
 			}
 			view.showCard(card);
@@ -63,7 +69,7 @@ class CardPresenter {
 				editView.onAccountSelected(account);
 		} else {
 			if(editView != null)
-				editView.setTitle(R.string.new_account_title);
+				editView.setTitle(R.string.new_card_title);
 		}
 	}
 
@@ -105,11 +111,32 @@ class CardPresenter {
 			case REQUEST_SELECT_ACCOUNT: {
 				if(resultCode == RESULT_OK) {
 					account = accountRepository.find(data.getStringExtra(ListAccountActivity.KEY_ACCOUNT_SELECTED_UUID));
-					if(account != null)
+					if(account != null && editView != null)
 						editView.onAccountSelected(account);
 				}
 				break;
 			}
 		}
+	}
+
+	Expense generateCreditCardBill() {
+		List<Expense> expenses = card.creditCardBills(DateTime.now().minusMonths(1));
+		int totalExpense = 0;
+		for (Expense expense : expenses) {
+			totalExpense += expense.getValue();
+			expense.setCharged(true);
+			expense.save();
+		}
+
+		if(totalExpense == 0)
+			return null;
+
+		Expense e = new Expense();
+		e.setName(MyApplication.getContext().getString(R.string.invoice) + " " + card.getName());
+		e.setValue(totalExpense);
+		e.setChargeable(card.getAccount());
+		e.save();
+
+		return e;
 	}
 }

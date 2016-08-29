@@ -35,4 +35,25 @@ public class CardRepositoryUnitTest {
 		assertFalse(result.isValid());
 		assertTrue(result.getErrors().contains(ValidationError.NAME));
 	}
+
+	@Test
+	public void return_with_error_when_tried_to_save_account_without_type() throws Exception {
+		when(card.getName()).thenReturn("Test");
+
+		OperationResult result = repository.save(card);
+
+		assertFalse(result.isValid());
+		assertTrue(result.getErrors().contains(ValidationError.CARD_TYPE));
+	}
+
+	@Test
+	public void return_with_error_when_tried_to_save_account_without_account() throws Exception {
+		when(card.getName()).thenReturn("Test");
+		when(card.getType()).thenReturn(CardType.DEBIT);
+
+		OperationResult result = repository.save(card);
+
+		assertFalse(result.isValid());
+		assertTrue(result.getErrors().contains(ValidationError.ACCOUNT));
+	}
 }

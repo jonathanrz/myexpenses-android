@@ -30,6 +30,7 @@ import br.com.jonathanzanella.myexpenses.expense.Expense_Table;
 import br.com.jonathanzanella.myexpenses.helpers.DateHelper;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -39,6 +40,7 @@ import static br.com.jonathanzanella.myexpenses.log.Log.warning;
  * Created by jzanella on 1/31/16.
  */
 @Table(database = MyDatabase.class)
+@EqualsAndHashCode
 public class Card extends BaseModel implements Chargeable, UnsyncModel {
 	private static final String LOG_TAG = "Card";
 	private static final CardApi cardApi = new CardApi();

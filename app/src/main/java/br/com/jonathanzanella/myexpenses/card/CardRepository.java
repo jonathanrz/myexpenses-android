@@ -32,6 +32,10 @@ class CardRepository {
 		OperationResult result = new OperationResult();
 		if(StringUtils.isEmpty(card.getName()))
 			result.addError(ValidationError.NAME);
+		if(card.getType() == null)
+			result.addError(ValidationError.CARD_TYPE);
+		if(card.getAccount() == null)
+			result.addError(ValidationError.ACCOUNT);
 		if(result.isValid())
 			card.save();
 		return result;

@@ -2,14 +2,17 @@ package br.com.jonathanzanella.myexpenses.card;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
+import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.user.SelectUserView;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
@@ -25,6 +28,8 @@ import static br.com.jonathanzanella.myexpenses.card.CardType.DEBIT;
 public class EditCardActivity extends BaseActivity implements CardContract.EditView {
 	public static final String KEY_CARD_UUID = "KeyCardUuid";
 
+	@Bind(R.id.content_view)
+	View contentView;
 	@Bind(R.id.act_edit_card_name)
 	EditText editName;
 	@Bind(R.id.act_edit_card_account)
@@ -100,6 +105,7 @@ public class EditCardActivity extends BaseActivity implements CardContract.EditV
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
+		presenter.attachView(this);
 		presenter.onActivityResult(requestCode, resultCode, data);
 	}
 
@@ -149,6 +155,18 @@ public class EditCardActivity extends BaseActivity implements CardContract.EditV
 
 	@Override
 	public void showError(ValidationError error) {
-
+		switch (error) {
+			case NAME:
+				editName.setError(getString(error.getMessage()));
+				break;
+			case CARD_TYPE:
+				Snackbar.make(contentView, getString(error.getMessage()), Snackbar.LENGTH_SHORT).show();
+				break;
+			case ACCOUNT:
+				editAccount.setError(getString(error.getMessage()));
+				break;
+			default:
+				Log.error(this.getClass().getName(), "Validation unrecognized, field:" + error);
+		}
 	}
 }

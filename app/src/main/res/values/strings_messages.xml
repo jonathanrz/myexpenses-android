@@ -4,4 +4,6 @@
 	<string name="message_confirm_receipt">Confirma recebimento de </string>
 	<string name="message_confirm_expense">Confirma pagamento de </string>
 	<string name="error_message_name_not_informed">Informe o nome</string>
+	<string name="error_message_card_type_not_selected">Selecione o tipo do cartão</string>
+	<string name="error_message_account_not_informed">Selecione a conta</string>
 </resources>
