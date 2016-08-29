@@ -24,6 +24,7 @@ public class ListAccountActivity extends BaseActivity implements AccountAdapterC
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_list_account);
+		setTitle(R.string.select_account_title);
 	}
 
 	@Override

@@ -10,7 +10,9 @@ import lombok.ToString;
 
 @ToString
 public enum ValidationError {
-	NAME(R.string.error_message_name_not_informed);
+	NAME(R.string.error_message_name_not_informed),
+	CARD_TYPE(R.string.error_message_card_type_not_selected),
+	ACCOUNT(R.string.error_message_account_not_informed);
 
 	@Getter
 	private int message;

@@ -22,6 +22,7 @@ import lombok.Setter;
  */
 public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
 	protected List<Card> cards;
+	private CardAdapterPresenter presenter;
 
 	@Setter
 	CardAdapterCallback callback;
@@ -74,6 +75,10 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
 		}
 	}
 
+	public CardAdapter() {
+		presenter = new CardAdapterPresenter(this, new CardRepository());
+	}
+
 	@Override
 	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_card, parent, false);
@@ -94,13 +99,13 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
 		cards = Card.user();
 	}
 
-	public void addCreditCard(@NonNull Card card) {
-		cards.add(card);
-		notifyItemInserted(cards.size() - 1);
+	void addCreditCard(@NonNull Card card) {
+		presenter.addCard(card);
+		cards = presenter.getCards(false);
 	}
 
-	public @Nullable
-	Card getCreditCard(int position) {
+	@Nullable
+	private Card getCreditCard(int position) {
 		return cards != null ? cards.get(position) : null;
 	}
 }

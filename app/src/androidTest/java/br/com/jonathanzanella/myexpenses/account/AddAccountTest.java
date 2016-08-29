@@ -14,6 +14,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.text.NumberFormat;
+
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.helpers.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.views.MainActivity;
@@ -72,7 +74,8 @@ public class AddAccountTest {
 		matchToolbarTitle(accountsTitle);
 
 		onView(withId(R.id.row_account_name)).check(matches(withText(accountTitle)));
-		onView(withId(R.id.row_account_balance)).check(matches(withText("R$0,00")));
+		String balance = NumberFormat.getCurrencyInstance().format(0);
+		onView(withId(R.id.row_account_balance)).check(matches(withText(balance)));
 	}
 
 	@Test

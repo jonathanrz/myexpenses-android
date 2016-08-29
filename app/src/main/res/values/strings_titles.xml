@@ -2,6 +2,9 @@
 <resources>
 	<string name="new_account_title">Nova Conta</string>
 	<string name="edit_account_title">Editar Conta</string>
+	<string name="select_account_title">Seleciona uma conta</string>
 	<string name="new_source_title">Nova Fonte</string>
 	<string name="edit_source_title">Editar Fonte</string>
+	<string name="new_card_title">Novo Cartão</string>
+	<string name="edit_card_title">Editar Cartão</string>
 </resources>

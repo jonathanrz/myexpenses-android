@@ -50,6 +50,7 @@ public class EditAccountActivity extends BaseActivity implements AccountContract
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
 		editBalance.addTextChangedListener(new CurrencyTextWatch(editBalance));
+		presenter.viewUpdated(false);
 	}
 
 	@Override
@@ -72,7 +73,6 @@ public class EditAccountActivity extends BaseActivity implements AccountContract
 	protected void onStart() {
 		super.onStart();
 		presenter.attachView(this);
-		presenter.viewUpdated(false);
 	}
 
 	@Override

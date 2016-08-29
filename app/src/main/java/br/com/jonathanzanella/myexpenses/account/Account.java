@@ -37,7 +37,7 @@ import static br.com.jonathanzanella.myexpenses.log.Log.warning;
  * Created by Jonathan Zanella on 26/01/16.
  */
 @Table(database = MyDatabase.class)
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 public class Account extends BaseModel implements Chargeable, UnsyncModel {
 	public static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
 	private static final AccountApi accountApi = new AccountApi();

@@ -10,22 +10,18 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.joda.time.DateTime;
-
-import java.util.List;
-
-import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.views.BaseActivity;
+import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.expense.EditExpenseActivity;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
+import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
 import butterknife.OnClick;
 
 /**
  * Created by jzanella on 1/31/16.
  */
-public class ShowCardActivity extends BaseActivity {
+public class ShowCardActivity extends BaseActivity implements CardContract.View {
 	public static final String KEY_CREDIT_CARD_UUID = "KeyCreateCardUuid";
 
 	@Bind(R.id.act_show_card_name)
@@ -35,7 +31,11 @@ public class ShowCardActivity extends BaseActivity {
 	@Bind(R.id.act_show_card_type)
 	TextView cardType;
 
-	private Card card;
+	private CardPresenter presenter;
+
+	public ShowCardActivity() {
+		this.presenter = new CardPresenter(new CardRepository(), new AccountRepository());
+	}
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,46 +46,33 @@ public class ShowCardActivity extends BaseActivity {
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
-
-		setData();
-	}
-
-	private void setData() {
-		cardName.setText(card.getName());
-		cardAccount.setText(card.getAccount().getName());
-		switch (card.getType()) {
-			case CREDIT:
-				cardType.setText(R.string.credit);
-				break;
-			case DEBIT:
-				cardType.setText(R.string.debit);
-				break;
-		}
+		presenter.viewUpdated(false);
 	}
 
 	@Override
 	protected void storeBundle(Bundle extras) {
 		super.storeBundle(extras);
-		if(extras == null)
-			return;
-		if(extras.containsKey(KEY_CREDIT_CARD_UUID))
-			card = Card.find(extras.getString(KEY_CREDIT_CARD_UUID));
+
+		if(extras != null && extras.containsKey(KEY_CREDIT_CARD_UUID))
+			presenter.loadCard(extras.getString(KEY_CREDIT_CARD_UUID));
 	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putString(KEY_CREDIT_CARD_UUID, card.getUuid());
+		outState.putString(KEY_CREDIT_CARD_UUID, presenter.getUuid());
 	}
 
 	@Override
-	protected void onResume() {
-		super.onResume();
+	protected void onStart() {
+		super.onStart();
+		presenter.attachView(this);
+	}
 
-		if(card != null) {
-			card = Card.find(card.getUuid());
-			setData();
-		}
+	@Override
+	protected void onStop() {
+		super.onStop();
+		presenter.detachView();
 	}
 
 	@Override
@@ -99,7 +86,7 @@ public class ShowCardActivity extends BaseActivity {
 		switch (item.getItemId()) {
 			case R.id.action_edit:
 				Intent i = new Intent(this, EditCardActivity.class);
-				i.putExtra(EditCardActivity.KEY_CARD_UUID, card.getUuid());
+				i.putExtra(EditCardActivity.KEY_CARD_UUID, presenter.getUuid());
 				startActivity(i);
 				break;
 		}
@@ -111,24 +98,7 @@ public class ShowCardActivity extends BaseActivity {
 		new AsyncTask<Void, Void, Expense>() {
 			@Override
 			protected Expense doInBackground(Void... voids) {
-				List<Expense> expenses = card.creditCardBills(DateTime.now().minusMonths(1));
-				int totalExpense = 0;
-				for (Expense expense : expenses) {
-					totalExpense += expense.getValue();
-					expense.setCharged(true);
-					expense.save();
-				}
-
-				if(totalExpense == 0)
-					return null;
-
-				Expense e = new Expense();
-				e.setName(MyApplication.getContext().getString(R.string.invoice) + " " + card.getName());
-				e.setValue(totalExpense);
-				e.setChargeable(card.getAccount());
-				e.save();
-
-				return e;
+				return presenter.generateCreditCardBill();
 			}
 
 			@Override
@@ -145,5 +115,19 @@ public class ShowCardActivity extends BaseActivity {
 			}
 		}.execute();
 
+	}
+
+	@Override
+	public void showCard(Card card) {
+		cardName.setText(card.getName());
+		cardAccount.setText(card.getAccount().getName());
+		switch (card.getType()) {
+			case CREDIT:
+				cardType.setText(R.string.credit);
+				break;
+			case DEBIT:
+				cardType.setText(R.string.debit);
+				break;
+		}
 	}
 }
