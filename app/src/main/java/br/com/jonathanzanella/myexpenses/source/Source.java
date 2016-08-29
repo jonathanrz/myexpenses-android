@@ -31,7 +31,7 @@ import static br.com.jonathanzanella.myexpenses.log.Log.warning;
  * Created by jzanella on 1/31/16.
  */
 @Table(database = MyDatabase.class)
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 public class Source extends BaseModel implements UnsyncModel {
     private static final SourceApi sourceApi = new SourceApi();
 

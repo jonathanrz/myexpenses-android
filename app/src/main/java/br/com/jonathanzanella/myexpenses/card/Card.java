@@ -40,7 +40,7 @@ import static br.com.jonathanzanella.myexpenses.log.Log.warning;
  * Created by jzanella on 1/31/16.
  */
 @Table(database = MyDatabase.class)
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 public class Card extends BaseModel implements Chargeable, UnsyncModel {
 	private static final String LOG_TAG = "Card";
 	private static final CardApi cardApi = new CardApi();
