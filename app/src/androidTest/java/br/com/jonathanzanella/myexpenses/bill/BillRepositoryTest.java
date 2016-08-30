@@ -15,7 +15,6 @@ import br.com.jonathanzanella.myexpenses.helpers.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.BillBuilder;
 
 import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -44,11 +43,11 @@ public class BillRepositoryTest {
 
 	@Test
 	public void can_load_saved_account() throws Exception {
-		Bill account = new BillBuilder().build();
-		repository.save(account);
+		Bill bill = new BillBuilder().build();
+		repository.save(bill);
 
-		Bill loadBill = repository.find(account.getUuid());
-		assertThat(loadBill, is(account));
+		Bill loadBill = repository.find(bill.getUuid());
+		assertThat(loadBill.getUuid(), is(bill.getUuid()));
 	}
 
 	@Test
@@ -61,9 +60,9 @@ public class BillRepositoryTest {
 		wrongBill.setUserUuid("wrong");
 		repository.save(wrongBill);
 
-		List<Bill> accounts = repository.userBills();
-		assertThat(accounts.size(), is(1));
-		assertTrue(accounts.contains(correctBill));
-		assertFalse(accounts.contains(wrongBill));
+		List<Bill> bills = repository.userBills();
+		assertThat(bills.size(), is(1));
+		assertThat(bills.get(0).getUuid(), is(correctBill.getUuid()));
+		assertFalse(bills.contains(wrongBill));
 	}
 }
