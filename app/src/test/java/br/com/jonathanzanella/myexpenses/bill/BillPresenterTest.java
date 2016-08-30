@@ -41,6 +41,7 @@ public class BillPresenterTest {
 
 	@Test
 	public void save_gets_data_from_screen_and_save_to_repository() {
+		when(view.fillBill(any(Bill.class))).thenReturn(new Bill());
 		when(repository.save(any(Bill.class))).thenReturn(new OperationResult());
 
 		presenter.save();
@@ -55,6 +56,7 @@ public class BillPresenterTest {
 		OperationResult result = new OperationResult();
 		result.addError(ValidationError.NAME);
 
+		when(view.fillBill(any(Bill.class))).thenReturn(new Bill());
 		when(repository.save(any(Bill.class))).thenReturn(result);
 
 		presenter.save();
