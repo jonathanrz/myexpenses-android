@@ -1,6 +1,7 @@
 package br.com.jonathanzanella.myexpenses.bill;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -72,8 +73,8 @@ public class BillRepositoryUnitTest {
 
 	@Test
 	public void return_with_error_when_tried_to_save_bill_with_init_date_greater_than_end_date() throws Exception {
-		when(bill.getInitDate()).thenReturn(new DateTime(2016, 10, 3, 0, 0));
-		when(bill.getEndDate()).thenReturn(new DateTime(2016, 10, 2, 0, 0));
+		when(bill.getInitDate()).thenReturn(new DateTime(2016, 10, 3, 0, 0, 0, DateTimeZone.UTC));
+		when(bill.getEndDate()).thenReturn(new DateTime(2016, 10, 2, 0, 0, 0, DateTimeZone.UTC));
 
 		OperationResult result = repository.save(bill);
 
