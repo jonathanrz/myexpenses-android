@@ -15,7 +15,7 @@ import br.com.jonathanzanella.myexpenses.validations.ValidationError;
  * Created by jzanella on 8/27/16.
  */
 
-public class BillRepository {
+class BillRepository {
 	private From<Bill> initQuery() {
 		return SQLite.select().from(Bill.class);
 	}
@@ -32,6 +32,16 @@ public class BillRepository {
 		OperationResult result = new OperationResult();
 		if(StringUtils.isEmpty(bill.getName()))
 			result.addError(ValidationError.NAME);
+		if(bill.getAmount() <= 0)
+			result.addError(ValidationError.AMOUNT);
+		if(bill.getDueDate() <= 0)
+			result.addError(ValidationError.DUE_DATE);
+		if(bill.getInitDate() == null)
+			result.addError(ValidationError.INIT_DATE);
+		if(bill.getEndDate() == null)
+			result.addError(ValidationError.END_DATE);
+		if(bill.getInitDate() != null && bill.getEndDate() != null && bill.getInitDate().isAfter(bill.getEndDate()))
+			result.addError(ValidationError.INIT_DATE_GREATER_THAN_END_DATE);
 		if(result.isValid())
 			bill.save();
 		return result;

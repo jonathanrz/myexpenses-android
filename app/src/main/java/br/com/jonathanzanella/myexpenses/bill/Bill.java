@@ -142,11 +142,17 @@ public class Bill extends BaseModel implements Transaction, UnsyncModel {
 	}
 
 	public void setInitDate(DateTime initDate) {
-		this.initDate = initDate.withMillisOfDay(0);
+		if(initDate != null)
+			this.initDate = initDate.withMillisOfDay(0);
+		else
+			this.initDate = null;
 	}
 
 	public void setEndDate(DateTime endDate) {
-		this.endDate = endDate.withMillisOfDay(0);
+		if(endDate != null)
+			this.endDate = endDate.withMillisOfDay(0);
+		else
+			this.endDate = null;
 	}
 
 	@Override
