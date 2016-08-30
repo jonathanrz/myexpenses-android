@@ -72,8 +72,8 @@ public class BillRepositoryUnitTest {
 
 	@Test
 	public void return_with_error_when_tried_to_save_bill_with_init_date_greater_than_end_date() throws Exception {
-		when(bill.getInitDate()).thenReturn(DateTime.now().plusDays(1));
-		when(bill.getEndDate()).thenReturn(DateTime.now());
+		when(bill.getInitDate()).thenReturn(new DateTime(2016, 10, 3, 0, 0));
+		when(bill.getEndDate()).thenReturn(new DateTime(2016, 10, 2, 0, 0));
 
 		OperationResult result = repository.save(bill);
 
