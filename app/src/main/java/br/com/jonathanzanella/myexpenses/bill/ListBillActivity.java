@@ -32,7 +32,6 @@ public class ListBillActivity extends BaseActivity implements BillAdapterCallbac
 
 		BillAdapter adapter = new BillAdapter();
 		adapter.setCallback(this);
-		adapter.loadData();
 
 		bills.setAdapter(adapter);
 		bills.setHasFixedSize(true);

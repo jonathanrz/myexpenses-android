@@ -29,6 +29,7 @@ import br.com.jonathanzanella.myexpenses.helpers.converter.DateTimeConverter;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi;
 import br.com.jonathanzanella.myexpenses.transaction.Transaction;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -38,6 +39,7 @@ import static br.com.jonathanzanella.myexpenses.log.Log.warning;
  * Created by Jonathan Zanella on 07/02/16.
  */
 @Table(database = MyDatabase.class)
+@EqualsAndHashCode(callSuper = false)
 public class Bill extends BaseModel implements Transaction, UnsyncModel {
 	public static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
 	private static final BillApi billApi = new BillApi();
@@ -142,11 +144,17 @@ public class Bill extends BaseModel implements Transaction, UnsyncModel {
 	}
 
 	public void setInitDate(DateTime initDate) {
-		this.initDate = initDate.withMillisOfDay(0);
+		if(initDate != null)
+			this.initDate = initDate.withMillisOfDay(0);
+		else
+			this.initDate = null;
 	}
 
 	public void setEndDate(DateTime endDate) {
-		this.endDate = endDate.withMillisOfDay(0);
+		if(endDate != null)
+			this.endDate = endDate.withMillisOfDay(0);
+		else
+			this.endDate = null;
 	}
 
 	@Override

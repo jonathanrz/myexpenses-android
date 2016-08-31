@@ -1,4 +1,4 @@
-package br.com.jonathanzanella.myexpenses.card;
+package br.com.jonathanzanella.myexpenses.bill;
 
 import android.content.Intent;
 import android.support.test.filters.LargeTest;
@@ -11,13 +11,12 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.text.NumberFormat;
+
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.account.Account;
-import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.DatabaseHelper;
-import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
-import br.com.jonathanzanella.myexpenses.helpers.builder.CardBuilder;
+import br.com.jonathanzanella.myexpenses.helpers.builder.BillBuilder;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.InstrumentationRegistry.getTargetContext;
@@ -32,22 +31,17 @@ import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTit
  */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class ShowCardActivityTest {
+public class ShowBillActivityTest {
 	@Rule
-	public ActivityTestRule<ShowCardActivity> activityTestRule = new ActivityTestRule<>(ShowCardActivity.class, true, false);
+	public ActivityTestRule<ShowBillActivity> activityTestRule = new ActivityTestRule<>(ShowBillActivity.class, true, false);
 
-	private Card card;
-	private Account account;
-	private CardRepository repository = new CardRepository();
-	private AccountRepository accountRepository = new AccountRepository();
+	private Bill bill;
+	private BillRepository repository = new BillRepository();
 
 	@Before
 	public void setUp() throws Exception {
-		account = new AccountBuilder().build();
-		accountRepository.save(account);
-
-		card = new CardBuilder().account(account).build();
-		repository.save(card);
+		bill = new BillBuilder().build();
+		repository.save(bill);
 	}
 
 	@After
@@ -59,13 +53,14 @@ public class ShowCardActivityTest {
 	@Test
 	public void shows_account_correctly() throws Exception {
 		Intent i = new Intent();
-		i.putExtra(ShowCardActivity.KEY_CREDIT_CARD_UUID, card.getUuid());
+		i.putExtra(ShowBillActivity.KEY_BILL_UUID, bill.getUuid());
 		activityTestRule.launchActivity(i);
 
-		final String editCardTitle = getTargetContext().getString(R.string.card) + " " + card.getName();
-		matchToolbarTitle(editCardTitle);
+		final String editBillTitle = getTargetContext().getString(R.string.bill) + " " + bill.getName();
+		matchToolbarTitle(editBillTitle);
 
-		onView(withId(R.id.act_show_card_name)).check(matches(withText(card.getName())));
-		onView(withId(R.id.act_show_card_account)).check(matches(withText(account.getName())));
+		String balanceAsCurrency = NumberFormat.getCurrencyInstance().format(bill.getAmount() / 100.0);
+		onView(withId(R.id.act_show_bill_name)).check(matches(withText(bill.getName())));
+		onView(withId(R.id.act_show_bill_amount)).check(matches(withText(balanceAsCurrency)));
 	}
 }

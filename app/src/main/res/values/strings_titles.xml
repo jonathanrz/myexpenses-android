@@ -7,4 +7,6 @@
 	<string name="edit_source_title">Editar Fonte</string>
 	<string name="new_card_title">Novo Cartão</string>
 	<string name="edit_card_title">Editar Cartão</string>
+	<string name="new_bill_title">Nova Cobrança</string>
+	<string name="edit_bill_title">Editar Cobrança</string>
 </resources>

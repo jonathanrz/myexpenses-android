@@ -1,28 +1,29 @@
 package br.com.jonathanzanella.myexpenses.bill;
 
-import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.DatePicker;
 import android.widget.EditText;
 
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 
 import java.text.NumberFormat;
 
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.user.SelectUserView;
-import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch;
+import br.com.jonathanzanella.myexpenses.log.Log;
+import br.com.jonathanzanella.myexpenses.user.SelectUserView;
+import br.com.jonathanzanella.myexpenses.validations.ValidationError;
+import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
 import butterknife.OnClick;
 
 /**
  * Created by Jonathan Zanella on 26/01/16.
  */
-public class EditBillActivity extends BaseActivity {
+public class EditBillActivity extends BaseActivity implements BillContract.EditView {
 	public static final String KEY_BILL_UUID = "KeyBillUuid";
 
 	@Bind(R.id.act_edit_bill_name)
@@ -38,9 +39,11 @@ public class EditBillActivity extends BaseActivity {
 	@Bind(R.id.act_edit_bill_user)
 	SelectUserView selectUserView;
 
-	private Bill bill;
-	private DateTime initDate;
-	private DateTime endDate;
+	private BillPresenter presenter;
+
+	public EditBillActivity() {
+		presenter = new BillPresenter(new BillRepository());
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -52,39 +55,35 @@ public class EditBillActivity extends BaseActivity {
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
 		editAmount.addTextChangedListener(new CurrencyTextWatch(editAmount));
-
-		initDate = DateTime.now();
-		endDate = DateTime.now();
-
-		if(bill != null) {
-			editName.setText(bill.getName());
-			editAmount.setText(NumberFormat.getCurrencyInstance().format(bill.getAmount() / 100.0));
-			editDueDate.setText(String.valueOf(bill.getDueDate()));
-			initDate = bill.getInitDate();
-			onInitDateChanged();
-			endDate = bill.getEndDate();
-			onEndDateChanged();
-			selectUserView.setSelectedUser(bill.getUserUuid());
-		} else {
-			onInitDateChanged();
-			onEndDateChanged();
-		}
+		presenter.viewUpdated(false);
 	}
 
 	@Override
 	protected void storeBundle(Bundle extras) {
 		super.storeBundle(extras);
-		if(extras == null)
-			return;
-		if(extras.containsKey(KEY_BILL_UUID))
-			bill = Bill.find(extras.getString(KEY_BILL_UUID));
+
+		if(extras != null && extras.containsKey(KEY_BILL_UUID))
+			presenter.loadBill(extras.getString(KEY_BILL_UUID));
 	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		if(bill != null)
-			outState.putString(KEY_BILL_UUID, bill.getUuid());
+		String uuid = presenter.getUuid();
+		if(uuid != null)
+			outState.putString(KEY_BILL_UUID, uuid);
+	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		presenter.attachView(this);
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		presenter.detachView();
 	}
 
 	@Override
@@ -95,58 +94,83 @@ public class EditBillActivity extends BaseActivity {
 
 	@OnClick(R.id.act_edit_bill_init_date)
 	void onInitDate() {
-		new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
-			@Override
-			public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-				initDate = initDate.withYear(year).withMonthOfYear(monthOfYear + 1).withDayOfMonth(dayOfMonth);
-				onInitDateChanged();
-			}
-		}, initDate.getYear(), initDate.getMonthOfYear() - 1, initDate.getDayOfMonth()).show();
+		presenter.onInitDate(this);
 	}
 
-	private void onInitDateChanged() {
-		editInitDate.setText(Bill.sdf.format(initDate.toDate()));
+	@Override
+	public void onInitDateChanged(DateTime date) {
+		editInitDate.setText(Bill.sdf.format(date.toDate()));
 	}
 
 	@OnClick(R.id.act_edit_bill_end_date)
 	void onEndDate() {
-		new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
-			@Override
-			public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-				endDate = endDate.withYear(year).withMonthOfYear(monthOfYear + 1).withDayOfMonth(dayOfMonth);
-				onEndDateChanged();
-			}
-		}, endDate.getYear(), endDate.getMonthOfYear() - 1, endDate.getDayOfMonth()).show();
+		presenter.onEndDate(this);
 	}
 
-	private void onEndDateChanged() {
-		editEndDate.setText(Bill.sdf.format(endDate.toDate()));
+	@Override
+	public void onEndDateChanged(DateTime date) {
+		editEndDate.setText(Bill.sdf.format(date.toDate()));
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_save:
-				save();
+				presenter.save();
 				break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
-	private void save() {
-		if(bill == null)
-			bill = new Bill();
-		bill.setName(editName.getText().toString());
-		bill.setAmount(Integer.parseInt(editAmount.getText().toString().replaceAll("[^\\d]", "")));
-		bill.setDueDate(Integer.parseInt(editDueDate.getText().toString()));
-		bill.setInitDate(initDate);
-		bill.setEndDate(endDate);
-		bill.setUserUuid(selectUserView.getSelectedUser());
-		bill.save();
+	@Override
+	public void showBill(Bill bill) {
+		editName.setText(bill.getName());
+		editAmount.setText(NumberFormat.getCurrencyInstance().format(bill.getAmount() / 100.0));
+		editDueDate.setText(String.valueOf(bill.getDueDate()));
+		selectUserView.setSelectedUser(bill.getUserUuid());
+	}
 
+	@Override
+	public Bill fillBill(Bill bill) {
+		String amountText = editAmount.getText().toString().replaceAll("[^\\d]", "");
+		String dueDateText = editDueDate.getText().toString().replaceAll("[^\\d]", "");
+
+		bill.setName(editName.getText().toString());
+		bill.setAmount(StringUtils.isEmpty(amountText) ? 0 : Integer.parseInt(amountText));
+		bill.setDueDate(StringUtils.isEmpty(dueDateText) ? 0 : Integer.parseInt(dueDateText));
+		bill.setUserUuid(selectUserView.getSelectedUser());
+		return bill;
+	}
+
+	@Override
+	public void finishView() {
 		Intent i = new Intent();
-		i.putExtra(KEY_BILL_UUID, bill.getUuid());
+		i.putExtra(KEY_BILL_UUID, presenter.getUuid());
 		setResult(RESULT_OK, i);
 		finish();
+	}
+
+	@Override
+	public void showError(ValidationError error) {
+		switch (error) {
+			case NAME:
+				editName.setError(getString(error.getMessage()));
+				break;
+			case AMOUNT:
+				editAmount.setError(getString(error.getMessage()));
+				break;
+			case DUE_DATE:
+				editDueDate.setError(getString(error.getMessage()));
+				break;
+			case INIT_DATE:
+			case INIT_DATE_GREATER_THAN_END_DATE:
+				editInitDate.setError(getString(error.getMessage()));
+				break;
+			case END_DATE:
+				editEndDate.setError(getString(error.getMessage()));
+				break;
+			default:
+				Log.error(this.getClass().getName(), "Validation unrecognized, field:" + error);
+		}
 	}
 }

@@ -8,11 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.lang.ref.WeakReference;
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.R;
@@ -25,9 +22,10 @@ import lombok.Setter;
  */
 class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder> {
 	protected List<Bill> bills;
-	protected List<Bill> billsFiltered;
 	@Setter
 	BillAdapterCallback callback;
+
+	private BillAdapterPresenter presenter;
 
 	public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 		@Bind(R.id.row_bill_name)
@@ -76,6 +74,11 @@ class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder> {
 		}
 	}
 
+	BillAdapter() {
+		this.presenter = new BillAdapterPresenter(this, new BillRepository());
+		refreshData();
+	}
+
 	@Override
 	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		View v = LayoutInflater.from(parent.getContext()).inflate(getLayout(), parent, false);
@@ -88,39 +91,29 @@ class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder> {
 
 	@Override
 	public void onBindViewHolder(ViewHolder holder, int position) {
-		holder.setData(billsFiltered.get(position));
+		holder.setData(getBill(position));
 	}
 
 	@Override
 	public int getItemCount() {
-		return billsFiltered != null ? billsFiltered.size() : 0;
+		return bills != null ? bills.size() : 0;
 	}
 
-	public void loadData() {
-		bills = Bill.user();
-		billsFiltered = bills;
+	public void refreshData() {
+		bills = presenter.getBills(true);
 	}
 
-	public @Nullable Bill getBill(int position) {
-		return billsFiltered != null ? billsFiltered.get(position) : null;
+	@Nullable
+	private Bill getBill(int position) {
+		return bills != null ? bills.get(position) : null;
 	}
 
-	public void addBill(Bill b) {
-		bills.add(b);
-		billsFiltered.add(b);
-		notifyItemInserted(billsFiltered.size() - 1);
+	void addBill(Bill b) {
+		presenter.addBill(b);
 	}
 
 	public void filter(String filter) {
-		if(filter == null || filter.compareTo("") == 0) {
-			billsFiltered = bills;
-			return;
-		}
-
-		billsFiltered = new ArrayList<>();
-		for (Bill bill : bills) {
-			if(StringUtils.containsIgnoreCase(bill.getName(), filter))
-				billsFiltered.add(bill);
-		}
+		presenter.filter(filter);
+		bills = presenter.getBills(false);
 	}
 }

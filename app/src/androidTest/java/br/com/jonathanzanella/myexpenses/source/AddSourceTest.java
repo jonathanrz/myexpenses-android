@@ -15,9 +15,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.views.MainActivity;
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -49,6 +51,7 @@ public class AddSourceTest {
 	@After
 	public void tearDown() throws Exception {
 		DatabaseHelper.reset(getContext());
+		ActivityLifecycleHelper.closeAllActivities(getInstrumentation());
 	}
 
 	@Test

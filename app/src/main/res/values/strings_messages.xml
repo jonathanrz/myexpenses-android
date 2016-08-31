@@ -6,4 +6,9 @@
 	<string name="error_message_name_not_informed">Informe o nome</string>
 	<string name="error_message_card_type_not_selected">Selecione o tipo do cartão</string>
 	<string name="error_message_account_not_informed">Selecione a conta</string>
+	<string name="error_message_amount_zero">Informe um valor maior do que zero</string>
+	<string name="error_message_due_date_not_informed">Informe a data de vencimento</string>
+	<string name="error_message_init_date_not_informed">Informe a data de inicio</string>
+	<string name="error_message_end_date_not_informed">Informe a data de fim</string>
+	<string name="error_message_init_date_greater_than_end_date">A data de inicio deve ser superior ou igual a data de fim</string>
 </resources>

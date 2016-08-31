@@ -16,7 +16,7 @@ import butterknife.Bind;
 /**
  * Created by jzanella on 1/31/16.
  */
-public class ShowBillActivity extends BaseActivity {
+public class ShowBillActivity extends BaseActivity implements BillContract.View {
 	public static final String KEY_BILL_UUID = "KeyBillUuid";
 
 	@Bind(R.id.act_show_bill_name)
@@ -30,7 +30,11 @@ public class ShowBillActivity extends BaseActivity {
 	@Bind(R.id.act_show_bill_end_date)
 	TextView billEndDate;
 
-	private Bill bill;
+	private BillPresenter presenter;
+
+	public ShowBillActivity() {
+		presenter = new BillPresenter(new BillRepository());
+	}
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,43 +45,33 @@ public class ShowBillActivity extends BaseActivity {
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
-
-		setData();
-	}
-
-	private void setData() {
-		if (bill != null) {
-			billName.setText(bill.getName());
-			billAmount.setText(NumberFormat.getCurrencyInstance().format(bill.getAmount() / 100.0));
-			billDueDate.setText(String.valueOf(bill.getDueDate()));
-			billInitDate.setText(Bill.sdf.format(bill.getInitDate().toDate()));
-			billEndDate.setText(Bill.sdf.format(bill.getEndDate().toDate()));
-		}
+		presenter.viewUpdated(false);
 	}
 
 	@Override
 	protected void storeBundle(Bundle extras) {
 		super.storeBundle(extras);
-		if(extras == null)
-			return;
-		if(extras.containsKey(KEY_BILL_UUID))
-			bill = Bill.find(extras.getString(KEY_BILL_UUID));
+
+		if(extras != null && extras.containsKey(KEY_BILL_UUID))
+			presenter.loadBill(extras.getString(KEY_BILL_UUID));
 	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putString(KEY_BILL_UUID, bill.getUuid());
+		outState.putString(KEY_BILL_UUID, presenter.getUuid());
 	}
 
 	@Override
-	protected void onResume() {
-		super.onResume();
+	protected void onStart() {
+		super.onStart();
+		presenter.attachView(this);
+	}
 
-		if(bill != null) {
-			bill = Bill.find(bill.getUuid());
-			setData();
-		}
+	@Override
+	protected void onStop() {
+		super.onStop();
+		presenter.detachView();
 	}
 
 	@Override
@@ -91,10 +85,19 @@ public class ShowBillActivity extends BaseActivity {
 		switch (item.getItemId()) {
 			case R.id.action_edit:
 				Intent i = new Intent(this, EditBillActivity.class);
-				i.putExtra(EditBillActivity.KEY_BILL_UUID, bill.getUuid());
+				i.putExtra(EditBillActivity.KEY_BILL_UUID, presenter.getUuid());
 				startActivity(i);
 				break;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public void showBill(Bill bill) {
+		billName.setText(bill.getName());
+		billAmount.setText(NumberFormat.getCurrencyInstance().format(bill.getAmount() / 100.0));
+		billDueDate.setText(String.valueOf(bill.getDueDate()));
+		billInitDate.setText(Bill.sdf.format(bill.getInitDate().toDate()));
+		billEndDate.setText(Bill.sdf.format(bill.getEndDate().toDate()));
 	}
 }

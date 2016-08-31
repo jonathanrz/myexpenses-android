@@ -6,6 +6,6 @@ package br.com.jonathanzanella.myexpenses.account;
 
 class AccountNotFoundException extends RuntimeException {
 	AccountNotFoundException(String uuid) {
-		super("Can't find source with uuid=" + uuid);
+		super("Can't find account with uuid=" + uuid);
 	}
 }
