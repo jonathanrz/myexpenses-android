@@ -14,8 +14,10 @@ import org.junit.runner.RunWith;
 import java.text.NumberFormat;
 
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.DatabaseHelper;
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.InstrumentationRegistry.getTargetContext;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -46,6 +48,7 @@ public class ShowAccountActivityTest {
 	@After
 	public void tearDown() throws Exception {
 		DatabaseHelper.reset(getTargetContext());
+		ActivityLifecycleHelper.closeAllActivities(getInstrumentation());
 	}
 
 	@Test
