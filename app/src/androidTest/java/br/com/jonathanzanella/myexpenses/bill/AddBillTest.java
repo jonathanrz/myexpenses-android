@@ -54,7 +54,7 @@ public class AddBillTest {
 	}
 
 	@Test
-	public void add_new_account() {
+	public void add_new_bill() {
 		activityTestRule.launchActivity(new Intent());
 
 		openMenuAndClickItem(R.string.bills);
