@@ -6,7 +6,7 @@ set -e
 INITIALIZATION_FILE="$ANDROID_HOME/.create_avd-$(git log -n 1 --format=%h -- $0)"
 
 if [ ! -e ${INITIALIZATION_FILE} ]; then
-  echo no | android create avd --force -n test -t android-24 --abi armeabi-v7a #creates device
+  echo no | android create avd --force -n test -t android-24 --abi x86 #creates device
 
   emulator -avd test -no-skin -no-audio -no-window & #starts emulator and put the process on background
 else
