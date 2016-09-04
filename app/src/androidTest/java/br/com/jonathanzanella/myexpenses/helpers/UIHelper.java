@@ -77,7 +77,11 @@ public class UIHelper {
 	}
 
 	public static void clickIntoView(@IdRes int view) {
-		onView(withId(view)).perform(click());
+		try {
+			onView(withId(view)).perform(scrollTo()).perform(click());
+		} catch (PerformException e) {
+			onView(withId(view)).perform(click());
+		}
 	}
 
 	public static void clickIntoView(String text) {
