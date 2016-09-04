@@ -145,6 +145,9 @@ dependencies {
     androidTestCompile "com.android.support.test:runner:$rootProject.ext.runnerVersion"
     androidTestCompile "com.android.support.test:rules:$rootProject.ext.rulesVersion"
 
+    //Test bundler
+    androidTestCompile "com.linkedin.testbutler:test-butler-library:$rootProject.ext.testButler"
+
     // Espresso UI Testing dependencies.
     androidTestCompile "com.android.support.test.espresso:espresso-core:$rootProject.ext.espressoVersion"
     androidTestCompile ("com.android.support.test.espresso:espresso-contrib:$rootProject.ext.espressoVersion") {

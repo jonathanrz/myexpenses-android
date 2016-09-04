@@ -2,8 +2,12 @@ package br.com.jonathanzanella.myexpenses;
 
 import android.app.KeyguardManager;
 import android.content.Context;
+import android.os.Bundle;
 import android.os.PowerManager;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnitRunner;
+
+import com.linkedin.android.testbutler.TestButler;
 
 import static android.content.Context.KEYGUARD_SERVICE;
 import static android.content.Context.POWER_SERVICE;
@@ -31,13 +35,14 @@ public class MyTestRunner extends AndroidJUnitRunner {
 		wakeLock = power.newWakeLock(FULL_WAKE_LOCK | ACQUIRE_CAUSES_WAKEUP | ON_AFTER_RELEASE, name);
 		wakeLock.acquire();
 
+		TestButler.setup(InstrumentationRegistry.getTargetContext());
 		super.onStart();
 	}
 
 	@Override
-	public void onDestroy() {
-		super.onDestroy();
-
+	public void finish(int resultCode, Bundle results) {
+		TestButler.teardown(InstrumentationRegistry.getTargetContext());
 		wakeLock.release();
+		super.finish(resultCode, results);
 	}
 }
