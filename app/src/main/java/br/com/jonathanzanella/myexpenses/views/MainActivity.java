@@ -3,6 +3,7 @@ package br.com.jonathanzanella.myexpenses.views;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.widget.DrawerLayout;
@@ -124,7 +125,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 	}
 
 	@Override
-	public boolean onNavigationItemSelected(MenuItem item) {
+	public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.menu_resume:
 				addViewToContent(new ResumeView(this));
