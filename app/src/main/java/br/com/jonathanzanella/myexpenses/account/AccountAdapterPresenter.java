@@ -1,6 +1,7 @@
 package br.com.jonathanzanella.myexpenses.account;
 
-import java.util.Collections;
+import android.os.AsyncTask;
+
 import java.util.List;
 
 /**
@@ -16,17 +17,32 @@ class AccountAdapterPresenter {
 	AccountAdapterPresenter(AccountAdapter adapter, AccountRepository repository) {
 		this.repository = repository;
 		this.adapter = adapter;
-		loadAccounts();
+		loadAccountsAsync();
 	}
 
-	private void loadAccounts() {
-		accounts = repository.userAccounts();
+	void loadAccountsAsync() {
+		new AsyncTask<Void, Void, Void>() {
+
+			@Override
+			protected Void doInBackground(Void... voids) {
+				accounts = repository.userAccounts();
+				return null;
+			}
+
+			@Override
+			protected void onPostExecute(Void aVoid) {
+				super.onPostExecute(aVoid);
+				adapter.notifyDataSetChanged();
+			}
+		}.execute();
 	}
 
-	List<Account> getAccounts(boolean invalidateCache) {
-		if(invalidateCache)
-			loadAccounts();
-		return Collections.unmodifiableList(accounts);
+	Account getAccount(int position) {
+		return accounts.get(position);
+	}
+
+	int getAccountsSize() {
+		return accounts == null ? 0 : accounts.size();
 	}
 
 	void addAccount(Account source) {

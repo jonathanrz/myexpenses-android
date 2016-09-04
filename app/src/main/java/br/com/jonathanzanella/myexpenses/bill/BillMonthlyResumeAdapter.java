@@ -1,5 +1,6 @@
 package br.com.jonathanzanella.myexpenses.bill;
 
+import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -94,12 +95,26 @@ public class BillMonthlyResumeAdapter extends RecyclerView.Adapter<BillMonthlyRe
 		return bills != null ? bills.size() + 1 : 0;
 	}
 
-	public void loadData(DateTime month) {
-		bills = Bill.monthly(month);
-		totalValue = 0;
+	public void loadDataAsync(final DateTime month, final Runnable runnable) {
+		new AsyncTask<Void, Void, Void>() {
 
-		for (Bill bill : bills) {
-			totalValue += bill.getAmount();
-		}
+			@Override
+			protected Void doInBackground(Void... voids) {
+				bills = Bill.monthly(month);
+				totalValue = 0;
+
+				for (Bill bill : bills) {
+					totalValue += bill.getAmount();
+				}
+				return null;
+			}
+
+			@Override
+			protected void onPostExecute(Void aVoid) {
+				super.onPostExecute(aVoid);
+				notifyDataSetChanged();
+				runnable.run();
+			}
+		}.execute();
 	}
 }

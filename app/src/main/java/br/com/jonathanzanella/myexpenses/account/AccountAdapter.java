@@ -13,7 +13,6 @@ import org.joda.time.DateTime;
 
 import java.lang.ref.WeakReference;
 import java.text.NumberFormat;
-import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.R;
 import butterknife.Bind;
@@ -25,7 +24,6 @@ import lombok.Setter;
  */
 public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHolder> {
 	private AccountAdapterPresenter presenter;
-	protected List<Account> accounts;
 
 	@Setter
 	private boolean simplified = false;
@@ -80,11 +78,10 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
 
 	public AccountAdapter() {
 		presenter = new AccountAdapterPresenter(this, new AccountRepository());
-		accounts = presenter.getAccounts(false);
 	}
 
 	public void refreshData() {
-		accounts = presenter.getAccounts(true);
+		presenter.loadAccountsAsync();
 	}
 
 	@Override
@@ -99,20 +96,19 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
 
 	@Override
 	public void onBindViewHolder(ViewHolder holder, int position) {
-		holder.setData(accounts.get(position));
+		holder.setData(getAccount(position));
 	}
 
 	@Override
 	public int getItemCount() {
-		return accounts != null ? accounts.size() : 0;
+		return presenter.getAccountsSize();
 	}
 
 	void addAccount(@NonNull Account acc) {
 		presenter.addAccount(acc);
-		accounts = presenter.getAccounts(false);
 	}
 
 	public @Nullable Account getAccount(int position) {
-		return accounts != null ? accounts.get(position) : null;
+		return presenter.getAccount(position);
 	}
 }

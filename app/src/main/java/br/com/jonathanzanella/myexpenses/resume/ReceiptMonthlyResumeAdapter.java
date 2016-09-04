@@ -1,6 +1,7 @@
 package br.com.jonathanzanella.myexpenses.resume;
 
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -141,9 +142,24 @@ class ReceiptMonthlyResumeAdapter extends RecyclerView.Adapter<ReceiptMonthlyRes
 		return receipts != null ? receipts.size() + 2 : 0;
 	}
 
-	public void loadData(DateTime month) {
-		receipts = Receipt.resume(month);
-		updateTotalValue();
+	void loadDataAsync(final DateTime month, final Runnable runnable) {
+		new AsyncTask<Void, Void, Void>() {
+
+			@Override
+			protected Void doInBackground(Void... voids) {
+				receipts = Receipt.resume(month);
+				updateTotalValue();
+				return null;
+			}
+
+			@Override
+			protected void onPostExecute(Void aVoid) {
+				super.onPostExecute(aVoid);
+				notifyDataSetChanged();
+				if(runnable != null)
+					runnable.run();
+			}
+		}.execute();
 	}
 
 	private void updateTotalValue() {

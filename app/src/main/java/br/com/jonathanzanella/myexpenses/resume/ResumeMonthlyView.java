@@ -2,6 +2,7 @@ package br.com.jonathanzanella.myexpenses.resume;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import org.joda.time.DateTime;
 
 import java.text.NumberFormat;
+import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.AccountAdapter;
@@ -108,24 +110,62 @@ class ResumeMonthlyView extends BaseView {
 		accountAdapter.refreshData();
 		accountAdapter.notifyDataSetChanged();
 
-		receiptAdapter.loadData(month);
-		receiptAdapter.notifyDataSetChanged();
-		receipts.getLayoutParams().height = singleRowHeight * receiptAdapter.getItemCount();
+		loadReceipts();
+		loadExpenses();
+		loadBills();
+	}
 
-		expensesAdapter.setExpenses(Expense.expenses(month));
-		expensesAdapter.notifyDataSetChanged();
-		expenses.getLayoutParams().height = singleRowHeight * expensesAdapter.getItemCount();
+	private void loadBills() {
+		billsAdapter.loadDataAsync(month, new Runnable() {
+			@Override
+			public void run() {
+				bills.getLayoutParams().height = singleRowHeight * billsAdapter.getItemCount();
+			}
+		});
+	}
 
-		billsAdapter.loadData(month);
-		billsAdapter.notifyDataSetChanged();
-		bills.getLayoutParams().height = singleRowHeight * billsAdapter.getItemCount();
+	private void loadExpenses() {
+		new AsyncTask<Void, Void, List<Expense>>() {
 
-		int totalReceiptsValue = receiptAdapter.getTotalValue();
-		totalReceipts.setText(NumberFormat.getCurrencyInstance().format(totalReceiptsValue / 100.0));
+			@Override
+			protected List<Expense> doInBackground(Void... voids) {
+				return Expense.expenses(month);
+			}
+
+			@Override
+			protected void onPostExecute(List<Expense> expensesList) {
+				super.onPostExecute(expensesList);
+				expensesAdapter.setExpenses(expensesList);
+				expensesAdapter.notifyDataSetChanged();
+				expenses.getLayoutParams().height = singleRowHeight * expensesAdapter.getItemCount();
+
+				int totalExpensesValue = expensesAdapter.getTotalValue();
+				totalExpensesValue += billsAdapter.getTotalValue();
+				totalExpenses.setText(NumberFormat.getCurrencyInstance().format(totalExpensesValue / 100.0));
+
+				updateBalance();
+			}
+		}.execute();
+	}
+
+	private void loadReceipts() {
+		receiptAdapter.loadDataAsync(month, new Runnable() {
+			@Override
+			public void run() {
+				receipts.getLayoutParams().height = singleRowHeight * receiptAdapter.getItemCount();
+				int totalReceiptsValue = receiptAdapter.getTotalValue();
+				totalReceipts.setText(NumberFormat.getCurrencyInstance().format(totalReceiptsValue / 100.0));
+
+				updateBalance();
+			}
+		});
+	}
+
+	private void updateBalance() {
 		int totalExpensesValue = expensesAdapter.getTotalValue();
 		totalExpensesValue += billsAdapter.getTotalValue();
-		totalExpenses.setText(NumberFormat.getCurrencyInstance().format(totalExpensesValue / 100.0));
-		int balanceValue = totalReceiptsValue - totalExpensesValue;
+
+		int balanceValue = receiptAdapter.getTotalValue() - totalExpensesValue;
 		balance.setText(NumberFormat.getCurrencyInstance().format(balanceValue / 100.0));
 		if(balanceValue >= 0)
 			balance.setTextColor(getResources().getColor(R.color.value_unreceived));
