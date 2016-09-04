@@ -125,6 +125,8 @@ public class EditExpenseActivity extends BaseActivity {
 		if(date == null)
 			date = DateTime.now();
 		onBalanceDateChanged();
+		bill = expense.getBill();
+		onBillSelected();
 		selectUserView.setSelectedUser(expense.getUserUuid());
 	}
 
