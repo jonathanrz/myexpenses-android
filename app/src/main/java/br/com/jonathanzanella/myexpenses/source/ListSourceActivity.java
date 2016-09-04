@@ -6,6 +6,8 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.TextView;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
@@ -19,11 +21,14 @@ public class ListSourceActivity extends BaseActivity implements SourceAdapterCal
 
 	@Bind(R.id.act_sources_list)
 	RecyclerView sources;
+	@Bind(R.id.act_sources_list_empty)
+	TextView emptyListView;
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_list_source);
+		setTitle(R.string.select_source_title);
 	}
 
 	@Override
@@ -37,6 +42,8 @@ public class ListSourceActivity extends BaseActivity implements SourceAdapterCal
 		sources.setHasFixedSize(true);
 		sources.setLayoutManager(new GridLayoutManager(this, 2));
 		sources.setItemAnimator(new DefaultItemAnimator());
+
+		emptyListView.setVisibility(adapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
 	}
 
 	@Override

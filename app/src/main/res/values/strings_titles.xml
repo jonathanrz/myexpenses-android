@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<!-- account -->
 	<string name="new_account_title">Nova Conta</string>
 	<string name="edit_account_title">Editar Conta</string>
 	<string name="select_account_title">Seleciona uma conta</string>
+	<!-- source -->
 	<string name="new_source_title">Nova Fonte</string>
 	<string name="edit_source_title">Editar Fonte</string>
+	<string name="select_source_title">Seleciona uma fonte</string>
+	<!-- card -->
 	<string name="new_card_title">Novo Cartão</string>
 	<string name="edit_card_title">Editar Cartão</string>
+	<!-- bill -->
 	<string name="new_bill_title">Nova Cobrança</string>
 	<string name="edit_bill_title">Editar Cobrança</string>
 </resources>

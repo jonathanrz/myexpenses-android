@@ -25,7 +25,10 @@ class SourceRepository {
 	}
 
 	List<Source> userSources() {
-		return initQuery().where(Source_Table.userUuid.is(Environment.CURRENT_USER_UUID)).queryList();
+		return initQuery()
+				.where(Source_Table.userUuid.is(Environment.CURRENT_USER_UUID))
+				.orderBy(Source_Table.name, true)
+				.queryList();
 	}
 
 	OperationResult save(Source source) {

@@ -31,7 +31,7 @@ android {
         applicationId "br.com.jonathanzanella.myexpenses"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 10
+        versionCode rootProject.ext.gitCommitCount()
         versionName "0.4.3." + rootProject.ext.getVersionName()
         testInstrumentationRunner "br.com.jonathanzanella.myexpenses.MyTestRunner"
 

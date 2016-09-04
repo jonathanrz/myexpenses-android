@@ -4,9 +4,21 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"/>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/act_sources_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
+
+	<TextView
+		android:id="@+id/act_sources_list_empty"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:gravity="center"
+		android:text="@string/message_no_sources"
+		android:visibility="gone"/>
 
 </LinearLayout>
