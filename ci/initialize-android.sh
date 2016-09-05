@@ -27,8 +27,12 @@ if [ ! -e ${INITIALIZATION_FILE} ]; then
   echo y | android update sdk --no-ui --filter extra-android-m2repository --all > /dev/null
 
   # Specify at least one system image if you want to run emulator tests
-  echo y | android update sdk --no-ui --filter sys-img-armeabi-v7a-android-24 --all > /dev/null
-#  echo y | android update sdk --no-ui --filter sys-img-x86-android-24 --all > /dev/null
+#  echo y | android update sdk --no-ui --filter sys-img-armeabi-v7a-android-24 --all > /dev/null
+  echo y | android update sdk --no-ui --filter sys-img-x86-android-24 --all > /dev/null
+
+  export DEBIAN_FRONTEND=noninteractive
+
+  sudo apt-get -y install libpulse-dev
 
   touch ${INITIALIZATION_FILE}
 else
