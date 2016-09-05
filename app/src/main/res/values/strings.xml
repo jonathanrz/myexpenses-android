@@ -35,7 +35,7 @@
     <string name="amount">Valor</string>
     <string name="due_date">Vencimento</string>
     <string name="bill">Cobrança</string>
-    <string name="bills">Cobrancas</string>
+    <string name="bills">Cobranças</string>
 	<string name="start">Início</string>
 	<string name="end">Fim</string>
 	<string name="repetition">Repetição</string>
