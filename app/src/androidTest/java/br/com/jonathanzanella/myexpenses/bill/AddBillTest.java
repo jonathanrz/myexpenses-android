@@ -11,6 +11,7 @@ import android.support.test.uiautomator.UiDevice;
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,6 +38,7 @@ import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.typeTextIntoVie
  */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
+@Ignore
 public class AddBillTest {
 	@Rule
 	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
