@@ -172,3 +172,8 @@ configurations.compile.dependencies.each { compileDependency ->
         configurations.androidTestCompile.exclude module: "${compileDependency.getName()}"
     }
 }
+
+task(runTests, type: Exec,
+        dependsOn: ['uninstallDebug', 'assembleDebug', 'connectedDebugAndroidTest', 'jacocoTestReport', 'connectedCheck']) {
+    commandLine './codecov.sh'
+}
