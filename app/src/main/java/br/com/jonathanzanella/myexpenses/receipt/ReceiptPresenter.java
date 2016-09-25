@@ -125,7 +125,8 @@ class ReceiptPresenter {
 			receipt.setSource(source);
 		if(account != null)
 			receipt.setAccount(account);
-		receipt.setDate(date);
+		if(date != null)
+			receipt.setDate(date);
 
 		int installment = editView.getInstallment();
 

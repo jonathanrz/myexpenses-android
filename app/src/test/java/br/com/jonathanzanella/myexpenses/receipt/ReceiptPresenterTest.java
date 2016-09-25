@@ -47,6 +47,7 @@ public class ReceiptPresenterTest {
 
 	@Test
 	public void save_gets_data_from_screen_and_save_to_repository() {
+		when(view.fillReceipt(any(Receipt.class))).thenReturn(new Receipt());
 		when(repository.save(any(Receipt.class))).thenReturn(new OperationResult());
 
 		presenter.save();
@@ -61,6 +62,7 @@ public class ReceiptPresenterTest {
 		OperationResult result = new OperationResult();
 		result.addError(ValidationError.NAME);
 
+		when(view.fillReceipt(any(Receipt.class))).thenReturn(new Receipt());
 		when(repository.save(any(Receipt.class))).thenReturn(result);
 
 		presenter.save();
