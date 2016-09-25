@@ -4,10 +4,12 @@ import com.raizlabs.android.dbflow.sql.language.From;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
 
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.Environment;
+import br.com.jonathanzanella.myexpenses.helpers.DateHelper;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
@@ -28,6 +30,16 @@ class ReceiptRepository {
 		return initQuery()
 				.where(Receipt_Table.userUuid.is(Environment.CURRENT_USER_UUID))
 				.orderBy(Receipt_Table.date, true)
+				.queryList();
+	}
+
+	List<Receipt> monthly(DateTime month) {
+		return initQuery()
+				.where(Receipt_Table.date
+						.between(DateHelper.firstDayOfMonth(month))
+						.and(DateHelper.lastDayOfMonth(month)))
+				.and(Receipt_Table.removed.is(false))
+				.and(Receipt_Table.userUuid.is(Environment.CURRENT_USER_UUID))
 				.queryList();
 	}
 

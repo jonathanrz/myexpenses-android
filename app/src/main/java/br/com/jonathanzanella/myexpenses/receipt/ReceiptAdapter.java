@@ -9,12 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 
 import java.lang.ref.WeakReference;
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.R;
@@ -26,7 +24,8 @@ import butterknife.ButterKnife;
  */
 class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ViewHolder> {
 	protected List<Receipt> receipts;
-	protected List<Receipt> receiptsFiltered;
+	private ReceiptAdapterPresenter presenter;
+	private DateTime date;
 
 	public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 		@Bind(R.id.row_receipt_name)
@@ -73,6 +72,14 @@ class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ViewHolder> {
 		}
 	}
 
+	ReceiptAdapter() {
+		presenter = new ReceiptAdapterPresenter(this, new ReceiptRepository());
+	}
+
+	public void loadData(DateTime date) {
+		receipts = presenter.getReceipts(true, date);
+	}
+
 	@Override
 	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_receipt, parent, false);
@@ -81,39 +88,25 @@ class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ViewHolder> {
 
 	@Override
 	public void onBindViewHolder(ViewHolder holder, int position) {
-		holder.setData(receiptsFiltered.get(position));
+		holder.setData(getReceipt(position));
 	}
 
 	@Override
 	public int getItemCount() {
-		return receiptsFiltered != null ? receiptsFiltered.size() : 0;
-	}
-
-	public void loadData(DateTime dateTime) {
-		receipts = Receipt.monthly(dateTime);
-		receiptsFiltered = receipts;
+		return receipts != null ? receipts.size() : 0;
 	}
 
 	void addReceipt(@NonNull Receipt receipt) {
-		receiptsFiltered.add(receipt);
-		notifyItemInserted(receiptsFiltered.size() - 1);
+		presenter.addReceipt(receipt);
 	}
 
 	@Nullable
 	private Receipt getReceipt(int position) {
-		return receiptsFiltered != null ? receiptsFiltered.get(position) : null;
+		return receipts != null ? receipts.get(position) : null;
 	}
 
 	public void filter(String filter) {
-		if(filter == null || filter.compareTo("") == 0) {
-			receiptsFiltered = receipts;
-			return;
-		}
-
-		receiptsFiltered = new ArrayList<>();
-		for (Receipt receipt : receipts) {
-			if(StringUtils.containsIgnoreCase(receipt.getName(), filter))
-				receiptsFiltered.add(receipt);
-		}
+		presenter.filter(filter);
+		loadData(date);
 	}
 }
