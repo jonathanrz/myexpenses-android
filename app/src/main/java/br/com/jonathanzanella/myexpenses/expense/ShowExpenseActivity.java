@@ -1,10 +1,7 @@
 package br.com.jonathanzanella.myexpenses.expense;
 
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,16 +11,16 @@ import android.widget.TextView;
 import java.text.NumberFormat;
 
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.views.BaseActivity;
-import br.com.jonathanzanella.myexpenses.bill.Bill;
+import br.com.jonathanzanella.myexpenses.bill.BillRepository;
 import br.com.jonathanzanella.myexpenses.receipt.Receipt;
+import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
 
 /**
  * Created by jzanella on 1/31/16.
  */
-public class ShowExpenseActivity extends BaseActivity {
-	public static final String KEY_EXPENSE_UUID = "KeyExpenseUuid";
+public class ShowExpenseActivity extends BaseActivity implements ExpenseContract.View {
+	public static final String KEY_EXPENSE_UUID = ExpensePresenter.KEY_EXPENSE_UUID;
 
 	@Bind(R.id.act_show_expense_name)
 	TextView expenseName;
@@ -40,7 +37,7 @@ public class ShowExpenseActivity extends BaseActivity {
 	@Bind(R.id.act_show_expense_charge_next_month)
 	TableRow chargeNextMonth;
 
-	private Expense expense;
+	private ExpensePresenter presenter = new ExpensePresenter(new ExpenseRepository(), new BillRepository());
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,45 +48,39 @@ public class ShowExpenseActivity extends BaseActivity {
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
-
-		setData();
-	}
-
-	private void setData() {
-		expenseName.setText(expense.getName());
-		expenseDate.setText(Receipt.sdf.format(expense.getDate().toDate()));
-		expenseIncome.setText(NumberFormat.getCurrencyInstance().format(expense.getValue() / 100.0));
-		expenseIncomeToShowInOverview.setText(NumberFormat.getCurrencyInstance().format(expense.getValueToShowInOverview() / 100.0));
-		expenseChargeable.setText(expense.getChargeable().getName());
-		chargeNextMonth.setVisibility(expense.isChargeNextMonth() ? View.VISIBLE : View.GONE);
-		Bill bill = expense.getBill();
-		if(bill != null)
-			expenseBill.setText(bill.getName());
+		presenter.viewUpdated(false);
 	}
 
 	@Override
 	protected void storeBundle(Bundle extras) {
 		super.storeBundle(extras);
-		if(extras == null)
-			return;
-		if(extras.containsKey(KEY_EXPENSE_UUID))
-			expense = Expense.find(extras.getString(KEY_EXPENSE_UUID));
+
+		if(extras != null)
+			presenter.storeBundle(extras);
 	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putString(KEY_EXPENSE_UUID, expense.getUuid());
+		presenter.onSaveInstanceState(outState);
+	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		presenter.attachView(this);
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
+		presenter.refreshExpense();
+	}
 
-		if(expense != null) {
-			expense = Expense.find(expense.getUuid());
-			setData();
-		}
+	@Override
+	protected void onStop() {
+		super.onStop();
+		presenter.detachView();
 	}
 
 	@Override
@@ -102,37 +93,25 @@ public class ShowExpenseActivity extends BaseActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_edit: {
-				Intent i = new Intent(this, EditExpenseActivity.class);
-				i.putExtra(EditExpenseActivity.KEY_EXPENSE_UUID, expense.getUuid());
-				startActivity(i);
+				presenter.edit(this);
 				break;
 			}
 			case R.id.action_delete: {
-				new AlertDialog.Builder(this)
-						.setTitle(android.R.string.dialog_alert_title)
-						.setMessage(R.string.message_confirm_deletion)
-						.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int which) {
-								dialog.dismiss();
+				presenter.delete(this);
 
-								expense.uncharge();
-								expense.delete();
-								Intent i = new Intent();
-								setResult(RESULT_OK, i);
-								finish();
-							}
-						})
-						.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int which) {
-								dialog.dismiss();
-							}
-						})
-						.show();
 				break;
 			}
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public void showExpense(Expense expense) {
+		expenseName.setText(expense.getName());
+		expenseDate.setText(Receipt.sdf.format(expense.getDate().toDate()));
+		expenseIncome.setText(NumberFormat.getCurrencyInstance().format(expense.getValue() / 100.0));
+		expenseIncomeToShowInOverview.setText(NumberFormat.getCurrencyInstance().format(expense.getValueToShowInOverview() / 100.0));
+		expenseChargeable.setText(expense.getChargeable().getName());
+		chargeNextMonth.setVisibility(expense.isChargeNextMonth() ? View.VISIBLE : View.GONE);
 	}
 }

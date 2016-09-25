@@ -30,7 +30,7 @@ import static android.app.Activity.RESULT_OK;
  */
 
 class ExpensePresenter {
-	static final String KEY_EXPENSE_UUID = "KeyReceiptUuid";
+	static final String KEY_EXPENSE_UUID = "KeyExpenseUuid";
 	static final String KEY_BILL_UUID = "KeyBillUuid";
 
 	private ExpenseContract.View view;
@@ -74,11 +74,11 @@ class ExpensePresenter {
 			view.showExpense(expense);
 
 			bill = expense.getBill();
-			if(bill != null)
+			if(editView != null && bill != null)
 				editView.onBillSelected(bill);
 
 			chargeable = expense.getChargeable();
-			if(chargeable != null)
+			if(editView != null && chargeable != null)
 				editView.onChargeableSelected(chargeable);
 
 			date = expense.getDate();
@@ -89,7 +89,7 @@ class ExpensePresenter {
 				editView.setTitle(R.string.new_expense_title);
 
 			date = DateTime.now();
-			if(date != null)
+			if(editView != null && date != null)
 				editView.onDateChanged(date);
 		}
 	}
@@ -166,9 +166,7 @@ class ExpensePresenter {
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.dismiss();
 
-						Chargeable c = expense.getChargeable();
-						c.debit(expense.getValue() * -1);
-						c.save();
+						expense.uncharge();
 						expense.delete();
 						Intent i = new Intent();
 						act.setResult(RESULT_OK, i);
