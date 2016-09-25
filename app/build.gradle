@@ -173,7 +173,8 @@ configurations.compile.dependencies.each { compileDependency ->
     }
 }
 
-task(runTests, type: Exec,
-        dependsOn: ['uninstallDebug', 'assembleDebug', 'connectedDebugAndroidTest', 'jacocoTestReport', 'connectedCheck']) {
+task(runTests, dependsOn: ['uninstallDebug', 'assembleDebug', 'connectedDebugAndroidTest']) {}
+
+task(runTestsWithCoverage, type: Exec, dependsOn: ['runTests', 'jacocoTestReport', 'connectedCheck']) {
     commandLine './codecov.sh'
 }

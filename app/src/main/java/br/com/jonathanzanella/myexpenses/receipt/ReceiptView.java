@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.helpers.DateHelper;
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapter;
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapterBuilder;
 import br.com.jonathanzanella.myexpenses.views.BaseView;
@@ -102,12 +103,9 @@ public class ReceiptView extends BaseView implements ViewPager.OnPageChangeListe
 				if(resultCode == Activity.RESULT_OK) {
 					Receipt r = Receipt.find(data.getStringExtra(EditReceiptActivity.KEY_RECEIPT_UUID));
 					if(r != null) {
-						WeakReference<ReceiptMonthlyView> viewRef = views.get(r.getDate());
-						if (viewRef != null) {
-							ReceiptMonthlyView view = viewRef.get();
-							if (view != null)
-								view.addReceipt(r);
-						}
+						ReceiptMonthlyView view = getMonthView(r.getDate());
+						if (view != null)
+							view.addReceipt(r);
 					}
 				}
 				break;
@@ -124,9 +122,13 @@ public class ReceiptView extends BaseView implements ViewPager.OnPageChangeListe
 	}
 
 	private @Nullable ReceiptMonthlyView getMonthView(DateTime date) {
-		WeakReference<ReceiptMonthlyView> viewRef = views.get(date);
-		if (viewRef != null)
-			return viewRef.get();
+		for (Map.Entry<DateTime, WeakReference<ReceiptMonthlyView>> pair : views.entrySet()) {
+			DateTime viewDateFirstDay = DateHelper.firstDayOfMonth(pair.getKey());
+			DateTime viewDateLastDay = DateHelper.lastDayOfMonth(pair.getKey());
+			if (date.isAfter(viewDateFirstDay) && date.isBefore(viewDateLastDay))
+				return pair.getValue().get();
+		}
+
 		return null;
 	}
 }

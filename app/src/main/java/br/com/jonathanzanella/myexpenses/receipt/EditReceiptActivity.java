@@ -1,34 +1,36 @@
 package br.com.jonathanzanella.myexpenses.receipt;
 
-import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.CheckBox;
-import android.widget.DatePicker;
 import android.widget.EditText;
 
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 
 import java.text.NumberFormat;
 
-import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.account.ListAccountActivity;
-import br.com.jonathanzanella.myexpenses.user.SelectUserView;
-import br.com.jonathanzanella.myexpenses.views.BaseActivity;
-import br.com.jonathanzanella.myexpenses.source.ListSourceActivity;
-import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch;
 import br.com.jonathanzanella.myexpenses.account.Account;
+import br.com.jonathanzanella.myexpenses.account.AccountRepository;
+import br.com.jonathanzanella.myexpenses.account.ListAccountActivity;
+import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch;
+import br.com.jonathanzanella.myexpenses.log.Log;
+import br.com.jonathanzanella.myexpenses.source.ListSourceActivity;
 import br.com.jonathanzanella.myexpenses.source.Source;
+import br.com.jonathanzanella.myexpenses.source.SourceRepository;
+import br.com.jonathanzanella.myexpenses.user.SelectUserView;
+import br.com.jonathanzanella.myexpenses.validations.ValidationError;
+import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
 import butterknife.OnClick;
 
 /**
  * Created by Jonathan Zanella on 26/01/16.
  */
-public class EditReceiptActivity extends BaseActivity {
+public class EditReceiptActivity extends BaseActivity implements ReceiptContract.EditView {
 	public static final String KEY_RECEIPT_UUID = "KeyReceiptUuid";
 	private static final int REQUEST_SELECT_SOURCE = 1001;
 	private static final int REQUEST_SELECT_ACCOUNT = 1002;
@@ -52,10 +54,7 @@ public class EditReceiptActivity extends BaseActivity {
 	@Bind(R.id.act_edit_receipt_user)
 	SelectUserView selectUserView;
 
-	private Receipt receipt;
-	private DateTime date;
-	private Source source;
-	private Account account;
+	private ReceiptPresenter presenter = new ReceiptPresenter(new ReceiptRepository(), new SourceRepository(), new AccountRepository());
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -66,84 +65,55 @@ public class EditReceiptActivity extends BaseActivity {
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
-
 		editIncome.addTextChangedListener(new CurrencyTextWatch(editIncome));
-
-		if(receipt == null) {
-			initData();
-		} else {
-			setData();
-		}
-	}
-
-	private void initData() {
-		date = DateTime.now();
-		onBalanceDateChanged();
-		if(source != null)
-			onSourceSelected();
-		if(account != null)
-			onAccountSelected();
-	}
-
-	private void setData() {
-		editName.setText(receipt.getName());
-		editIncome.setText(NumberFormat.getCurrencyInstance().format(receipt.getIncome() / 100.0));
-		if(receipt.isCredited())
-			editIncome.setTextColor(getResources().getColor(R.color.value_unpaid));
-		editSource.setText(receipt.getSource().getName());
-		source = receipt.getSource();
-		checkShowInResume.setChecked(receipt.isShowInResume());
-		onSourceSelected();
-		account = receipt.getAccount();
-		onAccountSelected();
-		date = receipt.getDate();
-		onBalanceDateChanged();
-		selectUserView.setSelectedUser(receipt.getUserUuid());
+		presenter.attachView(this);
+		presenter.viewUpdated(false);
 	}
 
 	@Override
 	protected void storeBundle(Bundle extras) {
 		super.storeBundle(extras);
 
-		if(extras == null)
-			return;
-
-		if(extras.containsKey(KEY_RECEIPT_UUID))
-			receipt = Receipt.find(extras.getString(KEY_RECEIPT_UUID));
-		if(extras.containsKey(ListSourceActivity.KEY_SOURCE_SELECTED_UUID))
-			source = Source.find(extras.getString(ListSourceActivity.KEY_SOURCE_SELECTED_UUID));
-		if(extras.containsKey(ListAccountActivity.KEY_ACCOUNT_SELECTED_UUID))
-			account = Account.find(extras.getString(ListAccountActivity.KEY_ACCOUNT_SELECTED_UUID));
+		if(extras != null)
+			presenter.storeBundle(extras);
 	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		if(receipt != null)
-			outState.putString(KEY_RECEIPT_UUID, receipt.getUuid());
-		if(source != null)
-			outState.putString(ListSourceActivity.KEY_SOURCE_SELECTED_UUID, source.getUuid());
-		if(account != null)
-			outState.putString(ListAccountActivity.KEY_ACCOUNT_SELECTED_UUID, account.getUuid());
+		presenter.onSaveInstanceState(outState);
+	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		presenter.attachView(this);
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		presenter.detachView();
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
+		presenter.attachView(this);
 		switch (requestCode) {
 			case REQUEST_SELECT_SOURCE: {
 				if(resultCode == RESULT_OK) {
-					source = Source.find(data.getStringExtra(ListSourceActivity.KEY_SOURCE_SELECTED_UUID));
-					if(source != null)
-						onSourceSelected();
+					String sourceUUid = data.getStringExtra(ListSourceActivity.KEY_SOURCE_SELECTED_UUID);
+					if(sourceUUid != null)
+						presenter.onSourceSelected(sourceUUid);
 				}
 				break;
 			}
 			case REQUEST_SELECT_ACCOUNT: {
 				if(resultCode == RESULT_OK) {
-					account = Account.find(data.getStringExtra(ListAccountActivity.KEY_ACCOUNT_SELECTED_UUID));
-					if(account != null)
-						onAccountSelected();
+					String accountUuid = data.getStringExtra(ListAccountActivity.KEY_ACCOUNT_SELECTED_UUID);
+					if(accountUuid != null)
+						presenter.onAccountSelected(accountUuid);
 				}
 				break;
 			}
@@ -167,26 +137,33 @@ public class EditReceiptActivity extends BaseActivity {
 	}
 
 	@OnClick(R.id.act_edit_receipt_date)
-	void onBalanceDate() {
-		new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
-			@Override
-			public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-				date = date.withYear(year).withMonthOfYear(monthOfYear + 1).withDayOfMonth(dayOfMonth);
-				onBalanceDateChanged();
-			}
-		}, date.getYear(), date.getMonthOfYear() - 1, date.getDayOfMonth()).show();
+	void onDate() {
+		presenter.onDate(this);
 	}
 
-	private void onBalanceDateChanged() {
+	@Override
+	public void onDateChanged(DateTime date) {
 		editDate.setText(Receipt.sdf.format(date.toDate()));
 	}
 
-	private void onSourceSelected() {
+	@Override
+	public void onSourceSelected(Source source) {
 		editSource.setText(source.getName());
 	}
 
-	private void onAccountSelected() {
+	@Override
+	public void onAccountSelected(Account account) {
 		editAccount.setText(account.getName());
+	}
+
+	@Override
+	public int getInstallment() {
+		return Integer.parseInt(editInstallment.getText().toString());
+	}
+
+	@Override
+	public int getRepetition() {
+		return Integer.parseInt(editRepetition.getText().toString());
 	}
 
 	@OnClick(R.id.act_edit_receipt_source)
@@ -196,40 +173,61 @@ public class EditReceiptActivity extends BaseActivity {
 
 	@OnClick(R.id.act_edit_receipt_account)
 	void onAccount() {
-		if(receipt == null)
+		if(!presenter.hasReceipt())
 			startActivityForResult(new Intent(this, ListAccountActivity.class), REQUEST_SELECT_ACCOUNT);
 	}
 
 	private void save() {
-		int installment = Integer.parseInt(editInstallment.getText().toString());
-		if(receipt == null)
-			receipt = new Receipt();
-		String originalName = editName.getText().toString();
-		if(installment == 1)
-			receipt.setName(originalName);
-		else
-			receipt.setName(String.format(Environment.PTBR_LOCALE, "%s %02d/%02d", originalName, 1, installment));
-		receipt.setDate(date);
-		receipt.setIncome(Integer.parseInt(editIncome.getText().toString().replaceAll("[^\\d]", "")));
-		receipt.setSource(source);
-		receipt.setAccount(account);
+		presenter.save();
+	}
+
+	@Override
+	public Receipt fillReceipt(Receipt receipt) {
+		receipt.setName(editName.getText().toString());
+		String income = editIncome.getText().toString().replaceAll("[^\\d]", "");
+		if(!StringUtils.isEmpty(income))
+			receipt.setIncome(Integer.parseInt(income));
 		receipt.setShowInResume(checkShowInResume.isChecked());
 		receipt.setUserUuid(selectUserView.getSelectedUser());
-		receipt.save();
+		return receipt;
+	}
 
-		int repetition = installment;
-		if(repetition == 1)
-			repetition = Integer.parseInt(editRepetition.getText().toString());
-		for(int i = 1; i < repetition; i++) {
-			if(installment != 1)
-				receipt.setName(String.format(Environment.PTBR_LOCALE, "%s %02d/%02d", originalName, i + 1, installment));
-			receipt.repeat();
-			receipt.save();
-		}
-
+	@Override
+	public void finishView() {
 		Intent i = new Intent();
-		i.putExtra(KEY_RECEIPT_UUID, receipt.getUuid());
+		i.putExtra(KEY_RECEIPT_UUID, presenter.getUuid());
 		setResult(RESULT_OK, i);
 		finish();
+	}
+
+	@Override
+	public void showError(ValidationError error) {
+		switch (error) {
+			case NAME:
+				editName.setError(getString(error.getMessage()));
+				break;
+			case AMOUNT:
+				editIncome.setError(getString(error.getMessage()));
+				break;
+			case SOURCE:
+				editSource.setError(getString(error.getMessage()));
+				break;
+			case ACCOUNT:
+				editAccount.setError(getString(error.getMessage()));
+				break;
+			default:
+				Log.error(this.getClass().getName(), "Validation unrecognized, field:" + error);
+		}
+	}
+
+	@Override
+	public void showReceipt(Receipt receipt) {
+		editName.setText(receipt.getName());
+		editIncome.setText(NumberFormat.getCurrencyInstance().format(receipt.getIncome() / 100.0));
+		if(receipt.isCredited())
+			editIncome.setTextColor(getResources().getColor(R.color.value_unpaid));
+		editSource.setText(receipt.getSource().getName());
+		checkShowInResume.setChecked(receipt.isShowInResume());
+		selectUserView.setSelectedUser(receipt.getUserUuid());
 	}
 }

@@ -94,13 +94,13 @@ class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ViewHolder> {
 		receiptsFiltered = receipts;
 	}
 
-	public void addReceipt(@NonNull Receipt receipt) {
-		receipts.add(receipt);
+	void addReceipt(@NonNull Receipt receipt) {
 		receiptsFiltered.add(receipt);
 		notifyItemInserted(receiptsFiltered.size() - 1);
 	}
 
-	public @Nullable Receipt getReceipt(int position) {
+	@Nullable
+	private Receipt getReceipt(int position) {
 		return receiptsFiltered != null ? receiptsFiltered.get(position) : null;
 	}
 

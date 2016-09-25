@@ -31,6 +31,7 @@ import br.com.jonathanzanella.myexpenses.source.Source;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi;
 import br.com.jonathanzanella.myexpenses.transaction.Transaction;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -41,6 +42,7 @@ import static br.com.jonathanzanella.myexpenses.log.Log.warning;
  * Created by jzanella on 2/1/16.
  */
 @Table(database = MyDatabase.class)
+@EqualsAndHashCode(callSuper = false, of = {"id", "uuid", "name"})
 public class Receipt extends BaseModel implements Transaction, UnsyncModel {
 	public static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
 	private static final ReceiptApi receiptApi = new ReceiptApi();
