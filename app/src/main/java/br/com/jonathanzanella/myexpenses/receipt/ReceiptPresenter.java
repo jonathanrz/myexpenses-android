@@ -1,9 +1,13 @@
 package br.com.jonathanzanella.myexpenses.receipt;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.widget.DatePicker;
 
 import org.joda.time.DateTime;
@@ -17,6 +21,8 @@ import br.com.jonathanzanella.myexpenses.source.Source;
 import br.com.jonathanzanella.myexpenses.source.SourceRepository;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by jzanella on 8/27/16.
@@ -64,7 +70,7 @@ class ReceiptPresenter {
 			if(editView != null) {
 				editView.setTitle(R.string.edit_receipt_title);
 			} else {
-				String title = view.getContext().getString(R.string.receipts);
+				String title = view.getContext().getString(R.string.receipt);
 				view.setTitle(title.concat(" ").concat(receipt.getName()));
 			}
 			view.showReceipt(receipt);
@@ -78,7 +84,7 @@ class ReceiptPresenter {
 				onAccountSelected(account.getUuid());
 
 			date = receipt.getDate();
-			if(date != null)
+			if(editView != null && date != null)
 				editView.onDateChanged(date);
 		} else {
 			if(editView != null)
@@ -88,6 +94,15 @@ class ReceiptPresenter {
 			if(date != null)
 				editView.onDateChanged(date);
 		}
+	}
+
+	void refreshReceipt() {
+		String uuid = receipt.getUuid();
+		receipt = repository.find(uuid);
+		if(receipt == null)
+			throw new ReceiptNotFoundException(uuid);
+
+		view.showReceipt(receipt);
 	}
 
 	void loadReceipt(String uuid) {
@@ -140,6 +155,39 @@ class ReceiptPresenter {
 		}
 	}
 
+	void edit(Context ctx) {
+		Intent i = new Intent(ctx, EditReceiptActivity.class);
+		i.putExtra(EditReceiptActivity.KEY_RECEIPT_UUID, getUuid());
+		ctx.startActivity(i);
+	}
+
+	void delete(final Activity act) {
+		new AlertDialog.Builder(act)
+				.setTitle(android.R.string.dialog_alert_title)
+				.setMessage(R.string.message_confirm_deletion)
+				.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+
+						Account a = receipt.getAccount();
+						a.credit(receipt.getIncome() * -1);
+						a.save();
+						receipt.delete();
+						Intent i = new Intent();
+						act.setResult(RESULT_OK, i);
+						act.finish();
+					}
+				})
+				.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+					}
+				})
+				.show();
+	}
+
 	String getUuid() {
 		return receipt != null ? receipt.getUuid() : null;
 	}
@@ -164,14 +212,14 @@ class ReceiptPresenter {
 
 	void onSourceSelected(String sourceUuid) {
 		source = sourceRepository.find(sourceUuid);
-		checkEditViewSet();
-		editView.onSourceSelected(source);
+		if(editView != null)
+			editView.onSourceSelected(source);
 	}
 
 	void onAccountSelected(String accountUuid) {
 		account = accountRepository.find(accountUuid);
-		checkEditViewSet();
-		editView.onAccountSelected(account);
+		if(editView != null)
+			editView.onAccountSelected(account);
 	}
 
 	boolean hasReceipt() {
