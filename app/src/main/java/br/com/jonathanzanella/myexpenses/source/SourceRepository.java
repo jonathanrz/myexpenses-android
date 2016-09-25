@@ -15,12 +15,12 @@ import br.com.jonathanzanella.myexpenses.validations.ValidationError;
  * Created by jzanella on 8/27/16.
  */
 
-class SourceRepository {
+public class SourceRepository {
 	private From<Source> initQuery() {
 		return SQLite.select().from(Source.class);
 	}
 
-	Source find(String uuid) {
+	public Source find(String uuid) {
 		return initQuery().where(Source_Table.uuid.eq(uuid)).querySingle();
 	}
 
@@ -31,7 +31,7 @@ class SourceRepository {
 				.queryList();
 	}
 
-	OperationResult save(Source source) {
+	public OperationResult save(Source source) {
 		OperationResult result = new OperationResult();
 		if(StringUtils.isEmpty(source.getName()))
 			result.addError(ValidationError.NAME);

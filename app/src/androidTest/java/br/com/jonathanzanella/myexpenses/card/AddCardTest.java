@@ -19,6 +19,7 @@ import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.DatabaseHelper;
+import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.views.MainActivity;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
@@ -52,8 +53,7 @@ public class AddCardTest {
 		if (!uiDevice.isScreenOn())
 			uiDevice.wakeUp();
 
-		account = new Account();
-		account.setName("accountTest");
+		account = new AccountBuilder().build();
 		new AccountRepository().save(account);
 	}
 
