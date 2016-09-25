@@ -10,12 +10,10 @@ import android.view.ViewGroup;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 
 import java.lang.ref.WeakReference;
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.R;
@@ -27,8 +25,9 @@ import butterknife.ButterKnife;
  * Created by Jonathan Zanella on 26/01/16.
  */
 class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHolder> {
-	protected List<Expense> expenses;
-	protected List<Expense> expensesFiltered;
+	private List<Expense> expenses;
+	private ExpenseAdapterPresenter presenter;
+	private DateTime date;
 
 	public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 		@Bind(R.id.row_expense_name)
@@ -72,6 +71,10 @@ class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHolder> {
 		}
 	}
 
+	ExpenseAdapter() {
+		presenter = new ExpenseAdapterPresenter(this, new ExpenseRepository());
+	}
+
 	@Override
 	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_expense, parent, false);
@@ -80,38 +83,32 @@ class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHolder> {
 
 	@Override
 	public void onBindViewHolder(ViewHolder holder, int position) {
-		holder.setData(expensesFiltered.get(position));
+		holder.setData(getExpense(position));
 	}
 
 	@Override
 	public int getItemCount() {
-		return expensesFiltered != null ? expensesFiltered.size() : 0;
+		return expenses != null ? expenses.size() : 0;
 	}
 
-	public void loadData(DateTime dateTime) {
-		expenses = Expense.monthly(dateTime);
-		expensesFiltered = expenses;
+	public void loadData(DateTime date) {
+		expenses = Expense.monthly(date);
+		expenses = presenter.getExpenses(true, date);
+		this.date = date;
 	}
 
-	public void addExpense(@NonNull Expense expense) {
-		expensesFiltered.add(expense);
-		notifyItemInserted(expensesFiltered.size() - 1);
+	void addExpense(@NonNull Expense expense) {
+		presenter.addExpense(expense);
+		expenses = presenter.getExpenses(false, date);
 	}
 
-	public @Nullable Expense getExpense(int position) {
-		return expensesFiltered != null ? expensesFiltered.get(position) : null;
+	@Nullable
+	private Expense getExpense(int position) {
+		return expenses != null ? expenses.get(position) : null;
 	}
 
 	public void filter(String filter) {
-		if(filter == null || filter.compareTo("") == 0) {
-			expensesFiltered = expenses;
-			return;
-		}
-
-		expensesFiltered = new ArrayList<>();
-		for (Expense expense : expenses) {
-			if(StringUtils.containsIgnoreCase(expense.getName(), filter))
-				expensesFiltered.add(expense);
-		}
+		presenter.filter(filter);
+		expenses = presenter.getExpenses(false, date);
 	}
 }
