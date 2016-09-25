@@ -94,7 +94,6 @@ class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHolder> {
 	}
 
 	public void addExpense(@NonNull Expense expense) {
-		expenses.add(expense);
 		expensesFiltered.add(expense);
 		notifyItemInserted(expensesFiltered.size() - 1);
 	}

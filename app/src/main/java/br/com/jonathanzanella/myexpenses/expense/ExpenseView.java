@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.helpers.DateHelper;
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapter;
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapterBuilder;
 import br.com.jonathanzanella.myexpenses.views.BaseView;
@@ -121,9 +122,13 @@ public class ExpenseView extends BaseView implements ViewPager.OnPageChangeListe
 	}
 
 	private @Nullable ExpenseMonthlyView getMonthView(DateTime date) {
-		WeakReference<ExpenseMonthlyView> viewRef = views.get(date);
-		if (viewRef != null)
-			return viewRef.get();
+		for (Map.Entry<DateTime, WeakReference<ExpenseMonthlyView>> pair : views.entrySet()) {
+			DateTime viewDateFirstDay = DateHelper.firstDayOfMonth(pair.getKey());
+			DateTime viewDateLastDay = DateHelper.lastDayOfMonth(pair.getKey());
+			if (date.isAfter(viewDateFirstDay) && date.isBefore(viewDateLastDay))
+				return pair.getValue().get();
+		}
+
 		return null;
 	}
 }

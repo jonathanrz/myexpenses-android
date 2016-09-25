@@ -34,6 +34,7 @@ public class ListChargeableActivity extends BaseActivity implements AccountAdapt
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_list_chargeable);
+		setTitle(R.string.select_chargeable_title);
 	}
 
 	@Override
