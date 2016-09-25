@@ -30,8 +30,8 @@ import static android.app.Activity.RESULT_OK;
 
 class ReceiptPresenter {
 	static final String KEY_RECEIPT_UUID = "KeyReceiptUuid";
-	static final String KEY_SOURCE_UUID = "KeySourceUuid";
-	static final String KEY_ACCOUNT_UUID = "KeyAccountUuid";
+	private static final String KEY_SOURCE_UUID = "KeySourceUuid";
+	private static final String KEY_ACCOUNT_UUID = "KeyAccountUuid";
 
 	private ReceiptContract.View view;
 	private ReceiptContract.EditView editView;

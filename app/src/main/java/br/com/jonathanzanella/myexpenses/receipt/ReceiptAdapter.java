@@ -78,6 +78,7 @@ class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ViewHolder> {
 
 	public void loadData(DateTime date) {
 		receipts = presenter.getReceipts(true, date);
+		this.date = date;
 	}
 
 	@Override

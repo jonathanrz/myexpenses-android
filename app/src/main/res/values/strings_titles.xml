@@ -17,4 +17,9 @@
 	<!-- receipt -->
 	<string name="new_receipt_title">Novo Recebimento</string>
 	<string name="edit_receipt_title">Editar Recebimento</string>
+	<!-- expense -->
+	<string name="new_expense_title">Novo Gasto</string>
+	<string name="edit_expense_title">Editar Gasto</string>
+	<!-- chargeable -->
+	<string name="select_chargeable_title">Selecione uma forma de pagamento</string>
 </resources>

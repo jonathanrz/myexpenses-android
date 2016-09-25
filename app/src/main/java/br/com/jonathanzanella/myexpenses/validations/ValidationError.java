@@ -19,7 +19,8 @@ public enum ValidationError {
 	INIT_DATE(R.string.error_message_init_date_not_informed),
 	END_DATE(R.string.error_message_end_date_not_informed),
 	DATE(R.string.error_message_date_not_informed),
-	INIT_DATE_GREATER_THAN_END_DATE(R.string.error_message_init_date_greater_than_end_date);
+	INIT_DATE_GREATER_THAN_END_DATE(R.string.error_message_init_date_greater_than_end_date),
+	CHARGEABLE(R.string.error_message_chargeable_not_informed);
 
 	@Getter
 	private int message;

@@ -14,4 +14,5 @@
 	<string name="error_message_end_date_not_informed">Informe a data de fim</string>
 	<string name="error_message_date_not_informed">Informe a data</string>
 	<string name="error_message_init_date_greater_than_end_date">A data de inicio deve ser superior ou igual a data de fim</string>
+	<string name="error_message_chargeable_not_informed">Selecione a forma de pagamento</string>
 </resources>

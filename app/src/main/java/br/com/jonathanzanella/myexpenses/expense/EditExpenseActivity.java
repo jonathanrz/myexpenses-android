@@ -1,28 +1,29 @@
 package br.com.jonathanzanella.myexpenses.expense;
 
-import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.DatePicker;
 import android.widget.EditText;
 
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 
 import java.text.NumberFormat;
 
-import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.bill.Bill;
+import br.com.jonathanzanella.myexpenses.bill.BillRepository;
 import br.com.jonathanzanella.myexpenses.bill.ListBillActivity;
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
 import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType;
 import br.com.jonathanzanella.myexpenses.chargeable.ListChargeableActivity;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch;
+import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.user.SelectUserView;
+import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -30,7 +31,7 @@ import butterknife.OnClick;
 /**
  * Created by Jonathan Zanella on 26/01/16.
  */
-public class EditExpenseActivity extends BaseActivity {
+public class EditExpenseActivity extends BaseActivity implements ExpenseContract.EditView {
 	public static final String KEY_EXPENSE_UUID = "KeyReceiptUuid";
 	private static final int REQUEST_SELECT_CHARGEABLE = 1003;
 	private static final int REQUEST_SELECT_BILL = 1004;
@@ -62,10 +63,7 @@ public class EditExpenseActivity extends BaseActivity {
 	@Bind(R.id.act_edit_expense_user)
 	SelectUserView selectUserView;
 
-	private Expense expense;
-	private DateTime date;
-	private Chargeable chargeable;
-	private Bill bill;
+	private ExpensePresenter presenter = new ExpensePresenter(new ExpenseRepository(), new BillRepository());
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -88,94 +86,51 @@ public class EditExpenseActivity extends BaseActivity {
 				}
 			}
 		});
-
-		if(expense != null) {
-			setData();
-		} else {
-			initData();
-		}
-	}
-
-	private void initData() {
-		date = DateTime.now();
-		onBalanceDateChanged();
-		if(chargeable != null)
-			onChargeableSelected();
-	}
-
-	private void setData() {
-		editName.setText(expense.getName());
-		editValue.setText(NumberFormat.getCurrencyInstance().format(Math.abs(expense.getValue()) / 100.0));
-		editValueToShowInOverview.setText(NumberFormat.getCurrencyInstance().format(Math.abs(expense.getValueToShowInOverview()) / 100.0));
-		if(expense.isCharged()) {
-			editValue.setTextColor(getResources().getColor(R.color.value_unpaid));
-			checkRepayment.setEnabled(false);
-		}
-		if(expense.getValue() < 0)
-			checkRepayment.setChecked(true);
-		chargeable = expense.getChargeable();
-		if(chargeable != null) {
-			editChargeable.setText(chargeable.getName());
-			onChargeableSelected();
-		}
-		checkPayNextMonth.setChecked(expense.isChargeNextMonth());
-		showInOverview.setChecked(expense.isShowInOverview());
-		showInResume.setChecked(expense.isShowInResume());
-		date = expense.getDate();
-		if(date == null)
-			date = DateTime.now();
-		onBalanceDateChanged();
-		bill = expense.getBill();
-		onBillSelected();
-		selectUserView.setSelectedUser(expense.getUserUuid());
+		presenter.attachView(this);
+		presenter.viewUpdated(false);
 	}
 
 	@Override
 	protected void storeBundle(Bundle extras) {
 		super.storeBundle(extras);
-
-		if(extras == null)
-			return;
-
-		if(extras.containsKey(KEY_EXPENSE_UUID))
-			expense = Expense.find(extras.getString(KEY_EXPENSE_UUID));
-
-		if(extras.containsKey(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_TYPE)) {
-			chargeable = Expense.findChargeable((ChargeableType) extras.getSerializable(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_TYPE),
-										extras.getString(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_UUID));
-		}
+		if(extras != null)
+			presenter.storeBundle(extras);
 	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		if(expense != null)
-			outState.putString(KEY_EXPENSE_UUID, expense.getUuid());
-		if(chargeable != null) {
-			outState.putString(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_UUID, chargeable.getUuid());
-			outState.putSerializable(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_TYPE, chargeable.getChargeableType());
-		}
+		presenter.onSaveInstanceState(outState);
+	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		presenter.attachView(this);
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		presenter.detachView();
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
+		presenter.attachView(this);
 		switch (requestCode) {
 			case REQUEST_SELECT_CHARGEABLE: {
 				if(resultCode == RESULT_OK) {
-					chargeable = Expense.findChargeable(
+					presenter.onChargeableSelected(
 							(ChargeableType) data.getSerializableExtra(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_TYPE),
 							data.getStringExtra(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_UUID));
-					if(chargeable != null)
-						onChargeableSelected();
 				}
 				break;
 			}
 			case REQUEST_SELECT_BILL: {
-				if(resultCode == RESULT_OK) {
-					bill = Bill.find(data.getStringExtra(ListBillActivity.KEY_BILL_SELECTED_UUID));
-					onBillSelected();
-				}
+				if(resultCode == RESULT_OK)
+					presenter.onBillSelected(data.getStringExtra(ListBillActivity.KEY_BILL_SELECTED_UUID));
 				break;
 			}
 		}
@@ -191,7 +146,7 @@ public class EditExpenseActivity extends BaseActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_save:
-				save();
+				presenter.save();
 				break;
 		}
 		return super.onOptionsItemSelected(item);
@@ -199,31 +154,28 @@ public class EditExpenseActivity extends BaseActivity {
 
 	@OnClick(R.id.act_edit_expense_date)
 	void onBalanceDate() {
-		new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
-			@Override
-			public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-				date = date.withYear(year).withMonthOfYear(monthOfYear + 1).withDayOfMonth(dayOfMonth);
-				onBalanceDateChanged();
-			}
-		}, date.getYear(), date.getMonthOfYear() - 1, date.getDayOfMonth()).show();
+		presenter.onDate(this);
 	}
 
-	private void onBalanceDateChanged() {
+	@Override
+	public void onDateChanged(DateTime date) {
 		editDate.setText(Expense.sdf.format(date.toDate()));
 	}
 
-	private void onChargeableSelected() {
+	@Override
+	public void onChargeableSelected(Chargeable chargeable) {
 		editChargeable.setText(chargeable.getName());
 		checkPayNextMonth.setVisibility(chargeable.canBePaidNextMonth() ? View.VISIBLE : View.GONE);
 	}
 
 	@OnClick(R.id.act_edit_expense_chargeable)
 	void onChargeable() {
-		if(expense == null || expense.getChargeable() == null)
+		if(!presenter.hasChargeable())
 			startActivityForResult(new Intent(this, ListChargeableActivity.class), REQUEST_SELECT_CHARGEABLE);
 	}
 
-	private void onBillSelected() {
+	@Override
+	public void onBillSelected(Bill bill) {
 		if(bill != null) {
 			if(editBill.getText().toString().isEmpty())
 				editBill.setText(bill.getName());
@@ -243,48 +195,83 @@ public class EditExpenseActivity extends BaseActivity {
 		startActivityForResult(new Intent(this, ListBillActivity.class), REQUEST_SELECT_BILL);
 	}
 
-	private void save() {
-		int installment = Integer.parseInt(editInstallment.getText().toString());
-		if(expense == null)
-			expense = new Expense();
-		String originalName = editName.getText().toString();
-		if(installment == 1)
-			expense.setName(originalName);
-		else
-			expense.setName(String.format(Environment.PTBR_LOCALE, "%s %02d/%02d", originalName, 1, installment));
-		expense.setDate(date);
-		int value = Integer.parseInt(editValue.getText().toString().replaceAll("[^\\d]", "")) / installment;
-		int valueToShowInOverview = Integer.parseInt(editValueToShowInOverview.getText().toString().replaceAll("[^\\d]", "")) / installment;
-		if(checkRepayment.isChecked()) {
+	@Override
+	public Expense fillExpense(Expense expense) {
+		expense.setName(editName.getText().toString());
+		int value = 0;
+		String valueText = editValue.getText().toString().replaceAll("[^\\d]", "");
+		if(!StringUtils.isEmpty(valueText))
+			value = Integer.parseInt(valueText) / getInstallment();
+
+		int valueToShowInOverview = 0;
+		String valueToShowInOverviewText = editValueToShowInOverview.getText().toString().replaceAll("[^\\d]", "");
+		if(!StringUtils.isEmpty(valueToShowInOverviewText))
+			valueToShowInOverview = Integer.parseInt(valueToShowInOverviewText) / getInstallment();
+
+		if (checkRepayment.isChecked()) {
 			value *= -1;
 			valueToShowInOverview *= -1;
 		}
 		expense.setValue(value);
 		expense.setValueToShowInOverview(valueToShowInOverview);
-		expense.setChargeable(chargeable);
-		expense.setBill(bill);
 		expense.setChargeNextMonth(checkPayNextMonth.isChecked());
 		expense.showInOverview(showInOverview.isChecked());
 		expense.showInResume(showInResume.isChecked());
 		expense.setUserUuid(selectUserView.getSelectedUser());
+		return expense;
+	}
 
-		if(expense.isCharged() && date.isAfterNow())
-			expense.uncharge();
-		expense.save();
-
-		int repetition = installment;
-		if(repetition == 1)
-			repetition = Integer.parseInt(editRepetition.getText().toString());
-		for(int i = 1; i < repetition; i++) {
-			if(installment != 1)
-				expense.setName(String.format(Environment.PTBR_LOCALE, "%s %02d/%02d", originalName, i + 1, installment));
-			expense.repeat();
-			expense.save();
-		}
-
+	@Override
+	public void finishView() {
 		Intent i = new Intent();
-		i.putExtra(KEY_EXPENSE_UUID, expense.getUuid());
+		i.putExtra(KEY_EXPENSE_UUID, presenter.getUuid());
 		setResult(RESULT_OK, i);
 		finish();
+	}
+
+	@Override
+	public void showError(ValidationError error) {
+		switch (error) {
+			case NAME:
+				editName.setError(getString(error.getMessage()));
+				break;
+			case AMOUNT:
+				editValue.setError(getString(error.getMessage()));
+				break;
+			case CHARGEABLE:
+				editChargeable.setError(getString(error.getMessage()));
+				break;
+			default:
+				Log.error(this.getClass().getName(), "Validation unrecognized, field:" + error);
+		}
+	}
+
+	@Override
+	public int getInstallment() {
+		return Integer.parseInt(editInstallment.getText().toString());
+	}
+
+	@Override
+	public int getRepetition() {
+		return Integer.parseInt(editRepetition.getText().toString());
+	}
+
+	@Override
+	public void showExpense(Expense expense) {
+		editName.setText(expense.getName());
+		editValue.setText(NumberFormat.getCurrencyInstance().format(Math.abs(expense.getValue()) / 100.0));
+		editValueToShowInOverview.setText(NumberFormat.getCurrencyInstance().format(Math.abs(expense.getValueToShowInOverview()) / 100.0));
+		if(expense.isCharged()) {
+			editValue.setTextColor(getResources().getColor(R.color.value_unpaid));
+			checkRepayment.setEnabled(false);
+		}
+		if(expense.getValue() < 0)
+			checkRepayment.setChecked(true);
+
+		checkPayNextMonth.setChecked(expense.isChargeNextMonth());
+		showInOverview.setChecked(expense.isShowInOverview());
+		showInResume.setChecked(expense.isShowInResume());
+
+		selectUserView.setSelectedUser(expense.getUserUuid());
 	}
 }

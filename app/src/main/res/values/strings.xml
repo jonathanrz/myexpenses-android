@@ -24,6 +24,7 @@
     <string name="delete">Apagar</string>
     <string name="paid_with">Pago com</string>
     <string name="value">Valor</string>
+    <string name="expense">Gasto</string>
     <string name="expenses">Gastos</string>
     <string name="type">Tipo</string>
     <string name="debit">Débito</string>

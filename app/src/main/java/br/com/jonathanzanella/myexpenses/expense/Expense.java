@@ -37,6 +37,7 @@ import br.com.jonathanzanella.myexpenses.overview.WeeklyPagerAdapter;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi;
 import br.com.jonathanzanella.myexpenses.transaction.Transaction;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -46,6 +47,7 @@ import static br.com.jonathanzanella.myexpenses.log.Log.warning;
  * Created by jzanella on 2/2/16.
  */
 @Table(database = MyDatabase.class)
+@EqualsAndHashCode(callSuper = false, of = {"id", "uuid", "name"})
 public class Expense extends BaseModel implements Transaction, UnsyncModel {
 	private static final ExpenseApi expenseApi = new ExpenseApi();
 
