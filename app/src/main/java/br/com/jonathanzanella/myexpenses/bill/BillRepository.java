@@ -10,6 +10,7 @@ import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
+import br.com.jonathanzanella.myexpenses.source.Source_Table;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
@@ -27,7 +28,10 @@ public class BillRepository {
 	}
 
 	List<Bill> userBills() {
-		return initQuery().where(Bill_Table.userUuid.is(Environment.CURRENT_USER_UUID)).queryList();
+		return initQuery()
+				.where(Bill_Table.userUuid.is(Environment.CURRENT_USER_UUID))
+				.orderBy(Source_Table.name, true)
+				.queryList();
 	}
 
 	public long greaterUpdatedAt() {

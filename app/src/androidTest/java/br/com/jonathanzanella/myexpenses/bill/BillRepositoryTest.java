@@ -104,4 +104,42 @@ public class BillRepositoryTest {
 
 		assertThat(repository.monthly(firstDayOfJune).size(), Is.is(0));
 	}
+
+	@Test
+	public void bill_greater_updated_at_returns_greater_updated_at() throws Exception {
+		Bill bill = new BillBuilder().name("bill100").updatedAt(100L).build();
+		repository.save(bill);
+		bill = new BillBuilder().name("bill99").updatedAt(99L).build();
+		repository.save(bill);
+
+		assertThat(repository.greaterUpdatedAt(), is(100L));
+	}
+
+	@Test
+	public void bill_unsync_returns_only_not_synced() throws Exception {
+		Bill billUnsync = new BillBuilder().name("billUnsync").updatedAt(100L).build();
+		billUnsync.sync = false;
+		repository.save(billUnsync);
+
+		Bill billSync = new BillBuilder().name("billSync").updatedAt(100L).build();
+		repository.save(billSync);
+		billSync.syncAndSave(billSync);
+
+		List<Bill> bills = repository.unsync();
+		assertThat(bills.size(), is(1));
+		assertThat(bills.get(0), is(billUnsync));
+	}
+
+	@Test
+	public void load_user_bills_in_alphabetical_order() throws Exception {
+		Bill billB = new BillBuilder().name("b").build();
+		repository.save(billB);
+
+		Bill billA = new BillBuilder().name("a").build();
+		repository.save(billA);
+
+		List<Bill> bills = repository.userBills();
+		assertThat(bills.get(0), is(billA));
+		assertThat(bills.get(1), is(billB));
+	}
 }

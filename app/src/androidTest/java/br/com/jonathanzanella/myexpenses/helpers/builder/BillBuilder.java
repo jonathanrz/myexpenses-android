@@ -14,6 +14,7 @@ public class BillBuilder {
 	private int dueDate = 1;
 	private DateTime initDate = DateTime.now();
 	private DateTime endDate = DateTime.now().plusMonths(1);
+	private long updatedAt = 0L;
 
 	public BillBuilder name(String name) {
 		this.name = name;
@@ -40,6 +41,11 @@ public class BillBuilder {
 		return this;
 	}
 
+	public BillBuilder updatedAt(long updatedAt) {
+		this.updatedAt = updatedAt;
+		return this;
+	}
+
 	public Bill build() {
 		Bill bill = new Bill();
 		bill.setName(name);
@@ -47,6 +53,7 @@ public class BillBuilder {
 		bill.setDueDate(dueDate);
 		bill.setInitDate(initDate);
 		bill.setEndDate(endDate);
+		bill.setUpdatedAt(updatedAt);
 		return bill;
 	}
 }
