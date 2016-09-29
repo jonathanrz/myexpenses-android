@@ -2,6 +2,7 @@ package br.com.jonathanzanella.myexpenses.helpers.builder;
 
 import org.joda.time.DateTime;
 
+import br.com.jonathanzanella.myexpenses.bill.Bill;
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 
@@ -13,6 +14,7 @@ public class ExpenseBuilder {
 	private String name = "expenseTest";
 	private Chargeable chargeable = new AccountBuilder().build();
 	private DateTime date = DateTime.now();
+	private Bill bill = null;
 
 	public ExpenseBuilder name(String name) {
 		this.name = name;
@@ -29,12 +31,18 @@ public class ExpenseBuilder {
 		return this;
 	}
 
+	public ExpenseBuilder bill(Bill bill) {
+		this.bill = bill;
+		return this;
+	}
+
 	public Expense build() {
 		Expense expense = new Expense();
 		expense.setName(name);
 		expense.setValue(1);
 		expense.setChargeable(chargeable);
 		expense.setDate(date);
+		expense.setBill(bill);
 		return expense;
 	}
 }

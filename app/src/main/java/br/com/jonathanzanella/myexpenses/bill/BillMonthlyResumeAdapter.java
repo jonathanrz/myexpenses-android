@@ -100,7 +100,7 @@ public class BillMonthlyResumeAdapter extends RecyclerView.Adapter<BillMonthlyRe
 
 			@Override
 			protected Void doInBackground(Void... voids) {
-				bills = Bill.monthly(month);
+				bills = new BillRepository().monthly(month);
 				totalValue = 0;
 
 				for (Bill bill : bills) {

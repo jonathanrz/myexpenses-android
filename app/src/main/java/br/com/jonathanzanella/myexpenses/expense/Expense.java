@@ -27,6 +27,7 @@ import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.bill.Bill;
+import br.com.jonathanzanella.myexpenses.bill.BillRepository;
 import br.com.jonathanzanella.myexpenses.card.Card;
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
 import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType;
@@ -358,7 +359,7 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 	}
 
 	public Bill getBill() {
-		return Bill.find(billUuid);
+		return new BillRepository().find(billUuid);
 	}
 
 	public static Chargeable findChargeable(ChargeableType type, String uuid) {

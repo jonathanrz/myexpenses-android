@@ -9,21 +9,17 @@ import com.raizlabs.android.dbflow.annotation.NotNull;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.annotation.Unique;
-import com.raizlabs.android.dbflow.sql.language.From;
-import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.joda.time.DateTime;
 
 import java.text.SimpleDateFormat;
-import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
 import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.database.MyDatabase;
-import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.helpers.DateHelper;
 import br.com.jonathanzanella.myexpenses.helpers.converter.DateTimeConverter;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
@@ -84,64 +80,7 @@ public class Bill extends BaseModel implements Transaction, UnsyncModel {
 	@Column
 	boolean sync;
 
-	private DateTime month;
-
-	public static List<Bill> all() {
-		return initQuery().queryList();
-	}
-
-	public static List<Bill> user() {
-		return initQuery().where(Bill_Table.userUuid.is(Environment.CURRENT_USER_UUID)).queryList();
-	}
-
-	private static From<Bill> initQuery() {
-		return SQLite.select().from(Bill.class);
-	}
-
-	public static Bill find(String uuid) {
-		return initQuery().where(Bill_Table.uuid.eq(uuid)).querySingle();
-	}
-
-	public static long greaterUpdatedAt() {
-		Bill bill = initQuery().orderBy(Bill_Table.updatedAt, false).limit(1).querySingle();
-		if(bill == null)
-			return 0L;
-		return bill.getUpdatedAt();
-	}
-
-	public static List<Bill> unsync() {
-		return initQuery().where(Bill_Table.sync.eq(false)).queryList();
-	}
-
-	public static List<Bill> monthly(DateTime month) {
-		List<Expense> expenses = Expense.monthly(month);
-		List<Bill> bills = initQuery()
-				.where(Bill_Table.initDate.lessThanOrEq(month))
-				.and(Bill_Table.endDate.greaterThanOrEq(month))
-				.and(Bill_Table.userUuid.is(Environment.CURRENT_USER_UUID))
-				.queryList();
-
-		for (int i = 0; i < bills.size(); i++) {
-			Bill bill = bills.get(i);
-			boolean billAlreadyPaid = false;
-			for (Expense expense : expenses) {
-				Bill b = expense.getBill();
-				if(b != null && b.getUuid().equals(bill.getUuid())) {
-					billAlreadyPaid = true;
-					break;
-				}
-			}
-			if(billAlreadyPaid) {
-				bills.remove(i);
-				i--;
-			}
-		}
-
-		for (Bill bill : bills)
-			bill.month = month;
-
-		return bills;
-	}
+	DateTime month;
 
 	public void setInitDate(DateTime initDate) {
 		if(initDate != null)
@@ -204,7 +143,7 @@ public class Bill extends BaseModel implements Transaction, UnsyncModel {
 
 	@Override
 	public void syncAndSave(UnsyncModel unsyncModel) {
-		Bill bill = Bill.find(uuid);
+		Bill bill = new BillRepository().find(uuid);
 
 		if(bill != null && bill.id != id) {
 			if(bill.getUpdatedAt() != getUpdatedAt())

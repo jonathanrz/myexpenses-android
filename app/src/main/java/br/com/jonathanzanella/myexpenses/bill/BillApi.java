@@ -28,7 +28,7 @@ public class BillApi implements UnsyncModelApi<Bill> {
 
 	@Override
 	public List<Bill> index() {
-		Call<List<Bill>> caller = getInterface().index(Bill.greaterUpdatedAt());
+		Call<List<Bill>> caller = getInterface().index(new BillRepository().greaterUpdatedAt());
 
 		try {
 			Response<List<Bill>> response = caller.execute();
@@ -70,11 +70,11 @@ public class BillApi implements UnsyncModelApi<Bill> {
 
 	@Override
 	public List<Bill> unsyncModels() {
-		return Bill.unsync();
+		return new BillRepository().unsync();
 	}
 
 	@Override
 	public long greaterUpdatedAt() {
-		return Bill.greaterUpdatedAt();
+		return new BillRepository().greaterUpdatedAt();
 	}
 }

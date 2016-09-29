@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Locale;
 
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.bill.Bill;
+import br.com.jonathanzanella.myexpenses.bill.BillRepository;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.receipt.Receipt;
 import br.com.jonathanzanella.myexpenses.transaction.Transaction;
@@ -64,7 +64,7 @@ public class MonthTransactionsView extends BaseView {
 		List<Expense> expenses = Expense.accountExpenses(account, month);
 		adapter.addTransactions(expenses);
 		if(account.isAccountToPayBills())
-			adapter.addTransactions(Bill.monthly(month));
+			adapter.addTransactions(new BillRepository().monthly(month));
 
 		list.setAdapter(adapter);
 		list.setHasFixedSize(true);

@@ -17,7 +17,7 @@ import br.com.jonathanzanella.myexpenses.validations.ValidationError;
  * Created by jzanella on 8/27/16.
  */
 
-class ExpenseRepository {
+public class ExpenseRepository {
 	private From<Expense> initQuery() {
 		return SQLite.select().from(Expense.class);
 	}

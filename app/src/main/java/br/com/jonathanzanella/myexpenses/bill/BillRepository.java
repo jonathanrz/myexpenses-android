@@ -4,10 +4,12 @@ import com.raizlabs.android.dbflow.sql.language.From;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
 
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.Environment;
+import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
@@ -26,6 +28,47 @@ public class BillRepository {
 
 	List<Bill> userBills() {
 		return initQuery().where(Bill_Table.userUuid.is(Environment.CURRENT_USER_UUID)).queryList();
+	}
+
+	public long greaterUpdatedAt() {
+		Bill bill = initQuery().orderBy(Bill_Table.updatedAt, false).limit(1).querySingle();
+		if(bill == null)
+			return 0L;
+		return bill.getUpdatedAt();
+	}
+
+	public List<Bill> unsync() {
+		return initQuery().where(Bill_Table.sync.eq(false)).queryList();
+	}
+
+	public List<Bill> monthly(DateTime month) {
+		List<Expense> expenses = Expense.monthly(month);
+		List<Bill> bills = initQuery()
+				.where(Bill_Table.initDate.lessThanOrEq(month))
+				.and(Bill_Table.endDate.greaterThanOrEq(month))
+				.and(Bill_Table.userUuid.is(Environment.CURRENT_USER_UUID))
+				.queryList();
+
+		for (int i = 0; i < bills.size(); i++) {
+			Bill bill = bills.get(i);
+			boolean billAlreadyPaid = false;
+			for (Expense expense : expenses) {
+				Bill b = expense.getBill();
+				if(b != null && b.getUuid().equals(bill.getUuid())) {
+					billAlreadyPaid = true;
+					break;
+				}
+			}
+			if(billAlreadyPaid) {
+				bills.remove(i);
+				i--;
+			}
+		}
+
+		for (Bill bill : bills)
+			bill.month = month;
+
+		return bills;
 	}
 
 	public OperationResult save(Bill bill) {

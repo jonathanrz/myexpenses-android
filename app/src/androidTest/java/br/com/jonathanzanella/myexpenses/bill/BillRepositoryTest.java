@@ -4,6 +4,8 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.LargeTest;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.hamcrest.core.Is;
+import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,8 +13,17 @@ import org.junit.runner.RunWith;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.Environment;
+import br.com.jonathanzanella.myexpenses.account.Account;
+import br.com.jonathanzanella.myexpenses.account.AccountRepository;
+import br.com.jonathanzanella.myexpenses.card.Card;
+import br.com.jonathanzanella.myexpenses.card.CardRepository;
+import br.com.jonathanzanella.myexpenses.expense.Expense;
+import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.DatabaseHelper;
+import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.BillBuilder;
+import br.com.jonathanzanella.myexpenses.helpers.builder.CardBuilder;
+import br.com.jonathanzanella.myexpenses.helpers.builder.ExpenseBuilder;
 
 import static junit.framework.Assert.assertFalse;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -25,6 +36,7 @@ import static org.hamcrest.Matchers.not;
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class BillRepositoryTest {
+	DateTime firstDayOfJune = new DateTime(2016, 6, 1, 0, 0, 0, 0);
 	private BillRepository repository = new BillRepository();
 
 	@After
@@ -64,5 +76,32 @@ public class BillRepositoryTest {
 		assertThat(bills.size(), is(1));
 		assertThat(bills.get(0).getUuid(), is(correctBill.getUuid()));
 		assertFalse(bills.contains(wrongBill));
+	}
+
+	@Test
+	public void bill_is_paid_when_paid_with_credit_card() {
+		Bill bill = new BillBuilder()
+				.initDate(firstDayOfJune)
+				.endDate(firstDayOfJune)
+				.build();
+		repository.save(bill);
+
+		Account account = new AccountBuilder().build();
+		new AccountRepository().save(account);
+
+		Card card = new CardBuilder().account(account).build();
+		new CardRepository().save(card);
+
+		Expense expense = new ExpenseBuilder()
+				.date(firstDayOfJune)
+				.bill(bill)
+				.chargeable(card)
+				.build();
+
+		assertThat(repository.monthly(firstDayOfJune).size(), Is.is(1));
+
+		new ExpenseRepository().save(expense);
+
+		assertThat(repository.monthly(firstDayOfJune).size(), Is.is(0));
 	}
 }

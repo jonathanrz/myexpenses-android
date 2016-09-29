@@ -15,7 +15,7 @@ import br.com.jonathanzanella.myexpenses.validations.ValidationError;
  * Created by jzanella on 8/27/16.
  */
 
-class CardRepository {
+public class CardRepository {
 	private From<Card> initQuery() {
 		return SQLite.select().from(Card.class);
 	}
@@ -28,7 +28,7 @@ class CardRepository {
 		return initQuery().where(Card_Table.userUuid.is(Environment.CURRENT_USER_UUID)).queryList();
 	}
 
-	OperationResult save(Card card) {
+	public OperationResult save(Card card) {
 		OperationResult result = new OperationResult();
 		if(StringUtils.isEmpty(card.getName()))
 			result.addError(ValidationError.NAME);
