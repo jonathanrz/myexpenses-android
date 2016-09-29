@@ -17,6 +17,7 @@ import java.text.NumberFormat;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.bill.Bill;
 import br.com.jonathanzanella.myexpenses.receipt.Receipt;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -38,6 +39,10 @@ class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHolder> {
 		TextView value;
 		@Bind(R.id.row_expense_chargeable)
 		TextView chargeable;
+		@Bind(R.id.row_expense_bill_layout)
+		View billLayout;
+		@Bind(R.id.row_expense_bill)
+		TextView billView;
 		@Bind(R.id.row_expense_charge_next_month)
 		TableRow chargeNextMonth;
 
@@ -58,6 +63,13 @@ class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHolder> {
 			value.setText(NumberFormat.getCurrencyInstance().format(expense.getValue() / 100.0));
 			chargeable.setText(expense.getChargeable().getName());
 			chargeNextMonth.setVisibility(expense.isChargeNextMonth() ? View.VISIBLE : View.GONE);
+			Bill bill = expense.getBill();
+			if(bill == null) {
+				billLayout.setVisibility(View.GONE);
+			} else {
+				billLayout.setVisibility(View.VISIBLE);
+				billView.setText(bill.getName());
+			}
 		}
 
 		@Override

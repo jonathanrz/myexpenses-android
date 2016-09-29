@@ -191,7 +191,7 @@ class ExpensePresenter {
 	void onBillSelected(String uuid) {
 		bill = Bill.find(uuid);
 		if(bill != null)
-			onBillSelected(uuid);
+			editView.onBillSelected(bill);
 	}
 
 	String getUuid() {

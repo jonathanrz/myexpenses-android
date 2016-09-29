@@ -24,6 +24,7 @@ public class ListBillActivity extends BaseActivity implements BillAdapterCallbac
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_list_bill);
+		setTitle(R.string.select_bill_title);
 	}
 
 	@Override

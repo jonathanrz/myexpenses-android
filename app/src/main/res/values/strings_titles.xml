@@ -22,4 +22,6 @@
 	<string name="edit_expense_title">Editar Gasto</string>
 	<!-- chargeable -->
 	<string name="select_chargeable_title">Selecione uma forma de pagamento</string>
+	<!-- bill -->
+	<string name="select_bill_title">Selecione uma cobrança</string>
 </resources>
