@@ -11,8 +11,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.text.NumberFormat;
-
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
@@ -25,17 +23,20 @@ import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.InstrumentationRegistry.getTargetContext;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.clickIntoView;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle;
+import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.typeTextIntoView;
+import static org.hamcrest.core.Is.is;
 
 /**
  * Created by jzanella on 8/28/16.
  */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class ShowExpenseActivityTest {
+public class EditExpenseTest {
 	@Rule
 	public ActivityTestRule<ShowExpenseActivity> activityTestRule = new ActivityTestRule<>(ShowExpenseActivity.class, true, false);
 
@@ -58,22 +59,7 @@ public class ShowExpenseActivityTest {
 	}
 
 	@Test
-	public void shows_expense_correctly() throws Exception {
-		Intent i = new Intent();
-		i.putExtra(ShowExpenseActivity.KEY_EXPENSE_UUID, expense.getUuid());
-		activityTestRule.launchActivity(i);
-
-		final String editExpenseTitle = getTargetContext().getString(R.string.expense) + " " + expense.getName();
-		matchToolbarTitle(editExpenseTitle);
-
-		String incomeAsCurrency = NumberFormat.getCurrencyInstance().format(expense.getValue() / 100.0);
-		onView(withId(R.id.act_show_expense_name)).check(matches(withText(expense.getName())));
-		onView(withId(R.id.act_show_expense_value)).check(matches(withText(incomeAsCurrency)));
-		onView(withId(R.id.act_show_expense_chargeable)).check(matches(withText(expense.getChargeable().getName())));
-	}
-
-	@Test
-	public void calls_edit_expense_activity() throws Exception {
+	public void edit_expense_correctly() throws Exception {
 		Intent i = new Intent();
 		i.putExtra(ShowExpenseActivity.KEY_EXPENSE_UUID, expense.getUuid());
 		activityTestRule.launchActivity(i);
@@ -85,5 +71,16 @@ public class ShowExpenseActivityTest {
 
 		final String editExpenseTitle = getTargetContext().getString(R.string.edit_expense_title);
 		matchToolbarTitle(editExpenseTitle);
+		onView(withId(R.id.act_edit_expense_name)).check(matches(withText(expense.getName())));
+		typeTextIntoView(R.id.act_edit_expense_name, " changed");
+
+		clickIntoView(R.id.action_save);
+
+		matchToolbarTitle(showExpenseTitle);
+
+		expense = repository.find(expense.getUuid());
+
+		onView(withId(R.id.act_show_expense_name)).check(matches(withText(expense.getName())));
+		assertThat(repository.userExpenses().size(), is(1));
 	}
 }

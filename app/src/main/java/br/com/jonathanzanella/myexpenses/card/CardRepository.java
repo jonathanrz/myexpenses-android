@@ -20,7 +20,7 @@ public class CardRepository {
 		return SQLite.select().from(Card.class);
 	}
 
-	Card find(String uuid) {
+	public Card find(String uuid) {
 		return initQuery().where(Card_Table.uuid.eq(uuid)).querySingle();
 	}
 

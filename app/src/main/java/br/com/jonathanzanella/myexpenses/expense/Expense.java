@@ -26,9 +26,11 @@ import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
+import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.bill.Bill;
 import br.com.jonathanzanella.myexpenses.bill.BillRepository;
 import br.com.jonathanzanella.myexpenses.card.Card;
+import br.com.jonathanzanella.myexpenses.card.CardRepository;
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
 import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType;
 import br.com.jonathanzanella.myexpenses.database.MyDatabase;
@@ -362,21 +364,21 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 		return new BillRepository().find(billUuid);
 	}
 
-	public static Chargeable findChargeable(ChargeableType type, String uuid) {
+	static Chargeable findChargeable(ChargeableType type, String uuid) {
 		if(type == null || uuid == null)
 			return null;
 
 		switch (type) {
 			case ACCOUNT:
-				return Account.find(uuid);
+				return new AccountRepository().find(uuid);
 			case DEBIT_CARD:
 			case CREDIT_CARD:
-				return Card.find(uuid);
+				return new CardRepository().find(uuid);
 		}
 		return null;
 	}
 
-	public void repeat() {
+	void repeat() {
 		id = 0;
 		uuid = null;
 		date = date.plusMonths(1);
