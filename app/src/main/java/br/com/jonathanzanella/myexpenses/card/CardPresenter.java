@@ -110,7 +110,7 @@ class CardPresenter {
 		switch (requestCode) {
 			case REQUEST_SELECT_ACCOUNT: {
 				if(resultCode == RESULT_OK) {
-					account = accountRepository.find(data.getStringExtra(ListAccountActivity.KEY_ACCOUNT_SELECTED_UUID));
+					account = accountRepository.find(data.getStringExtra(ListAccountActivity.Companion.getKEY_ACCOUNT_SELECTED_UUID()));
 					if(account != null && editView != null)
 						editView.onAccountSelected(account);
 				}

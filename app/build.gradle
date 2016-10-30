@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 apply plugin: 'testfairy'
 apply plugin: 'jacoco-android'
 
@@ -91,6 +92,9 @@ android {
             events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
         }
     }
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
 }
 
 dependencies {
@@ -126,6 +130,7 @@ dependencies {
 
     //JakeWharton
     compile "com.jakewharton:butterknife:$rootProject.butterKnifeVersion"
+    kapt "com.jakewharton:butterknife:$rootProject.butterKnifeVersion"
     annotationProcessor "com.jakewharton:butterknife:$rootProject.butterKnifeVersion"
 
     compile "net.danlew:android.joda:$rootProject.jodaVersion"
@@ -158,6 +163,7 @@ dependencies {
     }
     androidTestCompile "com.android.support.test.espresso:espresso-intents:$rootProject.ext.espressoVersion"
     androidTestCompile "com.android.support.test.uiautomator:uiautomator-v18:$rootProject.ext.uiAutomatorVersion"
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
 
 configurations.all {
@@ -177,4 +183,10 @@ task(runTests, dependsOn: ['uninstallDebug', 'assembleDebug', 'connectedDebugAnd
 
 task(runTestsWithCoverage, type: Exec, dependsOn: ['runTests', 'jacocoTestReport', 'connectedCheck']) {
     commandLine './codecov.sh'
+}
+repositories {
+    mavenCentral()
+}
+kapt {
+    generateStubs = true
 }
