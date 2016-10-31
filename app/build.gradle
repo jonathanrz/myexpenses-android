@@ -113,10 +113,12 @@ dependencies {
     //DBFlow
     compile "com.github.Raizlabs.DBFlow:dbflow-core:$rootProject.dbFlowVersion"
     compile "com.github.Raizlabs.DBFlow:dbflow:$rootProject.dbFlowVersion"
+    kapt "com.github.Raizlabs.DBFlow:dbflow-processor:$rootProject.dbFlowVersion"
     annotationProcessor "com.github.Raizlabs.DBFlow:dbflow-processor:$rootProject.dbFlowVersion"
 
     //Lombok
     provided "org.projectlombok:lombok:$rootProject.lombokVersion"
+    kapt "org.projectlombok:lombok:$rootProject.lombokVersion"
     annotationProcessor "org.projectlombok:lombok:$rootProject.lombokVersion"
 
     //retrofit

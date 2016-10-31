@@ -10,6 +10,7 @@ import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
+import br.com.jonathanzanella.myexpenses.source.Source_Table;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
