@@ -111,7 +111,7 @@ public class EditReceiptActivity extends BaseActivity implements ReceiptContract
 			}
 			case REQUEST_SELECT_ACCOUNT: {
 				if(resultCode == RESULT_OK) {
-					String accountUuid = data.getStringExtra(ListAccountActivity.KEY_ACCOUNT_SELECTED_UUID);
+					String accountUuid = data.getStringExtra(ListAccountActivity.Companion.getKEY_ACCOUNT_SELECTED_UUID());
 					if(accountUuid != null)
 						presenter.onAccountSelected(accountUuid);
 				}

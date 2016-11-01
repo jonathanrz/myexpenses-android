@@ -25,9 +25,7 @@ import lombok.Setter;
 public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHolder> {
 	private AccountAdapterPresenter presenter;
 
-	@Setter
 	private boolean simplified = false;
-	@Setter
 	AccountAdapterCallback callback;
 	@Setter
 	DateTime month;
@@ -110,5 +108,13 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
 
 	public @Nullable Account getAccount(int position) {
 		return presenter.getAccount(position);
+	}
+
+	public void setCallback(AccountAdapterCallback callback) {
+		this.callback = callback;
+	}
+
+	public void setSimplified(boolean simplified) {
+		this.simplified = simplified;
 	}
 }
