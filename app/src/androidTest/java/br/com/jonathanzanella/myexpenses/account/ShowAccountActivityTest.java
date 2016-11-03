@@ -15,7 +15,7 @@ import java.text.NumberFormat;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
-import br.com.jonathanzanella.myexpenses.helpers.DatabaseHelper;
+import br.com.jonathanzanella.myexpenses.helpers.FlowManagerHelper;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.InstrumentationRegistry.getTargetContext;
@@ -47,7 +47,7 @@ public class ShowAccountActivityTest {
 
 	@After
 	public void tearDown() throws Exception {
-		DatabaseHelper.reset(getTargetContext());
+		FlowManagerHelper.reset(getTargetContext());
 		ActivityLifecycleHelper.closeAllActivities(getInstrumentation());
 	}
 

@@ -13,9 +13,11 @@ import org.junit.runner.RunWith;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.account.Account;
-import br.com.jonathanzanella.myexpenses.helpers.DatabaseHelper;
+import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
+import br.com.jonathanzanella.myexpenses.helpers.FlowManagerHelper;
 import br.com.jonathanzanella.myexpenses.receipt.Receipt;
 import br.com.jonathanzanella.myexpenses.source.Source;
+import br.com.jonathanzanella.myexpenses.source.SourceRepository;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -29,6 +31,8 @@ public class ReceiptsInPeriodTestSuite {
 	Account account = new Account();
 	Source source = new Source();
 
+	SourceRepository sourceRepository = new SourceRepository(new DatabaseHelper(getContext()));
+
 	@Before
 	public void setUp() throws Exception {
 		account.setName("Account");
@@ -37,12 +41,12 @@ public class ReceiptsInPeriodTestSuite {
 
 		source.setName("Account");
 		source.setUserUuid(Environment.CURRENT_USER_UUID);
-		source.save();
+		sourceRepository.save(source);
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		DatabaseHelper.reset(getContext());
+		FlowManagerHelper.reset(getContext());
 	}
 
 	private Receipt newReceipt(String name, DateTime date, int value) {

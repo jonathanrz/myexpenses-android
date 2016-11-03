@@ -14,14 +14,16 @@ import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
+import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
-import br.com.jonathanzanella.myexpenses.helpers.DatabaseHelper;
+import br.com.jonathanzanella.myexpenses.helpers.FlowManagerHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.ReceiptBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder;
 import br.com.jonathanzanella.myexpenses.source.Source;
 import br.com.jonathanzanella.myexpenses.source.SourceRepository;
 
+import static android.support.test.InstrumentationRegistry.getContext;
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -43,12 +45,12 @@ public class ReceiptRepositoryTest {
 		account = new AccountBuilder().build();
 		new AccountRepository().save(account);
 		source = new SourceBuilder().build();
-		new SourceRepository().save(source);
+		new SourceRepository(new DatabaseHelper(getContext())).save(source);
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		DatabaseHelper.reset(InstrumentationRegistry.getTargetContext());
+		FlowManagerHelper.reset(InstrumentationRegistry.getTargetContext());
 		ActivityLifecycleHelper.closeAllActivities(getInstrumentation());
 	}
 

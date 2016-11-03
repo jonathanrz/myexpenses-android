@@ -12,7 +12,9 @@ import android.widget.TextView;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import lombok.Setter;
@@ -63,7 +65,7 @@ class SourceAdapter extends RecyclerView.Adapter<SourceAdapter.ViewHolder> {
 	}
 
 	SourceAdapter() {
-		presenter = new SourceAdapterPresenter(this, new SourceRepository());
+		presenter = new SourceAdapterPresenter(this, new SourceRepository(new DatabaseHelper(MyApplication.getContext())));
 		sources = presenter.getSources(false);
 	}
 

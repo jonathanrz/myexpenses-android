@@ -7,6 +7,8 @@ import com.raizlabs.android.dbflow.StringUtils;
 import java.io.IOException;
 import java.util.List;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
+import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.server.Server;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
@@ -19,7 +21,7 @@ import retrofit2.Response;
  */
 public class SourceApi implements UnsyncModelApi<Source> {
 	private static final String LOG_TAG = SourceApi.class.getSimpleName();
-	SourceInterface sourceInterface;
+	private SourceInterface sourceInterface;
 
     private SourceInterface getInterface() {
         if(sourceInterface == null)
@@ -29,7 +31,7 @@ public class SourceApi implements UnsyncModelApi<Source> {
 
     @Override
     public @Nullable List<Source> index() {
-        Call<List<Source>> caller = getInterface().index(Source.greaterUpdatedAt());
+        Call<List<Source>> caller = getInterface().index(new SourceRepository(new DatabaseHelper(MyApplication.getContext())).greaterUpdatedAt());
 
         try {
             Response<List<Source>> response = caller.execute();
@@ -71,11 +73,11 @@ public class SourceApi implements UnsyncModelApi<Source> {
 
     @Override
     public List<Source> unsyncModels() {
-        return Source.unsync();
+        return new SourceRepository(new DatabaseHelper(MyApplication.getContext())).unsync();
     }
 
     @Override
     public long greaterUpdatedAt() {
-        return Source.greaterUpdatedAt();
+        return new SourceRepository(new DatabaseHelper(MyApplication.getContext())).greaterUpdatedAt();
     }
 }

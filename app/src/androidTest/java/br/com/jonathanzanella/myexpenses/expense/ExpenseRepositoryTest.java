@@ -15,7 +15,7 @@ import java.util.List;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
-import br.com.jonathanzanella.myexpenses.helpers.DatabaseHelper;
+import br.com.jonathanzanella.myexpenses.helpers.FlowManagerHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.ExpenseBuilder;
 
@@ -42,7 +42,7 @@ public class ExpenseRepositoryTest {
 
 	@After
 	public void tearDown() throws Exception {
-		DatabaseHelper.reset(InstrumentationRegistry.getTargetContext());
+		FlowManagerHelper.reset(InstrumentationRegistry.getTargetContext());
 		ActivityLifecycleHelper.closeAllActivities(getInstrumentation());
 	}
 

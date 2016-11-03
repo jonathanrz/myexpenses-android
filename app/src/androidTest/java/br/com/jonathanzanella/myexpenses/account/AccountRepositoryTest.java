@@ -11,7 +11,7 @@ import org.junit.runner.RunWith;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.Environment;
-import br.com.jonathanzanella.myexpenses.helpers.DatabaseHelper;
+import br.com.jonathanzanella.myexpenses.helpers.FlowManagerHelper;
 
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
@@ -29,7 +29,7 @@ public class AccountRepositoryTest {
 
 	@After
 	public void tearDown() throws Exception {
-		DatabaseHelper.reset(InstrumentationRegistry.getTargetContext());
+		FlowManagerHelper.reset(InstrumentationRegistry.getTargetContext());
 	}
 
 	@Test

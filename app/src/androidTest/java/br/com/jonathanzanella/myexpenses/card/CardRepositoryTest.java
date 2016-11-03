@@ -14,7 +14,7 @@ import java.util.List;
 import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
-import br.com.jonathanzanella.myexpenses.helpers.DatabaseHelper;
+import br.com.jonathanzanella.myexpenses.helpers.FlowManagerHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.CardBuilder;
 
 import static junit.framework.Assert.assertFalse;
@@ -41,7 +41,7 @@ public class CardRepositoryTest {
 
 	@After
 	public void tearDown() throws Exception {
-		DatabaseHelper.reset(InstrumentationRegistry.getTargetContext());
+		FlowManagerHelper.reset(InstrumentationRegistry.getTargetContext());
 	}
 
 	@Test

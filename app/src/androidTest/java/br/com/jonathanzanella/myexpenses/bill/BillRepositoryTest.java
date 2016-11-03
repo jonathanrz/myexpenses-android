@@ -19,7 +19,7 @@ import br.com.jonathanzanella.myexpenses.card.Card;
 import br.com.jonathanzanella.myexpenses.card.CardRepository;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
-import br.com.jonathanzanella.myexpenses.helpers.DatabaseHelper;
+import br.com.jonathanzanella.myexpenses.helpers.FlowManagerHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.BillBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.CardBuilder;
@@ -41,7 +41,7 @@ public class BillRepositoryTest {
 
 	@After
 	public void tearDown() throws Exception {
-		DatabaseHelper.reset(InstrumentationRegistry.getTargetContext());
+		FlowManagerHelper.reset(InstrumentationRegistry.getTargetContext());
 	}
 
 	@Test

@@ -12,8 +12,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.helpers.DatabaseHelper;
+import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
+import br.com.jonathanzanella.myexpenses.helpers.FlowManagerHelper;
 
+import static android.support.test.InstrumentationRegistry.getContext;
 import static android.support.test.InstrumentationRegistry.getTargetContext;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -31,7 +33,7 @@ public class ShowSourceActivityTest {
 	public ActivityTestRule<ShowSourceActivity> activityTestRule = new ActivityTestRule<>(ShowSourceActivity.class, true, false);
 
 	private Source source;
-	private SourceRepository repository = new SourceRepository();
+	private SourceRepository repository = new SourceRepository(new DatabaseHelper(getContext()));
 
 	@Before
 	public void setUp() throws Exception {
@@ -42,7 +44,7 @@ public class ShowSourceActivityTest {
 
 	@After
 	public void tearDown() throws Exception {
-		DatabaseHelper.reset(getTargetContext());
+		FlowManagerHelper.reset(getTargetContext());
 	}
 
 	@Test

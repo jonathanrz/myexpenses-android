@@ -14,7 +14,7 @@ import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
-import br.com.jonathanzanella.myexpenses.helpers.DatabaseHelper;
+import br.com.jonathanzanella.myexpenses.helpers.FlowManagerHelper;
 import br.com.jonathanzanella.myexpenses.overview.WeeklyPagerAdapter;
 
 import static org.hamcrest.core.Is.is;
@@ -37,7 +37,7 @@ public class ExpensesInPeriodTestSuite {
 
 	@After
 	public void tearDown() throws Exception {
-		DatabaseHelper.reset(getContext());
+		FlowManagerHelper.reset(getContext());
 	}
 
 	private Expense newExpense(String name, DateTime date, int value) {

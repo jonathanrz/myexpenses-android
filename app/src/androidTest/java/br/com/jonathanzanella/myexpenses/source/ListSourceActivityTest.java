@@ -11,9 +11,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.helpers.DatabaseHelper;
+import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
+import br.com.jonathanzanella.myexpenses.helpers.FlowManagerHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder;
 
+import static android.support.test.InstrumentationRegistry.getContext;
 import static android.support.test.InstrumentationRegistry.getTargetContext;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -32,11 +34,11 @@ public class ListSourceActivityTest {
 	@Rule
 	public ActivityTestRule<ListSourceActivity> activityTestRule = new ActivityTestRule<>(ListSourceActivity.class, true, false);
 
-	private SourceRepository repository = new SourceRepository();
+	private SourceRepository repository = new SourceRepository(new DatabaseHelper(getContext()));
 
 	@After
 	public void tearDown() throws Exception {
-		DatabaseHelper.reset(getTargetContext());
+		FlowManagerHelper.reset(getTargetContext());
 	}
 
 	@Test

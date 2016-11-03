@@ -10,7 +10,7 @@ import br.com.jonathanzanella.myexpenses.database.MyDatabase;
 /**
  * Created by jzanella on 7/24/16.
  */
-public class DatabaseHelper {
+public class FlowManagerHelper {
 	public static void reset(Context ctx) {
 		FlowManager.getDatabase(MyDatabase.NAME).reset(ctx);
 		FlowManager.destroy();

@@ -20,7 +20,7 @@ import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.bill.Bill;
 import br.com.jonathanzanella.myexpenses.bill.BillRepository;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
-import br.com.jonathanzanella.myexpenses.helpers.DatabaseHelper;
+import br.com.jonathanzanella.myexpenses.helpers.FlowManagerHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.BillBuilder;
 import br.com.jonathanzanella.myexpenses.views.MainActivity;
@@ -63,7 +63,7 @@ public class AddExpenseTest {
 
 	@After
 	public void tearDown() throws Exception {
-		DatabaseHelper.reset(getContext());
+		FlowManagerHelper.reset(getContext());
 		ActivityLifecycleHelper.closeAllActivities(getInstrumentation());
 	}
 

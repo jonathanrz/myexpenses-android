@@ -22,12 +22,15 @@ import java.util.Locale;
 import java.util.UUID;
 
 import br.com.jonathanzanella.myexpenses.Environment;
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
+import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.database.MyDatabase;
 import br.com.jonathanzanella.myexpenses.helpers.DateHelper;
 import br.com.jonathanzanella.myexpenses.helpers.converter.DateTimeConverter;
 import br.com.jonathanzanella.myexpenses.source.Source;
+import br.com.jonathanzanella.myexpenses.source.SourceRepository;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi;
 import br.com.jonathanzanella.myexpenses.transaction.Transaction;
@@ -165,7 +168,7 @@ public class Receipt extends BaseModel implements Transaction, UnsyncModel {
 	}
 
 	public Source getSource() {
-		return Source.find(sourceUuid);
+		return new SourceRepository(new DatabaseHelper(MyApplication.getContext())).find(sourceUuid);
 	}
 
 	public void setSource(@NonNull Source s) {

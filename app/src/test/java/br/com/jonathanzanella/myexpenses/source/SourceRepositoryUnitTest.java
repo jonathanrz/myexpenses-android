@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
@@ -16,7 +17,10 @@ import static org.mockito.MockitoAnnotations.initMocks;
  * Created by jzanella on 8/27/16.
  */
 public class SourceRepositoryUnitTest {
-	private SourceRepository repository = new SourceRepository();
+	@Mock
+	DatabaseHelper databaseHelper;
+
+	private SourceRepository repository = new SourceRepository(databaseHelper);
 
 	@Mock
 	private Source source;

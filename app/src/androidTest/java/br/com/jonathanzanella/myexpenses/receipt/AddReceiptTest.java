@@ -17,8 +17,9 @@ import org.junit.runner.RunWith;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
+import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
-import br.com.jonathanzanella.myexpenses.helpers.DatabaseHelper;
+import br.com.jonathanzanella.myexpenses.helpers.FlowManagerHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder;
 import br.com.jonathanzanella.myexpenses.source.Source;
@@ -49,6 +50,7 @@ public class AddReceiptTest {
 
 	private Account account;
 	private Source source;
+	private SourceRepository sourceRepository = new SourceRepository(new DatabaseHelper(getContext()));
 
 	@Before
 	public void setUp() throws Exception {
@@ -60,12 +62,13 @@ public class AddReceiptTest {
 		new AccountRepository().save(account);
 
 		source = new SourceBuilder().build();
-		new SourceRepository().save(source);
+		sourceRepository.save(source);
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		DatabaseHelper.reset(getContext());
+		FlowManagerHelper.reset(getContext());
+		sourceRepository.resetSources();
 		ActivityLifecycleHelper.closeAllActivities(getInstrumentation());
 	}
 

@@ -16,14 +16,16 @@ import java.text.NumberFormat;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
+import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
-import br.com.jonathanzanella.myexpenses.helpers.DatabaseHelper;
+import br.com.jonathanzanella.myexpenses.helpers.FlowManagerHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.ReceiptBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder;
 import br.com.jonathanzanella.myexpenses.source.Source;
 import br.com.jonathanzanella.myexpenses.source.SourceRepository;
 
+import static android.support.test.InstrumentationRegistry.getContext;
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.InstrumentationRegistry.getTargetContext;
 import static android.support.test.espresso.Espresso.onView;
@@ -47,7 +49,7 @@ public class ShowReceiptActivityTest {
 	@Before
 	public void setUp() throws Exception {
 		Source s = new SourceBuilder().build();
-		new SourceRepository().save(s);
+		new SourceRepository(new DatabaseHelper(getContext())).save(s);
 
 		Account a = new AccountBuilder().build();
 		new AccountRepository().save(a);
@@ -58,7 +60,7 @@ public class ShowReceiptActivityTest {
 
 	@After
 	public void tearDown() throws Exception {
-		DatabaseHelper.reset(getTargetContext());
+		FlowManagerHelper.reset(getTargetContext());
 		ActivityLifecycleHelper.closeAllActivities(getInstrumentation());
 	}
 

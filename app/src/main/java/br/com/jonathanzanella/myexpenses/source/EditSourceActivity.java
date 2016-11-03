@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.widget.EditText;
 
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.user.SelectUserView;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
@@ -24,7 +25,7 @@ public class EditSourceActivity extends BaseActivity implements SourceContract.E
 	@Bind(R.id.act_edit_source_user)
 	SelectUserView selectUserView;
 
-	private SourcePresenter presenter = new SourcePresenter(new SourceRepository());
+	private SourcePresenter presenter = new SourcePresenter(new SourceRepository(new DatabaseHelper(this)));
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
