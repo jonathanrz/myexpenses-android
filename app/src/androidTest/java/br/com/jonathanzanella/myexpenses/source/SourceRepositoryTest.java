@@ -5,6 +5,8 @@ import android.support.test.filters.LargeTest;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.After;
+import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -29,8 +31,14 @@ import static org.hamcrest.Matchers.not;
  */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
+@Ignore("until dbflow are removed")
 public class SourceRepositoryTest {
-	private SourceRepository repository = new SourceRepository(new DatabaseHelper(getContext()));
+	private SourceRepository repository;
+
+	@Before
+	public void setUp() throws Exception {
+		repository = new SourceRepository(new DatabaseHelper(getContext()));
+	}
 
 	@After
 	public void tearDown() throws Exception {

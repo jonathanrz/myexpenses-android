@@ -7,6 +7,7 @@ import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,6 +29,7 @@ import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTit
  */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
+@Ignore("until dbflow are removed")
 public class ShowSourceActivityTest {
 	@Rule
 	public ActivityTestRule<ShowSourceActivity> activityTestRule = new ActivityTestRule<>(ShowSourceActivity.class, true, false);

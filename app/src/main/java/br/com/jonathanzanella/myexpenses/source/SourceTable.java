@@ -61,7 +61,6 @@ public final class SourceTable implements Table {
 
 	ContentValues fillContentValues(Source source) {
 		ContentValues values = new ContentValues();
-		values.put(Fields.ID, source.getId());
 		values.put(Fields.NAME, source.getName());
 		values.put(Fields.UUID, source.getUuid());
 		values.put(Fields.USER_UUID, source.getUserUuid());

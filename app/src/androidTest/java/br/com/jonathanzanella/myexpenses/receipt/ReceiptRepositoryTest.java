@@ -7,6 +7,7 @@ import android.support.test.runner.AndroidJUnit4;
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -34,6 +35,7 @@ import static org.hamcrest.Matchers.not;
  */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
+@Ignore("until dbflow are removed")
 public class ReceiptRepositoryTest {
 	private ReceiptRepository repository = new ReceiptRepository();
 
