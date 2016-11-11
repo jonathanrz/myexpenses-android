@@ -18,7 +18,7 @@ import org.junit.runner.RunWith;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
-import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
+import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.FlowManagerHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
@@ -52,7 +52,7 @@ public class AddReceiptTest {
 
 	private Account account;
 	private Source source;
-	private SourceRepository sourceRepository = new SourceRepository(new DatabaseHelper(getContext()));
+	private SourceRepository sourceRepository = new SourceRepository(new Repository<Source>(getContext()));
 
 	@Before
 	public void setUp() throws Exception {

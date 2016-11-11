@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.MyApplication;
-import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
+import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.server.Server;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
@@ -31,7 +31,7 @@ public class SourceApi implements UnsyncModelApi<Source> {
 
     @Override
     public @Nullable List<Source> index() {
-        Call<List<Source>> caller = getInterface().index(new SourceRepository(new DatabaseHelper(MyApplication.getContext())).greaterUpdatedAt());
+        Call<List<Source>> caller = getInterface().index(new SourceRepository(new Repository<Source>(MyApplication.getContext())).greaterUpdatedAt());
 
         try {
             Response<List<Source>> response = caller.execute();
@@ -73,11 +73,11 @@ public class SourceApi implements UnsyncModelApi<Source> {
 
     @Override
     public List<Source> unsyncModels() {
-        return new SourceRepository(new DatabaseHelper(MyApplication.getContext())).unsync();
+        return new SourceRepository(new Repository<Source>(MyApplication.getContext())).unsync();
     }
 
     @Override
     public long greaterUpdatedAt() {
-        return new SourceRepository(new DatabaseHelper(MyApplication.getContext())).greaterUpdatedAt();
+        return new SourceRepository(new Repository<Source>(MyApplication.getContext())).greaterUpdatedAt();
     }
 }

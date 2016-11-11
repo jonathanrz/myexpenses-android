@@ -43,7 +43,7 @@ public class Account extends BaseModel implements Chargeable, UnsyncModel {
 	private static final AccountApi accountApi = new AccountApi();
 
 	@Column
-	@PrimaryKey(autoincrement = true)
+	@PrimaryKey(autoincrement = true) @Setter @Getter
 	long id;
 
 	@Column @Unique @NotNull
@@ -76,7 +76,7 @@ public class Account extends BaseModel implements Chargeable, UnsyncModel {
 	@Column @Getter @Setter @Expose @SerializedName("updated_at")
 	long updatedAt;
 
-	@Column
+	@Column @Setter
 	boolean sync;
 
 	private static From<Account> initQuery() {

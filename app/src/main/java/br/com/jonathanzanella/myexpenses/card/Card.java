@@ -45,7 +45,7 @@ public class Card extends BaseModel implements Chargeable, UnsyncModel {
 	private static final String LOG_TAG = "Card";
 	private static final CardApi cardApi = new CardApi();
 	@Column
-	@PrimaryKey(autoincrement = true)
+	@PrimaryKey(autoincrement = true) @Setter @Getter
 	long id;
 
 	@Column @Unique @NotNull
@@ -76,7 +76,7 @@ public class Card extends BaseModel implements Chargeable, UnsyncModel {
 	@Column @Getter @Setter @Expose @SerializedName("updated_at")
 	long updatedAt;
 
-	@Column
+	@Column @Setter
 	boolean sync;
 
 	public static List<Card> all() {

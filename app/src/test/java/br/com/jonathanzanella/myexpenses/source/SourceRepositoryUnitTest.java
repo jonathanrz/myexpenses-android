@@ -4,7 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
+import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
@@ -18,9 +18,9 @@ import static org.mockito.MockitoAnnotations.initMocks;
  */
 public class SourceRepositoryUnitTest {
 	@Mock
-	DatabaseHelper databaseHelper;
+	Repository<Source> repository;
 
-	private SourceRepository repository = new SourceRepository(databaseHelper);
+	private SourceRepository sourceRepository = new SourceRepository(repository);
 
 	@Mock
 	private Source source;
@@ -34,7 +34,7 @@ public class SourceRepositoryUnitTest {
 	public void return_with_error_when_tried_to_save_source_without_name() throws Exception {
 		when(source.getName()).thenReturn(null);
 
-		OperationResult result = repository.save(source);
+		OperationResult result = sourceRepository.save(source);
 
 		assertFalse(result.isValid());
 		assertTrue(result.getErrors().contains(ValidationError.NAME));

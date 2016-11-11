@@ -7,6 +7,8 @@ import android.content.Context;
  */
 public interface UnsyncModel {
 	boolean isSaved();
+	long getId();
+	void setId(long id);
 	String getServerId();
 	String getUuid();
 	void setServerId(String serverId);
@@ -16,8 +18,11 @@ public interface UnsyncModel {
 	void setUpdatedAt(long updatedAt);
 	String getData();
 	void syncAndSave(UnsyncModel serverModel);
+	void setSync(boolean b);
 
 	String getHeader(Context ctx);
 
 	UnsyncModelApi<UnsyncModel> getServerApi();
+
+
 }

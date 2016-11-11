@@ -55,7 +55,7 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 	private static final ExpenseApi expenseApi = new ExpenseApi();
 
 	@Column
-	@PrimaryKey(autoincrement = true)
+	@PrimaryKey(autoincrement = true) @Setter @Getter
 	long id;
 
 	@Column @Unique @NotNull
@@ -109,7 +109,7 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 	@Column @Getter @Setter @Expose @SerializedName("updated_at")
 	long updatedAt;
 
-	@Column
+	@Column @Setter
 	boolean sync;
 
 	@Column

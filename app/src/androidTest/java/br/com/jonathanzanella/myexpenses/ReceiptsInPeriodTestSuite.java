@@ -13,7 +13,7 @@ import org.junit.runner.RunWith;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.account.Account;
-import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
+import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.helpers.FlowManagerHelper;
 import br.com.jonathanzanella.myexpenses.receipt.Receipt;
 import br.com.jonathanzanella.myexpenses.source.Source;
@@ -31,7 +31,7 @@ public class ReceiptsInPeriodTestSuite {
 	Account account = new Account();
 	Source source = new Source();
 
-	SourceRepository sourceRepository = new SourceRepository(new DatabaseHelper(getContext()));
+	SourceRepository sourceRepository = new SourceRepository(new Repository<Source>(getContext()));
 
 	@Before
 	public void setUp() throws Exception {

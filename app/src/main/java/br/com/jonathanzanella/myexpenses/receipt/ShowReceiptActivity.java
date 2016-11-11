@@ -10,7 +10,8 @@ import java.text.NumberFormat;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
-import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
+import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.source.Source;
 import br.com.jonathanzanella.myexpenses.source.SourceRepository;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
@@ -34,7 +35,7 @@ public class ShowReceiptActivity extends BaseActivity implements ReceiptContract
 	@Bind(R.id.act_show_receipt_show_in_resume)
 	TextView receiptShowInResume;
 
-	private ReceiptPresenter presenter = new ReceiptPresenter(new ReceiptRepository(), new SourceRepository(new DatabaseHelper(this)), new AccountRepository());
+	private ReceiptPresenter presenter = new ReceiptPresenter(new ReceiptRepository(), new SourceRepository(new Repository<Source>(this)), new AccountRepository());
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {

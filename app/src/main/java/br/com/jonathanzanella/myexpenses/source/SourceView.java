@@ -10,7 +10,7 @@ import android.util.AttributeSet;
 
 import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
+import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.views.BaseView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -68,7 +68,7 @@ public class SourceView extends BaseView {
         switch (requestCode) {
             case REQUEST_ADD_SOURCE:
                 if(resultCode == Activity.RESULT_OK) {
-                    Source s = new SourceRepository(new DatabaseHelper(MyApplication.getContext())).find(data.getStringExtra(EditSourceActivity.KEY_SOURCE_UUID));
+                    Source s = new SourceRepository(new Repository<Source>(MyApplication.getContext())).find(data.getStringExtra(EditSourceActivity.KEY_SOURCE_UUID));
                     if(s != null)
                         adapter.addSource(s);
                 }

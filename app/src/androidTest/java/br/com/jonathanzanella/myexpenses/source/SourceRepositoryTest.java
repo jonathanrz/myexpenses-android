@@ -13,7 +13,7 @@ import org.junit.runner.RunWith;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.Environment;
-import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
+import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.FlowManagerHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder;
@@ -37,7 +37,7 @@ public class SourceRepositoryTest {
 
 	@Before
 	public void setUp() throws Exception {
-		repository = new SourceRepository(new DatabaseHelper(getContext()));
+		repository = new SourceRepository(new Repository<Source>(getContext()));
 	}
 
 	@After

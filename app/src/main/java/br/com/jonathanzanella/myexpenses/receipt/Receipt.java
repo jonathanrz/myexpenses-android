@@ -25,8 +25,8 @@ import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
-import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.database.MyDatabase;
+import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.helpers.DateHelper;
 import br.com.jonathanzanella.myexpenses.helpers.converter.DateTimeConverter;
 import br.com.jonathanzanella.myexpenses.source.Source;
@@ -51,7 +51,7 @@ public class Receipt extends BaseModel implements Transaction, UnsyncModel {
 	private static final ReceiptApi receiptApi = new ReceiptApi();
 
 	@Column
-	@PrimaryKey(autoincrement = true)
+	@PrimaryKey(autoincrement = true) @Setter @Getter
 	long id;
 
 	@Column @Unique @NotNull
@@ -95,7 +95,7 @@ public class Receipt extends BaseModel implements Transaction, UnsyncModel {
 	@Column @Getter @Setter @Expose @SerializedName("updated_at")
 	long updatedAt;
 
-	@Column
+	@Column @Getter @Setter
 	boolean sync;
 
 	@Column
@@ -168,7 +168,7 @@ public class Receipt extends BaseModel implements Transaction, UnsyncModel {
 	}
 
 	public Source getSource() {
-		return new SourceRepository(new DatabaseHelper(MyApplication.getContext())).find(sourceUuid);
+		return new SourceRepository(new Repository<Source>(MyApplication.getContext())).find(sourceUuid);
 	}
 
 	public void setSource(@NonNull Source s) {

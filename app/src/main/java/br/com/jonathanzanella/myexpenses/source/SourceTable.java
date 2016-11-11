@@ -3,9 +3,8 @@ package br.com.jonathanzanella.myexpenses.source;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.provider.BaseColumns;
-import android.util.Pair;
 
+import br.com.jonathanzanella.myexpenses.database.Fields;
 import br.com.jonathanzanella.myexpenses.database.Table;
 
 import static br.com.jonathanzanella.myexpenses.database.SqlTypes.DATE;
@@ -17,20 +16,7 @@ import static br.com.jonathanzanella.myexpenses.database.SqlTypes.TEXT;
  * Created by jzanella on 11/1/16.
  */
 
-public final class SourceTable implements Table {
-	static final String TABLE_NAME = "Source";
-
-	private static class Fields implements BaseColumns {
-		static final String ID = "id";
-		static final String NAME = "name";
-		static final String UUID = "uuid";
-		static final String USER_UUID = "userUuid";
-		static final String SERVER_ID = "serverId";
-		static final String CREATED_AT = "createdAt";
-		static final String UPDATED_AT = "updatedAt";
-		static final String SYNC = "sync";
-	}
-
+public final class SourceTable implements Table<Source> {
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL(createTableSql());
 	}
@@ -38,13 +24,18 @@ public final class SourceTable implements Table {
 	public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
 	}
 
-	public void recreate(SQLiteDatabase db) {
+	@Override
+	public String getName() {
+		return "Source";
+	}
+
+	void recreate(SQLiteDatabase db) {
 		db.execSQL(dropTableSql());
 		db.execSQL(createTableSql());
 	}
 
 	private String createTableSql() {
-		return "CREATE TABLE " + TABLE_NAME + " (" +
+		return "CREATE TABLE " + getName() + " (" +
 				Fields.ID + PRIMARY_KEY + "," +
 				Fields.NAME + TEXT + "," +
 				Fields.UUID + TEXT + "," +
@@ -56,68 +47,47 @@ public final class SourceTable implements Table {
 	}
 
 	private String dropTableSql() {
-		return "DROP TABLE IF EXISTS " + TABLE_NAME;
+		return "DROP TABLE IF EXISTS " + getName();
 	}
 
-	ContentValues fillContentValues(Source source) {
+	@Override
+	public ContentValues fillContentValues(Source source) {
 		ContentValues values = new ContentValues();
-		values.put(Fields.NAME, source.getName());
-		values.put(Fields.UUID, source.getUuid());
-		values.put(Fields.USER_UUID, source.getUserUuid());
-		values.put(Fields.SERVER_ID, source.getServerId());
-		values.put(Fields.CREATED_AT, source.getCreatedAt());
-		values.put(Fields.UPDATED_AT, source.getUpdatedAt());
-		values.put(Fields.SYNC, source.isSync());
+		values.put(Fields.NAME.toString(), source.getName());
+		values.put(Fields.UUID.toString(), source.getUuid());
+		values.put(Fields.USER_UUID.toString(), source.getUserUuid());
+		values.put(Fields.SERVER_ID.toString(), source.getServerId());
+		values.put(Fields.CREATED_AT.toString(), source.getCreatedAt());
+		values.put(Fields.UPDATED_AT.toString(), source.getUpdatedAt());
+		values.put(Fields.SYNC.toString(), source.isSync());
 		return values;
 	}
 
-	Source fillSource(Cursor c) {
+	@Override
+	public Source fill(Cursor c) {
 		Source source = new Source();
-		source.setId(c.getLong(c.getColumnIndexOrThrow(Fields.ID)));
-		source.setName(c.getString(c.getColumnIndexOrThrow(Fields.NAME)));
-		source.setUuid(c.getString(c.getColumnIndexOrThrow(Fields.UUID)));
-		source.setUserUuid(c.getString(c.getColumnIndexOrThrow(Fields.USER_UUID)));
-		source.setServerId(c.getString(c.getColumnIndexOrThrow(Fields.SERVER_ID)));
-		source.setCreatedAt(c.getLong(c.getColumnIndexOrThrow(Fields.CREATED_AT)));
-		source.setUpdatedAt(c.getLong(c.getColumnIndexOrThrow(Fields.UPDATED_AT)));
-		source.setSync(c.getLong(c.getColumnIndexOrThrow(Fields.UPDATED_AT)) != 0);
+		source.setId(c.getLong(c.getColumnIndexOrThrow(Fields.ID.toString())));
+		source.setName(c.getString(c.getColumnIndexOrThrow(Fields.NAME.toString())));
+		source.setUuid(c.getString(c.getColumnIndexOrThrow(Fields.UUID.toString())));
+		source.setUserUuid(c.getString(c.getColumnIndexOrThrow(Fields.USER_UUID.toString())));
+		source.setServerId(c.getString(c.getColumnIndexOrThrow(Fields.SERVER_ID.toString())));
+		source.setCreatedAt(c.getLong(c.getColumnIndexOrThrow(Fields.CREATED_AT.toString())));
+		source.setUpdatedAt(c.getLong(c.getColumnIndexOrThrow(Fields.UPDATED_AT.toString())));
+		source.setSync(c.getLong(c.getColumnIndexOrThrow(Fields.UPDATED_AT.toString())) != 0);
 		return source;
 	}
 
-	String [] getProjection() {
+	@Override
+	public String [] getProjection() {
 		return new String[]{
-				Fields.ID,
-				Fields.NAME,
-				Fields.UUID,
-				Fields.USER_UUID,
-				Fields.SERVER_ID,
-				Fields.CREATED_AT,
-				Fields.UPDATED_AT,
-				Fields.SYNC
+				Fields.ID.toString(),
+				Fields.NAME.toString(),
+				Fields.UUID.toString(),
+				Fields.USER_UUID.toString(),
+				Fields.SERVER_ID.toString(),
+				Fields.CREATED_AT.toString(),
+				Fields.UPDATED_AT.toString(),
+				Fields.SYNC.toString()
 		};
-	}
-
-	Pair<String, String[]> getSelectionById(Long id) {
-		return new Pair<>(Fields.ID + " = ?", new String[] { String.valueOf(id) });
-	}
-
-	Pair<String, String[]> getSelectionByUuid(String uuid) {
-		return new Pair<>(Fields.UUID + " = ?", new String[] { uuid });
-	}
-
-	Pair<String, String[]> getSelectionByUserUuid(String userUuid) {
-		return new Pair<>(Fields.USER_UUID + " = ?", new String[] { userUuid });
-	}
-
-	Pair<String, String[]> getSelectionBySync(boolean sync) {
-		return new Pair<>(Fields.SYNC + " = ?", new String[] { String.valueOf(sync ? 1 : 0) });
-	}
-
-	String getOrderByName() {
-		return Fields.NAME;
-	}
-
-	String getOrderByUpdatedAt() {
-		return Fields.UPDATED_AT;
 	}
 }

@@ -13,7 +13,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
+import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.helpers.FlowManagerHelper;
 
 import static android.support.test.InstrumentationRegistry.getContext;
@@ -35,7 +35,7 @@ public class ShowSourceActivityTest {
 	public ActivityTestRule<ShowSourceActivity> activityTestRule = new ActivityTestRule<>(ShowSourceActivity.class, true, false);
 
 	private Source source;
-	private SourceRepository repository = new SourceRepository(new DatabaseHelper(getContext()));
+	private SourceRepository repository = new SourceRepository(new Repository<Source>(getContext()));
 
 	@Before
 	public void setUp() throws Exception {

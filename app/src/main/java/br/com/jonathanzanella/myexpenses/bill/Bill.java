@@ -41,7 +41,7 @@ public class Bill extends BaseModel implements Transaction, UnsyncModel {
 	private static final BillApi billApi = new BillApi();
 
 	@Column
-	@PrimaryKey(autoincrement = true)
+	@PrimaryKey(autoincrement = true) @Setter @Getter
 	long id;
 
 	@Column @Unique @NotNull
@@ -77,7 +77,7 @@ public class Bill extends BaseModel implements Transaction, UnsyncModel {
 	@Column @Getter @Setter @Expose @SerializedName("updated_at")
 	long updatedAt;
 
-	@Column
+	@Column @Getter @Setter
 	boolean sync;
 
 	DateTime month;
