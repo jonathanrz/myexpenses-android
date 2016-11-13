@@ -5,7 +5,9 @@ import com.raizlabs.android.dbflow.StringUtils;
 import java.io.IOException;
 import java.util.List;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.account.AccountApi;
+import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.server.Server;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
@@ -28,7 +30,7 @@ public class BillApi implements UnsyncModelApi<Bill> {
 
 	@Override
 	public List<Bill> index() {
-		Call<List<Bill>> caller = getInterface().index(new BillRepository().greaterUpdatedAt());
+		Call<List<Bill>> caller = getInterface().index(new BillRepository(new Repository<Bill>(MyApplication.getContext())).greaterUpdatedAt());
 
 		try {
 			Response<List<Bill>> response = caller.execute();
@@ -70,11 +72,11 @@ public class BillApi implements UnsyncModelApi<Bill> {
 
 	@Override
 	public List<Bill> unsyncModels() {
-		return new BillRepository().unsync();
+		return new BillRepository(new Repository<Bill>(MyApplication.getContext())).unsync();
 	}
 
 	@Override
 	public long greaterUpdatedAt() {
-		return new BillRepository().greaterUpdatedAt();
+		return new BillRepository(new Repository<Bill>(MyApplication.getContext())).greaterUpdatedAt();
 	}
 }

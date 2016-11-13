@@ -8,7 +8,9 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.views.BaseView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -66,7 +68,7 @@ public class BillView extends BaseView {
 		switch (requestCode) {
 			case REQUEST_ADD_BILL:
 				if(resultCode == Activity.RESULT_OK) {
-					Bill b = new BillRepository().find(data.getStringExtra(EditBillActivity.KEY_BILL_UUID));
+					Bill b = new BillRepository(new Repository<Bill>(MyApplication.getContext())).find(data.getStringExtra(EditBillActivity.KEY_BILL_UUID));
 					if(b != null)
 						adapter.addBill(b);
 				}

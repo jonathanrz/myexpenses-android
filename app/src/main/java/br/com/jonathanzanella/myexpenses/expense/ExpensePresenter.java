@@ -13,12 +13,14 @@ import android.widget.DatePicker;
 import org.joda.time.DateTime;
 
 import br.com.jonathanzanella.myexpenses.Environment;
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.bill.Bill;
 import br.com.jonathanzanella.myexpenses.bill.BillRepository;
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
 import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType;
 import br.com.jonathanzanella.myexpenses.chargeable.ListChargeableActivity;
+import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
@@ -189,7 +191,7 @@ class ExpensePresenter {
 	}
 
 	void onBillSelected(String uuid) {
-		bill = new BillRepository().find(uuid);
+		bill = new BillRepository(new Repository<Bill>(MyApplication.getContext())).find(uuid);
 		if(bill != null)
 			editView.onBillSelected(bill);
 	}

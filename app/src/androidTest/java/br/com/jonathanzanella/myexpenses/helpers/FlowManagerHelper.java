@@ -5,6 +5,8 @@ import android.content.Context;
 import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowManager;
 
+import br.com.jonathanzanella.myexpenses.bill.Bill;
+import br.com.jonathanzanella.myexpenses.bill.BillRepository;
 import br.com.jonathanzanella.myexpenses.database.MyDatabase;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.source.Source;
@@ -19,5 +21,6 @@ public class FlowManagerHelper {
 		FlowManager.destroy();
 		FlowManager.init(new FlowConfig.Builder(ctx).build());
 		new SourceRepository(new Repository<Source>(ctx)).resetSources();
+		new BillRepository(new Repository<Bill>(ctx)).resetBills();
 	}
 }

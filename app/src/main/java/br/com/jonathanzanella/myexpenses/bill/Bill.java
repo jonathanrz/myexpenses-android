@@ -18,8 +18,10 @@ import java.util.Locale;
 import java.util.UUID;
 
 import br.com.jonathanzanella.myexpenses.Environment;
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.database.MyDatabase;
+import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.helpers.DateHelper;
 import br.com.jonathanzanella.myexpenses.helpers.converter.DateTimeConverter;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
@@ -143,7 +145,7 @@ public class Bill extends BaseModel implements Transaction, UnsyncModel {
 
 	@Override
 	public void syncAndSave(UnsyncModel unsyncModel) {
-		Bill bill = new BillRepository().find(uuid);
+		Bill bill = new BillRepository(new Repository<Bill>(MyApplication.getContext())).find(uuid);
 
 		if(bill != null && bill.id != id) {
 			if(bill.getUpdatedAt() != getUpdatedAt())

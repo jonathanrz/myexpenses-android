@@ -13,8 +13,11 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.bill.Bill;
 import br.com.jonathanzanella.myexpenses.bill.BillRepository;
+import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.receipt.Receipt;
 import br.com.jonathanzanella.myexpenses.transaction.Transaction;
@@ -64,7 +67,7 @@ public class MonthTransactionsView extends BaseView {
 		List<Expense> expenses = Expense.accountExpenses(account, month);
 		adapter.addTransactions(expenses);
 		if(account.isAccountToPayBills())
-			adapter.addTransactions(new BillRepository().monthly(month));
+			adapter.addTransactions(new BillRepository(new Repository<Bill>(MyApplication.getContext())).monthly(month));
 
 		list.setAdapter(adapter);
 		list.setHasFixedSize(true);

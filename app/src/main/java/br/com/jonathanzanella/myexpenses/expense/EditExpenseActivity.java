@@ -13,6 +13,7 @@ import org.joda.time.DateTime;
 
 import java.text.NumberFormat;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.bill.Bill;
 import br.com.jonathanzanella.myexpenses.bill.BillRepository;
@@ -20,6 +21,7 @@ import br.com.jonathanzanella.myexpenses.bill.ListBillActivity;
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
 import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType;
 import br.com.jonathanzanella.myexpenses.chargeable.ListChargeableActivity;
+import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch;
 import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.user.SelectUserView;
@@ -63,7 +65,7 @@ public class EditExpenseActivity extends BaseActivity implements ExpenseContract
 	@Bind(R.id.act_edit_expense_user)
 	SelectUserView selectUserView;
 
-	private ExpensePresenter presenter = new ExpensePresenter(new ExpenseRepository(), new BillRepository());
+	private ExpensePresenter presenter = new ExpensePresenter(new ExpenseRepository(), new BillRepository(new Repository<Bill>(MyApplication.getContext())));
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

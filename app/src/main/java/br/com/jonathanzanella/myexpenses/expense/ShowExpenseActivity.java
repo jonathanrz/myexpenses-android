@@ -10,8 +10,11 @@ import android.widget.TextView;
 
 import java.text.NumberFormat;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.bill.Bill;
 import br.com.jonathanzanella.myexpenses.bill.BillRepository;
+import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.receipt.Receipt;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
@@ -37,7 +40,7 @@ public class ShowExpenseActivity extends BaseActivity implements ExpenseContract
 	@Bind(R.id.act_show_expense_charge_next_month)
 	TableRow chargeNextMonth;
 
-	private ExpensePresenter presenter = new ExpensePresenter(new ExpenseRepository(), new BillRepository());
+	private ExpensePresenter presenter = new ExpensePresenter(new ExpenseRepository(), new BillRepository(new Repository<Bill>(MyApplication.getContext())));
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {

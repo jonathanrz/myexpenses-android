@@ -34,6 +34,7 @@ import br.com.jonathanzanella.myexpenses.card.CardRepository;
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
 import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType;
 import br.com.jonathanzanella.myexpenses.database.MyDatabase;
+import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.helpers.DateHelper;
 import br.com.jonathanzanella.myexpenses.helpers.converter.DateTimeConverter;
 import br.com.jonathanzanella.myexpenses.overview.WeeklyPagerAdapter;
@@ -361,7 +362,7 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 	}
 
 	public Bill getBill() {
-		return new BillRepository().find(billUuid);
+		return new BillRepository(new Repository<Bill>(MyApplication.getContext())).find(billUuid);
 	}
 
 	static Chargeable findChargeable(ChargeableType type, String uuid) {

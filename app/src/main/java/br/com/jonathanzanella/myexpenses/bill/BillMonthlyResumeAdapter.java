@@ -14,7 +14,9 @@ import java.lang.ref.WeakReference;
 import java.text.NumberFormat;
 import java.util.List;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.database.Repository;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import lombok.Getter;
@@ -100,7 +102,7 @@ public class BillMonthlyResumeAdapter extends RecyclerView.Adapter<BillMonthlyRe
 
 			@Override
 			protected Void doInBackground(Void... voids) {
-				bills = new BillRepository().monthly(month);
+				bills = new BillRepository(new Repository<Bill>(MyApplication.getContext())).monthly(month);
 				totalValue = 0;
 
 				for (Bill bill : bills) {

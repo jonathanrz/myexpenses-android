@@ -12,6 +12,10 @@ public enum Fields {
 	SERVER_ID("serverId"),
 	CREATED_AT("createdAt"),
 	UPDATED_AT("updatedAt"),
+	AMOUNT("amount"),
+	DUE_DATE("due_date"),
+	INIT_DATE("init_date"),
+	END_DATE("end_date"),
 	SYNC("sync");
 
 	private String name;

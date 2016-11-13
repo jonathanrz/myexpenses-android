@@ -3,7 +3,6 @@ package br.com.jonathanzanella.myexpenses.database;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,12 +23,12 @@ public class Repository <T extends UnsyncModel> {
 
 	public T find(Table<T> table, String uuid) {
 		SQLiteDatabase db = databaseHelper.getReadableDatabase();
-		Pair<String, String[]> selection = new Where(Fields.UUID).eq(uuid);
+		Select select = new Where(Fields.UUID).eq(uuid).query();
 		try (Cursor c = db.query(
 				table.getName(),
 				table.getProjection(),
-				selection.first,
-				selection.second,
+				select.getWhere(),
+				select.getParameters(),
 				null,
 				null,
 				null
@@ -39,36 +38,40 @@ public class Repository <T extends UnsyncModel> {
 		}
 	}
 
-	public List<T> userData(Table<T> table) {
+	public List<T> query(Table<T> table, Where where) {
 		SQLiteDatabase db = databaseHelper.getReadableDatabase();
-		Pair<String, String[]> selection = new Where(Fields.USER_UUID).eq(Environment.CURRENT_USER_UUID);
+		Select select = where.query();
 		try (Cursor c = db.query(
 				table.getName(),
 				table.getProjection(),
-				selection.first,
-				selection.second,
+				select.getWhere(),
+				select.getParameters(),
 				null,
 				null,
 				Fields.NAME.toString()
 		)) {
 			List<T> sources = new ArrayList<>();
 			c.moveToFirst();
-			for(int i = 0; i < c.getCount(); i++) {
-				c.move(i);
+			while (!c.isAfterLast()) {
 				sources.add(table.fill(c));
+				c.moveToNext();
 			}
 			return sources;
 		}
 	}
 
+	public List<T> userData(Table<T> table) {
+		return query(table, new Where(Fields.USER_UUID).eq(Environment.CURRENT_USER_UUID));
+	}
+
 	public List<T> unsync(Table<T> table) {
 		SQLiteDatabase db = databaseHelper.getReadableDatabase();
-		Pair<String, String[]> selection = new Where(Fields.SYNC).eq(false);
+		Select select = new Where(Fields.SYNC).eq(false).query();
 		try (Cursor c = db.query(
 				table.getName(),
 				table.getProjection(),
-				selection.first,
-				selection.second,
+				select.getWhere(),
+				select.getParameters(),
 				null,
 				null,
 				Fields.NAME.toString()
@@ -92,7 +95,7 @@ public class Repository <T extends UnsyncModel> {
 				null,
 				null,
 				null,
-				Fields.UPDATED_AT.toString(),
+				Fields.UPDATED_AT.toString() + " DESC",
 				"1"
 		)) {
 			c.moveToFirst();
@@ -106,8 +109,8 @@ public class Repository <T extends UnsyncModel> {
 			long newId = db.insert(table.getName(), null, table.fillContentValues(data));
 			data.setId(newId);
 		} else {
-			Pair<String, String[]> selection = new Where(Fields.ID).eq(data.getId());
-			db.update(table.getName(), table.fillContentValues(data), selection.first, selection.second);
+			Select select = new Where(Fields.ID).eq(data.getId()).query();
+			db.update(table.getName(), table.fillContentValues(data), select.getWhere(), select.getParameters());
 		}
 	}
 

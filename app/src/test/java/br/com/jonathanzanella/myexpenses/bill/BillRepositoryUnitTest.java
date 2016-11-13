@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
@@ -18,7 +19,9 @@ import static org.mockito.MockitoAnnotations.initMocks;
  * Created by jzanella on 8/27/16.
  */
 public class BillRepositoryUnitTest {
-	private BillRepository repository = new BillRepository();
+	@Mock
+	Repository<Bill> repository;
+	private BillRepository billRepository = new BillRepository(repository);
 
 	@Mock
 	private Bill bill;
@@ -32,7 +35,7 @@ public class BillRepositoryUnitTest {
 	public void return_with_error_when_tried_to_save_bill_without_name() throws Exception {
 		when(bill.getName()).thenReturn(null);
 
-		OperationResult result = repository.save(bill);
+		OperationResult result = billRepository.save(bill);
 
 		assertFalse(result.isValid());
 		assertTrue(result.getErrors().contains(ValidationError.NAME));
@@ -43,7 +46,7 @@ public class BillRepositoryUnitTest {
 		when(bill.getName()).thenReturn("a");
 		when(bill.getAmount()).thenReturn(0);
 
-		OperationResult result = repository.save(bill);
+		OperationResult result = billRepository.save(bill);
 
 		assertFalse(result.isValid());
 		assertTrue(result.getErrors().contains(ValidationError.AMOUNT));
@@ -53,7 +56,7 @@ public class BillRepositoryUnitTest {
 	public void return_with_error_when_tried_to_save_bill_without_due_date() throws Exception {
 		when(bill.getDueDate()).thenReturn(0);
 
-		OperationResult result = repository.save(bill);
+		OperationResult result = billRepository.save(bill);
 
 		assertFalse(result.isValid());
 		assertTrue(result.getErrors().contains(ValidationError.DUE_DATE));
@@ -64,7 +67,7 @@ public class BillRepositoryUnitTest {
 		when(bill.getInitDate()).thenReturn(null);
 		when(bill.getEndDate()).thenReturn(null);
 
-		OperationResult result = repository.save(bill);
+		OperationResult result = billRepository.save(bill);
 
 		assertFalse(result.isValid());
 		assertTrue(result.getErrors().contains(ValidationError.INIT_DATE));
@@ -76,7 +79,7 @@ public class BillRepositoryUnitTest {
 		when(bill.getInitDate()).thenReturn(new DateTime(2016, 10, 3, 0, 0, 0, DateTimeZone.UTC));
 		when(bill.getEndDate()).thenReturn(new DateTime(2016, 10, 2, 0, 0, 0, DateTimeZone.UTC));
 
-		OperationResult result = repository.save(bill);
+		OperationResult result = billRepository.save(bill);
 
 		assertFalse(result.isValid());
 		assertTrue(result.getErrors().contains(ValidationError.INIT_DATE_GREATER_THAN_END_DATE));
