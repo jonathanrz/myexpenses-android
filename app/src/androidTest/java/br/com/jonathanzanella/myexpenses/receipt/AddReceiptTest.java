@@ -70,7 +70,6 @@ public class AddReceiptTest {
 	@After
 	public void tearDown() throws Exception {
 		FlowManagerHelper.reset(getContext());
-		sourceRepository.resetSources();
 		ActivityLifecycleHelper.closeAllActivities(getInstrumentation());
 	}
 

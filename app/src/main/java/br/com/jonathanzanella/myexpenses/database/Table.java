@@ -13,6 +13,7 @@ import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
 public interface Table <T extends UnsyncModel> {
 	void onCreate(SQLiteDatabase db);
 	void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion);
+	void onDrop(SQLiteDatabase db);
 
 	String getName();
 	ContentValues fillContentValues(T data);

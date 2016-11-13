@@ -98,12 +98,6 @@ public class BillRepository {
 		return result;
 	}
 
-
-
-	public void resetBills() {
-		billTable.recreate(repository.getDatabaseHelper().getWritableDatabase());
-	}
-
 	public void syncAndSave(Bill unsyncBill) {
 		Bill bill = find(unsyncBill.getUuid());
 

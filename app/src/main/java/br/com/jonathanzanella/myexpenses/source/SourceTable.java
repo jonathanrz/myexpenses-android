@@ -25,13 +25,13 @@ public final class SourceTable implements Table<Source> {
 	}
 
 	@Override
-	public String getName() {
-		return "Source";
+	public void onDrop(SQLiteDatabase db) {
+		db.execSQL(dropTableSql());
 	}
 
-	void recreate(SQLiteDatabase db) {
-		db.execSQL(dropTableSql());
-		db.execSQL(createTableSql());
+	@Override
+	public String getName() {
+		return "Source";
 	}
 
 	private String createTableSql() {

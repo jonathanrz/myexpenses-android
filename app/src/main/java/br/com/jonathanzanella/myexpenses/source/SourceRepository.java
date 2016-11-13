@@ -39,10 +39,6 @@ public class SourceRepository {
 		return result;
 	}
 
-	public void resetSources() {
-		sourceTable.recreate(repository.getDatabaseHelper().getWritableDatabase());
-	}
-
 	public Source find(String uuid) {
 		return repository.find(sourceTable, uuid);
 	}

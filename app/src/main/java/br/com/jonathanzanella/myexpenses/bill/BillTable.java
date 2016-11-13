@@ -27,13 +27,13 @@ public final class BillTable implements Table<Bill> {
 	}
 
 	@Override
-	public String getName() {
-		return "Bill";
+	public void onDrop(SQLiteDatabase db) {
+		db.execSQL(dropTableSql());
 	}
 
-	public void recreate(SQLiteDatabase db) {
-		db.execSQL(dropTableSql());
-		db.execSQL(createTableSql());
+	@Override
+	public String getName() {
+		return "Bill";
 	}
 
 	private String createTableSql() {
