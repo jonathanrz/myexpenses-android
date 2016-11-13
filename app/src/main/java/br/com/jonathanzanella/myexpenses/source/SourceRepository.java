@@ -10,6 +10,8 @@ import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
+import static br.com.jonathanzanella.myexpenses.log.Log.warning;
+
 /**
  * Created by jzanella on 8/27/16.
  */
@@ -55,5 +57,18 @@ public class SourceRepository {
 
 	public List<Source> unsync() {
 		return repository.unsync(sourceTable);
+	}
+
+	public void syncAndSave(Source sourceSync) {
+		Source source = find(sourceSync.getUuid());
+
+		if(source != null && source.id != sourceSync.getId()) {
+			if(source.getUpdatedAt() != sourceSync.getUpdatedAt())
+				warning("Bill overwritten", sourceSync.getData());
+			sourceSync.setId(source.id);
+		}
+
+		sourceSync.setSync(true);
+		repository.saveAtDatabase(sourceTable, sourceSync);
 	}
 }

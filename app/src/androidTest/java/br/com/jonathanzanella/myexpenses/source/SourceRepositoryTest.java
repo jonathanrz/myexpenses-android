@@ -31,7 +31,7 @@ import static org.hamcrest.Matchers.not;
  */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-@Ignore("until dbflow are removed")
+@Ignore("remove with dbflow")
 public class SourceRepositoryTest {
 	private SourceRepository repository;
 
@@ -80,6 +80,21 @@ public class SourceRepositoryTest {
 		assertThat(sources.size(), is(1));
 		assertTrue(sources.contains(correctSource));
 		assertFalse(sources.contains(wrongSource));
+	}
+
+	@Test
+	public void source_unsync_returns_only_not_synced() throws Exception {
+		Source sourceUnsync = new SourceBuilder().name("sourceUnsync").updatedAt(100L).build();
+		sourceUnsync.sync = false;
+		repository.save(sourceUnsync);
+
+		Source sourceSync = new SourceBuilder().name("sourceSync").updatedAt(100L).build();
+		repository.save(sourceSync);
+		repository.syncAndSave(sourceSync);
+
+		List<Source> sources = repository.unsync();
+		assertThat(sources.size(), is(1));
+		assertThat(sources.get(0), is(sourceUnsync));
 	}
 
 	@Test
