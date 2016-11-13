@@ -13,7 +13,8 @@ import br.com.jonathanzanella.myexpenses.source.SourceTable;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 	private Table[] tables = {
-			new SourceTable()
+			new SourceTable(),
+			new BillTable()
 	};
 
 	public DatabaseHelper(Context context) {
@@ -24,7 +25,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public void onCreate(SQLiteDatabase db) {
 		for (Table table : tables)
 			table.onCreate(db);
-		new BillTable().recreate(db);
 	}
 
 	@Override

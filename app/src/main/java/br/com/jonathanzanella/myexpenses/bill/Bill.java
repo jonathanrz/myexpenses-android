@@ -4,26 +4,15 @@ import android.content.Context;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.NotNull;
-import com.raizlabs.android.dbflow.annotation.PrimaryKey;
-import com.raizlabs.android.dbflow.annotation.Table;
-import com.raizlabs.android.dbflow.annotation.Unique;
-import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.joda.time.DateTime;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
-import java.util.UUID;
 
-import br.com.jonathanzanella.myexpenses.Environment;
-import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.database.MyDatabase;
-import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.helpers.DateHelper;
-import br.com.jonathanzanella.myexpenses.helpers.converter.DateTimeConverter;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi;
 import br.com.jonathanzanella.myexpenses.transaction.Transaction;
@@ -31,55 +20,48 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
-import static br.com.jonathanzanella.myexpenses.log.Log.warning;
-
 /**
  * Created by Jonathan Zanella on 07/02/16.
  */
-@Table(database = MyDatabase.class)
 @EqualsAndHashCode(callSuper = false, of = {"id", "uuid", "name"})
-public class Bill extends BaseModel implements Transaction, UnsyncModel {
+public class Bill implements Transaction, UnsyncModel {
 	public static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
 	private static final BillApi billApi = new BillApi();
 
-	@Column
-	@PrimaryKey(autoincrement = true) @Setter @Getter
+	@Setter @Getter
 	long id;
 
-	@Column @Unique @NotNull
-	@Getter @Setter @Expose
+	@NotNull @Getter @Setter @Expose
 	String uuid;
 
-	@Column @Unique @NotNull
-	@Getter @Setter @Expose
+	@NotNull @Getter @Setter @Expose
 	String name;
 
-	@Column @Getter @Setter @Expose
+	@Getter @Setter @Expose
 	int amount;
 
-	@Column @Getter @Setter @Expose
+	@Getter @Setter @Expose
 	int dueDate;
 
-	@Column(typeConverter = DateTimeConverter.class) @Getter @Expose
+	@Getter @Expose
 	DateTime initDate;
 
-	@Column(typeConverter = DateTimeConverter.class) @Getter @Expose
+	@Getter @Expose
 	DateTime endDate;
 
-	@Column @NotNull @Getter @Setter @Expose
+	@NotNull @Getter @Setter @Expose
 	String userUuid;
 
-	@Column @Unique
 	@Getter @Setter @Expose @SerializedName("_id")
 	String serverId;
 
-	@Column @Getter @Setter @Expose @SerializedName("created_at")
+	@Getter @Setter @Expose @SerializedName("created_at")
 	long createdAt;
 
-	@Column @Getter @Setter @Expose @SerializedName("updated_at")
+	@Getter @Setter @Expose @SerializedName("updated_at")
 	long updatedAt;
 
-	@Column @Getter @Setter
+	@Getter @Setter
 	boolean sync;
 
 	DateTime month;
@@ -134,32 +116,8 @@ public class Bill extends BaseModel implements Transaction, UnsyncModel {
 	}
 
 	@Override
-	public void save() {
-		if(id == 0 && uuid == null)
-			uuid = UUID.randomUUID().toString();
-		if(id == 0 && userUuid == null)
-			userUuid = Environment.CURRENT_USER_UUID;
-		sync = false;
-		super.save();
-	}
-
-	@Override
 	public void syncAndSave(UnsyncModel unsyncModel) {
-		Bill bill = new BillRepository(new Repository<Bill>(MyApplication.getContext())).find(uuid);
-
-		if(bill != null && bill.id != id) {
-			if(bill.getUpdatedAt() != getUpdatedAt())
-				warning("Bill overwritten", getData());
-			id = bill.id;
-		}
-
-		setServerId(unsyncModel.getServerId());
-		setCreatedAt(unsyncModel.getCreatedAt());
-		setUpdatedAt(unsyncModel.getUpdatedAt());
-
-		save();
-		sync = true;
-		super.save();
+		throw new UnsupportedOperationException("You should use BillRepository");
 	}
 
 	@Override

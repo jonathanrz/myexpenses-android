@@ -3,6 +3,7 @@ package br.com.jonathanzanella.myexpenses.database;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,9 @@ public class Repository <T extends UnsyncModel> {
 		this.databaseHelper = new DatabaseHelper(ctx);
 	}
 
-	public T find(Table<T> table, String uuid) {
+	public @Nullable T find(Table<T> table, String uuid) {
+		if(uuid == null)
+			return null;
 		SQLiteDatabase db = databaseHelper.getReadableDatabase();
 		Select select = new Where(Fields.UUID).eq(uuid).query();
 		try (Cursor c = db.query(
