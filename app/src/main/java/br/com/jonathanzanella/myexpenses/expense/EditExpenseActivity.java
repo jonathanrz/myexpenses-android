@@ -112,6 +112,12 @@ public class EditExpenseActivity extends BaseActivity implements ExpenseContract
 	}
 
 	@Override
+	protected void onResume() {
+		super.onResume();
+		presenter.refreshExpense();
+	}
+
+	@Override
 	protected void onStop() {
 		super.onStop();
 		presenter.detachView();

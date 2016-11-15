@@ -32,6 +32,7 @@ import static android.app.Activity.RESULT_OK;
  */
 
 class ExpensePresenter {
+	public static final int REQUEST_EDIT_EXPENSE = 1;
 	static final String KEY_EXPENSE_UUID = "KeyExpenseUuid";
 	static final String KEY_BILL_UUID = "KeyBillUuid";
 
@@ -97,9 +98,11 @@ class ExpensePresenter {
 	}
 
 	void refreshExpense() {
-		loadExpense(expense.getUuid());
+		if(expense != null) {
+			loadExpense(expense.getUuid());
 
-		view.showExpense(expense);
+			view.showExpense(expense);
+		}
 	}
 
 	Expense loadExpense(String uuid) {
@@ -153,10 +156,10 @@ class ExpensePresenter {
 		}
 	}
 
-	void edit(Context ctx) {
-		Intent i = new Intent(ctx, EditExpenseActivity.class);
+	void edit(Activity act) {
+		Intent i = new Intent(act, EditExpenseActivity.class);
 		i.putExtra(EditExpenseActivity.KEY_EXPENSE_UUID, getUuid());
-		ctx.startActivity(i);
+		act.startActivityForResult(i, REQUEST_EDIT_EXPENSE);
 	}
 
 	void delete(final Activity act) {
@@ -223,7 +226,16 @@ class ExpensePresenter {
 		}
 	}
 
-	boolean hasExpense() {
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		switch (requestCode) {
+			case REQUEST_EDIT_EXPENSE: {
+				if(resultCode == Activity.RESULT_OK)
+					refreshExpense();
+			}
+		}
+	}
+
+	private boolean hasExpense() {
 		return expense != null;
 	}
 

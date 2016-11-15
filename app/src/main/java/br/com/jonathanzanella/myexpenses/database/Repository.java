@@ -2,8 +2,10 @@ package br.com.jonathanzanella.myexpenses.database;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +38,8 @@ public class Repository <T extends UnsyncModel> {
 				null,
 				null
 		)) {
+			if(c.getCount() == 0)
+				return null;
 			c.moveToFirst();
 			return table.fill(c);
 		}
@@ -109,8 +113,13 @@ public class Repository <T extends UnsyncModel> {
 	public void saveAtDatabase(Table<T> table, T data) {
 		SQLiteDatabase db = databaseHelper.getWritableDatabase();
 		if(data.getId() == 0) {
-			long newId = db.insert(table.getName(), null, table.fillContentValues(data));
-			data.setId(newId);
+			try {
+				long newId = db.insertOrThrow(table.getName(), null, table.fillContentValues(data));
+				data.setId(newId);
+			} catch (SQLException e) {
+				Log.e("Repository", "error inserting the record into the database, error=" + e.getMessage());
+				throw e;
+			}
 		} else {
 			Select select = new Where(Fields.ID).eq(data.getId()).query();
 			db.update(table.getName(), table.fillContentValues(data), select.getWhere(), select.getParameters());

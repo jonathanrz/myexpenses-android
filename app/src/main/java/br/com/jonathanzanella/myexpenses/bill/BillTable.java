@@ -11,8 +11,11 @@ import br.com.jonathanzanella.myexpenses.database.Table;
 
 import static br.com.jonathanzanella.myexpenses.database.SqlTypes.DATE;
 import static br.com.jonathanzanella.myexpenses.database.SqlTypes.INT;
+import static br.com.jonathanzanella.myexpenses.database.SqlTypes.INT_NOT_NULL;
 import static br.com.jonathanzanella.myexpenses.database.SqlTypes.PRIMARY_KEY;
-import static br.com.jonathanzanella.myexpenses.database.SqlTypes.TEXT;
+import static br.com.jonathanzanella.myexpenses.database.SqlTypes.TEXT_NOT_NULL;
+import static br.com.jonathanzanella.myexpenses.database.SqlTypes.TEXT_UNIQUE;
+import static br.com.jonathanzanella.myexpenses.database.SqlTypes.TEXT_UNIQUE_NOT_NULL;
 
 /**
  * Created by jzanella on 11/1/16.
@@ -39,14 +42,14 @@ public final class BillTable implements Table<Bill> {
 	private String createTableSql() {
 		return "CREATE TABLE " + getName() + " (" +
 				Fields.ID + PRIMARY_KEY + "," +
-				Fields.NAME + TEXT + "," +
-				Fields.UUID + TEXT + "," +
+				Fields.NAME + TEXT_UNIQUE_NOT_NULL + "," +
+				Fields.UUID + TEXT_UNIQUE_NOT_NULL + "," +
 				Fields.AMOUNT + INT+ "," +
 				Fields.DUE_DATE + INT + "," +
-				Fields.INIT_DATE + INT + "," +
-				Fields.END_DATE + TEXT + "," +
-				Fields.USER_UUID + TEXT + "," +
-				Fields.SERVER_ID + TEXT + "," +
+				Fields.INIT_DATE + INT_NOT_NULL + "," +
+				Fields.END_DATE + INT_NOT_NULL + "," +
+				Fields.USER_UUID + TEXT_NOT_NULL + "," +
+				Fields.SERVER_ID + TEXT_UNIQUE + "," +
 				Fields.CREATED_AT + DATE + "," +
 				Fields.UPDATED_AT + DATE + "," +
 				Fields.SYNC + INT + " )";

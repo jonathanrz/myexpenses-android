@@ -1,5 +1,6 @@
 package br.com.jonathanzanella.myexpenses.expense;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.Menu;
@@ -75,12 +76,6 @@ public class ShowExpenseActivity extends BaseActivity implements ExpenseContract
 	}
 
 	@Override
-	protected void onResume() {
-		super.onResume();
-		presenter.refreshExpense();
-	}
-
-	@Override
 	protected void onStop() {
 		super.onStop();
 		presenter.detachView();
@@ -116,5 +111,12 @@ public class ShowExpenseActivity extends BaseActivity implements ExpenseContract
 		expenseIncomeToShowInOverview.setText(NumberFormat.getCurrencyInstance().format(expense.getValueToShowInOverview() / 100.0));
 		expenseChargeable.setText(expense.getChargeable().getName());
 		chargeNextMonth.setVisibility(expense.isChargeNextMonth() ? View.VISIBLE : View.GONE);
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		presenter.attachView(this);
+		presenter.onActivityResult(requestCode, resultCode, data);
 	}
 }
