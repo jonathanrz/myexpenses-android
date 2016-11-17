@@ -1,7 +1,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    ext.kotlin_version = '1.0.4'
+    ext.kotlin_version = '1.0.5'
     repositories {
         jcenter()
         maven { url 'https://www.testfairy.com/maven' }
@@ -31,9 +31,9 @@ task clean(type: Delete) {
 ext {
     // Sdk and tools
     minSdkVersion = 19
-    targetSdkVersion = 24
-    compileSdkVersion = 24
-    buildToolsVersion = '24.0.2'
+    targetSdkVersion = 25
+    compileSdkVersion = 25
+    buildToolsVersion = '25.0.0'
 
     // App dependencies
     butterKnifeVersion = '7.0.1'
