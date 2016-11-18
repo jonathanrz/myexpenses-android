@@ -18,8 +18,10 @@ import java.util.List;
 import java.util.Locale;
 
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import br.com.jonathanzanella.myexpenses.helpers.TransactionsHelper;
 import br.com.jonathanzanella.myexpenses.receipt.Receipt;
+import br.com.jonathanzanella.myexpenses.source.Source;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -69,8 +71,14 @@ class ReceiptMonthlyResumeAdapter extends RecyclerView.Adapter<ReceiptMonthlyRes
 			income.setTypeface(null, Typeface.NORMAL);
 			if(!receipt.isCredited())
 				income.setTypeface(null, Typeface.BOLD);
-			if(source != null)
-				source.setText(receipt.getSource().getName());
+			if(source != null) {
+				receipt.getSource().subscribe(new Subscriber<Source>("ReceiptMonthlyResumeAdapter.setData") {
+					@Override
+					public void onNext(Source s) {
+						source.setText(s.getName());
+					}
+				});
+			}
 		}
 
 		public void setTotal(int totalValue) {

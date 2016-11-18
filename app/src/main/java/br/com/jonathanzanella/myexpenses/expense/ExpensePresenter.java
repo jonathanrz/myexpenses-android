@@ -22,6 +22,7 @@ import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType;
 import br.com.jonathanzanella.myexpenses.chargeable.ListChargeableActivity;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException;
+import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
@@ -76,9 +77,14 @@ class ExpensePresenter {
 			}
 			view.showExpense(expense);
 
-			bill = expense.getBill();
-			if(editView != null && bill != null)
-				editView.onBillSelected(bill);
+			expense.getBill().subscribe(new Subscriber<Bill>("ExpensePresenter.viewUpdated") {
+				@Override
+				public void onNext(Bill bill) {
+					ExpensePresenter.this.bill = bill;
+					if(editView != null && bill != null)
+						editView.onBillSelected(bill);
+				}
+			});
 
 			chargeable = expense.getChargeable();
 			if(editView != null && chargeable != null)
@@ -194,9 +200,15 @@ class ExpensePresenter {
 	}
 
 	void onBillSelected(String uuid) {
-		bill = new BillRepository(new Repository<Bill>(MyApplication.getContext())).find(uuid);
-		if(bill != null)
-			editView.onBillSelected(bill);
+		new BillRepository(new Repository<Bill>(MyApplication.getContext())).find(uuid)
+				.subscribe(new Subscriber<Bill>("ExpensePresenter.onBillSelected") {
+					@Override
+					public void onNext(Bill bill) {
+						ExpensePresenter.this.bill = bill;
+						if(bill != null)
+							editView.onBillSelected(bill);
+					}
+				});
 	}
 
 	String getUuid() {
@@ -207,7 +219,12 @@ class ExpensePresenter {
 		if(extras.containsKey(KEY_EXPENSE_UUID))
 			loadExpense(extras.getString(KEY_EXPENSE_UUID));
 		if(extras.containsKey(KEY_BILL_UUID))
-			bill = billRepository.find(extras.getString(KEY_BILL_UUID));
+			billRepository.find(extras.getString(KEY_BILL_UUID)).subscribe(new Subscriber<Bill>("ExpensePresenter.storeBundle") {
+				@Override
+				public void onNext(Bill bill) {
+					ExpensePresenter.this.bill = bill;
+				}
+			});
 		if(extras.containsKey(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_TYPE)) {
 			chargeable = Expense.findChargeable(
 					(ChargeableType) extras.getSerializable(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_TYPE),

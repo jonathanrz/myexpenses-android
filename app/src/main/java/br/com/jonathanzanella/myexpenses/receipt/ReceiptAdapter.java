@@ -16,6 +16,8 @@ import java.text.NumberFormat;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
+import br.com.jonathanzanella.myexpenses.source.Source;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -56,7 +58,13 @@ class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ViewHolder> {
 			name.setText(receipt.getName());
 			date.setText(Receipt.sdf.format(receipt.getDate().toDate()));
 			income.setText(NumberFormat.getCurrencyInstance().format(receipt.getIncome() / 100.0));
-			source.setText(receipt.getSource().getName());
+			receipt.getSource().subscribe(new Subscriber<Source>("ReceiptAdapter.setData") {
+				@Override
+				public void onNext(Source s) {
+					source.setText(s.getName());
+				}
+			});
+
 			account.setText(receipt.getAccount().getName());
 			showInResume.setText(receipt.isShowInResume() ? R.string.yes : R.string.no);
 		}

@@ -30,7 +30,13 @@ class SourceAdapterPresenter {
 	}
 
 	void addSource(Source source) {
-		sources.add(source);
-		adapter.notifyItemInserted(sources.size() - 1);
+		int i = sources.indexOf(source);
+		if(i != -1) {
+			sources.set(i, source);
+		} else {
+			sources.add(source);
+			i = sources.size() - 1;
+		}
+		adapter.notifyItemInserted(i);
 	}
 }

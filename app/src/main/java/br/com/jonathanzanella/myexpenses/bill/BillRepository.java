@@ -1,5 +1,7 @@
 package br.com.jonathanzanella.myexpenses.bill;
 
+import android.support.test.espresso.idling.CountingIdlingResource;
+
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 
@@ -10,9 +12,11 @@ import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.database.Fields;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.database.Where;
-import br.com.jonathanzanella.myexpenses.expense.Expense;
+import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
+import rx.Observable;
+import rx.schedulers.Schedulers;
 
 import static br.com.jonathanzanella.myexpenses.log.Log.warning;
 
@@ -28,7 +32,7 @@ public class BillRepository {
 		this.repository = repository;
 	}
 
-	public Bill find(String uuid) {
+	public Observable<Bill> find(String uuid) {
 		return repository.find(billTable, uuid);
 	}
 
@@ -45,27 +49,27 @@ public class BillRepository {
 	}
 
 	public List<Bill> monthly(DateTime month) {
-		List<Expense> expenses = Expense.monthly(month);
+//		List<Expense> expenses = Expense.monthly(month);
 		Where query = new Where(Fields.INIT_DATE).lessThanOrEq(month.getMillis())
 				.and(Fields.END_DATE).greaterThanOrEq(month.getMillis())
 				.and(Fields.USER_UUID).eq(Environment.CURRENT_USER_UUID);
 		List<Bill> bills = repository.query(billTable, query);
 
-		for (int i = 0; i < bills.size(); i++) {
-			Bill bill = bills.get(i);
-			boolean billAlreadyPaid = false;
-			for (Expense expense : expenses) {
-				Bill b = expense.getBill();
-				if(b != null && b.getUuid().equals(bill.getUuid())) {
-					billAlreadyPaid = true;
-					break;
-				}
-			}
-			if(billAlreadyPaid) {
-				bills.remove(i);
-				i--;
-			}
-		}
+//		for (int i = 0; i < bills.size(); i++) {
+//			Bill bill = bills.get(i);
+//			boolean billAlreadyPaid = false;
+//			for (Expense expense : expenses) {
+//				Bill b = expense.getBill();
+//				if(b != null && b.getUuid().equals(bill.getUuid())) {
+//					billAlreadyPaid = true;
+//					break;
+//				}
+//			}
+//			if(billAlreadyPaid) {
+//				bills.remove(i);
+//				i--;
+//			}
+//		}
 
 		for (Bill bill : bills)
 			bill.month = month;
@@ -98,16 +102,24 @@ public class BillRepository {
 		return result;
 	}
 
-	public void syncAndSave(Bill unsyncBill) {
-		Bill bill = find(unsyncBill.getUuid());
+	public void syncAndSave(final Bill unsyncBill) {
+		final CountingIdlingResource idlingResource = new CountingIdlingResource("BillRepositorySave");
+		idlingResource.increment();
+		find(unsyncBill.getUuid())
+				.observeOn(Schedulers.io())
+				.subscribe(new Subscriber<Bill>("BillRepository.") {
+					@Override
+					public void onNext(Bill bill) {
+						if(bill != null && bill.id != unsyncBill.getId()) {
+							if(bill.getUpdatedAt() != unsyncBill.getUpdatedAt())
+								warning("Bill overwritten", unsyncBill.getData());
+							unsyncBill.setId(bill.id);
+						}
 
-		if(bill != null && bill.id != unsyncBill.getId()) {
-			if(bill.getUpdatedAt() != unsyncBill.getUpdatedAt())
-				warning("Bill overwritten", unsyncBill.getData());
-			unsyncBill.setId(bill.id);
-		}
-
-		unsyncBill.setSync(true);
-		repository.saveAtDatabase(billTable, unsyncBill);
+						unsyncBill.setSync(true);
+						repository.saveAtDatabase(billTable, unsyncBill);
+						idlingResource.decrement();
+					}
+				});
 	}
 }

@@ -15,7 +15,7 @@ import lombok.Setter;
 /**
  * Created by jzanella on 1/31/16.
  */
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode
 public class Source implements UnsyncModel {
     private static final SourceApi sourceApi = new SourceApi();
 

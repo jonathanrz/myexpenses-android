@@ -25,6 +25,7 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static br.com.jonathanzanella.myexpenses.helpers.TestUtils.waitForIdling;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle;
 
 /**
@@ -56,6 +57,8 @@ public class ShowBillActivityTest {
 		Intent i = new Intent();
 		i.putExtra(ShowBillActivity.KEY_BILL_UUID, bill.getUuid());
 		activityTestRule.launchActivity(i);
+
+		waitForIdling();
 
 		final String editBillTitle = getTargetContext().getString(R.string.bill) + " " + bill.getName();
 		matchToolbarTitle(editBillTitle);

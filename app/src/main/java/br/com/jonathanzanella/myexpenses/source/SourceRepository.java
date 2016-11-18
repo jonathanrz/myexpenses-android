@@ -7,8 +7,10 @@ import java.util.UUID;
 
 import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
+import rx.Observable;
 
 import static br.com.jonathanzanella.myexpenses.log.Log.warning;
 
@@ -39,7 +41,7 @@ public class SourceRepository {
 		return result;
 	}
 
-	public Source find(String uuid) {
+	public Observable<Source> find(String uuid) {
 		return repository.find(sourceTable, uuid);
 	}
 
@@ -55,16 +57,19 @@ public class SourceRepository {
 		return repository.unsync(sourceTable);
 	}
 
-	public void syncAndSave(Source sourceSync) {
-		Source source = find(sourceSync.getUuid());
+	public void syncAndSave(final Source sourceSync) {
+		find(sourceSync.getUuid()).subscribe(new Subscriber<Source>("SourceRepository.syncAndSave") {
+			@Override
+			public void onNext(Source source) {
+				if(source != null && source.id != sourceSync.getId()) {
+					if(source.getUpdatedAt() != sourceSync.getUpdatedAt())
+						warning("Bill overwritten", sourceSync.getData());
+					sourceSync.setId(source.id);
+				}
 
-		if(source != null && source.id != sourceSync.getId()) {
-			if(source.getUpdatedAt() != sourceSync.getUpdatedAt())
-				warning("Bill overwritten", sourceSync.getData());
-			sourceSync.setId(source.id);
-		}
-
-		sourceSync.setSync(true);
-		repository.saveAtDatabase(sourceTable, sourceSync);
+				sourceSync.setSync(true);
+				repository.saveAtDatabase(sourceTable, sourceSync);
+			}
+		});
 	}
 }

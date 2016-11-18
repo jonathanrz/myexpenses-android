@@ -20,12 +20,14 @@ import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.FlowManagerHelper;
+import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.BillBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.CardBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.ExpenseBuilder;
 
 import static android.support.test.InstrumentationRegistry.getTargetContext;
+import static br.com.jonathanzanella.myexpenses.helpers.TestUtils.waitForIdling;
 import static junit.framework.Assert.assertFalse;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -59,9 +61,13 @@ public class BillRepositoryTest {
 		Bill bill = new BillBuilder().build();
 		billRepository.save(bill);
 
-		Bill loadBill = billRepository.find(bill.getUuid());
-		assertThat(loadBill.getUuid(), is(bill.getUuid()));
-		assertThat(loadBill.getInitDate(), is(bill.getInitDate()));
+		billRepository.find(bill.getUuid()).subscribe(new Subscriber<Bill>("BillRepositoryTest.can_load_saved_account") {
+			@Override
+			public void onNext(Bill bill) {
+				assertThat(bill.getUuid(), is(bill.getUuid()));
+				assertThat(bill.getInitDate(), is(bill.getInitDate()));
+			}
+		});
 	}
 
 	@Test
@@ -126,6 +132,8 @@ public class BillRepositoryTest {
 		Bill billSync = new BillBuilder().name("billSync").updatedAt(100L).build();
 		billRepository.save(billSync);
 		billRepository.syncAndSave(billSync);
+
+		waitForIdling();
 
 		List<Bill> bills = billRepository.unsync();
 		assertThat(bills.size(), is(1));

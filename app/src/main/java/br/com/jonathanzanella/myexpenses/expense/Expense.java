@@ -44,6 +44,7 @@ import br.com.jonathanzanella.myexpenses.transaction.Transaction;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import rx.Observable;
 
 import static br.com.jonathanzanella.myexpenses.log.Log.warning;
 
@@ -361,7 +362,7 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 		billUuid = (bill != null ? bill.getUuid() : null);
 	}
 
-	public Bill getBill() {
+	public Observable<Bill> getBill() {
 		return new BillRepository(new Repository<Bill>(MyApplication.getContext())).find(billUuid);
 	}
 

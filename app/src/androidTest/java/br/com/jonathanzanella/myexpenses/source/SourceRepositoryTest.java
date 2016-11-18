@@ -16,6 +16,7 @@ import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.FlowManagerHelper;
+import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder;
 
 import static android.support.test.InstrumentationRegistry.getContext;
@@ -62,8 +63,12 @@ public class SourceRepositoryTest {
 		source.setName("test");
 		repository.save(source);
 
-		Source loadSource = repository.find(source.getUuid());
-		assertThat(loadSource, is(source));
+		repository.find(source.getUuid()).subscribe(new Subscriber<Source>("SourceRepositoryTest.can_load_saved_source") {
+			@Override
+			public void onNext(Source source) {
+				assertThat(source, is(source));
+			}
+		});
 	}
 
 	@Test

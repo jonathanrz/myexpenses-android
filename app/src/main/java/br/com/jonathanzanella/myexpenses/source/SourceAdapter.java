@@ -1,7 +1,6 @@
 package br.com.jonathanzanella.myexpenses.source;
 
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -87,11 +86,6 @@ class SourceAdapter extends RecyclerView.Adapter<SourceAdapter.ViewHolder> {
 	@Override
 	public int getItemCount() {
 		return sources.size();
-	}
-
-	void addSource(@NonNull Source source) {
-		presenter.addSource(source);
-		sources = presenter.getSources(false);
 	}
 
 	@Nullable

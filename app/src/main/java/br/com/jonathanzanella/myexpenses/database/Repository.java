@@ -4,15 +4,19 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import br.com.jonathanzanella.myexpenses.Environment;
+import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
 import lombok.Getter;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 import static br.com.jonathanzanella.myexpenses.log.Log.warning;
 
@@ -24,25 +28,32 @@ public class Repository <T extends UnsyncModel> {
 		this.databaseHelper = new DatabaseHelper(ctx);
 	}
 
-	public @Nullable T find(Table<T> table, String uuid) {
-		if(uuid == null)
-			return null;
-		SQLiteDatabase db = databaseHelper.getReadableDatabase();
-		Select select = new Where(Fields.UUID).eq(uuid).query();
-		try (Cursor c = db.query(
-				table.getName(),
-				table.getProjection(),
-				select.getWhere(),
-				select.getParameters(),
-				null,
-				null,
-				null
-		)) {
-			if(c.getCount() == 0)
-				return null;
-			c.moveToFirst();
-			return table.fill(c);
-		}
+	public Observable<T> find(final Table<T> table, final String uuid) {
+		return Observable.fromCallable(new Callable<T>() {
+			@Override
+			public T call() throws Exception {
+				if(uuid == null)
+					return null;
+				SQLiteDatabase db = databaseHelper.getReadableDatabase();
+				Select select = new Where(Fields.UUID).eq(uuid).query();
+				try (Cursor c = db.query(
+						table.getName(),
+						table.getProjection(),
+						select.getWhere(),
+						select.getParameters(),
+						null,
+						null,
+						null
+				)) {
+					if(c.getCount() == 0)
+						return null;
+					c.moveToFirst();
+					return table.fill(c);
+				}
+			}
+		})
+		.subscribeOn(Schedulers.io())
+		.observeOn(AndroidSchedulers.mainThread());
 	}
 
 	public List<T> query(Table<T> table, Where where) {
@@ -126,19 +137,24 @@ public class Repository <T extends UnsyncModel> {
 		}
 	}
 
-	public void syncAndSave(Table<T> table, T unsyncModel) {
-		T unsyncSource = find(table, unsyncModel.getUuid());
+	public void syncAndSave(final Table<T> table, final T unsyncModel) {
+		find(table, unsyncModel.getUuid())
+				.observeOn(Schedulers.io())
+				.subscribe(new Subscriber<T>("Repository.syncAndSave") {
+					@Override
+					public void onNext(T unsyncSource) {
+						if(unsyncSource != null && unsyncSource.getId() != unsyncModel.getId()) {
+							if(unsyncSource.getUpdatedAt() != unsyncModel.getUpdatedAt())
+								warning("Source overwritten", unsyncModel.getData());
+							unsyncModel.setId(unsyncSource.getId());
+						}
 
-		if(unsyncSource != null && unsyncSource.getId() != unsyncModel.getId()) {
-			if(unsyncSource.getUpdatedAt() != unsyncModel.getUpdatedAt())
-				warning("Source overwritten", unsyncModel.getData());
-			unsyncModel.setId(unsyncSource.getId());
-		}
-
-		unsyncModel.setServerId(unsyncModel.getServerId());
-		unsyncModel.setCreatedAt(unsyncModel.getCreatedAt());
-		unsyncModel.setUpdatedAt(unsyncModel.getUpdatedAt());
-		unsyncModel.setSync(true);
-		saveAtDatabase(table, unsyncModel);
+						unsyncModel.setServerId(unsyncModel.getServerId());
+						unsyncModel.setCreatedAt(unsyncModel.getCreatedAt());
+						unsyncModel.setUpdatedAt(unsyncModel.getUpdatedAt());
+						unsyncModel.setSync(true);
+						saveAtDatabase(table, unsyncModel);
+					}
+				});
 	}
 }

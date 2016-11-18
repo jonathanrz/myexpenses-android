@@ -110,10 +110,6 @@ class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder> {
 		return bills != null ? bills.get(position) : null;
 	}
 
-	void addBill(Bill b) {
-		presenter.addBill(b);
-	}
-
 	public void filter(String filter) {
 		presenter.filter(filter);
 		bills = presenter.getBills(false);

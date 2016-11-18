@@ -18,6 +18,7 @@ import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.account.ListAccountActivity;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch;
+import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.source.ListSourceActivity;
 import br.com.jonathanzanella.myexpenses.source.Source;
@@ -227,7 +228,13 @@ public class EditReceiptActivity extends BaseActivity implements ReceiptContract
 		editIncome.setText(NumberFormat.getCurrencyInstance().format(receipt.getIncome() / 100.0));
 		if(receipt.isCredited())
 			editIncome.setTextColor(getResources().getColor(R.color.value_unpaid));
-		editSource.setText(receipt.getSource().getName());
+		receipt.getSource().subscribe(new Subscriber<Source>("EditReceiptActivity.showReceipt") {
+			@Override
+			public void onNext(Source source) {
+				editSource.setText(source.getName());
+			}
+		});
+
 		checkShowInResume.setChecked(receipt.isShowInResume());
 		selectUserView.setSelectedUser(receipt.getUserUuid());
 	}

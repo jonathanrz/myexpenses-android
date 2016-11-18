@@ -17,6 +17,7 @@ import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException;
+import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import br.com.jonathanzanella.myexpenses.source.Source;
 import br.com.jonathanzanella.myexpenses.source.SourceRepository;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
@@ -75,9 +76,14 @@ class ReceiptPresenter {
 			}
 			view.showReceipt(receipt);
 
-			Source source = receipt.getSource();
-			if(source != null)
-				onSourceSelected(source.getUuid());
+			receipt.getSource().subscribe(new Subscriber<Source>("ReceiptPresenter.viewUpdated") {
+				@Override
+				public void onNext(Source source) {
+					ReceiptPresenter.this.source = source;
+					if(source != null)
+						onSourceSelected(source.getUuid());
+				}
+			});
 
 			Account account = receipt.getAccount();
 			if(account != null)
@@ -197,7 +203,13 @@ class ReceiptPresenter {
 		if(extras.containsKey(KEY_RECEIPT_UUID))
 			loadReceipt(extras.getString(KEY_RECEIPT_UUID));
 		if(extras.containsKey(KEY_SOURCE_UUID))
-			source = sourceRepository.find(extras.getString(KEY_SOURCE_UUID));
+			sourceRepository.find(extras.getString(KEY_SOURCE_UUID))
+					.subscribe(new Subscriber<Source>("ReceiptPresenter.storeBundle") {
+						@Override
+						public void onNext(Source source) {
+							ReceiptPresenter.this.source = source;
+						}
+					});
 		if(extras.containsKey(KEY_ACCOUNT_UUID))
 			account = accountRepository.find(extras.getString(KEY_ACCOUNT_UUID));
 	}
@@ -212,9 +224,14 @@ class ReceiptPresenter {
 	}
 
 	void onSourceSelected(String sourceUuid) {
-		source = sourceRepository.find(sourceUuid);
-		if(editView != null)
-			editView.onSourceSelected(source);
+		sourceRepository.find(sourceUuid).subscribe(new Subscriber<Source>("ReceiptPresenter.onSourceSelected") {
+			@Override
+			public void onNext(Source source) {
+				ReceiptPresenter.this.source = source;
+				if(editView != null)
+					editView.onSourceSelected(source);
+			}
+		});
 	}
 
 	void onAccountSelected(String accountUuid) {

@@ -4,6 +4,7 @@ import android.support.annotation.Nullable;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException;
+import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
@@ -38,25 +39,36 @@ class SourcePresenter {
 
 	void viewUpdated(boolean invalidateCache) {
 		if (source != null) {
-			if(invalidateCache)
-				source = repository.find(source.getUuid());
-			if(editView != null) {
-				editView.setTitle(R.string.edit_source_title);
-			} else {
-				String title = view.getContext().getString(R.string.source);
-				view.setTitle(title.concat(" ").concat(source.getName()));
+			if(invalidateCache) {
+				repository.find(source.getUuid()).subscribe(new Subscriber<Source>("SourcePresenter.viewUpdated") {
+					@Override
+					public void onNext(Source source) {
+						SourcePresenter.this.source = source;
+						if (editView != null) {
+							editView.setTitle(R.string.edit_source_title);
+						} else {
+							String title = view.getContext().getString(R.string.source);
+							view.setTitle(title.concat(" ").concat(source.getName()));
+						}
+						view.showSource(source);
+					}
+				});
 			}
-			view.showSource(source);
 		} else {
 			if(editView != null)
 				editView.setTitle(R.string.new_source_title);
 		}
 	}
 
-	void loadSource(String uuid) {
-		source = repository.find(uuid);
-		if(source == null)
-			throw new SourceNotFoundException(uuid);
+	void loadSource(final String uuid) {
+		repository.find(uuid).subscribe(new Subscriber<Source>("SourcePresenter.loadSource") {
+			@Override
+			public void onNext(Source source) {
+				SourcePresenter.this.source = source;
+				if(source == null)
+					throw new SourceNotFoundException(uuid);
+			}
+		});
 	}
 
 	void save() {

@@ -11,6 +11,7 @@ import java.text.NumberFormat;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import br.com.jonathanzanella.myexpenses.source.Source;
 import br.com.jonathanzanella.myexpenses.source.SourceRepository;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
@@ -107,7 +108,13 @@ public class ShowReceiptActivity extends BaseActivity implements ReceiptContract
 		receiptName.setText(receipt.getName());
 		receiptDate.setText(Receipt.sdf.format(receipt.getDate().toDate()));
 		receiptIncome.setText(NumberFormat.getCurrencyInstance().format(receipt.getIncome() / 100.0));
-		receiptSource.setText(receipt.getSource().getName());
+		receipt.getSource().subscribe(new Subscriber<Source>("ShowReceiptActivity.showReceipt") {
+			@Override
+			public void onNext(Source source) {
+				receiptSource.setText(source.getName());
+			}
+		});
+
 		receiptAccount.setText(receipt.getAccount().getName());
 		receiptShowInResume.setText(receipt.isShowInResume() ? R.string.yes : R.string.no);
 	}
