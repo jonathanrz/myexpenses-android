@@ -1,6 +1,5 @@
 package br.com.jonathanzanella.myexpenses.bill;
 
-import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,9 +16,11 @@ import java.util.List;
 import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import lombok.Getter;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by Jonathan Zanella on 26/01/16.
@@ -98,25 +99,20 @@ public class BillMonthlyResumeAdapter extends RecyclerView.Adapter<BillMonthlyRe
 	}
 
 	public void loadDataAsync(final DateTime month, final Runnable runnable) {
-		new AsyncTask<Void, Void, Void>() {
+		new BillRepository(new Repository<Bill>(MyApplication.getContext())).monthly(month)
+				.subscribeOn(AndroidSchedulers.mainThread())
+				.subscribe(new Subscriber<List<Bill>>("BillMonthlyResumeAdapter.loadDataAsync") {
+					@Override
+					public void onNext(List<Bill> bills) {
+						totalValue = 0;
 
-			@Override
-			protected Void doInBackground(Void... voids) {
-				bills = new BillRepository(new Repository<Bill>(MyApplication.getContext())).monthly(month);
-				totalValue = 0;
+						for (Bill bill : bills) {
+							totalValue += bill.getAmount();
+						}
 
-				for (Bill bill : bills) {
-					totalValue += bill.getAmount();
-				}
-				return null;
-			}
-
-			@Override
-			protected void onPostExecute(Void aVoid) {
-				super.onPostExecute(aVoid);
-				notifyDataSetChanged();
-				runnable.run();
-			}
-		}.execute();
+						notifyDataSetChanged();
+						runnable.run();
+					}
+				});
 	}
 }

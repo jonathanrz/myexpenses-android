@@ -106,11 +106,21 @@ public class BillRepositoryTest {
 				.chargeable(card)
 				.build();
 
-		assertThat(billRepository.monthly(firstDayOfJune).size(), Is.is(1));
+		billRepository.monthly(firstDayOfJune).subscribe(new Subscriber<List<Bill>>("BillRepositoryTest") {
+			@Override
+			public void onNext(List<Bill> bills) {
+				assertThat(bills.size(), Is.is(1));
+			}
+		});
 
 		new ExpenseRepository().save(expense);
 
-		assertThat(billRepository.monthly(firstDayOfJune).size(), Is.is(0));
+		billRepository.monthly(firstDayOfJune).subscribe(new Subscriber<List<Bill>>("BillRepositoryTest") {
+			@Override
+			public void onNext(List<Bill> bills) {
+				assertThat(bills.size(), Is.is(0));
+			}
+		});
 	}
 
 	@Test
@@ -125,11 +135,11 @@ public class BillRepositoryTest {
 
 	@Test
 	public void bill_unsync_returns_only_not_synced() throws Exception {
-		Bill billUnsync = new BillBuilder().name("billUnsync").updatedAt(100L).build();
+		Bill billUnsync = new BillBuilder().name("billUnsync").build();
 		billUnsync.sync = false;
 		billRepository.save(billUnsync);
 
-		Bill billSync = new BillBuilder().name("billSync").updatedAt(100L).build();
+		Bill billSync = new BillBuilder().name("billSync").build();
 		billRepository.save(billSync);
 		billRepository.syncAndSave(billSync);
 

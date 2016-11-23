@@ -83,7 +83,7 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 	@Column @Expose
 	ChargeableType chargeableType;
 
-	@Column @Expose
+	@Column @Expose @Getter
 	String billUuid;
 
 	@Column @Getter @Setter @Expose

@@ -25,6 +25,7 @@ import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException;
 import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
+import rx.android.schedulers.AndroidSchedulers;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -33,9 +34,9 @@ import static android.app.Activity.RESULT_OK;
  */
 
 class ExpensePresenter {
-	public static final int REQUEST_EDIT_EXPENSE = 1;
+	private static final int REQUEST_EDIT_EXPENSE = 1;
 	static final String KEY_EXPENSE_UUID = "KeyExpenseUuid";
-	static final String KEY_BILL_UUID = "KeyBillUuid";
+	private static final String KEY_BILL_UUID = "KeyBillUuid";
 
 	private ExpenseContract.View view;
 	private ExpenseContract.EditView editView;
@@ -201,12 +202,14 @@ class ExpensePresenter {
 
 	void onBillSelected(String uuid) {
 		new BillRepository(new Repository<Bill>(MyApplication.getContext())).find(uuid)
+				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(new Subscriber<Bill>("ExpensePresenter.onBillSelected") {
 					@Override
 					public void onNext(Bill bill) {
 						ExpensePresenter.this.bill = bill;
-						if(bill != null)
+						if(bill != null) {
 							editView.onBillSelected(bill);
+						}
 					}
 				});
 	}

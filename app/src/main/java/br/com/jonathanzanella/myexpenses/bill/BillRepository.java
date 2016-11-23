@@ -7,11 +7,13 @@ import org.joda.time.DateTime;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.Callable;
 
 import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.database.Fields;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.database.Where;
+import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
@@ -32,8 +34,14 @@ public class BillRepository {
 		this.repository = repository;
 	}
 
-	public Observable<Bill> find(String uuid) {
-		return repository.find(billTable, uuid);
+	public Observable<Bill> find(final String uuid) {
+		return Observable.fromCallable(new Callable<Bill>() {
+
+			@Override
+			public Bill call() throws Exception {
+				return repository.find(billTable, uuid);
+			}
+		}).observeOn(Schedulers.io());
 	}
 
 	List<Bill> userBills() {
@@ -48,33 +56,37 @@ public class BillRepository {
 		return repository.unsync(billTable);
 	}
 
-	public List<Bill> monthly(DateTime month) {
-//		List<Expense> expenses = Expense.monthly(month);
-		Where query = new Where(Fields.INIT_DATE).lessThanOrEq(month.getMillis())
-				.and(Fields.END_DATE).greaterThanOrEq(month.getMillis())
-				.and(Fields.USER_UUID).eq(Environment.CURRENT_USER_UUID);
-		List<Bill> bills = repository.query(billTable, query);
+	public Observable<List<Bill>> monthly(final DateTime month) {
+		return Observable.fromCallable(new Callable<List<Bill>>() {
+			@Override
+			public List<Bill> call() throws Exception {
+				final List<Expense> expenses = Expense.monthly(month);
+				Where query = new Where(Fields.INIT_DATE).lessThanOrEq(month.getMillis())
+						.and(Fields.END_DATE).greaterThanOrEq(month.getMillis())
+						.and(Fields.USER_UUID).eq(Environment.CURRENT_USER_UUID);
+				List<Bill> bills = repository.query(billTable, query);
+				for (int i = 0; i < bills.size(); i++) {
+					Bill bill = bills.get(i);
+					boolean billAlreadyPaid = false;
+					for (Expense expense : expenses) {
+						Bill b = repository.find(billTable, expense.getBillUuid());
+						if(b != null && b.getUuid().equals(bill.getUuid())) {
+							billAlreadyPaid = true;
+							break;
+						}
+					}
+					if(billAlreadyPaid) {
+						bills.remove(i);
+						i--;
+					}
+				}
 
-//		for (int i = 0; i < bills.size(); i++) {
-//			Bill bill = bills.get(i);
-//			boolean billAlreadyPaid = false;
-//			for (Expense expense : expenses) {
-//				Bill b = expense.getBill();
-//				if(b != null && b.getUuid().equals(bill.getUuid())) {
-//					billAlreadyPaid = true;
-//					break;
-//				}
-//			}
-//			if(billAlreadyPaid) {
-//				bills.remove(i);
-//				i--;
-//			}
-//		}
+				for (Bill bill : bills)
+					bill.month = month;
 
-		for (Bill bill : bills)
-			bill.month = month;
-
-		return bills;
+				return bills;
+			}
+		});
 	}
 
 	public OperationResult save(Bill bill) {

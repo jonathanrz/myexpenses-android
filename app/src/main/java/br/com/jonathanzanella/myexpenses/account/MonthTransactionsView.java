@@ -19,6 +19,7 @@ import br.com.jonathanzanella.myexpenses.bill.Bill;
 import br.com.jonathanzanella.myexpenses.bill.BillRepository;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
+import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import br.com.jonathanzanella.myexpenses.receipt.Receipt;
 import br.com.jonathanzanella.myexpenses.transaction.Transaction;
 import br.com.jonathanzanella.myexpenses.transaction.TransactionAdapter;
@@ -27,6 +28,7 @@ import butterknife.Bind;
 import butterknife.BindDimen;
 import butterknife.BindString;
 import butterknife.ButterKnife;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by jzanella on 7/9/16.
@@ -62,12 +64,21 @@ public class MonthTransactionsView extends BaseView {
 
 	int showBalance(Account account, DateTime month, int balance) {
 		header.setText(monthTransactionsTemplate.concat(" ").concat(sdf.format(month.toDate())));
-		TransactionAdapter adapter = new TransactionAdapter();
+		final TransactionAdapter adapter = new TransactionAdapter();
 		adapter.addTransactions(Receipt.monthly(month, account));
 		List<Expense> expenses = Expense.accountExpenses(account, month);
 		adapter.addTransactions(expenses);
-		if(account.isAccountToPayBills())
-			adapter.addTransactions(new BillRepository(new Repository<Bill>(MyApplication.getContext())).monthly(month));
+		if(account.isAccountToPayBills()) {
+			new BillRepository(new Repository<Bill>(MyApplication.getContext())).monthly(month)
+					.subscribeOn(AndroidSchedulers.mainThread())
+					.subscribe(new Subscriber<List<Bill>>("MonthTransactionsView.showBalance") {
+						@Override
+						public void onNext(List<Bill> bills) {
+							adapter.addTransactions(bills);
+							adapter.notifyDataSetChanged();
+						}
+					});
+		}
 
 		list.setAdapter(adapter);
 		list.setHasFixedSize(true);

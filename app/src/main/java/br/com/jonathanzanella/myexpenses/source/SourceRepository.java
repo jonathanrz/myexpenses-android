@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.Callable;
 
 import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.database.Repository;
@@ -11,6 +12,7 @@ import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 import rx.Observable;
+import rx.schedulers.Schedulers;
 
 import static br.com.jonathanzanella.myexpenses.log.Log.warning;
 
@@ -41,8 +43,14 @@ public class SourceRepository {
 		return result;
 	}
 
-	public Observable<Source> find(String uuid) {
-		return repository.find(sourceTable, uuid);
+	public Observable<Source> find(final String uuid) {
+		return Observable.fromCallable(new Callable<Source>() {
+			@Override
+			public Source call() throws Exception {
+				return repository.find(sourceTable, uuid);
+			}
+		})
+		.observeOn(Schedulers.io());
 	}
 
 	public long greaterUpdatedAt() {
