@@ -5,14 +5,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import br.com.jonathanzanella.myexpenses.database.Fields;
+import br.com.jonathanzanella.myexpenses.database.SqlTypes;
 import br.com.jonathanzanella.myexpenses.database.Table;
-
-import static br.com.jonathanzanella.myexpenses.database.SqlTypes.DATE;
-import static br.com.jonathanzanella.myexpenses.database.SqlTypes.INT;
-import static br.com.jonathanzanella.myexpenses.database.SqlTypes.PRIMARY_KEY;
-import static br.com.jonathanzanella.myexpenses.database.SqlTypes.TEXT_NOT_NULL;
-import static br.com.jonathanzanella.myexpenses.database.SqlTypes.TEXT_UNIQUE;
-import static br.com.jonathanzanella.myexpenses.database.SqlTypes.TEXT_UNIQUE_NOT_NULL;
 
 /**
  * Created by jzanella on 11/1/16.
@@ -38,14 +32,14 @@ public final class SourceTable implements Table<Source> {
 
 	private String createTableSql() {
 		return "CREATE TABLE " + getName() + " (" +
-				Fields.ID + PRIMARY_KEY + "," +
-				Fields.NAME + TEXT_UNIQUE_NOT_NULL + "," +
-				Fields.UUID + TEXT_UNIQUE_NOT_NULL + "," +
-				Fields.USER_UUID + TEXT_NOT_NULL + "," +
-				Fields.SERVER_ID + TEXT_UNIQUE + "," +
-				Fields.CREATED_AT + DATE + "," +
-				Fields.UPDATED_AT + DATE + "," +
-				Fields.SYNC + INT + " )";
+				Fields.ID + SqlTypes.PRIMARY_KEY + "," +
+				Fields.NAME + SqlTypes.TEXT_UNIQUE_NOT_NULL + "," +
+				Fields.UUID + SqlTypes.TEXT_UNIQUE_NOT_NULL + "," +
+				Fields.USER_UUID + SqlTypes.TEXT_NOT_NULL + "," +
+				Fields.SERVER_ID + SqlTypes.TEXT_UNIQUE + "," +
+				Fields.CREATED_AT + SqlTypes.DATE + "," +
+				Fields.UPDATED_AT + SqlTypes.DATE + "," +
+				Fields.SYNC + SqlTypes.INT + " )";
 	}
 
 	private String dropTableSql() {
