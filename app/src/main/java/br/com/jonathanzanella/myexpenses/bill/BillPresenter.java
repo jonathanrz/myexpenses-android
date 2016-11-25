@@ -2,13 +2,13 @@ package br.com.jonathanzanella.myexpenses.bill;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
-import android.support.test.espresso.idling.CountingIdlingResource;
 import android.widget.DatePicker;
 
 import org.joda.time.DateTime;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException;
+import br.com.jonathanzanella.myexpenses.helpers.CountingIdlingResource;
 import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
@@ -20,13 +20,15 @@ import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 class BillPresenter {
 	private BillContract.View view;
 	private BillContract.EditView editView;
-	private BillRepository repository;
+	private final BillRepository repository;
 	private Bill bill;
 	private DateTime initDate;
 	private DateTime endDate;
+	private final CountingIdlingResource idlingResource;
 
-	BillPresenter(BillRepository repository) {
+	BillPresenter(BillRepository repository, CountingIdlingResource idlingResource) {
 		this.repository = repository;
+		this.idlingResource = idlingResource;
 	}
 
 	void attachView(BillContract.View view) {
@@ -109,16 +111,13 @@ class BillPresenter {
 	}
 
 	void loadBill(final String uuid) {
-		final CountingIdlingResource idlingResource = new CountingIdlingResource("BillPresenter.loadBill");
 		idlingResource.increment();
 		repository.find(uuid).subscribe(new Subscriber<Bill>("BillPresenter.loadBill") {
 			@Override
 			public void onNext(Bill bill) {
 				BillPresenter.this.bill = bill;
-				if(bill == null)
-					throw new BillNotFoundException(uuid);
-
-				updateView();
+				if(bill != null)
+					updateView();
 				idlingResource.decrement();
 			}
 		});

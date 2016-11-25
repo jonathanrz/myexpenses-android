@@ -12,6 +12,7 @@ import java.text.NumberFormat;
 import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.helpers.CountingIdlingResource;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
 
@@ -35,7 +36,7 @@ public class ShowBillActivity extends BaseActivity implements BillContract.View 
 	private BillPresenter presenter;
 
 	public ShowBillActivity() {
-		presenter = new BillPresenter(new BillRepository(new Repository<Bill>(MyApplication.getContext())));
+		presenter = new BillPresenter(new BillRepository(new Repository<Bill>(MyApplication.getContext())), new CountingIdlingResource("ShowBillActivity"));
 	}
 
 	@Override

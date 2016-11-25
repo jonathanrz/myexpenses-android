@@ -1,5 +1,6 @@
 package br.com.jonathanzanella.myexpenses.bill;
 
+import android.support.annotation.Nullable;
 import android.support.test.espresso.idling.CountingIdlingResource;
 
 import org.apache.commons.lang3.StringUtils;
@@ -38,7 +39,7 @@ public class BillRepository {
 		return Observable.fromCallable(new Callable<Bill>() {
 
 			@Override
-			public Bill call() throws Exception {
+			public @Nullable Bill call() throws Exception {
 				return repository.find(billTable, uuid);
 			}
 		}).observeOn(Schedulers.io());

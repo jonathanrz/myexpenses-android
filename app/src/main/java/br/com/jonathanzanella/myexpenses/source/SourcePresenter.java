@@ -37,23 +37,15 @@ class SourcePresenter {
 		this.editView = null;
 	}
 
-	void viewUpdated(boolean invalidateCache) {
+	void viewUpdated() {
 		if (source != null) {
-			if(invalidateCache) {
-				repository.find(source.getUuid()).subscribe(new Subscriber<Source>("SourcePresenter.viewUpdated") {
-					@Override
-					public void onNext(Source source) {
-						SourcePresenter.this.source = source;
-						if (editView != null) {
-							editView.setTitle(R.string.edit_source_title);
-						} else {
-							String title = view.getContext().getString(R.string.source);
-							view.setTitle(title.concat(" ").concat(source.getName()));
-						}
-						view.showSource(source);
-					}
-				});
+			if (editView != null) {
+				editView.setTitle(R.string.edit_source_title);
+			} else {
+				String title = view.getContext().getString(R.string.source);
+				view.setTitle(title.concat(" ").concat(source.getName()));
 			}
+			view.showSource(source);
 		} else {
 			if(editView != null)
 				editView.setTitle(R.string.new_source_title);
@@ -65,8 +57,8 @@ class SourcePresenter {
 			@Override
 			public void onNext(Source source) {
 				SourcePresenter.this.source = source;
-				if(source == null)
-					throw new SourceNotFoundException(uuid);
+				if(source != null)
+					viewUpdated();
 			}
 		});
 	}

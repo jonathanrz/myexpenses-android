@@ -44,7 +44,7 @@ public class EditSourceActivity extends BaseActivity implements SourceContract.E
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
-		presenter.viewUpdated(false);
+		presenter.viewUpdated();
 	}
 
 	@Override

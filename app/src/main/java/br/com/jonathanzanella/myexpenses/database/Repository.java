@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ public class Repository <T extends UnsyncModel> {
 		this.databaseHelper = new DatabaseHelper(ctx);
 	}
 
-	public T find(final Table<T> table, final String uuid) {
+	public @Nullable T find(final Table<T> table, final String uuid) {
 		if(uuid == null)
 			return null;
 		SQLiteDatabase db = databaseHelper.getReadableDatabase();

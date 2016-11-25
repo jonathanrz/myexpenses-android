@@ -14,6 +14,7 @@ import java.text.NumberFormat;
 import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.helpers.CountingIdlingResource;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch;
 import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.user.SelectUserView;
@@ -44,7 +45,7 @@ public class EditBillActivity extends BaseActivity implements BillContract.EditV
 	private BillPresenter presenter;
 
 	public EditBillActivity() {
-		presenter = new BillPresenter(new BillRepository(new Repository<Bill>(MyApplication.getContext())));
+		presenter = new BillPresenter(new BillRepository(new Repository<Bill>(MyApplication.getContext())), new CountingIdlingResource("EditBillActivity"));
 	}
 
 	@Override

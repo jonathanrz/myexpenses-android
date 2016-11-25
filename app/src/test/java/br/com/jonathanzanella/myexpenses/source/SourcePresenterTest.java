@@ -4,8 +4,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import java.util.concurrent.Callable;
+
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
+import rx.Observable;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.times;
@@ -32,13 +35,6 @@ public class SourcePresenterTest {
 		presenter.attachView(view);
 	}
 
-	@Test(expected = SourceNotFoundException.class)
-	public void load_empty_source_throws_not_found_exception() {
-		when(repository.find(UUID)).thenReturn(null);
-
-		presenter.loadSource(UUID);
-	}
-
 	@Test
 	public void save_gets_data_from_screen_and_save_to_repository() {
 		when(repository.save(any(Source.class))).thenReturn(new OperationResult());
@@ -60,5 +56,18 @@ public class SourcePresenterTest {
 		presenter.save();
 
 		verify(view, times(1)).showError(ValidationError.NAME);
+	}
+
+	@Test
+	public void empty_source_does_not_not_call_show_source() throws Exception {
+		when(repository.find(UUID)).thenReturn(Observable.fromCallable(new Callable<Source>() {
+			@Override
+			public Source call() throws Exception {
+				return null;
+			}
+		}));
+
+		presenter.loadSource(UUID);
+		verify(view, times(0)).showSource(any(Source.class));
 	}
 }
