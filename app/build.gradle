@@ -35,6 +35,7 @@ android {
         versionCode rootProject.ext.gitCommitCount()
         versionName "0.4.3." + rootProject.ext.getVersionName()
         testInstrumentationRunner "br.com.jonathanzanella.myexpenses.MyTestRunner"
+        multiDexEnabled true
 
         jackOptions {
             enabled false
@@ -140,6 +141,11 @@ dependencies {
     compile "org.apache.commons:commons-lang$rootProject.commonsLangVersion"
     compile "com.timehop.stickyheadersrecyclerview:library:$rootProject.stickyHeadersVersion"
     compile "com.android.support.test.espresso:espresso-idling-resource:$rootProject.ext.espressoVersion"
+    compile "com.android.support:multidex:$rootProject.ext.multiDex"
+
+    //Kotlin
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 
     // Dependencies for local unit tests
     testCompile "junit:junit:$rootProject.junitVersion"
@@ -147,6 +153,7 @@ dependencies {
     testCompile "org.hamcrest:hamcrest-all:$rootProject.ext.hamcrestVersion"
     testCompile "org.powermock:powermock-module-junit4:$rootProject.ext.powerMockito"
     testCompile "org.powermock:powermock-api-mockito:$rootProject.ext.powerMockito"
+    testCompile "org.javassist:javassist:$rootProject.ext.javassist"
 
     // Android Testing Support Library's runner and rules
     androidTestCompile "com.android.support.test:runner:$rootProject.ext.runnerVersion"
@@ -165,7 +172,6 @@ dependencies {
     }
     androidTestCompile "com.android.support.test.espresso:espresso-intents:$rootProject.ext.espressoVersion"
     androidTestCompile "com.android.support.test.uiautomator:uiautomator-v18:$rootProject.ext.uiAutomatorVersion"
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
 
 configurations.all {
@@ -181,11 +187,6 @@ configurations.compile.dependencies.each { compileDependency ->
     }
 }
 
-task(runTests, dependsOn: ['uninstallDebug', 'assembleDebug', 'testDebugUnitTest', 'connectedDebugAndroidTest']) {}
-
-task(runTestsWithCoverage, type: Exec, dependsOn: ['runTests', 'jacocoTestReport', 'connectedCheck']) {
-    commandLine './codecov.sh'
-}
 repositories {
     mavenCentral()
 }

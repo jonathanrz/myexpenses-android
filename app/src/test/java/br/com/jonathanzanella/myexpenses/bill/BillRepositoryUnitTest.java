@@ -4,9 +4,12 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
 import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.testRunner.KotlinTestRunner;
+import br.com.jonathanzanella.myexpenses.testRunner.OpenedPackages;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
@@ -18,13 +21,15 @@ import static org.mockito.MockitoAnnotations.initMocks;
 /**
  * Created by jzanella on 8/27/16.
  */
+@RunWith(KotlinTestRunner.class)
+@OpenedPackages("br.com.jonathanzanella.myexpenses.database")
 public class BillRepositoryUnitTest {
 	@Mock
-	Repository<Bill> repository;
-	private BillRepository billRepository = new BillRepository(repository);
-
+	private Repository<Bill> repository;
 	@Mock
 	private Bill bill;
+
+	private BillRepository billRepository = new BillRepository(repository);
 
 	@Before
 	public void setUp() throws Exception {
