@@ -35,7 +35,6 @@ android {
         versionCode rootProject.ext.gitCommitCount()
         versionName "0.4.3." + rootProject.ext.getVersionName()
         testInstrumentationRunner "br.com.jonathanzanella.myexpenses.MyTestRunner"
-        multiDexEnabled true
 
         jackOptions {
             enabled false
@@ -141,11 +140,9 @@ dependencies {
     compile "org.apache.commons:commons-lang$rootProject.commonsLangVersion"
     compile "com.timehop.stickyheadersrecyclerview:library:$rootProject.stickyHeadersVersion"
     compile "com.android.support.test.espresso:espresso-idling-resource:$rootProject.ext.espressoVersion"
-    compile "com.android.support:multidex:$rootProject.ext.multiDex"
 
     //Kotlin
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 
     // Dependencies for local unit tests
     testCompile "junit:junit:$rootProject.junitVersion"

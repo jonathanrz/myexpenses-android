@@ -9,7 +9,7 @@ import br.com.jonathanzanella.myexpenses.sync.UnsyncModel
 import lombok.Getter
 import java.util.*
 
-class Repository<T : UnsyncModel>(ctx: Context) {
+open class Repository<T : UnsyncModel>(ctx: Context) {
     @Getter
     val databaseHelper: DatabaseHelper
 
