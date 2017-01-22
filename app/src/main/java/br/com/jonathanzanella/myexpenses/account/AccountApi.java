@@ -7,6 +7,8 @@ import com.raizlabs.android.dbflow.StringUtils;
 import java.io.IOException;
 import java.util.List;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
+import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.server.Server;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
@@ -20,6 +22,13 @@ import retrofit2.Response;
 public class AccountApi implements UnsyncModelApi<Account> {
 	private static final String LOG_TAG = AccountApi.class.getSimpleName();
 	private AccountInterface accountInterface;
+	private AccountRepository accountRepository;
+
+	private AccountRepository getRepository() {
+		if(accountRepository == null)
+			accountRepository = new AccountRepository(new Repository<Account>(MyApplication.getContext()));
+		return accountRepository;
+	}
 
 	private AccountInterface getInterface() {
 		if(accountInterface == null)
@@ -29,7 +38,7 @@ public class AccountApi implements UnsyncModelApi<Account> {
 
 	@Override
 	public @Nullable List<Account> index() {
-		Call<List<Account>> caller = getInterface().index(Account.greaterUpdatedAt());
+		Call<List<Account>> caller = getInterface().index(getRepository().greaterUpdatedAt());
 
 		try {
 			Response<List<Account>> response = caller.execute();
@@ -71,11 +80,11 @@ public class AccountApi implements UnsyncModelApi<Account> {
 
 	@Override
 	public List<Account> unsyncModels() {
-		return Account.unsync();
+		return getRepository().unsync();
 	}
 
 	@Override
 	public long greaterUpdatedAt() {
-		return Account.greaterUpdatedAt();
+		return getRepository().greaterUpdatedAt();
 	}
 }

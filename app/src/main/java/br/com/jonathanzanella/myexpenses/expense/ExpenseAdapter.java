@@ -18,10 +18,12 @@ import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.bill.Bill;
+import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
 import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import br.com.jonathanzanella.myexpenses.receipt.Receipt;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by Jonathan Zanella on 26/01/16.
@@ -62,7 +64,16 @@ class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHolder> {
 			name.setText(expense.getName());
 			date.setText(Receipt.sdf.format(expense.getDate().toDate()));
 			value.setText(NumberFormat.getCurrencyInstance().format(expense.getValue() / 100.0));
-			chargeable.setText(expense.getChargeable().getName());
+			expense.getChargeable()
+					.observeOn(AndroidSchedulers.mainThread())
+					.subscribe(new Subscriber<Chargeable>("ExpenseAdapter.setData") {
+
+						@Override
+						public void onNext(Chargeable c) {
+							chargeable.setText(c.getName());
+						}
+					});
+
 			chargeNextMonth.setVisibility(expense.isChargeNextMonth() ? View.VISIBLE : View.GONE);
 			expense.getBill().subscribe(new Subscriber<Bill>("ExpenseAdapter.setData") {
 				@Override

@@ -13,9 +13,12 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.account.Account;
+import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import lombok.Setter;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by Jonathan Zanella onCard 26/01/16.
@@ -48,7 +51,15 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
 
 		public void setData(Card card) {
 			name.setText(card.getName());
-			account.setText(card.getAccount().getName());
+			card.getAccount()
+					.observeOn(AndroidSchedulers.mainThread())
+					.subscribe(new Subscriber<Account>("CardAdapter.setData") {
+						@Override
+						public void onNext(Account a) {
+							account.setText(a.getName());
+						}
+					});
+
 			switch (card.getType()) {
 				case CREDIT:
 					type.setText(R.string.credit);

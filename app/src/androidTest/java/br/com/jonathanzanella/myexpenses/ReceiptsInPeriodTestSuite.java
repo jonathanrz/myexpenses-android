@@ -13,6 +13,7 @@ import org.junit.runner.RunWith;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.account.Account;
+import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.helpers.FlowManagerHelper;
 import br.com.jonathanzanella.myexpenses.receipt.Receipt;
@@ -24,22 +25,23 @@ import static org.junit.Assert.assertThat;
 
 @RunWith(AndroidJUnit4.class)
 public class ReceiptsInPeriodTestSuite {
-	DateTime firstDayOfJune = new DateTime(2016, 6, 1, 0, 0, 0, 0);
-	DateTime lastDayOfJune = firstDayOfJune.dayOfMonth().withMaximumValue();
-	DateTime firstDayOfJuly = firstDayOfJune.plusMonths(1);
+	private DateTime firstDayOfJune = new DateTime(2016, 6, 1, 0, 0, 0, 0);
+	private DateTime lastDayOfJune = firstDayOfJune.dayOfMonth().withMaximumValue();
+	private DateTime firstDayOfJuly = firstDayOfJune.plusMonths(1);
 
-	Account account = new Account();
-	Source source = new Source();
+	private Account account = new Account();
+	private Source source = new Source();
 
-	SourceRepository sourceRepository = new SourceRepository(new Repository<Source>(getContext()));
+	private SourceRepository sourceRepository = new SourceRepository(new Repository<Source>(getContext()));
+	private AccountRepository accountRepository = new AccountRepository(new Repository<Account>(getContext()));
 
 	@Before
 	public void setUp() throws Exception {
 		account.setName("Account");
 		account.setUserUuid(Environment.CURRENT_USER_UUID);
-		account.save();
+		accountRepository.save(account);
 
-		source.setName("Account");
+		source.setName("Source");
 		source.setUserUuid(Environment.CURRENT_USER_UUID);
 		sourceRepository.save(source);
 	}

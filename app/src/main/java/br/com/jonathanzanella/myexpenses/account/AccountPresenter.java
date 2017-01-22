@@ -4,8 +4,11 @@ import android.support.annotation.Nullable;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException;
+import br.com.jonathanzanella.myexpenses.helpers.CountingIdlingResource;
+import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by jzanella on 8/27/16.
@@ -17,9 +20,11 @@ class AccountPresenter {
 	private AccountContract.EditView editView;
 	private AccountRepository repository;
 	private Account account;
+	private CountingIdlingResource idlingResource;
 
-	AccountPresenter(AccountRepository repository) {
+	AccountPresenter(AccountRepository repository, CountingIdlingResource idlingResource) {
 		this.repository = repository;
+		this.idlingResource = idlingResource;
 	}
 
 	void attachView(AccountContract.View view) {
@@ -39,24 +44,35 @@ class AccountPresenter {
 	void viewUpdated(boolean invalidateCache) {
 		if (account != null) {
 			if(invalidateCache)
-				account = repository.find(account.getUuid());
-			if(editView != null) {
-				editView.setTitle(R.string.edit_account_title);
-			} else {
-				String title = view.getContext().getString(R.string.account);
-				view.setTitle(title.concat(" ").concat(account.getName()));
-			}
-			view.showAccount(account);
+				loadAccount(account.getUuid());
 		} else {
 			if(editView != null)
 				editView.setTitle(R.string.new_account_title);
 		}
 	}
 
+	private void updateView() {
+		if(editView != null) {
+			editView.setTitle(R.string.edit_account_title);
+		} else {
+			String title = view.getContext().getString(R.string.account);
+			view.setTitle(title.concat(" ").concat(account.getName()));
+		}
+		view.showAccount(account);
+	}
+
 	void loadAccount(String uuid) {
-		account = repository.find(uuid);
-		if(account == null)
-			throw new AccountNotFoundException(uuid);
+		repository.find(uuid)
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(new Subscriber<Account>("AccountPresenter.loadAccount") {
+					@Override
+					public void onNext(Account account) {
+						AccountPresenter.this.account = account;
+						if(account != null)
+							updateView();
+						idlingResource.decrement();
+					}
+				});
 	}
 
 	void save() {

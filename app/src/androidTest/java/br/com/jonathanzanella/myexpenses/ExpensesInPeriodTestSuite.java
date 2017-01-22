@@ -13,6 +13,8 @@ import org.junit.runner.RunWith;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.account.Account;
+import br.com.jonathanzanella.myexpenses.account.AccountRepository;
+import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.helpers.FlowManagerHelper;
 import br.com.jonathanzanella.myexpenses.overview.WeeklyPagerAdapter;
@@ -22,17 +24,18 @@ import static org.junit.Assert.assertThat;
 
 @RunWith(AndroidJUnit4.class)
 public class ExpensesInPeriodTestSuite {
-	DateTime firstDayOfJune = new DateTime(2016, 6, 1, 0, 0, 0, 0);
-	DateTime lastDayOfJune = firstDayOfJune.dayOfMonth().withMaximumValue();
-	DateTime firstDayOfJuly = firstDayOfJune.plusMonths(1);
+	private AccountRepository accountRepository = new AccountRepository(new Repository<Account>(MyApplication.getContext()));
+	private DateTime firstDayOfJune = new DateTime(2016, 6, 1, 0, 0, 0, 0);
+	private DateTime lastDayOfJune = firstDayOfJune.dayOfMonth().withMaximumValue();
+	private DateTime firstDayOfJuly = firstDayOfJune.plusMonths(1);
 
-	Account account = new Account();
+	private Account account = new Account();
 
 	@Before
 	public void setUp() throws Exception {
 		account.setName("Account");
 		account.setUserUuid(Environment.CURRENT_USER_UUID);
-		account.save();
+		accountRepository.save(account);
 	}
 
 	@After

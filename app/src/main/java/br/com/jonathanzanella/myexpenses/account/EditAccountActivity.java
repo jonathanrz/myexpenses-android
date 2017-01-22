@@ -9,7 +9,10 @@ import android.widget.EditText;
 
 import org.apache.commons.lang3.StringUtils;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.helpers.CountingIdlingResource;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch;
 import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.user.SelectUserView;
@@ -38,7 +41,7 @@ public class EditAccountActivity extends BaseActivity implements AccountContract
 	@Bind(R.id.act_edit_account_user)
 	SelectUserView selectUserView;
 
-	private AccountPresenter presenter = new AccountPresenter(new AccountRepository());
+	private AccountPresenter presenter = new AccountPresenter(new AccountRepository(new Repository<Account>(MyApplication.getContext())), new CountingIdlingResource("EditAccountActivity"));
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

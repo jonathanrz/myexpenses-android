@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.Callable;
 
 import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.MyApplication;
@@ -36,6 +37,7 @@ import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType;
 import br.com.jonathanzanella.myexpenses.database.MyDatabase;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.helpers.DateHelper;
+import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import br.com.jonathanzanella.myexpenses.helpers.converter.DateTimeConverter;
 import br.com.jonathanzanella.myexpenses.overview.WeeklyPagerAdapter;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
@@ -45,7 +47,10 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import rx.Observable;
+import rx.schedulers.Schedulers;
 
+import static br.com.jonathanzanella.myexpenses.chargeable.ChargeableType.CREDIT_CARD;
+import static br.com.jonathanzanella.myexpenses.chargeable.ChargeableType.DEBIT_CARD;
 import static br.com.jonathanzanella.myexpenses.log.Log.warning;
 
 /**
@@ -55,6 +60,8 @@ import static br.com.jonathanzanella.myexpenses.log.Log.warning;
 @EqualsAndHashCode(callSuper = false, of = {"id", "uuid", "name"})
 public class Expense extends BaseModel implements Transaction, UnsyncModel {
 	private static final ExpenseApi expenseApi = new ExpenseApi();
+	private static AccountRepository accountRepository;
+	private static CardRepository cardRepository;
 
 	@Column
 	@PrimaryKey(autoincrement = true) @Setter @Getter
@@ -176,7 +183,7 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 
 			expenses.addAll(initQuery()
 					.where(Expense_Table.date.between(initOfMonth).and(endOfMonth))
-					.and(Expense_Table.chargeableType.eq(ChargeableType.CREDIT_CARD))
+					.and(Expense_Table.chargeableType.eq(CREDIT_CARD))
 					.and(Expense_Table.chargeNextMonth.eq(true))
 					.and(Expense_Table.ignoreInOverview.eq(false))
 					.and(Expense_Table.userUuid.is(Environment.CURRENT_USER_UUID))
@@ -207,7 +214,7 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 
 		List<Expense> expenses = initQuery()
 				.where(Expense_Table.date.between(initOfMonth).and(endOfMonth))
-				.and(Expense_Table.chargeableType.notEq(ChargeableType.CREDIT_CARD))
+				.and(Expense_Table.chargeableType.notEq(CREDIT_CARD))
 				.and(Expense_Table.chargeNextMonth.eq(true))
 				.and(Expense_Table.ignoreInResume.eq(false))
 				.and(Expense_Table.userUuid.is(Environment.CURRENT_USER_UUID))
@@ -220,7 +227,7 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 
 		expenses.addAll(initQuery()
 				.where(Expense_Table.date.between(initOfMonth).and(endOfMonth))
-				.and(Expense_Table.chargeableType.notEq(ChargeableType.CREDIT_CARD))
+				.and(Expense_Table.chargeableType.notEq(CREDIT_CARD))
 				.and(Expense_Table.chargeNextMonth.eq(false))
 				.and(Expense_Table.ignoreInResume.eq(false))
 				.and(Expense_Table.userUuid.is(Environment.CURRENT_USER_UUID))
@@ -264,7 +271,7 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 		if(card != null) {
 			expenses.addAll(initQuery()
 					.where(Expense_Table.date.between(initOfMonth).and(endOfMonth))
-					.and(Expense_Table.chargeableType.eq(ChargeableType.DEBIT_CARD))
+					.and(Expense_Table.chargeableType.eq(DEBIT_CARD))
 					.and(Expense_Table.chargeableUuid.eq(card.getUuid()))
 					.and(Expense_Table.chargeNextMonth.eq(true))
 					.and(Expense_Table.removed.is(false))
@@ -285,7 +292,7 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 		if(card != null) {
 			expenses.addAll(initQuery()
 					.where(Expense_Table.date.between(initOfMonth).and(endOfMonth))
-					.and(Expense_Table.chargeableType.eq(ChargeableType.DEBIT_CARD))
+					.and(Expense_Table.chargeableType.eq(DEBIT_CARD))
 					.and(Expense_Table.chargeableUuid.eq(card.getUuid()))
 					.and(Expense_Table.chargeNextMonth.eq(false))
 					.and(Expense_Table.removed.is(false))
@@ -345,16 +352,32 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 		chargeableUuid = chargeable.getUuid();
 	}
 
-	public Chargeable getChargeable() {
+	public Observable<? extends Chargeable> getChargeable() {
 		return Expense.findChargeable(chargeableType, chargeableUuid);
 	}
 
-	public void uncharge() {
+	void uncharge() {
 		if(charged) {
-			Chargeable c = getChargeable();
-			c.credit(getValue());
-			c.save();
-			charged = false;
+			getChargeable()
+					.observeOn(Schedulers.io())
+					.subscribe(new Subscriber<Chargeable>("Expense.uncharge") {
+
+						@Override
+						public void onNext(Chargeable chargeable) {
+							chargeable.credit(getValue());
+							switch (chargeable.getChargeableType()) {
+								case ACCOUNT:
+									getAccountRepository().save((Account) chargeable);
+								case CREDIT_CARD:
+								case DEBIT_CARD:
+									if(chargeable instanceof Card)
+										getCardRepository().save((Card) chargeable);
+									else
+										throw new UnsupportedOperationException("Chargeable should be a card");
+							}
+							charged = false;
+						}
+					});
 		}
 	}
 
@@ -366,16 +389,21 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 		return new BillRepository(new Repository<Bill>(MyApplication.getContext())).find(billUuid);
 	}
 
-	static Chargeable findChargeable(ChargeableType type, String uuid) {
+	static Observable<? extends Chargeable> findChargeable(ChargeableType type, final String uuid) {
 		if(type == null || uuid == null)
 			return null;
 
 		switch (type) {
 			case ACCOUNT:
-				return new AccountRepository().find(uuid);
+				return getAccountRepository().find(uuid);
 			case DEBIT_CARD:
 			case CREDIT_CARD:
-				return new CardRepository().find(uuid);
+				Observable.fromCallable(new Callable<Card>() {
+					@Override
+					public Card call() throws Exception {
+						return getCardRepository().find(uuid);
+					}
+				});
 		}
 		return null;
 	}
@@ -386,19 +414,19 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 		date = date.plusMonths(1);
 	}
 
-	public boolean isShowInOverview() {
+	boolean isShowInOverview() {
 		return !ignoreInOverview;
 	}
 
-	public boolean isShowInResume() {
+	boolean isShowInResume() {
 		return !ignoreInResume;
 	}
 
-	public void showInOverview(boolean b) {
+	void showInOverview(boolean b) {
 		ignoreInOverview = !b;
 	}
 
-	public void showInResume(boolean b) {
+	void showInResume(boolean b) {
 		ignoreInResume = !b;
 	}
 
@@ -417,11 +445,27 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 	}
 
 	public void debit() {
-		Chargeable c = getChargeable();
-		c.debit(getValue());
-		c.save();
-		setCharged(true);
-		save();
+		getChargeable()
+				.observeOn(Schedulers.io())
+				.subscribe(new Subscriber<Chargeable>("Expense.debit") {
+
+					@Override
+					public void onNext(Chargeable chargeable) {
+						chargeable.debit(getValue());
+						switch (chargeable.getChargeableType()) {
+							case ACCOUNT:
+								getAccountRepository().save((Account) chargeable);
+								break;
+							case DEBIT_CARD:
+							case CREDIT_CARD:
+								getCardRepository().save((Card) chargeable);
+								break;
+						}
+						setCharged(true);
+						save();
+					}
+				});
+
 	}
 
 	public String getIncomeFormatted() {
@@ -475,5 +519,17 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 	@Override
 	public UnsyncModelApi getServerApi() {
 		return expenseApi;
+	}
+
+	private static AccountRepository getAccountRepository() {
+		if(accountRepository == null)
+			accountRepository = new AccountRepository(new Repository<Account>(MyApplication.getContext()));
+		return accountRepository;
+	}
+
+	private static CardRepository getCardRepository() {
+		if(cardRepository == null)
+			cardRepository = new CardRepository();
+		return cardRepository;
 	}
 }

@@ -15,8 +15,10 @@ import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.account.ListAccountActivity;
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
+import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
+import rx.android.schedulers.AndroidSchedulers;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -83,7 +85,7 @@ class CardPresenter {
 		if(editView == null)
 			throw new InvalidMethodCallException("save", getClass().toString(), "View should be a Edit View");
 		if(card == null)
-			card = new Card();
+			card = new Card(accountRepository);
 		card = editView.fillCard(card);
 		if(account != null)
 			card.setAccount(account);
@@ -110,9 +112,16 @@ class CardPresenter {
 		switch (requestCode) {
 			case REQUEST_SELECT_ACCOUNT: {
 				if(resultCode == RESULT_OK) {
-					account = accountRepository.find(data.getStringExtra(ListAccountActivity.Companion.getKEY_ACCOUNT_SELECTED_UUID()));
-					if(account != null && editView != null)
-						editView.onAccountSelected(account);
+					accountRepository
+							.find(data.getStringExtra(ListAccountActivity.Companion.getKEY_ACCOUNT_SELECTED_UUID()))
+							.observeOn(AndroidSchedulers.mainThread())
+							.subscribe(new Subscriber<Account>("CardPresenter.onActivityResult") {
+								@Override
+								public void onNext(Account account) {
+									if(account != null && editView != null)
+										editView.onAccountSelected(account);
+								}
+							});
 				}
 				break;
 			}
@@ -134,7 +143,8 @@ class CardPresenter {
 		Expense e = new Expense();
 		e.setName(MyApplication.getContext().getString(R.string.invoice) + " " + card.getName());
 		e.setValue(totalExpense);
-		e.setChargeable(card.getAccount());
+//		TODO: move this to a repository to execute the find without an Observable
+//		e.setChargeable(card.getAccount());
 		e.save();
 
 		return e;

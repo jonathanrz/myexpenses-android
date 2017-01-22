@@ -16,10 +16,12 @@ import java.text.NumberFormat;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import br.com.jonathanzanella.myexpenses.source.Source;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by Jonathan Zanella on 26/01/16.
@@ -65,7 +67,15 @@ class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ViewHolder> {
 				}
 			});
 
-			account.setText(receipt.getAccount().getName());
+			receipt.getAccount()
+					.observeOn(AndroidSchedulers.mainThread())
+					.subscribe(new Subscriber<Account>("ReceiptAdapter.setData") {
+						@Override
+						public void onNext(Account a) {
+							account.setText(a.getName());
+						}
+					});
+
 			showInResume.setText(receipt.isShowInResume() ? R.string.yes : R.string.no);
 		}
 

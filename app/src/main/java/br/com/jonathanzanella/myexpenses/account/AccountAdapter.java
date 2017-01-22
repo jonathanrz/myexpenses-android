@@ -14,7 +14,9 @@ import org.joda.time.DateTime;
 import java.lang.ref.WeakReference;
 import java.text.NumberFormat;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.database.Repository;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import lombok.Setter;
@@ -75,7 +77,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
 	}
 
 	public AccountAdapter() {
-		presenter = new AccountAdapterPresenter(this, new AccountRepository());
+		presenter = new AccountAdapterPresenter(this, new AccountRepository(new Repository<Account>(MyApplication.getContext())));
 	}
 
 	public void refreshData() {

@@ -10,5 +10,4 @@ public interface Chargeable {
 	boolean canBePaidNextMonth();
 	void debit(int value);
 	void credit(int value);
-	void save();
 }

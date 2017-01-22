@@ -17,13 +17,16 @@ import java.util.Locale;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.card.CreditCardInvoiceActivity;
+import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ShowExpenseActivity;
+import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import br.com.jonathanzanella.myexpenses.helpers.TransactionsHelper;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import lombok.Getter;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by Jonathan Zanella on 26/01/16.
@@ -72,8 +75,17 @@ class ExpenseMonthlyResumeAdapter extends RecyclerView.Adapter<ExpenseMonthlyRes
 			income.setTypeface(null, Typeface.NORMAL);
 			if(!expense.isCharged())
 				income.setTypeface(null, Typeface.BOLD);
-			if(source != null)
-				source.setText(expense.getChargeable().getName());
+			if(source != null) {
+				expense.getChargeable()
+						.observeOn(AndroidSchedulers.mainThread())
+						.subscribe(new Subscriber<Chargeable>("ExpenseMonthlyResumeAdapter.setData") {
+
+							@Override
+							public void onNext(Chargeable chargeable) {
+								source.setText(chargeable.getName());
+							}
+						});
+			}
 		}
 
 		public void setTotal(int totalValue) {

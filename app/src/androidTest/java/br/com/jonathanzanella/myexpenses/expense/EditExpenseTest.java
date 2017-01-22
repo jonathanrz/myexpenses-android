@@ -11,9 +11,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
+import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.FlowManagerHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
@@ -46,7 +48,7 @@ public class EditExpenseTest {
 	@Before
 	public void setUp() throws Exception {
 		Account a = new AccountBuilder().build();
-		new AccountRepository().save(a);
+		new AccountRepository(new Repository<Account>(MyApplication.getContext())).save(a);
 
 		expense = new ExpenseBuilder().chargeable(a).build();
 		repository.save(expense);

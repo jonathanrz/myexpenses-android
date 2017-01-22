@@ -48,13 +48,7 @@ class BillPresenter {
 	void viewUpdated(boolean invalidateCache) {
 		if (bill != null) {
 			if(invalidateCache) {
-				repository.find(bill.getUuid()).subscribe(new Subscriber<Bill>("BillPresenter.viewUpdated") {
-					@Override
-					public void onNext(Bill bill) {
-						BillPresenter.this.bill = bill;
-						updateView();
-					}
-				});
+				loadBill(bill.getUuid());
 			}
 		} else {
 			if(editView != null)

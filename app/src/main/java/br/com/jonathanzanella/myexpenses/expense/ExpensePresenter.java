@@ -26,6 +26,7 @@ import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -87,9 +88,17 @@ class ExpensePresenter {
 				}
 			});
 
-			chargeable = expense.getChargeable();
-			if(editView != null && chargeable != null)
-				editView.onChargeableSelected(chargeable);
+			expense.getChargeable()
+					.observeOn(AndroidSchedulers.mainThread())
+					.subscribe(new Subscriber<Chargeable>("ExpensePresenter.viewUpdated") {
+
+						@Override
+						public void onNext(Chargeable chargeable) {
+							ExpensePresenter.this.chargeable = chargeable;
+							if(editView != null && chargeable != null)
+								editView.onChargeableSelected(chargeable);
+						}
+					});
 
 			date = expense.getDate();
 			if(editView != null && date != null)
@@ -195,9 +204,18 @@ class ExpensePresenter {
 	}
 
 	void onChargeableSelected(ChargeableType type, String uuid) {
-		chargeable = Expense.findChargeable(type, uuid);
-		if(chargeable != null)
-			editView.onChargeableSelected(chargeable);
+		Expense.findChargeable(type, uuid)
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(new Subscriber<Chargeable>("ExpensePresenter.onChargeableSelected") {
+
+					@Override
+					public void onNext(Chargeable chargeable) {
+						ExpensePresenter.this.chargeable = chargeable;
+						if(chargeable != null)
+							editView.onChargeableSelected(chargeable);
+					}
+				});
+
 	}
 
 	void onBillSelected(String uuid) {
@@ -229,9 +247,17 @@ class ExpensePresenter {
 				}
 			});
 		if(extras.containsKey(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_TYPE)) {
-			chargeable = Expense.findChargeable(
+			Expense.findChargeable(
 					(ChargeableType) extras.getSerializable(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_TYPE),
-					extras.getString(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_UUID));
+					extras.getString(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_UUID))
+			.observeOn(Schedulers.io())
+			.subscribe(new Subscriber<Chargeable>("ExpensePresenter.storeBundle") {
+
+				@Override
+				public void onNext(Chargeable chargeable) {
+					ExpensePresenter.this.chargeable = chargeable;
+				}
+			});
 		}
 	}
 

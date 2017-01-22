@@ -12,6 +12,7 @@ import org.junit.runner.RunWith;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.Environment;
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.card.Card;
@@ -95,7 +96,7 @@ public class BillRepositoryTest {
 		billRepository.save(bill);
 
 		Account account = new AccountBuilder().build();
-		new AccountRepository().save(account);
+		new AccountRepository(new Repository<Account>(MyApplication.getContext())).save(account);
 
 		Card card = new CardBuilder().account(account).build();
 		new CardRepository().save(card);

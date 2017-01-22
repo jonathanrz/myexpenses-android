@@ -25,9 +25,11 @@ import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
+import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.database.MyDatabase;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.helpers.DateHelper;
+import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import br.com.jonathanzanella.myexpenses.helpers.converter.DateTimeConverter;
 import br.com.jonathanzanella.myexpenses.source.Source;
 import br.com.jonathanzanella.myexpenses.source.SourceRepository;
@@ -39,6 +41,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import rx.Observable;
+import rx.schedulers.Schedulers;
 
 import static br.com.jonathanzanella.myexpenses.log.Log.warning;
 
@@ -50,6 +53,7 @@ import static br.com.jonathanzanella.myexpenses.log.Log.warning;
 public class Receipt extends BaseModel implements Transaction, UnsyncModel {
 	public static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
 	private static final ReceiptApi receiptApi = new ReceiptApi();
+	private AccountRepository accountRepository = new AccountRepository(new Repository<Account>(MyApplication.getContext()));
 
 	@Column
 	@PrimaryKey(autoincrement = true) @Setter @Getter
@@ -176,19 +180,19 @@ public class Receipt extends BaseModel implements Transaction, UnsyncModel {
 		sourceUuid = s.getUuid();
 	}
 
-	public Account getAccount() {
-		return Account.find(accountUuid);
+	public Observable<Account> getAccount() {
+		return accountRepository.find(accountUuid);
 	}
 
 	public void setAccount(@NonNull Account a) {
 		accountUuid = a.getUuid();
 	}
 
-	public boolean isShowInResume() {
+	boolean isShowInResume() {
 		return !ignoreInResume;
 	}
 
-	public void setShowInResume(boolean b) {
+	void setShowInResume(boolean b) {
 		ignoreInResume = !b;
 	}
 
@@ -196,7 +200,7 @@ public class Receipt extends BaseModel implements Transaction, UnsyncModel {
 		return NumberFormat.getCurrencyInstance().format(income / 100.0);
 	}
 
-	public void repeat() {
+	void repeat() {
 		id = 0;
 		uuid = null;
 		date = date.plusMonths(1);
@@ -216,11 +220,17 @@ public class Receipt extends BaseModel implements Transaction, UnsyncModel {
 	}
 
 	public void credit() {
-		Account a = getAccount();
-		a.credit(getIncome());
-		a.save();
-		setCredited(true);
-		save();
+		getAccount()
+			.observeOn(Schedulers.io())
+			.subscribe(new Subscriber<Account>("Receipt.credit") {
+				@Override
+				public void onNext(Account account) {
+					account.credit(getIncome());
+					accountRepository.save(account);
+					setCredited(true);
+					save();
+				}
+			});
 	}
 
 	@Override

@@ -15,10 +15,13 @@ import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.bill.Bill;
 import br.com.jonathanzanella.myexpenses.bill.BillRepository;
+import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
 import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import br.com.jonathanzanella.myexpenses.receipt.Receipt;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by jzanella on 1/31/16.
@@ -109,7 +112,15 @@ public class ShowExpenseActivity extends BaseActivity implements ExpenseContract
 		expenseDate.setText(Receipt.sdf.format(expense.getDate().toDate()));
 		expenseIncome.setText(NumberFormat.getCurrencyInstance().format(expense.getValue() / 100.0));
 		expenseIncomeToShowInOverview.setText(NumberFormat.getCurrencyInstance().format(expense.getValueToShowInOverview() / 100.0));
-		expenseChargeable.setText(expense.getChargeable().getName());
+		expense.getChargeable()
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(new Subscriber<Chargeable>("ShowExpenseActivity.showExpense") {
+
+					@Override
+					public void onNext(Chargeable chargeable) {
+						expenseChargeable.setText(chargeable.getName());
+					}
+				});
 		chargeNextMonth.setVisibility(expense.isChargeNextMonth() ? View.VISIBLE : View.GONE);
 	}
 

@@ -13,7 +13,9 @@ import org.junit.runner.RunWith;
 
 import java.text.NumberFormat;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.FlowManagerHelper;
 
@@ -35,7 +37,7 @@ public class ShowAccountActivityTest {
 	public ActivityTestRule<ShowAccountActivity> activityTestRule = new ActivityTestRule<>(ShowAccountActivity.class, true, false);
 
 	private Account account;
-	private AccountRepository repository = new AccountRepository();
+	private AccountRepository repository = new AccountRepository(new Repository<Account>(MyApplication.getContext()));
 
 	@Before
 	public void setUp() throws Exception {

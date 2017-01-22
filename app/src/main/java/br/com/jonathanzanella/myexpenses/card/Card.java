@@ -22,17 +22,21 @@ import java.util.UUID;
 import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
+import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
 import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType;
 import br.com.jonathanzanella.myexpenses.database.MyDatabase;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.Expense_Table;
 import br.com.jonathanzanella.myexpenses.helpers.DateHelper;
+import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import rx.Observable;
+import rx.schedulers.Schedulers;
 
 import static br.com.jonathanzanella.myexpenses.log.Log.warning;
 
@@ -42,6 +46,7 @@ import static br.com.jonathanzanella.myexpenses.log.Log.warning;
 @Table(database = MyDatabase.class)
 @EqualsAndHashCode(callSuper = false)
 public class Card extends BaseModel implements Chargeable, UnsyncModel {
+	private AccountRepository accountRepository;
 	private static final String LOG_TAG = "Card";
 	private static final CardApi cardApi = new CardApi();
 	@Column
@@ -78,6 +83,14 @@ public class Card extends BaseModel implements Chargeable, UnsyncModel {
 
 	@Column @Setter
 	boolean sync;
+
+	//TODO: necessary for DBFlow, remove with it
+	public Card() {
+	}
+
+	public Card(AccountRepository accountRepository) {
+		this.accountRepository = accountRepository;
+	}
 
 	public static List<Card> all() {
 		return initQuery().queryList();
@@ -119,8 +132,8 @@ public class Card extends BaseModel implements Chargeable, UnsyncModel {
 				.querySingle();
 	}
 
-	public Account getAccount() {
-		return Account.find(accountUuid);
+	public Observable<Account> getAccount() {
+		return accountRepository.find(accountUuid);
 	}
 
 	public void setAccount(Account account) {
@@ -146,20 +159,33 @@ public class Card extends BaseModel implements Chargeable, UnsyncModel {
 	}
 
 	@Override
-	public void debit(int value) {
+	public void debit(final int value) {
 		if(type == CardType.DEBIT) {
-			Account a = getAccount();
-			a.debit(value);
-			a.save();
+			getAccount()
+					.observeOn(Schedulers.io())
+					.subscribe(new Subscriber<Account>("Card.debit") {
+						@Override
+						public void onNext(Account account) {
+							account.debit(value);
+							accountRepository.save(account);
+						}
+					});
+
 		}
 	}
 
 	@Override
-	public void credit(int value) {
+	public void credit(final int value) {
 		if(type == CardType.DEBIT) {
-			Account a = getAccount();
-			a.credit(value);
-			a.save();
+			getAccount()
+					.observeOn(Schedulers.io())
+					.subscribe(new Subscriber<Account>("Card.credit") {
+						@Override
+						public void onNext(Account account) {
+							account.credit(value);
+							accountRepository.save(account);
+						}
+					});
 		}
 	}
 

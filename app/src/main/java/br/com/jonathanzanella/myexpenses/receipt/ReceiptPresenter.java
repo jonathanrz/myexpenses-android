@@ -22,6 +22,8 @@ import br.com.jonathanzanella.myexpenses.source.Source;
 import br.com.jonathanzanella.myexpenses.source.SourceRepository;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -85,9 +87,16 @@ class ReceiptPresenter {
 				}
 			});
 
-			Account account = receipt.getAccount();
-			if(account != null)
-				onAccountSelected(account.getUuid());
+			receipt.getAccount()
+					.observeOn(AndroidSchedulers.mainThread())
+					.subscribe(new Subscriber<Account>("ReceiptPresenter.viewUpdated") {
+						@Override
+						public void onNext(Account account) {
+							ReceiptPresenter.this.account = account;
+							if(account != null)
+								onAccountSelected(account.getUuid());
+						}
+					});
 
 			date = receipt.getDate();
 			if(editView != null && date != null)
@@ -177,9 +186,16 @@ class ReceiptPresenter {
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.dismiss();
 
-						Account a = receipt.getAccount();
-						a.credit(receipt.getIncome() * -1);
-						a.save();
+						receipt.getAccount()
+							.observeOn(Schedulers.io())
+							.subscribe(new Subscriber<Account>("ReceiptPresenter.delete") {
+								@Override
+								public void onNext(Account account) {
+									account.credit(receipt.getIncome() * -1);
+									accountRepository.save(account);
+								}
+							});
+
 						receipt.delete();
 						Intent i = new Intent();
 						act.setResult(RESULT_OK, i);
@@ -210,8 +226,16 @@ class ReceiptPresenter {
 							ReceiptPresenter.this.source = source;
 						}
 					});
-		if(extras.containsKey(KEY_ACCOUNT_UUID))
-			account = accountRepository.find(extras.getString(KEY_ACCOUNT_UUID));
+		if(extras.containsKey(KEY_ACCOUNT_UUID)) {
+			accountRepository.find(extras.getString(KEY_ACCOUNT_UUID))
+				.observeOn(Schedulers.io())
+				.subscribe(new Subscriber<Account>("ReceiptPresenter.storeBundle") {
+					@Override
+					public void onNext(Account account) {
+						ReceiptPresenter.this.account = account;
+					}
+				});
+		}
 	}
 
 	void onSaveInstanceState(Bundle outState) {
@@ -235,9 +259,16 @@ class ReceiptPresenter {
 	}
 
 	void onAccountSelected(String accountUuid) {
-		account = accountRepository.find(accountUuid);
-		if(editView != null)
-			editView.onAccountSelected(account);
+		accountRepository.find(accountUuid)
+			.observeOn(AndroidSchedulers.mainThread())
+			.subscribe(new Subscriber<Account>("ReceiptPresenter.onAccountSelected") {
+				@Override
+				public void onNext(Account account) {
+					ReceiptPresenter.this.account = account;
+					if(editView != null)
+						editView.onAccountSelected(account);
+				}
+			});
 	}
 
 	boolean hasReceipt() {

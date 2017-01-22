@@ -45,7 +45,7 @@ public class CardPresenterTest {
 	@Test
 	public void save_gets_data_from_screen_and_save_to_repository() {
 		when(repository.save(any(Card.class))).thenReturn(new OperationResult());
-		when(view.fillCard(any(Card.class))).thenReturn(new Card());
+		when(view.fillCard(any(Card.class))).thenReturn(new Card(accountRepository));
 
 		presenter.save();
 
@@ -59,7 +59,7 @@ public class CardPresenterTest {
 		OperationResult result = new OperationResult();
 		result.addError(ValidationError.NAME);
 
-		when(view.fillCard(any(Card.class))).thenReturn(new Card());
+		when(view.fillCard(any(Card.class))).thenReturn(new Card(accountRepository));
 		when(repository.save(any(Card.class))).thenReturn(result);
 
 		presenter.save();

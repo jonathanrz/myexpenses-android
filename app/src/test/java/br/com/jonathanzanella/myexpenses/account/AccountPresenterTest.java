@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import br.com.jonathanzanella.myexpenses.helpers.CountingIdlingResource;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
@@ -17,26 +18,20 @@ import static org.mockito.MockitoAnnotations.initMocks;
  * Created by jzanella on 8/27/16.
  */
 public class AccountPresenterTest {
-	private static final String UUID = "uuid";
 	@Mock
 	private AccountRepository repository;
 	@Mock
 	private AccountContract.EditView view;
+	@Mock
+	private CountingIdlingResource idlingResource;
 
 	private AccountPresenter presenter;
 
 	@Before
 	public void setUp() throws Exception {
 		initMocks(this);
-		presenter = new AccountPresenter(repository);
+		presenter = new AccountPresenter(repository, idlingResource);
 		presenter.attachView(view);
-	}
-
-	@Test(expected = AccountNotFoundException.class)
-	public void load_empty_source_throws_not_found_exception() {
-		when(repository.find(UUID)).thenReturn(null);
-
-		presenter.loadAccount(UUID);
 	}
 
 	@Test

@@ -8,7 +8,9 @@ import android.widget.TextView;
 
 import java.text.NumberFormat;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
@@ -16,6 +18,7 @@ import br.com.jonathanzanella.myexpenses.source.Source;
 import br.com.jonathanzanella.myexpenses.source.SourceRepository;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by jzanella on 1/31/16.
@@ -36,7 +39,7 @@ public class ShowReceiptActivity extends BaseActivity implements ReceiptContract
 	@Bind(R.id.act_show_receipt_show_in_resume)
 	TextView receiptShowInResume;
 
-	private ReceiptPresenter presenter = new ReceiptPresenter(new ReceiptRepository(), new SourceRepository(new Repository<Source>(this)), new AccountRepository());
+	private ReceiptPresenter presenter = new ReceiptPresenter(new ReceiptRepository(), new SourceRepository(new Repository<Source>(this)), new AccountRepository(new Repository<Account>(MyApplication.getContext())));
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -115,7 +118,15 @@ public class ShowReceiptActivity extends BaseActivity implements ReceiptContract
 			}
 		});
 
-		receiptAccount.setText(receipt.getAccount().getName());
+		receipt.getAccount()
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(new Subscriber<Account>("ShowReceiptActivity.showReceipt") {
+					@Override
+					public void onNext(Account account) {
+						receiptAccount.setText(account.getName());
+					}
+				});
+
 		receiptShowInResume.setText(receipt.isShowInResume() ? R.string.yes : R.string.no);
 	}
 }

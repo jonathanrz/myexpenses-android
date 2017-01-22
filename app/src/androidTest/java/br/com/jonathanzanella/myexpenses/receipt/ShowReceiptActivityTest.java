@@ -55,7 +55,7 @@ public class ShowReceiptActivityTest {
 		new SourceRepository(new Repository<Source>(getContext())).save(s);
 
 		Account a = new AccountBuilder().build();
-		new AccountRepository().save(a);
+		new AccountRepository(new Repository<Account>(getContext())).save(a);
 
 		receipt = new ReceiptBuilder().source(s).account(a).build();
 		repository.save(receipt);
@@ -79,7 +79,12 @@ public class ShowReceiptActivityTest {
 		String incomeAsCurrency = NumberFormat.getCurrencyInstance().format(receipt.getIncome() / 100.0);
 		onView(withId(R.id.act_show_receipt_name)).check(matches(withText(receipt.getName())));
 		onView(withId(R.id.act_show_receipt_income)).check(matches(withText(incomeAsCurrency)));
-		onView(withId(R.id.act_show_receipt_account)).check(matches(withText(receipt.getAccount().getName())));
+		receipt.getAccount().subscribe(new Subscriber<Account>("ShowReceiptActivityTest") {
+			@Override
+			public void onNext(Account account) {
+				onView(withId(R.id.act_show_receipt_account)).check(matches(withText(account.getName())));
+			}
+		});
 
 		receipt.getSource().subscribe(new Subscriber<Source>("ShowReceiptActivityTest.shows_receipt_correctly") {
 			@Override

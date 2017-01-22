@@ -83,7 +83,7 @@ public final class BillTable implements Table<Bill> {
 		bill.setServerId(c.getString(c.getColumnIndexOrThrow(Fields.SERVER_ID.toString())));
 		bill.setCreatedAt(c.getLong(c.getColumnIndexOrThrow(Fields.CREATED_AT.toString())));
 		bill.setUpdatedAt(c.getLong(c.getColumnIndexOrThrow(Fields.UPDATED_AT.toString())));
-		bill.setSync(c.getLong(c.getColumnIndexOrThrow(Fields.UPDATED_AT.toString())) != 0);
+		bill.setSync(c.getLong(c.getColumnIndexOrThrow(Fields.SYNC.toString())) != 0);
 		return bill;
 	}
 

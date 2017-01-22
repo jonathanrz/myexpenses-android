@@ -12,6 +12,7 @@ import org.joda.time.DateTime;
 
 import java.text.NumberFormat;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
@@ -56,7 +57,7 @@ public class EditReceiptActivity extends BaseActivity implements ReceiptContract
 	@Bind(R.id.act_edit_receipt_user)
 	SelectUserView selectUserView;
 
-	private ReceiptPresenter presenter = new ReceiptPresenter(new ReceiptRepository(), new SourceRepository(new Repository<Source>(this)), new AccountRepository());
+	private ReceiptPresenter presenter = new ReceiptPresenter(new ReceiptRepository(), new SourceRepository(new Repository<Source>(this)), new AccountRepository(new Repository<Account>(MyApplication.getContext())));
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

@@ -10,13 +10,18 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
+import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.expense.EditExpenseActivity;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
+import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
 import butterknife.OnClick;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by jzanella on 1/31/16.
@@ -34,7 +39,7 @@ public class ShowCardActivity extends BaseActivity implements CardContract.View 
 	private CardPresenter presenter;
 
 	public ShowCardActivity() {
-		this.presenter = new CardPresenter(new CardRepository(), new AccountRepository());
+		this.presenter = new CardPresenter(new CardRepository(), new AccountRepository(new Repository<Account>(MyApplication.getContext())));
 	}
 
 	@Override
@@ -120,7 +125,15 @@ public class ShowCardActivity extends BaseActivity implements CardContract.View 
 	@Override
 	public void showCard(Card card) {
 		cardName.setText(card.getName());
-		cardAccount.setText(card.getAccount().getName());
+		card.getAccount()
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(new Subscriber<Account>("ShowCardActivity.showCard") {
+					@Override
+					public void onNext(Account account) {
+						cardAccount.setText(account.getName());
+					}
+				});
+
 		switch (card.getType()) {
 			case CREDIT:
 				cardType.setText(R.string.credit);

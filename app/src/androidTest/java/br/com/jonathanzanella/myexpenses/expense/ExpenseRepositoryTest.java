@@ -12,8 +12,10 @@ import org.junit.runner.RunWith;
 
 import java.util.List;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
+import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.FlowManagerHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
@@ -37,7 +39,7 @@ public class ExpenseRepositoryTest {
 	@Before
 	public void setUp() throws Exception {
 		account = new AccountBuilder().build();
-		new AccountRepository().save(account);
+		new AccountRepository(new Repository<Account>(MyApplication.getContext())).save(account);
 	}
 
 	@After

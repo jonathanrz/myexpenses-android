@@ -3,10 +3,8 @@ package br.com.jonathanzanella.myexpenses.account;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.NonNull;
 
-import org.joda.time.DateTime;
-
-import br.com.jonathanzanella.myexpenses.bill.Bill;
 import br.com.jonathanzanella.myexpenses.database.Fields;
 import br.com.jonathanzanella.myexpenses.database.SqlTypes;
 import br.com.jonathanzanella.myexpenses.database.Table;
@@ -15,16 +13,16 @@ import br.com.jonathanzanella.myexpenses.database.Table;
  * Created by jzanella on 11/1/16.
  */
 
-public final class AccountTable implements Table<Bill> {
-	public void onCreate(SQLiteDatabase db) {
+final class AccountTable implements Table<Account> {
+	public void onCreate(@NonNull SQLiteDatabase db) {
 		db.execSQL(createTableSql());
 	}
 
-	public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
+	public void onUpgrade(@NonNull SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
 	}
 
 	@Override
-	public void onDrop(SQLiteDatabase db) {
+	public void onDrop(@NonNull SQLiteDatabase db) {
 		db.execSQL(dropTableSql());
 	}
 
@@ -38,10 +36,9 @@ public final class AccountTable implements Table<Bill> {
 				Fields.ID + SqlTypes.PRIMARY_KEY + "," +
 				Fields.NAME + SqlTypes.TEXT_UNIQUE_NOT_NULL + "," +
 				Fields.UUID + SqlTypes.TEXT_UNIQUE_NOT_NULL + "," +
-				Fields.AMOUNT + SqlTypes.INT + "," +
-				Fields.DUE_DATE + SqlTypes.INT + "," +
-				Fields.INIT_DATE + SqlTypes.INT_NOT_NULL + "," +
-				Fields.END_DATE + SqlTypes.INT_NOT_NULL + "," +
+				Fields.BALANCE + SqlTypes.INT + "," +
+				Fields.ACCOUNT_TO_PAY_CREDIT_CARD + SqlTypes.INT + "," +
+				Fields.ACCOUNT_TO_PAY_BILLS + SqlTypes.INT + "," +
 				Fields.USER_UUID + SqlTypes.TEXT_NOT_NULL + "," +
 				Fields.SERVER_ID + SqlTypes.TEXT_UNIQUE + "," +
 				Fields.CREATED_AT + SqlTypes.DATE + "," +
@@ -53,51 +50,51 @@ public final class AccountTable implements Table<Bill> {
 		return "DROP TABLE IF EXISTS " + getName();
 	}
 
+	@NonNull
 	@Override
-	public ContentValues fillContentValues(Bill bill) {
+	public ContentValues fillContentValues(@NonNull Account account) {
 		ContentValues values = new ContentValues();
-		values.put(Fields.NAME.toString(), bill.getName());
-		values.put(Fields.UUID.toString(), bill.getUuid());
-		values.put(Fields.AMOUNT.toString(), bill.getAmount());
-		values.put(Fields.DUE_DATE.toString(), bill.getDueDate());
-		values.put(Fields.INIT_DATE.toString(), bill.getInitDate().getMillis());
-		values.put(Fields.END_DATE.toString(), bill.getEndDate().getMillis());
-		values.put(Fields.USER_UUID.toString(), bill.getUserUuid());
-		values.put(Fields.SERVER_ID.toString(), bill.getServerId());
-		values.put(Fields.CREATED_AT.toString(), bill.getCreatedAt());
-		values.put(Fields.UPDATED_AT.toString(), bill.getUpdatedAt());
-		values.put(Fields.SYNC.toString(), bill.isSync());
+		values.put(Fields.NAME.toString(), account.getName());
+		values.put(Fields.UUID.toString(), account.getUuid());
+		values.put(Fields.BALANCE.toString(), account.getBalance());
+		values.put(Fields.ACCOUNT_TO_PAY_CREDIT_CARD.toString(), account.isAccountToPayCreditCard());
+		values.put(Fields.ACCOUNT_TO_PAY_BILLS.toString(), account.isAccountToPayBills());
+		values.put(Fields.USER_UUID.toString(), account.getUserUuid());
+		values.put(Fields.SERVER_ID.toString(), account.getServerId());
+		values.put(Fields.CREATED_AT.toString(), account.getCreatedAt());
+		values.put(Fields.UPDATED_AT.toString(), account.getUpdatedAt());
+		values.put(Fields.SYNC.toString(), account.isSync());
 		return values;
 	}
 
+	@NonNull
 	@Override
-	public Bill fill(Cursor c) {
-		Bill bill = new Bill();
-		bill.setId(c.getLong(c.getColumnIndexOrThrow(Fields.ID.toString())));
-		bill.setName(c.getString(c.getColumnIndexOrThrow(Fields.NAME.toString())));
-		bill.setUuid(c.getString(c.getColumnIndexOrThrow(Fields.UUID.toString())));
-		bill.setAmount(c.getInt(c.getColumnIndexOrThrow(Fields.AMOUNT.toString())));
-		bill.setDueDate(c.getInt(c.getColumnIndexOrThrow(Fields.DUE_DATE.toString())));
-		bill.setInitDate(new DateTime(c.getLong(c.getColumnIndexOrThrow(Fields.INIT_DATE.toString()))));
-		bill.setEndDate((new DateTime(c.getLong(c.getColumnIndexOrThrow(Fields.END_DATE.toString())))));
-		bill.setUserUuid((c.getString(c.getColumnIndexOrThrow(Fields.USER_UUID.toString()))));
-		bill.setServerId(c.getString(c.getColumnIndexOrThrow(Fields.SERVER_ID.toString())));
-		bill.setCreatedAt(c.getLong(c.getColumnIndexOrThrow(Fields.CREATED_AT.toString())));
-		bill.setUpdatedAt(c.getLong(c.getColumnIndexOrThrow(Fields.UPDATED_AT.toString())));
-		bill.setSync(c.getLong(c.getColumnIndexOrThrow(Fields.UPDATED_AT.toString())) != 0);
-		return bill;
+	public Account fill(@NonNull Cursor c) {
+		Account account = new Account();
+		account.setId(c.getLong(c.getColumnIndexOrThrow(Fields.ID.toString())));
+		account.setName(c.getString(c.getColumnIndexOrThrow(Fields.NAME.toString())));
+		account.setUuid(c.getString(c.getColumnIndexOrThrow(Fields.UUID.toString())));
+		account.setBalance(c.getInt(c.getColumnIndexOrThrow(Fields.BALANCE.toString())));
+		account.setAccountToPayCreditCard(c.getLong(c.getColumnIndexOrThrow(Fields.ACCOUNT_TO_PAY_CREDIT_CARD.toString())) != 0);
+		account.setAccountToPayBills(c.getLong(c.getColumnIndexOrThrow(Fields.ACCOUNT_TO_PAY_BILLS.toString())) != 0);
+		account.setUserUuid((c.getString(c.getColumnIndexOrThrow(Fields.USER_UUID.toString()))));
+		account.setServerId(c.getString(c.getColumnIndexOrThrow(Fields.SERVER_ID.toString())));
+		account.setCreatedAt(c.getLong(c.getColumnIndexOrThrow(Fields.CREATED_AT.toString())));
+		account.setUpdatedAt(c.getLong(c.getColumnIndexOrThrow(Fields.UPDATED_AT.toString())));
+		account.setSync(c.getLong(c.getColumnIndexOrThrow(Fields.SYNC.toString())) != 0);
+		return account;
 	}
 
+	@NonNull
 	@Override
 	public String [] getProjection() {
 		return new String[]{
 				Fields.ID.toString(),
 				Fields.NAME.toString(),
 				Fields.UUID.toString(),
-				Fields.AMOUNT.toString(),
-				Fields.DUE_DATE.toString(),
-				Fields.INIT_DATE.toString(),
-				Fields.END_DATE.toString(),
+				Fields.BALANCE.toString(),
+				Fields.ACCOUNT_TO_PAY_CREDIT_CARD.toString(),
+				Fields.ACCOUNT_TO_PAY_BILLS.toString(),
 				Fields.USER_UUID.toString(),
 				Fields.SERVER_ID.toString(),
 				Fields.CREATED_AT.toString(),

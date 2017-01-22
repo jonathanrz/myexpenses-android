@@ -13,9 +13,12 @@ enum class Fields constructor(val fieldName: String) {
     CREATED_AT("createdAt"),
     UPDATED_AT("updatedAt"),
     AMOUNT("amount"),
+    BALANCE("balance"),
     DUE_DATE("due_date"),
     INIT_DATE("init_date"),
     END_DATE("end_date"),
+    ACCOUNT_TO_PAY_CREDIT_CARD("accountToPayCreditCard"),
+    ACCOUNT_TO_PAY_BILLS("accountToPayBills"),
     SYNC("sync");
 
     override fun toString(): String {

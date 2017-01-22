@@ -15,9 +15,12 @@ import java.util.Locale;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.card.CreditCardInvoiceActivity;
+import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
+import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import lombok.Getter;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by Jonathan Zanella on 26/01/16.
@@ -54,7 +57,15 @@ public class ExpenseWeeklyOverviewAdapter extends RecyclerView.Adapter<ExpenseWe
 			name.setText(expense.getName());
 			date.setText(sdf.format(expense.getDate().toDate()));
 			income.setText(NumberFormat.getCurrencyInstance().format(expense.getValueToShowInOverview() / 100.0));
-			source.setText(expense.getChargeable().getName());
+			expense.getChargeable()
+					.observeOn(AndroidSchedulers.mainThread())
+					.subscribe(new Subscriber<Chargeable>("ExpenseWeeklyOverviewAdapter.setData") {
+
+						@Override
+						public void onNext(Chargeable chargeable) {
+							source.setText(chargeable.getName());
+						}
+					});
 		}
 
 		@Override

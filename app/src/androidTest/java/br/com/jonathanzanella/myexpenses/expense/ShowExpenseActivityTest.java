@@ -13,11 +13,15 @@ import org.junit.runner.RunWith;
 
 import java.text.NumberFormat;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
+import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
+import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.FlowManagerHelper;
+import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.ExpenseBuilder;
 
@@ -45,7 +49,7 @@ public class ShowExpenseActivityTest {
 	@Before
 	public void setUp() throws Exception {
 		Account a = new AccountBuilder().build();
-		new AccountRepository().save(a);
+		new AccountRepository(new Repository<Account>(MyApplication.getContext())).save(a);
 
 		expense = new ExpenseBuilder().chargeable(a).build();
 		repository.save(expense);
@@ -69,7 +73,13 @@ public class ShowExpenseActivityTest {
 		String incomeAsCurrency = NumberFormat.getCurrencyInstance().format(expense.getValue() / 100.0);
 		onView(withId(R.id.act_show_expense_name)).check(matches(withText(expense.getName())));
 		onView(withId(R.id.act_show_expense_value)).check(matches(withText(incomeAsCurrency)));
-		onView(withId(R.id.act_show_expense_chargeable)).check(matches(withText(expense.getChargeable().getName())));
+		expense.getChargeable().subscribe(new Subscriber<Chargeable>("ShowExpenseActivityTest") {
+
+			@Override
+			public void onNext(Chargeable chargeable) {
+				onView(withId(R.id.act_show_expense_chargeable)).check(matches(withText(chargeable.getName())));
+			}
+		});
 	}
 
 	@Test

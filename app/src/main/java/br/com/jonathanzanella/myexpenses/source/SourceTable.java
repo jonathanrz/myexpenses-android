@@ -69,7 +69,7 @@ public final class SourceTable implements Table<Source> {
 		source.setServerId(c.getString(c.getColumnIndexOrThrow(Fields.SERVER_ID.toString())));
 		source.setCreatedAt(c.getLong(c.getColumnIndexOrThrow(Fields.CREATED_AT.toString())));
 		source.setUpdatedAt(c.getLong(c.getColumnIndexOrThrow(Fields.UPDATED_AT.toString())));
-		source.setSync(c.getLong(c.getColumnIndexOrThrow(Fields.UPDATED_AT.toString())) != 0);
+		source.setSync(c.getLong(c.getColumnIndexOrThrow(Fields.SYNC.toString())) != 0);
 		return source;
 	}
 

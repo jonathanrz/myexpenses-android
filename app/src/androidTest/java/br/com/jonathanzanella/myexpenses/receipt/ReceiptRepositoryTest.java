@@ -45,7 +45,7 @@ public class ReceiptRepositoryTest {
 	@Before
 	public void setUp() throws Exception {
 		account = new AccountBuilder().build();
-		new AccountRepository().save(account);
+		new AccountRepository(new Repository<Account>(getContext())).save(account);
 		source = new SourceBuilder().build();
 		new SourceRepository(new Repository<Source>(getContext())).save(source);
 	}
