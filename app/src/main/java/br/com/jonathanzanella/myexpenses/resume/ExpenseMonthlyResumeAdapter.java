@@ -2,7 +2,9 @@ package br.com.jonathanzanella.myexpenses.resume;
 
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.support.annotation.Nullable;
+import android.support.annotation.UiThread;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,13 +22,11 @@ import br.com.jonathanzanella.myexpenses.card.CreditCardInvoiceActivity;
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ShowExpenseActivity;
-import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import br.com.jonathanzanella.myexpenses.helpers.TransactionsHelper;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import lombok.Getter;
-import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by Jonathan Zanella on 26/01/16.
@@ -66,7 +66,8 @@ class ExpenseMonthlyResumeAdapter extends RecyclerView.Adapter<ExpenseMonthlyRes
 			itemView.setOnClickListener(this);
 		}
 
-		public void setData(Expense expense) {
+		@UiThread
+		public void setData(final Expense expense) {
 			if(name != null)
 				name.setText(expense.getName());
 			if(date != null)
@@ -76,15 +77,19 @@ class ExpenseMonthlyResumeAdapter extends RecyclerView.Adapter<ExpenseMonthlyRes
 			if(!expense.isCharged())
 				income.setTypeface(null, Typeface.BOLD);
 			if(source != null) {
-				expense.getChargeable()
-						.observeOn(AndroidSchedulers.mainThread())
-						.subscribe(new Subscriber<Chargeable>("ExpenseMonthlyResumeAdapter.setData") {
+				new AsyncTask<Void, Void, Chargeable>() {
 
-							@Override
-							public void onNext(Chargeable chargeable) {
-								source.setText(chargeable.getName());
-							}
-						});
+					@Override
+					protected Chargeable doInBackground(Void... voids) {
+						return expense.getChargeable();
+					}
+
+					@Override
+					protected void onPostExecute(Chargeable chargeable) {
+						super.onPostExecute(chargeable);
+						source.setText(chargeable.getName());
+					}
+				}.execute();
 			}
 		}
 

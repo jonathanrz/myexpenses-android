@@ -1,6 +1,8 @@
 package br.com.jonathanzanella.myexpenses.expense;
 
 import android.content.Intent;
+import android.os.AsyncTask;
+import android.support.annotation.UiThread;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,11 +18,9 @@ import java.util.Locale;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.card.CreditCardInvoiceActivity;
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
-import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import lombok.Getter;
-import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by Jonathan Zanella on 26/01/16.
@@ -53,19 +53,25 @@ public class ExpenseWeeklyOverviewAdapter extends RecyclerView.Adapter<ExpenseWe
 			itemView.setOnClickListener(this);
 		}
 
-		public void setData(Expense expense) {
+		@UiThread
+		public void setData(final Expense expense) {
 			name.setText(expense.getName());
 			date.setText(sdf.format(expense.getDate().toDate()));
 			income.setText(NumberFormat.getCurrencyInstance().format(expense.getValueToShowInOverview() / 100.0));
-			expense.getChargeable()
-					.observeOn(AndroidSchedulers.mainThread())
-					.subscribe(new Subscriber<Chargeable>("ExpenseWeeklyOverviewAdapter.setData") {
 
-						@Override
-						public void onNext(Chargeable chargeable) {
-							source.setText(chargeable.getName());
-						}
-					});
+			new AsyncTask<Void, Void, Chargeable>() {
+
+				@Override
+				protected Chargeable doInBackground(Void... voids) {
+					return expense.getChargeable();
+				}
+
+				@Override
+				protected void onPostExecute(Chargeable chargeable) {
+					super.onPostExecute(chargeable);
+					source.setText(chargeable.getName());
+				}
+			}.execute();
 		}
 
 		@Override

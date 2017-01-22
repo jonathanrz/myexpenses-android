@@ -1,8 +1,10 @@
 package br.com.jonathanzanella.myexpenses.card;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.UiThread;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,11 +16,9 @@ import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
-import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import lombok.Setter;
-import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by Jonathan Zanella onCard 26/01/16.
@@ -49,16 +49,23 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
 			itemView.setOnClickListener(this);
 		}
 
-		public void setData(Card card) {
+		@UiThread
+		public void setData(final Card card) {
+			new AsyncTask<Void, Void, Account>() {
+
+				@Override
+				protected Account doInBackground(Void... voids) {
+					return card.getAccount();
+				}
+
+				@Override
+				protected void onPostExecute(Account a) {
+					super.onPostExecute(a);
+					account.setText(a.getName());
+				}
+			}.execute();
+
 			name.setText(card.getName());
-			card.getAccount()
-					.observeOn(AndroidSchedulers.mainThread())
-					.subscribe(new Subscriber<Account>("CardAdapter.setData") {
-						@Override
-						public void onNext(Account a) {
-							account.setText(a.getName());
-						}
-					});
 
 			switch (card.getType()) {
 				case CREDIT:

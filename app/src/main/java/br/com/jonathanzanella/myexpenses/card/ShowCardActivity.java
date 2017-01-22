@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.UiThread;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -17,11 +18,9 @@ import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.expense.EditExpenseActivity;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
-import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
 import butterknife.OnClick;
-import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by jzanella on 1/31/16.
@@ -42,24 +41,34 @@ public class ShowCardActivity extends BaseActivity implements CardContract.View 
 		this.presenter = new CardPresenter(new CardRepository(), new AccountRepository(new Repository<Account>(MyApplication.getContext())));
 	}
 
+	@UiThread
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_show_card);
 	}
 
+	@UiThread
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
 		presenter.viewUpdated(false);
 	}
 
+	@UiThread
 	@Override
-	protected void storeBundle(Bundle extras) {
+	protected void storeBundle(final Bundle extras) {
 		super.storeBundle(extras);
 
-		if(extras != null && extras.containsKey(KEY_CREDIT_CARD_UUID))
-			presenter.loadCard(extras.getString(KEY_CREDIT_CARD_UUID));
+		new AsyncTask<Void, Void, Void>() {
+
+			@Override
+			protected Void doInBackground(Void... voids) {
+				if(extras != null && extras.containsKey(KEY_CREDIT_CARD_UUID))
+					presenter.loadCard(extras.getString(KEY_CREDIT_CARD_UUID));
+				return null;
+			}
+		}.execute();
 	}
 
 	@Override
@@ -68,12 +77,14 @@ public class ShowCardActivity extends BaseActivity implements CardContract.View 
 		outState.putString(KEY_CREDIT_CARD_UUID, presenter.getUuid());
 	}
 
+	@UiThread
 	@Override
 	protected void onStart() {
 		super.onStart();
 		presenter.attachView(this);
 	}
 
+	@UiThread
 	@Override
 	protected void onStop() {
 		super.onStop();
@@ -86,6 +97,7 @@ public class ShowCardActivity extends BaseActivity implements CardContract.View 
 		return true;
 	}
 
+	@UiThread
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -98,6 +110,7 @@ public class ShowCardActivity extends BaseActivity implements CardContract.View 
 		return super.onOptionsItemSelected(item);
 	}
 
+	@UiThread
 	@OnClick(R.id.act_show_card_pay_credit_card_bill)
 	public void payCreditCardBill() {
 		new AsyncTask<Void, Void, Expense>() {
@@ -122,17 +135,24 @@ public class ShowCardActivity extends BaseActivity implements CardContract.View 
 
 	}
 
+	@UiThread
 	@Override
-	public void showCard(Card card) {
+	public void showCard(final Card card) {
+		new AsyncTask<Void, Void, Account>() {
+
+			@Override
+			protected Account doInBackground(Void... voids) {
+				return card.getAccount();
+			}
+
+			@Override
+			protected void onPostExecute(Account account) {
+				super.onPostExecute(account);
+				cardAccount.setText(account.getName());
+			}
+		}.execute();
+
 		cardName.setText(card.getName());
-		card.getAccount()
-				.observeOn(AndroidSchedulers.mainThread())
-				.subscribe(new Subscriber<Account>("ShowCardActivity.showCard") {
-					@Override
-					public void onNext(Account account) {
-						cardAccount.setText(account.getName());
-					}
-				});
 
 		switch (card.getType()) {
 			case CREDIT:

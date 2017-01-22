@@ -29,7 +29,6 @@ import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.database.MyDatabase;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.helpers.DateHelper;
-import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import br.com.jonathanzanella.myexpenses.helpers.converter.DateTimeConverter;
 import br.com.jonathanzanella.myexpenses.source.Source;
 import br.com.jonathanzanella.myexpenses.source.SourceRepository;
@@ -41,7 +40,6 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import rx.Observable;
-import rx.schedulers.Schedulers;
 
 import static br.com.jonathanzanella.myexpenses.log.Log.warning;
 
@@ -186,7 +184,7 @@ public class Receipt extends BaseModel implements Transaction, UnsyncModel {
 		sourceUuid = s.getUuid();
 	}
 
-	public Observable<Account> getAccount() {
+	public Account getAccount() {
 		return getAccountRepository().find(accountUuid);
 	}
 
@@ -226,17 +224,11 @@ public class Receipt extends BaseModel implements Transaction, UnsyncModel {
 	}
 
 	public void credit() {
-		getAccount()
-			.observeOn(Schedulers.io())
-			.subscribe(new Subscriber<Account>("Receipt.credit") {
-				@Override
-				public void onNext(Account account) {
-					account.credit(getIncome());
-					getAccountRepository().save(account);
-					setCredited(true);
-					save();
-				}
-			});
+		Account account = getAccount();
+		account.credit(getIncome());
+		getAccountRepository().save(account);
+		setCredited(true);
+		save();
 	}
 
 	@Override

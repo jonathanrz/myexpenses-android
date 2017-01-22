@@ -1,6 +1,7 @@
 package br.com.jonathanzanella.myexpenses.expense;
 
 import android.content.Context;
+import android.support.annotation.WorkerThread;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -21,7 +22,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.Callable;
 
 import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.MyApplication;
@@ -37,7 +37,6 @@ import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType;
 import br.com.jonathanzanella.myexpenses.database.MyDatabase;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.helpers.DateHelper;
-import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import br.com.jonathanzanella.myexpenses.helpers.converter.DateTimeConverter;
 import br.com.jonathanzanella.myexpenses.overview.WeeklyPagerAdapter;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
@@ -47,7 +46,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import rx.Observable;
-import rx.schedulers.Schedulers;
 
 import static br.com.jonathanzanella.myexpenses.chargeable.ChargeableType.CREDIT_CARD;
 import static br.com.jonathanzanella.myexpenses.chargeable.ChargeableType.DEBIT_CARD;
@@ -352,32 +350,26 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 		chargeableUuid = chargeable.getUuid();
 	}
 
-	public Observable<? extends Chargeable> getChargeable() {
+	@WorkerThread
+	public Chargeable getChargeable() {
 		return Expense.findChargeable(chargeableType, chargeableUuid);
 	}
 
 	void uncharge() {
 		if(charged) {
-			getChargeable()
-					.observeOn(Schedulers.io())
-					.subscribe(new Subscriber<Chargeable>("Expense.uncharge") {
-
-						@Override
-						public void onNext(Chargeable chargeable) {
-							chargeable.credit(getValue());
-							switch (chargeable.getChargeableType()) {
-								case ACCOUNT:
-									getAccountRepository().save((Account) chargeable);
-								case CREDIT_CARD:
-								case DEBIT_CARD:
-									if(chargeable instanceof Card)
-										getCardRepository().save((Card) chargeable);
-									else
-										throw new UnsupportedOperationException("Chargeable should be a card");
-							}
-							charged = false;
-						}
-					});
+			Chargeable chargeable = getChargeable();
+			chargeable.credit(getValue());
+			switch (chargeable.getChargeableType()) {
+				case ACCOUNT:
+					getAccountRepository().save((Account) chargeable);
+				case CREDIT_CARD:
+				case DEBIT_CARD:
+					if(chargeable instanceof Card)
+						getCardRepository().save((Card) chargeable);
+					else
+						throw new UnsupportedOperationException("Chargeable should be a card");
+			}
+			charged = false;
 		}
 	}
 
@@ -389,7 +381,7 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 		return new BillRepository(new Repository<Bill>(MyApplication.getContext())).find(billUuid);
 	}
 
-	static Observable<? extends Chargeable> findChargeable(ChargeableType type, final String uuid) {
+	static Chargeable findChargeable(ChargeableType type, final String uuid) {
 		if(type == null || uuid == null)
 			return null;
 
@@ -398,12 +390,7 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 				return getAccountRepository().find(uuid);
 			case DEBIT_CARD:
 			case CREDIT_CARD:
-				Observable.fromCallable(new Callable<Card>() {
-					@Override
-					public Card call() throws Exception {
-						return getCardRepository().find(uuid);
-					}
-				});
+				return getCardRepository().find(uuid);
 		}
 		return null;
 	}
@@ -445,26 +432,19 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 	}
 
 	public void debit() {
-		getChargeable()
-				.observeOn(Schedulers.io())
-				.subscribe(new Subscriber<Chargeable>("Expense.debit") {
-
-					@Override
-					public void onNext(Chargeable chargeable) {
-						chargeable.debit(getValue());
-						switch (chargeable.getChargeableType()) {
-							case ACCOUNT:
-								getAccountRepository().save((Account) chargeable);
-								break;
-							case DEBIT_CARD:
-							case CREDIT_CARD:
-								getCardRepository().save((Card) chargeable);
-								break;
-						}
-						setCharged(true);
-						save();
-					}
-				});
+		Chargeable chargeable = getChargeable();
+		chargeable.debit(getValue());
+		switch (chargeable.getChargeableType()) {
+			case ACCOUNT:
+				getAccountRepository().save((Account) chargeable);
+				break;
+			case DEBIT_CARD:
+			case CREDIT_CARD:
+				getCardRepository().save((Card) chargeable);
+				break;
+		}
+		setCharged(true);
+		save();
 
 	}
 

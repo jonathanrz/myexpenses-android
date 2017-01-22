@@ -14,7 +14,6 @@ import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.helpers.FlowManagerHelper;
-import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
@@ -51,13 +50,8 @@ public class AccountRepositoryTest {
 		account.setName("test");
 		repository.save(account);
 
-		repository.find(account.getUuid())
-		.subscribe(new Subscriber<Account>("AccountRepositoryTest") {
-			@Override
-			public void onNext(Account account) {
-				assertThat(account, is(account));
-			}
-		});
+		Account loadAccount = repository.find(account.getUuid());
+		assertThat(loadAccount, is(account));
 	}
 
 	@Test

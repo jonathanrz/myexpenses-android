@@ -1,21 +1,16 @@
 package br.com.jonathanzanella.myexpenses.account;
 
-import android.support.annotation.Nullable;
-import android.support.test.espresso.idling.CountingIdlingResource;
+import android.support.annotation.WorkerThread;
 
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.Callable;
 
 import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.database.Repository;
-import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
-import rx.Observable;
-import rx.schedulers.Schedulers;
 
 import static br.com.jonathanzanella.myexpenses.log.Log.warning;
 
@@ -31,29 +26,27 @@ public class AccountRepository {
 		this.repository = repository;
 	}
 
-	public Observable<Account> find(final String uuid) {
-		return Observable.fromCallable(new Callable<Account>() {
-
-			@Override
-			public @Nullable
-			Account call() throws Exception {
-				return repository.find(accountTable, uuid);
-			}
-		}).observeOn(Schedulers.io());
+	@WorkerThread
+	public Account find(final String uuid) {
+		return repository.find(accountTable, uuid);
 	}
 
+	@WorkerThread
 	List<Account> userAccounts() {
 		return repository.userData(accountTable);
 	}
 
+	@WorkerThread
 	public long greaterUpdatedAt() {
 		return repository.greaterUpdatedAt(accountTable);
 	}
 
+	@WorkerThread
 	public List<Account> unsync() {
 		return repository.unsync(accountTable);
 	}
 
+	@WorkerThread
 	public OperationResult save(Account account) {
 		OperationResult result = new OperationResult();
 		if(StringUtils.isEmpty(account.getName()))
@@ -69,24 +62,17 @@ public class AccountRepository {
 		return result;
 	}
 
+	@WorkerThread
 	public void syncAndSave(final Account unsyncAccount) {
-		final CountingIdlingResource idlingResource = new CountingIdlingResource("AccountRepositorySave");
-		idlingResource.increment();
-		find(unsyncAccount.getUuid())
-				.observeOn(Schedulers.io())
-				.subscribe(new Subscriber<Account>("AccountRepository.") {
-					@Override
-					public void onNext(Account bill) {
-						if(bill != null && bill.id != unsyncAccount.getId()) {
-							if(bill.getUpdatedAt() != unsyncAccount.getUpdatedAt())
-								warning("Account overwritten", unsyncAccount.getData());
-							unsyncAccount.setId(bill.id);
-						}
+		Account account = find(unsyncAccount.getUuid());
 
-						unsyncAccount.setSync(true);
-						repository.saveAtDatabase(accountTable, unsyncAccount);
-						idlingResource.decrement();
-					}
-				});
+		if(account != null && account.id != unsyncAccount.getId()) {
+			if(account.getUpdatedAt() != unsyncAccount.getUpdatedAt())
+				warning("Account overwritten", unsyncAccount.getData());
+			unsyncAccount.setId(account.id);
+		}
+
+		unsyncAccount.setSync(true);
+		repository.saveAtDatabase(accountTable, unsyncAccount);
 	}
 }

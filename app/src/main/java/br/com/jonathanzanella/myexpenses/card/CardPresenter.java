@@ -2,7 +2,9 @@ package br.com.jonathanzanella.myexpenses.card;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.annotation.Nullable;
+import android.support.annotation.WorkerThread;
 
 import org.joda.time.DateTime;
 
@@ -15,10 +17,8 @@ import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.account.ListAccountActivity;
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
-import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
-import rx.android.schedulers.AndroidSchedulers;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -75,6 +75,7 @@ class CardPresenter {
 		}
 	}
 
+	@WorkerThread
 	void loadCard(String uuid) {
 		card = repository.find(uuid);
 		if(card == null)
@@ -112,16 +113,24 @@ class CardPresenter {
 		switch (requestCode) {
 			case REQUEST_SELECT_ACCOUNT: {
 				if(resultCode == RESULT_OK) {
-					accountRepository
-							.find(data.getStringExtra(ListAccountActivity.Companion.getKEY_ACCOUNT_SELECTED_UUID()))
-							.observeOn(AndroidSchedulers.mainThread())
-							.subscribe(new Subscriber<Account>("CardPresenter.onActivityResult") {
-								@Override
-								public void onNext(Account account) {
-									if(account != null && editView != null)
-										editView.onAccountSelected(account);
-								}
-							});
+					new AsyncTask<String, Void, Account>() {
+
+						@Override
+						protected Account doInBackground(String... accountUuid) {
+							if(accountUuid.length != 1) {
+								throw new UnsupportedOperationException("Called with " + accountUuid.length +
+										" uuids, it should be called with only one");
+							}
+							return accountRepository.find(accountUuid[0]);
+						}
+
+						@Override
+						protected void onPostExecute(Account account) {
+							super.onPostExecute(account);
+							if(account != null && editView != null)
+								editView.onAccountSelected(account);
+						}
+					}.execute(data.getStringExtra(ListAccountActivity.Companion.getKEY_ACCOUNT_SELECTED_UUID()));
 				}
 				break;
 			}

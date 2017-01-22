@@ -1,14 +1,12 @@
 package br.com.jonathanzanella.myexpenses.account;
 
+import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException;
-import br.com.jonathanzanella.myexpenses.helpers.CountingIdlingResource;
-import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
-import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by jzanella on 8/27/16.
@@ -20,11 +18,9 @@ class AccountPresenter {
 	private AccountContract.EditView editView;
 	private AccountRepository repository;
 	private Account account;
-	private CountingIdlingResource idlingResource;
 
-	AccountPresenter(AccountRepository repository, CountingIdlingResource idlingResource) {
+	AccountPresenter(AccountRepository repository) {
 		this.repository = repository;
-		this.idlingResource = idlingResource;
 	}
 
 	void attachView(AccountContract.View view) {
@@ -61,18 +57,22 @@ class AccountPresenter {
 		view.showAccount(account);
 	}
 
-	void loadAccount(String uuid) {
-		repository.find(uuid)
-				.observeOn(AndroidSchedulers.mainThread())
-				.subscribe(new Subscriber<Account>("AccountPresenter.loadAccount") {
-					@Override
-					public void onNext(Account account) {
-						AccountPresenter.this.account = account;
-						if(account != null)
-							updateView();
-						idlingResource.decrement();
-					}
-				});
+	void loadAccount(final String uuid) {
+		new AsyncTask<Void, Void, Account>() {
+
+			@Override
+			protected Account doInBackground(Void... voids) {
+				account = repository.find(uuid);
+				return account;
+			}
+
+			@Override
+			protected void onPostExecute(Account account) {
+				super.onPostExecute(account);
+				if(account != null)
+					updateView();
+			}
+		}.execute();
 	}
 
 	void save() {

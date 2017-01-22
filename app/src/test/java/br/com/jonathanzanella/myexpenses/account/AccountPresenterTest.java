@@ -4,7 +4,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import br.com.jonathanzanella.myexpenses.helpers.CountingIdlingResource;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
@@ -22,15 +21,13 @@ public class AccountPresenterTest {
 	private AccountRepository repository;
 	@Mock
 	private AccountContract.EditView view;
-	@Mock
-	private CountingIdlingResource idlingResource;
 
 	private AccountPresenter presenter;
 
 	@Before
 	public void setUp() throws Exception {
 		initMocks(this);
-		presenter = new AccountPresenter(repository, idlingResource);
+		presenter = new AccountPresenter(repository);
 		presenter.attachView(view);
 	}
 

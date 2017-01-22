@@ -3,7 +3,7 @@ package br.com.jonathanzanella.myexpenses.database
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-
+import br.com.jonathanzanella.myexpenses.account.AccountTable
 import br.com.jonathanzanella.myexpenses.bill.BillTable
 import br.com.jonathanzanella.myexpenses.source.SourceTable
 
@@ -12,7 +12,7 @@ import br.com.jonathanzanella.myexpenses.source.SourceTable
  */
 
 class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, MyDatabase.NAME, null, MyDatabase.VERSION) {
-    private val tables = arrayOf(SourceTable(), BillTable())
+    private val tables = arrayOf(SourceTable(), BillTable(), AccountTable())
 
     override fun onCreate(db: SQLiteDatabase) {
         for (table in tables)

@@ -13,7 +13,7 @@ import br.com.jonathanzanella.myexpenses.database.Table;
  * Created by jzanella on 11/1/16.
  */
 
-final class AccountTable implements Table<Account> {
+public final class AccountTable implements Table<Account> {
 	public void onCreate(@NonNull SQLiteDatabase db) {
 		db.execSQL(createTableSql());
 	}
@@ -28,7 +28,7 @@ final class AccountTable implements Table<Account> {
 
 	@Override
 	public String getName() {
-		return "Bill";
+		return "Account";
 	}
 
 	private String createTableSql() {

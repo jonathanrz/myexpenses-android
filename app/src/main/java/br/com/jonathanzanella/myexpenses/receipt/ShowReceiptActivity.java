@@ -1,7 +1,9 @@
 package br.com.jonathanzanella.myexpenses.receipt;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.UiThread;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -18,7 +20,6 @@ import br.com.jonathanzanella.myexpenses.source.Source;
 import br.com.jonathanzanella.myexpenses.source.SourceRepository;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
-import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by jzanella on 1/31/16.
@@ -106,8 +107,9 @@ public class ShowReceiptActivity extends BaseActivity implements ReceiptContract
 		return super.onOptionsItemSelected(item);
 	}
 
+	@UiThread
 	@Override
-	public void showReceipt(Receipt receipt) {
+	public void showReceipt(final Receipt receipt) {
 		receiptName.setText(receipt.getName());
 		receiptDate.setText(Receipt.sdf.format(receipt.getDate().toDate()));
 		receiptIncome.setText(NumberFormat.getCurrencyInstance().format(receipt.getIncome() / 100.0));
@@ -118,14 +120,19 @@ public class ShowReceiptActivity extends BaseActivity implements ReceiptContract
 			}
 		});
 
-		receipt.getAccount()
-				.observeOn(AndroidSchedulers.mainThread())
-				.subscribe(new Subscriber<Account>("ShowReceiptActivity.showReceipt") {
-					@Override
-					public void onNext(Account account) {
-						receiptAccount.setText(account.getName());
-					}
-				});
+		new AsyncTask<Void, Void, Account>() {
+
+			@Override
+			protected Account doInBackground(Void... voids) {
+				return receipt.getAccount();
+			}
+
+			@Override
+			protected void onPostExecute(Account account) {
+				super.onPostExecute(account);
+				receiptAccount.setText(account.getName());
+			}
+		}.execute();
 
 		receiptShowInResume.setText(receipt.isShowInResume() ? R.string.yes : R.string.no);
 	}

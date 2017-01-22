@@ -96,9 +96,10 @@ public class BillRepositoryTest {
 		billRepository.save(bill);
 
 		Account account = new AccountBuilder().build();
-		new AccountRepository(new Repository<Account>(MyApplication.getContext())).save(account);
+		AccountRepository accountRepository = new AccountRepository(new Repository<Account>(MyApplication.getContext()));
+		accountRepository.save(account);
 
-		Card card = new CardBuilder().account(account).build();
+		Card card = new CardBuilder().account(account).build(accountRepository);
 		new CardRepository().save(card);
 
 		Expense expense = new ExpenseBuilder()

@@ -1,8 +1,10 @@
 package br.com.jonathanzanella.myexpenses.expense;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.UiThread;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,11 +19,9 @@ import br.com.jonathanzanella.myexpenses.bill.Bill;
 import br.com.jonathanzanella.myexpenses.bill.BillRepository;
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
 import br.com.jonathanzanella.myexpenses.database.Repository;
-import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import br.com.jonathanzanella.myexpenses.receipt.Receipt;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
-import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by jzanella on 1/31/16.
@@ -46,18 +46,21 @@ public class ShowExpenseActivity extends BaseActivity implements ExpenseContract
 
 	private ExpensePresenter presenter = new ExpensePresenter(new ExpenseRepository(), new BillRepository(new Repository<Bill>(MyApplication.getContext())));
 
+	@UiThread
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_show_expenses);
 	}
 
+	@UiThread
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
 		presenter.viewUpdated(false);
 	}
 
+	@UiThread
 	@Override
 	protected void storeBundle(Bundle extras) {
 		super.storeBundle(extras);
@@ -72,12 +75,14 @@ public class ShowExpenseActivity extends BaseActivity implements ExpenseContract
 		presenter.onSaveInstanceState(outState);
 	}
 
+	@UiThread
 	@Override
 	protected void onStart() {
 		super.onStart();
 		presenter.attachView(this);
 	}
 
+	@UiThread
 	@Override
 	protected void onStop() {
 		super.onStop();
@@ -106,28 +111,34 @@ public class ShowExpenseActivity extends BaseActivity implements ExpenseContract
 		return super.onOptionsItemSelected(item);
 	}
 
+	@UiThread
 	@Override
-	public void showExpense(Expense expense) {
+	public void showExpense(final Expense expense) {
 		expenseName.setText(expense.getName());
 		expenseDate.setText(Receipt.sdf.format(expense.getDate().toDate()));
 		expenseIncome.setText(NumberFormat.getCurrencyInstance().format(expense.getValue() / 100.0));
 		expenseIncomeToShowInOverview.setText(NumberFormat.getCurrencyInstance().format(expense.getValueToShowInOverview() / 100.0));
-		expense.getChargeable()
-				.observeOn(AndroidSchedulers.mainThread())
-				.subscribe(new Subscriber<Chargeable>("ShowExpenseActivity.showExpense") {
+		new AsyncTask<Void, Void, Chargeable>() {
 
-					@Override
-					public void onNext(Chargeable chargeable) {
-						expenseChargeable.setText(chargeable.getName());
-					}
-				});
+			@Override
+			protected Chargeable doInBackground(Void... voids) {
+				return expense.getChargeable();
+			}
+
+			@Override
+			protected void onPostExecute(Chargeable chargeable) {
+				super.onPostExecute(chargeable);
+				expenseChargeable.setText(chargeable.getName());
+			}
+		}.execute();
 		chargeNextMonth.setVisibility(expense.isChargeNextMonth() ? View.VISIBLE : View.GONE);
 	}
 
+	@UiThread
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		presenter.attachView(this);
-		presenter.onActivityResult(requestCode, resultCode, data);
+		presenter.onActivityResult(requestCode, resultCode);
 	}
 }

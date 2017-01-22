@@ -1,6 +1,7 @@
 package br.com.jonathanzanella.myexpenses.card;
 
 import android.content.Context;
+import android.support.annotation.WorkerThread;
 import android.util.Log;
 
 import com.google.gson.annotations.Expose;
@@ -29,14 +30,11 @@ import br.com.jonathanzanella.myexpenses.database.MyDatabase;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.Expense_Table;
 import br.com.jonathanzanella.myexpenses.helpers.DateHelper;
-import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import rx.Observable;
-import rx.schedulers.Schedulers;
 
 import static br.com.jonathanzanella.myexpenses.log.Log.warning;
 
@@ -132,7 +130,7 @@ public class Card extends BaseModel implements Chargeable, UnsyncModel {
 				.querySingle();
 	}
 
-	public Observable<Account> getAccount() {
+	public Account getAccount() {
 		return accountRepository.find(accountUuid);
 	}
 
@@ -158,34 +156,23 @@ public class Card extends BaseModel implements Chargeable, UnsyncModel {
 		return (type == CardType.CREDIT);
 	}
 
+	@WorkerThread
 	@Override
 	public void debit(final int value) {
 		if(type == CardType.DEBIT) {
-			getAccount()
-					.observeOn(Schedulers.io())
-					.subscribe(new Subscriber<Account>("Card.debit") {
-						@Override
-						public void onNext(Account account) {
-							account.debit(value);
-							accountRepository.save(account);
-						}
-					});
-
+			Account account = getAccount();
+			account.debit(value);
+			accountRepository.save(account);
 		}
 	}
 
+	@WorkerThread
 	@Override
 	public void credit(final int value) {
 		if(type == CardType.DEBIT) {
-			getAccount()
-					.observeOn(Schedulers.io())
-					.subscribe(new Subscriber<Account>("Card.credit") {
-						@Override
-						public void onNext(Account account) {
-							account.credit(value);
-							accountRepository.save(account);
-						}
-					});
+			Account account = getAccount();
+			account.credit(value);
+			accountRepository.save(account);
 		}
 	}
 

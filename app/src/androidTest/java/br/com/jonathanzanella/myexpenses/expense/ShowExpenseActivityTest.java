@@ -21,7 +21,6 @@ import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.FlowManagerHelper;
-import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.ExpenseBuilder;
 
@@ -73,13 +72,8 @@ public class ShowExpenseActivityTest {
 		String incomeAsCurrency = NumberFormat.getCurrencyInstance().format(expense.getValue() / 100.0);
 		onView(withId(R.id.act_show_expense_name)).check(matches(withText(expense.getName())));
 		onView(withId(R.id.act_show_expense_value)).check(matches(withText(incomeAsCurrency)));
-		expense.getChargeable().subscribe(new Subscriber<Chargeable>("ShowExpenseActivityTest") {
-
-			@Override
-			public void onNext(Chargeable chargeable) {
-				onView(withId(R.id.act_show_expense_chargeable)).check(matches(withText(chargeable.getName())));
-			}
-		});
+		Chargeable chargeable = expense.getChargeable();
+		onView(withId(R.id.act_show_expense_chargeable)).check(matches(withText(chargeable.getName())));
 	}
 
 	@Test

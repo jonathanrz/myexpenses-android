@@ -14,7 +14,6 @@ import java.text.NumberFormat;
 import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.database.Repository;
-import br.com.jonathanzanella.myexpenses.helpers.CountingIdlingResource;
 import br.com.jonathanzanella.myexpenses.helpers.DateHelper;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
@@ -37,7 +36,7 @@ public class ShowAccountActivity extends BaseActivity implements AccountContract
 	@Bind(R.id.act_show_account_transactions)
 	TransactionsView transactionsView;
 
-	private AccountPresenter presenter = new AccountPresenter(new AccountRepository(new Repository<Account>(MyApplication.getContext())), new CountingIdlingResource("ShowAccountActivity"));
+	private AccountPresenter presenter = new AccountPresenter(new AccountRepository(new Repository<Account>(MyApplication.getContext())));
 	private DateTime monthToShow;
 
 	@Override

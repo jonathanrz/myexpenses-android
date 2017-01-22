@@ -1,8 +1,10 @@
 package br.com.jonathanzanella.myexpenses.expense;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.UiThread;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +25,6 @@ import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import br.com.jonathanzanella.myexpenses.receipt.Receipt;
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by Jonathan Zanella on 26/01/16.
@@ -60,19 +61,24 @@ class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHolder> {
 			itemView.setOnClickListener(this);
 		}
 
-		public void setData(Expense expense) {
+		@UiThread
+		public void setData(final Expense expense) {
 			name.setText(expense.getName());
 			date.setText(Receipt.sdf.format(expense.getDate().toDate()));
 			value.setText(NumberFormat.getCurrencyInstance().format(expense.getValue() / 100.0));
-			expense.getChargeable()
-					.observeOn(AndroidSchedulers.mainThread())
-					.subscribe(new Subscriber<Chargeable>("ExpenseAdapter.setData") {
+			new AsyncTask<Void, Void, Chargeable>() {
 
-						@Override
-						public void onNext(Chargeable c) {
-							chargeable.setText(c.getName());
-						}
-					});
+				@Override
+				protected Chargeable doInBackground(Void... voids) {
+					return expense.getChargeable();
+				}
+
+				@Override
+				protected void onPostExecute(Chargeable c) {
+					super.onPostExecute(c);
+					chargeable.setText(c.getName());
+				}
+			}.execute();
 
 			chargeNextMonth.setVisibility(expense.isChargeNextMonth() ? View.VISIBLE : View.GONE);
 			expense.getBill().subscribe(new Subscriber<Bill>("ExpenseAdapter.setData") {

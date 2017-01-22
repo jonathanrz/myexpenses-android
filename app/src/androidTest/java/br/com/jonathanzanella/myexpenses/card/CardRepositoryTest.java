@@ -33,12 +33,14 @@ import static org.hamcrest.Matchers.not;
 public class CardRepositoryTest {
 	private CardRepository repository = new CardRepository();
 	private Account account;
+	private AccountRepository accountRepository;
 
 	@Before
 	public void setUp() throws Exception {
 		account = new Account();
 		account.setName("test");
-		new AccountRepository(new Repository<Account>(MyApplication.getContext())).save(account);
+		accountRepository = new AccountRepository(new Repository<Account>(MyApplication.getContext()));
+		accountRepository.save(account);
 	}
 
 	@After
@@ -48,7 +50,7 @@ public class CardRepositoryTest {
 
 	@Test
 	public void can_save_card() throws Exception {
-		Card card = new CardBuilder().account(account).build();
+		Card card = new CardBuilder().account(account).build(accountRepository);
 		repository.save(card);
 
 		assertThat(card.id, is(not(0L)));
@@ -57,7 +59,7 @@ public class CardRepositoryTest {
 
 	@Test
 	public void can_load_saved_card() throws Exception {
-		Card card = new CardBuilder().account(account).build();
+		Card card = new CardBuilder().account(account).build(accountRepository);
 		repository.save(card);
 
 		Card loadCard = repository.find(card.getUuid());
@@ -66,11 +68,11 @@ public class CardRepositoryTest {
 
 	@Test
 	public void load_only_user_cards() throws Exception {
-		Card correctCard = new CardBuilder().account(account).build();
+		Card correctCard = new CardBuilder().account(account).build(accountRepository);
 		correctCard.setUserUuid(Environment.CURRENT_USER_UUID);
 		repository.save(correctCard);
 
-		Card wrongCard = new CardBuilder().name("wrongCard").account(account).build();
+		Card wrongCard = new CardBuilder().name("wrongCard").account(account).build(accountRepository);
 		wrongCard.setUserUuid("wrong");
 		repository.save(wrongCard);
 

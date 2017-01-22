@@ -5,8 +5,11 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.UiThread;
+import android.support.annotation.WorkerThread;
 import android.support.v7.app.AlertDialog;
 import android.widget.DatePicker;
 
@@ -26,9 +29,9 @@ import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 import static android.app.Activity.RESULT_OK;
+import static br.com.jonathanzanella.myexpenses.expense.Expense.findChargeable;
 
 /**
  * Created by jzanella on 8/27/16.
@@ -67,6 +70,7 @@ class ExpensePresenter {
 		this.editView = null;
 	}
 
+	@UiThread
 	void viewUpdated(boolean invalidateCache) {
 		if (expense != null) {
 			if(invalidateCache)
@@ -88,17 +92,21 @@ class ExpensePresenter {
 				}
 			});
 
-			expense.getChargeable()
-					.observeOn(AndroidSchedulers.mainThread())
-					.subscribe(new Subscriber<Chargeable>("ExpensePresenter.viewUpdated") {
+			new AsyncTask<Void, Void, Chargeable>() {
 
-						@Override
-						public void onNext(Chargeable chargeable) {
-							ExpensePresenter.this.chargeable = chargeable;
-							if(editView != null && chargeable != null)
-								editView.onChargeableSelected(chargeable);
-						}
-					});
+				@Override
+				protected Chargeable doInBackground(Void... voids) {
+					chargeable = expense.getChargeable();
+					return chargeable;
+				}
+
+				@Override
+				protected void onPostExecute(Chargeable chargeable) {
+					super.onPostExecute(chargeable);
+					if(editView != null && chargeable != null)
+						editView.onChargeableSelected(chargeable);
+				}
+			}.execute();
 
 			date = expense.getDate();
 			if(editView != null && date != null)
@@ -113,6 +121,7 @@ class ExpensePresenter {
 		}
 	}
 
+	@WorkerThread
 	void refreshExpense() {
 		if(expense != null) {
 			loadExpense(expense.getUuid());
@@ -121,6 +130,7 @@ class ExpensePresenter {
 		}
 	}
 
+	@WorkerThread
 	Expense loadExpense(String uuid) {
 		expense = repository.find(uuid);
 		if(expense == null)
@@ -133,6 +143,7 @@ class ExpensePresenter {
 			throw new InvalidMethodCallException("save", getClass().toString(), "View should be a Edit View");
 	}
 
+	@UiThread
 	void save() {
 		checkEditViewSet();
 		if(expense == null)
@@ -172,12 +183,14 @@ class ExpensePresenter {
 		}
 	}
 
+	@UiThread
 	void edit(Activity act) {
 		Intent i = new Intent(act, EditExpenseActivity.class);
 		i.putExtra(EditExpenseActivity.KEY_EXPENSE_UUID, getUuid());
 		act.startActivityForResult(i, REQUEST_EDIT_EXPENSE);
 	}
 
+	@UiThread
 	void delete(final Activity act) {
 		new AlertDialog.Builder(act)
 				.setTitle(android.R.string.dialog_alert_title)
@@ -203,21 +216,26 @@ class ExpensePresenter {
 				.show();
 	}
 
-	void onChargeableSelected(ChargeableType type, String uuid) {
-		Expense.findChargeable(type, uuid)
-				.observeOn(AndroidSchedulers.mainThread())
-				.subscribe(new Subscriber<Chargeable>("ExpensePresenter.onChargeableSelected") {
+	@UiThread
+	void onChargeableSelected(final ChargeableType type, final String uuid) {
+		new AsyncTask<Void, Void, Chargeable>() {
 
-					@Override
-					public void onNext(Chargeable chargeable) {
-						ExpensePresenter.this.chargeable = chargeable;
-						if(chargeable != null)
-							editView.onChargeableSelected(chargeable);
-					}
-				});
+			@Override
+			protected Chargeable doInBackground(Void... voids) {
+				chargeable = Expense.findChargeable(type, uuid);
+				return chargeable;
+			}
 
+			@Override
+			protected void onPostExecute(Chargeable chargeable) {
+				super.onPostExecute(chargeable);
+				if(chargeable != null)
+					editView.onChargeableSelected(chargeable);
+			}
+		}.execute();
 	}
 
+	@UiThread
 	void onBillSelected(String uuid) {
 		new BillRepository(new Repository<Bill>(MyApplication.getContext())).find(uuid)
 				.observeOn(AndroidSchedulers.mainThread())
@@ -236,29 +254,29 @@ class ExpensePresenter {
 		return expense != null ? expense.getUuid() : null;
 	}
 
-	void storeBundle(@NonNull  Bundle extras) {
-		if(extras.containsKey(KEY_EXPENSE_UUID))
-			loadExpense(extras.getString(KEY_EXPENSE_UUID));
-		if(extras.containsKey(KEY_BILL_UUID))
-			billRepository.find(extras.getString(KEY_BILL_UUID)).subscribe(new Subscriber<Bill>("ExpensePresenter.storeBundle") {
-				@Override
-				public void onNext(Bill bill) {
-					ExpensePresenter.this.bill = bill;
-				}
-			});
-		if(extras.containsKey(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_TYPE)) {
-			Expense.findChargeable(
-					(ChargeableType) extras.getSerializable(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_TYPE),
-					extras.getString(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_UUID))
-			.observeOn(Schedulers.io())
-			.subscribe(new Subscriber<Chargeable>("ExpensePresenter.storeBundle") {
+	@UiThread
+	void storeBundle(@NonNull final Bundle extras) {
+		new AsyncTask<Void, Void, Void>() {
 
-				@Override
-				public void onNext(Chargeable chargeable) {
-					ExpensePresenter.this.chargeable = chargeable;
+			@Override
+			protected Void doInBackground(Void... voids) {
+				if(extras.containsKey(KEY_EXPENSE_UUID))
+					loadExpense(extras.getString(KEY_EXPENSE_UUID));
+				if(extras.containsKey(KEY_BILL_UUID))
+					billRepository.find(extras.getString(KEY_BILL_UUID)).subscribe(new Subscriber<Bill>("ExpensePresenter.storeBundle") {
+						@Override
+						public void onNext(Bill bill) {
+							ExpensePresenter.this.bill = bill;
+						}
+					});
+				if(extras.containsKey(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_TYPE)) {
+					chargeable = findChargeable(
+							(ChargeableType) extras.getSerializable(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_TYPE),
+							extras.getString(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_UUID));
 				}
-			});
-		}
+				return null;
+			}
+		}.execute();
 	}
 
 	void onSaveInstanceState(Bundle outState) {
@@ -272,11 +290,19 @@ class ExpensePresenter {
 		}
 	}
 
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+	@UiThread
+	public void onActivityResult(int requestCode, int resultCode) {
 		switch (requestCode) {
 			case REQUEST_EDIT_EXPENSE: {
 				if(resultCode == Activity.RESULT_OK)
-					refreshExpense();
+					new AsyncTask<Void, Void, Void>() {
+
+						@Override
+						protected Void doInBackground(Void... voids) {
+							refreshExpense();
+							return null;
+						}
+					}.execute();
 			}
 		}
 	}
@@ -285,10 +311,12 @@ class ExpensePresenter {
 		return expense != null;
 	}
 
+	@WorkerThread
 	boolean hasChargeable() {
 		return hasExpense() && expense.getChargeable() != null;
 	}
 
+	@UiThread
 	void onDate(Context ctx) {
 		checkEditViewSet();
 		DateTime time = date;
