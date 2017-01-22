@@ -53,7 +53,7 @@ import static br.com.jonathanzanella.myexpenses.log.Log.warning;
 public class Receipt extends BaseModel implements Transaction, UnsyncModel {
 	public static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
 	private static final ReceiptApi receiptApi = new ReceiptApi();
-	private AccountRepository accountRepository = new AccountRepository(new Repository<Account>(MyApplication.getContext()));
+	private AccountRepository accountRepository = null;
 
 	@Column
 	@PrimaryKey(autoincrement = true) @Setter @Getter
@@ -121,6 +121,12 @@ public class Receipt extends BaseModel implements Transaction, UnsyncModel {
 		return true;
 	}
 
+	private AccountRepository getAccountRepository() {
+		if(accountRepository == null)
+			accountRepository = new AccountRepository(new Repository<Account>(MyApplication.getContext()));
+		return accountRepository;
+	}
+
 	public static List<Receipt> all() {
 		return initQuery().queryList();
 	}
@@ -181,7 +187,7 @@ public class Receipt extends BaseModel implements Transaction, UnsyncModel {
 	}
 
 	public Observable<Account> getAccount() {
-		return accountRepository.find(accountUuid);
+		return getAccountRepository().find(accountUuid);
 	}
 
 	public void setAccount(@NonNull Account a) {
@@ -226,7 +232,7 @@ public class Receipt extends BaseModel implements Transaction, UnsyncModel {
 				@Override
 				public void onNext(Account account) {
 					account.credit(getIncome());
-					accountRepository.save(account);
+					getAccountRepository().save(account);
 					setCredited(true);
 					save();
 				}
