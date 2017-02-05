@@ -20,7 +20,6 @@ import br.com.jonathanzanella.myexpenses.helpers.FlowManagerHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.CardBuilder;
 
 import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -76,9 +75,9 @@ public class CardRepositoryTest {
 		wrongCard.setUserUuid("wrong");
 		repository.save(wrongCard);
 
-		List<Card> accounts = repository.userCards();
-		assertThat(accounts.size(), is(1));
-		assertTrue(accounts.contains(correctCard));
-		assertFalse(accounts.contains(wrongCard));
+		List<Card> cards = repository.userCards();
+		assertThat(cards.size(), is(1));
+		assertThat(cards.get(0).getUuid(), is(correctCard.getUuid()));
+		assertFalse(cards.contains(wrongCard));
 	}
 }
