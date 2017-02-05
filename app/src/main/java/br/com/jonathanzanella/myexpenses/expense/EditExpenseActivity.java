@@ -89,7 +89,7 @@ public class EditExpenseActivity extends BaseActivity implements ExpenseContract
 			}
 		});
 		presenter.attachView(this);
-		presenter.viewUpdated(false);
+		presenter.onViewUpdated(false);
 	}
 
 	@Override

@@ -71,7 +71,7 @@ class ExpensePresenter {
 	}
 
 	@UiThread
-	void viewUpdated(boolean invalidateCache) {
+	void onViewUpdated(boolean invalidateCache) {
 		if (expense != null) {
 			if(invalidateCache)
 				expense = repository.find(expense.getUuid());
@@ -83,7 +83,7 @@ class ExpensePresenter {
 			}
 			view.showExpense(expense);
 
-			expense.getBill().subscribe(new Subscriber<Bill>("ExpensePresenter.viewUpdated") {
+			expense.getBill().subscribe(new Subscriber<Bill>("ExpensePresenter.onViewUpdated") {
 				@Override
 				public void onNext(Bill bill) {
 					ExpensePresenter.this.bill = bill;
@@ -275,6 +275,12 @@ class ExpensePresenter {
 							extras.getString(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_UUID));
 				}
 				return null;
+			}
+
+			@Override
+			protected void onPostExecute(Void aVoid) {
+				super.onPostExecute(aVoid);
+				onViewUpdated(false);
 			}
 		}.execute();
 	}

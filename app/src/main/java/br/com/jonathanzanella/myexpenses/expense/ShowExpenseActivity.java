@@ -57,7 +57,7 @@ public class ShowExpenseActivity extends BaseActivity implements ExpenseContract
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
-		presenter.viewUpdated(false);
+		presenter.onViewUpdated(false);
 	}
 
 	@UiThread
