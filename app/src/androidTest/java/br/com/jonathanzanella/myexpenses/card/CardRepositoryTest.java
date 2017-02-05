@@ -62,7 +62,7 @@ public class CardRepositoryTest {
 		repository.save(card);
 
 		Card loadCard = repository.find(card.getUuid());
-		assertThat(loadCard, is(card));
+		assertThat(loadCard.getUuid(), is(card.getUuid()));
 	}
 
 	@Test
