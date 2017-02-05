@@ -1,6 +1,10 @@
 runTests:
-	./gradlew uninstallDebug assembleDebug testDebugUnitTest connectedDebugAndroidTest
+	./gradlew uninstallDebug
+	./gradlew assembleDebug
+	./gradlew testDebugUnitTest
+	./gradlew connectedDebugAndroidTest
 
 runTestsWithCoverage: runTests
-	./gradlew jacocoTestReport connectedCheck
+	./gradlew jacocoTestReport
+	./gradlew connectedCheck
 	./codecov.sh
