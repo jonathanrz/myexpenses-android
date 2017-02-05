@@ -121,12 +121,23 @@ class ExpensePresenter {
 		}
 	}
 
-	@WorkerThread
+	@UiThread
 	void refreshExpense() {
 		if(expense != null) {
-			loadExpense(expense.getUuid());
+			new AsyncTask<Void, Void, Void>() {
 
-			view.showExpense(expense);
+				@Override
+				protected Void doInBackground(Void... voids) {
+					loadExpense(expense.getUuid());
+					return null;
+				}
+
+				@Override
+				protected void onPostExecute(Void aVoid) {
+					super.onPostExecute(aVoid);
+					view.showExpense(expense);
+				}
+			}.execute();
 		}
 	}
 
