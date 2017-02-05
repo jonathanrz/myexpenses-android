@@ -127,8 +127,10 @@ class CardPresenter {
 						@Override
 						protected void onPostExecute(Account account) {
 							super.onPostExecute(account);
-							if(account != null && editView != null)
+							CardPresenter.this.account = account;
+							if(account != null && editView != null) {
 								editView.onAccountSelected(account);
+							}
 						}
 					}.execute(data.getStringExtra(ListAccountActivity.Companion.getKEY_ACCOUNT_SELECTED_UUID()));
 				}

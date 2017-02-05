@@ -48,7 +48,7 @@ public class ShowCardActivityTest {
 		account = new AccountBuilder().build();
 		accountRepository.save(account);
 
-		card = new CardBuilder().account(account).build();
+		card = new CardBuilder().account(account).build(accountRepository);
 		repository.save(card);
 	}
 

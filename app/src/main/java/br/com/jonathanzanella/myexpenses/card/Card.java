@@ -21,12 +21,14 @@ import java.util.List;
 import java.util.UUID;
 
 import br.com.jonathanzanella.myexpenses.Environment;
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
 import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType;
 import br.com.jonathanzanella.myexpenses.database.MyDatabase;
+import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.Expense_Table;
 import br.com.jonathanzanella.myexpenses.helpers.DateHelper;
@@ -131,7 +133,13 @@ public class Card extends BaseModel implements Chargeable, UnsyncModel {
 	}
 
 	public Account getAccount() {
-		return accountRepository.find(accountUuid);
+		return getAccountRepository().find(accountUuid);
+	}
+
+	private AccountRepository getAccountRepository() {
+		if(accountRepository == null)
+			accountRepository = new AccountRepository(new Repository<Account>(MyApplication.getContext()));
+		return accountRepository;
 	}
 
 	public void setAccount(Account account) {
@@ -162,7 +170,7 @@ public class Card extends BaseModel implements Chargeable, UnsyncModel {
 		if(type == CardType.DEBIT) {
 			Account account = getAccount();
 			account.debit(value);
-			accountRepository.save(account);
+			getAccountRepository().save(account);
 		}
 	}
 
@@ -172,7 +180,7 @@ public class Card extends BaseModel implements Chargeable, UnsyncModel {
 		if(type == CardType.DEBIT) {
 			Account account = getAccount();
 			account.credit(value);
-			accountRepository.save(account);
+			getAccountRepository().save(account);
 		}
 	}
 
