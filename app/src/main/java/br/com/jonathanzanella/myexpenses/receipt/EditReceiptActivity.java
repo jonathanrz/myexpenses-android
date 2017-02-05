@@ -1,7 +1,9 @@
 package br.com.jonathanzanella.myexpenses.receipt;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.UiThread;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.CheckBox;
@@ -19,7 +21,6 @@ import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.account.ListAccountActivity;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch;
-import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.source.ListSourceActivity;
 import br.com.jonathanzanella.myexpenses.source.Source;
@@ -224,17 +225,26 @@ public class EditReceiptActivity extends BaseActivity implements ReceiptContract
 	}
 
 	@Override
-	public void showReceipt(Receipt receipt) {
+	@UiThread
+	public void showReceipt(final Receipt receipt) {
 		editName.setText(receipt.getName());
 		editIncome.setText(NumberFormat.getCurrencyInstance().format(receipt.getIncome() / 100.0));
 		if(receipt.isCredited())
 			editIncome.setTextColor(getResources().getColor(R.color.value_unpaid));
-		receipt.getSource().subscribe(new Subscriber<Source>("EditReceiptActivity.showReceipt") {
+
+		new AsyncTask<Void, Void, Source>() {
+
 			@Override
-			public void onNext(Source source) {
+			protected Source doInBackground(Void... voids) {
+				return receipt.getSource();
+			}
+
+			@Override
+			protected void onPostExecute(Source source) {
+				super.onPostExecute(source);
 				editSource.setText(source.getName());
 			}
-		});
+		}.execute();
 
 		checkShowInResume.setChecked(receipt.isShowInResume());
 		selectUserView.setSelectedUser(receipt.getUserUuid());

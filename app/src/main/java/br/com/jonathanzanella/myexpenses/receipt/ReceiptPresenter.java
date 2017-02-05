@@ -20,7 +20,6 @@ import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException;
-import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import br.com.jonathanzanella.myexpenses.source.Source;
 import br.com.jonathanzanella.myexpenses.source.SourceRepository;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
@@ -80,14 +79,21 @@ class ReceiptPresenter {
 			}
 			view.showReceipt(receipt);
 
-			receipt.getSource().subscribe(new Subscriber<Source>("ReceiptPresenter.viewUpdated") {
+			new AsyncTask<Void, Void, Void>() {
+
 				@Override
-				public void onNext(Source source) {
-					ReceiptPresenter.this.source = source;
+				protected Void doInBackground(Void... voids) {
+					source = receipt.getSource();
+					return null;
+				}
+
+				@Override
+				protected void onPostExecute(Void aVoid) {
+					super.onPostExecute(aVoid);
 					if(source != null)
 						onSourceSelected(source.getUuid());
 				}
-			});
+			}.execute();
 
 			new AsyncTask<Void, Void, Account>() {
 
@@ -249,19 +255,12 @@ class ReceiptPresenter {
 
 	@UiThread
 	void storeBundle(@NonNull final Bundle extras) {
-
-		if(extras.containsKey(KEY_SOURCE_UUID))
-			sourceRepository.find(extras.getString(KEY_SOURCE_UUID))
-					.subscribe(new Subscriber<Source>("ReceiptPresenter.storeBundle") {
-						@Override
-						public void onNext(Source source) {
-							ReceiptPresenter.this.source = source;
-						}
-					});
-
 		new AsyncTask<Void, Void, Void>() {
 			@Override
 			protected Void doInBackground(Void... voids) {
+				if(extras.containsKey(KEY_SOURCE_UUID))
+					source = sourceRepository.find(extras.getString(KEY_SOURCE_UUID));
+
 				if(extras.containsKey(KEY_RECEIPT_UUID))
 					loadReceipt(extras.getString(KEY_RECEIPT_UUID));
 
@@ -281,15 +280,22 @@ class ReceiptPresenter {
 			outState.putString(KEY_ACCOUNT_UUID, account.getUuid());
 	}
 
-	void onSourceSelected(String sourceUuid) {
-		sourceRepository.find(sourceUuid).subscribe(new Subscriber<Source>("ReceiptPresenter.onSourceSelected") {
+	void onSourceSelected(final String sourceUuid) {
+		new AsyncTask<Void, Void, Void>() {
+
 			@Override
-			public void onNext(Source source) {
-				ReceiptPresenter.this.source = source;
+			protected Void doInBackground(Void... voids) {
+				source = sourceRepository.find(sourceUuid);
+				return null;
+			}
+
+			@Override
+			protected void onPostExecute(Void aVoid) {
+				super.onPostExecute(aVoid);
 				if(editView != null)
 					editView.onSourceSelected(source);
 			}
-		});
+		}.execute();
 	}
 
 	@UiThread

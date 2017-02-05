@@ -1,18 +1,16 @@
 package br.com.jonathanzanella.myexpenses.source;
 
+import android.support.annotation.WorkerThread;
+
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.Callable;
 
 import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.database.Repository;
-import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
-import rx.Observable;
-import rx.schedulers.Schedulers;
 
 import static br.com.jonathanzanella.myexpenses.log.Log.warning;
 
@@ -28,6 +26,7 @@ public class SourceRepository {
 		this.repository = repository;
 	}
 
+	@WorkerThread
 	public OperationResult save(Source source) {
 		OperationResult result = new OperationResult();
 		if(StringUtils.isEmpty(source.getName()))
@@ -43,41 +42,36 @@ public class SourceRepository {
 		return result;
 	}
 
-	public Observable<Source> find(final String uuid) {
-		return Observable.fromCallable(new Callable<Source>() {
-			@Override
-			public Source call() throws Exception {
-				return repository.find(sourceTable, uuid);
-			}
-		})
-		.observeOn(Schedulers.io());
+	@WorkerThread
+	public Source find(final String uuid) {
+		return repository.find(sourceTable, uuid);
 	}
 
+	@WorkerThread
 	public long greaterUpdatedAt() {
 		return repository.greaterUpdatedAt(sourceTable);
 	}
 
-	public List<Source> userSources() {
+	@WorkerThread
+	List<Source> userSources() {
 		return repository.userData(sourceTable);
 	}
 
+	@WorkerThread
 	public List<Source> unsync() {
 		return repository.unsync(sourceTable);
 	}
 
+	@WorkerThread
 	public void syncAndSave(final Source sourceSync) {
-		find(sourceSync.getUuid()).subscribe(new Subscriber<Source>("SourceRepository.syncAndSave") {
-			@Override
-			public void onNext(Source source) {
-				if(source != null && source.id != sourceSync.getId()) {
-					if(source.getUpdatedAt() != sourceSync.getUpdatedAt())
-						warning("Bill overwritten", sourceSync.getData());
-					sourceSync.setId(source.id);
-				}
+		Source source = find(sourceSync.getUuid());
+		if(source != null && source.id != sourceSync.getId()) {
+			if(source.getUpdatedAt() != sourceSync.getUpdatedAt())
+				warning("Bill overwritten", sourceSync.getData());
+			sourceSync.setId(source.id);
+		}
 
-				sourceSync.setSync(true);
-				repository.saveAtDatabase(sourceTable, sourceSync);
-			}
-		});
+		sourceSync.setSync(true);
+		repository.saveAtDatabase(sourceTable, sourceSync);
 	}
 }

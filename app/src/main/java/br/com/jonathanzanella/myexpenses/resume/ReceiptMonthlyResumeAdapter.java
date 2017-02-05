@@ -3,6 +3,7 @@ package br.com.jonathanzanella.myexpenses.resume;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
+import android.support.annotation.UiThread;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +19,6 @@ import java.util.List;
 import java.util.Locale;
 
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import br.com.jonathanzanella.myexpenses.helpers.TransactionsHelper;
 import br.com.jonathanzanella.myexpenses.receipt.Receipt;
 import br.com.jonathanzanella.myexpenses.source.Source;
@@ -62,7 +62,8 @@ class ReceiptMonthlyResumeAdapter extends RecyclerView.Adapter<ReceiptMonthlyRes
 			ButterKnife.bind(this, itemView);
 		}
 
-		public void setData(Receipt receipt) {
+		@UiThread
+		public void setData(final Receipt receipt) {
 			if(name != null)
 				name.setText(receipt.getName());
 			if(date != null)
@@ -71,14 +72,21 @@ class ReceiptMonthlyResumeAdapter extends RecyclerView.Adapter<ReceiptMonthlyRes
 			income.setTypeface(null, Typeface.NORMAL);
 			if(!receipt.isCredited())
 				income.setTypeface(null, Typeface.BOLD);
-			if(source != null) {
-				receipt.getSource().subscribe(new Subscriber<Source>("ReceiptMonthlyResumeAdapter.setData") {
-					@Override
-					public void onNext(Source s) {
+
+			new AsyncTask<Void, Void, Source>() {
+
+				@Override
+				protected Source doInBackground(Void... voids) {
+					return receipt.getSource();
+				}
+
+				@Override
+				protected void onPostExecute(Source s) {
+					super.onPostExecute(s);
+					if(source != null)
 						source.setText(s.getName());
-					}
-				});
-			}
+				}
+			}.execute();
 		}
 
 		public void setTotal(int totalValue) {

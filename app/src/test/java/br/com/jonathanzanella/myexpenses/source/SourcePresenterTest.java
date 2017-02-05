@@ -4,11 +4,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import java.util.concurrent.Callable;
-
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
-import rx.Observable;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.times;
@@ -56,18 +53,5 @@ public class SourcePresenterTest {
 		presenter.save();
 
 		verify(view, times(1)).showError(ValidationError.NAME);
-	}
-
-	@Test
-	public void empty_source_does_not_not_call_show_source() throws Exception {
-		when(repository.find(UUID)).thenReturn(Observable.fromCallable(new Callable<Source>() {
-			@Override
-			public Source call() throws Exception {
-				return null;
-			}
-		}));
-
-		presenter.loadSource(UUID);
-		verify(view, times(0)).showSource(any(Source.class));
 	}
 }

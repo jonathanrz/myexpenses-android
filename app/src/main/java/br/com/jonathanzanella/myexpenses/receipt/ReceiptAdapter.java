@@ -19,7 +19,6 @@ import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
-import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import br.com.jonathanzanella.myexpenses.source.Source;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -62,12 +61,20 @@ class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ViewHolder> {
 			name.setText(receipt.getName());
 			date.setText(Receipt.sdf.format(receipt.getDate().toDate()));
 			income.setText(NumberFormat.getCurrencyInstance().format(receipt.getIncome() / 100.0));
-			receipt.getSource().subscribe(new Subscriber<Source>("ReceiptAdapter.setData") {
+
+			new AsyncTask<Void, Void, Source>() {
+
 				@Override
-				public void onNext(Source s) {
+				protected Source doInBackground(Void... voids) {
+					return receipt.getSource();
+				}
+
+				@Override
+				protected void onPostExecute(Source s) {
+					super.onPostExecute(s);
 					source.setText(s.getName());
 				}
-			});
+			}.execute();
 
 			new AsyncTask<Void, Void, Account>() {
 

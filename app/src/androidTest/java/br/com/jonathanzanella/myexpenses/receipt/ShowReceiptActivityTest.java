@@ -20,7 +20,6 @@ import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.FlowManagerHelper;
-import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.ReceiptBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder;
@@ -82,11 +81,7 @@ public class ShowReceiptActivityTest {
 		Account account = receipt.getAccount();
 		onView(withId(R.id.act_show_receipt_account)).check(matches(withText(account.getName())));
 
-		receipt.getSource().subscribe(new Subscriber<Source>("ShowReceiptActivityTest.shows_receipt_correctly") {
-			@Override
-			public void onNext(Source source) {
-				onView(withId(R.id.act_show_receipt_source)).check(matches(withText(source.getName())));
-			}
-		});
+		Source source = receipt.getSource();
+		onView(withId(R.id.act_show_receipt_source)).check(matches(withText(source.getName())));
 	}
 }

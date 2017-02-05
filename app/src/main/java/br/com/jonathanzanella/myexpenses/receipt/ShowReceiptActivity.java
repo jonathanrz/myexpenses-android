@@ -15,7 +15,6 @@ import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.database.Repository;
-import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import br.com.jonathanzanella.myexpenses.source.Source;
 import br.com.jonathanzanella.myexpenses.source.SourceRepository;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
@@ -113,12 +112,20 @@ public class ShowReceiptActivity extends BaseActivity implements ReceiptContract
 		receiptName.setText(receipt.getName());
 		receiptDate.setText(Receipt.sdf.format(receipt.getDate().toDate()));
 		receiptIncome.setText(NumberFormat.getCurrencyInstance().format(receipt.getIncome() / 100.0));
-		receipt.getSource().subscribe(new Subscriber<Source>("ShowReceiptActivity.showReceipt") {
+
+		new AsyncTask<Void, Void, Source>() {
+
 			@Override
-			public void onNext(Source source) {
+			protected Source doInBackground(Void... voids) {
+				return receipt.getSource();
+			}
+
+			@Override
+			protected void onPostExecute(Source source) {
+				super.onPostExecute(source);
 				receiptSource.setText(source.getName());
 			}
-		});
+		}.execute();
 
 		new AsyncTask<Void, Void, Account>() {
 

@@ -1,6 +1,7 @@
 package br.com.jonathanzanella.myexpenses.receipt;
 
 import android.content.Context;
+import android.support.annotation.WorkerThread;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -39,7 +40,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
-import rx.Observable;
 
 import static br.com.jonathanzanella.myexpenses.log.Log.warning;
 
@@ -176,7 +176,8 @@ public class Receipt extends BaseModel implements Transaction, UnsyncModel {
 		return initQuery().where(Receipt_Table.sync.eq(false)).queryList();
 	}
 
-	public Observable<Source> getSource() {
+	@WorkerThread
+	public Source getSource() {
 		return new SourceRepository(new Repository<Source>(MyApplication.getContext())).find(sourceUuid);
 	}
 

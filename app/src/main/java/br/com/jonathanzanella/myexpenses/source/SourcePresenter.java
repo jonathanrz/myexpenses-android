@@ -1,10 +1,10 @@
 package br.com.jonathanzanella.myexpenses.source;
 
 import android.support.annotation.Nullable;
+import android.support.annotation.WorkerThread;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException;
-import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
@@ -52,15 +52,9 @@ class SourcePresenter {
 		}
 	}
 
+	@WorkerThread
 	void loadSource(final String uuid) {
-		repository.find(uuid).subscribe(new Subscriber<Source>("SourcePresenter.loadSource") {
-			@Override
-			public void onNext(Source source) {
-				SourcePresenter.this.source = source;
-				if(source != null)
-					viewUpdated();
-			}
-		});
+		source = repository.find(uuid);
 	}
 
 	void save() {
