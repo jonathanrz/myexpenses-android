@@ -68,6 +68,12 @@ public class ShowCardActivity extends BaseActivity implements CardContract.View 
 					presenter.loadCard(extras.getString(KEY_CREDIT_CARD_UUID));
 				return null;
 			}
+
+			@Override
+			protected void onPostExecute(Void aVoid) {
+				super.onPostExecute(aVoid);
+				presenter.viewUpdated(false);
+			}
 		}.execute();
 	}
 
