@@ -25,7 +25,7 @@ public class CurrencyTextWatch implements TextWatcher {
 		if(!s.toString().equals(current)){
 			edit.removeTextChangedListener(this);
 
-			String cleanString = s.toString().replaceAll("[R$,.]", "");
+			String cleanString = s.toString().replaceAll("[^\\d.]", "");
 
 			double parsed = Double.parseDouble(cleanString);
 			String formatted = NumberFormat.getCurrencyInstance().format((parsed/100));
