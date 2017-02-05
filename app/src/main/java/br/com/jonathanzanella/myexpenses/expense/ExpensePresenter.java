@@ -25,10 +25,8 @@ import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType;
 import br.com.jonathanzanella.myexpenses.chargeable.ListChargeableActivity;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException;
-import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
-import rx.android.schedulers.AndroidSchedulers;
 
 import static android.app.Activity.RESULT_OK;
 import static br.com.jonathanzanella.myexpenses.expense.Expense.findChargeable;
@@ -83,14 +81,21 @@ class ExpensePresenter {
 			}
 			view.showExpense(expense);
 
-			expense.getBill().subscribe(new Subscriber<Bill>("ExpensePresenter.onViewUpdated") {
+			new AsyncTask<Void, Void, Void>() {
+
 				@Override
-				public void onNext(Bill bill) {
-					ExpensePresenter.this.bill = bill;
+				protected Void doInBackground(Void... voids) {
+					bill = expense.getBill();
+					return null;
+				}
+
+				@Override
+				protected void onPostExecute(Void aVoid) {
+					super.onPostExecute(aVoid);
 					if(editView != null && bill != null)
 						editView.onBillSelected(bill);
 				}
-			});
+			}.execute();
 
 			new AsyncTask<Void, Void, Chargeable>() {
 
@@ -247,18 +252,22 @@ class ExpensePresenter {
 	}
 
 	@UiThread
-	void onBillSelected(String uuid) {
-		new BillRepository(new Repository<Bill>(MyApplication.getContext())).find(uuid)
-				.observeOn(AndroidSchedulers.mainThread())
-				.subscribe(new Subscriber<Bill>("ExpensePresenter.onBillSelected") {
-					@Override
-					public void onNext(Bill bill) {
-						ExpensePresenter.this.bill = bill;
-						if(bill != null) {
-							editView.onBillSelected(bill);
-						}
-					}
-				});
+	void onBillSelected(final String uuid) {
+		new AsyncTask<Void, Void, Void>() {
+
+			@Override
+			protected Void doInBackground(Void... voids) {
+				bill = new BillRepository(new Repository<Bill>(MyApplication.getContext())).find(uuid);
+				return null;
+			}
+
+			@Override
+			protected void onPostExecute(Void aVoid) {
+				super.onPostExecute(aVoid);
+				if(bill != null)
+					editView.onBillSelected(bill);
+			}
+		}.execute();
 	}
 
 	String getUuid() {
@@ -274,12 +283,7 @@ class ExpensePresenter {
 				if(extras.containsKey(KEY_EXPENSE_UUID))
 					loadExpense(extras.getString(KEY_EXPENSE_UUID));
 				if(extras.containsKey(KEY_BILL_UUID))
-					billRepository.find(extras.getString(KEY_BILL_UUID)).subscribe(new Subscriber<Bill>("ExpensePresenter.storeBundle") {
-						@Override
-						public void onNext(Bill bill) {
-							ExpensePresenter.this.bill = bill;
-						}
-					});
+					bill = billRepository.find(extras.getString(KEY_BILL_UUID));
 				if(extras.containsKey(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_TYPE)) {
 					chargeable = findChargeable(
 							(ChargeableType) extras.getSerializable(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_TYPE),
@@ -312,14 +316,7 @@ class ExpensePresenter {
 		switch (requestCode) {
 			case REQUEST_EDIT_EXPENSE: {
 				if(resultCode == Activity.RESULT_OK)
-					new AsyncTask<Void, Void, Void>() {
-
-						@Override
-						protected Void doInBackground(Void... voids) {
-							refreshExpense();
-							return null;
-						}
-					}.execute();
+					refreshExpense();
 			}
 		}
 	}

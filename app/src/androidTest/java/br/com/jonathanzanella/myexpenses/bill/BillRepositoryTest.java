@@ -21,7 +21,6 @@ import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.FlowManagerHelper;
-import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.BillBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.CardBuilder;
@@ -59,16 +58,12 @@ public class BillRepositoryTest {
 
 	@Test
 	public void can_load_saved_account() throws Exception {
-		Bill bill = new BillBuilder().build();
-		billRepository.save(bill);
+		Bill savedBill = new BillBuilder().build();
+		billRepository.save(savedBill);
 
-		billRepository.find(bill.getUuid()).subscribe(new Subscriber<Bill>("BillRepositoryTest.can_load_saved_account") {
-			@Override
-			public void onNext(Bill bill) {
-				assertThat(bill.getUuid(), is(bill.getUuid()));
-				assertThat(bill.getInitDate(), is(bill.getInitDate()));
-			}
-		});
+		Bill bill = billRepository.find(savedBill.getUuid());
+		assertThat(bill.getUuid(), is(savedBill.getUuid()));
+		assertThat(bill.getInitDate(), is(savedBill.getInitDate()));
 	}
 
 	@Test
@@ -108,21 +103,13 @@ public class BillRepositoryTest {
 				.chargeable(card)
 				.build();
 
-		billRepository.monthly(firstDayOfJune).subscribe(new Subscriber<List<Bill>>("BillRepositoryTest") {
-			@Override
-			public void onNext(List<Bill> bills) {
-				assertThat(bills.size(), Is.is(1));
-			}
-		});
+		List<Bill> bills = billRepository.monthly(firstDayOfJune);
+		assertThat(bills.size(), Is.is(1));
 
 		new ExpenseRepository().save(expense);
 
-		billRepository.monthly(firstDayOfJune).subscribe(new Subscriber<List<Bill>>("BillRepositoryTest") {
-			@Override
-			public void onNext(List<Bill> bills) {
-				assertThat(bills.size(), Is.is(0));
-			}
-		});
+		bills = billRepository.monthly(firstDayOfJune);
+		assertThat(bills.size(), Is.is(0));
 	}
 
 	@Test

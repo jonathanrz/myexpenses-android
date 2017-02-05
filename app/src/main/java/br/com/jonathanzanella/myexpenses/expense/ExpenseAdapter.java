@@ -21,7 +21,6 @@ import java.util.List;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.bill.Bill;
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
-import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import br.com.jonathanzanella.myexpenses.receipt.Receipt;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -81,9 +80,16 @@ class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHolder> {
 			}.execute();
 
 			chargeNextMonth.setVisibility(expense.isChargeNextMonth() ? View.VISIBLE : View.GONE);
-			expense.getBill().subscribe(new Subscriber<Bill>("ExpenseAdapter.setData") {
+			new AsyncTask<Void, Void, Bill>() {
+
 				@Override
-				public void onNext(Bill bill) {
+				protected Bill doInBackground(Void... voids) {
+					return expense.getBill();
+				}
+
+				@Override
+				protected void onPostExecute(Bill bill) {
+					super.onPostExecute(bill);
 					if(bill == null) {
 						billLayout.setVisibility(View.GONE);
 					} else {
@@ -91,7 +97,7 @@ class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHolder> {
 						billView.setText(bill.getName());
 					}
 				}
-			});
+			}.execute();
 		}
 
 		@Override

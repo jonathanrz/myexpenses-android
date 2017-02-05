@@ -1,6 +1,7 @@
 package br.com.jonathanzanella.myexpenses.bill;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -58,15 +59,29 @@ public class EditBillActivity extends BaseActivity implements BillContract.EditV
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
 		editAmount.addTextChangedListener(new CurrencyTextWatch(editAmount));
-		presenter.viewUpdated(false);
+		presenter.onViewUpdated(false);
 	}
 
 	@Override
-	protected void storeBundle(Bundle extras) {
+	protected void storeBundle(final Bundle extras) {
 		super.storeBundle(extras);
 
-		if(extras != null && extras.containsKey(KEY_BILL_UUID))
-			presenter.loadBill(extras.getString(KEY_BILL_UUID));
+		if(extras != null && extras.containsKey(KEY_BILL_UUID)) {
+			new AsyncTask<Void, Void, Void>() {
+
+				@Override
+				protected Void doInBackground(Void... voids) {
+					presenter.loadBill(extras.getString(KEY_BILL_UUID));
+					return null;
+				}
+
+				@Override
+				protected void onPostExecute(Void aVoid) {
+					super.onPostExecute(aVoid);
+					presenter.onViewUpdated(false);
+				}
+			}.execute();
+		}
 	}
 
 	@Override

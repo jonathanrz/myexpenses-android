@@ -1,6 +1,8 @@
 package br.com.jonathanzanella.myexpenses.account;
 
 import android.content.Context;
+import android.os.AsyncTask;
+import android.support.annotation.UiThread;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
@@ -19,7 +21,6 @@ import br.com.jonathanzanella.myexpenses.bill.Bill;
 import br.com.jonathanzanella.myexpenses.bill.BillRepository;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
-import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import br.com.jonathanzanella.myexpenses.receipt.Receipt;
 import br.com.jonathanzanella.myexpenses.transaction.Transaction;
 import br.com.jonathanzanella.myexpenses.transaction.TransactionAdapter;
@@ -28,7 +29,6 @@ import butterknife.Bind;
 import butterknife.BindDimen;
 import butterknife.BindString;
 import butterknife.ButterKnife;
-import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by jzanella on 7/9/16.
@@ -62,22 +62,28 @@ public class MonthTransactionsView extends BaseView {
 		ButterKnife.bind(this);
 	}
 
-	int showBalance(Account account, DateTime month, int balance) {
+	@UiThread
+	int showBalance(Account account, final DateTime month, int balance) {
 		header.setText(monthTransactionsTemplate.concat(" ").concat(sdf.format(month.toDate())));
 		final TransactionAdapter adapter = new TransactionAdapter();
 		adapter.addTransactions(Receipt.monthly(month, account));
 		List<Expense> expenses = Expense.accountExpenses(account, month);
 		adapter.addTransactions(expenses);
 		if(account.isAccountToPayBills()) {
-			new BillRepository(new Repository<Bill>(MyApplication.getContext())).monthly(month)
-					.subscribeOn(AndroidSchedulers.mainThread())
-					.subscribe(new Subscriber<List<Bill>>("MonthTransactionsView.showBalance") {
-						@Override
-						public void onNext(List<Bill> bills) {
-							adapter.addTransactions(bills);
-							adapter.notifyDataSetChanged();
-						}
-					});
+			new AsyncTask<Void, Void, List<Bill>>() {
+
+				@Override
+				protected List<Bill> doInBackground(Void... voids) {
+					return new BillRepository(new Repository<Bill>(MyApplication.getContext())).monthly(month);
+				}
+
+				@Override
+				protected void onPostExecute(List<Bill> bills) {
+					super.onPostExecute(bills);
+					adapter.addTransactions(bills);
+					adapter.notifyDataSetChanged();
+				}
+			}.execute();
 		}
 
 		list.setAdapter(adapter);

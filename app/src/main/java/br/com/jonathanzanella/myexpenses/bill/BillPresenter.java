@@ -2,6 +2,9 @@ package br.com.jonathanzanella.myexpenses.bill;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.os.AsyncTask;
+import android.support.annotation.UiThread;
+import android.support.annotation.WorkerThread;
 import android.widget.DatePicker;
 
 import org.joda.time.DateTime;
@@ -9,7 +12,6 @@ import org.joda.time.DateTime;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException;
 import br.com.jonathanzanella.myexpenses.helpers.CountingIdlingResource;
-import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
@@ -45,10 +47,24 @@ class BillPresenter {
 		this.editView = null;
 	}
 
-	void viewUpdated(boolean invalidateCache) {
+	@UiThread
+	void onViewUpdated(boolean invalidateCache) {
 		if (bill != null) {
 			if(invalidateCache) {
-				loadBill(bill.getUuid());
+				new AsyncTask<Void, Void, Void>() {
+
+					@Override
+					protected Void doInBackground(Void... voids) {
+						loadBill(bill.getUuid());
+						return null;
+					}
+
+					@Override
+					protected void onPostExecute(Void aVoid) {
+						super.onPostExecute(aVoid);
+						updateView();
+					}
+				}.execute();
 			}
 		} else {
 			if(editView != null)
@@ -104,17 +120,9 @@ class BillPresenter {
 		}, time.getYear(), time.getMonthOfYear() - 1, time.getDayOfMonth()).show();
 	}
 
+	@WorkerThread
 	void loadBill(final String uuid) {
-		idlingResource.increment();
-		repository.find(uuid).subscribe(new Subscriber<Bill>("BillPresenter.loadBill") {
-			@Override
-			public void onNext(Bill bill) {
-				BillPresenter.this.bill = bill;
-				if(bill != null)
-					updateView();
-				idlingResource.decrement();
-			}
-		});
+		bill = repository.find(uuid);
 	}
 
 	private void checkEditViewSet() {

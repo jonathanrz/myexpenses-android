@@ -1,6 +1,6 @@
 package br.com.jonathanzanella.myexpenses.bill;
 
-import android.support.annotation.Nullable;
+import android.support.annotation.WorkerThread;
 import android.support.test.espresso.idling.CountingIdlingResource;
 
 import org.apache.commons.lang3.StringUtils;
@@ -8,18 +8,14 @@ import org.joda.time.DateTime;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.Callable;
 
 import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.database.Fields;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.database.Where;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
-import br.com.jonathanzanella.myexpenses.helpers.Subscriber;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
-import rx.Observable;
-import rx.schedulers.Schedulers;
 
 import static br.com.jonathanzanella.myexpenses.log.Log.warning;
 
@@ -35,61 +31,56 @@ public class BillRepository {
 		this.repository = repository;
 	}
 
-	public Observable<Bill> find(final String uuid) {
-		return Observable.fromCallable(new Callable<Bill>() {
-
-			@Override
-			public @Nullable Bill call() throws Exception {
-				return repository.find(billTable, uuid);
-			}
-		}).observeOn(Schedulers.io());
+	@WorkerThread
+	public Bill find(final String uuid) {
+		return repository.find(billTable, uuid);
 	}
 
+	@WorkerThread
 	List<Bill> userBills() {
 		return repository.userData(billTable);
 	}
 
+	@WorkerThread
 	public long greaterUpdatedAt() {
 		return repository.greaterUpdatedAt(billTable);
 	}
 
+	@WorkerThread
 	public List<Bill> unsync() {
 		return repository.unsync(billTable);
 	}
 
-	public Observable<List<Bill>> monthly(final DateTime month) {
-		return Observable.fromCallable(new Callable<List<Bill>>() {
-			@Override
-			public List<Bill> call() throws Exception {
-				final List<Expense> expenses = Expense.monthly(month);
-				Where query = new Where(Fields.INIT_DATE).lessThanOrEq(month.getMillis())
-						.and(Fields.END_DATE).greaterThanOrEq(month.getMillis())
-						.and(Fields.USER_UUID).eq(Environment.CURRENT_USER_UUID);
-				List<Bill> bills = repository.query(billTable, query);
-				for (int i = 0; i < bills.size(); i++) {
-					Bill bill = bills.get(i);
-					boolean billAlreadyPaid = false;
-					for (Expense expense : expenses) {
-						Bill b = repository.find(billTable, expense.getBillUuid());
-						if(b != null && b.getUuid().equals(bill.getUuid())) {
-							billAlreadyPaid = true;
-							break;
-						}
-					}
-					if(billAlreadyPaid) {
-						bills.remove(i);
-						i--;
-					}
+	@WorkerThread
+	public List<Bill> monthly(final DateTime month) {
+		final List<Expense> expenses = Expense.monthly(month);
+		Where query = new Where(Fields.INIT_DATE).lessThanOrEq(month.getMillis())
+				.and(Fields.END_DATE).greaterThanOrEq(month.getMillis())
+				.and(Fields.USER_UUID).eq(Environment.CURRENT_USER_UUID);
+		List<Bill> bills = repository.query(billTable, query);
+		for (int i = 0; i < bills.size(); i++) {
+			Bill bill = bills.get(i);
+			boolean billAlreadyPaid = false;
+			for (Expense expense : expenses) {
+				Bill b = repository.find(billTable, expense.getBillUuid());
+				if(b != null && b.getUuid().equals(bill.getUuid())) {
+					billAlreadyPaid = true;
+					break;
 				}
-
-				for (Bill bill : bills)
-					bill.month = month;
-
-				return bills;
 			}
-		});
+			if(billAlreadyPaid) {
+				bills.remove(i);
+				i--;
+			}
+		}
+
+		for (Bill bill : bills)
+			bill.month = month;
+
+		return bills;
 	}
 
+	@WorkerThread
 	public OperationResult save(Bill bill) {
 		OperationResult result = new OperationResult();
 		if(StringUtils.isEmpty(bill.getName()))
@@ -115,24 +106,19 @@ public class BillRepository {
 		return result;
 	}
 
+	@WorkerThread
 	public void syncAndSave(final Bill unsyncBill) {
 		final CountingIdlingResource idlingResource = new CountingIdlingResource("BillRepositorySave");
 		idlingResource.increment();
-		find(unsyncBill.getUuid())
-				.observeOn(Schedulers.io())
-				.subscribe(new Subscriber<Bill>("BillRepository.") {
-					@Override
-					public void onNext(Bill bill) {
-						if(bill != null && bill.id != unsyncBill.getId()) {
-							if(bill.getUpdatedAt() != unsyncBill.getUpdatedAt())
-								warning("Bill overwritten", unsyncBill.getData());
-							unsyncBill.setId(bill.id);
-						}
+		Bill bill = find(unsyncBill.getUuid());
+		if(bill != null && bill.id != unsyncBill.getId()) {
+			if(bill.getUpdatedAt() != unsyncBill.getUpdatedAt())
+				warning("Bill overwritten", unsyncBill.getData());
+			unsyncBill.setId(bill.id);
+		}
 
-						unsyncBill.setSync(true);
-						repository.saveAtDatabase(billTable, unsyncBill);
-						idlingResource.decrement();
-					}
-				});
+		unsyncBill.setSync(true);
+		repository.saveAtDatabase(billTable, unsyncBill);
+		idlingResource.decrement();
 	}
 }

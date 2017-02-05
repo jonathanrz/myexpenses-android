@@ -3,6 +3,7 @@ package br.com.jonathanzanella.myexpenses.resume;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.annotation.UiThread;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -115,13 +116,23 @@ class ResumeMonthlyView extends BaseView {
 		loadBills();
 	}
 
+	@UiThread
 	private void loadBills() {
-		billsAdapter.loadDataAsync(month, new Runnable() {
+		new AsyncTask<Void, Void, Void>() {
+
 			@Override
-			public void run() {
+			protected Void doInBackground(Void... voids) {
+				billsAdapter.loadDataAsync(month);
+				return null;
+			}
+
+			@Override
+			protected void onPostExecute(Void aVoid) {
+				super.onPostExecute(aVoid);
+				billsAdapter.notifyDataSetChanged();
 				bills.getLayoutParams().height = singleRowHeight * billsAdapter.getItemCount();
 			}
-		});
+		}.execute();
 	}
 
 	private void loadExpenses() {

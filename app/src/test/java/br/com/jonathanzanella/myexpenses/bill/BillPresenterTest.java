@@ -4,12 +4,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import java.util.concurrent.Callable;
-
 import br.com.jonathanzanella.myexpenses.helpers.CountingIdlingResource;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
-import rx.Observable;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.times;
@@ -65,12 +62,7 @@ public class BillPresenterTest {
 
 	@Test
 	public void empty_bill_does_not_not_call_show_bill() throws Exception {
-		when(repository.find(UUID)).thenReturn(Observable.fromCallable(new Callable<Bill>() {
-			@Override
-			public Bill call() throws Exception {
-				return null;
-			}
-		}));
+		when(repository.find(UUID)).thenReturn(null);
 
 		presenter.loadBill(UUID);
 		verify(view, times(0)).showBill(any(Bill.class));
