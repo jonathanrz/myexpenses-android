@@ -40,7 +40,7 @@ public class ShowCardActivityTest {
 
 	private Card card;
 	private Account account;
-	private CardRepository repository = new CardRepository();
+	private CardRepository repository = new CardRepository(new Repository<Card>(MyApplication.getContext()));
 	private AccountRepository accountRepository = new AccountRepository(new Repository<Account>(MyApplication.getContext()));
 
 	@Before

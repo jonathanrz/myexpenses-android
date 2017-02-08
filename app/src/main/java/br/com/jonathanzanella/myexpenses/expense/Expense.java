@@ -139,10 +139,6 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 		return charged;
 	}
 
-	public static List<Expense> all() {
-		return initQuery().queryList();
-	}
-
 	public static List<Expense> monthly(DateTime date) {
 		DateTime lastMonth = date.minusMonths(1);
 		DateTime initOfMonth = DateHelper.firstDayOfMonth(lastMonth);
@@ -233,8 +229,9 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 				.queryList());
 
 		DateTime creditCardMonth = date.minusMonths(1);
-		for (Card card : Card.creditCards()) {
-			int total = card.getInvoiceValue(creditCardMonth);
+		List<Card> cards = getCardRepository().creditCards();
+		for (Card card : cards) {
+			int total = getCardRepository().getInvoiceValue(card, creditCardMonth);
 			if(total == 0)
 				continue;
 
@@ -255,7 +252,7 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 		DateTime initOfMonth = DateHelper.firstDayOfMonth(lastMonth);
 		DateTime endOfMonth = DateHelper.lastDayOfMonth(lastMonth);
 
-		Card card = account.getDebitCard();
+		Card card = getCardRepository().accountDebitCard(account);
 
 		List<Expense> expenses = initQuery()
 				.where(Expense_Table.date.between(initOfMonth).and(endOfMonth))
@@ -298,8 +295,9 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 
 		if(account.isAccountToPayCreditCard()) {
 			DateTime creditCardMonth = month.minusMonths(1);
-			for (Card creditCard : Card.creditCards()) {
-				int total = creditCard.getInvoiceValue(creditCardMonth);
+			List<Card> cards = getCardRepository().creditCards();
+			for (Card creditCard : cards) {
+				int total = getCardRepository().getInvoiceValue(card, creditCardMonth);
 				if (total == 0)
 					continue;
 
@@ -509,7 +507,7 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 
 	private static CardRepository getCardRepository() {
 		if(cardRepository == null)
-			cardRepository = new CardRepository();
+			cardRepository = new CardRepository(new Repository<Card>(MyApplication.getContext()));
 		return cardRepository;
 	}
 }

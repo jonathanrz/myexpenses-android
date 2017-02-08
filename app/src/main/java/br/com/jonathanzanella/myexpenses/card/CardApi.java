@@ -5,6 +5,8 @@ import com.raizlabs.android.dbflow.StringUtils;
 import java.io.IOException;
 import java.util.List;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
+import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.server.Server;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
@@ -17,7 +19,8 @@ import retrofit2.Response;
  */
 public class CardApi implements UnsyncModelApi<Card> {
 	private static final String LOG_TAG = CardApi.class.getSimpleName();
-	CardInterface cardInterface;
+	private CardInterface cardInterface;
+	private CardRepository cardRepository;
 
 	private CardInterface getInterface() {
 		if(cardInterface == null)
@@ -25,9 +28,15 @@ public class CardApi implements UnsyncModelApi<Card> {
 		return cardInterface;
 	}
 
+	private CardRepository getCardRepository() {
+		if(cardRepository == null)
+			cardRepository = new CardRepository(new Repository<Card>(MyApplication.getContext()));
+		return cardRepository;
+	}
+
 	@Override
 	public List<Card> index() {
-		Call<List<Card>> caller = getInterface().index(Card.greaterUpdatedAt());
+		Call<List<Card>> caller = getInterface().index(greaterUpdatedAt());
 
 		try {
 			Response<List<Card>> response = caller.execute();
@@ -69,11 +78,11 @@ public class CardApi implements UnsyncModelApi<Card> {
 
 	@Override
 	public List<Card> unsyncModels() {
-		return Card.unsync();
+		return getCardRepository().unsync();
 	}
 
 	@Override
 	public long greaterUpdatedAt() {
-		return Card.greaterUpdatedAt();
+		return getCardRepository().greaterUpdatedAt();
 	}
 }

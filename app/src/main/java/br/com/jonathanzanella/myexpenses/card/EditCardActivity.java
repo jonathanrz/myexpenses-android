@@ -1,6 +1,7 @@
 package br.com.jonathanzanella.myexpenses.card;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.view.Menu;
@@ -9,7 +10,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 
-import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
@@ -41,11 +41,13 @@ public class EditCardActivity extends BaseActivity implements CardContract.EditV
 	@Bind(R.id.act_edit_card_user)
 	SelectUserView selectUserView;
 
-	private CardPresenter presenter = new CardPresenter(new CardRepository(), new AccountRepository(new Repository<Account>(MyApplication.getContext())));
+	private CardPresenter presenter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		presenter = new CardPresenter(new CardRepository(new Repository<Card>(this)),
+				new AccountRepository(new Repository<Account>(this)));
 		setContentView(R.layout.activity_edit_card);
 	}
 
@@ -56,11 +58,18 @@ public class EditCardActivity extends BaseActivity implements CardContract.EditV
 	}
 
 	@Override
-	protected void storeBundle(Bundle extras) {
+	protected void storeBundle(final Bundle extras) {
 		super.storeBundle(extras);
 
-		if(extras != null && extras.containsKey(KEY_CARD_UUID))
-			presenter.loadCard(extras.getString(KEY_CARD_UUID));
+		new AsyncTask<Void, Void, Void>() {
+
+			@Override
+			protected Void doInBackground(Void... voids) {
+				if(extras != null && extras.containsKey(KEY_CARD_UUID))
+					presenter.loadCard(extras.getString(KEY_CARD_UUID));
+				return null;
+			}
+		}.execute();
 	}
 
 	@Override

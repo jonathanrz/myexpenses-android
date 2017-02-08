@@ -1,10 +1,12 @@
 package br.com.jonathanzanella.myexpenses.card;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
+import android.support.annotation.WorkerThread;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,8 +16,10 @@ import android.widget.TextView;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
+import br.com.jonathanzanella.myexpenses.database.Repository;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import lombok.Setter;
@@ -26,6 +30,7 @@ import lombok.Setter;
 public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
 	protected List<Card> cards;
 	private CardAdapterPresenter presenter;
+	private CardRepository cardRepository;
 
 	@Setter
 	CardAdapterCallback callback;
@@ -94,7 +99,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
 	}
 
 	public CardAdapter() {
-		presenter = new CardAdapterPresenter(this, new CardRepository());
+		cardRepository = new CardRepository(new Repository<Card>(MyApplication.getContext()));
+		presenter = new CardAdapterPresenter(this, cardRepository);
 	}
 
 	@Override
@@ -113,13 +119,29 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
 		return cards != null ? cards.size() : 0;
 	}
 
+	@WorkerThread
 	public void loadData() {
-		cards = Card.user();
+		cards = cardRepository.userCards();
 	}
 
-	void addCreditCard(@NonNull Card card) {
-		presenter.addCard(card);
-		cards = presenter.getCards(false);
+	@UiThread
+	void addCreditCard(@NonNull final String uuid) {
+		new AsyncTask<Void, Void, Card>() {
+
+			@Override
+			protected Card doInBackground(Void... voids) {
+				return cardRepository.find(uuid);
+			}
+
+			@Override
+			protected void onPostExecute(Card card) {
+				super.onPostExecute(card);
+				if(card == null)
+					throw new Resources.NotFoundException("Not found card with uuid=" + uuid);
+				presenter.addCard(card);
+				cards = presenter.getCards(false);
+			}
+		}.execute();
 	}
 
 	@Nullable

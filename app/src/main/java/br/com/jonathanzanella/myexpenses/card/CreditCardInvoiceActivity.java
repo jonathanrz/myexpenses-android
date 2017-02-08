@@ -3,12 +3,14 @@ package br.com.jonathanzanella.myexpenses.card;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.WorkerThread;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 
 import org.joda.time.DateTime;
 
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapter;
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapterBuilder;
@@ -29,20 +31,24 @@ public class CreditCardInvoiceActivity extends BaseActivity {
 
 	private Card card;
 	private DateTime initDate;
+	private CardRepository cardRepository;
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_credit_card_invoice);
+
+		cardRepository = new CardRepository(new Repository<Card>(getContext()));
 	}
 
 	@Override
+	@WorkerThread
 	protected void storeBundle(Bundle extras) {
 		super.storeBundle(extras);
 		if(extras == null)
 			return;
 		if(extras.containsKey(KEY_CREDIT_CARD_UUID))
-			card = Card.find(extras.getString(KEY_CREDIT_CARD_UUID));
+			card = cardRepository.find(extras.getString(KEY_CREDIT_CARD_UUID));
 		if(extras.containsKey(KEY_INIT_DATE))
 			initDate = (DateTime) extras.getSerializable(KEY_INIT_DATE);
 	}

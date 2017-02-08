@@ -1,5 +1,6 @@
 package br.com.jonathanzanella.myexpenses.expense;
 
+import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,6 +16,8 @@ import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.card.Card;
+import br.com.jonathanzanella.myexpenses.card.CardRepository;
+import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.receipt.Receipt;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -25,6 +28,7 @@ import butterknife.ButterKnife;
 class CreditCardAdapter extends RecyclerView.Adapter<CreditCardAdapter.ViewHolder> {
 	protected List<Expense> expenses;
 	private int totalValue;
+	private CardRepository cardRepository;
 
 	private enum VIEW_TYPE {
 		TYPE_NORMAL,
@@ -55,6 +59,10 @@ class CreditCardAdapter extends RecyclerView.Adapter<CreditCardAdapter.ViewHolde
 		public void setTotal(int totalValue) {
 			value.setText(NumberFormat.getCurrencyInstance().format(totalValue / 100.0));
 		}
+	}
+
+	public CreditCardAdapter(Context context) {
+		cardRepository = new CardRepository(new Repository<Card>(context));
 	}
 
 	@Override
@@ -90,7 +98,7 @@ class CreditCardAdapter extends RecyclerView.Adapter<CreditCardAdapter.ViewHolde
 	}
 
 	public void loadData(Card creditCard, DateTime date) {
-		expenses = creditCard.creditCardBills(date);
+		expenses = cardRepository.creditCardBills(creditCard, date);
 
 		totalValue = 0;
 		for (Expense expense : expenses)

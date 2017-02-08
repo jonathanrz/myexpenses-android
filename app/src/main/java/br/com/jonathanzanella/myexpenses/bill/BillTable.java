@@ -3,6 +3,7 @@ package br.com.jonathanzanella.myexpenses.bill;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.NonNull;
 
 import org.joda.time.DateTime;
 
@@ -15,15 +16,15 @@ import br.com.jonathanzanella.myexpenses.database.Table;
  */
 
 public final class BillTable implements Table<Bill> {
-	public void onCreate(SQLiteDatabase db) {
+	public void onCreate(@NonNull SQLiteDatabase db) {
 		db.execSQL(createTableSql());
 	}
 
-	public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
+	public void onUpgrade(@NonNull SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
 	}
 
 	@Override
-	public void onDrop(SQLiteDatabase db) {
+	public void onDrop(@NonNull SQLiteDatabase db) {
 		db.execSQL(dropTableSql());
 	}
 
@@ -52,8 +53,9 @@ public final class BillTable implements Table<Bill> {
 		return "DROP TABLE IF EXISTS " + getName();
 	}
 
+	@NonNull
 	@Override
-	public ContentValues fillContentValues(Bill bill) {
+	public ContentValues fillContentValues(@NonNull Bill bill) {
 		ContentValues values = new ContentValues();
 		values.put(Fields.NAME.toString(), bill.getName());
 		values.put(Fields.UUID.toString(), bill.getUuid());
@@ -69,8 +71,9 @@ public final class BillTable implements Table<Bill> {
 		return values;
 	}
 
+	@NonNull
 	@Override
-	public Bill fill(Cursor c) {
+	public Bill fill(@NonNull Cursor c) {
 		Bill bill = new Bill();
 		bill.setId(c.getLong(c.getColumnIndexOrThrow(Fields.ID.toString())));
 		bill.setName(c.getString(c.getColumnIndexOrThrow(Fields.NAME.toString())));
@@ -87,6 +90,7 @@ public final class BillTable implements Table<Bill> {
 		return bill;
 	}
 
+	@NonNull
 	@Override
 	public String [] getProjection() {
 		return new String[]{

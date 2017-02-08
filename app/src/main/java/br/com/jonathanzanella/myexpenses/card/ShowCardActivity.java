@@ -11,7 +11,6 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
@@ -37,14 +36,12 @@ public class ShowCardActivity extends BaseActivity implements CardContract.View 
 
 	private CardPresenter presenter;
 
-	public ShowCardActivity() {
-		this.presenter = new CardPresenter(new CardRepository(), new AccountRepository(new Repository<Account>(MyApplication.getContext())));
-	}
-
 	@UiThread
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		presenter = new CardPresenter(new CardRepository(new Repository<Card>(this)),
+				new AccountRepository(new Repository<Account>(this)));
 		setContentView(R.layout.activity_show_card);
 	}
 

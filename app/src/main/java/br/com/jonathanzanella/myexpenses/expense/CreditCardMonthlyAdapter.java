@@ -1,6 +1,8 @@
 package br.com.jonathanzanella.myexpenses.expense;
 
+import android.content.Context;
 import android.support.annotation.Nullable;
+import android.support.annotation.WorkerThread;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +19,8 @@ import java.util.Locale;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.card.Card;
+import br.com.jonathanzanella.myexpenses.card.CardRepository;
+import br.com.jonathanzanella.myexpenses.database.Repository;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -27,6 +31,7 @@ public class CreditCardMonthlyAdapter extends RecyclerView.Adapter<CreditCardMon
 	public static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM", Locale.getDefault());
 	protected List<Expense> expenses;
 	private int totalValue;
+	private CardRepository cardRepository;
 
 	private enum VIEW_TYPE {
 		TYPE_NORMAL,
@@ -67,6 +72,10 @@ public class CreditCardMonthlyAdapter extends RecyclerView.Adapter<CreditCardMon
 		}
 	}
 
+	public CreditCardMonthlyAdapter(Context context) {
+		cardRepository = new CardRepository(new Repository<Card>(context));
+	}
+
 	@Override
 	public int getItemViewType(int position) {
 		if(expenses != null && position == expenses.size()) {
@@ -100,8 +109,9 @@ public class CreditCardMonthlyAdapter extends RecyclerView.Adapter<CreditCardMon
 		return expenses != null ? expenses.size() + 1 : 0;
 	}
 
+	@WorkerThread
 	public void loadData(Card creditCard, DateTime month) {
-		expenses = creditCard.creditCardBills(month);
+		expenses = cardRepository.creditCardBills(creditCard, month);
 		totalValue = 0;
 
 		for (Expense expense : expenses) {

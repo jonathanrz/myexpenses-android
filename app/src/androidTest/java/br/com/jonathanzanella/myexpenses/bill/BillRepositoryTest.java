@@ -97,7 +97,7 @@ public class BillRepositoryTest {
 		accountRepository.save(account);
 
 		Card card = new CardBuilder().account(account).build(accountRepository);
-		new CardRepository().save(card);
+		new CardRepository(new Repository<Card>(MyApplication.getContext())).save(card);
 
 		Expense expense = new ExpenseBuilder()
 				.date(firstDayOfJune)

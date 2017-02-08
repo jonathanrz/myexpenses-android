@@ -140,7 +140,7 @@ class CardPresenter {
 	}
 
 	Expense generateCreditCardBill() {
-		List<Expense> expenses = card.creditCardBills(DateTime.now().minusMonths(1));
+		List<Expense> expenses = repository.creditCardBills(card, DateTime.now().minusMonths(1));
 		int totalExpense = 0;
 		for (Expense expense : expenses) {
 			totalExpense += expense.getValue();

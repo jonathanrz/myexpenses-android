@@ -16,11 +16,10 @@ class Where(field: Fields) {
     }
 
     private val queries: MutableList<Query>
-    private val values: MutableList<String>
+    private val values: MutableList<String> = ArrayList()
 
     init {
         queries = ArrayList<Query>()
-        values = ArrayList<String>()
         queries.add(Query(field))
     }
 

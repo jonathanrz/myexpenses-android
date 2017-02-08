@@ -1,7 +1,6 @@
 package br.com.jonathanzanella.myexpenses.account;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -10,7 +9,6 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.card.Card;
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
 import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
@@ -77,11 +75,6 @@ public class Account implements Chargeable, UnsyncModel {
 	@Override
 	public void debit(int value) {
 		balance -= value;
-	}
-
-	public @Nullable
-	Card getDebitCard() {
-		return Card.accountDebitCard(this);
 	}
 
 	@Override

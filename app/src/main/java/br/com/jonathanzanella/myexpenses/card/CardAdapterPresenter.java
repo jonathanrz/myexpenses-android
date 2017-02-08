@@ -1,5 +1,7 @@
 package br.com.jonathanzanella.myexpenses.card;
 
+import android.support.annotation.UiThread;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -29,6 +31,7 @@ class CardAdapterPresenter {
 		return Collections.unmodifiableList(cards);
 	}
 
+	@UiThread
 	void addCard(Card source) {
 		cards.add(source);
 		adapter.notifyItemInserted(cards.size() - 1);

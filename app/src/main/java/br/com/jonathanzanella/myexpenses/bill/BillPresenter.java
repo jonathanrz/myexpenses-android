@@ -65,6 +65,8 @@ class BillPresenter {
 						updateView();
 					}
 				}.execute();
+			} else {
+				updateView();
 			}
 		} else {
 			if(editView != null)

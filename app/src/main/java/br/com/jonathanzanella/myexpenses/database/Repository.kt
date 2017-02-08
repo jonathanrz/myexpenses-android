@@ -38,7 +38,15 @@ open class Repository<T : UnsyncModel>(ctx: Context) {
         }
     }
 
+    fun querySingle(table: Table<T>, where: Where): T? {
+        return query(table, where, true).singleOrNull()
+    }
+
     fun query(table: Table<T>, where: Where): List<T> {
+        return query(table, where, false)
+    }
+
+    fun query(table: Table<T>, where: Where, single: Boolean): List<T> {
         val db = databaseHelper.readableDatabase
         val select = where.query()
         db.query(
@@ -52,7 +60,7 @@ open class Repository<T : UnsyncModel>(ctx: Context) {
         ).use { c ->
             val sources = ArrayList<T>()
             c.moveToFirst()
-            while (!c.isAfterLast) {
+            while (!single && !c.isAfterLast) {
                 sources.add(table.fill(c))
                 c.moveToNext()
             }
