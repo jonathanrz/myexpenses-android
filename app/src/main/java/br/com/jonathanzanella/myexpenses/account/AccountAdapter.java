@@ -1,7 +1,6 @@
 package br.com.jonathanzanella.myexpenses.account;
 
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -28,7 +27,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
 	private AccountAdapterPresenter presenter;
 
 	private boolean simplified = false;
-	AccountAdapterCallback callback;
+	private AccountAdapterCallback callback;
 	@Setter
 	DateTime month;
 
@@ -102,10 +101,6 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
 	@Override
 	public int getItemCount() {
 		return presenter.getAccountsSize();
-	}
-
-	void addAccount(@NonNull Account acc) {
-		presenter.addAccount(acc);
 	}
 
 	public @Nullable Account getAccount(int position) {

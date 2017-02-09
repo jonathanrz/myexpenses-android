@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import java.text.NumberFormat;
 
-import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
@@ -39,7 +38,9 @@ public class ShowReceiptActivity extends BaseActivity implements ReceiptContract
 	@Bind(R.id.act_show_receipt_show_in_resume)
 	TextView receiptShowInResume;
 
-	private ReceiptPresenter presenter = new ReceiptPresenter(new ReceiptRepository(), new SourceRepository(new Repository<Source>(this)), new AccountRepository(new Repository<Account>(MyApplication.getContext())));
+	private ReceiptPresenter presenter = new ReceiptPresenter(new ReceiptRepository(new Repository<Receipt>(this)),
+			new SourceRepository(new Repository<Source>(this)),
+			new AccountRepository(new Repository<Account>(this)));
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {

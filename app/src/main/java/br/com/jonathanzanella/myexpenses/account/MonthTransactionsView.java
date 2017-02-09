@@ -22,6 +22,7 @@ import br.com.jonathanzanella.myexpenses.bill.BillRepository;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.receipt.Receipt;
+import br.com.jonathanzanella.myexpenses.receipt.ReceiptRepository;
 import br.com.jonathanzanella.myexpenses.transaction.Transaction;
 import br.com.jonathanzanella.myexpenses.transaction.TransactionAdapter;
 import br.com.jonathanzanella.myexpenses.views.BaseView;
@@ -35,6 +36,7 @@ import butterknife.ButterKnife;
  */
 public class MonthTransactionsView extends BaseView {
 	public static final SimpleDateFormat sdf = new SimpleDateFormat("MMMM/yy", Locale.getDefault());
+	private ReceiptRepository receiptRepository;
 
 	@Bind(R.id.view_month_transactions_list)
 	RecyclerView list;
@@ -58,15 +60,29 @@ public class MonthTransactionsView extends BaseView {
 
 	@Override
 	protected void init() {
+		receiptRepository = new ReceiptRepository(new Repository<Receipt>(getContext()));
 		inflate(getContext(), R.layout.view_account_month_transactions, this);
 		ButterKnife.bind(this);
 	}
 
 	@UiThread
-	int showBalance(Account account, final DateTime month, int balance) {
+	int showBalance(final Account account, final DateTime month, int balance) {
 		header.setText(monthTransactionsTemplate.concat(" ").concat(sdf.format(month.toDate())));
 		final TransactionAdapter adapter = new TransactionAdapter();
-		adapter.addTransactions(Receipt.monthly(month, account));
+		new AsyncTask<Void, Void, Void>() {
+			@Override
+			protected Void doInBackground(Void... voids) {
+				adapter.addTransactions(receiptRepository.monthly(month, account));
+				return null;
+			}
+
+			@Override
+			protected void onPostExecute(Void aVoid) {
+				super.onPostExecute(aVoid);
+				adapter.notifyDataSetChanged();
+			}
+		}.execute();
+
 		List<Expense> expenses = Expense.accountExpenses(account, month);
 		adapter.addTransactions(expenses);
 		if(account.isAccountToPayBills()) {

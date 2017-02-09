@@ -17,6 +17,7 @@ class Where(field: Fields) {
 
     private val queries: MutableList<Query>
     private val values: MutableList<String> = ArrayList()
+    private var orderBy: Fields = Fields.NAME;
 
     init {
         queries = ArrayList<Query>()
@@ -79,6 +80,15 @@ class Where(field: Fields) {
             }
         }
         return Select(query.toString(), values.toTypedArray())
+    }
+
+    fun orderBy(field: Fields): Where {
+        orderBy = field
+        return this
+    }
+
+    fun orderBy(): Fields {
+        return orderBy()
     }
 
     private fun fieldsAndValueMatch() {

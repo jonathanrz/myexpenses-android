@@ -56,7 +56,7 @@ open class Repository<T : UnsyncModel>(ctx: Context) {
                 select.parameters,
                 null,
                 null,
-                Fields.NAME.toString()
+                where.orderBy().fieldName
         ).use { c ->
             val sources = ArrayList<T>()
             c.moveToFirst()

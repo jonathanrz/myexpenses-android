@@ -7,6 +7,8 @@ import com.raizlabs.android.dbflow.StringUtils;
 import java.io.IOException;
 import java.util.List;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
+import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.server.Server;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
@@ -19,7 +21,8 @@ import retrofit2.Response;
  */
 public class ReceiptApi implements UnsyncModelApi<Receipt> {
     private static final String LOG_TAG = ReceiptApi.class.getSimpleName();
-    ReceiptInterface receiptInterface;
+    private ReceiptInterface receiptInterface;
+    private ReceiptRepository receiptRepository;
 
     private ReceiptInterface getInterface() {
         if(receiptInterface == null)
@@ -27,9 +30,15 @@ public class ReceiptApi implements UnsyncModelApi<Receipt> {
         return receiptInterface;
     }
 
+    private ReceiptRepository getRepository() {
+        if(receiptRepository == null)
+            receiptRepository = new ReceiptRepository(new Repository<Receipt>(MyApplication.getContext()));
+        return receiptRepository;
+    }
+
     @Override
     public @Nullable List<Receipt> index() {
-        Call<List<Receipt>> caller = getInterface().index(Receipt.greaterUpdatedAt());
+        Call<List<Receipt>> caller = getInterface().index(greaterUpdatedAt());
 
         try {
             Response<List<Receipt>> response = caller.execute();
@@ -71,11 +80,11 @@ public class ReceiptApi implements UnsyncModelApi<Receipt> {
 
     @Override
     public List<Receipt> unsyncModels() {
-        return Receipt.unsync();
+        return getRepository().unsync();
     }
 
     @Override
     public long greaterUpdatedAt() {
-        return Receipt.greaterUpdatedAt();
+        return getRepository().greaterUpdatedAt();
     }
 }

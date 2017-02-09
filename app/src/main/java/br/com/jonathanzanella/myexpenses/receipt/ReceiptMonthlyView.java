@@ -39,7 +39,7 @@ class ReceiptMonthlyView extends BaseView {
         inflate(getContext(), R.layout.view_receipts_monthly, this);
         ButterKnife.bind(this);
 
-        adapter = new ReceiptAdapter();
+        adapter = new ReceiptAdapter(getContext());
 
         sources.setAdapter(adapter);
         sources.setLayoutManager(new GridLayoutManager(getContext(), 1));

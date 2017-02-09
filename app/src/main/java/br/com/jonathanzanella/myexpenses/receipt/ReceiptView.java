@@ -3,6 +3,7 @@ package br.com.jonathanzanella.myexpenses.receipt;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -16,6 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.helpers.DateHelper;
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapter;
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapterBuilder;
@@ -33,6 +35,7 @@ public class ReceiptView extends BaseView implements ViewPager.OnPageChangeListe
     ViewPager pager;
 
 	private MonthlyPagerAdapter adapter;
+	private ReceiptRepository repository;
 
 	private Map<DateTime, WeakReference<ReceiptMonthlyView>> views = new HashMap<>();
 
@@ -50,6 +53,7 @@ public class ReceiptView extends BaseView implements ViewPager.OnPageChangeListe
 
     @Override
     protected void init() {
+	    repository = new ReceiptRepository(new Repository<Receipt>(getContext()));
         inflate(getContext(), R.layout.view_receipts, this);
         ButterKnife.bind(this);
 
@@ -95,18 +99,29 @@ public class ReceiptView extends BaseView implements ViewPager.OnPageChangeListe
 	}
 
 	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+	public void onActivityResult(int requestCode, int resultCode, final Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
 		switch (requestCode) {
 			case REQUEST_ADD_RECEIPT:
 				if(resultCode == Activity.RESULT_OK) {
-					Receipt r = Receipt.find(data.getStringExtra(EditReceiptActivity.KEY_RECEIPT_UUID));
-					if(r != null) {
-						ReceiptMonthlyView view = getMonthView(r.getDate());
-						if (view != null)
-							view.addReceipt(r);
-					}
+					new AsyncTask<Void, Void, Receipt>() {
+
+						@Override
+						protected Receipt doInBackground(Void... voids) {
+							return repository.find(data.getStringExtra(EditReceiptActivity.KEY_RECEIPT_UUID));
+						}
+
+						@Override
+						protected void onPostExecute(Receipt receipt) {
+							super.onPostExecute(receipt);
+							if(receipt != null) {
+								ReceiptMonthlyView view = getMonthView(receipt.getDate());
+								if (view != null)
+									view.addReceipt(receipt);
+							}
+						}
+					}.execute();
 				}
 				break;
 		}

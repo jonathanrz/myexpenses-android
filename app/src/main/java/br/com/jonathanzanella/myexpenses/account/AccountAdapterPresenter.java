@@ -44,9 +44,4 @@ class AccountAdapterPresenter {
 	int getAccountsSize() {
 		return accounts == null ? 0 : accounts.size();
 	}
-
-	void addAccount(Account source) {
-		accounts.add(source);
-		adapter.notifyItemInserted(accounts.size() - 1);
-	}
 }

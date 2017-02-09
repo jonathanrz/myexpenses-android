@@ -69,51 +69,40 @@ class ReceiptPresenter {
 	@UiThread
 	void viewUpdated(boolean invalidateCache) {
 		if (receipt != null) {
-			if(invalidateCache)
-				receipt = repository.find(receipt.getUuid());
-			if(editView != null) {
-				editView.setTitle(R.string.edit_receipt_title);
-			} else {
-				String title = view.getContext().getString(R.string.receipt);
-				view.setTitle(title.concat(" ").concat(receipt.getName()));
+			if(invalidateCache) {
+				new AsyncTask<Void, Void, Void>() {
+
+					@Override
+					protected Void doInBackground(Void... voids) {
+						receipt = repository.find(receipt.getUuid());
+						source = receipt.getSource();
+						account = receipt.getAccount();
+						return null;
+					}
+
+					@Override
+					protected void onPostExecute(Void aVoid) {
+						super.onPostExecute(aVoid);
+
+						if(editView != null) {
+							editView.setTitle(R.string.edit_receipt_title);
+						} else {
+							String title = view.getContext().getString(R.string.receipt);
+							view.setTitle(title.concat(" ").concat(receipt.getName()));
+						}
+						view.showReceipt(receipt);
+
+						if(source != null)
+							onSourceSelected(source.getUuid());
+						if(account != null)
+							onAccountSelected(account.getUuid());
+
+						date = receipt.getDate();
+						if(editView != null && date != null)
+							editView.onDateChanged(date);
+					}
+				}.execute();
 			}
-			view.showReceipt(receipt);
-
-			new AsyncTask<Void, Void, Void>() {
-
-				@Override
-				protected Void doInBackground(Void... voids) {
-					source = receipt.getSource();
-					return null;
-				}
-
-				@Override
-				protected void onPostExecute(Void aVoid) {
-					super.onPostExecute(aVoid);
-					if(source != null)
-						onSourceSelected(source.getUuid());
-				}
-			}.execute();
-
-			new AsyncTask<Void, Void, Account>() {
-
-				@Override
-				protected Account doInBackground(Void... voids) {
-					account = receipt.getAccount();
-					return account;
-				}
-
-				@Override
-				protected void onPostExecute(Account account) {
-					super.onPostExecute(account);
-					if(account != null)
-						onAccountSelected(account.getUuid());
-				}
-			}.execute();
-
-			date = receipt.getDate();
-			if(editView != null && date != null)
-				editView.onDateChanged(date);
 		} else {
 			if(editView != null)
 				editView.setTitle(R.string.new_receipt_title);
@@ -170,32 +159,43 @@ class ReceiptPresenter {
 		if(date != null)
 			receipt.setDate(date);
 
-		int installment = editView.getInstallment();
+		final int installment = editView.getInstallment();
 
-		String originalName = receipt.getName();
+		final String originalName = receipt.getName();
 		if(installment == 1)
 			receipt.setName(originalName);
 		else
 			receipt.setName(String.format(Environment.PTBR_LOCALE, "%s %02d/%02d", originalName, 1, installment));
 
-		OperationResult result = repository.save(receipt);
+		new AsyncTask<Void, Void, OperationResult>() {
 
-		if(result.isValid()) {
-			int repetition = installment;
-			if(repetition == 1)
-				repetition = editView.getRepetition();
-			for(int i = 1; i < repetition; i++) {
-				if(installment != 1)
-					receipt.setName(String.format(Environment.PTBR_LOCALE, "%s %02d/%02d", originalName, i + 1, installment));
-				receipt.repeat();
-				receipt.save();
+			@Override
+			protected OperationResult doInBackground(Void... voids) {
+				return repository.save(receipt);
 			}
 
-			editView.finishView();
-		} else {
-			for (ValidationError validationError : result.getErrors())
-				editView.showError(validationError);
-		}
+			@Override
+			protected void onPostExecute(OperationResult result) {
+				super.onPostExecute(result);
+
+				if(result.isValid()) {
+					int repetition = installment;
+					if(repetition == 1)
+						repetition = editView.getRepetition();
+					for(int i = 1; i < repetition; i++) {
+						if(installment != 1)
+							receipt.setName(String.format(Environment.PTBR_LOCALE, "%s %02d/%02d", originalName, i + 1, installment));
+						receipt.repeat();
+						repository.saveAsync(receipt);
+					}
+
+					editView.finishView();
+				} else {
+					for (ValidationError validationError : result.getErrors())
+						editView.showError(validationError);
+				}
+			}
+		}.execute();
 	}
 
 	@UiThread

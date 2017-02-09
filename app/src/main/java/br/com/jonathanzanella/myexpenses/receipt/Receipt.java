@@ -5,32 +5,21 @@ import android.support.annotation.WorkerThread;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.NotNull;
-import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
-import com.raizlabs.android.dbflow.annotation.Unique;
-import com.raizlabs.android.dbflow.sql.language.From;
-import com.raizlabs.android.dbflow.sql.language.SQLite;
-import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.joda.time.DateTime;
 
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.List;
 import java.util.Locale;
-import java.util.UUID;
 
-import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.database.MyDatabase;
 import br.com.jonathanzanella.myexpenses.database.Repository;
-import br.com.jonathanzanella.myexpenses.helpers.DateHelper;
-import br.com.jonathanzanella.myexpenses.helpers.converter.DateTimeConverter;
 import br.com.jonathanzanella.myexpenses.source.Source;
 import br.com.jonathanzanella.myexpenses.source.SourceRepository;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
@@ -41,67 +30,60 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 
-import static br.com.jonathanzanella.myexpenses.log.Log.warning;
-
 /**
  * Created by jzanella on 2/1/16.
  */
 @Table(database = MyDatabase.class)
 @EqualsAndHashCode(callSuper = false, of = {"id", "uuid", "name"})
-public class Receipt extends BaseModel implements Transaction, UnsyncModel {
+public class Receipt implements Transaction, UnsyncModel {
 	public static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
 	private static final ReceiptApi receiptApi = new ReceiptApi();
 	private AccountRepository accountRepository = null;
+	private ReceiptRepository receiptRepository = null;
 
-	@Column
-	@PrimaryKey(autoincrement = true) @Setter @Getter
+	@Setter @Getter
 	long id;
 
-	@Column @Unique @NotNull
-	@Getter @Setter @Expose
+	@NotNull @Getter @Setter @Expose
 	String uuid;
 
-	@Column @NotNull
 	@Getter @Setter @Expose
 	String name;
 
-	@Column(typeConverter = DateTimeConverter.class) @Getter @Setter @Expose
+	@Getter @Setter @Expose
 	DateTime date;
 
-	@Column @Getter @Setter @Expose
+	@Getter @Setter @Expose
 	int income;
 
-	@Column @NotNull
 	@Getter @Setter @Expose
 	String sourceUuid;
 
-	@Column @NotNull
 	@Getter @Setter @Expose
 	String accountUuid;
 
-	@Column @Getter @Setter @Expose
+	@Getter @Setter @Expose
 	boolean credited;
 
-	@Column @Getter @Setter @Expose
+	@Getter @Setter @Expose
 	boolean ignoreInResume;
 
-	@Column @NotNull @Getter @Setter @Expose
+	@NotNull @Getter @Setter @Expose
 	String userUuid;
 
-	@Column @Unique
 	@Getter @Setter @Expose @SerializedName("_id")
 	String serverId;
 
-	@Column @Getter @Setter @Expose @SerializedName("created_at")
+	@Getter @Setter @Expose @SerializedName("created_at")
 	long createdAt;
 
-	@Column @Getter @Setter @Expose @SerializedName("updated_at")
+	@Getter @Setter @Expose @SerializedName("updated_at")
 	long updatedAt;
 
-	@Column @Getter @Setter
+	@Getter @Setter
 	boolean sync;
 
-	@Column
+	@Getter @Setter
 	boolean removed;
 
 	@Override
@@ -125,55 +107,10 @@ public class Receipt extends BaseModel implements Transaction, UnsyncModel {
 		return accountRepository;
 	}
 
-	public static List<Receipt> all() {
-		return initQuery().queryList();
-	}
-
-	public static List<Receipt> monthly(DateTime month) {
-		return initQuery()
-				.where(Receipt_Table.date
-						.between(DateHelper.firstDayOfMonth(month))
-						.and(DateHelper.lastDayOfMonth(month)))
-				.and(Receipt_Table.removed.is(false))
-				.and(Receipt_Table.userUuid.is(Environment.CURRENT_USER_UUID))
-				.queryList();
-	}
-
-	public static List<Receipt> monthly(DateTime month, Account account) {
-		return initQuery()
-				.where(Receipt_Table.date.between(month).and(month.plusMonths(1).minusDays(1)))
-				.and(Receipt_Table.accountUuid.eq(account.getUuid()))
-				.and(Receipt_Table.removed.is(false))
-				.queryList();
-	}
-
-	public static List<Receipt> resume(DateTime month) {
-		return initQuery()
-				.where(Receipt_Table.date.between(month).and(month.plusMonths(1)))
-				.and(Receipt_Table.ignoreInResume.is(false))
-				.and(Receipt_Table.userUuid.is(Environment.CURRENT_USER_UUID))
-				.and(Receipt_Table.removed.is(false))
-				.orderBy(Receipt_Table.date, true)
-				.queryList();
-	}
-
-	private static From<Receipt> initQuery() {
-		return SQLite.select().from(Receipt.class);
-	}
-
-	public static Receipt find(String uuid) {
-		return initQuery().where(Receipt_Table.uuid.eq(uuid)).querySingle();
-	}
-
-	public static long greaterUpdatedAt() {
-		Receipt receipt = initQuery().orderBy(Receipt_Table.updatedAt, false).limit(1).querySingle();
-		if(receipt == null)
-			return 0L;
-		return receipt.getUpdatedAt();
-	}
-
-	public static List<Receipt> unsync() {
-		return initQuery().where(Receipt_Table.sync.eq(false)).queryList();
+	private ReceiptRepository getReceiptRepository() {
+		if(receiptRepository == null)
+			receiptRepository = new ReceiptRepository(new Repository<Receipt>(MyApplication.getContext()));
+		return receiptRepository;
 	}
 
 	@WorkerThread
@@ -205,6 +142,10 @@ public class Receipt extends BaseModel implements Transaction, UnsyncModel {
 		return NumberFormat.getCurrencyInstance().format(income / 100.0);
 	}
 
+	String getDateAsString() {
+		return date.toString();
+	}
+
 	void repeat() {
 		id = 0;
 		uuid = null;
@@ -224,47 +165,22 @@ public class Receipt extends BaseModel implements Transaction, UnsyncModel {
 				"\nincome=" + income;
 	}
 
+	@Override
+	public void syncAndSave(UnsyncModel serverModel) {
+		throw new UnsupportedOperationException("You should use ReceiptRepository");
+	}
+
 	public void credit() {
 		Account account = getAccount();
 		account.credit(getIncome());
 		getAccountRepository().save(account);
 		setCredited(true);
-		save();
+		getReceiptRepository().save(this);
 	}
 
-	@Override
-	public void save() {
-		if(id == 0 && uuid == null)
-			uuid = UUID.randomUUID().toString();
-		if(id == 0 && userUuid == null)
-			userUuid = Environment.CURRENT_USER_UUID;
-		sync = false;
-		super.save();
-	}
-
-	@Override
-	public void syncAndSave(UnsyncModel unsyncModel) {
-		Receipt receipt = Receipt.find(uuid);
-
-		if(receipt != null && receipt.id != id) {
-			if(receipt.getUpdatedAt() != getUpdatedAt())
-				warning("Receipt overwritten", getData());
-			id = receipt.id;
-		}
-
-		setServerId(unsyncModel.getServerId());
-		setCreatedAt(unsyncModel.getCreatedAt());
-		setUpdatedAt(unsyncModel.getUpdatedAt());
-
-		save();
-		sync = true;
-		super.save();
-	}
-
-	@Override
-	public void delete() {
+	void delete() {
 		removed = true;
-		save();
+		getReceiptRepository().save(this);
 	}
 
 	@Override

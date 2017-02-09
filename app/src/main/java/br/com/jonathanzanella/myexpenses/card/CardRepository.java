@@ -25,10 +25,7 @@ import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
 import static br.com.jonathanzanella.myexpenses.log.Log.warning;
 
-/**
- * Created by jzanella on 8/27/16.
- */
-
+@WorkerThread
 public class CardRepository {
 	private Repository<Card> repository;
 	private CardTable table = new CardTable();
@@ -37,39 +34,32 @@ public class CardRepository {
 		this.repository = repository;
 	}
 
-	@WorkerThread
 	public Card find(String uuid) {
 		return repository.find(table, uuid);
 	}
 
-	@WorkerThread
 	List<Card> userCards() {
 		return repository.userData(table);
 	}
 
-	@WorkerThread
 	public List<Card> creditCards() {
 		return repository.query(table, new Where(Fields.TYPE).eq(CardType.CREDIT.getValue()));
 	}
 
-	@WorkerThread
 	public Card accountDebitCard(Account account) {
 		return repository.querySingle(table,
 				new Where(Fields.ACCOUNT_UUID).eq(account.getUuid())
 				.and(Fields.TYPE).eq(CardType.DEBIT.getValue()));
 	}
 
-	@WorkerThread
 	public List<Card> unsync() {
 		return repository.unsync(table);
 	}
 
-	@WorkerThread
 	public long greaterUpdatedAt() {
 		return repository.greaterUpdatedAt(table);
 	}
 
-	@WorkerThread
 	public OperationResult save(Card card) {
 		OperationResult result = new OperationResult();
 		if(StringUtils.isEmpty(card.getName()))
@@ -89,7 +79,6 @@ public class CardRepository {
 		return result;
 	}
 
-	@WorkerThread
 	public void syncAndSave(final Card unsyncCard) {
 		Card card = find(unsyncCard.getUuid());
 		if(card != null && card.id != unsyncCard.getId()) {

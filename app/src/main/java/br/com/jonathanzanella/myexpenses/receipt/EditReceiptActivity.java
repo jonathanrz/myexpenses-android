@@ -14,7 +14,6 @@ import org.joda.time.DateTime;
 
 import java.text.NumberFormat;
 
-import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
@@ -58,7 +57,9 @@ public class EditReceiptActivity extends BaseActivity implements ReceiptContract
 	@Bind(R.id.act_edit_receipt_user)
 	SelectUserView selectUserView;
 
-	private ReceiptPresenter presenter = new ReceiptPresenter(new ReceiptRepository(), new SourceRepository(new Repository<Source>(this)), new AccountRepository(new Repository<Account>(MyApplication.getContext())));
+	private ReceiptPresenter presenter = new ReceiptPresenter(new ReceiptRepository(new Repository<Receipt>(this)),
+			new SourceRepository(new Repository<Source>(this)),
+			new AccountRepository(new Repository<Account>(this)));
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -230,6 +231,7 @@ public class EditReceiptActivity extends BaseActivity implements ReceiptContract
 		editName.setText(receipt.getName());
 		editIncome.setText(NumberFormat.getCurrencyInstance().format(receipt.getIncome() / 100.0));
 		if(receipt.isCredited())
+			//noinspection deprecation
 			editIncome.setTextColor(getResources().getColor(R.color.value_unpaid));
 
 		new AsyncTask<Void, Void, Source>() {

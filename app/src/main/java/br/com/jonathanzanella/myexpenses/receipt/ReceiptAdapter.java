@@ -1,5 +1,6 @@
 package br.com.jonathanzanella.myexpenses.receipt;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
@@ -19,6 +20,7 @@ import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
+import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.source.Source;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -104,8 +106,8 @@ class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ViewHolder> {
 		}
 	}
 
-	ReceiptAdapter() {
-		presenter = new ReceiptAdapterPresenter(this, new ReceiptRepository());
+	ReceiptAdapter(Context context) {
+		presenter = new ReceiptAdapterPresenter(this, new ReceiptRepository(new Repository<Receipt>(context)));
 	}
 
 	public void loadData(DateTime date) {
