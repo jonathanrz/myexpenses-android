@@ -14,9 +14,10 @@ import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
+import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.database.Repository;
-import br.com.jonathanzanella.myexpenses.helpers.FlowManagerHelper;
 import br.com.jonathanzanella.myexpenses.receipt.Receipt;
+import br.com.jonathanzanella.myexpenses.receipt.ReceiptRepository;
 import br.com.jonathanzanella.myexpenses.source.Source;
 import br.com.jonathanzanella.myexpenses.source.SourceRepository;
 
@@ -34,6 +35,7 @@ public class ReceiptsInPeriodTestSuite {
 
 	private SourceRepository sourceRepository = new SourceRepository(new Repository<Source>(getContext()));
 	private AccountRepository accountRepository = new AccountRepository(new Repository<Account>(getContext()));
+	private ReceiptRepository receiptRepository = new ReceiptRepository(new Repository<Receipt>(getContext()));
 
 	@Before
 	public void setUp() throws Exception {
@@ -48,7 +50,7 @@ public class ReceiptsInPeriodTestSuite {
 
 	@After
 	public void tearDown() throws Exception {
-		FlowManagerHelper.reset(getContext());
+		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
 	}
 
 	private Receipt newReceipt(String name, DateTime date, int value) {
@@ -65,15 +67,15 @@ public class ReceiptsInPeriodTestSuite {
 	@Test
 	public void testReceiptsInMonthly() {
 		Receipt firstOfMonth = newReceipt("First", firstDayOfJune, 1000);
-		firstOfMonth.save();
+		receiptRepository.save(firstOfMonth);
 
 		Receipt endOfMonth = newReceipt("End", lastDayOfJune.withHourOfDay(23), 500);
-		endOfMonth.save();
+		receiptRepository.save(endOfMonth);
 
 		Receipt firstOfJuly = newReceipt("July", firstDayOfJuly, 200);
-		firstOfJuly.save();
+		receiptRepository.save(firstOfJuly);
 
-		List<Receipt> receipts = Receipt.monthly(firstDayOfJune);
+		List<Receipt> receipts = receiptRepository.monthly(firstDayOfJune);
 		assertThat(receipts.size(), is(2));
 		assertThat(receipts.get(0).getUuid(), is(firstOfMonth.getUuid()));
 		assertThat(receipts.get(1).getUuid(), is(endOfMonth.getUuid()));

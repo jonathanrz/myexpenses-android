@@ -5,8 +5,6 @@ import android.support.annotation.WorkerThread;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.raizlabs.android.dbflow.annotation.NotNull;
-import com.raizlabs.android.dbflow.annotation.Table;
 
 import org.joda.time.DateTime;
 
@@ -18,7 +16,6 @@ import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
-import br.com.jonathanzanella.myexpenses.database.MyDatabase;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.source.Source;
 import br.com.jonathanzanella.myexpenses.source.SourceRepository;
@@ -30,10 +27,6 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 
-/**
- * Created by jzanella on 2/1/16.
- */
-@Table(database = MyDatabase.class)
 @EqualsAndHashCode(callSuper = false, of = {"id", "uuid", "name"})
 public class Receipt implements Transaction, UnsyncModel {
 	public static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
@@ -42,49 +35,49 @@ public class Receipt implements Transaction, UnsyncModel {
 	private ReceiptRepository receiptRepository = null;
 
 	@Setter @Getter
-	long id;
-
-	@NotNull @Getter @Setter @Expose
-	String uuid;
+	private long id;
 
 	@Getter @Setter @Expose
-	String name;
+	private String uuid;
 
 	@Getter @Setter @Expose
-	DateTime date;
+	private String name;
 
 	@Getter @Setter @Expose
-	int income;
+	private DateTime date;
 
 	@Getter @Setter @Expose
-	String sourceUuid;
+	private int income;
 
 	@Getter @Setter @Expose
-	String accountUuid;
+	private String sourceUuid;
 
 	@Getter @Setter @Expose
-	boolean credited;
+	private String accountUuid;
 
 	@Getter @Setter @Expose
-	boolean ignoreInResume;
+	private boolean credited;
 
-	@NotNull @Getter @Setter @Expose
-	String userUuid;
+	@Getter @Setter @Expose
+	private boolean ignoreInResume;
+
+	@Getter @Setter @Expose
+	private String userUuid;
 
 	@Getter @Setter @Expose @SerializedName("_id")
-	String serverId;
+	private String serverId;
 
 	@Getter @Setter @Expose @SerializedName("created_at")
-	long createdAt;
+	private long createdAt;
 
 	@Getter @Setter @Expose @SerializedName("updated_at")
-	long updatedAt;
+	private long updatedAt;
 
 	@Getter @Setter
-	boolean sync;
+	private boolean sync;
 
 	@Getter @Setter
-	boolean removed;
+	private boolean removed;
 
 	@Override
 	public int getAmount() {

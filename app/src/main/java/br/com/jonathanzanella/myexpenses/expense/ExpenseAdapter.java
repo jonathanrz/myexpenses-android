@@ -18,9 +18,11 @@ import java.lang.ref.WeakReference;
 import java.text.NumberFormat;
 import java.util.List;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.bill.Bill;
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
+import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.receipt.Receipt;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -32,6 +34,7 @@ class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHolder> {
 	private List<Expense> expenses;
 	private ExpenseAdapterPresenter presenter;
 	private DateTime date;
+	private ExpenseRepository expenseRepository;
 
 	public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 		@Bind(R.id.row_expense_name)
@@ -112,7 +115,8 @@ class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHolder> {
 	}
 
 	ExpenseAdapter() {
-		presenter = new ExpenseAdapterPresenter(this, new ExpenseRepository());
+		expenseRepository = new ExpenseRepository(new Repository<Expense>(MyApplication.getContext()));
+		presenter = new ExpenseAdapterPresenter(this, expenseRepository);
 	}
 
 	@Override
@@ -132,7 +136,7 @@ class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHolder> {
 	}
 
 	public void loadData(DateTime date) {
-		expenses = Expense.monthly(date);
+		expenses = expenseRepository.monthly(date);
 		expenses = presenter.getExpenses(true, date);
 		this.date = date;
 	}

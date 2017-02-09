@@ -14,6 +14,7 @@ import br.com.jonathanzanella.myexpenses.database.Fields;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.database.Where;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
+import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
@@ -26,9 +27,11 @@ import static br.com.jonathanzanella.myexpenses.log.Log.warning;
 public class BillRepository {
 	private Repository<Bill> repository;
 	private BillTable billTable = new BillTable();
+	private ExpenseRepository expenseRepository;
 
-	public BillRepository(Repository<Bill> repository) {
+	public BillRepository(Repository<Bill> repository, ExpenseRepository expenseRepository) {
 		this.repository = repository;
+		this.expenseRepository = expenseRepository;
 	}
 
 	@WorkerThread
@@ -53,7 +56,7 @@ public class BillRepository {
 
 	@WorkerThread
 	public List<Bill> monthly(final DateTime month) {
-		final List<Expense> expenses = Expense.monthly(month);
+		final List<Expense> expenses = expenseRepository.monthly(month);
 		Where query = new Where(Fields.INIT_DATE).lessThanOrEq(month.getMillis())
 				.and(Fields.END_DATE).greaterThanOrEq(month.getMillis())
 				.and(Fields.USER_UUID).eq(Environment.CURRENT_USER_UUID);
@@ -75,7 +78,7 @@ public class BillRepository {
 		}
 
 		for (Bill bill : bills)
-			bill.month = month;
+			bill.setMonth(month);
 
 		return bills;
 	}
@@ -111,10 +114,10 @@ public class BillRepository {
 		final CountingIdlingResource idlingResource = new CountingIdlingResource("BillRepositorySave");
 		idlingResource.increment();
 		Bill bill = find(unsyncBill.getUuid());
-		if(bill != null && bill.id != unsyncBill.getId()) {
+		if(bill != null && bill.getId() != unsyncBill.getId()) {
 			if(bill.getUpdatedAt() != unsyncBill.getUpdatedAt())
 				warning("Bill overwritten", unsyncBill.getData());
-			unsyncBill.setId(bill.id);
+			unsyncBill.setId(bill.getId());
 		}
 
 		unsyncBill.setSync(true);

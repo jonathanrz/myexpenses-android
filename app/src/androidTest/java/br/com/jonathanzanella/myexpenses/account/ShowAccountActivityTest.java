@@ -1,6 +1,7 @@
 package br.com.jonathanzanella.myexpenses.account;
 
 import android.content.Intent;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -15,9 +16,9 @@ import java.text.NumberFormat;
 
 import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
-import br.com.jonathanzanella.myexpenses.helpers.FlowManagerHelper;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.InstrumentationRegistry.getTargetContext;
@@ -49,7 +50,7 @@ public class ShowAccountActivityTest {
 
 	@After
 	public void tearDown() throws Exception {
-		FlowManagerHelper.reset(getTargetContext());
+		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
 		ActivityLifecycleHelper.closeAllActivities(getInstrumentation());
 	}
 

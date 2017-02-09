@@ -1,5 +1,6 @@
 package br.com.jonathanzanella.myexpenses.bill;
 
+import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.FlakyTest;
 import android.support.test.filters.LargeTest;
 import android.support.test.runner.AndroidJUnit4;
@@ -19,10 +20,10 @@ import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.card.Card;
 import br.com.jonathanzanella.myexpenses.card.CardRepository;
+import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
-import br.com.jonathanzanella.myexpenses.helpers.FlowManagerHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.BillBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.CardBuilder;
@@ -42,11 +43,12 @@ import static org.hamcrest.Matchers.not;
 @LargeTest
 public class BillRepositoryTest {
 	private DateTime firstDayOfJune = new DateTime(2016, 6, 1, 0, 0, 0, 0);
-	private BillRepository billRepository = new BillRepository(new Repository<Bill>(getTargetContext()));
+	private ExpenseRepository expenseRepository = new ExpenseRepository(new Repository<Expense>(getTargetContext()));
+	private BillRepository billRepository = new BillRepository(new Repository<Bill>(getTargetContext()), expenseRepository);
 
 	@After
 	public void tearDown() throws Exception {
-		FlowManagerHelper.reset(getTargetContext());
+		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
 	}
 
 	@Test
@@ -54,7 +56,7 @@ public class BillRepositoryTest {
 		Bill bill = new BillBuilder().build();
 		billRepository.save(bill);
 
-		assertThat(bill.id, is(not(0L)));
+		assertThat(bill.getId(), is(not(0L)));
 		assertThat(bill.getUuid(), is(not("")));
 	}
 
@@ -97,7 +99,7 @@ public class BillRepositoryTest {
 		accountRepository.save(account);
 
 		Card card = new CardBuilder().account(account).build(accountRepository);
-		new CardRepository(new Repository<Card>(MyApplication.getContext())).save(card);
+		new CardRepository(new Repository<Card>(MyApplication.getContext()), expenseRepository).save(card);
 
 		Expense expense = new ExpenseBuilder()
 				.date(firstDayOfJune)
@@ -108,7 +110,7 @@ public class BillRepositoryTest {
 		List<Bill> bills = billRepository.monthly(firstDayOfJune);
 		assertThat(bills.size(), Is.is(1));
 
-		new ExpenseRepository().save(expense);
+		expenseRepository.save(expense);
 
 		bills = billRepository.monthly(firstDayOfJune);
 		assertThat(bills.size(), Is.is(0));
@@ -129,7 +131,7 @@ public class BillRepositoryTest {
 	@Ignore
 	public void bill_unsync_returns_only_not_synced() throws Exception {
 		Bill billUnsync = new BillBuilder().name("billUnsync").build();
-		billUnsync.sync = false;
+		billUnsync.setSync(false);
 		billRepository.save(billUnsync);
 
 		Bill billSync = new BillBuilder().name("billSync").build();

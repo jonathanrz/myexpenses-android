@@ -7,6 +7,8 @@ package br.com.jonathanzanella.myexpenses.database
 enum class Fields constructor(val fieldName: String) {
     ID("id"),
     NAME("name"),
+    TITLE("title"),
+    DESCRIPTION("description"),
     UUID("uuid"),
     USER_UUID("userUuid"),
     SERVER_ID("serverId"),

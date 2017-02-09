@@ -3,6 +3,7 @@ package br.com.jonathanzanella.myexpenses.expense;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -16,6 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.helpers.DateHelper;
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapter;
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapterBuilder;
@@ -32,6 +34,7 @@ public class ExpenseView extends BaseView implements ViewPager.OnPageChangeListe
 	@Bind(R.id.view_expenses_pager)
     ViewPager pager;
 	MonthlyPagerAdapter adapter;
+	ExpenseRepository expenseRepository;
 
 	private Map<DateTime, WeakReference<ExpenseMonthlyView>> views = new HashMap<>();
 
@@ -50,6 +53,7 @@ public class ExpenseView extends BaseView implements ViewPager.OnPageChangeListe
     @Override
     protected void init() {
         inflate(getContext(), R.layout.view_expenses, this);
+	    expenseRepository = new ExpenseRepository(new Repository<Expense>(getContext()));
         ButterKnife.bind(this);
 
         adapter = new MonthlyPagerAdapter(getContext(), new MonthlyPagerAdapterBuilder() {
@@ -95,18 +99,29 @@ public class ExpenseView extends BaseView implements ViewPager.OnPageChangeListe
 	}
 
 	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+	public void onActivityResult(int requestCode, int resultCode, final Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
 		switch (requestCode) {
 			case REQUEST_ADD_EXPENSE:
 				if(resultCode == Activity.RESULT_OK) {
-					Expense e = Expense.find(data.getStringExtra(EditExpenseActivity.KEY_EXPENSE_UUID));
-					if(e != null) {
-						ExpenseMonthlyView view = getMonthView(e.getDate());
-						if (view != null)
-							view.addExpense(e);
-					}
+					new AsyncTask<Void, Void, Expense>() {
+
+						@Override
+						protected Expense doInBackground(Void... voids) {
+							return expenseRepository.find(data.getStringExtra(EditExpenseActivity.KEY_EXPENSE_UUID));
+						}
+
+						@Override
+						protected void onPostExecute(Expense expense) {
+							super.onPostExecute(expense);
+							if(expense != null) {
+								ExpenseMonthlyView view = getMonthView(expense.getDate());
+								if (view != null)
+									view.addExpense(expense);
+							}
+						}
+					}.execute();
 				}
 				break;
 		}

@@ -73,7 +73,8 @@ public class CreditCardMonthlyAdapter extends RecyclerView.Adapter<CreditCardMon
 	}
 
 	public CreditCardMonthlyAdapter(Context context) {
-		cardRepository = new CardRepository(new Repository<Card>(context));
+		cardRepository = new CardRepository(new Repository<Card>(context),
+				new ExpenseRepository(new Repository<Expense>(context)));
 	}
 
 	@Override

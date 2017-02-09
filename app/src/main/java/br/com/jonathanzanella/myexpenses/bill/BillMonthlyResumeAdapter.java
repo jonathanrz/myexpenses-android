@@ -17,6 +17,8 @@ import java.util.List;
 import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.expense.Expense;
+import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import lombok.Getter;
@@ -99,7 +101,8 @@ public class BillMonthlyResumeAdapter extends RecyclerView.Adapter<BillMonthlyRe
 
 	@WorkerThread
 	public void loadDataAsync(final DateTime month) {
-		bills = new BillRepository(new Repository<Bill>(MyApplication.getContext())).monthly(month);
+		ExpenseRepository expenseRepository = new ExpenseRepository(new Repository<Expense>(MyApplication.getContext()));
+		bills = new BillRepository(new Repository<Bill>(MyApplication.getContext()), expenseRepository).monthly(month);
 		totalValue = 0;
 
 		for (Bill bill : bills) {

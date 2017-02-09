@@ -1,5 +1,7 @@
 package br.com.jonathanzanella.myexpenses.expense;
 
+import android.os.AsyncTask;
+import android.support.annotation.UiThread;
 import android.support.annotation.WorkerThread;
 
 import org.apache.commons.lang3.StringUtils;
@@ -34,7 +36,7 @@ import static br.com.jonathanzanella.myexpenses.log.Log.warning;
 
 public class ExpenseRepository {
 	private Repository<Expense> repository;
-	private CardRepository cardRepository = new CardRepository(new Repository<Card>(MyApplication.getContext()));
+	private CardRepository cardRepository = new CardRepository(new Repository<Card>(MyApplication.getContext()), this);
 	private ExpenseTable table = new ExpenseTable();
 
 	public ExpenseRepository(Repository<Expense> repository) {
@@ -52,7 +54,7 @@ public class ExpenseRepository {
 	}
 
 	@WorkerThread
-	List<Expense> monthly(DateTime month) {
+	public List<Expense> monthly(DateTime month) {
 		DateTime lastMonth = month.minusMonths(1);
 		DateTime initOfMonth = firstDayOfMonth(lastMonth);
 		DateTime endOfMonth = lastDayOfMonth(lastMonth);
@@ -72,9 +74,12 @@ public class ExpenseRepository {
 
 		return expenses;
 	}
+	public List<Expense> expenses(WeeklyPagerAdapter.Period period) {
+		return expenses(period, null);
+	}
 
 	@WorkerThread
-	public List<Expense> expenses(WeeklyPagerAdapter.Period period) {
+	public List<Expense> expenses(WeeklyPagerAdapter.Period period, Card card) {
 		List<Expense> expenses = new ArrayList<>();
 
 		if(period.init.getDayOfMonth() == 1) {
@@ -82,21 +87,27 @@ public class ExpenseRepository {
 			DateTime initOfMonth = date.minusMonths(1);
 			DateTime endOfMonth = DateHelper.lastDayOfMonth(initOfMonth);
 
-			expenses.addAll(repository.query(table, queryBetweenUserDataAndNotRemoved(initOfMonth, endOfMonth)
+			Where where = queryBetweenUserDataAndNotRemoved(initOfMonth, endOfMonth)
 					.and(Fields.CHARGEABLE_TYPE).eq(CREDIT_CARD.name())
 					.and(Fields.CHARGE_NEXT_MONTH).eq(true)
 					.and(Fields.IGNORE_IN_OVERVIEW).eq(false)
-					.orderBy(Fields.DATE)));
+					.orderBy(Fields.DATE);
+			if(card != null)
+				where = where.and(Fields.CHARGEABLE_UUID).eq(card.getUuid());
+			expenses.addAll(repository.query(table, where));
 		}
 
 		DateTime init = DateHelper.firstMillisOfDay(period.init);
 		DateTime end = DateHelper.lastMillisOfDay(period.end);
 
-		expenses.addAll(repository.query(table, queryBetweenUserDataAndNotRemoved(init, end)
+		Where where = queryBetweenUserDataAndNotRemoved(init, end)
 				.and(Fields.CHARGEABLE_TYPE).eq(CREDIT_CARD.name())
 				.and(Fields.CHARGE_NEXT_MONTH).eq(false)
 				.and(Fields.IGNORE_IN_OVERVIEW).eq(false)
-				.orderBy(Fields.DATE)));
+				.orderBy(Fields.DATE);
+		if(card != null)
+			where = where.and(Fields.CHARGEABLE_UUID).eq(card.getUuid());
+		expenses.addAll(repository.query(table, where));
 
 		return expenses;
 	}
@@ -253,13 +264,31 @@ public class ExpenseRepository {
 		return result;
 	}
 
+	@UiThread
+	void saveAsync(final Expense expense) {
+		new AsyncTask<Void, Void, OperationResult>() {
+
+			@Override
+			protected OperationResult doInBackground(Void... voids) {
+				return save(expense);
+			}
+
+			@Override
+			protected void onPostExecute(OperationResult operationResult) {
+				super.onPostExecute(operationResult);
+				if(!operationResult.isValid())
+					throw new UnsupportedOperationException("Could not save expense " + expense.getUuid());
+			}
+		}.execute();
+	}
+
 	@WorkerThread
 	public void syncAndSave(final Expense unsyncExpense) {
 		Expense expense = find(unsyncExpense.getUuid());
-		if(expense != null && expense.id != unsyncExpense.getId()) {
+		if(expense != null && expense.getId() != unsyncExpense.getId()) {
 			if(expense.getUpdatedAt() != unsyncExpense.getUpdatedAt())
 				warning("Expense overwritten", unsyncExpense.getData());
-			unsyncExpense.setId(expense.id);
+			unsyncExpense.setId(expense.getId());
 		}
 
 		unsyncExpense.setSync(true);

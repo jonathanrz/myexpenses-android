@@ -1,6 +1,7 @@
 package br.com.jonathanzanella.myexpenses.bill;
 
 import android.content.Intent;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -14,9 +15,11 @@ import org.junit.runner.RunWith;
 import java.text.NumberFormat;
 
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.expense.Expense;
+import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
-import br.com.jonathanzanella.myexpenses.helpers.FlowManagerHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.BillBuilder;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
@@ -38,7 +41,8 @@ public class ShowBillActivityTest {
 	public ActivityTestRule<ShowBillActivity> activityTestRule = new ActivityTestRule<>(ShowBillActivity.class, true, false);
 
 	private Bill bill;
-	private BillRepository repository = new BillRepository(new Repository<Bill>(getTargetContext()));
+	private ExpenseRepository expenseRepository = new ExpenseRepository(new Repository<Expense>(getTargetContext()));
+	private BillRepository repository = new BillRepository(new Repository<Bill>(getTargetContext()), expenseRepository);
 
 	@Before
 	public void setUp() throws Exception {
@@ -48,7 +52,7 @@ public class ShowBillActivityTest {
 
 	@After
 	public void tearDown() throws Exception {
-		FlowManagerHelper.reset(getTargetContext());
+		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
 		ActivityLifecycleHelper.closeAllActivities(getInstrumentation());
 	}
 

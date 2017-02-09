@@ -1,6 +1,7 @@
 package br.com.jonathanzanella.myexpenses.expense;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,7 +14,6 @@ import org.joda.time.DateTime;
 
 import java.text.NumberFormat;
 
-import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.bill.Bill;
 import br.com.jonathanzanella.myexpenses.bill.BillRepository;
@@ -65,11 +65,13 @@ public class EditExpenseActivity extends BaseActivity implements ExpenseContract
 	@Bind(R.id.act_edit_expense_user)
 	SelectUserView selectUserView;
 
-	private ExpensePresenter presenter = new ExpensePresenter(new ExpenseRepository(), new BillRepository(new Repository<Bill>(MyApplication.getContext())));
+	private ExpensePresenter presenter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		ExpenseRepository expenseRepository = new ExpenseRepository(new Repository<Expense>(this));
+		presenter = new ExpensePresenter(expenseRepository, new BillRepository(new Repository<Bill>(this), expenseRepository));
 		setContentView(R.layout.activity_edit_expense);
 	}
 
@@ -178,8 +180,20 @@ public class EditExpenseActivity extends BaseActivity implements ExpenseContract
 
 	@OnClick(R.id.act_edit_expense_chargeable)
 	void onChargeable() {
-		if(!presenter.hasChargeable())
-			startActivityForResult(new Intent(this, ListChargeableActivity.class), REQUEST_SELECT_CHARGEABLE);
+		new AsyncTask<Void, Void, Boolean>() {
+
+			@Override
+			protected Boolean doInBackground(Void... voids) {
+				return presenter.hasChargeable();
+			}
+
+			@Override
+			protected void onPostExecute(Boolean hasChargeable) {
+				super.onPostExecute(hasChargeable);
+				if(!hasChargeable)
+					startActivityForResult(new Intent(EditExpenseActivity.this, ListChargeableActivity.class), REQUEST_SELECT_CHARGEABLE);
+			}
+		}.execute();
 	}
 
 	@Override
@@ -270,6 +284,7 @@ public class EditExpenseActivity extends BaseActivity implements ExpenseContract
 		editValue.setText(NumberFormat.getCurrencyInstance().format(Math.abs(expense.getValue()) / 100.0));
 		editValueToShowInOverview.setText(NumberFormat.getCurrencyInstance().format(Math.abs(expense.getValueToShowInOverview()) / 100.0));
 		if(expense.isCharged()) {
+			//noinspection deprecation
 			editValue.setTextColor(getResources().getColor(R.color.value_unpaid));
 			checkRepayment.setEnabled(false);
 		}

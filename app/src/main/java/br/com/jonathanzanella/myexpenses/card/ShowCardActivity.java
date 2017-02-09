@@ -17,6 +17,7 @@ import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.expense.EditExpenseActivity;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
+import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -40,8 +41,9 @@ public class ShowCardActivity extends BaseActivity implements CardContract.View 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		presenter = new CardPresenter(new CardRepository(new Repository<Card>(this)),
-				new AccountRepository(new Repository<Account>(this)));
+		ExpenseRepository expenseRepository = new ExpenseRepository(new Repository<Expense>(this));
+		presenter = new CardPresenter(new CardRepository(new Repository<Card>(this), expenseRepository),
+				new AccountRepository(new Repository<Account>(this)), expenseRepository);
 		setContentView(R.layout.activity_show_card);
 	}
 

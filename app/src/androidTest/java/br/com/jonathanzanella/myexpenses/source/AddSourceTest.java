@@ -15,8 +15,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
-import br.com.jonathanzanella.myexpenses.helpers.FlowManagerHelper;
 import br.com.jonathanzanella.myexpenses.views.MainActivity;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
@@ -50,7 +50,7 @@ public class AddSourceTest {
 
 	@After
 	public void tearDown() throws Exception {
-		FlowManagerHelper.reset(getContext());
+		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
 		ActivityLifecycleHelper.closeAllActivities(getInstrumentation());
 	}
 

@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.raizlabs.android.dbflow.annotation.NotNull;
 
 import org.joda.time.DateTime;
 
@@ -20,51 +19,49 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
-/**
- * Created by Jonathan Zanella on 07/02/16.
- */
 @EqualsAndHashCode(callSuper = false, of = {"id", "uuid", "name"})
 public class Bill implements Transaction, UnsyncModel {
 	public static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
 	private static final BillApi billApi = new BillApi();
 
 	@Setter @Getter
-	long id;
-
-	@NotNull @Getter @Setter @Expose
-	String uuid;
-
-	@NotNull @Getter @Setter @Expose
-	String name;
+	private long id;
 
 	@Getter @Setter @Expose
-	int amount;
+	private String uuid;
 
 	@Getter @Setter @Expose
-	int dueDate;
+	private String name;
+
+	@Getter @Setter @Expose
+	private int amount;
+
+	@Getter @Setter @Expose
+	private int dueDate;
 
 	@Getter @Expose
-	DateTime initDate;
+	private DateTime initDate;
 
 	@Getter @Expose
-	DateTime endDate;
+	private DateTime endDate;
 
-	@NotNull @Getter @Setter @Expose
-	String userUuid;
+	@Getter @Setter @Expose
+	private String userUuid;
 
 	@Getter @Setter @Expose @SerializedName("_id")
-	String serverId;
+	private String serverId;
 
 	@Getter @Setter @Expose @SerializedName("created_at")
-	long createdAt;
+	private long createdAt;
 
 	@Getter @Setter @Expose @SerializedName("updated_at")
-	long updatedAt;
+	private long updatedAt;
 
 	@Getter @Setter
-	boolean sync;
+	private boolean sync;
 
-	DateTime month;
+	@Setter
+	private DateTime month;
 
 	public void setInitDate(DateTime initDate) {
 		if(initDate != null)

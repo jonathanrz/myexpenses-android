@@ -1,12 +1,14 @@
 package br.com.jonathanzanella.myexpenses.card;
 
-import com.raizlabs.android.dbflow.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.expense.Expense;
+import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.server.Server;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
@@ -21,6 +23,7 @@ public class CardApi implements UnsyncModelApi<Card> {
 	private static final String LOG_TAG = CardApi.class.getSimpleName();
 	private CardInterface cardInterface;
 	private CardRepository cardRepository;
+	private ExpenseRepository expenseRepository;
 
 	private CardInterface getInterface() {
 		if(cardInterface == null)
@@ -28,9 +31,15 @@ public class CardApi implements UnsyncModelApi<Card> {
 		return cardInterface;
 	}
 
+	private ExpenseRepository getExpenseRepository() {
+		if(expenseRepository == null)
+			expenseRepository = new ExpenseRepository(new Repository<Expense>(MyApplication.getContext()));
+		return expenseRepository;
+	}
+
 	private CardRepository getCardRepository() {
 		if(cardRepository == null)
-			cardRepository = new CardRepository(new Repository<Card>(MyApplication.getContext()));
+			cardRepository = new CardRepository(new Repository<Card>(MyApplication.getContext()), getExpenseRepository());
 		return cardRepository;
 	}
 
@@ -57,7 +66,7 @@ public class CardApi implements UnsyncModelApi<Card> {
 	public void save(UnsyncModel model) {
 		Card card = (Card) model;
 		Call<Card> caller;
-		if(StringUtils.isNotNullOrEmpty(card.getServerId()))
+		if(StringUtils.isNotEmpty(card.getServerId()))
 			caller = getInterface().update(card.getServerId(), card);
 		else
 			caller = getInterface().create(card);

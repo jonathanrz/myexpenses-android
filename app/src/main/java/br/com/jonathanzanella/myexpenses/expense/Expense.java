@@ -5,8 +5,6 @@ import android.support.annotation.WorkerThread;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.raizlabs.android.dbflow.annotation.NotNull;
-import com.raizlabs.android.dbflow.annotation.Table;
 
 import org.joda.time.DateTime;
 
@@ -22,7 +20,6 @@ import br.com.jonathanzanella.myexpenses.card.Card;
 import br.com.jonathanzanella.myexpenses.card.CardRepository;
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
 import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType;
-import br.com.jonathanzanella.myexpenses.database.MyDatabase;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi;
@@ -31,73 +28,69 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
-/**
- * Created by jzanella on 2/2/16.
- */
-@Table(database = MyDatabase.class)
 @EqualsAndHashCode(callSuper = false, of = {"id", "uuid", "name"})
 public class Expense implements Transaction, UnsyncModel {
-	private static final ExpenseApi expenseApi = new ExpenseApi();
+	private static ExpenseApi expenseApi;
 	private static AccountRepository accountRepository;
 	private static CardRepository cardRepository;
 	private static ExpenseRepository expenseRepository;
 
 	@Setter @Getter
-	long id;
-
-	@NotNull @Getter @Setter @Expose
-	String uuid;
-
-	@NotNull @Getter @Setter @Expose
-	String name;
+	private long id;
 
 	@Getter @Setter @Expose
-	DateTime date;
+	private String uuid;
 
 	@Getter @Setter @Expose
-	int value;
+	private String name;
 
 	@Getter @Setter @Expose
-	int valueToShowInOverview;
+	private DateTime date;
 
-	@NotNull @Expose @Setter
-	String chargeableUuid;
+	@Getter @Setter @Expose
+	private int value;
+
+	@Getter @Setter @Expose
+	private int valueToShowInOverview;
+
+	@Expose @Setter
+	private String chargeableUuid;
 
 	@Expose
-	ChargeableType chargeableType;
+	private ChargeableType chargeableType;
 
 	@Expose @Getter @Setter
-	String billUuid;
+	private String billUuid;
 
 	@Getter @Setter @Expose
-	boolean charged;
+	private boolean charged;
 
 	@Getter @Setter @Expose
-	boolean chargedNextMonth;
+	private boolean chargedNextMonth;
 
 	@Getter @Setter @Expose
-	boolean ignoreInOverview;
+	private boolean ignoreInOverview;
 
 	@Getter @Setter @Expose
-	boolean ignoreInResume;
+	private boolean ignoreInResume;
 
-	@NotNull @Getter @Setter @Expose
-	String userUuid;
+	@Getter @Setter @Expose
+	private String userUuid;
 
 	@Getter @Setter @Expose @SerializedName("_id")
-	String serverId;
+	private String serverId;
 
 	@Getter @Setter @Expose @SerializedName("created_at")
-	long createdAt;
+	private long createdAt;
 
 	@Getter @Setter @Expose @SerializedName("updated_at")
-	long updatedAt;
+	private long updatedAt;
 
 	@Getter @Setter
-	boolean sync;
+	private boolean sync;
 
 	@Getter @Setter
-	boolean removed;
+	private boolean removed;
 
 	@Getter @Setter
 	private Card creditCard;
@@ -160,7 +153,7 @@ public class Expense implements Transaction, UnsyncModel {
 
 	@WorkerThread
 	public Bill getBill() {
-		return new BillRepository(new Repository<Bill>(MyApplication.getContext())).find(billUuid);
+		return new BillRepository(new Repository<Bill>(MyApplication.getContext()), expenseRepository).find(billUuid);
 	}
 
 	static Chargeable findChargeable(ChargeableType type, final String uuid) {
@@ -252,6 +245,8 @@ public class Expense implements Transaction, UnsyncModel {
 	@SuppressWarnings("unchecked")
 	@Override
 	public UnsyncModelApi getServerApi() {
+		if(expenseApi == null)
+			expenseApi = new ExpenseApi(getExpenseRepository());
 		return expenseApi;
 	}
 
@@ -263,7 +258,7 @@ public class Expense implements Transaction, UnsyncModel {
 
 	private static CardRepository getCardRepository() {
 		if(cardRepository == null)
-			cardRepository = new CardRepository(new Repository<Card>(MyApplication.getContext()));
+			cardRepository = new CardRepository(new Repository<Card>(MyApplication.getContext()), expenseRepository);
 		return cardRepository;
 	}
 

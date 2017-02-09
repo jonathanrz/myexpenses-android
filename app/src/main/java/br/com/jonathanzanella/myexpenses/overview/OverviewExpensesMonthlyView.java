@@ -11,15 +11,14 @@ import org.joda.time.DateTime;
 import java.text.NumberFormat;
 
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
+import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapter;
 import br.com.jonathanzanella.myexpenses.views.BaseView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-/**
- * Created by Jonathan Zanella on 14/02/16.
- */
 @SuppressLint("ViewConstructor")
 class OverviewExpensesMonthlyView extends BaseView {
 	@Bind(R.id.view_overview_expenses_monthly_tabs)
@@ -31,6 +30,7 @@ class OverviewExpensesMonthlyView extends BaseView {
 
 	public OverviewExpensesMonthlyView(Context context, DateTime month) {
 		super(context);
+		ExpenseRepository expenseRepository = new ExpenseRepository(new Repository<Expense>(context));
 
 		WeeklyPagerAdapter adapter = new WeeklyPagerAdapter(getContext(), month, new WeeklyPagerAdapterBuilder() {
 
@@ -52,7 +52,7 @@ class OverviewExpensesMonthlyView extends BaseView {
 		period.init = month.dayOfMonth().withMinimumValue();
 		period.end = month.dayOfMonth().withMaximumValue();
 		int total = 0;
-		for (Expense expense : Expense.expenses(period))
+		for (Expense expense : expenseRepository.expenses(period))
 			total += expense.getValueToShowInOverview();
 
 		monthlyTotal.setText(NumberFormat.getCurrencyInstance().format(total / 100.0));

@@ -2,7 +2,7 @@ package br.com.jonathanzanella.myexpenses.account;
 
 import android.support.annotation.Nullable;
 
-import com.raizlabs.android.dbflow.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.util.List;
@@ -59,10 +59,10 @@ public class AccountApi implements UnsyncModelApi<Account> {
 	public void save(UnsyncModel model) {
 		Account account = (Account) model;
 		Call<Account> caller;
-		if(StringUtils.isNotNullOrEmpty(account.getServerId()))
-			caller = getInterface().update(account.getServerId(), account);
-		else
+		if(StringUtils.isEmpty(account.getServerId()))
 			caller = getInterface().create(account);
+		else
+			caller = getInterface().update(account.getServerId(), account);
 
 		try {
 			Response<Account> response = caller.execute();

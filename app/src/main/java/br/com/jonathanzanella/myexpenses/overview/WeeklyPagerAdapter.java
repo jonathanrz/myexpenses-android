@@ -22,7 +22,7 @@ public class WeeklyPagerAdapter extends PagerAdapter {
 		public DateTime init;
 		public DateTime end;
 
-		public String titleize() {
+		String titleize() {
 			return String.format(Environment.PTBR_LOCALE, "%02d - %02d", init.getDayOfMonth(), end.getDayOfMonth());
 		}
 	}

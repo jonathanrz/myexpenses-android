@@ -41,7 +41,7 @@ public class ReceiptRepository {
 	}
 
 	@WorkerThread
-	List<Receipt> monthly(DateTime month) {
+	public List<Receipt> monthly(DateTime month) {
 		return repository.query(table, monthlyQuery(month, null));
 	}
 
@@ -127,10 +127,10 @@ public class ReceiptRepository {
 	@WorkerThread
 	public void syncAndSave(final Receipt unsyncReceipt) {
 		Receipt receipt = find(unsyncReceipt.getUuid());
-		if(receipt != null && receipt.id != unsyncReceipt.getId()) {
+		if(receipt != null && receipt.getId() != unsyncReceipt.getId()) {
 			if(receipt.getUpdatedAt() != unsyncReceipt.getUpdatedAt())
 				warning("Receipt overwritten", unsyncReceipt.getData());
-			unsyncReceipt.setId(receipt.id);
+			unsyncReceipt.setId(receipt.getId());
 		}
 
 		unsyncReceipt.setSync(true);

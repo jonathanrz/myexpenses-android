@@ -17,7 +17,11 @@ import java.util.List;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.AccountAdapter;
 import br.com.jonathanzanella.myexpenses.bill.BillMonthlyResumeAdapter;
+import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
+import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
+import br.com.jonathanzanella.myexpenses.receipt.Receipt;
+import br.com.jonathanzanella.myexpenses.receipt.ReceiptRepository;
 import br.com.jonathanzanella.myexpenses.views.BaseView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -48,6 +52,8 @@ class ResumeMonthlyView extends BaseView {
 	private ReceiptMonthlyResumeAdapter receiptAdapter;
 	private ExpenseMonthlyResumeAdapter expensesAdapter;
 	private BillMonthlyResumeAdapter billsAdapter;
+	private ReceiptRepository receiptRepository;
+	private ExpenseRepository expenseRepository;
 	private DateTime month;
 
 	public ResumeMonthlyView(Context context, DateTime month) {
@@ -61,6 +67,8 @@ class ResumeMonthlyView extends BaseView {
 	@Override
 	protected void init() {
 		inflate(getContext(), R.layout.view_monthly_resume, this);
+		expenseRepository = new ExpenseRepository(new Repository<Expense>(getContext()));
+		receiptRepository = new ReceiptRepository(new Repository<Receipt>(getContext()));
 		ButterKnife.bind(this);
 
 		initAccount();
@@ -79,7 +87,7 @@ class ResumeMonthlyView extends BaseView {
 	}
 
 	private void initReceipts() {
-		receiptAdapter = new ReceiptMonthlyResumeAdapter();
+		receiptAdapter = new ReceiptMonthlyResumeAdapter(receiptRepository);
 
 		receipts.setAdapter(receiptAdapter);
 		receipts.setHasFixedSize(true);
@@ -135,12 +143,13 @@ class ResumeMonthlyView extends BaseView {
 		}.execute();
 	}
 
+	@UiThread
 	private void loadExpenses() {
 		new AsyncTask<Void, Void, List<Expense>>() {
 
 			@Override
 			protected List<Expense> doInBackground(Void... voids) {
-				return Expense.expenses(month);
+				return expenseRepository.expenses(month);
 			}
 
 			@Override
@@ -178,9 +187,12 @@ class ResumeMonthlyView extends BaseView {
 
 		int balanceValue = receiptAdapter.getTotalValue() - totalExpensesValue;
 		balance.setText(NumberFormat.getCurrencyInstance().format(balanceValue / 100.0));
-		if(balanceValue >= 0)
+		if(balanceValue >= 0) {
+			//noinspection deprecation
 			balance.setTextColor(getResources().getColor(R.color.value_unreceived));
-		else
+		} else {
+			//noinspection deprecation
 			balance.setTextColor(getResources().getColor(R.color.value_unpaid));
+		}
 	}
 }

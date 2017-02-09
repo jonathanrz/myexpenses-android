@@ -18,9 +18,9 @@ import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
+import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
-import br.com.jonathanzanella.myexpenses.helpers.FlowManagerHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.views.MainActivity;
 
@@ -61,7 +61,7 @@ public class AddCardTest {
 
 	@After
 	public void tearDown() throws Exception {
-		FlowManagerHelper.reset(getContext());
+		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
 		ActivityLifecycleHelper.closeAllActivities(getInstrumentation());
 	}
 

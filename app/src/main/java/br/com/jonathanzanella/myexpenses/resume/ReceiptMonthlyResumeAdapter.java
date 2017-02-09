@@ -21,21 +21,20 @@ import java.util.Locale;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.helpers.TransactionsHelper;
 import br.com.jonathanzanella.myexpenses.receipt.Receipt;
+import br.com.jonathanzanella.myexpenses.receipt.ReceiptRepository;
 import br.com.jonathanzanella.myexpenses.source.Source;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import lombok.Getter;
 
-/**
- * Created by Jonathan Zanella on 26/01/16.
- */
 class ReceiptMonthlyResumeAdapter extends RecyclerView.Adapter<ReceiptMonthlyResumeAdapter.ViewHolder> {
 	public static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM", Locale.getDefault());
 	protected List<Receipt> receipts;
 	@Getter
 	private int totalValue;
 	private int totalUnreceivedValue;
+	private ReceiptRepository receiptRepository;
 
 	private enum VIEW_TYPE {
 		TYPE_NORMAL,
@@ -111,6 +110,10 @@ class ReceiptMonthlyResumeAdapter extends RecyclerView.Adapter<ReceiptMonthlyRes
 		}
 	}
 
+	ReceiptMonthlyResumeAdapter(ReceiptRepository receiptRepository) {
+		this.receiptRepository = receiptRepository;
+	}
+
 	@Override
 	public int getItemViewType(int position) {
 		if(isTotalView(position)) {
@@ -163,7 +166,7 @@ class ReceiptMonthlyResumeAdapter extends RecyclerView.Adapter<ReceiptMonthlyRes
 
 			@Override
 			protected Void doInBackground(Void... voids) {
-				receipts = Receipt.resume(month);
+				receipts = receiptRepository.resume(month);
 				updateTotalValue();
 				return null;
 			}

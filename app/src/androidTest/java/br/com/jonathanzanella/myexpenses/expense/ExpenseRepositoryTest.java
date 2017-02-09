@@ -15,13 +15,14 @@ import java.util.List;
 import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
+import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
-import br.com.jonathanzanella.myexpenses.helpers.FlowManagerHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.ExpenseBuilder;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
+import static android.support.test.InstrumentationRegistry.getTargetContext;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -32,7 +33,7 @@ import static org.hamcrest.Matchers.not;
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class ExpenseRepositoryTest {
-	private ExpenseRepository repository = new ExpenseRepository();
+	private ExpenseRepository repository = new ExpenseRepository(new Repository<Expense>(getTargetContext()));
 
 	private Account account;
 
@@ -44,7 +45,7 @@ public class ExpenseRepositoryTest {
 
 	@After
 	public void tearDown() throws Exception {
-		FlowManagerHelper.reset(InstrumentationRegistry.getTargetContext());
+		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
 		ActivityLifecycleHelper.closeAllActivities(getInstrumentation());
 	}
 
@@ -53,7 +54,7 @@ public class ExpenseRepositoryTest {
 		Expense receipt = new ExpenseBuilder().chargeable(account).build();
 		repository.save(receipt);
 
-		assertThat(receipt.id, is(not(0L)));
+		assertThat(receipt.getId(), is(not(0L)));
 		assertThat(receipt.getUuid(), is(not("")));
 	}
 

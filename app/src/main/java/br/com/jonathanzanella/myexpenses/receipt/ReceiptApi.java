@@ -2,7 +2,7 @@ package br.com.jonathanzanella.myexpenses.receipt;
 
 import android.support.annotation.Nullable;
 
-import com.raizlabs.android.dbflow.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.util.List;
@@ -59,7 +59,7 @@ public class ReceiptApi implements UnsyncModelApi<Receipt> {
     public void save(UnsyncModel model) {
         Receipt receipt = (Receipt) model;
         Call<Receipt> caller;
-        if(StringUtils.isNotNullOrEmpty(receipt.getServerId()))
+        if(StringUtils.isNotEmpty(receipt.getServerId()))
             caller = getInterface().update(receipt.getServerId(), receipt);
         else
             caller = getInterface().create(receipt);

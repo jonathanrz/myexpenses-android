@@ -14,6 +14,8 @@ import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.expense.Expense;
+import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.user.SelectUserView;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
@@ -46,8 +48,9 @@ public class EditCardActivity extends BaseActivity implements CardContract.EditV
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		presenter = new CardPresenter(new CardRepository(new Repository<Card>(this)),
-				new AccountRepository(new Repository<Account>(this)));
+		ExpenseRepository expenseRepository = new ExpenseRepository(new Repository<Expense>(this));
+		presenter = new CardPresenter(new CardRepository(new Repository<Card>(this), expenseRepository),
+				new AccountRepository(new Repository<Account>(this)), expenseRepository);
 		setContentView(R.layout.activity_edit_card);
 	}
 

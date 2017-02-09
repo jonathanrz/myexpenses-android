@@ -20,9 +20,9 @@ import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.bill.Bill;
 import br.com.jonathanzanella.myexpenses.bill.BillRepository;
+import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
-import br.com.jonathanzanella.myexpenses.helpers.FlowManagerHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.BillBuilder;
 import br.com.jonathanzanella.myexpenses.views.MainActivity;
@@ -66,7 +66,7 @@ public class AddExpenseTest {
 
 	@After
 	public void tearDown() throws Exception {
-		FlowManagerHelper.reset(getContext());
+		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
 		ActivityLifecycleHelper.closeAllActivities(getInstrumentation());
 	}
 
@@ -139,7 +139,8 @@ public class AddExpenseTest {
 	@Test
 	public void add_new_expense_with_bill() throws Exception {
 		Bill bill = new BillBuilder().build();
-		new BillRepository(new Repository<Bill>(getTargetContext())).save(bill);
+		ExpenseRepository expenseRepository = new ExpenseRepository(new Repository<Expense>(getTargetContext()));
+		new BillRepository(new Repository<Bill>(getTargetContext()), expenseRepository).save(bill);
 
 		mainActivityTestRule.launchActivity(new Intent());
 

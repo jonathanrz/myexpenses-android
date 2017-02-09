@@ -10,9 +10,10 @@ import android.widget.TextView;
 
 import java.text.NumberFormat;
 
-import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.expense.Expense;
+import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.CountingIdlingResource;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
@@ -37,7 +38,8 @@ public class ShowBillActivity extends BaseActivity implements BillContract.View 
 	private BillPresenter presenter;
 
 	public ShowBillActivity() {
-		presenter = new BillPresenter(new BillRepository(new Repository<Bill>(MyApplication.getContext())), new CountingIdlingResource("ShowBillActivity"));
+		ExpenseRepository expenseRepository = new ExpenseRepository(new Repository<Expense>(this));
+		presenter = new BillPresenter(new BillRepository(new Repository<Bill>(this), expenseRepository), new CountingIdlingResource("ShowBillActivity"));
 	}
 
 	@Override

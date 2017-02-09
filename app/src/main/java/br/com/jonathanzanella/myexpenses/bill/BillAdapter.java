@@ -15,6 +15,8 @@ import java.util.List;
 import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.expense.Expense;
+import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import lombok.Setter;
@@ -77,7 +79,8 @@ class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder> {
 	}
 
 	BillAdapter() {
-		this.presenter = new BillAdapterPresenter(this, new BillRepository(new Repository<Bill>(MyApplication.getContext())));
+		ExpenseRepository expenseRepository = new ExpenseRepository(new Repository<Expense>(MyApplication.getContext()));
+		this.presenter = new BillAdapterPresenter(this, new BillRepository(new Repository<Bill>(MyApplication.getContext()), expenseRepository));
 		refreshData();
 	}
 

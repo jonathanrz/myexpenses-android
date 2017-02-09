@@ -4,6 +4,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
+import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
@@ -12,11 +14,8 @@ import static junit.framework.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-/**
- * Created by jzanella on 8/27/16.
- */
 public class ExpenseRepositoryUnitTest {
-	private ExpenseRepository repository = new ExpenseRepository();
+	private ExpenseRepository repository = new ExpenseRepository(new Repository<Expense>(MyApplication.getContext()));
 
 	@Mock
 	private Expense expense;

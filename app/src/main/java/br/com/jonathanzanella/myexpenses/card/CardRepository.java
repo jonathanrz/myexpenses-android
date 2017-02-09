@@ -2,9 +2,6 @@ package br.com.jonathanzanella.myexpenses.card;
 
 import android.support.annotation.WorkerThread;
 
-import com.raizlabs.android.dbflow.sql.language.From;
-import com.raizlabs.android.dbflow.sql.language.SQLite;
-
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 
@@ -13,53 +10,61 @@ import java.util.UUID;
 
 import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.account.Account;
-import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType;
 import br.com.jonathanzanella.myexpenses.database.Fields;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.database.Where;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
-import br.com.jonathanzanella.myexpenses.expense.Expense_Table;
+import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.DateHelper;
+import br.com.jonathanzanella.myexpenses.overview.WeeklyPagerAdapter;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
 import static br.com.jonathanzanella.myexpenses.log.Log.warning;
 
-@WorkerThread
 public class CardRepository {
 	private Repository<Card> repository;
+	private ExpenseRepository expenseRepository;
 	private CardTable table = new CardTable();
 
-	public CardRepository(Repository<Card> repository) {
+	public CardRepository(Repository<Card> repository, ExpenseRepository expenseRepository) {
 		this.repository = repository;
+		this.expenseRepository = expenseRepository;
 	}
 
+	@WorkerThread
 	public Card find(String uuid) {
 		return repository.find(table, uuid);
 	}
 
+	@WorkerThread
 	List<Card> userCards() {
 		return repository.userData(table);
 	}
 
+	@WorkerThread
 	public List<Card> creditCards() {
 		return repository.query(table, new Where(Fields.TYPE).eq(CardType.CREDIT.getValue()));
 	}
 
+	@WorkerThread
 	public Card accountDebitCard(Account account) {
 		return repository.querySingle(table,
 				new Where(Fields.ACCOUNT_UUID).eq(account.getUuid())
 				.and(Fields.TYPE).eq(CardType.DEBIT.getValue()));
 	}
 
+	@WorkerThread
 	public List<Card> unsync() {
 		return repository.unsync(table);
 	}
 
+	@WorkerThread
 	public long greaterUpdatedAt() {
 		return repository.greaterUpdatedAt(table);
 	}
 
+	@WorkerThread
 	public OperationResult save(Card card) {
 		OperationResult result = new OperationResult();
 		if(StringUtils.isEmpty(card.getName()))
@@ -79,53 +84,29 @@ public class CardRepository {
 		return result;
 	}
 
+	@WorkerThread
 	public void syncAndSave(final Card unsyncCard) {
 		Card card = find(unsyncCard.getUuid());
-		if(card != null && card.id != unsyncCard.getId()) {
+		if(card != null && card.getId() != unsyncCard.getId()) {
 			if(card.getUpdatedAt() != unsyncCard.getUpdatedAt())
 				warning("Card overwritten", unsyncCard.getData());
-			unsyncCard.setId(card.id);
+			unsyncCard.setId(card.getId());
 		}
 
 		unsyncCard.setSync(true);
 		repository.saveAtDatabase(table, unsyncCard);
 	}
 
-	private static From<Expense> initExpenseQuery() {
-		return SQLite.select().from(Expense.class);
-	}
-
+	@WorkerThread
 	public List<Expense> creditCardBills(Card card, DateTime month) {
-		DateTime lastMonth = month.minusMonths(1);
-		DateTime initOfMonth = DateHelper.firstDayOfMonth(lastMonth);
-		DateTime endOfMonth = DateHelper.lastDayOfMonth(lastMonth);
+		WeeklyPagerAdapter.Period period = new WeeklyPagerAdapter.Period();
+		period.init = DateHelper.firstDayOfMonth(month);
+		period.end = DateHelper.lastDayOfMonth(month);
 
-		List<Expense> expenses = initExpenseQuery()
-				.where(Expense_Table.chargeableUuid.eq(card.getUuid()))
-				.and(Expense_Table.chargeableType.eq(ChargeableType.CREDIT_CARD))
-				.and(Expense_Table.date.between(initOfMonth).and(endOfMonth))
-				.and(Expense_Table.chargeNextMonth.eq(true))
-				.and(Expense_Table.charged.eq(false))
-				.and(Expense_Table.userUuid.is(Environment.CURRENT_USER_UUID))
-				.orderBy(Expense_Table.date, true)
-				.queryList();
-
-		initOfMonth = DateHelper.firstDayOfMonth(month);
-		endOfMonth = DateHelper.lastDayOfMonth(month);
-
-		expenses.addAll(initExpenseQuery()
-				.where(Expense_Table.chargeableUuid.eq(card.getUuid()))
-				.and(Expense_Table.chargeableType.eq(ChargeableType.CREDIT_CARD))
-				.and(Expense_Table.date.between(initOfMonth).and(endOfMonth))
-				.and(Expense_Table.chargeNextMonth.eq(false))
-				.and(Expense_Table.charged.eq(false))
-				.and(Expense_Table.userUuid.is(Environment.CURRENT_USER_UUID))
-				.orderBy(Expense_Table.date, true)
-				.queryList());
-
-		return expenses;
+		return expenseRepository.expenses(period, card);
 	}
 
+	@WorkerThread
 	public int getInvoiceValue(Card card, DateTime month) {
 		int total = 0;
 		for (Expense expense : creditCardBills(card, month))

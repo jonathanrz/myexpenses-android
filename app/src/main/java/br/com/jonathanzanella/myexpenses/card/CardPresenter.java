@@ -17,6 +17,7 @@ import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.account.ListAccountActivity;
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
+import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
@@ -34,12 +35,14 @@ class CardPresenter {
 	private CardContract.EditView editView;
 	private CardRepository repository;
 	private AccountRepository accountRepository;
+	private ExpenseRepository expenseRepository;
 	private Card card;
 	private Account account;
 
-	CardPresenter(CardRepository repository, AccountRepository accountRepository) {
+	CardPresenter(CardRepository repository, AccountRepository accountRepository, ExpenseRepository expenseRepository) {
 		this.repository = repository;
 		this.accountRepository = accountRepository;
+		this.expenseRepository = expenseRepository;
 	}
 
 	void attachView(CardContract.View view) {
@@ -145,7 +148,7 @@ class CardPresenter {
 		for (Expense expense : expenses) {
 			totalExpense += expense.getValue();
 			expense.setCharged(true);
-			expense.save();
+			expenseRepository.save(expense);
 		}
 
 		if(totalExpense == 0)
@@ -156,7 +159,7 @@ class CardPresenter {
 		e.setValue(totalExpense);
 //		TODO: move this to a repository to execute the find without an Observable
 //		e.setChargeable(card.getAccount());
-		e.save();
+		expenseRepository.save(e);
 
 		return e;
 	}

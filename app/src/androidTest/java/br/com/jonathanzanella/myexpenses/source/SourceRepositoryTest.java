@@ -13,9 +13,9 @@ import org.junit.runner.RunWith;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.Environment;
+import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
-import br.com.jonathanzanella.myexpenses.helpers.FlowManagerHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder;
 
 import static android.support.test.InstrumentationRegistry.getContext;
@@ -42,7 +42,7 @@ public class SourceRepositoryTest {
 
 	@After
 	public void tearDown() throws Exception {
-		FlowManagerHelper.reset(InstrumentationRegistry.getTargetContext());
+		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
 		ActivityLifecycleHelper.closeAllActivities(getInstrumentation());
 	}
 

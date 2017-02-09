@@ -69,53 +69,65 @@ class ExpensePresenter {
 	}
 
 	@UiThread
-	void onViewUpdated(boolean invalidateCache) {
+	void onViewUpdated(final boolean invalidateCache) {
 		if (expense != null) {
-			if(invalidateCache)
-				expense = repository.find(expense.getUuid());
-			if(editView != null) {
-				editView.setTitle(R.string.edit_expense_title);
-			} else {
-				String title = view.getContext().getString(R.string.expense);
-				view.setTitle(title.concat(" ").concat(expense.getName()));
-			}
-			view.showExpense(expense);
-
 			new AsyncTask<Void, Void, Void>() {
 
 				@Override
 				protected Void doInBackground(Void... voids) {
-					bill = expense.getBill();
+					if(invalidateCache)
+						expense = repository.find(expense.getUuid());
 					return null;
 				}
 
 				@Override
 				protected void onPostExecute(Void aVoid) {
 					super.onPostExecute(aVoid);
-					if(editView != null && bill != null)
-						editView.onBillSelected(bill);
+					if(editView != null) {
+						editView.setTitle(R.string.edit_expense_title);
+					} else {
+						String title = view.getContext().getString(R.string.expense);
+						view.setTitle(title.concat(" ").concat(expense.getName()));
+					}
+					view.showExpense(expense);
+
+					new AsyncTask<Void, Void, Void>() {
+
+						@Override
+						protected Void doInBackground(Void... voids) {
+							bill = expense.getBill();
+							return null;
+						}
+
+						@Override
+						protected void onPostExecute(Void aVoid) {
+							super.onPostExecute(aVoid);
+							if(editView != null && bill != null)
+								editView.onBillSelected(bill);
+						}
+					}.execute();
+
+					new AsyncTask<Void, Void, Chargeable>() {
+
+						@Override
+						protected Chargeable doInBackground(Void... voids) {
+							chargeable = expense.getChargeable();
+							return chargeable;
+						}
+
+						@Override
+						protected void onPostExecute(Chargeable chargeable) {
+							super.onPostExecute(chargeable);
+							if(editView != null && chargeable != null)
+								editView.onChargeableSelected(chargeable);
+						}
+					}.execute();
+
+					date = expense.getDate();
+					if(editView != null && date != null)
+						editView.onDateChanged(date);
 				}
 			}.execute();
-
-			new AsyncTask<Void, Void, Chargeable>() {
-
-				@Override
-				protected Chargeable doInBackground(Void... voids) {
-					chargeable = expense.getChargeable();
-					return chargeable;
-				}
-
-				@Override
-				protected void onPostExecute(Chargeable chargeable) {
-					super.onPostExecute(chargeable);
-					if(editView != null && chargeable != null)
-						editView.onChargeableSelected(chargeable);
-				}
-			}.execute();
-
-			date = expense.getDate();
-			if(editView != null && date != null)
-				editView.onDateChanged(date);
 		} else {
 			if(editView != null)
 				editView.setTitle(R.string.new_expense_title);
@@ -171,32 +183,42 @@ class ExpensePresenter {
 		if(chargeable != null)
 			expense.setChargeable(chargeable);
 
-		int installment = editView.getInstallment();
+		final int installment = editView.getInstallment();
 
-		String originalName = expense.getName();
+		final String originalName = expense.getName();
 		if(installment == 1)
 			expense.setName(originalName);
 		else
 			expense.setName(String.format(Environment.PTBR_LOCALE, "%s %02d/%02d", originalName, 1, installment));
 
-		OperationResult result = repository.save(expense);
+		new AsyncTask<Void, Void, OperationResult>() {
 
-		if(result.isValid()) {
-			int repetition = installment;
-			if(repetition == 1)
-				repetition = editView.getRepetition();
-			for(int i = 1; i < repetition; i++) {
-				if(installment != 1)
-					expense.setName(String.format(Environment.PTBR_LOCALE, "%s %02d/%02d", originalName, i + 1, installment));
-				expense.repeat();
-				expense.save();
+			@Override
+			protected OperationResult doInBackground(Void... voids) {
+				return repository.save(expense);
 			}
 
-			editView.finishView();
-		} else {
-			for (ValidationError validationError : result.getErrors())
-				editView.showError(validationError);
-		}
+			@Override
+			protected void onPostExecute(OperationResult result) {
+				super.onPostExecute(result);
+				if(result.isValid()) {
+					int repetition = installment;
+					if(repetition == 1)
+						repetition = editView.getRepetition();
+					for(int i = 1; i < repetition; i++) {
+						if(installment != 1)
+							expense.setName(String.format(Environment.PTBR_LOCALE, "%s %02d/%02d", originalName, i + 1, installment));
+						expense.repeat();
+						repository.saveAsync(expense);
+					}
+
+					editView.finishView();
+				} else {
+					for (ValidationError validationError : result.getErrors())
+						editView.showError(validationError);
+				}
+			}
+		}.execute();
 	}
 
 	@UiThread
@@ -257,7 +279,7 @@ class ExpensePresenter {
 
 			@Override
 			protected Void doInBackground(Void... voids) {
-				bill = new BillRepository(new Repository<Bill>(MyApplication.getContext())).find(uuid);
+				bill = new BillRepository(new Repository<Bill>(MyApplication.getContext()), repository).find(uuid);
 				return null;
 			}
 

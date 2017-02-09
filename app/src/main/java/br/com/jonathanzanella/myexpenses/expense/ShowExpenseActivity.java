@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import java.text.NumberFormat;
 
-import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.bill.Bill;
 import br.com.jonathanzanella.myexpenses.bill.BillRepository;
@@ -44,11 +43,13 @@ public class ShowExpenseActivity extends BaseActivity implements ExpenseContract
 	@Bind(R.id.act_show_expense_charge_next_month)
 	TableRow chargeNextMonth;
 
-	private ExpensePresenter presenter = new ExpensePresenter(new ExpenseRepository(), new BillRepository(new Repository<Bill>(MyApplication.getContext())));
+	private ExpensePresenter presenter;
 
 	@UiThread
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
+		ExpenseRepository expenseRepository = new ExpenseRepository(new Repository<Expense>(this));
+		presenter = new ExpensePresenter(expenseRepository, new BillRepository(new Repository<Bill>(this), expenseRepository));
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_show_expenses);
 	}

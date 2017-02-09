@@ -2,7 +2,7 @@ package br.com.jonathanzanella.myexpenses.source;
 
 import android.support.annotation.Nullable;
 
-import com.raizlabs.android.dbflow.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.util.List;
@@ -52,7 +52,7 @@ public class SourceApi implements UnsyncModelApi<Source> {
     public void save(UnsyncModel model) {
         Source source = (Source) model;
         Call<Source> caller;
-        if(StringUtils.isNotNullOrEmpty(source.getServerId()))
+        if(StringUtils.isNotEmpty(source.getServerId()))
             caller = getInterface().update(source.getServerId(), source);
         else
             caller = getInterface().create(source);

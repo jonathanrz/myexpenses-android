@@ -7,7 +7,6 @@ import android.support.test.runner.AndroidJUnit4;
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -15,9 +14,9 @@ import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
+import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
-import br.com.jonathanzanella.myexpenses.helpers.FlowManagerHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.ReceiptBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder;
@@ -26,6 +25,7 @@ import br.com.jonathanzanella.myexpenses.source.SourceRepository;
 
 import static android.support.test.InstrumentationRegistry.getContext;
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
+import static android.support.test.InstrumentationRegistry.getTargetContext;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -35,9 +35,8 @@ import static org.hamcrest.Matchers.not;
  */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-@Ignore("until dbflow are removed")
 public class ReceiptRepositoryTest {
-	private ReceiptRepository repository = new ReceiptRepository();
+	private ReceiptRepository repository = new ReceiptRepository(new Repository<Receipt>(getTargetContext()));
 
 	private Source source;
 	private Account account;
@@ -52,7 +51,7 @@ public class ReceiptRepositoryTest {
 
 	@After
 	public void tearDown() throws Exception {
-		FlowManagerHelper.reset(InstrumentationRegistry.getTargetContext());
+		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
 		ActivityLifecycleHelper.closeAllActivities(getInstrumentation());
 	}
 
@@ -61,7 +60,7 @@ public class ReceiptRepositoryTest {
 		Receipt receipt = new ReceiptBuilder().source(source).account(account).build();
 		repository.save(receipt);
 
-		assertThat(receipt.id, is(not(0L)));
+		assertThat(receipt.getId(), is(not(0L)));
 		assertThat(receipt.getUuid(), is(not("")));
 	}
 

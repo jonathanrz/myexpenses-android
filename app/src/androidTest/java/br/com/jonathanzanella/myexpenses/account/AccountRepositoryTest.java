@@ -12,8 +12,8 @@ import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.MyApplication;
+import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.database.Repository;
-import br.com.jonathanzanella.myexpenses.helpers.FlowManagerHelper;
 
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
@@ -31,7 +31,7 @@ public class AccountRepositoryTest {
 
 	@After
 	public void tearDown() throws Exception {
-		FlowManagerHelper.reset(InstrumentationRegistry.getTargetContext());
+		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
 	}
 
 	@Test

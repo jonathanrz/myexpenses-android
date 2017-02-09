@@ -1,12 +1,6 @@
 package br.com.jonathanzanella.myexpenses.log;
 
-import com.raizlabs.android.dbflow.annotation.Column;
-import com.raizlabs.android.dbflow.annotation.NotNull;
-import com.raizlabs.android.dbflow.annotation.PrimaryKey;
-import com.raizlabs.android.dbflow.annotation.Table;
-import com.raizlabs.android.dbflow.sql.language.From;
-import com.raizlabs.android.dbflow.sql.language.SQLite;
-import com.raizlabs.android.dbflow.structure.BaseModel;
+import android.content.Context;
 
 import org.joda.time.DateTime;
 
@@ -15,18 +9,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.database.MyDatabase;
-import br.com.jonathanzanella.myexpenses.helpers.converter.DateTimeConverter;
+import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
+import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi;
 import lombok.Getter;
+import lombok.Setter;
 
-/**
- * Created by jzanella on 7/11/16.
- */
-@Table(database = MyDatabase.class)
-public class Log extends BaseModel {
+public class Log implements UnsyncModel {
 	public static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy HH:mm:ss:SSSS", Locale.getDefault());
 	private static final String TAG = "Log";
+	private static LogRepository logRepository;
 
 	enum LOG_LEVEL {
 		DEBUG,
@@ -64,29 +58,62 @@ public class Log extends BaseModel {
 			}
 			return logLevels;
 		}
+
+		public List<String> getLogLevelsAsString() {
+			List<String> logLevels = new ArrayList<>();
+			switch (this) {
+				case DEBUG:
+					logLevels.add(LOG_LEVEL.DEBUG.name());
+				case INFO:
+					logLevels.add(LOG_LEVEL.INFO.name());
+				case WARNING:
+					logLevels.add(LOG_LEVEL.WARNING.name());
+				case ERROR:
+					logLevels.add(LOG_LEVEL.ERROR.name());
+			}
+			return logLevels;
+		}
+
+		public static LOG_LEVEL getLogLevel(String logLevelAsString) {
+			for (LOG_LEVEL logLevel : values()) {
+				if(logLevel.name().equals(logLevelAsString))
+					return logLevel;
+			}
+
+			return null;
+		}
 	}
 
-	@Column
-	@PrimaryKey(autoincrement = true)
-	long id;
+	@Setter
+	private long id;
 
-	@Column @NotNull @Getter
-	String title;
+	@Getter @Setter
+	private String title;
 
-	@Column @NotNull @Getter
-	String description;
+	@Getter @Setter
+	private String description;
 
-	@Column(typeConverter = DateTimeConverter.class) @NotNull @Getter
-	DateTime date;
+	@Getter @Setter
+	private DateTime date;
 
-	@Column @NotNull
-	LOG_LEVEL type;
+	@Setter
+	private LOG_LEVEL type;
 
 	Log() {
 	}
 
-	public LOG_LEVEL getLogLevel() {
+	LOG_LEVEL getLogLevel() {
 		return type;
+	}
+
+	String getDateAsString() {
+		return date.toString();
+	}
+
+	private static LogRepository getLogRepository() {
+		if(logRepository == null)
+			logRepository = new LogRepository(new Repository<Log>(MyApplication.getContext()));
+		return logRepository;
 	}
 
 	private static void log(String title, String description, LOG_LEVEL logLevel) {
@@ -95,7 +122,7 @@ public class Log extends BaseModel {
 		log.description = description;
 		log.date = DateTime.now();
 		log.type = logLevel;
-		log.save();
+		getLogRepository().save(log);
 	}
 
 	public static void debug(String title, String description) {
@@ -118,17 +145,74 @@ public class Log extends BaseModel {
 		android.util.Log.e(title, description);
 	}
 
-	private static From<Log> initQuery() {
-		return SQLite.select().from(Log.class);
+	//UnsyncModel methods
+	@Override
+	public boolean isSaved() {
+		throw new UnsupportedOperationException("Log isn't an unsync model");
 	}
 
-	public static List<Log> all() {
-		return initQuery().queryList();
+	@Override
+	public long getId() {
+		throw new UnsupportedOperationException("Log isn't an unsync model");
 	}
 
-	public static List<Log> filter(DateTime initDate, DateTime endDate, LOG_LEVEL logLevel) {
-		return initQuery()
-				.where(Log_Table.date.between(initDate).and(endDate))
-				.and(Log_Table.type.in(logLevel.getLogLevels())).queryList();
+	@Override
+	public String getServerId() {
+		throw new UnsupportedOperationException("Log isn't an unsync model");
+	}
+
+	@Override
+	public String getUuid() {
+		throw new UnsupportedOperationException("Log isn't an unsync model");
+	}
+
+	@Override
+	public void setServerId(String serverId) {
+		throw new UnsupportedOperationException("Log isn't an unsync model");
+	}
+
+	@Override
+	public long getCreatedAt() {
+		throw new UnsupportedOperationException("Log isn't an unsync model");
+	}
+
+	@Override
+	public void setCreatedAt(long createdAt) {
+		throw new UnsupportedOperationException("Log isn't an unsync model");
+	}
+
+	@Override
+	public long getUpdatedAt() {
+		throw new UnsupportedOperationException("Log isn't an unsync model");
+	}
+
+	@Override
+	public void setUpdatedAt(long updatedAt) {
+		throw new UnsupportedOperationException("Log isn't an unsync model");
+	}
+
+	@Override
+	public String getData() {
+		throw new UnsupportedOperationException("Log isn't an unsync model");
+	}
+
+	@Override
+	public void syncAndSave(UnsyncModel serverModel) {
+		throw new UnsupportedOperationException("Log isn't an unsync model");
+	}
+
+	@Override
+	public void setSync(boolean b) {
+		throw new UnsupportedOperationException("Log isn't an unsync model");
+	}
+
+	@Override
+	public String getHeader(Context ctx) {
+		throw new UnsupportedOperationException("Log isn't an unsync model");
+	}
+
+	@Override
+	public UnsyncModelApi<UnsyncModel> getServerApi() {
+		throw new UnsupportedOperationException("Log isn't an unsync model");
 	}
 }

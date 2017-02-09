@@ -6,8 +6,6 @@ import android.util.Log;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.raizlabs.android.dbflow.annotation.Column;
-import com.raizlabs.android.dbflow.annotation.NotNull;
 
 import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
@@ -32,34 +30,34 @@ public class Card implements Chargeable, UnsyncModel {
 	private static final CardApi cardApi = new CardApi();
 
 	@Setter @Getter
-	long id;
+	private long id;
 
-	@NotNull @Getter @Setter @Expose
-	String uuid;
+	@Getter @Setter @Expose
+	private String uuid;
 
-	@NotNull @Getter @Setter @Expose
-	String name;
+	@Getter @Setter @Expose
+	private String name;
 
-	@Column @Getter @Setter @Expose
-	CardType type;
+	@Getter @Setter @Expose
+	private CardType type;
 
-	@NotNull @Getter @Setter @Expose
-	String accountUuid;
+	@Getter @Setter @Expose
+	private String accountUuid;
 
-	@NotNull @Getter @Setter @Expose
-	String userUuid;
+	@Getter @Setter @Expose
+	private String userUuid;
 
 	@Getter @Setter @Expose @SerializedName("_id")
-	String serverId;
+	private String serverId;
 
 	@Getter @Setter @Expose @SerializedName("created_at")
-	long createdAt;
+	private long createdAt;
 
 	@Getter @Setter @Expose @SerializedName("updated_at")
-	long updatedAt;
+	private long updatedAt;
 
 	@Getter @Setter
-	boolean sync;
+	private boolean sync;
 
 	Card() {
 	}

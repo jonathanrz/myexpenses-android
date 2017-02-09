@@ -15,8 +15,10 @@ import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
+import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.database.Repository;
-import br.com.jonathanzanella.myexpenses.helpers.FlowManagerHelper;
+import br.com.jonathanzanella.myexpenses.expense.Expense;
+import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.builder.CardBuilder;
 
 import static junit.framework.Assert.assertFalse;
@@ -24,9 +26,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 
-/**
- * Created by jzanella on 8/27/16.
- */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class CardRepositoryTest {
@@ -40,12 +39,13 @@ public class CardRepositoryTest {
 		account.setName("test");
 		accountRepository = new AccountRepository(new Repository<Account>(MyApplication.getContext()));
 		accountRepository.save(account);
-		subject = new CardRepository(new Repository<Card>(MyApplication.getContext()));
+		ExpenseRepository expenseRepository = new ExpenseRepository(new Repository<Expense>(MyApplication.getContext()));
+		subject = new CardRepository(new Repository<Card>(MyApplication.getContext()), expenseRepository);
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		FlowManagerHelper.reset(InstrumentationRegistry.getTargetContext());
+		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
 	}
 
 	@Test
@@ -53,7 +53,7 @@ public class CardRepositoryTest {
 		Card card = new CardBuilder().account(account).build(accountRepository);
 		subject.save(card);
 
-		assertThat(card.id, is(not(0L)));
+		assertThat(card.getId(), is(not(0L)));
 		assertThat(card.getUuid(), is(not("")));
 	}
 

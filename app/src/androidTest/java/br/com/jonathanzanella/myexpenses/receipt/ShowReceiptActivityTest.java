@@ -1,6 +1,7 @@
 package br.com.jonathanzanella.myexpenses.receipt;
 
 import android.content.Intent;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -17,9 +18,9 @@ import java.text.NumberFormat;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
+import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
-import br.com.jonathanzanella.myexpenses.helpers.FlowManagerHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.ReceiptBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder;
@@ -46,7 +47,7 @@ public class ShowReceiptActivityTest {
 	public ActivityTestRule<ShowReceiptActivity> activityTestRule = new ActivityTestRule<>(ShowReceiptActivity.class, true, false);
 
 	private Receipt receipt;
-	private ReceiptRepository repository = new ReceiptRepository();
+	private ReceiptRepository repository = new ReceiptRepository(new Repository<Receipt>(getTargetContext()));
 
 	@Before
 	public void setUp() throws Exception {
@@ -62,7 +63,7 @@ public class ShowReceiptActivityTest {
 
 	@After
 	public void tearDown() throws Exception {
-		FlowManagerHelper.reset(getTargetContext());
+		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
 		ActivityLifecycleHelper.closeAllActivities(getInstrumentation());
 	}
 

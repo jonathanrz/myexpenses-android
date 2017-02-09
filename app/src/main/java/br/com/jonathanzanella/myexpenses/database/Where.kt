@@ -64,6 +64,17 @@ class Where(field: Fields) {
         return this
     }
 
+    fun queryIn(list: List<String>): Where {
+        var string = "(";
+        for (s in list) {
+            string = string.plus("?,")
+            values.add(s)
+        }
+        string = string.removeRange(string.length - 1, string.length) + ")";
+        setLastQueryOperation(string)
+        return this;
+    }
+
     fun and(field: Fields): Where {
         fieldsAndValueMatch()
         queries.add(Query(field))

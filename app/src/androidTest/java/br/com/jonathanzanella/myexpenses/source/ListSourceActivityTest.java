@@ -1,6 +1,7 @@
 package br.com.jonathanzanella.myexpenses.source;
 
 import android.content.Intent;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -12,8 +13,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.database.Repository;
-import br.com.jonathanzanella.myexpenses.helpers.FlowManagerHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder;
 
 import static android.support.test.InstrumentationRegistry.getContext;
@@ -40,7 +41,7 @@ public class ListSourceActivityTest {
 
 	@After
 	public void tearDown() throws Exception {
-		FlowManagerHelper.reset(getTargetContext());
+		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
 	}
 
 	@Test

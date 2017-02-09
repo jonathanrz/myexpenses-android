@@ -2,6 +2,8 @@ package br.com.jonathanzanella.myexpenses.database;
 
 import org.junit.Test;
 
+import java.util.Arrays;
+
 import static junit.framework.Assert.assertEquals;
 
 /**
@@ -21,6 +23,14 @@ public class WhereTest {
 	public void generate_query_with_and_successfully() throws Exception {
 		Where where = new Where(Fields.ID).eq(1L).and(Fields.NAME).eq("John Doe");
 		Select expected = new Select("id = ? and name = ?", new String[] {"1", "John Doe"});
+		Select query = where.query();
+		assertEquals(query, expected);
+	}
+
+	@Test
+	public void generate_query_with_in() throws Exception {
+		Where where = new Where(Fields.NAME).queryIn(Arrays.asList("John Doe", "John Doe2"));
+		Select expected = new Select("name in (?,?)", new String[] {"John Doe", "John Doe2"});
 		Select query = where.query();
 		assertEquals(query, expected);
 	}

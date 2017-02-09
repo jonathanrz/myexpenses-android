@@ -62,7 +62,8 @@ class CreditCardAdapter extends RecyclerView.Adapter<CreditCardAdapter.ViewHolde
 	}
 
 	public CreditCardAdapter(Context context) {
-		cardRepository = new CardRepository(new Repository<Card>(context));
+		ExpenseRepository expenseRepository = new ExpenseRepository(new Repository<Expense>(context));
+		cardRepository = new CardRepository(new Repository<Card>(context), expenseRepository);
 	}
 
 	@Override

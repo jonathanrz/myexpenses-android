@@ -20,6 +20,8 @@ import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.expense.Expense;
+import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import lombok.Setter;
@@ -31,6 +33,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
 	protected List<Card> cards;
 	private CardAdapterPresenter presenter;
 	private CardRepository cardRepository;
+	private ExpenseRepository expenseRepository;
 
 	@Setter
 	CardAdapterCallback callback;
@@ -99,8 +102,14 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
 	}
 
 	public CardAdapter() {
-		cardRepository = new CardRepository(new Repository<Card>(MyApplication.getContext()));
+		cardRepository = new CardRepository(new Repository<Card>(MyApplication.getContext()), getExpenseRepository());
 		presenter = new CardAdapterPresenter(this, cardRepository);
+	}
+
+	private ExpenseRepository getExpenseRepository() {
+		if(expenseRepository == null)
+			expenseRepository = new ExpenseRepository(new Repository<Expense>(MyApplication.getContext()));
+		return expenseRepository;
 	}
 
 	@Override

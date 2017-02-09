@@ -21,6 +21,7 @@ import br.com.jonathanzanella.myexpenses.bill.Bill;
 import br.com.jonathanzanella.myexpenses.bill.BillRepository;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
+import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.receipt.Receipt;
 import br.com.jonathanzanella.myexpenses.receipt.ReceiptRepository;
 import br.com.jonathanzanella.myexpenses.transaction.Transaction;
@@ -37,6 +38,7 @@ import butterknife.ButterKnife;
 public class MonthTransactionsView extends BaseView {
 	public static final SimpleDateFormat sdf = new SimpleDateFormat("MMMM/yy", Locale.getDefault());
 	private ReceiptRepository receiptRepository;
+	private ExpenseRepository expenseRepository;
 
 	@Bind(R.id.view_month_transactions_list)
 	RecyclerView list;
@@ -61,6 +63,7 @@ public class MonthTransactionsView extends BaseView {
 	@Override
 	protected void init() {
 		receiptRepository = new ReceiptRepository(new Repository<Receipt>(getContext()));
+		expenseRepository = new ExpenseRepository(new Repository<Expense>(getContext()));
 		inflate(getContext(), R.layout.view_account_month_transactions, this);
 		ButterKnife.bind(this);
 	}
@@ -83,14 +86,27 @@ public class MonthTransactionsView extends BaseView {
 			}
 		}.execute();
 
-		List<Expense> expenses = Expense.accountExpenses(account, month);
-		adapter.addTransactions(expenses);
+		new AsyncTask<Void, Void, List<Expense>>() {
+
+			@Override
+			protected List<Expense> doInBackground(Void... voids) {
+				return expenseRepository.accountExpenses(account, month);
+			}
+
+			@Override
+			protected void onPostExecute(List<Expense> expenses) {
+				super.onPostExecute(expenses);
+				adapter.addTransactions(expenses);
+				adapter.notifyDataSetChanged();
+			}
+		}.execute();
+
 		if(account.isAccountToPayBills()) {
 			new AsyncTask<Void, Void, List<Bill>>() {
 
 				@Override
 				protected List<Bill> doInBackground(Void... voids) {
-					return new BillRepository(new Repository<Bill>(MyApplication.getContext())).monthly(month);
+					return new BillRepository(new Repository<Bill>(MyApplication.getContext()), expenseRepository).monthly(month);
 				}
 
 				@Override
