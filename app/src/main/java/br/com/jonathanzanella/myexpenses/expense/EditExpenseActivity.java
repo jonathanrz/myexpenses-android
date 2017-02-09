@@ -222,7 +222,7 @@ public class EditExpenseActivity extends BaseActivity implements ExpenseContract
 		}
 		expense.setValue(value);
 		expense.setValueToShowInOverview(valueToShowInOverview);
-		expense.setChargeNextMonth(checkPayNextMonth.isChecked());
+		expense.setChargedNextMonth(checkPayNextMonth.isChecked());
 		expense.showInOverview(showInOverview.isChecked());
 		expense.showInResume(showInResume.isChecked());
 		expense.setUserUuid(selectUserView.getSelectedUser());
@@ -276,7 +276,7 @@ public class EditExpenseActivity extends BaseActivity implements ExpenseContract
 		if(expense.getValue() < 0)
 			checkRepayment.setChecked(true);
 
-		checkPayNextMonth.setChecked(expense.isChargeNextMonth());
+		checkPayNextMonth.setChecked(expense.isChargedNextMonth());
 		showInOverview.setChecked(expense.isShowInOverview());
 		showInResume.setChecked(expense.isShowInResume());
 

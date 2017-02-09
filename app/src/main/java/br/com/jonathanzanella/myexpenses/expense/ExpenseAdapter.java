@@ -79,7 +79,7 @@ class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHolder> {
 				}
 			}.execute();
 
-			chargeNextMonth.setVisibility(expense.isChargeNextMonth() ? View.VISIBLE : View.GONE);
+			chargeNextMonth.setVisibility(expense.isChargedNextMonth() ? View.VISIBLE : View.GONE);
 			new AsyncTask<Void, Void, Bill>() {
 
 				@Override

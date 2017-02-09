@@ -5,25 +5,13 @@ import android.support.annotation.WorkerThread;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.NotNull;
-import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
-import com.raizlabs.android.dbflow.annotation.Unique;
-import com.raizlabs.android.dbflow.sql.language.From;
-import com.raizlabs.android.dbflow.sql.language.SQLite;
-import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.joda.time.DateTime;
 
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.UUID;
 
-import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
@@ -36,9 +24,6 @@ import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
 import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType;
 import br.com.jonathanzanella.myexpenses.database.MyDatabase;
 import br.com.jonathanzanella.myexpenses.database.Repository;
-import br.com.jonathanzanella.myexpenses.helpers.DateHelper;
-import br.com.jonathanzanella.myexpenses.helpers.converter.DateTimeConverter;
-import br.com.jonathanzanella.myexpenses.overview.WeeklyPagerAdapter;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi;
 import br.com.jonathanzanella.myexpenses.transaction.Transaction;
@@ -46,82 +31,75 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
-import static br.com.jonathanzanella.myexpenses.chargeable.ChargeableType.CREDIT_CARD;
-import static br.com.jonathanzanella.myexpenses.chargeable.ChargeableType.DEBIT_CARD;
-import static br.com.jonathanzanella.myexpenses.log.Log.warning;
-
 /**
  * Created by jzanella on 2/2/16.
  */
 @Table(database = MyDatabase.class)
 @EqualsAndHashCode(callSuper = false, of = {"id", "uuid", "name"})
-public class Expense extends BaseModel implements Transaction, UnsyncModel {
+public class Expense implements Transaction, UnsyncModel {
 	private static final ExpenseApi expenseApi = new ExpenseApi();
 	private static AccountRepository accountRepository;
 	private static CardRepository cardRepository;
+	private static ExpenseRepository expenseRepository;
 
-	@Column
-	@PrimaryKey(autoincrement = true) @Setter @Getter
+	@Setter @Getter
 	long id;
 
-	@Column @Unique @NotNull
-	@Getter @Setter @Expose
+	@NotNull @Getter @Setter @Expose
 	String uuid;
 
-	@Column @NotNull
-	@Getter @Setter @Expose
+	@NotNull @Getter @Setter @Expose
 	String name;
 
-	@Column(typeConverter = DateTimeConverter.class) @Getter @Setter @Expose
+	@Getter @Setter @Expose
 	DateTime date;
 
-	@Column @Getter @Setter @Expose
+	@Getter @Setter @Expose
 	int value;
 
-	@Column @Getter @Setter @Expose
+	@Getter @Setter @Expose
 	int valueToShowInOverview;
 
-	@Column @NotNull @Expose
+	@NotNull @Expose @Setter
 	String chargeableUuid;
 
-	@Column @Expose
+	@Expose
 	ChargeableType chargeableType;
 
-	@Column @Expose @Getter
+	@Expose @Getter @Setter
 	String billUuid;
 
-	@Column @Getter @Setter @Expose
+	@Getter @Setter @Expose
 	boolean charged;
 
-	@Column @Getter @Setter @Expose
-	boolean chargeNextMonth;
+	@Getter @Setter @Expose
+	boolean chargedNextMonth;
 
-	@Column @Getter @Setter @Expose
+	@Getter @Setter @Expose
 	boolean ignoreInOverview;
 
-	@Column @Getter @Setter @Expose
+	@Getter @Setter @Expose
 	boolean ignoreInResume;
 
-	@Column @NotNull @Getter @Setter @Expose
+	@NotNull @Getter @Setter @Expose
 	String userUuid;
 
-	@Column @Unique
 	@Getter @Setter @Expose @SerializedName("_id")
 	String serverId;
 
-	@Column @Getter @Setter @Expose @SerializedName("created_at")
+	@Getter @Setter @Expose @SerializedName("created_at")
 	long createdAt;
 
-	@Column @Getter @Setter @Expose @SerializedName("updated_at")
+	@Getter @Setter @Expose @SerializedName("updated_at")
 	long updatedAt;
 
-	@Column @Setter
+	@Getter @Setter
 	boolean sync;
 
-	@Column
+	@Getter @Setter
 	boolean removed;
 
-	@Getter
+	@Getter @Setter
 	private Card creditCard;
 
 	@Override
@@ -139,212 +117,18 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 		return charged;
 	}
 
-	public static List<Expense> monthly(DateTime date) {
-		DateTime lastMonth = date.minusMonths(1);
-		DateTime initOfMonth = DateHelper.firstDayOfMonth(lastMonth);
-		DateTime endOfMonth = DateHelper.lastDayOfMonth(lastMonth);
-
-		List<Expense> expenses = initQuery()
-				.where(Expense_Table.date.between(initOfMonth).and(endOfMonth))
-				.and(Expense_Table.chargeNextMonth.eq(true))
-				.and(Expense_Table.userUuid.is(Environment.CURRENT_USER_UUID))
-				.and(Expense_Table.removed.is(false))
-				.orderBy(Expense_Table.date, true)
-				.queryList();
-
-		initOfMonth = DateHelper.firstDayOfMonth(date);
-		endOfMonth = DateHelper.lastDayOfMonth(date);
-
-		expenses.addAll(initQuery()
-				.where(Expense_Table.date.between(initOfMonth).and(endOfMonth))
-				.and(Expense_Table.chargeNextMonth.eq(false))
-				.and(Expense_Table.userUuid.is(Environment.CURRENT_USER_UUID))
-				.and(Expense_Table.removed.is(false))
-				.orderBy(Expense_Table.date, true)
-				.queryList());
-
-		return expenses;
-	}
-
-	public static List<Expense> expenses(WeeklyPagerAdapter.Period period) {
-		List<Expense> expenses = new ArrayList<>();
-
-		if(period.init.getDayOfMonth() == 1) {
-			DateTime date = DateHelper.firstDayOfMonth(period.init);
-			DateTime initOfMonth = date.minusMonths(1);
-			DateTime endOfMonth = DateHelper.lastDayOfMonth(initOfMonth);
-
-			expenses.addAll(initQuery()
-					.where(Expense_Table.date.between(initOfMonth).and(endOfMonth))
-					.and(Expense_Table.chargeableType.eq(CREDIT_CARD))
-					.and(Expense_Table.chargeNextMonth.eq(true))
-					.and(Expense_Table.ignoreInOverview.eq(false))
-					.and(Expense_Table.userUuid.is(Environment.CURRENT_USER_UUID))
-					.and(Expense_Table.removed.is(false))
-					.orderBy(Expense_Table.date, true)
-					.queryList());
-		}
-
-		DateTime init = DateHelper.firstMillisOfDay(period.init);
-		DateTime end = DateHelper.lastMillisOfDay(period.end);
-
-		expenses.addAll(initQuery()
-				.where(Expense_Table.date.between(init).and(end))
-				.and(Expense_Table.chargeNextMonth.eq(false))
-				.and(Expense_Table.ignoreInOverview.eq(false))
-				.and(Expense_Table.userUuid.is(Environment.CURRENT_USER_UUID))
-				.and(Expense_Table.removed.is(false))
-				.orderBy(Expense_Table.date, true)
-				.queryList());
-
-		return expenses;
-	}
-
-	public static List<Expense> expenses(DateTime date) {
-		DateTime lastMonth = date.minusMonths(1);
-		DateTime initOfMonth = DateHelper.firstDayOfMonth(lastMonth);
-		DateTime endOfMonth = DateHelper.lastDayOfMonth(lastMonth);
-
-		List<Expense> expenses = initQuery()
-				.where(Expense_Table.date.between(initOfMonth).and(endOfMonth))
-				.and(Expense_Table.chargeableType.notEq(CREDIT_CARD))
-				.and(Expense_Table.chargeNextMonth.eq(true))
-				.and(Expense_Table.ignoreInResume.eq(false))
-				.and(Expense_Table.userUuid.is(Environment.CURRENT_USER_UUID))
-				.and(Expense_Table.removed.is(false))
-				.orderBy(Expense_Table.date, true)
-				.queryList();
-
-		initOfMonth = DateHelper.firstDayOfMonth(date);
-		endOfMonth = DateHelper.lastDayOfMonth(date);
-
-		expenses.addAll(initQuery()
-				.where(Expense_Table.date.between(initOfMonth).and(endOfMonth))
-				.and(Expense_Table.chargeableType.notEq(CREDIT_CARD))
-				.and(Expense_Table.chargeNextMonth.eq(false))
-				.and(Expense_Table.ignoreInResume.eq(false))
-				.and(Expense_Table.userUuid.is(Environment.CURRENT_USER_UUID))
-				.and(Expense_Table.removed.is(false))
-				.orderBy(Expense_Table.date, true)
-				.queryList());
-
-		DateTime creditCardMonth = date.minusMonths(1);
-		List<Card> cards = getCardRepository().creditCards();
-		for (Card card : cards) {
-			int total = getCardRepository().getInvoiceValue(card, creditCardMonth);
-			if(total == 0)
-				continue;
-
-			Expense expense = new Expense();
-			expense.setChargeable(card);
-			expense.setName(MyApplication.getContext().getString(R.string.invoice));
-			expense.setDate(creditCardMonth);
-			expense.setValue(total);
-			expense.creditCard = card;
-			expenses.add(expense);
-		}
-
-		return expenses;
-	}
-
-	public static List<Expense> accountExpenses(Account account, DateTime month) {
-		DateTime lastMonth = month.minusMonths(1);
-		DateTime initOfMonth = DateHelper.firstDayOfMonth(lastMonth);
-		DateTime endOfMonth = DateHelper.lastDayOfMonth(lastMonth);
-
-		Card card = getCardRepository().accountDebitCard(account);
-
-		List<Expense> expenses = initQuery()
-				.where(Expense_Table.date.between(initOfMonth).and(endOfMonth))
-				.and(Expense_Table.chargeableType.eq(ChargeableType.ACCOUNT))
-				.and(Expense_Table.chargeableUuid.eq(account.getUuid()))
-				.and(Expense_Table.chargeNextMonth.eq(true))
-				.and(Expense_Table.removed.is(false))
-				.queryList();
-
-		if(card != null) {
-			expenses.addAll(initQuery()
-					.where(Expense_Table.date.between(initOfMonth).and(endOfMonth))
-					.and(Expense_Table.chargeableType.eq(DEBIT_CARD))
-					.and(Expense_Table.chargeableUuid.eq(card.getUuid()))
-					.and(Expense_Table.chargeNextMonth.eq(true))
-					.and(Expense_Table.removed.is(false))
-					.queryList());
-		}
-
-		initOfMonth = DateHelper.firstDayOfMonth(month);
-		endOfMonth = DateHelper.lastDayOfMonth(month);
-
-		expenses.addAll(initQuery()
-				.where(Expense_Table.date.between(initOfMonth).and(endOfMonth))
-				.and(Expense_Table.chargeableType.eq(ChargeableType.ACCOUNT))
-				.and(Expense_Table.chargeableUuid.eq(account.getUuid()))
-				.and(Expense_Table.chargeNextMonth.eq(false))
-				.and(Expense_Table.removed.is(false))
-				.queryList());
-
-		if(card != null) {
-			expenses.addAll(initQuery()
-					.where(Expense_Table.date.between(initOfMonth).and(endOfMonth))
-					.and(Expense_Table.chargeableType.eq(DEBIT_CARD))
-					.and(Expense_Table.chargeableUuid.eq(card.getUuid()))
-					.and(Expense_Table.chargeNextMonth.eq(false))
-					.and(Expense_Table.removed.is(false))
-					.queryList());
-		}
-
-		if(account.isAccountToPayCreditCard()) {
-			DateTime creditCardMonth = month.minusMonths(1);
-			List<Card> cards = getCardRepository().creditCards();
-			for (Card creditCard : cards) {
-				int total = getCardRepository().getInvoiceValue(card, creditCardMonth);
-				if (total == 0)
-					continue;
-
-				Expense expense = new Expense();
-				expense.setChargeable(card);
-				expense.setName(MyApplication.getContext().getString(R.string.invoice) + " " + creditCard.getName());
-				expense.setDate(creditCardMonth.plusMonths(1));
-				expense.setValue(total);
-				expense.creditCard = card;
-				expenses.add(expense);
-			}
-		}
-
-		Collections.sort(expenses, new Comparator<Expense>() {
-			@Override
-			public int compare(Expense lhs, Expense rhs) {
-				if(lhs.getDate().isAfter(rhs.getDate()))
-					return 1;
-				return -1;
-			}
-		});
-
-		return expenses;
-	}
-
-	private static From<Expense> initQuery() {
-		return SQLite.select().from(Expense.class);
-	}
-
-	public static Expense find(String uuid) {
-		return initQuery().where(Expense_Table.uuid.eq(uuid)).querySingle();
-	}
-
-	public static long greaterUpdatedAt() {
-		Expense expense = initQuery().orderBy(Expense_Table.updatedAt, false).limit(1).querySingle();
-		if(expense == null)
-			return 0L;
-		return expense.getUpdatedAt();
-	}
-
-	public static List<Expense> unsync() {
-		return initQuery().where(Expense_Table.sync.eq(false)).queryList();
+	String getDateAsString() {
+		return date.toString();
 	}
 
 	public void setChargeable(Chargeable chargeable) {
 		chargeableType = chargeable.getChargeableType();
 		chargeableUuid = chargeable.getUuid();
+	}
+
+	void setChargeable(String uuid, ChargeableType type) {
+		chargeableType = type;
+		chargeableUuid = uuid;
 	}
 
 	@WorkerThread
@@ -442,7 +226,7 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 				break;
 		}
 		setCharged(true);
-		save();
+		getExpenseRepository().save(this);
 
 	}
 
@@ -451,41 +235,13 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 	}
 
 	@Override
-	public void save() {
-		if(id == 0 && uuid == null) {
-			do
-				uuid = UUID.randomUUID().toString();
-			while (Expense.find(uuid) != null);
-		}
-		if(id == 0 && userUuid == null)
-			userUuid = Environment.CURRENT_USER_UUID;
-		sync = false;
-		super.save();
+	public void syncAndSave(UnsyncModel serverModel) {
+		throw new UnsupportedOperationException("You should use ReceiptRepository");
 	}
 
-	@Override
-	public void syncAndSave(UnsyncModel unsyncModel) {
-		Expense expense = Expense.find(uuid);
-
-		if(expense != null && expense.id != id) {
-			if(expense.getUpdatedAt() != getUpdatedAt())
-				warning("Expense overwritten", getData());
-			id = expense.id;
-		}
-
-		setServerId(unsyncModel.getServerId());
-		setCreatedAt(unsyncModel.getCreatedAt());
-		setUpdatedAt(unsyncModel.getUpdatedAt());
-
-		save();
-		sync = true;
-		super.save();
-	}
-
-	@Override
-	public void delete() {
+	void delete() {
 		removed = true;
-		save();
+		getExpenseRepository().save(this);
 	}
 
 	@Override
@@ -509,5 +265,11 @@ public class Expense extends BaseModel implements Transaction, UnsyncModel {
 		if(cardRepository == null)
 			cardRepository = new CardRepository(new Repository<Card>(MyApplication.getContext()));
 		return cardRepository;
+	}
+
+	private static ExpenseRepository getExpenseRepository() {
+		if(expenseRepository == null)
+			expenseRepository = new ExpenseRepository(new Repository<Expense>(MyApplication.getContext()));
+		return expenseRepository;
 	}
 }

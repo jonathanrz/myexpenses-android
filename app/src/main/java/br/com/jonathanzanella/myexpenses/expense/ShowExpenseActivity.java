@@ -131,7 +131,7 @@ public class ShowExpenseActivity extends BaseActivity implements ExpenseContract
 				expenseChargeable.setText(chargeable.getName());
 			}
 		}.execute();
-		chargeNextMonth.setVisibility(expense.isChargeNextMonth() ? View.VISIBLE : View.GONE);
+		chargeNextMonth.setVisibility(expense.isChargedNextMonth() ? View.VISIBLE : View.GONE);
 	}
 
 	@UiThread
