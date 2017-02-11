@@ -6,9 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.database.Repository;
-import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
@@ -18,12 +16,11 @@ import static junit.framework.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-/**
- * Created by jzanella on 8/27/16.
- */
 public class BillRepositoryUnitTest {
 	@Mock
 	private Repository<Bill> repository;
+	@Mock
+	private ExpenseRepository expenseRepository;
 	@Mock
 	private Bill bill;
 
@@ -32,7 +29,7 @@ public class BillRepositoryUnitTest {
 	@Before
 	public void setUp() throws Exception {
 		initMocks(this);
-		billRepository = new BillRepository(repository, new ExpenseRepository(new Repository<Expense>(MyApplication.getContext())));
+		billRepository = new BillRepository(repository, expenseRepository);
 	}
 
 	@Test

@@ -12,16 +12,13 @@ import java.util.List;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-/**
- * Created by jzanella on 8/27/16.
- */
 public class ReceiptAdapterPresenterTest {
 	@Mock
 	private ReceiptAdapter adapter;
 	@Mock
 	private ReceiptRepository repository;
 
-	ReceiptAdapterPresenter presenter;
+	private ReceiptAdapterPresenter presenter;
 
 	@Before
 	public void setUp() throws Exception {

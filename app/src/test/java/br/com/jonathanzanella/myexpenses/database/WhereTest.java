@@ -6,9 +6,6 @@ import java.util.Arrays;
 
 import static junit.framework.Assert.assertEquals;
 
-/**
- * Created by jzanella on 11/12/16.
- */
 public class WhereTest {
 
 	@Test

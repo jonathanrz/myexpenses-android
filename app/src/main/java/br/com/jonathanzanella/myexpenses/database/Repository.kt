@@ -121,7 +121,6 @@ open class Repository<T : UnsyncModel>(ctx: Context) {
                 Log.e("Repository", "error inserting the record into the database, error=" + e.message)
                 throw e
             }
-
         } else {
             val select = Where(Fields.ID).eq(data.id).query()
             db.update(table.name, table.fillContentValues(data), select.where, select.parameters)

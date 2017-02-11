@@ -13,12 +13,9 @@ import static junit.framework.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-/**
- * Created by jzanella on 8/27/16.
- */
 public class SourceRepositoryUnitTest {
 	@Mock
-	Repository<Source> repository;
+	private Repository<Source> repository;
 
 	private SourceRepository sourceRepository = new SourceRepository(repository);
 

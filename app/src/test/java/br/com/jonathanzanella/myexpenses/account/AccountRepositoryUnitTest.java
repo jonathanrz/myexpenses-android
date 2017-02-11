@@ -15,9 +15,6 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-/**
- * Created by jzanella on 8/27/16.
- */
 public class AccountRepositoryUnitTest {
 	@Mock
 	private Repository<Account> repository;

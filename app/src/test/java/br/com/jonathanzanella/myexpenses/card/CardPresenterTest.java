@@ -4,10 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
-import br.com.jonathanzanella.myexpenses.database.Repository;
-import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
@@ -18,15 +15,14 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-/**
- * Created by jzanella on 8/27/16.
- */
 public class CardPresenterTest {
 	private static final String UUID = "uuid";
 	@Mock
 	private CardRepository repository;
 	@Mock
 	private AccountRepository accountRepository;
+	@Mock
+	private ExpenseRepository expenseRepository;
 	@Mock
 	private CardContract.EditView view;
 
@@ -35,7 +31,6 @@ public class CardPresenterTest {
 	@Before
 	public void setUp() throws Exception {
 		initMocks(this);
-		ExpenseRepository expenseRepository = new ExpenseRepository(new Repository<Expense>(MyApplication.getContext()));
 		presenter = new CardPresenter(repository, accountRepository, expenseRepository);
 		presenter.attachView(view);
 	}

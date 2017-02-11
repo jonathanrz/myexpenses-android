@@ -22,7 +22,7 @@ import lombok.Setter;
 @EqualsAndHashCode(callSuper = false, of = {"id", "uuid", "name"})
 public class Bill implements Transaction, UnsyncModel {
 	public static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
-	private static final BillApi billApi = new BillApi();
+	private static BillApi billApi;
 
 	@Setter @Getter
 	private long id;
@@ -125,6 +125,8 @@ public class Bill implements Transaction, UnsyncModel {
 	@SuppressWarnings("unchecked")
 	@Override
 	public UnsyncModelApi getServerApi() {
+		if(billApi == null)
+			billApi = new BillApi();
 		return billApi;
 	}
 }

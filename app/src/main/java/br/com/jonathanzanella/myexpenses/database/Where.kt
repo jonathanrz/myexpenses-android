@@ -17,7 +17,7 @@ class Where(field: Fields) {
 
     private val queries: MutableList<Query>
     private val values: MutableList<String> = ArrayList()
-    private var orderBy: Fields = Fields.NAME;
+    private var orderBy: Fields = Fields.NAME
 
     init {
         queries = ArrayList<Query>()
@@ -65,24 +65,22 @@ class Where(field: Fields) {
     }
 
     fun queryIn(list: List<String>): Where {
-        var string = "(";
+        var string = "("
         for (s in list) {
             string = string.plus("?,")
             values.add(s)
         }
-        string = string.removeRange(string.length - 1, string.length) + ")";
+        string = string.removeRange(string.length - 1, string.length) + ")"
         setLastQueryOperation(string)
-        return this;
+        return this
     }
 
     fun and(field: Fields): Where {
-        fieldsAndValueMatch()
         queries.add(Query(field))
         return this
     }
 
     fun query(): Select {
-        fieldsAndValueMatch()
         var query = StringBuilder()
         for (i in queries.indices) {
             query = query.append(queries[i].toString())
@@ -100,11 +98,6 @@ class Where(field: Fields) {
 
     fun orderBy(): Fields {
         return orderBy()
-    }
-
-    private fun fieldsAndValueMatch() {
-        if (queries.size != values.size)
-            throw UnsupportedOperationException("The value for the last field was not setted")
     }
 
     private fun isExpectingFieldDefinition() {

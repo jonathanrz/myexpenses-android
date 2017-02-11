@@ -36,11 +36,17 @@ import static br.com.jonathanzanella.myexpenses.log.Log.warning;
 
 public class ExpenseRepository {
 	private Repository<Expense> repository;
-	private CardRepository cardRepository = new CardRepository(new Repository<Card>(MyApplication.getContext()), this);
+	private CardRepository cardRepository;
 	private ExpenseTable table = new ExpenseTable();
 
 	public ExpenseRepository(Repository<Expense> repository) {
 		this.repository = repository;
+	}
+
+	private CardRepository getCardRepository() {
+		if(cardRepository == null)
+			cardRepository = new CardRepository(new Repository<Card>(MyApplication.getContext()), this);
+		return cardRepository;
 	}
 
 	@WorkerThread
@@ -134,9 +140,9 @@ public class ExpenseRepository {
 				.orderBy(Fields.DATE)));
 
 		DateTime creditCardMonth = date.minusMonths(1);
-		List<Card> cards = cardRepository.creditCards();
+		List<Card> cards = getCardRepository().creditCards();
 		for (Card card : cards) {
-			int total = cardRepository.getInvoiceValue(card, creditCardMonth);
+			int total = getCardRepository().getInvoiceValue(card, creditCardMonth);
 			if(total == 0)
 				continue;
 
@@ -158,7 +164,7 @@ public class ExpenseRepository {
 		DateTime initOfMonth = DateHelper.firstDayOfMonth(lastMonth);
 		DateTime endOfMonth = DateHelper.lastDayOfMonth(lastMonth);
 
-		Card card = cardRepository.accountDebitCard(account);
+		Card card = getCardRepository().accountDebitCard(account);
 
 		List<Expense> expenses = repository.query(table, queryBetweenUserDataAndNotRemoved(initOfMonth, endOfMonth)
 				.and(Fields.CHARGEABLE_TYPE).eq(ACCOUNT.name())
@@ -193,9 +199,9 @@ public class ExpenseRepository {
 
 		if(account.isAccountToPayCreditCard()) {
 			DateTime creditCardMonth = month.minusMonths(1);
-			List<Card> cards = cardRepository.creditCards();
+			List<Card> cards = getCardRepository().creditCards();
 			for (Card creditCard : cards) {
-				int total = cardRepository.getInvoiceValue(card, creditCardMonth);
+				int total = getCardRepository().getInvoiceValue(card, creditCardMonth);
 				if (total == 0)
 					continue;
 

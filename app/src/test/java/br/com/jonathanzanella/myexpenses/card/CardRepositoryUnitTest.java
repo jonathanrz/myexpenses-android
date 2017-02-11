@@ -4,9 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.database.Repository;
-import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
@@ -21,7 +19,8 @@ import static org.mockito.MockitoAnnotations.initMocks;
  */
 public class CardRepositoryUnitTest {
 	private CardRepository subject;
-
+	@Mock
+	private ExpenseRepository expenseRepository;
 	@Mock
 	private Card card;
 	@Mock
@@ -30,7 +29,6 @@ public class CardRepositoryUnitTest {
 	@Before
 	public void setUp() throws Exception {
 		initMocks(this);
-		ExpenseRepository expenseRepository = new ExpenseRepository(new Repository<Expense>(MyApplication.getContext()));
 		subject = new CardRepository(repository, expenseRepository);
 	}
 
