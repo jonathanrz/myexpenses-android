@@ -97,7 +97,7 @@ class Where(field: Fields) {
     }
 
     fun orderBy(): Fields {
-        return orderBy()
+        return orderBy
     }
 
     private fun isExpectingFieldDefinition() {

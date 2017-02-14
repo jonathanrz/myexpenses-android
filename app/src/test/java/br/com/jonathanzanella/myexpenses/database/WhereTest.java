@@ -33,17 +33,7 @@ public class WhereTest {
 	}
 
 	@Test(expected = UnsupportedOperationException.class)
-	public void throw_exception_with_two_fields_added() throws Exception {
-		new Where(Fields.ID).and(Fields.NAME);
-	}
-
-	@Test(expected = UnsupportedOperationException.class)
 	public void throw_exception_with_two_values_added() throws Exception {
 		new Where(Fields.ID).eq("").eq("");
-	}
-
-	@Test(expected = UnsupportedOperationException.class)
-	public void throw_exception_without_values_added() throws Exception {
-		new Where(Fields.ID).query();
 	}
 }
