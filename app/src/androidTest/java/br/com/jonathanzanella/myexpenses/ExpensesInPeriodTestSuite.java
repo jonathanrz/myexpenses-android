@@ -51,6 +51,8 @@ public class ExpensesInPeriodTestSuite {
 		expense.setChargeable(account);
 		expense.setDate(date);
 		expense.setValue(value);
+		expense.setRemoved(false);
+		expense.setIgnoreInOverview(false);
 		return expense;
 	}
 

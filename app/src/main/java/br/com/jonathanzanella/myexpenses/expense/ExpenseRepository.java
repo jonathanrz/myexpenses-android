@@ -94,7 +94,6 @@ public class ExpenseRepository {
 			DateTime endOfMonth = DateHelper.lastDayOfMonth(initOfMonth);
 
 			Where where = queryBetweenUserDataAndNotRemoved(initOfMonth, endOfMonth)
-					.and(Fields.CHARGEABLE_TYPE).eq(CREDIT_CARD.name())
 					.and(Fields.CHARGE_NEXT_MONTH).eq(true)
 					.and(Fields.IGNORE_IN_OVERVIEW).eq(false)
 					.orderBy(Fields.DATE);
@@ -107,7 +106,6 @@ public class ExpenseRepository {
 		DateTime end = DateHelper.lastMillisOfDay(period.end);
 
 		Where where = queryBetweenUserDataAndNotRemoved(init, end)
-				.and(Fields.CHARGEABLE_TYPE).eq(CREDIT_CARD.name())
 				.and(Fields.CHARGE_NEXT_MONTH).eq(false)
 				.and(Fields.IGNORE_IN_OVERVIEW).eq(false)
 				.orderBy(Fields.DATE);

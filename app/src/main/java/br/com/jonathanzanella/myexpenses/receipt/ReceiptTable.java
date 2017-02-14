@@ -37,7 +37,7 @@ public final class ReceiptTable implements Table<Receipt> {
 				Fields.ID + SqlTypes.PRIMARY_KEY + "," +
 				Fields.NAME + SqlTypes.TEXT_UNIQUE_NOT_NULL + "," +
 				Fields.UUID + SqlTypes.TEXT_UNIQUE_NOT_NULL + "," +
-				Fields.DATE + SqlTypes.TEXT_NOT_NULL + "," +
+				Fields.DATE + SqlTypes.INT_NOT_NULL + "," +
 				Fields.INCOME + SqlTypes.INT_NOT_NULL + "," +
 				Fields.SOURCE_UUID + SqlTypes.TEXT + "," +
 				Fields.ACCOUNT_UUID + SqlTypes.TEXT_NOT_NULL + "," +
@@ -61,7 +61,7 @@ public final class ReceiptTable implements Table<Receipt> {
 		ContentValues values = new ContentValues();
 		values.put(Fields.NAME.toString(), receipt.getName());
 		values.put(Fields.UUID.toString(), receipt.getUuid());
-		values.put(Fields.DATE.toString(), receipt.getDateAsString());
+		values.put(Fields.DATE.toString(), receipt.getDate().getMillis());
 		values.put(Fields.INCOME.toString(), receipt.getIncome());
 		values.put(Fields.SOURCE_UUID.toString(), receipt.getSourceUuid());
 		values.put(Fields.ACCOUNT_UUID.toString(), receipt.getAccountUuid());

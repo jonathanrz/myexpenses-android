@@ -135,10 +135,6 @@ public class Receipt implements Transaction, UnsyncModel {
 		return NumberFormat.getCurrencyInstance().format(income / 100.0);
 	}
 
-	String getDateAsString() {
-		return date.toString();
-	}
-
 	void repeat() {
 		id = 0;
 		uuid = null;

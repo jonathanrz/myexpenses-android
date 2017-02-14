@@ -38,7 +38,7 @@ public final class ExpenseTable implements Table<Expense> {
 				Fields.ID + SqlTypes.PRIMARY_KEY + "," +
 				Fields.UUID + SqlTypes.TEXT_UNIQUE_NOT_NULL + "," +
 				Fields.NAME + SqlTypes.TEXT_UNIQUE_NOT_NULL + "," +
-				Fields.DATE + SqlTypes.TEXT_NOT_NULL + "," +
+				Fields.DATE + SqlTypes.INT_NOT_NULL + "," +
 				Fields.VALUE + SqlTypes.INT_NOT_NULL + "," +
 				Fields.VALUE_TO_SHOW_IN_OVERVIEW + SqlTypes.INT_NOT_NULL + "," +
 				Fields.CHARGEABLE_UUID + SqlTypes.TEXT_NOT_NULL + "," +
@@ -66,11 +66,11 @@ public final class ExpenseTable implements Table<Expense> {
 		ContentValues values = new ContentValues();
 		values.put(Fields.UUID.toString(), expense.getUuid());
 		values.put(Fields.NAME.toString(), expense.getName());
-		values.put(Fields.DATE.toString(), expense.getDateAsString());
+		values.put(Fields.DATE.toString(), expense.getDate().getMillis());
 		values.put(Fields.VALUE.toString(), expense.getValue());
 		values.put(Fields.VALUE_TO_SHOW_IN_OVERVIEW.toString(), expense.getValueToShowInOverview());
 		values.put(Fields.CHARGEABLE_UUID.toString(), expense.getChargeable().getUuid());
-		values.put(Fields.CHARGEABLE_TYPE.toString(), expense.getChargeable().getName());
+		values.put(Fields.CHARGEABLE_TYPE.toString(), expense.getChargeable().getChargeableType().toString());
 		values.put(Fields.BILL_UUID.toString(), expense.getBillUuid());
 		values.put(Fields.CHARGED.toString(), expense.isCharged() ? 1 : 0);
 		values.put(Fields.CHARGE_NEXT_MONTH.toString(), expense.isChargedNextMonth() ? 1 : 0);

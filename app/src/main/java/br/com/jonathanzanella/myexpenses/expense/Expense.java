@@ -110,10 +110,6 @@ public class Expense implements Transaction, UnsyncModel {
 		return charged;
 	}
 
-	String getDateAsString() {
-		return date.toString();
-	}
-
 	public void setChargeable(Chargeable chargeable) {
 		chargeableType = chargeable.getChargeableType();
 		chargeableUuid = chargeable.getUuid();
