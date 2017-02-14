@@ -32,6 +32,12 @@ public class WhereTest {
 		assertEquals(query, expected);
 	}
 
+	@Test
+	public void generate_query_with_order_by() throws Exception {
+		Where where = new Where(Fields.ID).eq(1L).orderBy(Fields.ID);
+		assertEquals(where.orderBy(), Fields.ID);
+	}
+
 	@Test(expected = UnsupportedOperationException.class)
 	public void throw_exception_with_two_values_added() throws Exception {
 		new Where(Fields.ID).eq("").eq("");
