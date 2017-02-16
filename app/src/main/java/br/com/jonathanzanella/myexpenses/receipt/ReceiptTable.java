@@ -105,6 +105,7 @@ public final class ReceiptTable implements Table<Receipt> {
 				Fields.ID.toString(),
 				Fields.NAME.toString(),
 				Fields.UUID.toString(),
+				Fields.DATE.toString(),
 				Fields.INCOME.toString(),
 				Fields.SOURCE_UUID.toString(),
 				Fields.ACCOUNT_UUID.toString(),

@@ -28,7 +28,6 @@ import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
 import static br.com.jonathanzanella.myexpenses.chargeable.ChargeableType.ACCOUNT;
-import static br.com.jonathanzanella.myexpenses.chargeable.ChargeableType.CREDIT_CARD;
 import static br.com.jonathanzanella.myexpenses.chargeable.ChargeableType.DEBIT_CARD;
 import static br.com.jonathanzanella.myexpenses.helpers.DateHelper.firstDayOfMonth;
 import static br.com.jonathanzanella.myexpenses.helpers.DateHelper.lastDayOfMonth;
@@ -123,7 +122,6 @@ public class ExpenseRepository {
 		DateTime endOfMonth = DateHelper.lastDayOfMonth(lastMonth);
 
 		List<Expense> expenses = repository.query(table, queryBetweenUserDataAndNotRemoved(initOfMonth, endOfMonth)
-				.and(Fields.CHARGEABLE_TYPE).eq(CREDIT_CARD.name())
 				.and(Fields.CHARGE_NEXT_MONTH).eq(true)
 				.and(Fields.IGNORE_IN_OVERVIEW).eq(false)
 				.orderBy(Fields.DATE));
@@ -132,7 +130,6 @@ public class ExpenseRepository {
 		endOfMonth = DateHelper.lastDayOfMonth(date);
 
 		expenses.addAll(repository.query(table, queryBetweenUserDataAndNotRemoved(initOfMonth, endOfMonth)
-				.and(Fields.CHARGEABLE_TYPE).eq(CREDIT_CARD.name())
 				.and(Fields.CHARGE_NEXT_MONTH).eq(false)
 				.and(Fields.IGNORE_IN_OVERVIEW).eq(false)
 				.orderBy(Fields.DATE)));
