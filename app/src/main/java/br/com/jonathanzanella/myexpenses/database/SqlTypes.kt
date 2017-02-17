@@ -12,5 +12,6 @@ object SqlTypes {
     const val TEXT_NOT_NULL = " TEXT NOT NULL"
     const val TEXT_UNIQUE = " TEXT UNIQUE"
     const val TEXT_UNIQUE_NOT_NULL = " TEXT UNIQUE NOT NULL"
-    const val DATE = " DATE"
+    const val DATE = " INTEGER"
+    const val DATE_NOT_NULL = " INTEGER NOT NULL"
 }

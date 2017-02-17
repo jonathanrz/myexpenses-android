@@ -38,7 +38,7 @@ public final class ExpenseTable implements Table<Expense> {
 				Fields.ID + SqlTypes.PRIMARY_KEY + "," +
 				Fields.UUID + SqlTypes.TEXT_UNIQUE_NOT_NULL + "," +
 				Fields.NAME + SqlTypes.TEXT_UNIQUE_NOT_NULL + "," +
-				Fields.DATE + SqlTypes.INT_NOT_NULL + "," +
+				Fields.DATE + SqlTypes.DATE_NOT_NULL + "," +
 				Fields.VALUE + SqlTypes.INT_NOT_NULL + "," +
 				Fields.VALUE_TO_SHOW_IN_OVERVIEW + SqlTypes.INT_NOT_NULL + "," +
 				Fields.CHARGEABLE_UUID + SqlTypes.TEXT_NOT_NULL + "," +

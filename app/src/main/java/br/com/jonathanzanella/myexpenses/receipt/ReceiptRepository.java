@@ -55,7 +55,8 @@ public class ReceiptRepository {
 		Where where = new Where(Fields.DATE).greaterThanOrEq(firstDayOfMonth(month).getMillis())
 				.and(Fields.DATE).lessThanOrEq(lastDayOfMonth(month).getMillis())
 				.and(Fields.REMOVED).eq(false)
-				.and(Fields.USER_UUID).eq(Environment.CURRENT_USER_UUID);
+				.and(Fields.USER_UUID).eq(Environment.CURRENT_USER_UUID)
+				.orderBy(Fields.DATE);
 		if(account != null)
 			where = where.and(Fields.ACCOUNT_UUID).eq(account.getUuid());
 

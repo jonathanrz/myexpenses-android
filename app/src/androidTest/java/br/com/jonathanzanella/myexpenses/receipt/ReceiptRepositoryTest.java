@@ -1,6 +1,5 @@
 package br.com.jonathanzanella.myexpenses.receipt;
 
-import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.LargeTest;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -23,7 +22,6 @@ import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder;
 import br.com.jonathanzanella.myexpenses.source.Source;
 import br.com.jonathanzanella.myexpenses.source.SourceRepository;
 
-import static android.support.test.InstrumentationRegistry.getContext;
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.InstrumentationRegistry.getTargetContext;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -36,7 +34,7 @@ import static org.hamcrest.Matchers.not;
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class ReceiptRepositoryTest {
-	private ReceiptRepository repository = new ReceiptRepository(new Repository<Receipt>(getTargetContext()));
+	private ReceiptRepository repository;
 
 	private Source source;
 	private Account account;
@@ -44,14 +42,15 @@ public class ReceiptRepositoryTest {
 	@Before
 	public void setUp() throws Exception {
 		account = new AccountBuilder().build();
-		new AccountRepository(new Repository<Account>(getContext())).save(account);
+		new AccountRepository(new Repository<Account>(getTargetContext())).save(account);
 		source = new SourceBuilder().build();
-		new SourceRepository(new Repository<Source>(getContext())).save(source);
+		new SourceRepository(new Repository<Source>(getTargetContext())).save(source);
+		repository = new ReceiptRepository(new Repository<Receipt>(getTargetContext()));
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
+		new DatabaseHelper(getTargetContext()).recreateTables();
 		ActivityLifecycleHelper.closeAllActivities(getInstrumentation());
 	}
 

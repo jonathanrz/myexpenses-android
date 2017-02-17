@@ -8,6 +8,7 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.test.uiautomator.UiDevice;
 
+import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -38,6 +39,7 @@ import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.clickIntoView;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchErrorMessage;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.openMenuAndClickItem;
+import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.setTimeInDatePicker;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.typeTextIntoView;
 import static org.hamcrest.core.IsNot.not;
 
@@ -87,6 +89,9 @@ public class AddExpenseTest {
 		final String expenseName = "Test";
 		typeTextIntoView(R.id.act_edit_expense_name, expenseName);
 		typeTextIntoView(R.id.act_edit_expense_value, "100");
+		clickIntoView(R.id.act_edit_expense_date);
+		DateTime currentTime = new DateTime();
+		setTimeInDatePicker(currentTime.getYear(), currentTime.getMonthOfYear(), currentTime.getDayOfMonth());
 		selectChargeable();
 
 		clickIntoView(R.id.action_save);

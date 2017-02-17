@@ -40,8 +40,8 @@ public final class BillTable implements Table<Bill> {
 				Fields.UUID + SqlTypes.TEXT_UNIQUE_NOT_NULL + "," +
 				Fields.AMOUNT + SqlTypes.INT + "," +
 				Fields.DUE_DATE + SqlTypes.INT + "," +
-				Fields.INIT_DATE + SqlTypes.INT_NOT_NULL + "," +
-				Fields.END_DATE + SqlTypes.INT_NOT_NULL + "," +
+				Fields.INIT_DATE + SqlTypes.DATE_NOT_NULL + "," +
+				Fields.END_DATE + SqlTypes.DATE_NOT_NULL + "," +
 				Fields.USER_UUID + SqlTypes.TEXT_NOT_NULL + "," +
 				Fields.SERVER_ID + SqlTypes.TEXT_UNIQUE + "," +
 				Fields.CREATED_AT + SqlTypes.DATE + "," +

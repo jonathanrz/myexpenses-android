@@ -55,7 +55,7 @@ public class ExpenseRepository {
 
 	@WorkerThread
 	List<Expense> userExpenses() {
-		return repository.userData(table);
+		return repository.query(table, new Where(Fields.USER_UUID).eq(Environment.CURRENT_USER_UUID).orderBy(Fields.DATE));
 	}
 
 	@WorkerThread
