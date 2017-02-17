@@ -95,7 +95,7 @@ public class ReceiptRepositoryTest {
 		repository.save(receiptB);
 
 		List<Receipt> sources = repository.userReceipts();
-		assertThat(sources.get(0), is(receiptB));
-		assertThat(sources.get(1), is(receiptA));
+		assertThat(sources.get(0).getUuid(), is(receiptB.getUuid()));
+		assertThat(sources.get(1).getUuid(), is(receiptA.getUuid()));
 	}
 }
