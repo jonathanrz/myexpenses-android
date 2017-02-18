@@ -38,7 +38,7 @@ public class ReceiptRepository implements ModelRepository<Receipt> {
 
 	@WorkerThread
 	List<Receipt> userReceipts() {
-		return repository.userData(table);
+		return repository.query(table, new Where(Fields.USER_UUID).eq(Environment.CURRENT_USER_UUID).orderBy(Fields.DATE));
 	}
 
 	@WorkerThread
