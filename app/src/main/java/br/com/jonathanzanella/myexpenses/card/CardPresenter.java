@@ -157,8 +157,7 @@ class CardPresenter {
 		Expense e = new Expense();
 		e.setName(MyApplication.getContext().getString(R.string.invoice) + " " + card.getName());
 		e.setValue(totalExpense);
-//		TODO: move this to a repository to execute the find without an Observable
-//		e.setChargeable(card.getAccount());
+		e.setChargeable(card.getAccount());
 		expenseRepository.save(e);
 
 		return e;

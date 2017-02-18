@@ -16,8 +16,6 @@ import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.database.Where;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
-import br.com.jonathanzanella.myexpenses.helpers.DateHelper;
-import br.com.jonathanzanella.myexpenses.overview.WeeklyPagerAdapter;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
@@ -101,11 +99,7 @@ public class CardRepository implements ModelRepository<Card> {
 
 	@WorkerThread
 	public List<Expense> creditCardBills(Card card, DateTime month) {
-		WeeklyPagerAdapter.Period period = new WeeklyPagerAdapter.Period();
-		period.init = DateHelper.firstDayOfMonth(month);
-		period.end = DateHelper.lastDayOfMonth(month);
-
-		return expenseRepository.expenses(period, card);
+		return expenseRepository.alreadyPaidCardExpenses(month, card);
 	}
 
 	@WorkerThread

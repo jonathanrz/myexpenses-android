@@ -20,9 +20,6 @@ import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import br.com.jonathanzanella.myexpenses.views.BaseView;
 import butterknife.Bind;
 
-/**
- * Created by Jonathan Zanella on 08/02/16.
- */
 public class CreditCardInvoiceActivity extends BaseActivity {
 	public static final String KEY_CREDIT_CARD_UUID = "KeyCreateCardUuid";
 	public static final String KEY_INIT_DATE = "KeyInitDate";
@@ -61,21 +58,21 @@ public class CreditCardInvoiceActivity extends BaseActivity {
 					initDate = (DateTime) extras.getSerializable(KEY_INIT_DATE);
 				return null;
 			}
-		}.execute();
-	}
 
-	@Override
-	protected void onPostCreate(Bundle savedInstanceState) {
-		super.onPostCreate(savedInstanceState);
-
-		MonthlyPagerAdapter adapter = new MonthlyPagerAdapter(this, new MonthlyPagerAdapterBuilder() {
 			@Override
-			public BaseView buildView(Context ctx, DateTime date) {
-				return new CreditCardInvoiceView(ctx, card, date);
+			protected void onPostExecute(Void aVoid) {
+				super.onPostExecute(aVoid);
+
+				MonthlyPagerAdapter adapter = new MonthlyPagerAdapter(CreditCardInvoiceActivity.this, new MonthlyPagerAdapterBuilder() {
+					@Override
+					public BaseView buildView(Context ctx, DateTime date) {
+						return new CreditCardInvoiceView(ctx, card, date);
+					}
+				});
+				pager.setAdapter(adapter);
+				pager.setCurrentItem(adapter.getDatePosition(initDate));
+				tabs.setupWithViewPager(pager);
 			}
-		});
-		pager.setAdapter(adapter);
-		pager.setCurrentItem(adapter.getDatePosition(initDate));
-		tabs.setupWithViewPager(pager);
+		}.execute();
 	}
 }

@@ -30,6 +30,7 @@ public class BillMonthlyResumeAdapter extends RecyclerView.Adapter<BillMonthlyRe
 	protected List<Bill> bills;
 	@Getter
 	private int totalValue;
+	private BillRepository billRepository;
 
 	private enum VIEW_TYPE {
 		TYPE_NORMAL,
@@ -64,6 +65,11 @@ public class BillMonthlyResumeAdapter extends RecyclerView.Adapter<BillMonthlyRe
 		public void setTotal(int totalValue) {
 			amount.setText(NumberFormat.getCurrencyInstance().format(totalValue / 100.0));
 		}
+	}
+
+	public BillMonthlyResumeAdapter() {
+		ExpenseRepository expenseRepository = new ExpenseRepository(new Repository<Expense>(MyApplication.getContext()));
+		billRepository = new BillRepository(new Repository<Bill>(MyApplication.getContext()), expenseRepository);
 	}
 
 	@Override
@@ -101,8 +107,7 @@ public class BillMonthlyResumeAdapter extends RecyclerView.Adapter<BillMonthlyRe
 
 	@WorkerThread
 	public void loadDataAsync(final DateTime month) {
-		ExpenseRepository expenseRepository = new ExpenseRepository(new Repository<Expense>(MyApplication.getContext()));
-		bills = new BillRepository(new Repository<Bill>(MyApplication.getContext()), expenseRepository).monthly(month);
+		bills = billRepository.monthly(month);
 		totalValue = 0;
 
 		for (Bill bill : bills) {

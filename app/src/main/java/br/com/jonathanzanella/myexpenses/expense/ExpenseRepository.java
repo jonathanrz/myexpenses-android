@@ -118,6 +118,30 @@ public class ExpenseRepository implements ModelRepository<Expense> {
 	}
 
 	@WorkerThread
+	public List<Expense> alreadyPaidCardExpenses(DateTime month, Card card) {
+		List<Expense> expenses = new ArrayList<>();
+		DateTime lastMonth = month.minusMonths(1);
+
+		Where where = queryBetweenUserDataAndNotRemoved(firstDayOfMonth(lastMonth), lastDayOfMonth(lastMonth))
+				.and(Fields.CHARGEABLE_TYPE).eq(card.getChargeableType().name())
+				.and(Fields.CHARGEABLE_UUID).eq(card.getUuid())
+				.and(Fields.CHARGE_NEXT_MONTH).eq(true)
+				.and(Fields.CHARGED).eq(false)
+				.orderBy(Fields.DATE);
+		expenses.addAll(repository.query(table, where));
+
+		where = queryBetweenUserDataAndNotRemoved(firstDayOfMonth(month), lastDayOfMonth(month))
+				.and(Fields.CHARGEABLE_TYPE).eq(card.getChargeableType().name())
+				.and(Fields.CHARGEABLE_UUID).eq(card.getUuid())
+				.and(Fields.CHARGE_NEXT_MONTH).eq(false)
+				.and(Fields.CHARGED).eq(false)
+				.orderBy(Fields.DATE);
+		expenses.addAll(repository.query(table, where));
+
+		return expenses;
+	}
+
+	@WorkerThread
 	public List<Expense> expensesForResumeScreen(DateTime date) {
 		DateTime lastMonth = date.minusMonths(1);
 		DateTime initOfMonth = DateHelper.firstDayOfMonth(lastMonth);
@@ -126,7 +150,7 @@ public class ExpenseRepository implements ModelRepository<Expense> {
 		List<Expense> expenses = repository.query(table, queryBetweenUserDataAndNotRemoved(initOfMonth, endOfMonth)
 				.and(Fields.CHARGEABLE_TYPE).notEq(ChargeableType.CREDIT_CARD.name())
 				.and(Fields.CHARGE_NEXT_MONTH).eq(true)
-				.and(Fields.IGNORE_IN_OVERVIEW).eq(false)
+				.and(Fields.IGNORE_IN_RESUME).eq(false)
 				.orderBy(Fields.DATE));
 
 		initOfMonth = DateHelper.firstDayOfMonth(date);
@@ -135,7 +159,7 @@ public class ExpenseRepository implements ModelRepository<Expense> {
 		expenses.addAll(repository.query(table, queryBetweenUserDataAndNotRemoved(initOfMonth, endOfMonth)
 				.and(Fields.CHARGEABLE_TYPE).notEq(ChargeableType.CREDIT_CARD.name())
 				.and(Fields.CHARGE_NEXT_MONTH).eq(false)
-				.and(Fields.IGNORE_IN_OVERVIEW).eq(false)
+				.and(Fields.IGNORE_IN_RESUME).eq(false)
 				.orderBy(Fields.DATE)));
 
 		DateTime creditCardMonth = date.minusMonths(1);
