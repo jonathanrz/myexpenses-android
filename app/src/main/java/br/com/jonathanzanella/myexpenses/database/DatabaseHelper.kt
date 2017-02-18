@@ -27,7 +27,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, Environment.D
     }
 
     fun runMigrations() {
-        readableDatabase //We just need to open a database to execute the migrations
+        readableDatabase.close() //We just need to open a database to execute the migrations
     }
 
     fun recreateTables() {
@@ -36,5 +36,6 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, Environment.D
             table.onDrop(db)
             table.onCreate(db)
         }
+        db.close()
     }
 }

@@ -31,10 +31,13 @@ open class Repository<T : UnsyncModel>(ctx: Context) {
                 null,
                 null
         ).use { c ->
-            if (c.count == 0)
-                return null
-            c.moveToFirst()
-            return table.fill(c)
+            var data: T? = null
+            if (c.count > 0) {
+                c.moveToFirst()
+                data = table.fill(c)
+            }
+            db.close()
+            return data
         }
     }
 
@@ -64,6 +67,7 @@ open class Repository<T : UnsyncModel>(ctx: Context) {
                 sources.add(table.fill(c))
                 c.moveToNext()
             }
+            db.close()
             return sources
         }
     }
@@ -90,6 +94,7 @@ open class Repository<T : UnsyncModel>(ctx: Context) {
                 c.move(i)
                 sources.add(table.fill(c))
             }
+            db.close()
             return sources
         }
     }
@@ -106,10 +111,13 @@ open class Repository<T : UnsyncModel>(ctx: Context) {
                 Fields.UPDATED_AT.toString() + " DESC",
                 "1"
         ).use { c ->
-            if(c.count == 0)
-                return 0
-            c.moveToFirst()
-            return table.fill(c).updatedAt
+            var data: Long = 0
+            if(c.count > 0) {
+                c.moveToFirst()
+                data = table.fill(c).updatedAt
+            }
+            db.close()
+            return data
         }
     }
 
