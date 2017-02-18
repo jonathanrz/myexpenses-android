@@ -61,9 +61,9 @@ ext {
     testButler = '1.0.0'
 
     //Config variables
-    authToken = "\"" + (hasProperty('MyExpensesAuthToken') ? MyExpensesAuthToken : System.getenv('MYEXPENSES_AUTH_TOKEN')) + "\""
-    jonathanKeyPass = "\"" + (hasProperty('MyExpensesJonathanKeyPass') ? MyExpensesJonathanKeyPass : System.getenv('MYEXPENSES_JONATHAN_KEY_PASS')) + "\""
-    thainaraKeyPass = "\"" + (hasProperty('MyExpensesThainaraKeyPass') ? MyExpensesThainaraKeyPass : System.getenv('MYEXPENSES_THAINARA_KEY_PASS')) + "\""
+    authToken = "\"" + (project.hasProperty('MyExpensesAuthToken') ? MyExpensesAuthToken : System.getenv('MYEXPENSES_AUTH_TOKEN')) + "\""
+    jonathanKeyPass = project.hasProperty('MyExpensesJonathanKeyPass') ? MyExpensesJonathanKeyPass : System.getenv('MYEXPENSES_JONATHAN_KEY_PASS')
+    thainaraKeyPass = project.hasProperty('MyExpensesThainaraKeyPass') ? MyExpensesThainaraKeyPass : System.getenv('MYEXPENSES_THAINARA_KEY_PASS')
 }
 
 ext.gitCommitCount = {
