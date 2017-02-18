@@ -85,7 +85,7 @@ public class Expense implements Transaction, UnsyncModel {
 	@Getter @Setter
 	private boolean sync;
 
-	@Getter @Setter
+	@Getter @Setter @Expose
 	private boolean removed;
 
 	@Getter @Setter
@@ -216,6 +216,7 @@ public class Expense implements Transaction, UnsyncModel {
 
 	void delete() {
 		removed = true;
+		sync = false;
 		getExpenseRepository().save(this);
 	}
 

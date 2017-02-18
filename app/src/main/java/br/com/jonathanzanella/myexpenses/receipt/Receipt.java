@@ -72,7 +72,7 @@ public class Receipt implements Transaction, UnsyncModel {
 	@Getter @Setter
 	private boolean sync;
 
-	@Getter @Setter
+	@Getter @Setter @Expose
 	private boolean removed;
 
 	@Override
@@ -155,6 +155,7 @@ public class Receipt implements Transaction, UnsyncModel {
 
 	void delete() {
 		removed = true;
+		sync = false;
 		getReceiptRepository().save(this);
 	}
 

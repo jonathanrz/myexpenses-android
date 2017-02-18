@@ -1,10 +1,5 @@
 package br.com.jonathanzanella.myexpenses.sync;
 
-import br.com.jonathanzanella.myexpenses.database.ModelRepository;
-
-/**
- * Created by jzanella on 6/6/16.
- */
 public interface UnsyncModel {
 	long getId();
 	void setId(long id);
