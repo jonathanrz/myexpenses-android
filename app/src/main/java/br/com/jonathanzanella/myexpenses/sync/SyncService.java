@@ -108,7 +108,7 @@ public class SyncService extends GcmTaskService {
 		List<? extends UnsyncModel> unsyncModels = api.index();
 		if(unsyncModels != null) {
 			for (UnsyncModel unsyncModel : unsyncModels) {
-				unsyncModel.syncAndSave(unsyncModel);
+				api.syncAndSave(unsyncModel);
 				totalSaved++;
 				Log.info(logTag, "Saved: " + unsyncModel.getData());
 			}

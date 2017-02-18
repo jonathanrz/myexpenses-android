@@ -16,32 +16,11 @@ import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi;
 import retrofit2.Call;
 import retrofit2.Response;
 
-/**
- * Created by jzanella on 6/12/16.
- */
 public class CardApi implements UnsyncModelApi<Card> {
 	private static final String LOG_TAG = CardApi.class.getSimpleName();
 	private CardInterface cardInterface;
 	private CardRepository cardRepository;
 	private ExpenseRepository expenseRepository;
-
-	private CardInterface getInterface() {
-		if(cardInterface == null)
-			cardInterface = new Server().cardInterface();
-		return cardInterface;
-	}
-
-	private ExpenseRepository getExpenseRepository() {
-		if(expenseRepository == null)
-			expenseRepository = new ExpenseRepository(new Repository<Expense>(MyApplication.getContext()));
-		return expenseRepository;
-	}
-
-	private CardRepository getCardRepository() {
-		if(cardRepository == null)
-			cardRepository = new CardRepository(new Repository<Card>(MyApplication.getContext()), getExpenseRepository());
-		return cardRepository;
-	}
 
 	@Override
 	public List<Card> index() {
@@ -74,7 +53,7 @@ public class CardApi implements UnsyncModelApi<Card> {
 		try {
 			Response<Card> response = caller.execute();
 			if(response.isSuccessful()) {
-				model.syncAndSave(response.body());
+				getCardRepository().syncAndSave(response.body());
 				Log.info(LOG_TAG, "Updated: " + card.getData());
 			} else {
 				Log.error(LOG_TAG, "Save request error: " + response.message() + " uuid: " + card.getUuid());
@@ -86,6 +65,13 @@ public class CardApi implements UnsyncModelApi<Card> {
 	}
 
 	@Override
+	public void syncAndSave(UnsyncModel unsync) {
+		if(!(unsync instanceof Card))
+			throw new UnsupportedOperationException("UnsyncModel is not a Card");
+		getCardRepository().syncAndSave((Card)unsync);
+	}
+
+	@Override
 	public List<Card> unsyncModels() {
 		return getCardRepository().unsync();
 	}
@@ -93,5 +79,23 @@ public class CardApi implements UnsyncModelApi<Card> {
 	@Override
 	public long greaterUpdatedAt() {
 		return getCardRepository().greaterUpdatedAt();
+	}
+
+	private CardInterface getInterface() {
+		if(cardInterface == null)
+			cardInterface = new Server().cardInterface();
+		return cardInterface;
+	}
+
+	private ExpenseRepository getExpenseRepository() {
+		if(expenseRepository == null)
+			expenseRepository = new ExpenseRepository(new Repository<Expense>(MyApplication.getContext()));
+		return expenseRepository;
+	}
+
+	private CardRepository getCardRepository() {
+		if(cardRepository == null)
+			cardRepository = new CardRepository(new Repository<Card>(MyApplication.getContext()), getExpenseRepository());
+		return cardRepository;
 	}
 }

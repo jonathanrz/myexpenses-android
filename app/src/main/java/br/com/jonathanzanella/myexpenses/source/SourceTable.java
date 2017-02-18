@@ -33,7 +33,7 @@ public final class SourceTable implements Table<Source> {
 	private String createTableSql() {
 		return "CREATE TABLE " + getName() + " (" +
 				Fields.ID + SqlTypes.PRIMARY_KEY + "," +
-				Fields.NAME + SqlTypes.TEXT_UNIQUE_NOT_NULL + "," +
+				Fields.NAME + SqlTypes.TEXT_NOT_NULL + "," +
 				Fields.UUID + SqlTypes.TEXT_UNIQUE_NOT_NULL + "," +
 				Fields.USER_UUID + SqlTypes.TEXT_NOT_NULL + "," +
 				Fields.SERVER_ID + SqlTypes.TEXT_UNIQUE + "," +

@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.MyApplication;
+import br.com.jonathanzanella.myexpenses.card.Card;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.server.Server;
@@ -16,25 +17,10 @@ import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi;
 import retrofit2.Call;
 import retrofit2.Response;
 
-/**
- * Created by jzanella on 6/12/16.
- */
 public class ReceiptApi implements UnsyncModelApi<Receipt> {
     private static final String LOG_TAG = ReceiptApi.class.getSimpleName();
     private ReceiptInterface receiptInterface;
     private ReceiptRepository receiptRepository;
-
-    private ReceiptInterface getInterface() {
-        if(receiptInterface == null)
-            receiptInterface = new Server().receiptInterface();
-        return receiptInterface;
-    }
-
-    private ReceiptRepository getRepository() {
-        if(receiptRepository == null)
-            receiptRepository = new ReceiptRepository(new Repository<Receipt>(MyApplication.getContext()));
-        return receiptRepository;
-    }
 
     @Override
     public @Nullable List<Receipt> index() {
@@ -67,7 +53,7 @@ public class ReceiptApi implements UnsyncModelApi<Receipt> {
         try {
             Response<Receipt> response = caller.execute();
             if(response.isSuccessful()) {
-                model.syncAndSave(response.body());
+                getReceiptRepository().syncAndSave(response.body());
                 Log.info(LOG_TAG, "Updated: " + receipt.getData());
             } else {
                 Log.error(LOG_TAG, "Save request error: " + response.message() + " uuid: " + receipt.getUuid());
@@ -78,13 +64,32 @@ public class ReceiptApi implements UnsyncModelApi<Receipt> {
         }
     }
 
-    @Override
+	@Override
+	public void syncAndSave(UnsyncModel unsync) {
+		if(!(unsync instanceof Receipt))
+			throw new UnsupportedOperationException("UnsyncModel is not a Receipt");
+		getReceiptRepository().syncAndSave((Receipt)unsync);
+	}
+
+	@Override
     public List<Receipt> unsyncModels() {
-        return getRepository().unsync();
+        return getReceiptRepository().unsync();
     }
 
     @Override
     public long greaterUpdatedAt() {
-        return getRepository().greaterUpdatedAt();
+        return getReceiptRepository().greaterUpdatedAt();
+    }
+
+    private ReceiptInterface getInterface() {
+        if(receiptInterface == null)
+            receiptInterface = new Server().receiptInterface();
+        return receiptInterface;
+    }
+
+    private ReceiptRepository getReceiptRepository() {
+        if(receiptRepository == null)
+            receiptRepository = new ReceiptRepository(new Repository<Receipt>(MyApplication.getContext()));
+        return receiptRepository;
     }
 }

@@ -1,6 +1,7 @@
 package br.com.jonathanzanella.myexpenses.account;
 
 import android.support.annotation.Nullable;
+import android.support.annotation.WorkerThread;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -16,25 +17,10 @@ import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi;
 import retrofit2.Call;
 import retrofit2.Response;
 
-/**
- * Created by jzanella on 6/12/16.
- */
 public class AccountApi implements UnsyncModelApi<Account> {
 	private static final String LOG_TAG = AccountApi.class.getSimpleName();
 	private AccountInterface accountInterface;
 	private AccountRepository accountRepository;
-
-	private AccountRepository getRepository() {
-		if(accountRepository == null)
-			accountRepository = new AccountRepository(new Repository<Account>(MyApplication.getContext()));
-		return accountRepository;
-	}
-
-	private AccountInterface getInterface() {
-		if(accountInterface == null)
-			accountInterface = new Server().accountInterface();
-		return accountInterface;
-	}
 
 	@Override
 	public @Nullable List<Account> index() {
@@ -67,7 +53,7 @@ public class AccountApi implements UnsyncModelApi<Account> {
 		try {
 			Response<Account> response = caller.execute();
 			if(response.isSuccessful()) {
-				model.syncAndSave(response.body());
+				getRepository().syncAndSave(response.body());
 				Log.info(LOG_TAG, "Updated: " + account.getData());
 			} else {
 				Log.error(LOG_TAG, "Save request error: " + response.message() + " uuid: " + account.getUuid());
@@ -79,6 +65,13 @@ public class AccountApi implements UnsyncModelApi<Account> {
 	}
 
 	@Override
+	public void syncAndSave(UnsyncModel unsyncAccount) {
+		if(!(unsyncAccount instanceof Account))
+			throw new UnsupportedOperationException("UnsyncModel is not an Account");
+		getRepository().syncAndSave((Account)unsyncAccount);
+	}
+
+	@Override
 	public List<Account> unsyncModels() {
 		return getRepository().unsync();
 	}
@@ -86,5 +79,18 @@ public class AccountApi implements UnsyncModelApi<Account> {
 	@Override
 	public long greaterUpdatedAt() {
 		return getRepository().greaterUpdatedAt();
+	}
+
+	@WorkerThread
+	public AccountRepository getRepository() {
+		if(accountRepository == null)
+			accountRepository = new AccountRepository(new Repository<Account>(MyApplication.getContext()));
+		return accountRepository;
+	}
+
+	private AccountInterface getInterface() {
+		if(accountInterface == null)
+			accountInterface = new Server().accountInterface();
+		return accountInterface;
 	}
 }

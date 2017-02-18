@@ -1,7 +1,5 @@
 package br.com.jonathanzanella.myexpenses.bill;
 
-import android.content.Context;
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -10,10 +8,8 @@ import org.joda.time.DateTime;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.helpers.DateHelper;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
-import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi;
 import br.com.jonathanzanella.myexpenses.transaction.Transaction;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -22,7 +18,6 @@ import lombok.Setter;
 @EqualsAndHashCode(callSuper = false, of = {"id", "uuid", "name"})
 public class Bill implements Transaction, UnsyncModel {
 	public static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
-	private static BillApi billApi;
 
 	@Setter @Getter
 	private long id;
@@ -98,11 +93,6 @@ public class Bill implements Transaction, UnsyncModel {
 	}
 
 	@Override
-	public boolean isSaved() {
-		return id != 0;
-	}
-
-	@Override
 	public String getData() {
 		return "name=" + name +
 				"\nuuid=" + uuid +
@@ -110,23 +100,5 @@ public class Bill implements Transaction, UnsyncModel {
 				"\ndueDate=" + dueDate +
 				"\ninitDate=" + sdf.format(initDate.toDate()) +
 				"\nendDate="+ sdf.format(endDate.toDate());
-	}
-
-	@Override
-	public void syncAndSave(UnsyncModel unsyncModel) {
-		throw new UnsupportedOperationException("You should use BillRepository");
-	}
-
-	@Override
-	public String getHeader(Context ctx) {
-		return ctx.getString(R.string.bill);
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public UnsyncModelApi getServerApi() {
-		if(billApi == null)
-			billApi = new BillApi();
-		return billApi;
 	}
 }

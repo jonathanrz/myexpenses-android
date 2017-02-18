@@ -8,17 +8,14 @@ import java.util.List;
 import java.util.UUID;
 
 import br.com.jonathanzanella.myexpenses.Environment;
+import br.com.jonathanzanella.myexpenses.database.ModelRepository;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
 import static br.com.jonathanzanella.myexpenses.log.Log.warning;
 
-/**
- * Created by jzanella on 8/27/16.
- */
-
-public class SourceRepository {
+public class SourceRepository implements ModelRepository<Source>  {
 	private Repository<Source> repository;
 	private SourceTable sourceTable = new SourceTable();
 
@@ -63,6 +60,7 @@ public class SourceRepository {
 	}
 
 	@WorkerThread
+	@Override
 	public void syncAndSave(final Source sourceSync) {
 		Source source = find(sourceSync.getUuid());
 		if(source != null && source.id != sourceSync.getId()) {

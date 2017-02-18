@@ -11,6 +11,7 @@ import java.util.UUID;
 import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.database.Fields;
+import br.com.jonathanzanella.myexpenses.database.ModelRepository;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.database.Where;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
@@ -22,7 +23,7 @@ import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
 import static br.com.jonathanzanella.myexpenses.log.Log.warning;
 
-public class CardRepository {
+public class CardRepository implements ModelRepository<Card> {
 	private Repository<Card> repository;
 	private ExpenseRepository expenseRepository;
 	private CardTable table = new CardTable();
@@ -85,6 +86,7 @@ public class CardRepository {
 	}
 
 	@WorkerThread
+	@Override
 	public void syncAndSave(final Card unsyncCard) {
 		Card card = find(unsyncCard.getUuid());
 		if(card != null && card.getId() != unsyncCard.getId()) {

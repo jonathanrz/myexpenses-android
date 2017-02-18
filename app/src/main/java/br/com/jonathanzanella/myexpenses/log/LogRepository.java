@@ -13,25 +13,17 @@ import br.com.jonathanzanella.myexpenses.database.Where;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
-/**
- * Created by jzanella on 8/27/16.
- */
-
-public class LogRepository {
+class LogRepository {
 	private Repository<Log> repository;
 	private LogTable table = new LogTable();
 
-	public LogRepository(Repository<Log> repository) {
+	LogRepository(Repository<Log> repository) {
 		this.repository = repository;
 	}
 
 	@WorkerThread
 	public Log find(final String uuid) {
 		return repository.find(table, uuid);
-	}
-
-	public List<Log> all() {
-		return repository.query(table, null);
 	}
 
 	public List<Log> filter(DateTime initDate, DateTime endDate, Log.LOG_LEVEL logLevel) {

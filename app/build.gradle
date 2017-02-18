@@ -6,7 +6,7 @@ apply plugin: 'jacoco-android'
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
-    def MYEXPENSES_AUTH_TOKEN = '"' + System.getenv("MYEXPENSES_AUTH_TOKEN") + '"' ?: '"Auth Token"';
+    def MYEXPENSES_AUTH_TOKEN = "\"" + MyExpensesAuthToken + "\""
 
     dexOptions {
         maxProcessCount 2
@@ -16,15 +16,15 @@ android {
     signingConfigs {
         jonathan {
             storeFile file("jonathan.keystore")
-            storePassword System.getenv("MYEXPENSES_JONATHAN_KEY_PASS")
+            storePassword MyExpensesJonathanKeyPass
             keyAlias "jonathanrz"
-            keyPassword System.getenv("MYEXPENSES_JONATHAN_KEY_PASS")
+            keyPassword MyExpensesJonathanKeyPass
         }
         thainara {
             storeFile file("thainara.keystore")
-            storePassword System.getenv("MYEXPENSES_THAINARA_KEY_PASS")
+            storePassword MyExpensesThainaraKeyPass
             keyAlias "jonathanrz"
-            keyPassword System.getenv("MYEXPENSES_THAINARA_KEY_PASS")
+            keyPassword MyExpensesThainaraKeyPass
         }
     }
 
@@ -81,7 +81,7 @@ android {
     }
 
     testfairyConfig {
-        apiKey System.getenv("MYEXPENSES_TEST_FAIRY_TOKEN")
+        apiKey MyExpensesTestFairyToken
         autoUpdate false
         notify true
         testersGroups "dev"

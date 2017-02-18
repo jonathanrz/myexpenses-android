@@ -1,7 +1,5 @@
 package br.com.jonathanzanella.myexpenses.log;
 
-import android.content.Context;
-
 import org.joda.time.DateTime;
 
 import java.text.SimpleDateFormat;
@@ -13,7 +11,6 @@ import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
-import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -42,21 +39,6 @@ public class Log implements UnsyncModel {
 
 			android.util.Log.e(TAG, "new log type?");
 			return R.color.log_debug;
-		}
-
-		public List<LOG_LEVEL> getLogLevels() {
-			List<LOG_LEVEL> logLevels = new ArrayList<>();
-			switch (this) {
-				case DEBUG:
-					logLevels.add(LOG_LEVEL.DEBUG);
-				case INFO:
-					logLevels.add(LOG_LEVEL.INFO);
-				case WARNING:
-					logLevels.add(LOG_LEVEL.WARNING);
-				case ERROR:
-					logLevels.add(LOG_LEVEL.ERROR);
-			}
-			return logLevels;
 		}
 
 		public List<String> getLogLevelsAsString() {
@@ -145,15 +127,9 @@ public class Log implements UnsyncModel {
 		android.util.Log.e(title, description);
 	}
 
-	//UnsyncModel methods
-	@Override
-	public boolean isSaved() {
-		throw new UnsupportedOperationException("Log isn't an unsync model");
-	}
-
 	@Override
 	public long getId() {
-		throw new UnsupportedOperationException("Log isn't an unsync model");
+		return id;
 	}
 
 	@Override
@@ -197,22 +173,8 @@ public class Log implements UnsyncModel {
 	}
 
 	@Override
-	public void syncAndSave(UnsyncModel serverModel) {
-		throw new UnsupportedOperationException("Log isn't an unsync model");
-	}
-
-	@Override
 	public void setSync(boolean b) {
 		throw new UnsupportedOperationException("Log isn't an unsync model");
 	}
 
-	@Override
-	public String getHeader(Context ctx) {
-		throw new UnsupportedOperationException("Log isn't an unsync model");
-	}
-
-	@Override
-	public UnsyncModelApi<UnsyncModel> getServerApi() {
-		throw new UnsupportedOperationException("Log isn't an unsync model");
-	}
 }

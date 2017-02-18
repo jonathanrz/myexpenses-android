@@ -11,6 +11,7 @@ import java.util.UUID;
 
 import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.database.Fields;
+import br.com.jonathanzanella.myexpenses.database.ModelRepository;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.database.Where;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
@@ -20,11 +21,7 @@ import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
 import static br.com.jonathanzanella.myexpenses.log.Log.warning;
 
-/**
- * Created by jzanella on 8/27/16.
- */
-
-public class BillRepository {
+public class BillRepository  implements ModelRepository<Bill> {
 	private Repository<Bill> repository;
 	private BillTable billTable = new BillTable();
 	private ExpenseRepository expenseRepository;
@@ -110,6 +107,7 @@ public class BillRepository {
 	}
 
 	@WorkerThread
+	@Override
 	public void syncAndSave(final Bill unsyncBill) {
 		final CountingIdlingResource idlingResource = new CountingIdlingResource("BillRepositorySave");
 		idlingResource.increment();

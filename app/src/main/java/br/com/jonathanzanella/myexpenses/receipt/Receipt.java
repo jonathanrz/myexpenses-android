@@ -1,6 +1,5 @@
 package br.com.jonathanzanella.myexpenses.receipt;
 
-import android.content.Context;
 import android.support.annotation.WorkerThread;
 
 import com.google.gson.annotations.Expose;
@@ -13,14 +12,12 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import br.com.jonathanzanella.myexpenses.MyApplication;
-import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.source.Source;
 import br.com.jonathanzanella.myexpenses.source.SourceRepository;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
-import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi;
 import br.com.jonathanzanella.myexpenses.transaction.Transaction;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -30,7 +27,6 @@ import lombok.Setter;
 @EqualsAndHashCode(callSuper = false, of = {"id", "uuid", "name"})
 public class Receipt implements Transaction, UnsyncModel {
 	public static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
-	private static final ReceiptApi receiptApi = new ReceiptApi();
 	private AccountRepository accountRepository = null;
 	private ReceiptRepository receiptRepository = null;
 
@@ -142,21 +138,11 @@ public class Receipt implements Transaction, UnsyncModel {
 	}
 
 	@Override
-	public boolean isSaved() {
-		return id != 0;
-	}
-
-	@Override
 	public String getData() {
 		return "name=" + name +
 				"\nuuid=" + uuid +
 				"\ndate=" + sdf.format(date.toDate()) +
 				"\nincome=" + income;
-	}
-
-	@Override
-	public void syncAndSave(UnsyncModel serverModel) {
-		throw new UnsupportedOperationException("You should use ReceiptRepository");
 	}
 
 	public void credit() {
@@ -172,14 +158,4 @@ public class Receipt implements Transaction, UnsyncModel {
 		getReceiptRepository().save(this);
 	}
 
-	@Override
-	public String getHeader(Context ctx) {
-		return ctx.getString(R.string.receipts);
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public UnsyncModelApi getServerApi() {
-		return receiptApi;
-	}
 }

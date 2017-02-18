@@ -35,7 +35,7 @@ public final class ReceiptTable implements Table<Receipt> {
 	private String createTableSql() {
 		return "CREATE TABLE " + getName() + " (" +
 				Fields.ID + SqlTypes.PRIMARY_KEY + "," +
-				Fields.NAME + SqlTypes.TEXT_UNIQUE_NOT_NULL + "," +
+				Fields.NAME + SqlTypes.TEXT_NOT_NULL + "," +
 				Fields.UUID + SqlTypes.TEXT_UNIQUE_NOT_NULL + "," +
 				Fields.DATE + SqlTypes.DATE_NOT_NULL + "," +
 				Fields.INCOME + SqlTypes.INT_NOT_NULL + "," +

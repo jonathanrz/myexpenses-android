@@ -13,6 +13,7 @@ import java.util.UUID;
 import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.database.Fields;
+import br.com.jonathanzanella.myexpenses.database.ModelRepository;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.database.Where;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
@@ -22,7 +23,7 @@ import static br.com.jonathanzanella.myexpenses.helpers.DateHelper.firstDayOfMon
 import static br.com.jonathanzanella.myexpenses.helpers.DateHelper.lastDayOfMonth;
 import static br.com.jonathanzanella.myexpenses.log.Log.warning;
 
-public class ReceiptRepository {
+public class ReceiptRepository implements ModelRepository<Receipt> {
 	private Repository<Receipt> repository;
 	private ReceiptTable table = new ReceiptTable();
 
@@ -126,6 +127,7 @@ public class ReceiptRepository {
 	}
 
 	@WorkerThread
+	@Override
 	public void syncAndSave(final Receipt unsyncReceipt) {
 		Receipt receipt = find(unsyncReceipt.getUuid());
 		if(receipt != null && receipt.getId() != unsyncReceipt.getId()) {

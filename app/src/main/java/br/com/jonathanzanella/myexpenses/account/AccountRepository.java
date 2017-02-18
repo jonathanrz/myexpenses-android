@@ -8,17 +8,14 @@ import java.util.List;
 import java.util.UUID;
 
 import br.com.jonathanzanella.myexpenses.Environment;
+import br.com.jonathanzanella.myexpenses.database.ModelRepository;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
 import static br.com.jonathanzanella.myexpenses.log.Log.warning;
 
-/**
- * Created by jzanella on 8/27/16.
- */
-
-public class AccountRepository {
+public class AccountRepository implements ModelRepository<Account> {
 	private Repository<Account> repository;
 	AccountTable accountTable = new AccountTable();
 
@@ -63,6 +60,7 @@ public class AccountRepository {
 	}
 
 	@WorkerThread
+	@Override
 	public void syncAndSave(final Account unsyncAccount) {
 		Account account = find(unsyncAccount.getUuid());
 

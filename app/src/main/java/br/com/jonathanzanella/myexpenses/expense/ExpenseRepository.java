@@ -20,6 +20,7 @@ import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.card.Card;
 import br.com.jonathanzanella.myexpenses.card.CardRepository;
 import br.com.jonathanzanella.myexpenses.database.Fields;
+import br.com.jonathanzanella.myexpenses.database.ModelRepository;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.database.Where;
 import br.com.jonathanzanella.myexpenses.helpers.DateHelper;
@@ -33,7 +34,7 @@ import static br.com.jonathanzanella.myexpenses.helpers.DateHelper.firstDayOfMon
 import static br.com.jonathanzanella.myexpenses.helpers.DateHelper.lastDayOfMonth;
 import static br.com.jonathanzanella.myexpenses.log.Log.warning;
 
-public class ExpenseRepository {
+public class ExpenseRepository implements ModelRepository<Expense> {
 	private Repository<Expense> repository;
 	private CardRepository cardRepository;
 	private ExpenseTable table = new ExpenseTable();
@@ -284,6 +285,7 @@ public class ExpenseRepository {
 	}
 
 	@WorkerThread
+	@Override
 	public void syncAndSave(final Expense unsyncExpense) {
 		Expense expense = find(unsyncExpense.getUuid());
 		if(expense != null && expense.getId() != unsyncExpense.getId()) {

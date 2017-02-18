@@ -1,6 +1,5 @@
 package br.com.jonathanzanella.myexpenses.expense;
 
-import android.content.Context;
 import android.support.annotation.WorkerThread;
 
 import com.google.gson.annotations.Expose;
@@ -11,7 +10,6 @@ import org.joda.time.DateTime;
 import java.text.NumberFormat;
 
 import br.com.jonathanzanella.myexpenses.MyApplication;
-import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.bill.Bill;
@@ -22,7 +20,6 @@ import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
 import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
-import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi;
 import br.com.jonathanzanella.myexpenses.transaction.Transaction;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -30,7 +27,6 @@ import lombok.Setter;
 
 @EqualsAndHashCode(callSuper = false, of = {"id", "uuid", "name"})
 public class Expense implements Transaction, UnsyncModel {
-	private static ExpenseApi expenseApi;
 	private static AccountRepository accountRepository;
 	private static CardRepository cardRepository;
 	private static ExpenseRepository expenseRepository;
@@ -189,11 +185,6 @@ public class Expense implements Transaction, UnsyncModel {
 	}
 
 	@Override
-	public boolean isSaved() {
-		return id != 0;
-	}
-
-	@Override
 	public String getData() {
 		return "name=" + name + "" +
 				"\nuuid=" + uuid +
@@ -223,27 +214,9 @@ public class Expense implements Transaction, UnsyncModel {
 		return NumberFormat.getCurrencyInstance().format(value / 100.0);
 	}
 
-	@Override
-	public void syncAndSave(UnsyncModel serverModel) {
-		throw new UnsupportedOperationException("You should use ReceiptRepository");
-	}
-
 	void delete() {
 		removed = true;
 		getExpenseRepository().save(this);
-	}
-
-	@Override
-	public String getHeader(Context ctx) {
-		return ctx.getString(R.string.expenses);
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public UnsyncModelApi getServerApi() {
-		if(expenseApi == null)
-			expenseApi = new ExpenseApi(getExpenseRepository());
-		return expenseApi;
 	}
 
 	private static AccountRepository getAccountRepository() {

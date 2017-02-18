@@ -106,6 +106,8 @@ open class Repository<T : UnsyncModel>(ctx: Context) {
                 Fields.UPDATED_AT.toString() + " DESC",
                 "1"
         ).use { c ->
+            if(c.count == 0)
+                return 0
             c.moveToFirst()
             return table.fill(c).updatedAt
         }

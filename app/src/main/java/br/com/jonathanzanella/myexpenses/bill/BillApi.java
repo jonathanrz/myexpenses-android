@@ -17,23 +17,13 @@ import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi;
 import retrofit2.Call;
 import retrofit2.Response;
 
-/**
- * Created by jzanella on 6/12/16.
- */
 public class BillApi implements UnsyncModelApi<Bill> {
 	private static final String LOG_TAG = AccountApi.class.getSimpleName();
 	private BillInterface BillInterface;
 	private BillRepository billRepository;
-	private ExpenseRepository expenseRepository;
-
-	private BillInterface getInterface() {
-		if(BillInterface == null)
-			BillInterface = new Server().billInterface();
-		return BillInterface;
-	}
 
 	public BillApi() {
-		expenseRepository = new ExpenseRepository(new Repository<Expense>(MyApplication.getContext()));
+		ExpenseRepository expenseRepository = new ExpenseRepository(new Repository<Expense>(MyApplication.getContext()));
 		billRepository = new BillRepository(new Repository<Bill>(MyApplication.getContext()), expenseRepository);
 	}
 
@@ -68,7 +58,7 @@ public class BillApi implements UnsyncModelApi<Bill> {
         try {
             Response<Bill> response = caller.execute();
             if(response.isSuccessful()) {
-                model.syncAndSave(response.body());
+                billRepository.syncAndSave(response.body());
 	            Log.info(LOG_TAG, "Updated: " + bill.getData());
             } else {
                 Log.error(LOG_TAG, "Save request error: " + response.message() + " uuid: " + bill.getUuid());
@@ -80,12 +70,25 @@ public class BillApi implements UnsyncModelApi<Bill> {
 	}
 
 	@Override
+	public void syncAndSave(UnsyncModel unsync) {
+		if(!(unsync instanceof Bill))
+			throw new UnsupportedOperationException("UnsyncModel is not a Bill");
+		billRepository.syncAndSave((Bill)unsync);
+	}
+
+	@Override
 	public List<Bill> unsyncModels() {
-		return new BillRepository(new Repository<Bill>(MyApplication.getContext()), expenseRepository).unsync();
+		return billRepository.unsync();
 	}
 
 	@Override
 	public long greaterUpdatedAt() {
-		return new BillRepository(new Repository<Bill>(MyApplication.getContext()), expenseRepository).greaterUpdatedAt();
+		return billRepository.greaterUpdatedAt();
+	}
+
+	private BillInterface getInterface() {
+		if(BillInterface == null)
+			BillInterface = new Server().billInterface();
+		return BillInterface;
 	}
 }
