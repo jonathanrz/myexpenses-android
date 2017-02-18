@@ -10,10 +10,6 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
 
-/**
- * Created by jonathan on 08/11/15.
- * Copyright (c) 2015. All rights reserved.
- */
 @UiThread
 public abstract class BaseView extends FrameLayout {
 	protected String filter;

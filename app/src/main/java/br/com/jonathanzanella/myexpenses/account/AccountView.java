@@ -14,9 +14,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-/**
- * Created by Jonathan Zanella on 26/01/16.
- */
 public class AccountView extends BaseView {
 	private static final int REQUEST_ADD_ACCOUNT = 1003;
 	private AccountAdapter adapter;
@@ -65,9 +62,8 @@ public class AccountView extends BaseView {
 
 		switch (requestCode) {
 			case REQUEST_ADD_ACCOUNT:
-				if(resultCode == Activity.RESULT_OK) {
+				if(resultCode == Activity.RESULT_OK)
 					adapter.refreshData();
-				}
 				break;
 		}
 	}

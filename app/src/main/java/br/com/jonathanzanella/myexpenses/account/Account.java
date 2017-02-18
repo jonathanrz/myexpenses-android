@@ -13,7 +13,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode
 public class Account implements Chargeable, UnsyncModel {
 	public static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
 
@@ -75,6 +75,6 @@ public class Account implements Chargeable, UnsyncModel {
 				"\nuuid=" + uuid +
 				"\nbalance=" + balance +
 				"\naccountToPayCreditCard=" + accountToPayCreditCard +
-				"\nuuid=" + uuid;
+				"\nuserUuid=" + userUuid;
 	}
 }

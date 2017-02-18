@@ -4,10 +4,6 @@ import android.os.AsyncTask;
 
 import java.util.List;
 
-/**
- * Created by jzanella on 8/27/16.
- */
-
 class AccountAdapterPresenter {
 	private AccountRepository repository;
 	private AccountAdapter adapter;

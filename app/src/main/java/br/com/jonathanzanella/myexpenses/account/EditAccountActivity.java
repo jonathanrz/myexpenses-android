@@ -21,9 +21,6 @@ import butterknife.Bind;
 
 import static java.text.NumberFormat.getCurrencyInstance;
 
-/**
- * Created by Jonathan Zanella on 26/01/16.
- */
 public class EditAccountActivity extends BaseActivity implements AccountContract.EditView {
 	public static final String KEY_ACCOUNT_UUID = "KeyAccountUuid";
 

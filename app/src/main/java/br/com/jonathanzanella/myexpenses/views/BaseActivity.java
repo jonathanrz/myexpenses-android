@@ -13,10 +13,6 @@ import br.com.jonathanzanella.myexpenses.R;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-/**
- * Created by jonathan on 08/11/15.
- * Copyright (c) 2015. All rights reserved.
- */
 @UiThread
 public class BaseActivity extends AppCompatActivity {
 	@Bind(R.id.toolbar) @Nullable

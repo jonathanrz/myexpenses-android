@@ -2,15 +2,12 @@ package br.com.jonathanzanella.myexpenses.account;
 
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
+import android.support.annotation.UiThread;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
-
-/**
- * Created by jzanella on 8/27/16.
- */
 
 class AccountPresenter {
 	private AccountContract.View view;
@@ -37,6 +34,7 @@ class AccountPresenter {
 		this.editView = null;
 	}
 
+	@UiThread
 	void viewUpdated(boolean invalidateCache) {
 		if (account != null) {
 			if(invalidateCache)
@@ -47,6 +45,7 @@ class AccountPresenter {
 		}
 	}
 
+	@UiThread
 	private void updateView() {
 		if(editView != null) {
 			editView.setTitle(R.string.edit_account_title);
@@ -57,6 +56,7 @@ class AccountPresenter {
 		view.showAccount(account);
 	}
 
+	@UiThread
 	void loadAccount(final String uuid) {
 		new AsyncTask<Void, Void, Account>() {
 
@@ -75,20 +75,33 @@ class AccountPresenter {
 		}.execute();
 	}
 
+	@UiThread
 	void save() {
 		if(editView == null)
 			throw new InvalidMethodCallException("save", getClass().toString(), "View should be a Edit View");
+
 		if(account == null)
 			account = new Account();
-		account = editView.fillAccount(account);
-		OperationResult result = repository.save(account);
 
-		if(result.isValid()) {
-			editView.finishView();
-		} else {
-			for (ValidationError validationError : result.getErrors())
-				editView.showError(validationError);
-		}
+		account = editView.fillAccount(account);
+		new AsyncTask<Void, Void, OperationResult>() {
+
+			@Override
+			protected OperationResult doInBackground(Void... voids) {
+				return repository.save(account);
+			}
+
+			@Override
+			protected void onPostExecute(OperationResult result) {
+				super.onPostExecute(result);
+				if(result.isValid()) {
+					editView.finishView();
+				} else {
+					for (ValidationError validationError : result.getErrors())
+						editView.showError(validationError);
+				}
+			}
+		}.execute();
 	}
 
 	String getUuid() {

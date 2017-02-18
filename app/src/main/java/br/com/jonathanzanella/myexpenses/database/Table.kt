@@ -4,10 +4,6 @@ import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 
-/**
- * Created by jzanella on 11/1/16.
- */
-
 interface Table<T> {
     fun onCreate(db: SQLiteDatabase)
     fun onUpgrade(sqLiteDatabase: SQLiteDatabase, oldVersion: Int, newVersion: Int)

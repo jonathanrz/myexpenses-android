@@ -18,9 +18,6 @@ import br.com.jonathanzanella.myexpenses.helpers.DateHelper;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
 
-/**
- * Created by jzanella on 1/31/16.
- */
 public class ShowAccountActivity extends BaseActivity implements AccountContract.View {
 	public static final String KEY_ACCOUNT_UUID = "KeyAccountUuid";
 	public static final String KEY_ACCOUNT_MONTH_TO_SHOW = "KeyAccountMonthToShow";

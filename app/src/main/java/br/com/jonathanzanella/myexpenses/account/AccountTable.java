@@ -9,10 +9,6 @@ import br.com.jonathanzanella.myexpenses.database.Fields;
 import br.com.jonathanzanella.myexpenses.database.SqlTypes;
 import br.com.jonathanzanella.myexpenses.database.Table;
 
-/**
- * Created by jzanella on 11/1/16.
- */
-
 public final class AccountTable implements Table<Account> {
 	public void onCreate(@NonNull SQLiteDatabase db) {
 		db.execSQL(createTableSql());

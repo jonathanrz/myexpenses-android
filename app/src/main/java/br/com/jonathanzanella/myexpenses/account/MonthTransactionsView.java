@@ -2,7 +2,6 @@ package br.com.jonathanzanella.myexpenses.account;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.support.annotation.UiThread;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
@@ -32,9 +31,6 @@ import butterknife.BindDimen;
 import butterknife.BindString;
 import butterknife.ButterKnife;
 
-/**
- * Created by jzanella on 7/9/16.
- */
 public class MonthTransactionsView extends BaseView {
 	public static final SimpleDateFormat sdf = new SimpleDateFormat("MMMM/yy", Locale.getDefault());
 	private ReceiptRepository receiptRepository;
@@ -68,55 +64,13 @@ public class MonthTransactionsView extends BaseView {
 		ButterKnife.bind(this);
 	}
 
-	@UiThread
 	int showBalance(final Account account, final DateTime month, int balance) {
 		header.setText(monthTransactionsTemplate.concat(" ").concat(sdf.format(month.toDate())));
 		final TransactionAdapter adapter = new TransactionAdapter();
-		new AsyncTask<Void, Void, Void>() {
-			@Override
-			protected Void doInBackground(Void... voids) {
-				adapter.addTransactions(receiptRepository.monthly(month, account));
-				return null;
-			}
 
-			@Override
-			protected void onPostExecute(Void aVoid) {
-				super.onPostExecute(aVoid);
-				adapter.notifyDataSetChanged();
-			}
-		}.execute();
-
-		new AsyncTask<Void, Void, List<Expense>>() {
-
-			@Override
-			protected List<Expense> doInBackground(Void... voids) {
-				return expenseRepository.accountExpenses(account, month);
-			}
-
-			@Override
-			protected void onPostExecute(List<Expense> expenses) {
-				super.onPostExecute(expenses);
-				adapter.addTransactions(expenses);
-				adapter.notifyDataSetChanged();
-			}
-		}.execute();
-
-		if(account.isAccountToPayBills()) {
-			new AsyncTask<Void, Void, List<Bill>>() {
-
-				@Override
-				protected List<Bill> doInBackground(Void... voids) {
-					return new BillRepository(new Repository<Bill>(MyApplication.getContext()), expenseRepository).monthly(month);
-				}
-
-				@Override
-				protected void onPostExecute(List<Bill> bills) {
-					super.onPostExecute(bills);
-					adapter.addTransactions(bills);
-					adapter.notifyDataSetChanged();
-				}
-			}.execute();
-		}
+		loadReceipts(account, month, adapter);
+		loadExpenses(account, month, adapter);
+		loadBills(account, month, adapter);
 
 		list.setAdapter(adapter);
 		list.setHasFixedSize(true);
@@ -137,5 +91,57 @@ public class MonthTransactionsView extends BaseView {
 		this.balance.setTextColor(getResources().getColor(balance >= 0 ? R.color.value_unreceived : R.color.value_unpaid));
 
 		return balance;
+	}
+
+	private void loadBills(Account account, final DateTime month, final TransactionAdapter adapter) {
+		if(account.isAccountToPayBills()) {
+			new AsyncTask<Void, Void, List<Bill>>() {
+
+				@Override
+				protected List<Bill> doInBackground(Void... voids) {
+					return new BillRepository(new Repository<Bill>(MyApplication.getContext()), expenseRepository).monthly(month);
+				}
+
+				@Override
+				protected void onPostExecute(List<Bill> bills) {
+					super.onPostExecute(bills);
+					adapter.addTransactions(bills);
+					adapter.notifyDataSetChanged();
+				}
+			}.execute();
+		}
+	}
+
+	private void loadExpenses(final Account account, final DateTime month, final TransactionAdapter adapter) {
+		new AsyncTask<Void, Void, List<Expense>>() {
+
+			@Override
+			protected List<Expense> doInBackground(Void... voids) {
+				return expenseRepository.accountExpenses(account, month);
+			}
+
+			@Override
+			protected void onPostExecute(List<Expense> expenses) {
+				super.onPostExecute(expenses);
+				adapter.addTransactions(expenses);
+				adapter.notifyDataSetChanged();
+			}
+		}.execute();
+	}
+
+	private void loadReceipts(final Account account, final DateTime month, final TransactionAdapter adapter) {
+		new AsyncTask<Void, Void, Void>() {
+			@Override
+			protected Void doInBackground(Void... voids) {
+				adapter.addTransactions(receiptRepository.monthly(month, account));
+				return null;
+			}
+
+			@Override
+			protected void onPostExecute(Void aVoid) {
+				super.onPostExecute(aVoid);
+				adapter.notifyDataSetChanged();
+			}
+		}.execute();
 	}
 }
