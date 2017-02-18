@@ -27,6 +27,8 @@ android {
             keyPassword MyExpensesThainaraKeyPass
         }
     }
+    
+    buildToolsVersion "$rootProject.buildToolsVersion"
 
     defaultConfig {
         applicationId "br.com.jonathanzanella.myexpenses"
@@ -98,7 +100,6 @@ android {
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
-    buildToolsVersion '25.0.0'
 }
 
 dependencies {
