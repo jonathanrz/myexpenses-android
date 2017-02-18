@@ -17,9 +17,6 @@ import br.com.jonathanzanella.myexpenses.views.BaseView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-/**
- * Created by Jonathan Zanella on 14/02/16.
- */
 @SuppressLint("ViewConstructor")
 class OverviewExpensesWeeklyView extends BaseView {
 	@Bind(R.id.view_overview_expenses_weekly_list)

@@ -2,10 +2,6 @@ package br.com.jonathanzanella.myexpenses.database
 
 import java.util.*
 
-/**
- * Created by jzanella on 11/10/16.
- */
-
 class Where(field: Fields) {
     private inner class Query internal constructor(internal var field: Fields) {
         internal var operation: String? = null

@@ -1,5 +1,7 @@
 package br.com.jonathanzanella.myexpenses.bill;
 
+import android.support.annotation.WorkerThread;
+
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -17,6 +19,7 @@ import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi;
 import retrofit2.Call;
 import retrofit2.Response;
 
+@WorkerThread
 public class BillApi implements UnsyncModelApi<Bill> {
 	private static final String LOG_TAG = AccountApi.class.getSimpleName();
 	private BillInterface BillInterface;

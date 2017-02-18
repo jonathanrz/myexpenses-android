@@ -16,7 +16,6 @@ import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
-import br.com.jonathanzanella.myexpenses.helpers.CountingIdlingResource;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch;
 import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.user.SelectUserView;
@@ -25,9 +24,6 @@ import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
 import butterknife.OnClick;
 
-/**
- * Created by Jonathan Zanella on 26/01/16.
- */
 public class EditBillActivity extends BaseActivity implements BillContract.EditView {
 	public static final String KEY_BILL_UUID = "KeyBillUuid";
 
@@ -48,7 +44,7 @@ public class EditBillActivity extends BaseActivity implements BillContract.EditV
 
 	public EditBillActivity() {
 		ExpenseRepository expenseRepository = new ExpenseRepository(new Repository<Expense>(this));
-		presenter = new BillPresenter(new BillRepository(new Repository<Bill>(this), expenseRepository), new CountingIdlingResource("EditBillActivity"));
+		presenter = new BillPresenter(new BillRepository(new Repository<Bill>(this), expenseRepository));
 	}
 
 	@Override

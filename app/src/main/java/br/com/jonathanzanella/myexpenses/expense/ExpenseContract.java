@@ -9,10 +9,6 @@ import br.com.jonathanzanella.myexpenses.bill.Bill;
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
-/**
- * Created by jzanella on 8/28/16.
- */
-
 interface ExpenseContract {
 	interface View {
 		Context getContext();

@@ -25,7 +25,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
-@EqualsAndHashCode(callSuper = false, of = {"id", "uuid", "name"})
+@EqualsAndHashCode
 public class Expense implements Transaction, UnsyncModel {
 	private static AccountRepository accountRepository;
 	private static CardRepository cardRepository;

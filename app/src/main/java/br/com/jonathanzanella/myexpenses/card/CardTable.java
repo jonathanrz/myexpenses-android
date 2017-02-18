@@ -12,10 +12,6 @@ import br.com.jonathanzanella.myexpenses.database.Table;
 import static br.com.jonathanzanella.myexpenses.database.CursorHelper.getLong;
 import static br.com.jonathanzanella.myexpenses.database.CursorHelper.getString;
 
-/**
- * Created by jzanella on 11/1/16.
- */
-
 public final class CardTable implements Table<Card> {
 	public void onCreate(@NonNull SQLiteDatabase db) {
 		db.execSQL(createTableSql());

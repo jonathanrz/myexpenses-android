@@ -1,9 +1,5 @@
 package br.com.jonathanzanella.myexpenses.database
 
-/**
- * Created by jzanella on 11/10/16.
- */
-
 enum class Fields constructor(val fieldName: String) {
     ID("id"),
     NAME("name"),

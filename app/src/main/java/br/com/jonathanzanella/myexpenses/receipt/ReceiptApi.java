@@ -1,6 +1,7 @@
 package br.com.jonathanzanella.myexpenses.receipt;
 
 import android.support.annotation.Nullable;
+import android.support.annotation.WorkerThread;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -8,7 +9,6 @@ import java.io.IOException;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.MyApplication;
-import br.com.jonathanzanella.myexpenses.card.Card;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.server.Server;
@@ -17,6 +17,7 @@ import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi;
 import retrofit2.Call;
 import retrofit2.Response;
 
+@WorkerThread
 public class ReceiptApi implements UnsyncModelApi<Receipt> {
     private static final String LOG_TAG = ReceiptApi.class.getSimpleName();
     private ReceiptInterface receiptInterface;

@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.lang.ref.WeakReference;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.MyApplication;
@@ -26,9 +25,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import lombok.Setter;
 
-/**
- * Created by Jonathan Zanella onCard 26/01/16.
- */
 public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
 	protected List<Card> cards;
 	private CardAdapterPresenter presenter;
@@ -38,7 +34,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
 	@Setter
 	CardAdapterCallback callback;
 
-	static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+	class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 		@Bind(R.id.row_card_name)
 		TextView name;
 		@Bind(R.id.row_card_account)
@@ -46,11 +42,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
 		@Bind(R.id.row_card_type)
 		TextView type;
 
-		WeakReference<CardAdapter> adapterWeakReference;
-
-		public ViewHolder(View itemView, CardAdapter adapter) {
+		public ViewHolder(View itemView) {
 			super(itemView);
-			adapterWeakReference = new WeakReference<>(adapter);
 
 			ButterKnife.bind(this, itemView);
 
@@ -87,11 +80,10 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
 
 		@Override
 		public void onClick(View v) {
-			CardAdapter adapter = adapterWeakReference.get();
-			Card card = adapter.getCreditCard(getAdapterPosition());
+			Card card = getCreditCard(getAdapterPosition());
 			if(card != null) {
-				if(adapter.callback != null) {
-					adapter.callback.onCard(card);
+				if(callback != null) {
+					callback.onCard(card);
 				} else {
 					Intent i = new Intent(itemView.getContext(), ShowCardActivity.class);
 					i.putExtra(ShowCardActivity.KEY_CREDIT_CARD_UUID, card.getUuid());
@@ -115,7 +107,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
 	@Override
 	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_card, parent, false);
-		return new ViewHolder(v, this);
+		return new ViewHolder(v);
 	}
 
 	@Override

@@ -24,9 +24,6 @@ import br.com.jonathanzanella.myexpenses.database.Repository;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-/**
- * Created by Jonathan Zanella on 26/01/16.
- */
 public class CreditCardMonthlyAdapter extends RecyclerView.Adapter<CreditCardMonthlyAdapter.ViewHolder> {
 	public static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM", Locale.getDefault());
 	protected List<Expense> expenses;

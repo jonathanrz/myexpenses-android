@@ -19,9 +19,6 @@ import br.com.jonathanzanella.myexpenses.source.SourceRepository;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
 
-/**
- * Created by jzanella on 1/31/16.
- */
 public class ShowReceiptActivity extends BaseActivity implements ReceiptContract.View {
 	public static final String KEY_RECEIPT_UUID = ReceiptPresenter.KEY_RECEIPT_UUID;
 

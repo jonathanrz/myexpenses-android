@@ -25,9 +25,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import lombok.Getter;
 
-/**
- * Created by Jonathan Zanella on 13/02/16.
- */
 public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.ViewHolder> {
 	@Getter
 	List<Transaction> transactions = new ArrayList<>();
@@ -78,6 +75,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 		}
 
 		private int getColor(@ColorRes int color) {
+			//noinspection deprecation
 			return itemView.getContext().getResources().getColor(color);
 		}
 	}

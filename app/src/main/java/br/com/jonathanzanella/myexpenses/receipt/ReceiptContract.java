@@ -9,10 +9,6 @@ import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.source.Source;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
-/**
- * Created by jzanella on 8/28/16.
- */
-
 interface ReceiptContract {
 	interface View {
 		Context getContext();

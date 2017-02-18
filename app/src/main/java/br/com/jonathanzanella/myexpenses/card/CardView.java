@@ -16,9 +16,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-/**
- * Created by Jonathan Zanella on 26/01/16.
- */
 @UiThread
 public class CardView extends BaseView {
     private static final int REQUEST_ADD_CARD = 1005;

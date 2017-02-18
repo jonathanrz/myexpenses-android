@@ -17,6 +17,7 @@ import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi;
 import retrofit2.Call;
 import retrofit2.Response;
 
+@WorkerThread
 public class AccountApi implements UnsyncModelApi<Account> {
 	private static final String LOG_TAG = AccountApi.class.getSimpleName();
 	private AccountInterface accountInterface;

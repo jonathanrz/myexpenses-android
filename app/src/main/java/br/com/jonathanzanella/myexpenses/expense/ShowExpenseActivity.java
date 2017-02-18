@@ -22,9 +22,6 @@ import br.com.jonathanzanella.myexpenses.receipt.Receipt;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
 
-/**
- * Created by jzanella on 1/31/16.
- */
 public class ShowExpenseActivity extends BaseActivity implements ExpenseContract.View {
 	public static final String KEY_EXPENSE_UUID = ExpensePresenter.KEY_EXPENSE_UUID;
 

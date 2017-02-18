@@ -5,10 +5,6 @@ import android.support.annotation.UiThread;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Created by jzanella on 8/27/16.
- */
-
 class CardAdapterPresenter {
 	private CardRepository repository;
 	private CardAdapter adapter;

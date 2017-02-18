@@ -1,6 +1,7 @@
 package br.com.jonathanzanella.myexpenses.source;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.Menu;
@@ -12,9 +13,6 @@ import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
 
-/**
- * Created by jzanella on 1/31/16.
- */
 public class ShowSourceActivity extends BaseActivity implements SourceContract.View {
 	public static final String KEY_SOURCE_UUID = "KeySourceUuid";
 
@@ -30,11 +28,19 @@ public class ShowSourceActivity extends BaseActivity implements SourceContract.V
 	}
 
 	@Override
-	protected void storeBundle(Bundle extras) {
+	protected void storeBundle(final Bundle extras) {
 		super.storeBundle(extras);
 
-		if(extras != null && extras.containsKey(KEY_SOURCE_UUID))
-			presenter.loadSource(extras.getString(KEY_SOURCE_UUID));
+		if(extras != null && extras.containsKey(KEY_SOURCE_UUID)) {
+			new AsyncTask<Void, Void, Void>() {
+
+				@Override
+				protected Void doInBackground(Void... voids) {
+					presenter.loadSource(extras.getString(KEY_SOURCE_UUID));
+					return null;
+				}
+			}.execute();
+		}
 	}
 
 	@Override

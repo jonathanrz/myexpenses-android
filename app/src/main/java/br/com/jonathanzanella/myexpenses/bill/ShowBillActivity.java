@@ -14,13 +14,9 @@ import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
-import br.com.jonathanzanella.myexpenses.helpers.CountingIdlingResource;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
 
-/**
- * Created by jzanella on 1/31/16.
- */
 public class ShowBillActivity extends BaseActivity implements BillContract.View {
 	public static final String KEY_BILL_UUID = "KeyBillUuid";
 
@@ -39,7 +35,7 @@ public class ShowBillActivity extends BaseActivity implements BillContract.View 
 
 	public ShowBillActivity() {
 		ExpenseRepository expenseRepository = new ExpenseRepository(new Repository<Expense>(this));
-		presenter = new BillPresenter(new BillRepository(new Repository<Bill>(this), expenseRepository), new CountingIdlingResource("ShowBillActivity"));
+		presenter = new BillPresenter(new BillRepository(new Repository<Bill>(this), expenseRepository));
 	}
 
 	@Override

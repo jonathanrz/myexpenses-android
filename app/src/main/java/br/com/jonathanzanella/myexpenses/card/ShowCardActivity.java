@@ -22,9 +22,6 @@ import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
 import butterknife.OnClick;
 
-/**
- * Created by jzanella on 1/31/16.
- */
 public class ShowCardActivity extends BaseActivity implements CardContract.View {
 	public static final String KEY_CREDIT_CARD_UUID = "KeyCreateCardUuid";
 

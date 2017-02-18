@@ -14,9 +14,6 @@ import br.com.jonathanzanella.myexpenses.views.BaseView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-/**
- * Created by Jonathan Zanella on 08/02/16.
- */
 @SuppressLint("ViewConstructor")
 public class CreditCardInvoiceView extends BaseView {
 	@Bind(R.id.view_credit_card_invoice_list)

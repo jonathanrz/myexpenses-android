@@ -29,7 +29,7 @@ public class AccountPresenterTest {
 	}
 
 	@Test
-	public void save_gets_data_from_screen_and_save_to_repository() {
+	public void save_gets_data_from_screen_and_save_to_repository() throws InterruptedException {
 		when(repository.save(any(Account.class))).thenReturn(new OperationResult());
 
 		presenter.save();

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
+import android.support.annotation.UiThread;
 import android.support.annotation.WorkerThread;
 
 import org.joda.time.DateTime;
@@ -22,10 +23,6 @@ import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
 import static android.app.Activity.RESULT_OK;
-
-/**
- * Created by jzanella on 8/27/16.
- */
 
 class CardPresenter {
 	private static final int REQUEST_SELECT_ACCOUNT = 1006;
@@ -59,19 +56,33 @@ class CardPresenter {
 		this.editView = null;
 	}
 
+	@UiThread
 	void viewUpdated(boolean invalidateCache) {
 		if (card != null) {
-			if(invalidateCache)
-				card = repository.find(card.getUuid());
-			if(editView != null) {
-				editView.setTitle(R.string.edit_card_title);
-			} else {
-				String title = view.getContext().getString(R.string.card);
-				view.setTitle(title.concat(" ").concat(card.getName()));
+			if(invalidateCache) {
+				new AsyncTask<Void, Void, Void>() {
+
+					@Override
+					protected Void doInBackground(Void... voids) {
+						card = repository.find(card.getUuid());
+						return null;
+					}
+
+					@Override
+					protected void onPostExecute(Void aVoid) {
+						super.onPostExecute(aVoid);
+						if(editView != null) {
+							editView.setTitle(R.string.edit_card_title);
+						} else {
+							String title = view.getContext().getString(R.string.card);
+							view.setTitle(title.concat(" ").concat(card.getName()));
+						}
+						view.showCard(card);
+						if(account != null)
+							editView.onAccountSelected(account);
+					}
+				}.execute();
 			}
-			view.showCard(card);
-			if(account != null)
-				editView.onAccountSelected(account);
 		} else {
 			if(editView != null)
 				editView.setTitle(R.string.new_card_title);
@@ -85,6 +96,7 @@ class CardPresenter {
 			throw new CardNotFoundException(uuid);
 	}
 
+	@UiThread
 	void save() {
 		if(editView == null)
 			throw new InvalidMethodCallException("save", getClass().toString(), "View should be a Edit View");
@@ -93,14 +105,26 @@ class CardPresenter {
 		card = editView.fillCard(card);
 		if(account != null)
 			card.setAccount(account);
-		OperationResult result = repository.save(card);
 
-		if(result.isValid()) {
-			editView.finishView();
-		} else {
-			for (ValidationError validationError : result.getErrors())
-				editView.showError(validationError);
-		}
+		new AsyncTask<Void, Void, OperationResult>() {
+
+			@Override
+			protected OperationResult doInBackground(Void... voids) {
+				return repository.save(card);
+			}
+
+			@Override
+			protected void onPostExecute(OperationResult result) {
+				super.onPostExecute(result);
+
+				if(result.isValid()) {
+					editView.finishView();
+				} else {
+					for (ValidationError validationError : result.getErrors())
+						editView.showError(validationError);
+				}
+			}
+		}.execute();
 	}
 
 	String getUuid() {

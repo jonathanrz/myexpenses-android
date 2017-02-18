@@ -14,9 +14,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-/**
- * Created by Jonathan Zanella on 26/01/16.
- */
 public class BillView extends BaseView {
 	private static final int REQUEST_ADD_BILL = 1003;
 	private BillAdapter adapter;

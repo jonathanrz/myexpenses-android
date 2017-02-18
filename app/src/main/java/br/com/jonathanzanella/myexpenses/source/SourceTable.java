@@ -3,25 +3,22 @@ package br.com.jonathanzanella.myexpenses.source;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.NonNull;
 
 import br.com.jonathanzanella.myexpenses.database.Fields;
 import br.com.jonathanzanella.myexpenses.database.SqlTypes;
 import br.com.jonathanzanella.myexpenses.database.Table;
 
-/**
- * Created by jzanella on 11/1/16.
- */
-
 public final class SourceTable implements Table<Source> {
-	public void onCreate(SQLiteDatabase db) {
+	public void onCreate(@NonNull SQLiteDatabase db) {
 		db.execSQL(createTableSql());
 	}
 
-	public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
+	public void onUpgrade(@NonNull SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
 	}
 
 	@Override
-	public void onDrop(SQLiteDatabase db) {
+	public void onDrop(@NonNull SQLiteDatabase db) {
 		db.execSQL(dropTableSql());
 	}
 
@@ -46,6 +43,7 @@ public final class SourceTable implements Table<Source> {
 		return "DROP TABLE IF EXISTS " + getName();
 	}
 
+	@NonNull
 	@Override
 	public ContentValues fillContentValues(Source source) {
 		ContentValues values = new ContentValues();
@@ -60,7 +58,7 @@ public final class SourceTable implements Table<Source> {
 	}
 
 	@Override
-	public Source fill(Cursor c) {
+	public Source fill(@NonNull Cursor c) {
 		Source source = new Source();
 		source.setId(c.getLong(c.getColumnIndexOrThrow(Fields.ID.toString())));
 		source.setName(c.getString(c.getColumnIndexOrThrow(Fields.NAME.toString())));
@@ -73,6 +71,7 @@ public final class SourceTable implements Table<Source> {
 		return source;
 	}
 
+	@NonNull
 	@Override
 	public String [] getProjection() {
 		return new String[]{

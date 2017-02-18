@@ -27,9 +27,6 @@ import br.com.jonathanzanella.myexpenses.receipt.Receipt;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-/**
- * Created by Jonathan Zanella on 26/01/16.
- */
 class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHolder> {
 	private List<Expense> expenses;
 	private ExpenseAdapterPresenter presenter;

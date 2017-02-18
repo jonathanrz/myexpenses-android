@@ -1,6 +1,7 @@
 package br.com.jonathanzanella.myexpenses.source;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,9 +15,6 @@ import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
 
-/**
- * Created by Jonathan Zanella on 26/01/16.
- */
 public class EditSourceActivity extends BaseActivity implements SourceContract.EditView {
 	public static final String KEY_SOURCE_UUID = "KeySourceUuid";
 
@@ -34,11 +32,20 @@ public class EditSourceActivity extends BaseActivity implements SourceContract.E
 	}
 
 	@Override
-	protected void storeBundle(Bundle extras) {
+	protected void storeBundle(final Bundle extras) {
 		super.storeBundle(extras);
 
-		if(extras != null && extras.containsKey(KEY_SOURCE_UUID))
-			presenter.loadSource(extras.getString(KEY_SOURCE_UUID));
+		if(extras != null && extras.containsKey(KEY_SOURCE_UUID)) {
+			new AsyncTask<Void, Void, Void>() {
+
+				@Override
+				protected Void doInBackground(Void... voids) {
+					presenter.loadSource(extras.getString(KEY_SOURCE_UUID));
+					return null;
+				}
+			}.execute();
+
+		}
 	}
 
 	@Override

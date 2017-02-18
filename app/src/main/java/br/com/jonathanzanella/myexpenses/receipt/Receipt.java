@@ -24,7 +24,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 
-@EqualsAndHashCode(callSuper = false, of = {"id", "uuid", "name"})
+@EqualsAndHashCode
 public class Receipt implements Transaction, UnsyncModel {
 	public static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
 	private AccountRepository accountRepository = null;

@@ -20,9 +20,6 @@ import butterknife.OnClick;
 import lombok.Getter;
 import lombok.Setter;
 
-/**
- * Created by jzanella on 7/17/16.
- */
 public class DateTimeView extends BaseView {
 	public interface Listener {
 		void onDateTimeChanged(DateTime currentTime);

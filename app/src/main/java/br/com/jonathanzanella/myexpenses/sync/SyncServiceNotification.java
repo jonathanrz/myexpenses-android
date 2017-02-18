@@ -10,13 +10,10 @@ import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.views.MainActivity;
 
-/**
- * Created by jzanella on 7/17/16.
- */
 class SyncServiceNotification {
-	public static final String CONTENT_TITLE = "My Expenses";
-	public static final String CONTENT_TEXT_SYNCING = Environment.CURRENT_USER + " data syncing";
-	public static final String CONTENT_TEXT_SYNCED = Environment.CURRENT_USER + " data synced";
+	private static final String CONTENT_TITLE = "My Expenses";
+	private static final String CONTENT_TEXT_SYNCING = Environment.CURRENT_USER + " data syncing";
+	private static final String CONTENT_TEXT_SYNCED = Environment.CURRENT_USER + " data synced";
 	private final int notificationId;
 	private final NotificationManager notifyMgr;
 	private final NotificationCompat.Builder notification;

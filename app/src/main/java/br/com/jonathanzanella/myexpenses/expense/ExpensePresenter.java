@@ -31,10 +31,6 @@ import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 import static android.app.Activity.RESULT_OK;
 import static br.com.jonathanzanella.myexpenses.expense.Expense.findChargeable;
 
-/**
- * Created by jzanella on 8/27/16.
- */
-
 class ExpensePresenter {
 	private static final int REQUEST_EDIT_EXPENSE = 1;
 	static final String KEY_EXPENSE_UUID = "KeyExpenseUuid";
@@ -91,37 +87,8 @@ class ExpensePresenter {
 					}
 					view.showExpense(expense);
 
-					new AsyncTask<Void, Void, Void>() {
-
-						@Override
-						protected Void doInBackground(Void... voids) {
-							bill = expense.getBill();
-							return null;
-						}
-
-						@Override
-						protected void onPostExecute(Void aVoid) {
-							super.onPostExecute(aVoid);
-							if(editView != null && bill != null)
-								editView.onBillSelected(bill);
-						}
-					}.execute();
-
-					new AsyncTask<Void, Void, Chargeable>() {
-
-						@Override
-						protected Chargeable doInBackground(Void... voids) {
-							chargeable = expense.getChargeable();
-							return chargeable;
-						}
-
-						@Override
-						protected void onPostExecute(Chargeable chargeable) {
-							super.onPostExecute(chargeable);
-							if(editView != null && chargeable != null)
-								editView.onChargeableSelected(chargeable);
-						}
-					}.execute();
+					loadBill();
+					loadChargeable();
 
 					date = expense.getDate();
 					if(editView != null && date != null)
@@ -136,6 +103,42 @@ class ExpensePresenter {
 			if(editView != null && date != null)
 				editView.onDateChanged(date);
 		}
+	}
+
+	private void loadChargeable() {
+		new AsyncTask<Void, Void, Chargeable>() {
+
+			@Override
+			protected Chargeable doInBackground(Void... voids) {
+				chargeable = expense.getChargeable();
+				return chargeable;
+			}
+
+			@Override
+			protected void onPostExecute(Chargeable chargeable) {
+				super.onPostExecute(chargeable);
+				if(editView != null && chargeable != null)
+					editView.onChargeableSelected(chargeable);
+			}
+		}.execute();
+	}
+
+	private void loadBill() {
+		new AsyncTask<Void, Void, Void>() {
+
+			@Override
+			protected Void doInBackground(Void... voids) {
+				bill = expense.getBill();
+				return null;
+			}
+
+			@Override
+			protected void onPostExecute(Void aVoid) {
+				super.onPostExecute(aVoid);
+				if(editView != null && bill != null)
+					editView.onBillSelected(bill);
+			}
+		}.execute();
 	}
 
 	@UiThread

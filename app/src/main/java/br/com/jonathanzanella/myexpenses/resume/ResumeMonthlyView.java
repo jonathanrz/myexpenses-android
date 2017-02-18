@@ -26,9 +26,6 @@ import br.com.jonathanzanella.myexpenses.views.BaseView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-/**
- * Created by jzanella onCard 2/2/16.
- */
 @SuppressLint("ViewConstructor")
 class ResumeMonthlyView extends BaseView {
 	@Bind(R.id.view_monthly_resume_accounts)

@@ -24,9 +24,6 @@ import br.com.jonathanzanella.myexpenses.receipt.ReceiptApi;
 import br.com.jonathanzanella.myexpenses.server.ServerApi;
 import br.com.jonathanzanella.myexpenses.source.SourceApi;
 
-/**
- * Created by jzanella on 7/13/16.
- */
 public class SyncService extends GcmTaskService {
 	public static final String KEY_EXECUTE_SYNC = "KeyExecuteSync";
 	private static int NOTIFICATION_ID = 1;

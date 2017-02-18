@@ -14,9 +14,6 @@ import br.com.jonathanzanella.myexpenses.views.BaseView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-/**
- * Created by Jonathan Zanella on 26/01/16.
- */
 @SuppressLint("ViewConstructor")
 class ExpenseMonthlyView extends BaseView {
     private ExpenseAdapter adapter;

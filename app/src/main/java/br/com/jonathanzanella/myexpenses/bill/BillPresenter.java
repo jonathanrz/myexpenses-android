@@ -11,13 +11,8 @@ import org.joda.time.DateTime;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException;
-import br.com.jonathanzanella.myexpenses.helpers.CountingIdlingResource;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
-
-/**
- * Created by jzanella on 8/27/16.
- */
 
 class BillPresenter {
 	private BillContract.View view;
@@ -26,11 +21,9 @@ class BillPresenter {
 	private Bill bill;
 	private DateTime initDate;
 	private DateTime endDate;
-	private final CountingIdlingResource idlingResource;
 
-	BillPresenter(BillRepository repository, CountingIdlingResource idlingResource) {
+	BillPresenter(BillRepository repository) {
 		this.repository = repository;
-		this.idlingResource = idlingResource;
 	}
 
 	void attachView(BillContract.View view) {

@@ -27,10 +27,6 @@ import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
 import static android.app.Activity.RESULT_OK;
 
-/**
- * Created by jzanella on 8/27/16.
- */
-
 class ReceiptPresenter {
 	static final String KEY_RECEIPT_UUID = "KeyReceiptUuid";
 	private static final String KEY_SOURCE_UUID = "KeySourceUuid";

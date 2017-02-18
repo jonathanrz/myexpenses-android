@@ -26,9 +26,6 @@ import butterknife.OnClick;
 import static br.com.jonathanzanella.myexpenses.card.CardType.CREDIT;
 import static br.com.jonathanzanella.myexpenses.card.CardType.DEBIT;
 
-/**
- * Created by Jonathan Zanella on 26/01/16.
- */
 public class EditCardActivity extends BaseActivity implements CardContract.EditView {
 	public static final String KEY_CARD_UUID = "KeyCardUuid";
 

@@ -18,9 +18,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import lombok.Setter;
 
-/**
- * Created by Jonathan Zanella on 26/01/16.
- */
 class SourceAdapter extends RecyclerView.Adapter<SourceAdapter.ViewHolder> {
 	private SourceAdapterPresenter presenter;
 	private List<Source> sources;

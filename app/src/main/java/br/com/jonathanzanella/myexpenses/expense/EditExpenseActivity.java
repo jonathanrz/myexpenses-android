@@ -30,9 +30,6 @@ import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
 import butterknife.OnClick;
 
-/**
- * Created by Jonathan Zanella on 26/01/16.
- */
 public class EditExpenseActivity extends BaseActivity implements ExpenseContract.EditView {
 	public static final String KEY_EXPENSE_UUID = ExpensePresenter.KEY_EXPENSE_UUID;
 	private static final int REQUEST_SELECT_CHARGEABLE = 1003;

@@ -5,9 +5,6 @@ import android.support.annotation.Nullable;
 import lombok.Getter;
 import lombok.NonNull;
 
-/**
- * Created by jzanella on 2/2/16.
- */
 public enum CardType {
 	CREDIT("CREDIT"),
 	DEBIT("DEBIT");

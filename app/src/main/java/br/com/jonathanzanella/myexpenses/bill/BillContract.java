@@ -7,10 +7,6 @@ import org.joda.time.DateTime;
 
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
-/**
- * Created by jzanella on 8/28/16.
- */
-
 interface BillContract {
 	interface View {
 		Context getContext();

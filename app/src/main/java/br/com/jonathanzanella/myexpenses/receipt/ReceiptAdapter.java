@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import org.joda.time.DateTime;
 
-import java.lang.ref.WeakReference;
 import java.text.NumberFormat;
 import java.util.List;
 
@@ -25,15 +24,12 @@ import br.com.jonathanzanella.myexpenses.source.Source;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-/**
- * Created by Jonathan Zanella on 26/01/16.
- */
 class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ViewHolder> {
 	protected List<Receipt> receipts;
 	private ReceiptAdapterPresenter presenter;
 	private DateTime date;
 
-	public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+	public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 		@Bind(R.id.row_receipt_name)
 		TextView name;
 		@Bind(R.id.row_receipt_date)
@@ -47,11 +43,8 @@ class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ViewHolder> {
 		@Bind(R.id.row_receipt_show_in_resume)
 		TextView showInResume;
 
-		WeakReference<ReceiptAdapter> adapterWeakReference;
-
-		public ViewHolder(View itemView, ReceiptAdapter adapter) {
+		public ViewHolder(View itemView) {
 			super(itemView);
-			adapterWeakReference = new WeakReference<>(adapter);
 
 			ButterKnife.bind(this, itemView);
 
@@ -97,7 +90,7 @@ class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ViewHolder> {
 
 		@Override
 		public void onClick(View v) {
-			Receipt receipt = adapterWeakReference.get().getReceipt(getAdapterPosition());
+			Receipt receipt = getReceipt(getAdapterPosition());
 			if(receipt != null) {
                 Intent i = new Intent(itemView.getContext(), ShowReceiptActivity.class);
                 i.putExtra(ShowReceiptActivity.KEY_RECEIPT_UUID, receipt.getUuid());
@@ -118,7 +111,7 @@ class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ViewHolder> {
 	@Override
 	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_receipt, parent, false);
-		return new ViewHolder(v, this);
+		return new ViewHolder(v);
 	}
 
 	@Override

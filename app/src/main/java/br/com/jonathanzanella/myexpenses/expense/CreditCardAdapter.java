@@ -22,9 +22,6 @@ import br.com.jonathanzanella.myexpenses.receipt.Receipt;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-/**
- * Created by Jonathan Zanella onCard 26/01/16.
- */
 class CreditCardAdapter extends RecyclerView.Adapter<CreditCardAdapter.ViewHolder> {
 	protected List<Expense> expenses;
 	private int totalValue;

@@ -30,9 +30,6 @@ import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
 import butterknife.OnClick;
 
-/**
- * Created by Jonathan Zanella on 26/01/16.
- */
 public class EditReceiptActivity extends BaseActivity implements ReceiptContract.EditView {
 	public static final String KEY_RECEIPT_UUID = "KeyReceiptUuid";
 	private static final int REQUEST_SELECT_SOURCE = 1001;

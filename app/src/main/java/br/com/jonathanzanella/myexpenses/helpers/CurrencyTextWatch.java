@@ -6,9 +6,6 @@ import android.widget.EditText;
 
 import java.text.NumberFormat;
 
-/**
- * Created by jzanella on 2/2/16.
- */
 public class CurrencyTextWatch implements TextWatcher {
 	private EditText edit;
 	private String current;

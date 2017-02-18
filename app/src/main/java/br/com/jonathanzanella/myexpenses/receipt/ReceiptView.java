@@ -26,9 +26,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-/**
- * Created by Jonathan Zanella on 03/02/16.
- */
 public class ReceiptView extends BaseView implements ViewPager.OnPageChangeListener {
 	private static final int REQUEST_ADD_RECEIPT = 1007;
 	@Bind(R.id.view_receipts_pager)

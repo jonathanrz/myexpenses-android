@@ -14,11 +14,8 @@ import java.util.Locale;
 
 import br.com.jonathanzanella.myexpenses.views.BaseView;
 
-/**
- * Created by Jonathan Zanella on 03/02/16.
- */
 public class MonthlyPagerAdapter extends PagerAdapter {
-    public static final int TOTAL_MONTHS_VISIBLE = 25;
+    private static final int TOTAL_MONTHS_VISIBLE = 25;
     public static final int INIT_MONTH_VISIBLE = TOTAL_MONTHS_VISIBLE / 2;
 
     private static final SimpleDateFormat sdf = new SimpleDateFormat("MMM/yy", Locale.getDefault());

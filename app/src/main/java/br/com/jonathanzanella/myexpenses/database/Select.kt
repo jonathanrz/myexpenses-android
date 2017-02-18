@@ -2,10 +2,6 @@ package br.com.jonathanzanella.myexpenses.database
 
 import java.util.*
 
-/**
- * Created by jzanella on 11/12/16.
- */
-
 data class Select internal constructor(internal var where: String, internal var parameters: Array<String>) {
 
     override fun equals(other: Any?): Boolean {

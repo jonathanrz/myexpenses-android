@@ -1,9 +1,5 @@
 package br.com.jonathanzanella.myexpenses.database
 
-/**
- * Created by jzanella on 11/1/16.
- */
-
 object SqlTypes {
     const val PRIMARY_KEY = " INTEGER PRIMARY KEY AUTOINCREMENT"
     const val INT = " INTEGER"

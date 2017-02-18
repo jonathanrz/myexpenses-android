@@ -14,9 +14,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-/**
- * Created by Jonathan Zanella on 26/01/16.
- */
 public class SourceView extends BaseView {
     private static final int REQUEST_ADD_SOURCE = 1004;
     private SourceAdapter adapter;

@@ -2,9 +2,6 @@ package br.com.jonathanzanella.myexpenses.helpers;
 
 import org.joda.time.DateTime;
 
-/**
- * Created by jzanella on 7/1/16.
- */
 public class DateHelper {
 	public static DateTime firstDayOfMonth(DateTime date) {
 		return firstMillisOfDay(date.dayOfMonth().withMinimumValue());

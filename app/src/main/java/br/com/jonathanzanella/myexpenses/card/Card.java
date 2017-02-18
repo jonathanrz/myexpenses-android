@@ -17,10 +17,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode
 public class Card implements Chargeable, UnsyncModel {
 	private AccountRepository accountRepository;
-	private CardRepository cardRepository;
 	private static final String LOG_TAG = "Card";
 
 	@Setter @Getter
@@ -53,8 +52,7 @@ public class Card implements Chargeable, UnsyncModel {
 	@Getter @Setter
 	private boolean sync;
 
-	Card() {
-	}
+	Card() {}
 
 	public Card(AccountRepository accountRepository) {
 		this.accountRepository = accountRepository;

@@ -15,9 +15,6 @@ import br.com.jonathanzanella.myexpenses.views.BaseView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-/**
- * Created by Jonathan Zanella on 14/02/16.
- */
 public class OverviewExpensesView extends BaseView {
 	@Bind(R.id.view_overview_expenses_pager)
 	ViewPager pager;

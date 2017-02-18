@@ -11,9 +11,6 @@ import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
 
-/**
- * Created by jzanella on 2/1/16.
- */
 public class ListBillActivity extends BaseActivity implements BillAdapterCallback {
 	public static final String KEY_BILL_SELECTED_UUID = "KeyBillSelectUuid";
 

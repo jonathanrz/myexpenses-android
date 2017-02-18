@@ -19,9 +19,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-/**
- * Created by jzanella on 7/11/16.
- */
 public class LogsView extends BaseView implements DateTimeView.Listener {
 	private static final String LOG_TAG = LogsView.class.getSimpleName();
 	public static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());

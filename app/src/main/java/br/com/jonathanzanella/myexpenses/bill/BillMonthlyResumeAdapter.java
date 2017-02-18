@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import org.joda.time.DateTime;
 
-import java.lang.ref.WeakReference;
 import java.text.NumberFormat;
 import java.util.List;
 
@@ -23,9 +22,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import lombok.Getter;
 
-/**
- * Created by Jonathan Zanella on 26/01/16.
- */
 public class BillMonthlyResumeAdapter extends RecyclerView.Adapter<BillMonthlyResumeAdapter.ViewHolder> {
 	protected List<Bill> bills;
 	@Getter
@@ -37,7 +33,7 @@ public class BillMonthlyResumeAdapter extends RecyclerView.Adapter<BillMonthlyRe
 		TYPE_TOTAL
 	}
 
-	public static class ViewHolder extends RecyclerView.ViewHolder {
+	public class ViewHolder extends RecyclerView.ViewHolder {
 		@Bind(R.id.row_monthly_resume_bill_name) @Nullable
 		TextView name;
 		@Bind(R.id.row_monthly_resume_bill_day) @Nullable
@@ -45,11 +41,8 @@ public class BillMonthlyResumeAdapter extends RecyclerView.Adapter<BillMonthlyRe
 		@Bind(R.id.row_monthly_resume_bill_amount)
 		TextView amount;
 
-		WeakReference<BillMonthlyResumeAdapter> adapterWeakReference;
-
-		public ViewHolder(View itemView, BillMonthlyResumeAdapter adapter) {
+		public ViewHolder(View itemView) {
 			super(itemView);
-			adapterWeakReference = new WeakReference<>(adapter);
 
 			ButterKnife.bind(this, itemView);
 		}
@@ -89,7 +82,7 @@ public class BillMonthlyResumeAdapter extends RecyclerView.Adapter<BillMonthlyRe
 		else
 			v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_monthly_resume_bill, parent, false);
 
-		return new ViewHolder(v, this);
+		return new ViewHolder(v);
 	}
 
 	@Override

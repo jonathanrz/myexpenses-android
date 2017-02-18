@@ -26,9 +26,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-/**
- * Created by Jonathan Zanella on 03/02/16.
- */
 public class ExpenseView extends BaseView implements ViewPager.OnPageChangeListener {
 	private static final int REQUEST_ADD_EXPENSE = 1006;
 	@Bind(R.id.view_expenses_pager)
