@@ -34,7 +34,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode rootProject.ext.gitCommitCount()
-        versionName "0.4.3." + rootProject.ext.getVersionName()
+        versionName "1.0.0." + rootProject.ext.getVersionName()
         testInstrumentationRunner "br.com.jonathanzanella.myexpenses.MyTestRunner"
 
         jackOptions {
