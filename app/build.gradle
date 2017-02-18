@@ -6,7 +6,6 @@ apply plugin: 'jacoco-android'
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
-    def MYEXPENSES_AUTH_TOKEN = "\"" + MyExpensesAuthToken + "\""
 
     dexOptions {
         maxProcessCount 2
@@ -16,18 +15,18 @@ android {
     signingConfigs {
         jonathan {
             storeFile file("jonathan.keystore")
-            storePassword MyExpensesJonathanKeyPass
+            storePassword rootProject.ext.jonathanKeyPass
             keyAlias "jonathanrz"
-            keyPassword MyExpensesJonathanKeyPass
+            keyPassword rootProject.ext.jonathanKeyPass
         }
         thainara {
             storeFile file("thainara.keystore")
-            storePassword MyExpensesThainaraKeyPass
+            storePassword rootProject.ext.thainaraKeyPass
             keyAlias "jonathanrz"
-            keyPassword MyExpensesThainaraKeyPass
+            keyPassword rootProject.ext.thainaraKeyPass
         }
     }
-    
+
     buildToolsVersion "$rootProject.buildToolsVersion"
 
     defaultConfig {
@@ -52,13 +51,13 @@ android {
         debug {
             applicationIdSuffix '.debug'
             versionNameSuffix '-DEBUG'
-            buildConfigField 'String', 'MYEXPENSES_AUTH_TOKEN', MYEXPENSES_AUTH_TOKEN
+            buildConfigField 'String', 'MYEXPENSES_AUTH_TOKEN', rootProject.ext.authTokenString
             testCoverageEnabled true
         }
         jonathan {
             applicationIdSuffix '.jonathan'
             versionNameSuffix '-JONATHAN'
-            buildConfigField 'String', 'MYEXPENSES_AUTH_TOKEN', MYEXPENSES_AUTH_TOKEN
+            buildConfigField 'String', 'MYEXPENSES_AUTH_TOKEN', rootProject.ext.authTokenString
             debuggable true
 
             // NB: If you want to use the default debug key for a (non-debug)
@@ -68,7 +67,7 @@ android {
         thainara {
             applicationIdSuffix '.thainara'
             versionNameSuffix '-THAINARA'
-            buildConfigField 'String', 'MYEXPENSES_AUTH_TOKEN', MYEXPENSES_AUTH_TOKEN
+            buildConfigField 'String', 'MYEXPENSES_AUTH_TOKEN', rootProject.ext.authTokenString
             debuggable true
 
             // NB: If you want to use the default debug key for a (non-debug)
@@ -78,7 +77,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            buildConfigField 'String', 'MYEXPENSES_AUTH_TOKEN', MYEXPENSES_AUTH_TOKEN
+            buildConfigField 'String', 'MYEXPENSES_AUTH_TOKEN', rootProject.ext.authTokenString
         }
     }
 
