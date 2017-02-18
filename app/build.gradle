@@ -82,7 +82,7 @@ android {
     }
 
     testfairyConfig {
-        apiKey MyExpensesTestFairyToken
+        apiKey rootProject.ext.testFairyToken
         autoUpdate false
         notify true
         testersGroups "dev"
