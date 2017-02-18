@@ -115,7 +115,7 @@ public class ExpensesInPeriodTestSuite {
 		Expense firstOfJuly = newExpense("July", firstDayOfJuly, 200);
 		expenseRepository.save(firstOfJuly);
 
-		List<Expense> expenses = expenseRepository.expenses(firstDayOfJune);
+		List<Expense> expenses = expenseRepository.expensesForResumeScreen(firstDayOfJune);
 		assertThat(expenses.size(), is(2));
 		assertThat(expenses.get(0).getUuid(), is(firstOfMonth.getUuid()));
 		assertThat(expenses.get(1).getUuid(), is(endOfMonth.getUuid()));

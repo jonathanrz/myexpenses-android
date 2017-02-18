@@ -19,6 +19,7 @@ import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.card.Card;
 import br.com.jonathanzanella.myexpenses.card.CardRepository;
+import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType;
 import br.com.jonathanzanella.myexpenses.database.Fields;
 import br.com.jonathanzanella.myexpenses.database.ModelRepository;
 import br.com.jonathanzanella.myexpenses.database.Repository;
@@ -117,12 +118,13 @@ public class ExpenseRepository implements ModelRepository<Expense> {
 	}
 
 	@WorkerThread
-	public List<Expense> expenses(DateTime date) {
+	public List<Expense> expensesForResumeScreen(DateTime date) {
 		DateTime lastMonth = date.minusMonths(1);
 		DateTime initOfMonth = DateHelper.firstDayOfMonth(lastMonth);
 		DateTime endOfMonth = DateHelper.lastDayOfMonth(lastMonth);
 
 		List<Expense> expenses = repository.query(table, queryBetweenUserDataAndNotRemoved(initOfMonth, endOfMonth)
+				.and(Fields.CHARGEABLE_TYPE).notEq(ChargeableType.CREDIT_CARD.name())
 				.and(Fields.CHARGE_NEXT_MONTH).eq(true)
 				.and(Fields.IGNORE_IN_OVERVIEW).eq(false)
 				.orderBy(Fields.DATE));
@@ -131,6 +133,7 @@ public class ExpenseRepository implements ModelRepository<Expense> {
 		endOfMonth = DateHelper.lastDayOfMonth(date);
 
 		expenses.addAll(repository.query(table, queryBetweenUserDataAndNotRemoved(initOfMonth, endOfMonth)
+				.and(Fields.CHARGEABLE_TYPE).notEq(ChargeableType.CREDIT_CARD.name())
 				.and(Fields.CHARGE_NEXT_MONTH).eq(false)
 				.and(Fields.IGNORE_IN_OVERVIEW).eq(false)
 				.orderBy(Fields.DATE)));

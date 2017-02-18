@@ -5,10 +5,6 @@ import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.card.Card;
 import br.com.jonathanzanella.myexpenses.card.CardType;
 
-/**
- * Created by jzanella on 8/28/16.
- */
-
 public class CardBuilder {
 	private Account account;
 	private String name = "cardTest";

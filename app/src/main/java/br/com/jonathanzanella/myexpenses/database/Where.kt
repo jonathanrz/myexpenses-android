@@ -29,6 +29,13 @@ class Where(field: Fields) {
         query.operation = operation
     }
 
+    fun notEq(s: String): Where {
+        isExpectingFieldDefinition()
+        setLastQueryOperation("!=")
+        values.add(s)
+        return this
+    }
+
     fun eq(s: String): Where {
         isExpectingFieldDefinition()
         setLastQueryOperation("=")

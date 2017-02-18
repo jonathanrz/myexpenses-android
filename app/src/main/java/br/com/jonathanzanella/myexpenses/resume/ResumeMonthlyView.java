@@ -149,7 +149,7 @@ class ResumeMonthlyView extends BaseView {
 
 			@Override
 			protected List<Expense> doInBackground(Void... voids) {
-				return expenseRepository.expenses(month);
+				return expenseRepository.expensesForResumeScreen(month);
 			}
 
 			@Override
