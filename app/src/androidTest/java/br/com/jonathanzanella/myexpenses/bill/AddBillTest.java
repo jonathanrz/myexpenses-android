@@ -57,21 +57,21 @@ public class AddBillTest {
 	}
 
 	@Test
-	public void add_new_bill() {
+	public void add_new_bill() throws InterruptedException {
 		activityTestRule.launchActivity(new Intent());
 
 		openMenuAndClickItem(R.string.bills);
 
-		final String accountsTitle = getContext().getString(R.string.bills);
-		matchToolbarTitle(accountsTitle);
+		final String billsTitle = getContext().getString(R.string.bills);
+		matchToolbarTitle(billsTitle);
 
 		clickIntoView(R.id.view_bills_fab);
 
 		final String newBillTitle = getContext().getString(R.string.new_bill_title);
 		matchToolbarTitle(newBillTitle);
 
-		final String accountTitle = "Test";
-		typeTextIntoView(R.id.act_edit_bill_name, accountTitle);
+		final String billTitle = "Test";
+		typeTextIntoView(R.id.act_edit_bill_name, billTitle);
 		typeTextIntoView(R.id.act_edit_bill_amount, "100");
 		typeTextIntoView(R.id.act_edit_bill_due_date, "1");
 
@@ -84,9 +84,11 @@ public class AddBillTest {
 
 		clickIntoView(R.id.action_save);
 
-		matchToolbarTitle(accountsTitle);
+		Thread.sleep(500);
 
-		onView(withId(R.id.row_bill_name)).check(matches(withText(accountTitle)));
+		matchToolbarTitle(billsTitle);
+
+		onView(withId(R.id.row_bill_name)).check(matches(withText(billTitle)));
 		String initDateText = Bill.sdf.format(initDate.toDate());
 		onView(withId(R.id.row_bill_init_date)).check(matches(withText(initDateText)));
 		String endDateText = Bill.sdf.format(endDate.toDate());

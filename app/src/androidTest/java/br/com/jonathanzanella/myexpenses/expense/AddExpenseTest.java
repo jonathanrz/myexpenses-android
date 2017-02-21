@@ -73,7 +73,7 @@ public class AddExpenseTest {
 	}
 
 	@Test
-	public void add_new_expense() {
+	public void add_new_expense() throws InterruptedException {
 		mainActivityTestRule.launchActivity(new Intent());
 
 		openMenuAndClickItem(R.string.expenses);
@@ -95,6 +95,8 @@ public class AddExpenseTest {
 		selectChargeable();
 
 		clickIntoView(R.id.action_save);
+
+		Thread.sleep(500);
 
 		matchToolbarTitle(expensesTitle);
 
@@ -163,6 +165,8 @@ public class AddExpenseTest {
 		selectChargeable();
 
 		clickIntoView(R.id.action_save);
+
+		Thread.sleep(500);
 
 		matchToolbarTitle(expensesTitle);
 

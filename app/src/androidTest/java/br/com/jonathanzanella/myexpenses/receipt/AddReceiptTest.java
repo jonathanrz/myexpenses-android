@@ -38,9 +38,6 @@ import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTit
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.openMenuAndClickItem;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.typeTextIntoView;
 
-/**
- * Created by jzanella on 7/24/16.
- */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class AddReceiptTest {
@@ -73,7 +70,7 @@ public class AddReceiptTest {
 	}
 
 	@Test
-	public void add_new_receipt() {
+	public void add_new_receipt() throws InterruptedException {
 		mainActivityTestRule.launchActivity(new Intent());
 
 		openMenuAndClickItem(R.string.receipts);
@@ -95,6 +92,8 @@ public class AddReceiptTest {
 		matchToolbarTitle(newReceiptTitle);
 
 		clickIntoView(R.id.action_save);
+
+		Thread.sleep(500);
 
 		matchToolbarTitle(receiptsTitle);
 

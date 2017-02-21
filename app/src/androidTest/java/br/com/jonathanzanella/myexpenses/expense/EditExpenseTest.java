@@ -34,9 +34,6 @@ import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTit
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.typeTextIntoView;
 import static org.hamcrest.core.Is.is;
 
-/**
- * Created by jzanella on 8/28/16.
- */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class EditExpenseTest {
@@ -78,6 +75,8 @@ public class EditExpenseTest {
 		typeTextIntoView(R.id.act_edit_expense_name, " changed");
 
 		clickIntoView(R.id.action_save);
+
+		Thread.sleep(500);
 
 		matchToolbarTitle(showExpenseTitle);
 
