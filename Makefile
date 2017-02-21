@@ -7,4 +7,4 @@ runTests:
 runTestsWithCoverage: runTests
 	./gradlew jacocoTestReport
 	./gradlew connectedCheck
-	./codecov.sh
+	./app/codecov.sh
