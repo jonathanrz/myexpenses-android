@@ -5,10 +5,6 @@ import android.support.annotation.StringRes;
 
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
-/**
- * Created by jzanella on 8/28/16.
- */
-
 interface AccountContract {
 	interface View {
 		Context getContext();

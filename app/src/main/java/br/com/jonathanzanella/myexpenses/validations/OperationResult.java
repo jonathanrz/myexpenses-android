@@ -5,10 +5,6 @@ import java.util.List;
 
 import lombok.Getter;
 
-/**
- * Created by jzanella on 8/27/16.
- */
-
 public class OperationResult {
 	@Getter
 	List<ValidationError> errors = new ArrayList<>();

@@ -1,6 +1,7 @@
 package br.com.jonathanzanella.myexpenses.bill;
 
 import android.content.Intent;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -14,8 +15,11 @@ import org.junit.runner.RunWith;
 import java.text.NumberFormat;
 
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
+import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.expense.Expense;
+import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
-import br.com.jonathanzanella.myexpenses.helpers.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.BillBuilder;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
@@ -24,6 +28,7 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static br.com.jonathanzanella.myexpenses.helpers.TestUtils.waitForIdling;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle;
 
 /**
@@ -36,7 +41,8 @@ public class ShowBillActivityTest {
 	public ActivityTestRule<ShowBillActivity> activityTestRule = new ActivityTestRule<>(ShowBillActivity.class, true, false);
 
 	private Bill bill;
-	private BillRepository repository = new BillRepository();
+	private ExpenseRepository expenseRepository = new ExpenseRepository(new Repository<Expense>(getTargetContext()));
+	private BillRepository repository = new BillRepository(new Repository<Bill>(getTargetContext()), expenseRepository);
 
 	@Before
 	public void setUp() throws Exception {
@@ -46,7 +52,7 @@ public class ShowBillActivityTest {
 
 	@After
 	public void tearDown() throws Exception {
-		DatabaseHelper.reset(getTargetContext());
+		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
 		ActivityLifecycleHelper.closeAllActivities(getInstrumentation());
 	}
 
@@ -55,6 +61,8 @@ public class ShowBillActivityTest {
 		Intent i = new Intent();
 		i.putExtra(ShowBillActivity.KEY_BILL_UUID, bill.getUuid());
 		activityTestRule.launchActivity(i);
+
+		waitForIdling();
 
 		final String editBillTitle = getTargetContext().getString(R.string.bill) + " " + bill.getName();
 		matchToolbarTitle(editBillTitle);

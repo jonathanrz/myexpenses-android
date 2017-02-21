@@ -9,7 +9,9 @@ import android.widget.EditText;
 
 import org.apache.commons.lang3.StringUtils;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch;
 import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.user.SelectUserView;
@@ -19,9 +21,6 @@ import butterknife.Bind;
 
 import static java.text.NumberFormat.getCurrencyInstance;
 
-/**
- * Created by Jonathan Zanella on 26/01/16.
- */
 public class EditAccountActivity extends BaseActivity implements AccountContract.EditView {
 	public static final String KEY_ACCOUNT_UUID = "KeyAccountUuid";
 
@@ -38,7 +37,7 @@ public class EditAccountActivity extends BaseActivity implements AccountContract
 	@Bind(R.id.act_edit_account_user)
 	SelectUserView selectUserView;
 
-	private AccountPresenter presenter = new AccountPresenter(new AccountRepository());
+	private AccountPresenter presenter = new AccountPresenter(new AccountRepository(new Repository<Account>(MyApplication.getContext())));
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

@@ -1,26 +1,23 @@
 package br.com.jonathanzanella.myexpenses.chargeable;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountAdapter;
 import br.com.jonathanzanella.myexpenses.account.AccountAdapterCallback;
-import br.com.jonathanzanella.myexpenses.views.BaseActivity;
+import br.com.jonathanzanella.myexpenses.card.Card;
 import br.com.jonathanzanella.myexpenses.card.CardAdapter;
 import br.com.jonathanzanella.myexpenses.card.CardAdapterCallback;
-import br.com.jonathanzanella.myexpenses.account.Account;
-import br.com.jonathanzanella.myexpenses.card.Card;
+import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
 
-/**
- * Created by jzanella onCard 2/1/16.
- */
 public class ListChargeableActivity extends BaseActivity implements AccountAdapterCallback, CardAdapterCallback {
 	public static final String KEY_CHARGEABLE_SELECTED_UUID = "KeyChargeableSelectUuid";
 	public static final String KEY_CHARGEABLE_SELECTED_TYPE = "KeyChargeableSelectType";
@@ -45,7 +42,6 @@ public class ListChargeableActivity extends BaseActivity implements AccountAdapt
 		initCreditCards();
 	}
 
-	@NonNull
 	private void initAccounts() {
 		AccountAdapter adapter = new AccountAdapter();
 		adapter.setCallback(this);
@@ -58,14 +54,25 @@ public class ListChargeableActivity extends BaseActivity implements AccountAdapt
 	}
 
 	private void initCreditCards() {
-		CardAdapter adapter = new CardAdapter();
+		final CardAdapter adapter = new CardAdapter();
 		adapter.setCallback(this);
-		adapter.loadData();
+		new AsyncTask<Void, Void, Void>() {
 
-		cards.setAdapter(adapter);
-		cards.setHasFixedSize(true);
-		cards.setLayoutManager(new GridLayoutManager(this, 2));
-		cards.setItemAnimator(new DefaultItemAnimator());
+			@Override
+			protected Void doInBackground(Void... voids) {
+				adapter.loadData();
+				return null;
+			}
+
+			@Override
+			protected void onPostExecute(Void aVoid) {
+				super.onPostExecute(aVoid);
+				cards.setAdapter(adapter);
+				cards.setHasFixedSize(true);
+				cards.setLayoutManager(new GridLayoutManager(ListChargeableActivity.this, 2));
+				cards.setItemAnimator(new DefaultItemAnimator());
+			}
+		}.execute();
 	}
 
 	@Override

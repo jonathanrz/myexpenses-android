@@ -1,10 +1,14 @@
 package br.com.jonathanzanella.myexpenses.card;
 
-import com.raizlabs.android.dbflow.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.util.List;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
+import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.expense.Expense;
+import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.server.Server;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
@@ -12,22 +16,15 @@ import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi;
 import retrofit2.Call;
 import retrofit2.Response;
 
-/**
- * Created by jzanella on 6/12/16.
- */
 public class CardApi implements UnsyncModelApi<Card> {
 	private static final String LOG_TAG = CardApi.class.getSimpleName();
-	CardInterface cardInterface;
-
-	private CardInterface getInterface() {
-		if(cardInterface == null)
-			cardInterface = new Server().cardInterface();
-		return cardInterface;
-	}
+	private CardInterface cardInterface;
+	private CardRepository cardRepository;
+	private ExpenseRepository expenseRepository;
 
 	@Override
 	public List<Card> index() {
-		Call<List<Card>> caller = getInterface().index(Card.greaterUpdatedAt());
+		Call<List<Card>> caller = getInterface().index(greaterUpdatedAt());
 
 		try {
 			Response<List<Card>> response = caller.execute();
@@ -48,7 +45,7 @@ public class CardApi implements UnsyncModelApi<Card> {
 	public void save(UnsyncModel model) {
 		Card card = (Card) model;
 		Call<Card> caller;
-		if(StringUtils.isNotNullOrEmpty(card.getServerId()))
+		if(StringUtils.isNotEmpty(card.getServerId()))
 			caller = getInterface().update(card.getServerId(), card);
 		else
 			caller = getInterface().create(card);
@@ -56,7 +53,7 @@ public class CardApi implements UnsyncModelApi<Card> {
 		try {
 			Response<Card> response = caller.execute();
 			if(response.isSuccessful()) {
-				model.syncAndSave(response.body());
+				getCardRepository().syncAndSave(response.body());
 				Log.info(LOG_TAG, "Updated: " + card.getData());
 			} else {
 				Log.error(LOG_TAG, "Save request error: " + response.message() + " uuid: " + card.getUuid());
@@ -68,12 +65,37 @@ public class CardApi implements UnsyncModelApi<Card> {
 	}
 
 	@Override
+	public void syncAndSave(UnsyncModel unsync) {
+		if(!(unsync instanceof Card))
+			throw new UnsupportedOperationException("UnsyncModel is not a Card");
+		getCardRepository().syncAndSave((Card)unsync);
+	}
+
+	@Override
 	public List<Card> unsyncModels() {
-		return Card.unsync();
+		return getCardRepository().unsync();
 	}
 
 	@Override
 	public long greaterUpdatedAt() {
-		return Card.greaterUpdatedAt();
+		return getCardRepository().greaterUpdatedAt();
+	}
+
+	private CardInterface getInterface() {
+		if(cardInterface == null)
+			cardInterface = new Server().cardInterface();
+		return cardInterface;
+	}
+
+	private ExpenseRepository getExpenseRepository() {
+		if(expenseRepository == null)
+			expenseRepository = new ExpenseRepository(new Repository<Expense>(MyApplication.getContext()));
+		return expenseRepository;
+	}
+
+	private CardRepository getCardRepository() {
+		if(cardRepository == null)
+			cardRepository = new CardRepository(new Repository<Card>(MyApplication.getContext()), getExpenseRepository());
+		return cardRepository;
 	}
 }

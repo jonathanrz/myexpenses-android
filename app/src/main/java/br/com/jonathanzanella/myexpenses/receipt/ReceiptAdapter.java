@@ -1,8 +1,11 @@
 package br.com.jonathanzanella.myexpenses.receipt;
 
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.UiThread;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,23 +14,22 @@ import android.widget.TextView;
 
 import org.joda.time.DateTime;
 
-import java.lang.ref.WeakReference;
 import java.text.NumberFormat;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.account.Account;
+import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.source.Source;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-/**
- * Created by Jonathan Zanella on 26/01/16.
- */
 class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ViewHolder> {
 	protected List<Receipt> receipts;
 	private ReceiptAdapterPresenter presenter;
 	private DateTime date;
 
-	public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+	public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 		@Bind(R.id.row_receipt_name)
 		TextView name;
 		@Bind(R.id.row_receipt_date)
@@ -41,29 +43,54 @@ class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ViewHolder> {
 		@Bind(R.id.row_receipt_show_in_resume)
 		TextView showInResume;
 
-		WeakReference<ReceiptAdapter> adapterWeakReference;
-
-		public ViewHolder(View itemView, ReceiptAdapter adapter) {
+		public ViewHolder(View itemView) {
 			super(itemView);
-			adapterWeakReference = new WeakReference<>(adapter);
 
 			ButterKnife.bind(this, itemView);
 
 			itemView.setOnClickListener(this);
 		}
 
-		public void setData(Receipt receipt) {
+		@UiThread
+		public void setData(final Receipt receipt) {
 			name.setText(receipt.getName());
 			date.setText(Receipt.sdf.format(receipt.getDate().toDate()));
 			income.setText(NumberFormat.getCurrencyInstance().format(receipt.getIncome() / 100.0));
-			source.setText(receipt.getSource().getName());
-			account.setText(receipt.getAccount().getName());
+
+			new AsyncTask<Void, Void, Source>() {
+
+				@Override
+				protected Source doInBackground(Void... voids) {
+					return receipt.getSource();
+				}
+
+				@Override
+				protected void onPostExecute(Source s) {
+					super.onPostExecute(s);
+					source.setText(s.getName());
+				}
+			}.execute();
+
+			new AsyncTask<Void, Void, Account>() {
+
+				@Override
+				protected Account doInBackground(Void... voids) {
+					return receipt.getAccount();
+				}
+
+				@Override
+				protected void onPostExecute(Account a) {
+					super.onPostExecute(a);
+					account.setText(a.getName());
+				}
+			}.execute();
+
 			showInResume.setText(receipt.isShowInResume() ? R.string.yes : R.string.no);
 		}
 
 		@Override
 		public void onClick(View v) {
-			Receipt receipt = adapterWeakReference.get().getReceipt(getAdapterPosition());
+			Receipt receipt = getReceipt(getAdapterPosition());
 			if(receipt != null) {
                 Intent i = new Intent(itemView.getContext(), ShowReceiptActivity.class);
                 i.putExtra(ShowReceiptActivity.KEY_RECEIPT_UUID, receipt.getUuid());
@@ -72,8 +99,8 @@ class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ViewHolder> {
 		}
 	}
 
-	ReceiptAdapter() {
-		presenter = new ReceiptAdapterPresenter(this, new ReceiptRepository());
+	ReceiptAdapter(Context context) {
+		presenter = new ReceiptAdapterPresenter(this, new ReceiptRepository(new Repository<Receipt>(context)));
 	}
 
 	public void loadData(DateTime date) {
@@ -84,7 +111,7 @@ class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ViewHolder> {
 	@Override
 	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_receipt, parent, false);
-		return new ViewHolder(v, this);
+		return new ViewHolder(v);
 	}
 
 	@Override

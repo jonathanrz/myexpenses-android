@@ -1,6 +1,7 @@
 package br.com.jonathanzanella.myexpenses.bill;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.Menu;
@@ -10,12 +11,12 @@ import android.widget.TextView;
 import java.text.NumberFormat;
 
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.expense.Expense;
+import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
 
-/**
- * Created by jzanella on 1/31/16.
- */
 public class ShowBillActivity extends BaseActivity implements BillContract.View {
 	public static final String KEY_BILL_UUID = "KeyBillUuid";
 
@@ -33,7 +34,8 @@ public class ShowBillActivity extends BaseActivity implements BillContract.View 
 	private BillPresenter presenter;
 
 	public ShowBillActivity() {
-		presenter = new BillPresenter(new BillRepository());
+		ExpenseRepository expenseRepository = new ExpenseRepository(new Repository<Expense>(this));
+		presenter = new BillPresenter(new BillRepository(new Repository<Bill>(this), expenseRepository));
 	}
 
 	@Override
@@ -45,15 +47,29 @@ public class ShowBillActivity extends BaseActivity implements BillContract.View 
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
-		presenter.viewUpdated(false);
+		presenter.onViewUpdated(false);
 	}
 
 	@Override
-	protected void storeBundle(Bundle extras) {
+	protected void storeBundle(final Bundle extras) {
 		super.storeBundle(extras);
 
-		if(extras != null && extras.containsKey(KEY_BILL_UUID))
-			presenter.loadBill(extras.getString(KEY_BILL_UUID));
+		if(extras != null && extras.containsKey(KEY_BILL_UUID)) {
+			new AsyncTask<Void, Void, Void>() {
+
+				@Override
+				protected Void doInBackground(Void... voids) {
+					presenter.loadBill(extras.getString(KEY_BILL_UUID));
+					return null;
+				}
+
+				@Override
+				protected void onPostExecute(Void aVoid) {
+					super.onPostExecute(aVoid);
+					presenter.updateView();
+				}
+			}.execute();
+		}
 	}
 
 	@Override

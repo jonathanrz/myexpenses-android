@@ -4,10 +4,6 @@ import android.os.AsyncTask;
 
 import java.util.List;
 
-/**
- * Created by jzanella on 8/27/16.
- */
-
 class AccountAdapterPresenter {
 	private AccountRepository repository;
 	private AccountAdapter adapter;
@@ -43,10 +39,5 @@ class AccountAdapterPresenter {
 
 	int getAccountsSize() {
 		return accounts == null ? 0 : accounts.size();
-	}
-
-	void addAccount(Account source) {
-		accounts.add(source);
-		adapter.notifyItemInserted(accounts.size() - 1);
 	}
 }

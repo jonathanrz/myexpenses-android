@@ -1,6 +1,7 @@
 package br.com.jonathanzanella.myexpenses.card;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.view.Menu;
@@ -12,6 +13,9 @@ import android.widget.RadioGroup;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
+import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.expense.Expense;
+import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.user.SelectUserView;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
@@ -22,9 +26,6 @@ import butterknife.OnClick;
 import static br.com.jonathanzanella.myexpenses.card.CardType.CREDIT;
 import static br.com.jonathanzanella.myexpenses.card.CardType.DEBIT;
 
-/**
- * Created by Jonathan Zanella on 26/01/16.
- */
 public class EditCardActivity extends BaseActivity implements CardContract.EditView {
 	public static final String KEY_CARD_UUID = "KeyCardUuid";
 
@@ -39,11 +40,14 @@ public class EditCardActivity extends BaseActivity implements CardContract.EditV
 	@Bind(R.id.act_edit_card_user)
 	SelectUserView selectUserView;
 
-	private CardPresenter presenter = new CardPresenter(new CardRepository(), new AccountRepository());
+	private CardPresenter presenter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		ExpenseRepository expenseRepository = new ExpenseRepository(new Repository<Expense>(this));
+		presenter = new CardPresenter(new CardRepository(new Repository<Card>(this), expenseRepository),
+				new AccountRepository(new Repository<Account>(this)), expenseRepository);
 		setContentView(R.layout.activity_edit_card);
 	}
 
@@ -54,11 +58,18 @@ public class EditCardActivity extends BaseActivity implements CardContract.EditV
 	}
 
 	@Override
-	protected void storeBundle(Bundle extras) {
+	protected void storeBundle(final Bundle extras) {
 		super.storeBundle(extras);
 
-		if(extras != null && extras.containsKey(KEY_CARD_UUID))
-			presenter.loadCard(extras.getString(KEY_CARD_UUID));
+		new AsyncTask<Void, Void, Void>() {
+
+			@Override
+			protected Void doInBackground(Void... voids) {
+				if(extras != null && extras.containsKey(KEY_CARD_UUID))
+					presenter.loadCard(extras.getString(KEY_CARD_UUID));
+				return null;
+			}
+		}.execute();
 	}
 
 	@Override

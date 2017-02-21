@@ -1,8 +1,10 @@
 package br.com.jonathanzanella.myexpenses.expense;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.UiThread;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,19 +18,20 @@ import java.lang.ref.WeakReference;
 import java.text.NumberFormat;
 import java.util.List;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.bill.Bill;
+import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
+import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.receipt.Receipt;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-/**
- * Created by Jonathan Zanella on 26/01/16.
- */
 class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHolder> {
 	private List<Expense> expenses;
 	private ExpenseAdapterPresenter presenter;
 	private DateTime date;
+	private ExpenseRepository expenseRepository;
 
 	public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 		@Bind(R.id.row_expense_name)
@@ -57,19 +60,44 @@ class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHolder> {
 			itemView.setOnClickListener(this);
 		}
 
-		public void setData(Expense expense) {
+		@UiThread
+		public void setData(final Expense expense) {
 			name.setText(expense.getName());
 			date.setText(Receipt.sdf.format(expense.getDate().toDate()));
 			value.setText(NumberFormat.getCurrencyInstance().format(expense.getValue() / 100.0));
-			chargeable.setText(expense.getChargeable().getName());
-			chargeNextMonth.setVisibility(expense.isChargeNextMonth() ? View.VISIBLE : View.GONE);
-			Bill bill = expense.getBill();
-			if(bill == null) {
-				billLayout.setVisibility(View.GONE);
-			} else {
-				billLayout.setVisibility(View.VISIBLE);
-				billView.setText(bill.getName());
-			}
+			new AsyncTask<Void, Void, Chargeable>() {
+
+				@Override
+				protected Chargeable doInBackground(Void... voids) {
+					return expense.getChargeable();
+				}
+
+				@Override
+				protected void onPostExecute(Chargeable c) {
+					super.onPostExecute(c);
+					chargeable.setText(c.getName());
+				}
+			}.execute();
+
+			chargeNextMonth.setVisibility(expense.isChargedNextMonth() ? View.VISIBLE : View.GONE);
+			new AsyncTask<Void, Void, Bill>() {
+
+				@Override
+				protected Bill doInBackground(Void... voids) {
+					return expense.getBill();
+				}
+
+				@Override
+				protected void onPostExecute(Bill bill) {
+					super.onPostExecute(bill);
+					if(bill == null) {
+						billLayout.setVisibility(View.GONE);
+					} else {
+						billLayout.setVisibility(View.VISIBLE);
+						billView.setText(bill.getName());
+					}
+				}
+			}.execute();
 		}
 
 		@Override
@@ -84,7 +112,8 @@ class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHolder> {
 	}
 
 	ExpenseAdapter() {
-		presenter = new ExpenseAdapterPresenter(this, new ExpenseRepository());
+		expenseRepository = new ExpenseRepository(new Repository<Expense>(MyApplication.getContext()));
+		presenter = new ExpenseAdapterPresenter(this, expenseRepository);
 	}
 
 	@Override
@@ -104,7 +133,7 @@ class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHolder> {
 	}
 
 	public void loadData(DateTime date) {
-		expenses = Expense.monthly(date);
+		expenses = expenseRepository.monthly(date);
 		expenses = presenter.getExpenses(true, date);
 		this.date = date;
 	}

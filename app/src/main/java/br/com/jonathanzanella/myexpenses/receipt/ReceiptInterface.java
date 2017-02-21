@@ -10,9 +10,6 @@ import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
-/**
- * Created by jzanella on 6/5/16.
- */
 public interface ReceiptInterface {
     @GET("receipts")
     Call<List<Receipt>> index(@Query("last-updated-at") long lastUpdatedAt);

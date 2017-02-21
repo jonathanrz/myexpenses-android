@@ -1,7 +1,6 @@
 package br.com.jonathanzanella.myexpenses.account;
 
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,26 +10,24 @@ import android.widget.TextView;
 
 import org.joda.time.DateTime;
 
-import java.lang.ref.WeakReference;
 import java.text.NumberFormat;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.database.Repository;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import lombok.Setter;
 
-/**
- * Created by Jonathan Zanella on 26/01/16.
- */
 public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHolder> {
 	private AccountAdapterPresenter presenter;
 
 	private boolean simplified = false;
-	AccountAdapterCallback callback;
+	private AccountAdapterCallback callback;
 	@Setter
-	DateTime month;
+	private DateTime month;
 
-	public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+	public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 		@Bind(R.id.row_account_name)
 		TextView name;
 		@Bind(R.id.row_account_balance)
@@ -38,11 +35,8 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
 		@Bind(R.id.row_account_to_pay_credit_card) @Nullable
 		TextView accountToPayCreditCard;
 
-		WeakReference<AccountAdapter> adapterWeakReference;
-
-		public ViewHolder(View itemView, AccountAdapter adapter) {
+		public ViewHolder(View itemView) {
 			super(itemView);
-			adapterWeakReference = new WeakReference<>(adapter);
 
 			ButterKnife.bind(this, itemView);
 
@@ -58,16 +52,15 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
 
 		@Override
 		public void onClick(View v) {
-			AccountAdapter adapter = adapterWeakReference.get();
-			Account acc = adapter.getAccount(getAdapterPosition());
+			Account acc = getAccount(getAdapterPosition());
 			if(acc != null) {
-				if(adapter.callback != null) {
-					adapter.callback.onAccountSelected(acc);
+				if(callback != null) {
+					callback.onAccountSelected(acc);
 				} else {
 					Intent i = new Intent(itemView.getContext(), ShowAccountActivity.class);
 					i.putExtra(ShowAccountActivity.KEY_ACCOUNT_UUID, acc.getUuid());
-					if(adapter.month != null)
-						i.putExtra(ShowAccountActivity.KEY_ACCOUNT_MONTH_TO_SHOW, adapter.month.getMillis());
+					if(month != null)
+						i.putExtra(ShowAccountActivity.KEY_ACCOUNT_MONTH_TO_SHOW, month.getMillis());
 					itemView.getContext().startActivity(i);
 				}
 			}
@@ -75,7 +68,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
 	}
 
 	public AccountAdapter() {
-		presenter = new AccountAdapterPresenter(this, new AccountRepository());
+		presenter = new AccountAdapterPresenter(this, new AccountRepository(new Repository<Account>(MyApplication.getContext())));
 	}
 
 	public void refreshData() {
@@ -85,7 +78,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
 	@Override
 	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		View v = LayoutInflater.from(parent.getContext()).inflate(getLayout(), parent, false);
-		return new ViewHolder(v, this);
+		return new ViewHolder(v);
 	}
 
 	private int getLayout() {
@@ -100,10 +93,6 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
 	@Override
 	public int getItemCount() {
 		return presenter.getAccountsSize();
-	}
-
-	void addAccount(@NonNull Account acc) {
-		presenter.addAccount(acc);
 	}
 
 	public @Nullable Account getAccount(int position) {

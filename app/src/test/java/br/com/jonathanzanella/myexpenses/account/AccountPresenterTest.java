@@ -13,11 +13,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-/**
- * Created by jzanella on 8/27/16.
- */
 public class AccountPresenterTest {
-	private static final String UUID = "uuid";
 	@Mock
 	private AccountRepository repository;
 	@Mock
@@ -32,15 +28,8 @@ public class AccountPresenterTest {
 		presenter.attachView(view);
 	}
 
-	@Test(expected = AccountNotFoundException.class)
-	public void load_empty_source_throws_not_found_exception() {
-		when(repository.find(UUID)).thenReturn(null);
-
-		presenter.loadAccount(UUID);
-	}
-
 	@Test
-	public void save_gets_data_from_screen_and_save_to_repository() {
+	public void save_gets_data_from_screen_and_save_to_repository() throws InterruptedException {
 		when(repository.save(any(Account.class))).thenReturn(new OperationResult());
 
 		presenter.save();

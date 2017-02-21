@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
+import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
@@ -14,15 +15,14 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-/**
- * Created by jzanella on 8/27/16.
- */
 public class CardPresenterTest {
 	private static final String UUID = "uuid";
 	@Mock
 	private CardRepository repository;
 	@Mock
 	private AccountRepository accountRepository;
+	@Mock
+	private ExpenseRepository expenseRepository;
 	@Mock
 	private CardContract.EditView view;
 
@@ -31,7 +31,7 @@ public class CardPresenterTest {
 	@Before
 	public void setUp() throws Exception {
 		initMocks(this);
-		presenter = new CardPresenter(repository, accountRepository);
+		presenter = new CardPresenter(repository, accountRepository, expenseRepository);
 		presenter.attachView(view);
 	}
 
@@ -45,7 +45,7 @@ public class CardPresenterTest {
 	@Test
 	public void save_gets_data_from_screen_and_save_to_repository() {
 		when(repository.save(any(Card.class))).thenReturn(new OperationResult());
-		when(view.fillCard(any(Card.class))).thenReturn(new Card());
+		when(view.fillCard(any(Card.class))).thenReturn(new Card(accountRepository));
 
 		presenter.save();
 
@@ -59,7 +59,7 @@ public class CardPresenterTest {
 		OperationResult result = new OperationResult();
 		result.addError(ValidationError.NAME);
 
-		when(view.fillCard(any(Card.class))).thenReturn(new Card());
+		when(view.fillCard(any(Card.class))).thenReturn(new Card(accountRepository));
 		when(repository.save(any(Card.class))).thenReturn(result);
 
 		presenter.save();

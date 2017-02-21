@@ -1,6 +1,7 @@
 package br.com.jonathanzanella.myexpenses.source;
 
 import android.support.annotation.Nullable;
+import android.support.annotation.WorkerThread;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException;
@@ -36,11 +37,9 @@ class SourcePresenter {
 		this.editView = null;
 	}
 
-	void viewUpdated(boolean invalidateCache) {
+	void viewUpdated() {
 		if (source != null) {
-			if(invalidateCache)
-				source = repository.find(source.getUuid());
-			if(editView != null) {
+			if (editView != null) {
 				editView.setTitle(R.string.edit_source_title);
 			} else {
 				String title = view.getContext().getString(R.string.source);
@@ -53,10 +52,9 @@ class SourcePresenter {
 		}
 	}
 
-	void loadSource(String uuid) {
+	@WorkerThread
+	void loadSource(final String uuid) {
 		source = repository.find(uuid);
-		if(source == null)
-			throw new SourceNotFoundException(uuid);
 	}
 
 	void save() {

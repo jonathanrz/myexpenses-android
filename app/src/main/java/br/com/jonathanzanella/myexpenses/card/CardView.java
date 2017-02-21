@@ -3,6 +3,8 @@ package br.com.jonathanzanella.myexpenses.card;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
+import android.support.annotation.UiThread;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,9 +16,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-/**
- * Created by Jonathan Zanella on 26/01/16.
- */
+@UiThread
 public class CardView extends BaseView {
     private static final int REQUEST_ADD_CARD = 1005;
     private CardAdapter adapter;
@@ -42,7 +42,7 @@ public class CardView extends BaseView {
         ButterKnife.bind(this);
 
         adapter = new CardAdapter();
-        adapter.loadData();
+        refreshData();
 
         cards.setAdapter(adapter);
         cards.setLayoutManager(new GridLayoutManager(getContext(), 1));
@@ -66,11 +66,8 @@ public class CardView extends BaseView {
 
         switch (requestCode) {
             case REQUEST_ADD_CARD:
-                if(resultCode == Activity.RESULT_OK) {
-                    Card c = Card.find(data.getStringExtra(EditCardActivity.KEY_CARD_UUID));
-                    if(c != null)
-                        adapter.addCreditCard(c);
-                }
+                if(resultCode == Activity.RESULT_OK)
+                    adapter.addCreditCard(data.getStringExtra(EditCardActivity.KEY_CARD_UUID));
                 break;
         }
     }
@@ -79,7 +76,19 @@ public class CardView extends BaseView {
     public void refreshData() {
         super.refreshData();
 
-        adapter.loadData();
-        adapter.notifyDataSetChanged();
+	    new AsyncTask<Void, Void, Void>() {
+
+		    @Override
+		    protected Void doInBackground(Void... voids) {
+			    adapter.loadData();
+			    return null;
+		    }
+
+		    @Override
+		    protected void onPostExecute(Void aVoid) {
+			    super.onPostExecute(aVoid);
+			    adapter.notifyDataSetChanged();
+		    }
+	    }.execute();
     }
 }

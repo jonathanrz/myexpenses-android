@@ -10,9 +10,6 @@ import br.com.jonathanzanella.myexpenses.views.BaseView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-/**
- * Created by jzanella on 7/10/16.
- */
 public class SelectUserView extends BaseView {
 	@Bind(R.id.view_select_user_jonathan)
 	RadioButton userJonathan;

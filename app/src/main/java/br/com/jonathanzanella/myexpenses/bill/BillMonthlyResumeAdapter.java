@@ -1,7 +1,7 @@
 package br.com.jonathanzanella.myexpenses.bill;
 
-import android.os.AsyncTask;
 import android.support.annotation.Nullable;
+import android.support.annotation.WorkerThread;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,29 +10,30 @@ import android.widget.TextView;
 
 import org.joda.time.DateTime;
 
-import java.lang.ref.WeakReference;
 import java.text.NumberFormat;
 import java.util.List;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.expense.Expense;
+import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import lombok.Getter;
 
-/**
- * Created by Jonathan Zanella on 26/01/16.
- */
 public class BillMonthlyResumeAdapter extends RecyclerView.Adapter<BillMonthlyResumeAdapter.ViewHolder> {
 	protected List<Bill> bills;
 	@Getter
 	private int totalValue;
+	private BillRepository billRepository;
 
 	private enum VIEW_TYPE {
 		TYPE_NORMAL,
 		TYPE_TOTAL
 	}
 
-	public static class ViewHolder extends RecyclerView.ViewHolder {
+	public class ViewHolder extends RecyclerView.ViewHolder {
 		@Bind(R.id.row_monthly_resume_bill_name) @Nullable
 		TextView name;
 		@Bind(R.id.row_monthly_resume_bill_day) @Nullable
@@ -40,11 +41,8 @@ public class BillMonthlyResumeAdapter extends RecyclerView.Adapter<BillMonthlyRe
 		@Bind(R.id.row_monthly_resume_bill_amount)
 		TextView amount;
 
-		WeakReference<BillMonthlyResumeAdapter> adapterWeakReference;
-
-		public ViewHolder(View itemView, BillMonthlyResumeAdapter adapter) {
+		public ViewHolder(View itemView) {
 			super(itemView);
-			adapterWeakReference = new WeakReference<>(adapter);
 
 			ButterKnife.bind(this, itemView);
 		}
@@ -60,6 +58,11 @@ public class BillMonthlyResumeAdapter extends RecyclerView.Adapter<BillMonthlyRe
 		public void setTotal(int totalValue) {
 			amount.setText(NumberFormat.getCurrencyInstance().format(totalValue / 100.0));
 		}
+	}
+
+	public BillMonthlyResumeAdapter() {
+		ExpenseRepository expenseRepository = new ExpenseRepository(new Repository<Expense>(MyApplication.getContext()));
+		billRepository = new BillRepository(new Repository<Bill>(MyApplication.getContext()), expenseRepository);
 	}
 
 	@Override
@@ -79,7 +82,7 @@ public class BillMonthlyResumeAdapter extends RecyclerView.Adapter<BillMonthlyRe
 		else
 			v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_monthly_resume_bill, parent, false);
 
-		return new ViewHolder(v, this);
+		return new ViewHolder(v);
 	}
 
 	@Override
@@ -95,26 +98,13 @@ public class BillMonthlyResumeAdapter extends RecyclerView.Adapter<BillMonthlyRe
 		return bills != null ? bills.size() + 1 : 0;
 	}
 
-	public void loadDataAsync(final DateTime month, final Runnable runnable) {
-		new AsyncTask<Void, Void, Void>() {
+	@WorkerThread
+	public void loadDataAsync(final DateTime month) {
+		bills = billRepository.monthly(month);
+		totalValue = 0;
 
-			@Override
-			protected Void doInBackground(Void... voids) {
-				bills = new BillRepository().monthly(month);
-				totalValue = 0;
-
-				for (Bill bill : bills) {
-					totalValue += bill.getAmount();
-				}
-				return null;
-			}
-
-			@Override
-			protected void onPostExecute(Void aVoid) {
-				super.onPostExecute(aVoid);
-				notifyDataSetChanged();
-				runnable.run();
-			}
-		}.execute();
+		for (Bill bill : bills) {
+			totalValue += bill.getAmount();
+		}
 	}
 }

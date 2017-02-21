@@ -14,9 +14,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-/**
- * Created by Jonathan Zanella on 26/01/16.
- */
 public class BillView extends BaseView {
 	private static final int REQUEST_ADD_BILL = 1003;
 	private BillAdapter adapter;
@@ -65,11 +62,8 @@ public class BillView extends BaseView {
 
 		switch (requestCode) {
 			case REQUEST_ADD_BILL:
-				if(resultCode == Activity.RESULT_OK) {
-					Bill b = new BillRepository().find(data.getStringExtra(EditBillActivity.KEY_BILL_UUID));
-					if(b != null)
-						adapter.addBill(b);
-				}
+				if(resultCode == Activity.RESULT_OK)
+					adapter.refreshData();
 				break;
 		}
 	}

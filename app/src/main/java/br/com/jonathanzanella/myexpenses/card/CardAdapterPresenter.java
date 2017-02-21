@@ -1,11 +1,9 @@
 package br.com.jonathanzanella.myexpenses.card;
 
+import android.support.annotation.UiThread;
+
 import java.util.Collections;
 import java.util.List;
-
-/**
- * Created by jzanella on 8/27/16.
- */
 
 class CardAdapterPresenter {
 	private CardRepository repository;
@@ -29,6 +27,7 @@ class CardAdapterPresenter {
 		return Collections.unmodifiableList(cards);
 	}
 
+	@UiThread
 	void addCard(Card source) {
 		cards.add(source);
 		adapter.notifyItemInserted(cards.size() - 1);

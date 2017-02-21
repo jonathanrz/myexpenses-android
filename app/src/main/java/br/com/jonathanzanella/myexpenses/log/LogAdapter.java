@@ -16,12 +16,9 @@ import br.com.jonathanzanella.myexpenses.R;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-/**
- * Created by Jonathan Zanella on 26/01/16.
- */
-public class LogAdapter extends RecyclerView.Adapter<LogAdapter.ViewHolder> {
-	protected List<Log> logs;
-	protected List<Log> filteredLogs;
+class LogAdapter extends RecyclerView.Adapter<LogAdapter.ViewHolder> {
+	private List<Log> filteredLogs;
+	private LogRepository logRepository;
 
 	public static class ViewHolder extends RecyclerView.ViewHolder {
 		@Bind(R.id.row_log_indicator)
@@ -40,11 +37,16 @@ public class LogAdapter extends RecyclerView.Adapter<LogAdapter.ViewHolder> {
 		}
 
 		public void setData(Log log) {
+			//noinspection deprecation
 			indicator.setBackgroundColor(indicator.getContext().getResources().getColor(log.getLogLevel().getColor()));
 			title.setText(log.getTitle());
 			date.setText(Log.sdf.format(log.getDate().toDate()));
 			description.setText(log.getDescription());
 		}
+	}
+
+	LogAdapter(LogRepository logRepository) {
+		this.logRepository = logRepository;
 	}
 
 	@Override
@@ -64,7 +66,7 @@ public class LogAdapter extends RecyclerView.Adapter<LogAdapter.ViewHolder> {
 	}
 
 	public void loadData(DateTime initDate, DateTime endDate, Log.LOG_LEVEL logLevel, String filter) {
-		logs = Log.filter(initDate, endDate, logLevel);
+		List<Log> logs = logRepository.filter(initDate, endDate, logLevel);
 
 		filteredLogs = new ArrayList<>();
 		if(StringUtils.isNotEmpty(filter)) {

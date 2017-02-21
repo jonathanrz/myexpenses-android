@@ -1,6 +1,5 @@
 package br.com.jonathanzanella.myexpenses.receipt;
 
-import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.LargeTest;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -14,8 +13,9 @@ import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
+import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
+import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
-import br.com.jonathanzanella.myexpenses.helpers.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.ReceiptBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder;
@@ -23,6 +23,7 @@ import br.com.jonathanzanella.myexpenses.source.Source;
 import br.com.jonathanzanella.myexpenses.source.SourceRepository;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
+import static android.support.test.InstrumentationRegistry.getTargetContext;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -33,7 +34,7 @@ import static org.hamcrest.Matchers.not;
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class ReceiptRepositoryTest {
-	private ReceiptRepository repository = new ReceiptRepository();
+	private ReceiptRepository repository;
 
 	private Source source;
 	private Account account;
@@ -41,14 +42,15 @@ public class ReceiptRepositoryTest {
 	@Before
 	public void setUp() throws Exception {
 		account = new AccountBuilder().build();
-		new AccountRepository().save(account);
+		new AccountRepository(new Repository<Account>(getTargetContext())).save(account);
 		source = new SourceBuilder().build();
-		new SourceRepository().save(source);
+		new SourceRepository(new Repository<Source>(getTargetContext())).save(source);
+		repository = new ReceiptRepository(new Repository<Receipt>(getTargetContext()));
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		DatabaseHelper.reset(InstrumentationRegistry.getTargetContext());
+		new DatabaseHelper(getTargetContext()).recreateTables();
 		ActivityLifecycleHelper.closeAllActivities(getInstrumentation());
 	}
 
@@ -57,7 +59,7 @@ public class ReceiptRepositoryTest {
 		Receipt receipt = new ReceiptBuilder().source(source).account(account).build();
 		repository.save(receipt);
 
-		assertThat(receipt.id, is(not(0L)));
+		assertThat(receipt.getId(), is(not(0L)));
 		assertThat(receipt.getUuid(), is(not("")));
 	}
 
@@ -70,7 +72,7 @@ public class ReceiptRepositoryTest {
 		repository.save(receipt);
 
 		Receipt loadReceipt = repository.find(receipt.getUuid());
-		assertThat(loadReceipt, is(receipt));
+		assertThat(loadReceipt.getUuid(), is(receipt.getUuid()));
 	}
 
 	@Test
@@ -93,7 +95,7 @@ public class ReceiptRepositoryTest {
 		repository.save(receiptB);
 
 		List<Receipt> sources = repository.userReceipts();
-		assertThat(sources.get(0), is(receiptB));
-		assertThat(sources.get(1), is(receiptA));
+		assertThat(sources.get(0).getUuid(), is(receiptB.getUuid()));
+		assertThat(sources.get(1).getUuid(), is(receiptA.getUuid()));
 	}
 }

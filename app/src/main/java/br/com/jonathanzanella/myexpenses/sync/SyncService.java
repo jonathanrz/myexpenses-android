@@ -11,18 +11,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.Environment;
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.account.AccountApi;
 import br.com.jonathanzanella.myexpenses.bill.BillApi;
 import br.com.jonathanzanella.myexpenses.card.CardApi;
+import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseApi;
+import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.receipt.ReceiptApi;
 import br.com.jonathanzanella.myexpenses.server.ServerApi;
 import br.com.jonathanzanella.myexpenses.source.SourceApi;
 
-/**
- * Created by jzanella on 7/13/16.
- */
 public class SyncService extends GcmTaskService {
 	public static final String KEY_EXECUTE_SYNC = "KeyExecuteSync";
 	private static int NOTIFICATION_ID = 1;
@@ -38,7 +39,7 @@ public class SyncService extends GcmTaskService {
 		apis.add(new AccountApi());
 		apis.add(new BillApi());
 		apis.add(new CardApi());
-		apis.add(new ExpenseApi());
+		apis.add(new ExpenseApi(new ExpenseRepository(new Repository<Expense>(MyApplication.getContext()))));
 		apis.add(new ReceiptApi());
 		apis.add(new SourceApi());
 	}
@@ -104,7 +105,7 @@ public class SyncService extends GcmTaskService {
 		List<? extends UnsyncModel> unsyncModels = api.index();
 		if(unsyncModels != null) {
 			for (UnsyncModel unsyncModel : unsyncModels) {
-				unsyncModel.syncAndSave(unsyncModel);
+				api.syncAndSave(unsyncModel);
 				totalSaved++;
 				Log.info(logTag, "Saved: " + unsyncModel.getData());
 			}

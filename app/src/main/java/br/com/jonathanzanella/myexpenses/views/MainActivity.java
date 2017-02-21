@@ -29,9 +29,6 @@ import br.com.jonathanzanella.myexpenses.source.SourceView;
 import br.com.jonathanzanella.myexpenses.sync.SyncView;
 import butterknife.Bind;
 
-/**
- * Created by Jonathan Zanella on 25/01/16.
- */
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, SearchView.OnQueryTextListener {
 	@Bind(R.id.act_main_drawer)
 	DrawerLayout drawer;

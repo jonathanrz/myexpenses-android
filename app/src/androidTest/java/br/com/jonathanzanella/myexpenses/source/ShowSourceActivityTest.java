@@ -1,19 +1,23 @@
 package br.com.jonathanzanella.myexpenses.source;
 
 import android.content.Intent;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.helpers.DatabaseHelper;
+import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
+import br.com.jonathanzanella.myexpenses.database.Repository;
 
+import static android.support.test.InstrumentationRegistry.getContext;
 import static android.support.test.InstrumentationRegistry.getTargetContext;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -26,12 +30,13 @@ import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTit
  */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
+@Ignore("until dbflow are removed")
 public class ShowSourceActivityTest {
 	@Rule
 	public ActivityTestRule<ShowSourceActivity> activityTestRule = new ActivityTestRule<>(ShowSourceActivity.class, true, false);
 
 	private Source source;
-	private SourceRepository repository = new SourceRepository();
+	private SourceRepository repository = new SourceRepository(new Repository<Source>(getContext()));
 
 	@Before
 	public void setUp() throws Exception {
@@ -42,7 +47,7 @@ public class ShowSourceActivityTest {
 
 	@After
 	public void tearDown() throws Exception {
-		DatabaseHelper.reset(getTargetContext());
+		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
 	}
 
 	@Test

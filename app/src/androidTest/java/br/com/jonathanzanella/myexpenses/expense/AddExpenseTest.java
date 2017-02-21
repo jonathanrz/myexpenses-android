@@ -8,24 +8,28 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.test.uiautomator.UiDevice;
 
+import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.bill.Bill;
 import br.com.jonathanzanella.myexpenses.bill.BillRepository;
+import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
+import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
-import br.com.jonathanzanella.myexpenses.helpers.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.BillBuilder;
 import br.com.jonathanzanella.myexpenses.views.MainActivity;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
+import static android.support.test.InstrumentationRegistry.getTargetContext;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -35,6 +39,7 @@ import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.clickIntoView;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchErrorMessage;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.openMenuAndClickItem;
+import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.setTimeInDatePicker;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.typeTextIntoView;
 import static org.hamcrest.core.IsNot.not;
 
@@ -53,17 +58,17 @@ public class AddExpenseTest {
 
 	@Before
 	public void setUp() throws Exception {
-		UiDevice uiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+		UiDevice uiDevice = UiDevice.getInstance(getInstrumentation());
 		if (!uiDevice.isScreenOn())
 			uiDevice.wakeUp();
 
 		account = new AccountBuilder().build();
-		new AccountRepository().save(account);
+		new AccountRepository(new Repository<Account>(MyApplication.getContext())).save(account);
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		DatabaseHelper.reset(getContext());
+		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
 		ActivityLifecycleHelper.closeAllActivities(getInstrumentation());
 	}
 
@@ -84,6 +89,9 @@ public class AddExpenseTest {
 		final String expenseName = "Test";
 		typeTextIntoView(R.id.act_edit_expense_name, expenseName);
 		typeTextIntoView(R.id.act_edit_expense_value, "100");
+		clickIntoView(R.id.act_edit_expense_date);
+		DateTime currentTime = new DateTime();
+		setTimeInDatePicker(currentTime.getYear(), currentTime.getMonthOfYear(), currentTime.getDayOfMonth());
 		selectChargeable();
 
 		clickIntoView(R.id.action_save);
@@ -136,7 +144,8 @@ public class AddExpenseTest {
 	@Test
 	public void add_new_expense_with_bill() throws Exception {
 		Bill bill = new BillBuilder().build();
-		new BillRepository().save(bill);
+		ExpenseRepository expenseRepository = new ExpenseRepository(new Repository<Expense>(getTargetContext()));
+		new BillRepository(new Repository<Bill>(getTargetContext()), expenseRepository).save(bill);
 
 		mainActivityTestRule.launchActivity(new Intent());
 

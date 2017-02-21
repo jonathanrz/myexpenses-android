@@ -2,6 +2,9 @@ package br.com.jonathanzanella.myexpenses.bill;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.os.AsyncTask;
+import android.support.annotation.UiThread;
+import android.support.annotation.WorkerThread;
 import android.widget.DatePicker;
 
 import org.joda.time.DateTime;
@@ -11,14 +14,10 @@ import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
-/**
- * Created by jzanella on 8/27/16.
- */
-
 class BillPresenter {
 	private BillContract.View view;
 	private BillContract.EditView editView;
-	private BillRepository repository;
+	private final BillRepository repository;
 	private Bill bill;
 	private DateTime initDate;
 	private DateTime endDate;
@@ -41,11 +40,35 @@ class BillPresenter {
 		this.editView = null;
 	}
 
-	void viewUpdated(boolean invalidateCache) {
+	@UiThread
+	void onViewUpdated(boolean invalidateCache) {
 		if (bill != null) {
-			if(invalidateCache)
-				bill = repository.find(bill.getUuid());
-			if(editView != null) {
+			if(invalidateCache) {
+				new AsyncTask<Void, Void, Void>() {
+
+					@Override
+					protected Void doInBackground(Void... voids) {
+						loadBill(bill.getUuid());
+						return null;
+					}
+
+					@Override
+					protected void onPostExecute(Void aVoid) {
+						super.onPostExecute(aVoid);
+						updateView();
+					}
+				}.execute();
+			} else {
+				updateView();
+			}
+		} else {
+			updateView();
+		}
+	}
+
+	void updateView() {
+		if (bill != null) {
+			if (editView != null) {
 				editView.setTitle(R.string.edit_bill_title);
 			} else {
 				String title = view.getContext().getString(R.string.bill);
@@ -53,10 +76,10 @@ class BillPresenter {
 			}
 			view.showBill(bill);
 			initDate = bill.getInitDate();
-			if(editView != null)
+			if (editView != null)
 				editView.onInitDateChanged(initDate);
 			endDate = bill.getEndDate();
-			if(editView != null)
+			if (editView != null)
 				editView.onEndDateChanged(endDate);
 		} else {
 			if(editView != null)
@@ -96,10 +119,9 @@ class BillPresenter {
 		}, time.getYear(), time.getMonthOfYear() - 1, time.getDayOfMonth()).show();
 	}
 
-	void loadBill(String uuid) {
+	@WorkerThread
+	void loadBill(final String uuid) {
 		bill = repository.find(uuid);
-		if(bill == null)
-			throw new BillNotFoundException(uuid);
 	}
 
 	private void checkEditViewSet() {

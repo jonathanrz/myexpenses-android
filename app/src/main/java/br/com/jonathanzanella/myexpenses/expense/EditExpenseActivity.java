@@ -1,6 +1,7 @@
 package br.com.jonathanzanella.myexpenses.expense;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,6 +21,7 @@ import br.com.jonathanzanella.myexpenses.bill.ListBillActivity;
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
 import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType;
 import br.com.jonathanzanella.myexpenses.chargeable.ListChargeableActivity;
+import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch;
 import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.user.SelectUserView;
@@ -28,9 +30,6 @@ import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
 import butterknife.OnClick;
 
-/**
- * Created by Jonathan Zanella on 26/01/16.
- */
 public class EditExpenseActivity extends BaseActivity implements ExpenseContract.EditView {
 	public static final String KEY_EXPENSE_UUID = ExpensePresenter.KEY_EXPENSE_UUID;
 	private static final int REQUEST_SELECT_CHARGEABLE = 1003;
@@ -63,11 +62,13 @@ public class EditExpenseActivity extends BaseActivity implements ExpenseContract
 	@Bind(R.id.act_edit_expense_user)
 	SelectUserView selectUserView;
 
-	private ExpensePresenter presenter = new ExpensePresenter(new ExpenseRepository(), new BillRepository());
+	private ExpensePresenter presenter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		ExpenseRepository expenseRepository = new ExpenseRepository(new Repository<Expense>(this));
+		presenter = new ExpensePresenter(expenseRepository, new BillRepository(new Repository<Bill>(this), expenseRepository));
 		setContentView(R.layout.activity_edit_expense);
 	}
 
@@ -87,7 +88,7 @@ public class EditExpenseActivity extends BaseActivity implements ExpenseContract
 			}
 		});
 		presenter.attachView(this);
-		presenter.viewUpdated(false);
+		presenter.onViewUpdated(false);
 	}
 
 	@Override
@@ -107,6 +108,12 @@ public class EditExpenseActivity extends BaseActivity implements ExpenseContract
 	protected void onStart() {
 		super.onStart();
 		presenter.attachView(this);
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		presenter.refreshExpense();
 	}
 
 	@Override
@@ -170,8 +177,20 @@ public class EditExpenseActivity extends BaseActivity implements ExpenseContract
 
 	@OnClick(R.id.act_edit_expense_chargeable)
 	void onChargeable() {
-		if(!presenter.hasChargeable())
-			startActivityForResult(new Intent(this, ListChargeableActivity.class), REQUEST_SELECT_CHARGEABLE);
+		new AsyncTask<Void, Void, Boolean>() {
+
+			@Override
+			protected Boolean doInBackground(Void... voids) {
+				return presenter.hasChargeable();
+			}
+
+			@Override
+			protected void onPostExecute(Boolean hasChargeable) {
+				super.onPostExecute(hasChargeable);
+				if(!hasChargeable)
+					startActivityForResult(new Intent(EditExpenseActivity.this, ListChargeableActivity.class), REQUEST_SELECT_CHARGEABLE);
+			}
+		}.execute();
 	}
 
 	@Override
@@ -214,7 +233,7 @@ public class EditExpenseActivity extends BaseActivity implements ExpenseContract
 		}
 		expense.setValue(value);
 		expense.setValueToShowInOverview(valueToShowInOverview);
-		expense.setChargeNextMonth(checkPayNextMonth.isChecked());
+		expense.setChargedNextMonth(checkPayNextMonth.isChecked());
 		expense.showInOverview(showInOverview.isChecked());
 		expense.showInResume(showInResume.isChecked());
 		expense.setUserUuid(selectUserView.getSelectedUser());
@@ -262,13 +281,14 @@ public class EditExpenseActivity extends BaseActivity implements ExpenseContract
 		editValue.setText(NumberFormat.getCurrencyInstance().format(Math.abs(expense.getValue()) / 100.0));
 		editValueToShowInOverview.setText(NumberFormat.getCurrencyInstance().format(Math.abs(expense.getValueToShowInOverview()) / 100.0));
 		if(expense.isCharged()) {
+			//noinspection deprecation
 			editValue.setTextColor(getResources().getColor(R.color.value_unpaid));
 			checkRepayment.setEnabled(false);
 		}
 		if(expense.getValue() < 0)
 			checkRepayment.setChecked(true);
 
-		checkPayNextMonth.setChecked(expense.isChargeNextMonth());
+		checkPayNextMonth.setChecked(expense.isChargedNextMonth());
 		showInOverview.setChecked(expense.isShowInOverview());
 		showInResume.setChecked(expense.isShowInResume());
 

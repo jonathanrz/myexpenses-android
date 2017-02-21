@@ -13,9 +13,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-/**
- * Created by jzanella on 8/27/16.
- */
 public class BillPresenterTest {
 	private static final String UUID = "uuid";
 	@Mock
@@ -30,13 +27,6 @@ public class BillPresenterTest {
 		initMocks(this);
 		presenter = new BillPresenter(repository);
 		presenter.attachView(view);
-	}
-
-	@Test(expected = BillNotFoundException.class)
-	public void load_empty_bill_throws_not_found_exception() {
-		when(repository.find(UUID)).thenReturn(null);
-
-		presenter.loadBill(UUID);
 	}
 
 	@Test
@@ -62,5 +52,13 @@ public class BillPresenterTest {
 		presenter.save();
 
 		verify(view, times(1)).showError(ValidationError.NAME);
+	}
+
+	@Test
+	public void empty_bill_does_not_not_call_show_bill() throws Exception {
+		when(repository.find(UUID)).thenReturn(null);
+
+		presenter.loadBill(UUID);
+		verify(view, times(0)).showBill(any(Bill.class));
 	}
 }

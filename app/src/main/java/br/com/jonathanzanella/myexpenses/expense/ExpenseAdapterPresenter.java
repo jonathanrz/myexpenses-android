@@ -7,10 +7,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Created by jzanella on 8/27/16.
- */
-
 class ExpenseAdapterPresenter {
 	private ExpenseRepository repository;
 	private ExpenseAdapter adapter;

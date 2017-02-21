@@ -1,16 +1,21 @@
 package br.com.jonathanzanella.myexpenses.helpers;
 
 import android.support.annotation.IdRes;
+import android.support.test.espresso.Espresso;
+import android.support.test.espresso.IdlingResource;
 import android.support.test.espresso.PerformException;
 import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.espresso.util.HumanReadables;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
+
+import java.util.List;
 
 /**
  * Created by jzanella on 9/4/16.
@@ -104,5 +109,17 @@ public class TestUtils {
 
 	public static RecyclerViewMatcher withRecyclerView(final int recyclerViewId) {
 		return new RecyclerViewMatcher(recyclerViewId);
+	}
+
+	public static void waitForIdling() {
+		List<IdlingResource> idlingResourceList = Espresso.getIdlingResources();
+		for (IdlingResource idlingResource : idlingResourceList) {
+			Log.d("TestUtils", "waiting for=" + idlingResource.getName());
+			try {
+				idlingResource.wait();
+			} catch (InterruptedException e) {
+				Log.w("TestUtils", "idling " + idlingResource.getName() + " interrupted");
+			}
+		}
 	}
 }

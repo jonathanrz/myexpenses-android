@@ -13,9 +13,6 @@ import br.com.jonathanzanella.myexpenses.views.BaseView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-/**
- * Created by Jonathan Zanella on 03/02/16.
- */
 public class ResumeView extends BaseView {
     @Bind(R.id.view_resume_pager)
     ViewPager pager;

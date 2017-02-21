@@ -6,7 +6,6 @@ apply plugin: 'jacoco-android'
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
-    def MYEXPENSES_AUTH_TOKEN = '"' + System.getenv("MYEXPENSES_AUTH_TOKEN") + '"' ?: '"Auth Token"';
 
     dexOptions {
         maxProcessCount 2
@@ -16,24 +15,26 @@ android {
     signingConfigs {
         jonathan {
             storeFile file("jonathan.keystore")
-            storePassword System.getenv("MYEXPENSES_JONATHAN_KEY_PASS")
+            storePassword rootProject.ext.jonathanKeyPass
             keyAlias "jonathanrz"
-            keyPassword System.getenv("MYEXPENSES_JONATHAN_KEY_PASS")
+            keyPassword rootProject.ext.jonathanKeyPass
         }
         thainara {
             storeFile file("thainara.keystore")
-            storePassword System.getenv("MYEXPENSES_THAINARA_KEY_PASS")
+            storePassword rootProject.ext.thainaraKeyPass
             keyAlias "jonathanrz"
-            keyPassword System.getenv("MYEXPENSES_THAINARA_KEY_PASS")
+            keyPassword rootProject.ext.thainaraKeyPass
         }
     }
+
+    buildToolsVersion "$rootProject.buildToolsVersion"
 
     defaultConfig {
         applicationId "br.com.jonathanzanella.myexpenses"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode rootProject.ext.gitCommitCount()
-        versionName "0.4.3." + rootProject.ext.getVersionName()
+        versionName "1.0.0." + rootProject.ext.getVersionName()
         testInstrumentationRunner "br.com.jonathanzanella.myexpenses.MyTestRunner"
 
         jackOptions {
@@ -50,13 +51,13 @@ android {
         debug {
             applicationIdSuffix '.debug'
             versionNameSuffix '-DEBUG'
-            buildConfigField 'String', 'MYEXPENSES_AUTH_TOKEN', MYEXPENSES_AUTH_TOKEN
+            buildConfigField 'String', 'MYEXPENSES_AUTH_TOKEN', rootProject.ext.authToken
             testCoverageEnabled true
         }
         jonathan {
             applicationIdSuffix '.jonathan'
             versionNameSuffix '-JONATHAN'
-            buildConfigField 'String', 'MYEXPENSES_AUTH_TOKEN', MYEXPENSES_AUTH_TOKEN
+            buildConfigField 'String', 'MYEXPENSES_AUTH_TOKEN', rootProject.ext.authToken
             debuggable true
 
             // NB: If you want to use the default debug key for a (non-debug)
@@ -66,7 +67,7 @@ android {
         thainara {
             applicationIdSuffix '.thainara'
             versionNameSuffix '-THAINARA'
-            buildConfigField 'String', 'MYEXPENSES_AUTH_TOKEN', MYEXPENSES_AUTH_TOKEN
+            buildConfigField 'String', 'MYEXPENSES_AUTH_TOKEN', rootProject.ext.authToken
             debuggable true
 
             // NB: If you want to use the default debug key for a (non-debug)
@@ -76,12 +77,12 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            buildConfigField 'String', 'MYEXPENSES_AUTH_TOKEN', MYEXPENSES_AUTH_TOKEN
+            buildConfigField 'String', 'MYEXPENSES_AUTH_TOKEN', rootProject.ext.authToken
         }
     }
 
     testfairyConfig {
-        apiKey System.getenv("MYEXPENSES_TEST_FAIRY_TOKEN")
+        apiKey rootProject.ext.testFairyToken
         autoUpdate false
         notify true
         testersGroups "dev"
@@ -91,6 +92,9 @@ android {
         testLogging {
             events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
         }
+    }
+    testOptions {
+        unitTests.returnDefaultValues = true
     }
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -109,12 +113,6 @@ dependencies {
 
     //Play Services
     compile "com.google.android.gms:play-services-gcm:$rootProject.playServicesVersion"
-
-    //DBFlow
-    compile "com.github.Raizlabs.DBFlow:dbflow-core:$rootProject.dbFlowVersion"
-    compile "com.github.Raizlabs.DBFlow:dbflow:$rootProject.dbFlowVersion"
-    kapt "com.github.Raizlabs.DBFlow:dbflow-processor:$rootProject.dbFlowVersion"
-    annotationProcessor "com.github.Raizlabs.DBFlow:dbflow-processor:$rootProject.dbFlowVersion"
 
     //Lombok
     provided "org.projectlombok:lombok:$rootProject.lombokVersion"
@@ -141,12 +139,16 @@ dependencies {
     compile "com.timehop.stickyheadersrecyclerview:library:$rootProject.stickyHeadersVersion"
     compile "com.android.support.test.espresso:espresso-idling-resource:$rootProject.ext.espressoVersion"
 
+    //Kotlin
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
     // Dependencies for local unit tests
     testCompile "junit:junit:$rootProject.junitVersion"
     testCompile "org.mockito:mockito-all:$rootProject.mockitoVersion"
     testCompile "org.hamcrest:hamcrest-all:$rootProject.ext.hamcrestVersion"
     testCompile "org.powermock:powermock-module-junit4:$rootProject.ext.powerMockito"
     testCompile "org.powermock:powermock-api-mockito:$rootProject.ext.powerMockito"
+    testCompile "org.javassist:javassist:$rootProject.ext.javassist"
 
     // Android Testing Support Library's runner and rules
     androidTestCompile "com.android.support.test:runner:$rootProject.ext.runnerVersion"
@@ -165,7 +167,6 @@ dependencies {
     }
     androidTestCompile "com.android.support.test.espresso:espresso-intents:$rootProject.ext.espressoVersion"
     androidTestCompile "com.android.support.test.uiautomator:uiautomator-v18:$rootProject.ext.uiAutomatorVersion"
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
 
 configurations.all {
@@ -181,11 +182,6 @@ configurations.compile.dependencies.each { compileDependency ->
     }
 }
 
-task(runTests, dependsOn: ['uninstallDebug', 'assembleDebug', 'connectedDebugAndroidTest']) {}
-
-task(runTestsWithCoverage, type: Exec, dependsOn: ['runTests', 'jacocoTestReport', 'connectedCheck']) {
-    commandLine './codecov.sh'
-}
 repositories {
     mavenCentral()
 }

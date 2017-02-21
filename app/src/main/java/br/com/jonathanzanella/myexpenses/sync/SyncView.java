@@ -8,9 +8,6 @@ import br.com.jonathanzanella.myexpenses.views.BaseView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-/**
- * Created by jzanella on 6/5/16.
- */
 public class SyncView extends BaseView {
 	public SyncView(Context context) {
 		super(context);

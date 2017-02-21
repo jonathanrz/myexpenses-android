@@ -2,12 +2,11 @@ package br.com.jonathanzanella.myexpenses.expense;
 
 import android.support.annotation.Nullable;
 
-import com.raizlabs.android.dbflow.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.util.List;
 
-import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.server.Server;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
@@ -15,12 +14,10 @@ import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi;
 import retrofit2.Call;
 import retrofit2.Response;
 
-/**
- * Created by jzanella on 6/12/16.
- */
 public class ExpenseApi implements UnsyncModelApi<Expense> {
     private static final String LOG_TAG = ExpenseApi.class.getSimpleName();
-    ExpenseInterface expenseInterface;
+    private ExpenseInterface expenseInterface;
+    private ExpenseRepository expenseRepository;
 
     private ExpenseInterface getInterface() {
         if(expenseInterface == null)
@@ -28,9 +25,13 @@ public class ExpenseApi implements UnsyncModelApi<Expense> {
         return expenseInterface;
     }
 
+    public ExpenseApi(ExpenseRepository expenseRepository) {
+        this.expenseRepository = expenseRepository;
+    }
+
     @Override
     public @Nullable List<Expense> index() {
-        Call<List<Expense>> caller = getInterface().index(Expense.greaterUpdatedAt());
+        Call<List<Expense>> caller = getInterface().index(greaterUpdatedAt());
 
         try {
             Response<List<Expense>> response = caller.execute();
@@ -51,7 +52,7 @@ public class ExpenseApi implements UnsyncModelApi<Expense> {
     public void save(UnsyncModel model) {
         Expense expense = (Expense) model;
         Call<Expense> caller;
-        if(StringUtils.isNotNullOrEmpty(expense.getServerId()))
+        if(StringUtils.isNotEmpty(expense.getServerId()))
             caller = getInterface().update(expense.getServerId(), expense);
         else
             caller = getInterface().create(expense);
@@ -59,7 +60,7 @@ public class ExpenseApi implements UnsyncModelApi<Expense> {
         try {
             Response<Expense> response = caller.execute();
             if(response.isSuccessful()) {
-                model.syncAndSave(response.body());
+                expenseRepository.syncAndSave(response.body());
                 Log.info(LOG_TAG, "Updated: " + expense.getData());
             } else {
                 Log.error(LOG_TAG, "Save request error: " + response.message() + " uuid: " + expense.getUuid());
@@ -71,12 +72,19 @@ public class ExpenseApi implements UnsyncModelApi<Expense> {
     }
 
     @Override
+    public void syncAndSave(UnsyncModel unsync) {
+        if(!(unsync instanceof Expense))
+            throw new UnsupportedOperationException("UnsyncModel is not a Expense");
+        expenseRepository.syncAndSave((Expense) unsync);
+    }
+
+    @Override
     public List<Expense> unsyncModels() {
-        return Expense.unsync();
+        return expenseRepository.unsync();
     }
 
     @Override
     public long greaterUpdatedAt() {
-        return Expense.greaterUpdatedAt();
+        return expenseRepository.greaterUpdatedAt();
     }
 }

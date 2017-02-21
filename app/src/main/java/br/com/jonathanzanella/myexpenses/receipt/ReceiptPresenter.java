@@ -5,8 +5,11 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.UiThread;
+import android.support.annotation.WorkerThread;
 import android.support.v7.app.AlertDialog;
 import android.widget.DatePicker;
 
@@ -23,10 +26,6 @@ import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
 import static android.app.Activity.RESULT_OK;
-
-/**
- * Created by jzanella on 8/27/16.
- */
 
 class ReceiptPresenter {
 	static final String KEY_RECEIPT_UUID = "KeyReceiptUuid";
@@ -63,11 +62,33 @@ class ReceiptPresenter {
 		this.editView = null;
 	}
 
+	@UiThread
 	void viewUpdated(boolean invalidateCache) {
+		if (receipt != null || invalidateCache) {
+			new AsyncTask<Void, Void, Void>() {
+
+				@Override
+				protected Void doInBackground(Void... voids) {
+					receipt = repository.find(receipt.getUuid());
+					source = receipt.getSource();
+					account = receipt.getAccount();
+					return null;
+				}
+
+				@Override
+				protected void onPostExecute(Void aVoid) {
+					super.onPostExecute(aVoid);
+					updateView();
+				}
+			}.execute();
+		} else {
+			updateView();
+		}
+	}
+
+	private void updateView() {
 		if (receipt != null) {
-			if(invalidateCache)
-				receipt = repository.find(receipt.getUuid());
-			if(editView != null) {
+			if (editView != null) {
 				editView.setTitle(R.string.edit_receipt_title);
 			} else {
 				String title = view.getContext().getString(R.string.receipt);
@@ -75,16 +96,13 @@ class ReceiptPresenter {
 			}
 			view.showReceipt(receipt);
 
-			Source source = receipt.getSource();
-			if(source != null)
+			if (source != null)
 				onSourceSelected(source.getUuid());
-
-			Account account = receipt.getAccount();
-			if(account != null)
+			if (account != null)
 				onAccountSelected(account.getUuid());
 
 			date = receipt.getDate();
-			if(editView != null && date != null)
+			if (editView != null && date != null)
 				editView.onDateChanged(date);
 		} else {
 			if(editView != null)
@@ -96,15 +114,28 @@ class ReceiptPresenter {
 		}
 	}
 
+	@UiThread
 	void refreshReceipt() {
-		String uuid = receipt.getUuid();
-		receipt = repository.find(uuid);
-		if(receipt == null)
-			throw new ReceiptNotFoundException(uuid);
+		new AsyncTask<Void, Void, Receipt>() {
 
-		view.showReceipt(receipt);
+			@Override
+			protected Receipt doInBackground(Void... voids) {
+				String uuid = receipt.getUuid();
+				receipt = repository.find(uuid);
+				if(receipt == null)
+					throw new ReceiptNotFoundException(uuid);
+				return receipt;
+			}
+
+			@Override
+			protected void onPostExecute(Receipt receipt) {
+				super.onPostExecute(receipt);
+				view.showReceipt(receipt);
+			}
+		}.execute();
 	}
 
+	@WorkerThread
 	void loadReceipt(String uuid) {
 		receipt = repository.find(uuid);
 		if(receipt == null)
@@ -116,6 +147,7 @@ class ReceiptPresenter {
 			throw new InvalidMethodCallException("save", getClass().toString(), "View should be a Edit View");
 	}
 
+	@UiThread
 	void save() {
 		checkEditViewSet();
 		if(receipt == null)
@@ -128,40 +160,53 @@ class ReceiptPresenter {
 		if(date != null)
 			receipt.setDate(date);
 
-		int installment = editView.getInstallment();
+		final int installment = editView.getInstallment();
 
-		String originalName = receipt.getName();
+		final String originalName = receipt.getName();
 		if(installment == 1)
 			receipt.setName(originalName);
 		else
 			receipt.setName(String.format(Environment.PTBR_LOCALE, "%s %02d/%02d", originalName, 1, installment));
 
-		OperationResult result = repository.save(receipt);
+		new AsyncTask<Void, Void, OperationResult>() {
 
-		if(result.isValid()) {
-			int repetition = installment;
-			if(repetition == 1)
-				repetition = editView.getRepetition();
-			for(int i = 1; i < repetition; i++) {
-				if(installment != 1)
-					receipt.setName(String.format(Environment.PTBR_LOCALE, "%s %02d/%02d", originalName, i + 1, installment));
-				receipt.repeat();
-				receipt.save();
+			@Override
+			protected OperationResult doInBackground(Void... voids) {
+				return repository.save(receipt);
 			}
 
-			editView.finishView();
-		} else {
-			for (ValidationError validationError : result.getErrors())
-				editView.showError(validationError);
-		}
+			@Override
+			protected void onPostExecute(OperationResult result) {
+				super.onPostExecute(result);
+
+				if(result.isValid()) {
+					int repetition = installment;
+					if(repetition == 1)
+						repetition = editView.getRepetition();
+					for(int i = 1; i < repetition; i++) {
+						if(installment != 1)
+							receipt.setName(String.format(Environment.PTBR_LOCALE, "%s %02d/%02d", originalName, i + 1, installment));
+						receipt.repeat();
+						repository.saveAsync(receipt);
+					}
+
+					editView.finishView();
+				} else {
+					for (ValidationError validationError : result.getErrors())
+						editView.showError(validationError);
+				}
+			}
+		}.execute();
 	}
 
+	@UiThread
 	void edit(Context ctx) {
 		Intent i = new Intent(ctx, EditReceiptActivity.class);
 		i.putExtra(EditReceiptActivity.KEY_RECEIPT_UUID, getUuid());
 		ctx.startActivity(i);
 	}
 
+	@UiThread
 	void delete(final Activity act) {
 		new AlertDialog.Builder(act)
 				.setTitle(android.R.string.dialog_alert_title)
@@ -171,13 +216,29 @@ class ReceiptPresenter {
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.dismiss();
 
-						Account a = receipt.getAccount();
-						a.credit(receipt.getIncome() * -1);
-						a.save();
-						receipt.delete();
-						Intent i = new Intent();
-						act.setResult(RESULT_OK, i);
-						act.finish();
+						new AsyncTask<Void, Void, Void>() {
+
+							//TODO: add loading
+
+							@Override
+							protected Void doInBackground(Void... voids) {
+								Account account = receipt.getAccount();
+								account.credit(receipt.getIncome() * -1);
+								accountRepository.save(account);
+
+								receipt.delete();
+								return null;
+							}
+
+							@Override
+							protected void onPostExecute(Void aVoid) {
+								super.onPostExecute(aVoid);
+								Intent i = new Intent();
+								act.setResult(RESULT_OK, i);
+								act.finish();
+							}
+						}.execute();
+
 					}
 				})
 				.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -193,13 +254,28 @@ class ReceiptPresenter {
 		return receipt != null ? receipt.getUuid() : null;
 	}
 
-	void storeBundle(@NonNull  Bundle extras) {
-		if(extras.containsKey(KEY_RECEIPT_UUID))
-			loadReceipt(extras.getString(KEY_RECEIPT_UUID));
-		if(extras.containsKey(KEY_SOURCE_UUID))
-			source = sourceRepository.find(extras.getString(KEY_SOURCE_UUID));
-		if(extras.containsKey(KEY_ACCOUNT_UUID))
-			account = accountRepository.find(extras.getString(KEY_ACCOUNT_UUID));
+	@UiThread
+	void storeBundle(@NonNull final Bundle extras) {
+		new AsyncTask<Void, Void, Void>() {
+			@Override
+			protected Void doInBackground(Void... voids) {
+				if(extras.containsKey(KEY_SOURCE_UUID))
+					source = sourceRepository.find(extras.getString(KEY_SOURCE_UUID));
+
+				if(extras.containsKey(KEY_RECEIPT_UUID))
+					loadReceipt(extras.getString(KEY_RECEIPT_UUID));
+
+				if(extras.containsKey(KEY_ACCOUNT_UUID))
+					account = accountRepository.find(extras.getString(KEY_ACCOUNT_UUID));
+				return null;
+			}
+
+			@Override
+			protected void onPostExecute(Void aVoid) {
+				super.onPostExecute(aVoid);
+				updateView();
+			}
+		}.execute();
 	}
 
 	void onSaveInstanceState(Bundle outState) {
@@ -211,16 +287,41 @@ class ReceiptPresenter {
 			outState.putString(KEY_ACCOUNT_UUID, account.getUuid());
 	}
 
-	void onSourceSelected(String sourceUuid) {
-		source = sourceRepository.find(sourceUuid);
-		if(editView != null)
-			editView.onSourceSelected(source);
+	void onSourceSelected(final String sourceUuid) {
+		new AsyncTask<Void, Void, Void>() {
+
+			@Override
+			protected Void doInBackground(Void... voids) {
+				source = sourceRepository.find(sourceUuid);
+				return null;
+			}
+
+			@Override
+			protected void onPostExecute(Void aVoid) {
+				super.onPostExecute(aVoid);
+				if(editView != null)
+					editView.onSourceSelected(source);
+			}
+		}.execute();
 	}
 
-	void onAccountSelected(String accountUuid) {
-		account = accountRepository.find(accountUuid);
-		if(editView != null)
-			editView.onAccountSelected(account);
+	@UiThread
+	void onAccountSelected(final String accountUuid) {
+		new AsyncTask<Void, Void, Account>() {
+
+			@Override
+			protected Account doInBackground(Void... voids) {
+				account = accountRepository.find(accountUuid);
+				return account;
+			}
+
+			@Override
+			protected void onPostExecute(Account account) {
+				super.onPostExecute(account);
+				if(editView != null)
+					editView.onAccountSelected(account);
+			}
+		}.execute();
 	}
 
 	boolean hasReceipt() {

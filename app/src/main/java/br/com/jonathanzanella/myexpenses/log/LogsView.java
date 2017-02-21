@@ -12,15 +12,13 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.views.BaseView;
 import br.com.jonathanzanella.myexpenses.views.DateTimeView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-/**
- * Created by jzanella on 7/11/16.
- */
 public class LogsView extends BaseView implements DateTimeView.Listener {
 	private static final String LOG_TAG = LogsView.class.getSimpleName();
 	public static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
@@ -53,7 +51,7 @@ public class LogsView extends BaseView implements DateTimeView.Listener {
 		inflate(getContext(), R.layout.view_logs, this);
 		ButterKnife.bind(this);
 
-		adapter = new LogAdapter();
+		adapter = new LogAdapter(new LogRepository(new Repository<Log>(getContext())));
 		logs.setAdapter(adapter);
 		logs.setHasFixedSize(true);
 		logs.setLayoutManager(new LinearLayoutManager(getContext()));

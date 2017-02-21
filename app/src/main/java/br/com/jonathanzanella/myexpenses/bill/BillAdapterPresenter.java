@@ -6,10 +6,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Created by jzanella on 8/27/16.
- */
-
 class BillAdapterPresenter {
 	private BillRepository repository;
 	private BillAdapter adapter;
@@ -32,13 +28,6 @@ class BillAdapterPresenter {
 		if(invalidateCache)
 			loadBills();
 		return Collections.unmodifiableList(billsFiltered);
-	}
-
-	void addBill(Bill bill) {
-		bills.add(bill);
-		if(bills != billsFiltered)
-			billsFiltered.add(bill);
-		adapter.notifyItemInserted(bills.size() - 1);
 	}
 
 	public void filter(String filter) {

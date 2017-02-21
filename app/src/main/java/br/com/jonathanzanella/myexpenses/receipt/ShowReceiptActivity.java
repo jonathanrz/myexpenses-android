@@ -1,7 +1,9 @@
 package br.com.jonathanzanella.myexpenses.receipt;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.UiThread;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -9,14 +11,14 @@ import android.widget.TextView;
 import java.text.NumberFormat;
 
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
+import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.source.Source;
 import br.com.jonathanzanella.myexpenses.source.SourceRepository;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
 
-/**
- * Created by jzanella on 1/31/16.
- */
 public class ShowReceiptActivity extends BaseActivity implements ReceiptContract.View {
 	public static final String KEY_RECEIPT_UUID = ReceiptPresenter.KEY_RECEIPT_UUID;
 
@@ -33,7 +35,9 @@ public class ShowReceiptActivity extends BaseActivity implements ReceiptContract
 	@Bind(R.id.act_show_receipt_show_in_resume)
 	TextView receiptShowInResume;
 
-	private ReceiptPresenter presenter = new ReceiptPresenter(new ReceiptRepository(), new SourceRepository(), new AccountRepository());
+	private ReceiptPresenter presenter = new ReceiptPresenter(new ReceiptRepository(new Repository<Receipt>(this)),
+			new SourceRepository(new Repository<Source>(this)),
+			new AccountRepository(new Repository<Account>(this)));
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -100,13 +104,41 @@ public class ShowReceiptActivity extends BaseActivity implements ReceiptContract
 		return super.onOptionsItemSelected(item);
 	}
 
+	@UiThread
 	@Override
-	public void showReceipt(Receipt receipt) {
+	public void showReceipt(final Receipt receipt) {
 		receiptName.setText(receipt.getName());
 		receiptDate.setText(Receipt.sdf.format(receipt.getDate().toDate()));
 		receiptIncome.setText(NumberFormat.getCurrencyInstance().format(receipt.getIncome() / 100.0));
-		receiptSource.setText(receipt.getSource().getName());
-		receiptAccount.setText(receipt.getAccount().getName());
+
+		new AsyncTask<Void, Void, Source>() {
+
+			@Override
+			protected Source doInBackground(Void... voids) {
+				return receipt.getSource();
+			}
+
+			@Override
+			protected void onPostExecute(Source source) {
+				super.onPostExecute(source);
+				receiptSource.setText(source.getName());
+			}
+		}.execute();
+
+		new AsyncTask<Void, Void, Account>() {
+
+			@Override
+			protected Account doInBackground(Void... voids) {
+				return receipt.getAccount();
+			}
+
+			@Override
+			protected void onPostExecute(Account account) {
+				super.onPostExecute(account);
+				receiptAccount.setText(account.getName());
+			}
+		}.execute();
+
 		receiptShowInResume.setText(receipt.isShowInResume() ? R.string.yes : R.string.no);
 	}
 }

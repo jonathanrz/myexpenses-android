@@ -13,9 +13,6 @@ import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
 
-/**
- * Created by jzanella on 2/1/16.
- */
 public class ListSourceActivity extends BaseActivity implements SourceAdapterCallback {
 	public static final String KEY_SOURCE_SELECTED_UUID = "KeySourceSelectUuid";
 

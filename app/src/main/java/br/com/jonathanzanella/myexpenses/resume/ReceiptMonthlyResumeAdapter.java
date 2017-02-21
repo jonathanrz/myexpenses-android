@@ -3,6 +3,7 @@ package br.com.jonathanzanella.myexpenses.resume;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
+import android.support.annotation.UiThread;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,20 +21,20 @@ import java.util.Locale;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.helpers.TransactionsHelper;
 import br.com.jonathanzanella.myexpenses.receipt.Receipt;
+import br.com.jonathanzanella.myexpenses.receipt.ReceiptRepository;
+import br.com.jonathanzanella.myexpenses.source.Source;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import lombok.Getter;
 
-/**
- * Created by Jonathan Zanella on 26/01/16.
- */
 class ReceiptMonthlyResumeAdapter extends RecyclerView.Adapter<ReceiptMonthlyResumeAdapter.ViewHolder> {
 	public static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM", Locale.getDefault());
 	protected List<Receipt> receipts;
 	@Getter
 	private int totalValue;
 	private int totalUnreceivedValue;
+	private ReceiptRepository receiptRepository;
 
 	private enum VIEW_TYPE {
 		TYPE_NORMAL,
@@ -60,7 +61,8 @@ class ReceiptMonthlyResumeAdapter extends RecyclerView.Adapter<ReceiptMonthlyRes
 			ButterKnife.bind(this, itemView);
 		}
 
-		public void setData(Receipt receipt) {
+		@UiThread
+		public void setData(final Receipt receipt) {
 			if(name != null)
 				name.setText(receipt.getName());
 			if(date != null)
@@ -69,8 +71,21 @@ class ReceiptMonthlyResumeAdapter extends RecyclerView.Adapter<ReceiptMonthlyRes
 			income.setTypeface(null, Typeface.NORMAL);
 			if(!receipt.isCredited())
 				income.setTypeface(null, Typeface.BOLD);
-			if(source != null)
-				source.setText(receipt.getSource().getName());
+
+			new AsyncTask<Void, Void, Source>() {
+
+				@Override
+				protected Source doInBackground(Void... voids) {
+					return receipt.getSource();
+				}
+
+				@Override
+				protected void onPostExecute(Source s) {
+					super.onPostExecute(s);
+					if(source != null)
+						source.setText(s.getName());
+				}
+			}.execute();
 		}
 
 		public void setTotal(int totalValue) {
@@ -93,6 +108,10 @@ class ReceiptMonthlyResumeAdapter extends RecyclerView.Adapter<ReceiptMonthlyRes
 				}
 			});
 		}
+	}
+
+	ReceiptMonthlyResumeAdapter(ReceiptRepository receiptRepository) {
+		this.receiptRepository = receiptRepository;
 	}
 
 	@Override
@@ -147,7 +166,7 @@ class ReceiptMonthlyResumeAdapter extends RecyclerView.Adapter<ReceiptMonthlyRes
 
 			@Override
 			protected Void doInBackground(Void... voids) {
-				receipts = Receipt.resume(month);
+				receipts = receiptRepository.resume(month);
 				updateTotalValue();
 				return null;
 			}

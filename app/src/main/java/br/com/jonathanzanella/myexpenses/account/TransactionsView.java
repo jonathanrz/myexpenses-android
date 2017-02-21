@@ -10,9 +10,6 @@ import br.com.jonathanzanella.myexpenses.views.BaseView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-/**
- * Created by jzanella on 7/9/16.
- */
 public class TransactionsView extends BaseView {
 	@Bind(R.id.view_account_transactions_this_month)
 	MonthTransactionsView thisMonth;

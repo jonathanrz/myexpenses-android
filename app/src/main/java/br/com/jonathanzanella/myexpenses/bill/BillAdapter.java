@@ -8,18 +8,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.lang.ref.WeakReference;
 import java.text.NumberFormat;
 import java.util.List;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.expense.Expense;
+import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import lombok.Setter;
 
-/**
- * Created by Jonathan Zanella on 26/01/16.
- */
 class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder> {
 	protected List<Bill> bills;
 	@Setter
@@ -27,7 +27,7 @@ class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder> {
 
 	private BillAdapterPresenter presenter;
 
-	public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+	public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 		@Bind(R.id.row_bill_name)
 		TextView name;
 		@Bind(R.id.row_bill_amount)
@@ -39,11 +39,8 @@ class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder> {
 		@Bind(R.id.row_bill_end_date)
 		TextView endDate;
 
-		WeakReference<BillAdapter> adapterWeakReference;
-
-		public ViewHolder(View itemView, BillAdapter adapter) {
+		public ViewHolder(View itemView) {
 			super(itemView);
-			adapterWeakReference = new WeakReference<>(adapter);
 
 			ButterKnife.bind(this, itemView);
 
@@ -60,11 +57,10 @@ class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder> {
 
 		@Override
 		public void onClick(View v) {
-			BillAdapter adapter = adapterWeakReference.get();
-			Bill bill = adapter.getBill(getAdapterPosition());
+			Bill bill = getBill(getAdapterPosition());
 			if(bill != null) {
-				if(adapter.callback != null) {
-					adapter.callback.onBillSelected(bill);
+				if(callback != null) {
+					callback.onBillSelected(bill);
 				} else {
 					Intent i = new Intent(itemView.getContext(), ShowBillActivity.class);
 					i.putExtra(ShowBillActivity.KEY_BILL_UUID, bill.getUuid());
@@ -75,14 +71,15 @@ class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder> {
 	}
 
 	BillAdapter() {
-		this.presenter = new BillAdapterPresenter(this, new BillRepository());
+		ExpenseRepository expenseRepository = new ExpenseRepository(new Repository<Expense>(MyApplication.getContext()));
+		this.presenter = new BillAdapterPresenter(this, new BillRepository(new Repository<Bill>(MyApplication.getContext()), expenseRepository));
 		refreshData();
 	}
 
 	@Override
 	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		View v = LayoutInflater.from(parent.getContext()).inflate(getLayout(), parent, false);
-		return new ViewHolder(v, this);
+		return new ViewHolder(v);
 	}
 
 	private int getLayout() {
@@ -106,10 +103,6 @@ class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder> {
 	@Nullable
 	private Bill getBill(int position) {
 		return bills != null ? bills.get(position) : null;
-	}
-
-	void addBill(Bill b) {
-		presenter.addBill(b);
 	}
 
 	public void filter(String filter) {

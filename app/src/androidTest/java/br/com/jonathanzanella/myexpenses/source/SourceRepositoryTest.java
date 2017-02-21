@@ -5,16 +5,20 @@ import android.support.test.filters.LargeTest;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.After;
+import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.Environment;
+import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
+import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
-import br.com.jonathanzanella.myexpenses.helpers.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder;
 
+import static android.support.test.InstrumentationRegistry.getContext;
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
@@ -27,12 +31,18 @@ import static org.hamcrest.Matchers.not;
  */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
+@Ignore("remove with dbflow")
 public class SourceRepositoryTest {
-	private SourceRepository repository = new SourceRepository();
+	private SourceRepository repository;
+
+	@Before
+	public void setUp() throws Exception {
+		repository = new SourceRepository(new Repository<Source>(getContext()));
+	}
 
 	@After
 	public void tearDown() throws Exception {
-		DatabaseHelper.reset(InstrumentationRegistry.getTargetContext());
+		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
 		ActivityLifecycleHelper.closeAllActivities(getInstrumentation());
 	}
 
@@ -48,12 +58,12 @@ public class SourceRepositoryTest {
 
 	@Test
 	public void can_load_saved_source() throws Exception {
-		Source source = new Source();
-		source.setName("test");
-		repository.save(source);
+		Source sourceSaved = new Source();
+		sourceSaved.setName("test");
+		repository.save(sourceSaved);
 
-		Source loadSource = repository.find(source.getUuid());
-		assertThat(loadSource, is(source));
+		Source source = repository.find(sourceSaved.getUuid());
+		assertThat(source, is(source));
 	}
 
 	@Test
@@ -70,6 +80,21 @@ public class SourceRepositoryTest {
 		assertThat(sources.size(), is(1));
 		assertTrue(sources.contains(correctSource));
 		assertFalse(sources.contains(wrongSource));
+	}
+
+	@Test
+	public void source_unsync_returns_only_not_synced() throws Exception {
+		Source sourceUnsync = new SourceBuilder().name("sourceUnsync").updatedAt(100L).build();
+		sourceUnsync.sync = false;
+		repository.save(sourceUnsync);
+
+		Source sourceSync = new SourceBuilder().name("sourceSync").updatedAt(100L).build();
+		repository.save(sourceSync);
+		repository.syncAndSave(sourceSync);
+
+		List<Source> sources = repository.unsync();
+		assertThat(sources.size(), is(1));
+		assertThat(sources.get(0), is(sourceUnsync));
 	}
 
 	@Test

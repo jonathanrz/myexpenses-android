@@ -32,27 +32,8 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-/**
- * Created by jzanella on 6/5/16.
- */
 public class Server {
 	private Retrofit retrofit;
-
-	JsonSerializer<DateTime> dateTimeJsonSerializer = new JsonSerializer<DateTime>() {
-		@Override
-		public JsonElement serialize(DateTime src, Type typeOfSrc, JsonSerializationContext
-				context) {
-			return src == null ? null : new JsonPrimitive(src.getMillis());
-		}
-	};
-
-	JsonDeserializer<DateTime> dateTimeJsonDeserializer = new JsonDeserializer<DateTime>() {
-		@Override
-		public DateTime deserialize(JsonElement json, Type typeOfT,
-		                        JsonDeserializationContext context) throws JsonParseException {
-			return json == null ? null : new DateTime(json.getAsLong());
-		}
-	};
 
 	private class HeaderInterceptor implements Interceptor {
 		@Override
@@ -67,6 +48,20 @@ public class Server {
 	}
 
 	public Server() {
+		JsonSerializer<DateTime> dateTimeJsonSerializer = new JsonSerializer<DateTime>() {
+			@Override
+			public JsonElement serialize(DateTime src, Type typeOfSrc, JsonSerializationContext
+					context) {
+				return src == null ? null : new JsonPrimitive(src.getMillis());
+			}
+		};
+		JsonDeserializer<DateTime> dateTimeJsonDeserializer = new JsonDeserializer<DateTime>() {
+			@Override
+			public DateTime deserialize(JsonElement json, Type typeOfT,
+			                            JsonDeserializationContext context) throws JsonParseException {
+				return json == null ? null : new DateTime(json.getAsLong());
+			}
+		};
 		Gson gson = new GsonBuilder()
 							.excludeFieldsWithoutExposeAnnotation()
 							.registerTypeAdapter(DateTime.class, dateTimeJsonSerializer)
@@ -87,7 +82,7 @@ public class Server {
 				.build();
 	}
 
-	public ServerInterface serverInterface() {
+	ServerInterface serverInterface() {
 		return retrofit.create(ServerInterface.class);
 	}
 	public SourceInterface sourceInterface() {

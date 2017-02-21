@@ -5,22 +5,23 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.UiThread;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
+import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.expense.EditExpenseActivity;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
+import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
 import butterknife.OnClick;
 
-/**
- * Created by jzanella on 1/31/16.
- */
 public class ShowCardActivity extends BaseActivity implements CardContract.View {
 	public static final String KEY_CREDIT_CARD_UUID = "KeyCreateCardUuid";
 
@@ -33,28 +34,43 @@ public class ShowCardActivity extends BaseActivity implements CardContract.View 
 
 	private CardPresenter presenter;
 
-	public ShowCardActivity() {
-		this.presenter = new CardPresenter(new CardRepository(), new AccountRepository());
-	}
-
+	@UiThread
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		ExpenseRepository expenseRepository = new ExpenseRepository(new Repository<Expense>(this));
+		presenter = new CardPresenter(new CardRepository(new Repository<Card>(this), expenseRepository),
+				new AccountRepository(new Repository<Account>(this)), expenseRepository);
 		setContentView(R.layout.activity_show_card);
 	}
 
+	@UiThread
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
 		presenter.viewUpdated(false);
 	}
 
+	@UiThread
 	@Override
-	protected void storeBundle(Bundle extras) {
+	protected void storeBundle(final Bundle extras) {
 		super.storeBundle(extras);
 
-		if(extras != null && extras.containsKey(KEY_CREDIT_CARD_UUID))
-			presenter.loadCard(extras.getString(KEY_CREDIT_CARD_UUID));
+		new AsyncTask<Void, Void, Void>() {
+
+			@Override
+			protected Void doInBackground(Void... voids) {
+				if(extras != null && extras.containsKey(KEY_CREDIT_CARD_UUID))
+					presenter.loadCard(extras.getString(KEY_CREDIT_CARD_UUID));
+				return null;
+			}
+
+			@Override
+			protected void onPostExecute(Void aVoid) {
+				super.onPostExecute(aVoid);
+				presenter.updateView();
+			}
+		}.execute();
 	}
 
 	@Override
@@ -63,12 +79,14 @@ public class ShowCardActivity extends BaseActivity implements CardContract.View 
 		outState.putString(KEY_CREDIT_CARD_UUID, presenter.getUuid());
 	}
 
+	@UiThread
 	@Override
 	protected void onStart() {
 		super.onStart();
 		presenter.attachView(this);
 	}
 
+	@UiThread
 	@Override
 	protected void onStop() {
 		super.onStop();
@@ -81,6 +99,7 @@ public class ShowCardActivity extends BaseActivity implements CardContract.View 
 		return true;
 	}
 
+	@UiThread
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -93,6 +112,7 @@ public class ShowCardActivity extends BaseActivity implements CardContract.View 
 		return super.onOptionsItemSelected(item);
 	}
 
+	@UiThread
 	@OnClick(R.id.act_show_card_pay_credit_card_bill)
 	public void payCreditCardBill() {
 		new AsyncTask<Void, Void, Expense>() {
@@ -117,10 +137,25 @@ public class ShowCardActivity extends BaseActivity implements CardContract.View 
 
 	}
 
+	@UiThread
 	@Override
-	public void showCard(Card card) {
+	public void showCard(final Card card) {
+		new AsyncTask<Void, Void, Account>() {
+
+			@Override
+			protected Account doInBackground(Void... voids) {
+				return card.getAccount();
+			}
+
+			@Override
+			protected void onPostExecute(Account account) {
+				super.onPostExecute(account);
+				cardAccount.setText(account.getName());
+			}
+		}.execute();
+
 		cardName.setText(card.getName());
-		cardAccount.setText(card.getAccount().getName());
+
 		switch (card.getType()) {
 			case CREDIT:
 				cardType.setText(R.string.credit);

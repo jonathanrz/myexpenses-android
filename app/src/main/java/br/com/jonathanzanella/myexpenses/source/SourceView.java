@@ -14,9 +14,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-/**
- * Created by Jonathan Zanella on 26/01/16.
- */
 public class SourceView extends BaseView {
     private static final int REQUEST_ADD_SOURCE = 1004;
     private SourceAdapter adapter;
@@ -65,11 +62,8 @@ public class SourceView extends BaseView {
 
         switch (requestCode) {
             case REQUEST_ADD_SOURCE:
-                if(resultCode == Activity.RESULT_OK) {
-                    Source s = Source.find(data.getStringExtra(EditSourceActivity.KEY_SOURCE_UUID));
-                    if(s != null)
-                        adapter.addSource(s);
-                }
+                if(resultCode == Activity.RESULT_OK)
+                    adapter.refreshData();
                 break;
         }
     }

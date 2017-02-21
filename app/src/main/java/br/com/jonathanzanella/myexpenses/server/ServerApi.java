@@ -6,12 +6,9 @@ import br.com.jonathanzanella.myexpenses.log.Log;
 import retrofit2.Call;
 import retrofit2.Response;
 
-/**
- * Created by jzanella on 7/13/16.
- */
 public class ServerApi {
 	private static final String LOG_TAG = ServerApi.class.getSimpleName();
-	ServerInterface serverInterface;
+	private ServerInterface serverInterface;
 
 	private ServerInterface getInterface() {
 		if(serverInterface == null)

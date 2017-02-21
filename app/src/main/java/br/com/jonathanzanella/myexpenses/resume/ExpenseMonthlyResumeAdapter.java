@@ -2,14 +2,15 @@ package br.com.jonathanzanella.myexpenses.resume;
 
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.support.annotation.Nullable;
+import android.support.annotation.UiThread;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.lang.ref.WeakReference;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.Locale;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.card.CreditCardInvoiceActivity;
+import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ShowExpenseActivity;
 import br.com.jonathanzanella.myexpenses.helpers.TransactionsHelper;
@@ -25,9 +27,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import lombok.Getter;
 
-/**
- * Created by Jonathan Zanella on 26/01/16.
- */
 class ExpenseMonthlyResumeAdapter extends RecyclerView.Adapter<ExpenseMonthlyResumeAdapter.ViewHolder> {
 	public static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM", Locale.getDefault());
 	@Getter
@@ -42,7 +41,7 @@ class ExpenseMonthlyResumeAdapter extends RecyclerView.Adapter<ExpenseMonthlyRes
 		TYPE_TOTAL
 	}
 
-	public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+	public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 		@Bind(R.id.row_monthly_resume_expense_name) @Nullable
 		TextView name;
 		@Bind(R.id.row_monthly_resume_expense_date) @Nullable
@@ -52,18 +51,16 @@ class ExpenseMonthlyResumeAdapter extends RecyclerView.Adapter<ExpenseMonthlyRes
 		@Bind(R.id.row_monthly_resume_expense_source) @Nullable
 		TextView source;
 
-		WeakReference<ExpenseMonthlyResumeAdapter> adapterWeakReference;
-
-		public ViewHolder(View itemView, ExpenseMonthlyResumeAdapter adapter) {
+		public ViewHolder(View itemView) {
 			super(itemView);
-			adapterWeakReference = new WeakReference<>(adapter);
 
 			ButterKnife.bind(this, itemView);
 
 			itemView.setOnClickListener(this);
 		}
 
-		public void setData(Expense expense) {
+		@UiThread
+		public void setData(final Expense expense) {
 			if(name != null)
 				name.setText(expense.getName());
 			if(date != null)
@@ -72,8 +69,21 @@ class ExpenseMonthlyResumeAdapter extends RecyclerView.Adapter<ExpenseMonthlyRes
 			income.setTypeface(null, Typeface.NORMAL);
 			if(!expense.isCharged())
 				income.setTypeface(null, Typeface.BOLD);
-			if(source != null)
-				source.setText(expense.getChargeable().getName());
+			if(source != null) {
+				new AsyncTask<Void, Void, Chargeable>() {
+
+					@Override
+					protected Chargeable doInBackground(Void... voids) {
+						return expense.getChargeable();
+					}
+
+					@Override
+					protected void onPostExecute(Chargeable chargeable) {
+						super.onPostExecute(chargeable);
+						source.setText(chargeable.getName());
+					}
+				}.execute();
+			}
 		}
 
 		public void setTotal(int totalValue) {
@@ -85,14 +95,13 @@ class ExpenseMonthlyResumeAdapter extends RecyclerView.Adapter<ExpenseMonthlyRes
 			if(getItemViewType() != VIEW_TYPE.TYPE_NORMAL.ordinal())
 				return;
 
-			final Expense expense = adapterWeakReference.get().getExpense(getAdapterPosition());
+			final Expense expense = getExpense(getAdapterPosition());
 			TransactionsHelper.showConfirmTransactionDialog(expense, income.getContext(),
 					new TransactionsHelper.DialogCallback() {
 				@Override
 				public void onPositiveButton() {
-					ExpenseMonthlyResumeAdapter adapter = adapterWeakReference.get();
-					adapter.updateTotalValue();
-					adapter.notifyDataSetChanged();
+					updateTotalValue();
+					notifyDataSetChanged();
 				}
 			});
 		}
@@ -102,7 +111,7 @@ class ExpenseMonthlyResumeAdapter extends RecyclerView.Adapter<ExpenseMonthlyRes
 			if(getItemViewType() != VIEW_TYPE.TYPE_NORMAL.ordinal())
 				return;
 
-			Expense expense = adapterWeakReference.get().getExpense(getAdapterPosition());
+			Expense expense = getExpense(getAdapterPosition());
 			if(expense != null) {
 				if(expense.getCreditCard() != null) {
 					Intent i = new Intent(itemView.getContext(), CreditCardInvoiceActivity.class);
@@ -139,7 +148,7 @@ class ExpenseMonthlyResumeAdapter extends RecyclerView.Adapter<ExpenseMonthlyRes
 		else
 			v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_monthly_resume_expense, parent, false);
 
-		return new ViewHolder(v, this);
+		return new ViewHolder(v);
 	}
 
 	@Override

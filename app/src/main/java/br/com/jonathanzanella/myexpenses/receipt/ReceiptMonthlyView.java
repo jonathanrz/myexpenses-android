@@ -14,9 +14,6 @@ import br.com.jonathanzanella.myexpenses.views.BaseView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-/**
- * Created by Jonathan Zanella on 26/01/16.
- */
 @SuppressLint("ViewConstructor")
 class ReceiptMonthlyView extends BaseView {
     private ReceiptAdapter adapter;
@@ -39,7 +36,7 @@ class ReceiptMonthlyView extends BaseView {
         inflate(getContext(), R.layout.view_receipts_monthly, this);
         ButterKnife.bind(this);
 
-        adapter = new ReceiptAdapter();
+        adapter = new ReceiptAdapter(getContext());
 
         sources.setAdapter(adapter);
         sources.setLayoutManager(new GridLayoutManager(getContext(), 1));

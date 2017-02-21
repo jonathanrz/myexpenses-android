@@ -4,6 +4,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
@@ -16,21 +18,25 @@ import static org.mockito.MockitoAnnotations.initMocks;
  * Created by jzanella on 8/27/16.
  */
 public class CardRepositoryUnitTest {
-	private CardRepository repository = new CardRepository();
-
+	private CardRepository subject;
+	@Mock
+	private ExpenseRepository expenseRepository;
 	@Mock
 	private Card card;
+	@Mock
+	private Repository<Card> repository;
 
 	@Before
 	public void setUp() throws Exception {
 		initMocks(this);
+		subject = new CardRepository(repository, expenseRepository);
 	}
 
 	@Test
 	public void return_with_error_when_tried_to_save_account_without_name() throws Exception {
 		when(card.getName()).thenReturn(null);
 
-		OperationResult result = repository.save(card);
+		OperationResult result = subject.save(card);
 
 		assertFalse(result.isValid());
 		assertTrue(result.getErrors().contains(ValidationError.NAME));
@@ -40,7 +46,7 @@ public class CardRepositoryUnitTest {
 	public void return_with_error_when_tried_to_save_account_without_type() throws Exception {
 		when(card.getName()).thenReturn("Test");
 
-		OperationResult result = repository.save(card);
+		OperationResult result = subject.save(card);
 
 		assertFalse(result.isValid());
 		assertTrue(result.getErrors().contains(ValidationError.CARD_TYPE));
@@ -51,7 +57,7 @@ public class CardRepositoryUnitTest {
 		when(card.getName()).thenReturn("Test");
 		when(card.getType()).thenReturn(CardType.DEBIT);
 
-		OperationResult result = repository.save(card);
+		OperationResult result = subject.save(card);
 
 		assertFalse(result.isValid());
 		assertTrue(result.getErrors().contains(ValidationError.ACCOUNT));

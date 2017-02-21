@@ -1,42 +1,75 @@
 package br.com.jonathanzanella.myexpenses.source;
 
-import com.raizlabs.android.dbflow.sql.language.From;
-import com.raizlabs.android.dbflow.sql.language.SQLite;
+import android.support.annotation.WorkerThread;
 
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
+import java.util.UUID;
 
 import br.com.jonathanzanella.myexpenses.Environment;
+import br.com.jonathanzanella.myexpenses.database.ModelRepository;
+import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
-/**
- * Created by jzanella on 8/27/16.
- */
+import static br.com.jonathanzanella.myexpenses.log.Log.warning;
 
-public class SourceRepository {
-	private From<Source> initQuery() {
-		return SQLite.select().from(Source.class);
+public class SourceRepository implements ModelRepository<Source>  {
+	private Repository<Source> repository;
+	private SourceTable sourceTable = new SourceTable();
+
+	public SourceRepository(Repository<Source> repository) {
+		this.repository = repository;
 	}
 
-	public Source find(String uuid) {
-		return initQuery().where(Source_Table.uuid.eq(uuid)).querySingle();
-	}
-
-	List<Source> userSources() {
-		return initQuery()
-				.where(Source_Table.userUuid.is(Environment.CURRENT_USER_UUID))
-				.orderBy(Source_Table.name, true)
-				.queryList();
-	}
-
+	@WorkerThread
 	public OperationResult save(Source source) {
 		OperationResult result = new OperationResult();
 		if(StringUtils.isEmpty(source.getName()))
 			result.addError(ValidationError.NAME);
-		if(result.isValid())
-			source.save();
+		if(result.isValid()) {
+			if(source.getId() == 0 && source.getUuid() == null)
+				source.setUuid(UUID.randomUUID().toString());
+			if(source.getId() == 0 && source.getUserUuid() == null)
+				source.setUserUuid(Environment.CURRENT_USER_UUID);
+			source.setSync(false);
+			repository.saveAtDatabase(sourceTable, source);
+		}
 		return result;
+	}
+
+	@WorkerThread
+	public Source find(final String uuid) {
+		return repository.find(sourceTable, uuid);
+	}
+
+	@WorkerThread
+	public long greaterUpdatedAt() {
+		return repository.greaterUpdatedAt(sourceTable);
+	}
+
+	@WorkerThread
+	List<Source> userSources() {
+		return repository.userData(sourceTable);
+	}
+
+	@WorkerThread
+	public List<Source> unsync() {
+		return repository.unsync(sourceTable);
+	}
+
+	@WorkerThread
+	@Override
+	public void syncAndSave(final Source sourceSync) {
+		Source source = find(sourceSync.getUuid());
+		if(source != null && source.id != sourceSync.getId()) {
+			if(source.getUpdatedAt() != sourceSync.getUpdatedAt())
+				warning("Bill overwritten", sourceSync.getData());
+			sourceSync.setId(source.id);
+		}
+
+		sourceSync.setSync(true);
+		repository.saveAtDatabase(sourceTable, sourceSync);
 	}
 }

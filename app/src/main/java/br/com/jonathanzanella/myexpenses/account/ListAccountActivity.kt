@@ -11,9 +11,6 @@ import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.views.BaseActivity
 import butterknife.Bind
 
-/**
- * Created by jzanella on 2/1/16.
- */
 class ListAccountActivity : BaseActivity(), AccountAdapterCallback {
 
     @Bind(R.id.act_account_list)

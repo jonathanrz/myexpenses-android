@@ -12,69 +12,73 @@ import org.junit.runner.RunWith;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.Environment;
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
-import br.com.jonathanzanella.myexpenses.helpers.DatabaseHelper;
+import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
+import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.expense.Expense;
+import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.builder.CardBuilder;
 
 import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 
-/**
- * Created by jzanella on 8/27/16.
- */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class CardRepositoryTest {
-	private CardRepository repository = new CardRepository();
+	private CardRepository subject;
 	private Account account;
+	private AccountRepository accountRepository;
 
 	@Before
 	public void setUp() throws Exception {
 		account = new Account();
 		account.setName("test");
-		new AccountRepository().save(account);
+		accountRepository = new AccountRepository(new Repository<Account>(MyApplication.getContext()));
+		accountRepository.save(account);
+		ExpenseRepository expenseRepository = new ExpenseRepository(new Repository<Expense>(MyApplication.getContext()));
+		subject = new CardRepository(new Repository<Card>(MyApplication.getContext()), expenseRepository);
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		DatabaseHelper.reset(InstrumentationRegistry.getTargetContext());
+		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
 	}
 
 	@Test
 	public void can_save_card() throws Exception {
-		Card card = new CardBuilder().account(account).build();
-		repository.save(card);
+		Card card = new CardBuilder().account(account).build(accountRepository);
+		subject.save(card);
 
-		assertThat(card.id, is(not(0L)));
+		assertThat(card.getId(), is(not(0L)));
 		assertThat(card.getUuid(), is(not("")));
 	}
 
 	@Test
 	public void can_load_saved_card() throws Exception {
-		Card card = new CardBuilder().account(account).build();
-		repository.save(card);
+		Card card = new CardBuilder().account(account).build(accountRepository);
+		subject.save(card);
 
-		Card loadCard = repository.find(card.getUuid());
-		assertThat(loadCard, is(card));
+		Card loadCard = subject.find(card.getUuid());
+		assertThat(loadCard.getUuid(), is(card.getUuid()));
 	}
 
 	@Test
 	public void load_only_user_cards() throws Exception {
-		Card correctCard = new CardBuilder().account(account).build();
+		Card correctCard = new CardBuilder().account(account).build(accountRepository);
 		correctCard.setUserUuid(Environment.CURRENT_USER_UUID);
-		repository.save(correctCard);
+		subject.save(correctCard);
 
-		Card wrongCard = new CardBuilder().name("wrongCard").account(account).build();
+		Card wrongCard = new CardBuilder().name("wrongCard").account(account).build(accountRepository);
 		wrongCard.setUserUuid("wrong");
-		repository.save(wrongCard);
+		subject.save(wrongCard);
 
-		List<Card> accounts = repository.userCards();
-		assertThat(accounts.size(), is(1));
-		assertTrue(accounts.contains(correctCard));
-		assertFalse(accounts.contains(wrongCard));
+		List<Card> cards = subject.userCards();
+		assertThat(cards.size(), is(1));
+		assertThat(cards.get(0).getUuid(), is(correctCard.getUuid()));
+		assertFalse(cards.contains(wrongCard));
 	}
 }

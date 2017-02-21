@@ -1,6 +1,7 @@
 package br.com.jonathanzanella.myexpenses.card;
 
 import android.content.Intent;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -11,11 +12,15 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
+import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
+import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.expense.Expense;
+import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
-import br.com.jonathanzanella.myexpenses.helpers.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.CardBuilder;
 
@@ -38,21 +43,22 @@ public class ShowCardActivityTest {
 
 	private Card card;
 	private Account account;
-	private CardRepository repository = new CardRepository();
-	private AccountRepository accountRepository = new AccountRepository();
+	private ExpenseRepository expenseRepository = new ExpenseRepository(new Repository<Expense>(MyApplication.getContext()));
+	private CardRepository repository = new CardRepository(new Repository<Card>(MyApplication.getContext()), expenseRepository);
+	private AccountRepository accountRepository = new AccountRepository(new Repository<Account>(MyApplication.getContext()));
 
 	@Before
 	public void setUp() throws Exception {
 		account = new AccountBuilder().build();
 		accountRepository.save(account);
 
-		card = new CardBuilder().account(account).build();
+		card = new CardBuilder().account(account).build(accountRepository);
 		repository.save(card);
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		DatabaseHelper.reset(getTargetContext());
+		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
 		ActivityLifecycleHelper.closeAllActivities(getInstrumentation());
 	}
 

@@ -1,13 +1,14 @@
 package br.com.jonathanzanella.myexpenses.expense;
 
 import android.content.Intent;
+import android.os.AsyncTask;
+import android.support.annotation.UiThread;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.lang.ref.WeakReference;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -15,13 +16,11 @@ import java.util.Locale;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.card.CreditCardInvoiceActivity;
+import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import lombok.Getter;
 
-/**
- * Created by Jonathan Zanella on 26/01/16.
- */
 public class ExpenseWeeklyOverviewAdapter extends RecyclerView.Adapter<ExpenseWeeklyOverviewAdapter.ViewHolder> {
 	public static final SimpleDateFormat sdf = new SimpleDateFormat("dd", Locale.getDefault());
 	@Getter
@@ -29,7 +28,7 @@ public class ExpenseWeeklyOverviewAdapter extends RecyclerView.Adapter<ExpenseWe
 	@Getter
 	private int totalValue;
 
-	public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+	public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 		@Bind(R.id.row_weekly_overview_expense_name)
 		TextView name;
 		@Bind(R.id.row_weekly_overview_expense_date)
@@ -39,27 +38,38 @@ public class ExpenseWeeklyOverviewAdapter extends RecyclerView.Adapter<ExpenseWe
 		@Bind(R.id.row_weekly_overview_expense_source)
 		TextView source;
 
-		WeakReference<ExpenseWeeklyOverviewAdapter> adapterWeakReference;
-
-		public ViewHolder(View itemView, ExpenseWeeklyOverviewAdapter adapter) {
+		public ViewHolder(View itemView) {
 			super(itemView);
-			adapterWeakReference = new WeakReference<>(adapter);
 
 			ButterKnife.bind(this, itemView);
 
 			itemView.setOnClickListener(this);
 		}
 
-		public void setData(Expense expense) {
+		@UiThread
+		public void setData(final Expense expense) {
 			name.setText(expense.getName());
 			date.setText(sdf.format(expense.getDate().toDate()));
 			income.setText(NumberFormat.getCurrencyInstance().format(expense.getValueToShowInOverview() / 100.0));
-			source.setText(expense.getChargeable().getName());
+
+			new AsyncTask<Void, Void, Chargeable>() {
+
+				@Override
+				protected Chargeable doInBackground(Void... voids) {
+					return expense.getChargeable();
+				}
+
+				@Override
+				protected void onPostExecute(Chargeable chargeable) {
+					super.onPostExecute(chargeable);
+					source.setText(chargeable.getName());
+				}
+			}.execute();
 		}
 
 		@Override
 		public void onClick(View v) {
-			Expense expense = adapterWeakReference.get().getExpense(getAdapterPosition());
+			Expense expense = getExpense(getAdapterPosition());
 			if(expense != null) {
 				if(expense.getCreditCard() != null) {
 					Intent i = new Intent(itemView.getContext(), CreditCardInvoiceActivity.class);
@@ -78,7 +88,7 @@ public class ExpenseWeeklyOverviewAdapter extends RecyclerView.Adapter<ExpenseWe
 	@Override
 	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_weekly_overview_expense, parent, false);
-		return new ViewHolder(v, this);
+		return new ViewHolder(v);
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package br.com.jonathanzanella.myexpenses.expense;
 
 import android.content.Intent;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -11,11 +12,13 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
+import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
+import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
-import br.com.jonathanzanella.myexpenses.helpers.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.ExpenseBuilder;
 
@@ -41,12 +44,12 @@ public class EditExpenseTest {
 	public ActivityTestRule<ShowExpenseActivity> activityTestRule = new ActivityTestRule<>(ShowExpenseActivity.class, true, false);
 
 	private Expense expense;
-	private ExpenseRepository repository = new ExpenseRepository();
+	private ExpenseRepository repository = new ExpenseRepository(new Repository<Expense>(getTargetContext()));
 
 	@Before
 	public void setUp() throws Exception {
 		Account a = new AccountBuilder().build();
-		new AccountRepository().save(a);
+		new AccountRepository(new Repository<Account>(MyApplication.getContext())).save(a);
 
 		expense = new ExpenseBuilder().chargeable(a).build();
 		repository.save(expense);
@@ -54,7 +57,7 @@ public class EditExpenseTest {
 
 	@After
 	public void tearDown() throws Exception {
-		DatabaseHelper.reset(getTargetContext());
+		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
 		ActivityLifecycleHelper.closeAllActivities(getInstrumentation());
 	}
 

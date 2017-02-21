@@ -1,6 +1,7 @@
 package br.com.jonathanzanella.myexpenses.bill;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,6 +13,9 @@ import org.joda.time.DateTime;
 import java.text.NumberFormat;
 
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.expense.Expense;
+import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch;
 import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.user.SelectUserView;
@@ -20,9 +24,6 @@ import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
 import butterknife.OnClick;
 
-/**
- * Created by Jonathan Zanella on 26/01/16.
- */
 public class EditBillActivity extends BaseActivity implements BillContract.EditView {
 	public static final String KEY_BILL_UUID = "KeyBillUuid";
 
@@ -42,7 +43,8 @@ public class EditBillActivity extends BaseActivity implements BillContract.EditV
 	private BillPresenter presenter;
 
 	public EditBillActivity() {
-		presenter = new BillPresenter(new BillRepository());
+		ExpenseRepository expenseRepository = new ExpenseRepository(new Repository<Expense>(this));
+		presenter = new BillPresenter(new BillRepository(new Repository<Bill>(this), expenseRepository));
 	}
 
 	@Override
@@ -55,15 +57,29 @@ public class EditBillActivity extends BaseActivity implements BillContract.EditV
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
 		editAmount.addTextChangedListener(new CurrencyTextWatch(editAmount));
-		presenter.viewUpdated(false);
+		presenter.onViewUpdated(false);
 	}
 
 	@Override
-	protected void storeBundle(Bundle extras) {
+	protected void storeBundle(final Bundle extras) {
 		super.storeBundle(extras);
 
-		if(extras != null && extras.containsKey(KEY_BILL_UUID))
-			presenter.loadBill(extras.getString(KEY_BILL_UUID));
+		if(extras != null && extras.containsKey(KEY_BILL_UUID)) {
+			new AsyncTask<Void, Void, Void>() {
+
+				@Override
+				protected Void doInBackground(Void... voids) {
+					presenter.loadBill(extras.getString(KEY_BILL_UUID));
+					return null;
+				}
+
+				@Override
+				protected void onPostExecute(Void aVoid) {
+					super.onPostExecute(aVoid);
+					presenter.onViewUpdated(false);
+				}
+			}.execute();
+		}
 	}
 
 	@Override

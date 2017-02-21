@@ -1,12 +1,9 @@
 package br.com.jonathanzanella.myexpenses.helpers.builder;
 
 import br.com.jonathanzanella.myexpenses.account.Account;
+import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.card.Card;
 import br.com.jonathanzanella.myexpenses.card.CardType;
-
-/**
- * Created by jzanella on 8/28/16.
- */
 
 public class CardBuilder {
 	private Account account;
@@ -28,10 +25,10 @@ public class CardBuilder {
 		return this;
 	}
 
-	public Card build() {
+	public Card build(AccountRepository accountRepository) {
 		if(account == null)
 			throw new NullPointerException("Account can't be empty");
-		Card card = new Card();
+		Card card = new Card(accountRepository);
 		card.setName(name);
 		card.setType(type);
 		card.setAccount(account);

@@ -3,6 +3,7 @@ package br.com.jonathanzanella.myexpenses.views;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.UiThread;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -12,10 +13,7 @@ import br.com.jonathanzanella.myexpenses.R;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-/**
- * Created by jonathan on 08/11/15.
- * Copyright (c) 2015. All rights reserved.
- */
+@UiThread
 public class BaseActivity extends AppCompatActivity {
 	@Bind(R.id.toolbar) @Nullable
 	Toolbar toolbar;

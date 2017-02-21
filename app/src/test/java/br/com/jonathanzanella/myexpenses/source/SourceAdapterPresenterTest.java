@@ -10,22 +10,17 @@ import java.util.List;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-/**
- * Created by jzanella on 8/27/16.
- */
 public class SourceAdapterPresenterTest {
-	@Mock
-	private SourceAdapter adapter;
 	@Mock
 	private SourceRepository repository;
 
-	SourceAdapterPresenter presenter;
+	private SourceAdapterPresenter presenter;
 
 	@Before
 	public void setUp() throws Exception {
 		initMocks(this);
 
-		presenter = new SourceAdapterPresenter(adapter, repository);
+		presenter = new SourceAdapterPresenter(repository);
 	}
 
 	@Test(expected = UnsupportedOperationException.class)

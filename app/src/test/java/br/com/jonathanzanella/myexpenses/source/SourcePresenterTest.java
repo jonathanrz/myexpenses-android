@@ -13,9 +13,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-/**
- * Created by jzanella on 8/27/16.
- */
 public class SourcePresenterTest {
 	private static final String UUID = "uuid";
 	@Mock
@@ -30,13 +27,6 @@ public class SourcePresenterTest {
 		initMocks(this);
 		presenter = new SourcePresenter(repository);
 		presenter.attachView(view);
-	}
-
-	@Test(expected = SourceNotFoundException.class)
-	public void load_empty_source_throws_not_found_exception() {
-		when(repository.find(UUID)).thenReturn(null);
-
-		presenter.loadSource(UUID);
 	}
 
 	@Test

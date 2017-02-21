@@ -1,7 +1,9 @@
 package br.com.jonathanzanella.myexpenses.receipt;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.UiThread;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.CheckBox;
@@ -16,6 +18,7 @@ import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.account.ListAccountActivity;
+import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch;
 import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.source.ListSourceActivity;
@@ -27,9 +30,6 @@ import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
 import butterknife.OnClick;
 
-/**
- * Created by Jonathan Zanella on 26/01/16.
- */
 public class EditReceiptActivity extends BaseActivity implements ReceiptContract.EditView {
 	public static final String KEY_RECEIPT_UUID = "KeyReceiptUuid";
 	private static final int REQUEST_SELECT_SOURCE = 1001;
@@ -54,7 +54,9 @@ public class EditReceiptActivity extends BaseActivity implements ReceiptContract
 	@Bind(R.id.act_edit_receipt_user)
 	SelectUserView selectUserView;
 
-	private ReceiptPresenter presenter = new ReceiptPresenter(new ReceiptRepository(), new SourceRepository(), new AccountRepository());
+	private ReceiptPresenter presenter = new ReceiptPresenter(new ReceiptRepository(new Repository<Receipt>(this)),
+			new SourceRepository(new Repository<Source>(this)),
+			new AccountRepository(new Repository<Account>(this)));
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -221,12 +223,28 @@ public class EditReceiptActivity extends BaseActivity implements ReceiptContract
 	}
 
 	@Override
-	public void showReceipt(Receipt receipt) {
+	@UiThread
+	public void showReceipt(final Receipt receipt) {
 		editName.setText(receipt.getName());
 		editIncome.setText(NumberFormat.getCurrencyInstance().format(receipt.getIncome() / 100.0));
 		if(receipt.isCredited())
+			//noinspection deprecation
 			editIncome.setTextColor(getResources().getColor(R.color.value_unpaid));
-		editSource.setText(receipt.getSource().getName());
+
+		new AsyncTask<Void, Void, Source>() {
+
+			@Override
+			protected Source doInBackground(Void... voids) {
+				return receipt.getSource();
+			}
+
+			@Override
+			protected void onPostExecute(Source source) {
+				super.onPostExecute(source);
+				editSource.setText(source.getName());
+			}
+		}.execute();
+
 		checkShowInResume.setChecked(receipt.isShowInResume());
 		selectUserView.setSelectedUser(receipt.getUserUuid());
 	}

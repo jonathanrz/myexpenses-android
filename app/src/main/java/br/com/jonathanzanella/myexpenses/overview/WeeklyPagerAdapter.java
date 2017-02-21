@@ -14,15 +14,12 @@ import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.helpers.DateHelper;
 import br.com.jonathanzanella.myexpenses.views.BaseView;
 
-/**
- * Created by Jonathan Zanella on 03/02/16.
- */
 public class WeeklyPagerAdapter extends PagerAdapter {
 	public static class Period {
 		public DateTime init;
 		public DateTime end;
 
-		public String titleize() {
+		String titleize() {
 			return String.format(Environment.PTBR_LOCALE, "%02d - %02d", init.getDayOfMonth(), end.getDayOfMonth());
 		}
 	}
@@ -30,7 +27,7 @@ public class WeeklyPagerAdapter extends PagerAdapter {
     private List<Period> periods = new ArrayList<>();
 	private WeeklyPagerAdapterBuilder builder;
 
-    public WeeklyPagerAdapter(Context context, DateTime month, WeeklyPagerAdapterBuilder builder) {
+    WeeklyPagerAdapter(Context context, DateTime month, WeeklyPagerAdapterBuilder builder) {
         this.context = context;
 	    this.builder = builder;
 
@@ -77,7 +74,7 @@ public class WeeklyPagerAdapter extends PagerAdapter {
         return periods.get(position).titleize();
     }
 
-	public int getPositionOfDay(int day) {
+	int getPositionOfDay(int day) {
 		for (int i = 0; i < periods.size(); i++) {
 			Period period = periods.get(i);
 			if(day >= period.init.getDayOfMonth()  && day <= period.end.getDayOfMonth())

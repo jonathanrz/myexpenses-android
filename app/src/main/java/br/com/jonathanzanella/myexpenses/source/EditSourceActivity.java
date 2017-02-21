@@ -1,21 +1,20 @@
 package br.com.jonathanzanella.myexpenses.source;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.user.SelectUserView;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
 
-/**
- * Created by Jonathan Zanella on 26/01/16.
- */
 public class EditSourceActivity extends BaseActivity implements SourceContract.EditView {
 	public static final String KEY_SOURCE_UUID = "KeySourceUuid";
 
@@ -24,7 +23,7 @@ public class EditSourceActivity extends BaseActivity implements SourceContract.E
 	@Bind(R.id.act_edit_source_user)
 	SelectUserView selectUserView;
 
-	private SourcePresenter presenter = new SourcePresenter(new SourceRepository());
+	private SourcePresenter presenter = new SourcePresenter(new SourceRepository(new Repository<Source>(this)));
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,17 +32,26 @@ public class EditSourceActivity extends BaseActivity implements SourceContract.E
 	}
 
 	@Override
-	protected void storeBundle(Bundle extras) {
+	protected void storeBundle(final Bundle extras) {
 		super.storeBundle(extras);
 
-		if(extras != null && extras.containsKey(KEY_SOURCE_UUID))
-			presenter.loadSource(extras.getString(KEY_SOURCE_UUID));
+		if(extras != null && extras.containsKey(KEY_SOURCE_UUID)) {
+			new AsyncTask<Void, Void, Void>() {
+
+				@Override
+				protected Void doInBackground(Void... voids) {
+					presenter.loadSource(extras.getString(KEY_SOURCE_UUID));
+					return null;
+				}
+			}.execute();
+
+		}
 	}
 
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
-		presenter.viewUpdated(false);
+		presenter.viewUpdated();
 	}
 
 	@Override

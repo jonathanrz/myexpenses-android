@@ -1,63 +1,68 @@
 package br.com.jonathanzanella.myexpenses.bill;
 
-import com.raizlabs.android.dbflow.sql.language.From;
-import com.raizlabs.android.dbflow.sql.language.SQLite;
+import android.support.annotation.WorkerThread;
+import android.support.test.espresso.idling.CountingIdlingResource;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 
 import java.util.List;
+import java.util.UUID;
 
 import br.com.jonathanzanella.myexpenses.Environment;
+import br.com.jonathanzanella.myexpenses.database.Fields;
+import br.com.jonathanzanella.myexpenses.database.ModelRepository;
+import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.database.Where;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
-import br.com.jonathanzanella.myexpenses.source.Source_Table;
+import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
-/**
- * Created by jzanella on 8/27/16.
- */
+import static br.com.jonathanzanella.myexpenses.log.Log.warning;
 
-public class BillRepository {
-	private From<Bill> initQuery() {
-		return SQLite.select().from(Bill.class);
+public class BillRepository  implements ModelRepository<Bill> {
+	private Repository<Bill> repository;
+	private BillTable billTable = new BillTable();
+	private ExpenseRepository expenseRepository;
+
+	public BillRepository(Repository<Bill> repository, ExpenseRepository expenseRepository) {
+		this.repository = repository;
+		this.expenseRepository = expenseRepository;
 	}
 
-	public Bill find(String uuid) {
-		return initQuery().where(Bill_Table.uuid.eq(uuid)).querySingle();
+	@WorkerThread
+	public Bill find(final String uuid) {
+		return repository.find(billTable, uuid);
 	}
 
+	@WorkerThread
 	List<Bill> userBills() {
-		return initQuery()
-				.where(Bill_Table.userUuid.is(Environment.CURRENT_USER_UUID))
-				.orderBy(Source_Table.name, true)
-				.queryList();
+		return repository.userData(billTable);
 	}
 
+	@WorkerThread
 	public long greaterUpdatedAt() {
-		Bill bill = initQuery().orderBy(Bill_Table.updatedAt, false).limit(1).querySingle();
-		if(bill == null)
-			return 0L;
-		return bill.getUpdatedAt();
+		return repository.greaterUpdatedAt(billTable);
 	}
 
+	@WorkerThread
 	public List<Bill> unsync() {
-		return initQuery().where(Bill_Table.sync.eq(false)).queryList();
+		return repository.unsync(billTable);
 	}
 
-	public List<Bill> monthly(DateTime month) {
-		List<Expense> expenses = Expense.monthly(month);
-		List<Bill> bills = initQuery()
-				.where(Bill_Table.initDate.lessThanOrEq(month))
-				.and(Bill_Table.endDate.greaterThanOrEq(month))
-				.and(Bill_Table.userUuid.is(Environment.CURRENT_USER_UUID))
-				.queryList();
-
+	@WorkerThread
+	public List<Bill> monthly(final DateTime month) {
+		final List<Expense> expenses = expenseRepository.monthly(month);
+		Where query = new Where(Fields.INIT_DATE).lessThanOrEq(month.getMillis())
+				.and(Fields.END_DATE).greaterThanOrEq(month.getMillis())
+				.and(Fields.USER_UUID).eq(Environment.CURRENT_USER_UUID);
+		List<Bill> bills = repository.query(billTable, query);
 		for (int i = 0; i < bills.size(); i++) {
 			Bill bill = bills.get(i);
 			boolean billAlreadyPaid = false;
 			for (Expense expense : expenses) {
-				Bill b = expense.getBill();
+				Bill b = repository.find(billTable, expense.getBillUuid());
 				if(b != null && b.getUuid().equals(bill.getUuid())) {
 					billAlreadyPaid = true;
 					break;
@@ -70,11 +75,12 @@ public class BillRepository {
 		}
 
 		for (Bill bill : bills)
-			bill.month = month;
+			bill.setMonth(month);
 
 		return bills;
 	}
 
+	@WorkerThread
 	public OperationResult save(Bill bill) {
 		OperationResult result = new OperationResult();
 		if(StringUtils.isEmpty(bill.getName()))
@@ -89,8 +95,31 @@ public class BillRepository {
 			result.addError(ValidationError.END_DATE);
 		if(bill.getInitDate() != null && bill.getEndDate() != null && bill.getInitDate().isAfter(bill.getEndDate()))
 			result.addError(ValidationError.INIT_DATE_GREATER_THAN_END_DATE);
-		if(result.isValid())
-			bill.save();
+		if(result.isValid()) {
+			if(bill.getId() == 0 && bill.getUuid() == null)
+				bill.setUuid(UUID.randomUUID().toString());
+			if(bill.getId() == 0 && bill.getUserUuid() == null)
+				bill.setUserUuid(Environment.CURRENT_USER_UUID);
+			bill.setSync(false);
+			repository.saveAtDatabase(billTable, bill);
+		}
 		return result;
+	}
+
+	@WorkerThread
+	@Override
+	public void syncAndSave(final Bill unsyncBill) {
+		final CountingIdlingResource idlingResource = new CountingIdlingResource("BillRepositorySave");
+		idlingResource.increment();
+		Bill bill = find(unsyncBill.getUuid());
+		if(bill != null && bill.getId() != unsyncBill.getId()) {
+			if(bill.getUpdatedAt() != unsyncBill.getUpdatedAt())
+				warning("Bill overwritten", unsyncBill.getData());
+			unsyncBill.setId(bill.getId());
+		}
+
+		unsyncBill.setSync(true);
+		repository.saveAtDatabase(billTable, unsyncBill);
+		idlingResource.decrement();
 	}
 }
