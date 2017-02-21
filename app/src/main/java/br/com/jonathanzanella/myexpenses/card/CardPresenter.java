@@ -71,18 +71,28 @@ class CardPresenter {
 					@Override
 					protected void onPostExecute(Void aVoid) {
 						super.onPostExecute(aVoid);
-						if(editView != null) {
-							editView.setTitle(R.string.edit_card_title);
-						} else {
-							String title = view.getContext().getString(R.string.card);
-							view.setTitle(title.concat(" ").concat(card.getName()));
-						}
-						view.showCard(card);
-						if(account != null)
-							editView.onAccountSelected(account);
+						updateView();
 					}
 				}.execute();
+			} else {
+				updateView();
 			}
+		} else {
+			updateView();
+		}
+	}
+
+	void updateView() {
+		if (card != null) {
+			if (editView != null) {
+				editView.setTitle(R.string.edit_card_title);
+			} else {
+				String title = view.getContext().getString(R.string.card);
+				view.setTitle(title.concat(" ").concat(card.getName()));
+			}
+			view.showCard(card);
+			if (account != null)
+				editView.onAccountSelected(account);
 		} else {
 			if(editView != null)
 				editView.setTitle(R.string.new_card_title);

@@ -68,7 +68,7 @@ public class ShowCardActivity extends BaseActivity implements CardContract.View 
 			@Override
 			protected void onPostExecute(Void aVoid) {
 				super.onPostExecute(aVoid);
-				presenter.viewUpdated(false);
+				presenter.updateView();
 			}
 		}.execute();
 	}

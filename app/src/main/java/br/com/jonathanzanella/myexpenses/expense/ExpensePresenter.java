@@ -67,34 +67,46 @@ class ExpensePresenter {
 	@UiThread
 	void onViewUpdated(final boolean invalidateCache) {
 		if (expense != null) {
-			new AsyncTask<Void, Void, Void>() {
+			if(invalidateCache) {
+				new AsyncTask<Void, Void, Void>() {
 
-				@Override
-				protected Void doInBackground(Void... voids) {
-					if(invalidateCache)
-						expense = repository.find(expense.getUuid());
-					return null;
-				}
-
-				@Override
-				protected void onPostExecute(Void aVoid) {
-					super.onPostExecute(aVoid);
-					if(editView != null) {
-						editView.setTitle(R.string.edit_expense_title);
-					} else {
-						String title = view.getContext().getString(R.string.expense);
-						view.setTitle(title.concat(" ").concat(expense.getName()));
+					@Override
+					protected Void doInBackground(Void... voids) {
+						if (invalidateCache)
+							expense = repository.find(expense.getUuid());
+						return null;
 					}
-					view.showExpense(expense);
 
-					loadBill();
-					loadChargeable();
+					@Override
+					protected void onPostExecute(Void aVoid) {
+						super.onPostExecute(aVoid);
+						updateView();
+					}
+				}.execute();
+			} else {
+				updateView();
+			}
+		} else {
+			updateView();
+		}
+	}
 
-					date = expense.getDate();
-					if(editView != null && date != null)
-						editView.onDateChanged(date);
-				}
-			}.execute();
+	private void updateView() {
+		if (expense != null) {
+			if (editView != null) {
+				editView.setTitle(R.string.edit_expense_title);
+			} else {
+				String title = view.getContext().getString(R.string.expense);
+				view.setTitle(title.concat(" ").concat(expense.getName()));
+			}
+			view.showExpense(expense);
+
+			loadBill();
+			loadChargeable();
+
+			date = expense.getDate();
+			if (editView != null && date != null)
+				editView.onDateChanged(date);
 		} else {
 			if(editView != null)
 				editView.setTitle(R.string.new_expense_title);
@@ -320,7 +332,7 @@ class ExpensePresenter {
 			@Override
 			protected void onPostExecute(Void aVoid) {
 				super.onPostExecute(aVoid);
-				onViewUpdated(false);
+				updateView();
 			}
 		}.execute();
 	}

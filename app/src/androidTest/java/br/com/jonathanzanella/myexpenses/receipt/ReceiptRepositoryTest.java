@@ -72,7 +72,7 @@ public class ReceiptRepositoryTest {
 		repository.save(receipt);
 
 		Receipt loadReceipt = repository.find(receipt.getUuid());
-		assertThat(loadReceipt, is(receipt));
+		assertThat(loadReceipt.getUuid(), is(receipt.getUuid()));
 	}
 
 	@Test

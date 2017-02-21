@@ -64,41 +64,46 @@ class ReceiptPresenter {
 
 	@UiThread
 	void viewUpdated(boolean invalidateCache) {
+		if (receipt != null || invalidateCache) {
+			new AsyncTask<Void, Void, Void>() {
+
+				@Override
+				protected Void doInBackground(Void... voids) {
+					receipt = repository.find(receipt.getUuid());
+					source = receipt.getSource();
+					account = receipt.getAccount();
+					return null;
+				}
+
+				@Override
+				protected void onPostExecute(Void aVoid) {
+					super.onPostExecute(aVoid);
+					updateView();
+				}
+			}.execute();
+		} else {
+			updateView();
+		}
+	}
+
+	private void updateView() {
 		if (receipt != null) {
-			if(invalidateCache) {
-				new AsyncTask<Void, Void, Void>() {
-
-					@Override
-					protected Void doInBackground(Void... voids) {
-						receipt = repository.find(receipt.getUuid());
-						source = receipt.getSource();
-						account = receipt.getAccount();
-						return null;
-					}
-
-					@Override
-					protected void onPostExecute(Void aVoid) {
-						super.onPostExecute(aVoid);
-
-						if(editView != null) {
-							editView.setTitle(R.string.edit_receipt_title);
-						} else {
-							String title = view.getContext().getString(R.string.receipt);
-							view.setTitle(title.concat(" ").concat(receipt.getName()));
-						}
-						view.showReceipt(receipt);
-
-						if(source != null)
-							onSourceSelected(source.getUuid());
-						if(account != null)
-							onAccountSelected(account.getUuid());
-
-						date = receipt.getDate();
-						if(editView != null && date != null)
-							editView.onDateChanged(date);
-					}
-				}.execute();
+			if (editView != null) {
+				editView.setTitle(R.string.edit_receipt_title);
+			} else {
+				String title = view.getContext().getString(R.string.receipt);
+				view.setTitle(title.concat(" ").concat(receipt.getName()));
 			}
+			view.showReceipt(receipt);
+
+			if (source != null)
+				onSourceSelected(source.getUuid());
+			if (account != null)
+				onAccountSelected(account.getUuid());
+
+			date = receipt.getDate();
+			if (editView != null && date != null)
+				editView.onDateChanged(date);
 		} else {
 			if(editView != null)
 				editView.setTitle(R.string.new_receipt_title);
@@ -263,6 +268,12 @@ class ReceiptPresenter {
 				if(extras.containsKey(KEY_ACCOUNT_UUID))
 					account = accountRepository.find(extras.getString(KEY_ACCOUNT_UUID));
 				return null;
+			}
+
+			@Override
+			protected void onPostExecute(Void aVoid) {
+				super.onPostExecute(aVoid);
+				updateView();
 			}
 		}.execute();
 	}

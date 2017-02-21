@@ -62,25 +62,29 @@ class BillPresenter {
 				updateView();
 			}
 		} else {
-			if(editView != null)
-				editView.setTitle(R.string.new_bill_title);
+			updateView();
 		}
 	}
 
-	private void updateView() {
-		if(editView != null) {
-			editView.setTitle(R.string.edit_bill_title);
+	void updateView() {
+		if (bill != null) {
+			if (editView != null) {
+				editView.setTitle(R.string.edit_bill_title);
+			} else {
+				String title = view.getContext().getString(R.string.bill);
+				view.setTitle(title.concat(" ").concat(bill.getName()));
+			}
+			view.showBill(bill);
+			initDate = bill.getInitDate();
+			if (editView != null)
+				editView.onInitDateChanged(initDate);
+			endDate = bill.getEndDate();
+			if (editView != null)
+				editView.onEndDateChanged(endDate);
 		} else {
-			String title = view.getContext().getString(R.string.bill);
-			view.setTitle(title.concat(" ").concat(bill.getName()));
+			if(editView != null)
+				editView.setTitle(R.string.new_bill_title);
 		}
-		view.showBill(bill);
-		initDate = bill.getInitDate();
-		if(editView != null)
-			editView.onInitDateChanged(initDate);
-		endDate = bill.getEndDate();
-		if(editView != null)
-			editView.onEndDateChanged(endDate);
 	}
 
 	void onInitDate(Context ctx) {

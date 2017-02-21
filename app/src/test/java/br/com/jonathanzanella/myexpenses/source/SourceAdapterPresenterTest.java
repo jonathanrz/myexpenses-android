@@ -12,8 +12,6 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class SourceAdapterPresenterTest {
 	@Mock
-	private SourceAdapter adapter;
-	@Mock
 	private SourceRepository repository;
 
 	private SourceAdapterPresenter presenter;
@@ -22,7 +20,7 @@ public class SourceAdapterPresenterTest {
 	public void setUp() throws Exception {
 		initMocks(this);
 
-		presenter = new SourceAdapterPresenter(adapter, repository);
+		presenter = new SourceAdapterPresenter(repository);
 	}
 
 	@Test(expected = UnsupportedOperationException.class)

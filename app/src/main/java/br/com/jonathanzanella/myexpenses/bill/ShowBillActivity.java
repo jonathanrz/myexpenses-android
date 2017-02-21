@@ -66,7 +66,7 @@ public class ShowBillActivity extends BaseActivity implements BillContract.View 
 				@Override
 				protected void onPostExecute(Void aVoid) {
 					super.onPostExecute(aVoid);
-					presenter.onViewUpdated(false);
+					presenter.updateView();
 				}
 			}.execute();
 		}
