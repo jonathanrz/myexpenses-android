@@ -27,6 +27,8 @@ class ExpenseAdapterPresenter {
 	List<Expense> getExpenses(boolean invalidateCache, DateTime date) {
 		if(invalidateCache)
 			loadExpenses(date);
+		if(receiptsFiltered == null)
+			return null;
 		return Collections.unmodifiableList(receiptsFiltered);
 	}
 

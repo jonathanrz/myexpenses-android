@@ -33,10 +33,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.clickIntoView;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle;
+import static junit.framework.Assert.assertTrue;
 
-/**
- * Created by jzanella on 8/28/16.
- */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class ShowExpenseActivityTest {
@@ -52,7 +50,7 @@ public class ShowExpenseActivityTest {
 		new AccountRepository(new Repository<Account>(MyApplication.getContext())).save(a);
 
 		expense = new ExpenseBuilder().chargeable(a).build();
-		repository.save(expense);
+		assertTrue(repository.save(expense).isValid());
 	}
 
 	@After

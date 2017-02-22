@@ -115,7 +115,7 @@ public class ExpenseView extends BaseView implements ViewPager.OnPageChangeListe
 							if(expense != null) {
 								ExpenseMonthlyView view = getMonthView(expense.getDate());
 								if (view != null)
-									view.addExpense(expense);
+									view.refreshData();
 							}
 						}
 					}.execute();

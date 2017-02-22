@@ -96,8 +96,6 @@ public class AddExpenseTest {
 
 		clickIntoView(R.id.action_save);
 
-		Thread.sleep(2500);
-
 		matchToolbarTitle(expensesTitle);
 
 		onView(withId(R.id.row_expense_name)).check(matches(withText(expenseName)));

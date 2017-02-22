@@ -93,8 +93,6 @@ public class AddReceiptTest {
 
 		clickIntoView(R.id.action_save);
 
-		Thread.sleep(10000);
-
 		matchToolbarTitle(receiptsTitle);
 
 		onView(withId(R.id.row_receipt_name)).check(matches(withText(receiptName)));

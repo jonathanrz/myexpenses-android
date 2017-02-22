@@ -2,6 +2,7 @@ package br.com.jonathanzanella.myexpenses.expense;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -26,7 +27,6 @@ class ExpenseMonthlyView extends BaseView {
     public ExpenseMonthlyView(Context context, DateTime dateTime) {
         super(context);
         this.dateTime = dateTime;
-        adapter.loadData(dateTime);
     }
 
     @Override
@@ -45,8 +45,20 @@ class ExpenseMonthlyView extends BaseView {
     public void refreshData() {
         super.refreshData();
 
-        adapter.loadData(dateTime);
-        adapter.notifyDataSetChanged();
+        new AsyncTask<Void, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                adapter.loadData(dateTime);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                adapter.notifyDataSetChanged();
+            }
+        }.execute();
     }
 
 	public void addExpense(@NonNull Expense expense) {

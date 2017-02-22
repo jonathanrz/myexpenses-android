@@ -36,9 +36,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 
-/**
- * Created by jzanella on 8/27/16.
- */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class BillRepositoryTest {

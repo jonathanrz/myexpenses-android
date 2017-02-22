@@ -67,7 +67,21 @@ public class CardView extends BaseView {
         switch (requestCode) {
             case REQUEST_ADD_CARD:
                 if(resultCode == Activity.RESULT_OK)
-                    adapter.addCreditCard(data.getStringExtra(EditCardActivity.KEY_CARD_UUID));
+                	new AsyncTask<Void, Void, Void>() {
+
+		                @Override
+		                protected Void doInBackground(Void... voids) {
+			                adapter.loadData();
+			                return null;
+		                }
+
+		                @Override
+		                protected void onPostExecute(Void aVoid) {
+			                super.onPostExecute(aVoid);
+			                adapter.notifyDataSetChanged();
+		                }
+	                }.execute();
+
                 break;
         }
     }

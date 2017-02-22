@@ -3,6 +3,7 @@ package br.com.jonathanzanella.myexpenses.views;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -30,6 +31,7 @@ import br.com.jonathanzanella.myexpenses.sync.SyncView;
 import butterknife.Bind;
 
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, SearchView.OnQueryTextListener {
+	private static final String KEY_SELECTED_ITEM = "KeySelectedItem";
 	@Bind(R.id.act_main_drawer)
 	DrawerLayout drawer;
 	@Bind(R.id.act_main_navigation_view)
@@ -41,6 +43,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
 	private BaseView currentView;
 	private String filter;
+	private int selectedItem = -1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +64,21 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 		drawer.setDrawerListener(drawerToggle);
 		drawerToggle.syncState();
 
-		addViewToContent(new ResumeView(this));
+		if(selectedItem == -1)
+			selectMenuItem(R.id.menu_resume);
+	}
+
+	@Override
+	protected void storeBundle(Bundle extras) {
+		super.storeBundle(extras);
+		if(extras != null && extras.containsKey(KEY_SELECTED_ITEM))
+			selectMenuItem(extras.getInt(KEY_SELECTED_ITEM));
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putInt(KEY_SELECTED_ITEM, selectedItem);
 	}
 
 	@Override
@@ -123,7 +140,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
 	@Override
 	public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-		switch (item.getItemId()) {
+		return selectMenuItem(item.getItemId());
+	}
+
+	private boolean selectMenuItem(@IdRes int itemId) {
+		selectedItem = itemId;
+		navigationView.setCheckedItem(selectedItem);
+		switch (itemId) {
 			case R.id.menu_resume:
 				addViewToContent(new ResumeView(this));
 				setTitle(R.string.app_name);
@@ -175,6 +198,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 				drawer.closeDrawers();
 				return true;
 		}
+		selectedItem = -1;
+		navigationView.setCheckedItem(selectedItem);
 		return false;
 	}
 }

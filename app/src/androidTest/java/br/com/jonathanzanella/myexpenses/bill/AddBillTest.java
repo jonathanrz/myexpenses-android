@@ -84,8 +84,6 @@ public class AddBillTest {
 
 		clickIntoView(R.id.action_save);
 
-		Thread.sleep(5000);
-
 		matchToolbarTitle(billsTitle);
 
 		onView(withId(R.id.row_bill_name)).check(matches(withText(billTitle)));

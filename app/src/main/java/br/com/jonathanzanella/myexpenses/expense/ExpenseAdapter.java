@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
+import android.support.annotation.WorkerThread;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -132,6 +133,7 @@ class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHolder> {
 		return expenses != null ? expenses.size() : 0;
 	}
 
+	@WorkerThread
 	public void loadData(DateTime date) {
 		expenses = expenseRepository.monthly(date);
 		expenses = presenter.getExpenses(true, date);

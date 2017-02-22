@@ -76,9 +76,7 @@ public class EditExpenseTest {
 
 		clickIntoView(R.id.action_save);
 
-		Thread.sleep(1500);
-
-		matchToolbarTitle(showExpenseTitle);
+		matchToolbarTitle(showExpenseTitle + " changed");
 
 		expense = repository.find(expense.getUuid());
 

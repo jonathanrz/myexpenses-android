@@ -6,12 +6,8 @@ import br.com.jonathanzanella.myexpenses.bill.Bill;
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 
-/**
- * Created by jzanella on 8/28/16.
- */
-
 public class ExpenseBuilder {
-	private String name = "expenseTest";
+	private String name = "a";
 	private Chargeable chargeable = new AccountBuilder().build();
 	private DateTime date = DateTime.now();
 	private Bill bill = null;

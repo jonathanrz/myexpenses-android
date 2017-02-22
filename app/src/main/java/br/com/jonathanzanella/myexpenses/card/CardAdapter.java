@@ -125,26 +125,6 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
 		cards = cardRepository.userCards();
 	}
 
-	@UiThread
-	void addCreditCard(@NonNull final String uuid) {
-		new AsyncTask<Void, Void, Card>() {
-
-			@Override
-			protected Card doInBackground(Void... voids) {
-				return cardRepository.find(uuid);
-			}
-
-			@Override
-			protected void onPostExecute(Card card) {
-				super.onPostExecute(card);
-				if(card == null)
-					throw new Resources.NotFoundException("Not found card with uuid=" + uuid);
-				presenter.addCard(card);
-				cards = presenter.getCards(false);
-			}
-		}.execute();
-	}
-
 	@Nullable
 	private Card getCreditCard(int position) {
 		return cards != null ? cards.get(position) : null;
