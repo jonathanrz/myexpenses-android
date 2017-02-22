@@ -93,7 +93,7 @@ public class AddReceiptTest {
 
 		clickIntoView(R.id.action_save);
 
-		Thread.sleep(500);
+		Thread.sleep(10000);
 
 		matchToolbarTitle(receiptsTitle);
 

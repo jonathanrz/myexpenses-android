@@ -96,7 +96,7 @@ public class AddExpenseTest {
 
 		clickIntoView(R.id.action_save);
 
-		Thread.sleep(500);
+		Thread.sleep(2500);
 
 		matchToolbarTitle(expensesTitle);
 
@@ -166,7 +166,7 @@ public class AddExpenseTest {
 
 		clickIntoView(R.id.action_save);
 
-		Thread.sleep(500);
+		Thread.sleep(2000);
 
 		matchToolbarTitle(expensesTitle);
 

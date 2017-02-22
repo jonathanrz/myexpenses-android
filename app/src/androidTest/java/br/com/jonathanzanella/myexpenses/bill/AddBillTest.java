@@ -84,7 +84,7 @@ public class AddBillTest {
 
 		clickIntoView(R.id.action_save);
 
-		Thread.sleep(500);
+		Thread.sleep(5000);
 
 		matchToolbarTitle(billsTitle);
 

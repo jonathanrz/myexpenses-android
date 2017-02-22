@@ -76,7 +76,7 @@ public class EditExpenseTest {
 
 		clickIntoView(R.id.action_save);
 
-		Thread.sleep(500);
+		Thread.sleep(1500);
 
 		matchToolbarTitle(showExpenseTitle);
 
