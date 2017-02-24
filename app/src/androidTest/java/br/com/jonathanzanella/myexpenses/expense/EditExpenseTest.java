@@ -5,6 +5,7 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.util.Log;
 
 import org.junit.After;
 import org.junit.Before;
@@ -41,7 +42,7 @@ public class EditExpenseTest {
 	public ActivityTestRule<ShowExpenseActivity> activityTestRule = new ActivityTestRule<>(ShowExpenseActivity.class, true, false);
 
 	private Expense expense;
-	private ExpenseRepository repository = new ExpenseRepository(new Repository<Expense>(getTargetContext()));
+	private ExpenseRepository repository;
 
 	@Before
 	public void setUp() throws Exception {
@@ -49,6 +50,7 @@ public class EditExpenseTest {
 		new AccountRepository(new Repository<Account>(MyApplication.getContext())).save(a);
 
 		expense = new ExpenseBuilder().chargeable(a).build();
+		repository = new ExpenseRepository(new Repository<Expense>(getTargetContext()));
 		repository.save(expense);
 	}
 
@@ -77,7 +79,7 @@ public class EditExpenseTest {
 		clickIntoView(R.id.action_save);
 
 		matchToolbarTitle(showExpenseTitle + " changed");
-
+		
 		expense = repository.find(expense.getUuid());
 
 		onView(withId(R.id.act_show_expense_name)).check(matches(withText(expense.getName())));
