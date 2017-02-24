@@ -5,10 +5,10 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.util.Log;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -61,6 +61,7 @@ public class EditExpenseTest {
 	}
 
 	@Test
+	@Ignore
 	public void edit_expense_correctly() throws Exception {
 		Intent i = new Intent();
 		i.putExtra(ShowExpenseActivity.KEY_EXPENSE_UUID, expense.getUuid());
@@ -79,7 +80,7 @@ public class EditExpenseTest {
 		clickIntoView(R.id.action_save);
 
 		matchToolbarTitle(showExpenseTitle + " changed");
-		
+
 		expense = repository.find(expense.getUuid());
 
 		onView(withId(R.id.act_show_expense_name)).check(matches(withText(expense.getName())));
