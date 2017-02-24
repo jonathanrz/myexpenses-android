@@ -63,7 +63,7 @@ public class BillView extends BaseView {
 		switch (requestCode) {
 			case REQUEST_ADD_BILL:
 				if(resultCode == Activity.RESULT_OK)
-					adapter.refreshData();
+					refreshData();
 				break;
 		}
 	}
