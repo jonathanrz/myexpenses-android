@@ -224,16 +224,16 @@ public class ExpenseRepository implements ModelRepository<Expense> {
 			DateTime creditCardMonth = month.minusMonths(1);
 			List<Card> cards = getCardRepository().creditCards();
 			for (Card creditCard : cards) {
-				int total = getCardRepository().getInvoiceValue(card, creditCardMonth);
+				int total = getCardRepository().getInvoiceValue(creditCard, creditCardMonth);
 				if (total == 0)
 					continue;
 
 				Expense expense = new Expense();
-				expense.setChargeable(card);
+				expense.setChargeable(creditCard);
 				expense.setName(MyApplication.getContext().getString(R.string.invoice) + " " + creditCard.getName());
 				expense.setDate(creditCardMonth.plusMonths(1));
 				expense.setValue(total);
-				expense.setCreditCard(card);
+				expense.setCreditCard(creditCard);
 				expenses.add(expense);
 			}
 		}
