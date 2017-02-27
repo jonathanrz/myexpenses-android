@@ -11,6 +11,7 @@ public class ExpenseBuilder {
 	private Chargeable chargeable = new AccountBuilder().build();
 	private DateTime date = DateTime.now();
 	private Bill bill = null;
+	private boolean sync = false;
 
 	public ExpenseBuilder name(String name) {
 		this.name = name;
@@ -32,6 +33,11 @@ public class ExpenseBuilder {
 		return this;
 	}
 
+	public ExpenseBuilder sync(boolean sync) {
+		this.sync = sync;
+		return this;
+	}
+
 	public Expense build() {
 		Expense expense = new Expense();
 		expense.setName(name);
@@ -39,6 +45,7 @@ public class ExpenseBuilder {
 		expense.setChargeable(chargeable);
 		expense.setDate(date);
 		expense.setBill(bill);
+		expense.setSync(sync);
 		return expense;
 	}
 }
