@@ -90,9 +90,9 @@ open class Repository<T : UnsyncModel>(ctx: Context) {
         ).use { c ->
             val sources = ArrayList<T>()
             c.moveToFirst()
-            for (i in 0..c.count - 1) {
-                c.move(i)
+            while (!c.isAfterLast) {
                 sources.add(table.fill(c))
+                c.moveToNext()
             }
             db.close()
             return sources

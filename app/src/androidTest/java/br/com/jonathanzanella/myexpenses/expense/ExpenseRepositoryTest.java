@@ -26,6 +26,7 @@ import br.com.jonathanzanella.myexpenses.helpers.builder.ExpenseBuilder;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.InstrumentationRegistry.getTargetContext;
+import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -112,5 +113,24 @@ public class ExpenseRepositoryTest {
 		List<Expense> expenses = repository.expensesForResumeScreen(creditCardExpense.getDate());
 		assertThat(expenses.size(), is(1));
 		assertThat(expenses.get(0).getUuid(), is(accountExpense.getUuid()));
+	}
+
+	@Test
+	public void load_unsync_expenses() throws Exception {
+		Expense expenseUnsync = new ExpenseBuilder()
+				.sync(false)
+				.chargeable(account)
+				.build();
+		assertTrue(repository.save(expenseUnsync).isValid());
+		Expense expenseSync = new ExpenseBuilder()
+				.sync(true)
+				.chargeable(account)
+				.build();
+		assertTrue(repository.save(expenseSync).isValid());
+		repository.syncAndSave(expenseSync);
+
+		List<Expense> expenses = repository.unsync();
+		assertThat(expenses.size(), is(1));
+		assertThat(expenses.get(0).getUuid(), is(expenseUnsync.getUuid()));
 	}
 }
