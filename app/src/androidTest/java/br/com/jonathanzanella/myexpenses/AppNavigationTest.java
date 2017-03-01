@@ -19,9 +19,6 @@ import static android.support.test.espresso.contrib.DrawerMatchers.isClosed;
 import static android.support.test.espresso.contrib.DrawerMatchers.isOpen;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
-/**
- * Created by jzanella on 7/24/16.
- */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class AppNavigationTest {

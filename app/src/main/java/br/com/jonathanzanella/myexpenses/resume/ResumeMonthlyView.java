@@ -45,6 +45,7 @@ class ResumeMonthlyView extends BaseView {
 
 	int singleRowHeight;
 
+	private MonthlyPagerAdapterHelper monthlyPagerAdapterHelper = new MonthlyPagerAdapterHelper();
 	private AccountAdapter accountAdapter;
 	private ReceiptMonthlyResumeAdapter receiptAdapter;
 	private ExpenseMonthlyResumeAdapter expensesAdapter;
@@ -62,6 +63,7 @@ class ResumeMonthlyView extends BaseView {
 	}
 
 	@Override
+	@UiThread
 	protected void init() {
 		inflate(getContext(), R.layout.view_monthly_resume, this);
 		expenseRepository = new ExpenseRepository(new Repository<Expense>(getContext()));
@@ -111,6 +113,7 @@ class ResumeMonthlyView extends BaseView {
 	}
 
 	@Override
+	@UiThread
 	public void refreshData() {
 		super.refreshData();
 		accountAdapter.refreshData();
@@ -136,6 +139,8 @@ class ResumeMonthlyView extends BaseView {
 				super.onPostExecute(aVoid);
 				billsAdapter.notifyDataSetChanged();
 				bills.getLayoutParams().height = singleRowHeight * billsAdapter.getItemCount();
+
+				updateTotalExpenses();
 			}
 		}.execute();
 	}
@@ -156,15 +161,21 @@ class ResumeMonthlyView extends BaseView {
 				expensesAdapter.notifyDataSetChanged();
 				expenses.getLayoutParams().height = singleRowHeight * expensesAdapter.getItemCount();
 
-				int totalExpensesValue = expensesAdapter.getTotalValue();
-				totalExpensesValue += billsAdapter.getTotalValue();
-				totalExpenses.setText(NumberFormat.getCurrencyInstance().format(totalExpensesValue / 100.0));
-
-				updateBalance();
+				updateTotalExpenses();
 			}
 		}.execute();
 	}
 
+	@UiThread
+	private void updateTotalExpenses() {
+		int totalExpensesValue = expensesAdapter.getTotalValue();
+		totalExpensesValue += billsAdapter.getTotalValue();
+		totalExpenses.setText(NumberFormat.getCurrencyInstance().format(totalExpensesValue / 100.0));
+
+		updateBalance();
+	}
+
+	@UiThread
 	private void loadReceipts() {
 		receiptAdapter.loadDataAsync(month, new Runnable() {
 			@Override
@@ -178,6 +189,7 @@ class ResumeMonthlyView extends BaseView {
 		});
 	}
 
+	@UiThread
 	private void updateBalance() {
 		int totalExpensesValue = expensesAdapter.getTotalValue();
 		totalExpensesValue += billsAdapter.getTotalValue();

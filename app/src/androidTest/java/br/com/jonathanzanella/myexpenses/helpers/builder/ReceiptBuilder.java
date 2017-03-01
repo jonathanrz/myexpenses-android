@@ -6,15 +6,12 @@ import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.receipt.Receipt;
 import br.com.jonathanzanella.myexpenses.source.Source;
 
-/**
- * Created by jzanella on 8/28/16.
- */
-
 public class ReceiptBuilder {
 	private String name = "receiptTest";
 	private Source source = new SourceBuilder().build();
 	private Account account = new AccountBuilder().build();
 	private DateTime date = DateTime.now();
+	private int income = 100;
 
 	public ReceiptBuilder name(String name) {
 		this.name = name;
@@ -36,13 +33,18 @@ public class ReceiptBuilder {
 		return this;
 	}
 
+	public ReceiptBuilder income(int income) {
+		this.income = income;
+		return this;
+	}
+
 	public Receipt build() {
 		Receipt receipt = new Receipt();
 		receipt.setName(name);
-		receipt.setIncome(1);
 		receipt.setSource(source);
 		receipt.setAccount(account);
 		receipt.setDate(date);
+		receipt.setIncome(income);
 		return receipt;
 	}
 }
