@@ -39,13 +39,14 @@ import br.com.jonathanzanella.myexpenses.views.MainActivity;
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.InstrumentationRegistry.getTargetContext;
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.clickIntoView;
 import static junit.framework.Assert.assertTrue;
-import static org.hamcrest.core.AllOf.allOf;
+import static org.hamcrest.Matchers.allOf;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
@@ -99,7 +100,7 @@ public class CalculateMonthBalanceCorrectly {
 				.account(a)
 				.source(s)
 				.date(dateTime)
-				.income(RECEIPT_INCOME)
+				.income(RECEIPT_INCOME * 2)
 				.build();
 		assertTrue(receiptRepository.save(r).isValid());
 		dateTime = dateTime.plusMonths(1);
@@ -107,7 +108,7 @@ public class CalculateMonthBalanceCorrectly {
 				.account(a)
 				.source(s)
 				.date(dateTime)
-				.income(RECEIPT_INCOME)
+				.income(RECEIPT_INCOME * 3)
 				.build();
 		assertTrue(receiptRepository.save(r).isValid());
 	}
@@ -125,14 +126,14 @@ public class CalculateMonthBalanceCorrectly {
 		r = new ExpenseBuilder()
 				.chargeable(a)
 				.date(dateTime)
-				.value(EXPENSE_VALUE)
+				.value(EXPENSE_VALUE * 2)
 				.build();
 		assertTrue(expenseRepository.save(r).isValid());
 		dateTime = dateTime.plusMonths(1);
 		r = new ExpenseBuilder()
 				.chargeable(a)
 				.date(dateTime)
-				.value(EXPENSE_VALUE)
+				.value(EXPENSE_VALUE * 3)
 				.build();
 		assertTrue(expenseRepository.save(r).isValid());
 	}
@@ -145,6 +146,7 @@ public class CalculateMonthBalanceCorrectly {
 		int balance = RECEIPT_INCOME - EXPENSE_VALUE - BILL_AMOUNT;
 		String expectedBalance = NumberFormat.getCurrencyInstance().format((balance/100.0));
 
+		onView(withText(expectedBalance)).perform(scrollTo());
 		onView(allOf(
 				withId(R.id.view_monthly_resume_balance),
 				isDisplayed()))
@@ -153,6 +155,9 @@ public class CalculateMonthBalanceCorrectly {
 		String twoMonthsFromNow = monthlyPagerAdapterHelper.formatMonthForView(DateTime.now().plusMonths(2));
 		clickIntoView(twoMonthsFromNow);
 
+		balance = RECEIPT_INCOME * 3 - EXPENSE_VALUE * 3 - BILL_AMOUNT;
+		expectedBalance = NumberFormat.getCurrencyInstance().format((balance/100.0));
+		onView(withText(expectedBalance)).perform(scrollTo());
 		onView(allOf(
 				withId(R.id.view_monthly_resume_balance),
 				isDisplayed()))
