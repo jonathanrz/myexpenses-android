@@ -57,6 +57,7 @@ public class CalculateMonthBalanceCorrectly {
 
 	@Rule
 	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
+	private MonthlyPagerAdapterHelper monthlyPagerAdapterHelper = new MonthlyPagerAdapterHelper();
 
 	@Before
 	public void setUp() throws Exception {
@@ -141,26 +142,31 @@ public class CalculateMonthBalanceCorrectly {
 	@Test
 	public void verify_month_balance() throws Exception {
 		activityTestRule.launchActivity(new Intent());
-		MonthlyPagerAdapterHelper monthlyPagerAdapterHelper = new MonthlyPagerAdapterHelper();
 
 		int balance = RECEIPT_INCOME - EXPENSE_VALUE - BILL_AMOUNT;
+		int twoMonthsBalance = RECEIPT_INCOME * 3 - EXPENSE_VALUE * 3 - BILL_AMOUNT;
 		String expectedBalance = NumberFormat.getCurrencyInstance().format((balance/100.0));
+		String twoMonthsExpectedBalance = NumberFormat.getCurrencyInstance().format((twoMonthsBalance/100.0));
 
+		validateExpectedBalance(expectedBalance);
+
+		scrollToMonth(DateTime.now().plusMonths(2));
+		validateExpectedBalance(twoMonthsExpectedBalance);
+
+		scrollToMonth(DateTime.now());
+		validateExpectedBalance(expectedBalance);
+	}
+
+	private void validateExpectedBalance(String expectedBalance) {
 		onView(withText(expectedBalance)).perform(scrollTo());
 		onView(allOf(
 				withId(R.id.view_monthly_resume_balance),
 				isDisplayed()))
 				.check(matches(withText(expectedBalance)));
+	}
 
-		String twoMonthsFromNow = monthlyPagerAdapterHelper.formatMonthForView(DateTime.now().plusMonths(2));
+	private void scrollToMonth(DateTime dateTime) {
+		String twoMonthsFromNow = monthlyPagerAdapterHelper.formatMonthForView(dateTime);
 		clickIntoView(twoMonthsFromNow);
-
-		balance = RECEIPT_INCOME * 3 - EXPENSE_VALUE * 3 - BILL_AMOUNT;
-		expectedBalance = NumberFormat.getCurrencyInstance().format((balance/100.0));
-		onView(withText(expectedBalance)).perform(scrollTo());
-		onView(allOf(
-				withId(R.id.view_monthly_resume_balance),
-				isDisplayed()))
-				.check(matches(withText(expectedBalance)));
 	}
 }
