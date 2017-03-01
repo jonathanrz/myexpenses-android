@@ -85,7 +85,11 @@ public class UIHelper {
 	}
 
 	public static void clickIntoView(String text) {
-		onView(withText(text)).perform(click());
+		try {
+			onView(withText(text)).perform(scrollTo()).perform(click());
+		} catch (PerformException e) {
+			onView(withText(text)).perform(click());
+		}
 	}
 
 	public static void checkSnackbarText(String text) {
