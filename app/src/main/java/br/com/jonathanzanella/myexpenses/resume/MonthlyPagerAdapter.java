@@ -7,10 +7,8 @@ import android.view.ViewGroup;
 
 import org.joda.time.DateTime;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import br.com.jonathanzanella.myexpenses.views.BaseView;
 
@@ -18,7 +16,7 @@ public class MonthlyPagerAdapter extends PagerAdapter {
     private static final int TOTAL_MONTHS_VISIBLE = 25;
     public static final int INIT_MONTH_VISIBLE = TOTAL_MONTHS_VISIBLE / 2;
 
-    private static final SimpleDateFormat sdf = new SimpleDateFormat("MMM/yy", Locale.getDefault());
+	private MonthlyPagerAdapterHelper helper = new MonthlyPagerAdapterHelper();
     private Context context;
     private List<DateTime> months = new ArrayList<>();
 	private MonthlyPagerAdapterBuilder builder;
@@ -59,7 +57,7 @@ public class MonthlyPagerAdapter extends PagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return sdf.format(months.get(position).toDate());
+        return helper.formatMonthForView(months.get(position));
     }
 
 	public int getDatePosition(DateTime date) {

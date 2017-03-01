@@ -4,10 +4,6 @@ import org.joda.time.DateTime;
 
 import br.com.jonathanzanella.myexpenses.bill.Bill;
 
-/**
- * Created by jzanella on 8/28/16.
- */
-
 public class BillBuilder {
 	private String name = "billTest";
 	private int amount = 1;
