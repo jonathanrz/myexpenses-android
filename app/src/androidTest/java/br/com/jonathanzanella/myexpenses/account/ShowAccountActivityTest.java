@@ -1,11 +1,11 @@
 package br.com.jonathanzanella.myexpenses.account;
 
 import android.content.Intent;
-import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -24,51 +24,64 @@ import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.CardBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.ExpenseBuilder;
+import br.com.jonathanzanella.myexpenses.helpers.builder.ReceiptBuilder;
+import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder;
+import br.com.jonathanzanella.myexpenses.receipt.Receipt;
+import br.com.jonathanzanella.myexpenses.receipt.ReceiptRepository;
+import br.com.jonathanzanella.myexpenses.source.Source;
+import br.com.jonathanzanella.myexpenses.source.SourceRepository;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.InstrumentationRegistry.getTargetContext;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle;
 import static junit.framework.Assert.assertTrue;
+import static org.hamcrest.core.AllOf.allOf;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class ShowAccountActivityTest {
+	private static final int ACCOUNT_BALANCE = 115;
+	private static final int EXPENSE_VALUE = 25;
+	private static final int RECEIPT_INCOME = 35;
 	@Rule
 	public ActivityTestRule<ShowAccountActivity> activityTestRule = new ActivityTestRule<>(ShowAccountActivity.class, true, false);
 
 	private Account account;
 	private AccountRepository repository;
 	private ExpenseRepository expenseRepository;
+	private ReceiptRepository receiptRepository;
+	private SourceRepository sourceRepository;
 	private CardRepository cardRepository;
 
 	@Before
 	public void setUp() throws Exception {
-		repository = new AccountRepository(new Repository<Account>(InstrumentationRegistry.getTargetContext()));
-		expenseRepository = new ExpenseRepository(new Repository<Expense>(InstrumentationRegistry.getTargetContext()));
-		cardRepository = new CardRepository(new Repository<Card>(InstrumentationRegistry.getTargetContext()), expenseRepository);
+		repository = new AccountRepository(new Repository<Account>(getTargetContext()));
+		receiptRepository = new ReceiptRepository(new Repository<Receipt>(getTargetContext()));
+		expenseRepository = new ExpenseRepository(new Repository<Expense>(getTargetContext()));
+		cardRepository = new CardRepository(new Repository<Card>(getTargetContext()), expenseRepository);
+		sourceRepository = new SourceRepository(new Repository<Source>(getTargetContext()));
 
 		account = new Account();
 		account.setName("test");
-		account.setBalance(115);
+		account.setBalance(ACCOUNT_BALANCE);
 		account.setAccountToPayCreditCard(true);
 		repository.save(account);
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
+		new DatabaseHelper(getTargetContext()).recreateTables();
 		ActivityLifecycleHelper.closeAllActivities(getInstrumentation());
 	}
 
 	@Test
 	public void shows_account_correctly() throws Exception {
-		Intent i = new Intent();
-		i.putExtra(ShowAccountActivity.KEY_ACCOUNT_UUID, account.getUuid());
-		activityTestRule.launchActivity(i);
+		launchActivity();
 
 		final String editAccountTitle = getTargetContext().getString(R.string.account) + " " + account.getName();
 		matchToolbarTitle(editAccountTitle);
@@ -85,15 +98,76 @@ public class ShowAccountActivityTest {
 		Expense expense = new ExpenseBuilder().chargeable(card).build();
 		assertTrue(expenseRepository.save(expense).isValid());
 
-		Intent i = new Intent();
-		i.putExtra(ShowAccountActivity.KEY_ACCOUNT_UUID, account.getUuid());
-		activityTestRule.launchActivity(i);
+		launchActivity();
 
-		String billName = InstrumentationRegistry.getTargetContext().getString(R.string.invoice) + " " + card.getName();
-		String value = NumberFormat.getCurrencyInstance().format((expense.getAmount() / 100.0));
+		String billName = getTargetContext().getString(R.string.invoice) + " " + card.getName();
+		String value = NumberFormat.getCurrencyInstance().format(expense.getAmount() / 100.0);
 
 		onView(withId(R.id.act_show_account_name)).check(matches(withText(account.getName())));
 		onView(withId(R.id.row_transaction_name)).check(matches(withText(billName)));
 		onView(withId(R.id.row_transaction_value)).check(matches(withText(value)));
+	}
+
+	@Test
+	public void calculate_account_balance_correctly() throws Exception {
+		generateTwoMonthsExpenses();
+		generateTwoMonthsReceipts();
+
+		launchActivity();
+
+		int expectedBalance = ACCOUNT_BALANCE + RECEIPT_INCOME - EXPENSE_VALUE;
+		String expectedValue = NumberFormat.getCurrencyInstance().format(expectedBalance / 100.0);
+		onView(allOf(
+				withId(R.id.view_month_transactions_balance),
+				isDescendantOfA(withId(R.id.view_account_transactions_this_month))))
+				.check(matches(withText(expectedValue)));
+
+		expectedBalance = expectedBalance + RECEIPT_INCOME - EXPENSE_VALUE;
+		expectedValue = NumberFormat.getCurrencyInstance().format(expectedBalance / 100.0);
+		onView(allOf(
+				withId(R.id.view_month_transactions_balance),
+				isDescendantOfA(withId(R.id.view_account_transactions_next_month))))
+				.check(matches(withText(expectedValue)));
+	}
+
+	private void launchActivity() {
+		Intent i = new Intent();
+		i.putExtra(ShowAccountActivity.KEY_ACCOUNT_UUID, account.getUuid());
+		activityTestRule.launchActivity(i);
+	}
+
+	private void generateTwoMonthsReceipts() {
+		Source s = new SourceBuilder().build();
+		sourceRepository.save(s);
+
+		Receipt receipt = new ReceiptBuilder()
+				.income(RECEIPT_INCOME)
+				.date(DateTime.now())
+				.account(account)
+				.source(s)
+				.build();
+		assertTrue(receiptRepository.save(receipt).isValid());
+		receipt = new ReceiptBuilder()
+				.income(RECEIPT_INCOME)
+				.date(DateTime.now().plusMonths(1))
+				.account(account)
+				.source(s)
+				.build();
+		assertTrue(receiptRepository.save(receipt).isValid());
+	}
+
+	private void generateTwoMonthsExpenses() {
+		Expense expense = new ExpenseBuilder()
+				.value(EXPENSE_VALUE)
+				.date(DateTime.now())
+				.chargeable(account)
+				.build();
+		assertTrue(expenseRepository.save(expense).isValid());
+		expense = new ExpenseBuilder()
+				.value(EXPENSE_VALUE)
+				.date(DateTime.now().plusMonths(1))
+				.chargeable(account)
+				.build();
+		assertTrue(expenseRepository.save(expense).isValid());
 	}
 }

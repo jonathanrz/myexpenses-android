@@ -1,4 +1,4 @@
-package br.com.jonathanzanella.myexpenses.account;
+package br.com.jonathanzanella.myexpenses.account.transactions;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -6,6 +6,7 @@ import android.util.AttributeSet;
 import org.joda.time.DateTime;
 
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.views.BaseView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -29,8 +30,14 @@ public class TransactionsView extends BaseView {
 		ButterKnife.bind(this);
 	}
 
-	public void showTransactions(Account account, DateTime monthToShow) {
-		int nextMonthBalance = thisMonth.showBalance(account, monthToShow, account.getBalance());
-		nextMonth.showBalance(account, monthToShow.plusMonths(1), nextMonthBalance);
+	public void showTransactions(final Account account, final DateTime monthToShow) {
+		thisMonth.setLoadTransactionsCallback(new LoadTransactionsCallback() {
+			@Override
+			public void onTransactionsLoaded(int balance) {
+				nextMonth.showBalance(account, monthToShow.plusMonths(1), balance);
+			}
+		});
+
+		thisMonth.showBalance(account, monthToShow, account.getBalance());
 	}
 }

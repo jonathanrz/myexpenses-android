@@ -86,7 +86,7 @@
 			</TableRow>
 	    </TableLayout>
 
-		<br.com.jonathanzanella.myexpenses.account.TransactionsView
+		<br.com.jonathanzanella.myexpenses.account.transactions.TransactionsView
 			android:id="@+id/act_show_account_transactions"
 			android:layout_width="match_parent"
 		    android:layout_height="wrap_content"/>
