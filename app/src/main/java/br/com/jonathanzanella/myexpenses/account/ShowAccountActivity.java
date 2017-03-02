@@ -13,6 +13,7 @@ import java.text.NumberFormat;
 
 import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.account.transactions.TransactionsView;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.helpers.DateHelper;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;

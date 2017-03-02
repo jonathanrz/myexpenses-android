@@ -10,12 +10,12 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content">
 
-		<br.com.jonathanzanella.myexpenses.account.MonthTransactionsView
+		<br.com.jonathanzanella.myexpenses.account.transactions.MonthTransactionsView
 			android:id="@+id/view_account_transactions_this_month"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"/>
 
-		<br.com.jonathanzanella.myexpenses.account.MonthTransactionsView
+		<br.com.jonathanzanella.myexpenses.account.transactions.MonthTransactionsView
 			android:id="@+id/view_account_transactions_next_month"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
