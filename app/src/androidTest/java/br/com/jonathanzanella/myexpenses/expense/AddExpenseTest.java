@@ -15,6 +15,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.text.NumberFormat;
+
 import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
@@ -43,9 +45,6 @@ import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.setTimeInDatePi
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.typeTextIntoView;
 import static org.hamcrest.core.IsNot.not;
 
-/**
- * Created by jzanella on 7/24/16.
- */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class AddExpenseTest {
@@ -171,6 +170,36 @@ public class AddExpenseTest {
 		onView(withId(R.id.row_expense_name)).check(matches(withText(bill.getName())));
 		onView(withId(R.id.row_expense_bill_layout)).check(matches(isDisplayed()));
 		onView(withId(R.id.row_expense_bill)).check(matches(withText(bill.getName())));
+	}
+
+	@Test
+	public void add_new_expense_with_reimburse() throws InterruptedException {
+		mainActivityTestRule.launchActivity(new Intent());
+
+		openMenuAndClickItem(R.string.expenses);
+
+		final String expensesTitle = getContext().getString(R.string.expenses);
+		matchToolbarTitle(expensesTitle);
+
+		clickIntoView(R.id.view_expenses_fab);
+
+		final String newExpenseTitle = getContext().getString(R.string.new_expense_title);
+		matchToolbarTitle(newExpenseTitle);
+
+		final String expenseName = "Test";
+		int value = 100;
+		typeTextIntoView(R.id.act_edit_expense_name, expenseName);
+		typeTextIntoView(R.id.act_edit_expense_value, String.valueOf(value));
+		clickIntoView(R.id.act_edit_expense_repayment);
+		selectChargeable();
+
+		clickIntoView(R.id.action_save);
+
+		matchToolbarTitle(expensesTitle);
+
+		onView(withId(R.id.row_expense_name)).check(matches(withText(expenseName)));
+		String expectedValue = NumberFormat.getCurrencyInstance().format(((value * -1) / 100));
+		onView(withId(R.id.row_expense_value)).check(matches(withText(expectedValue)));
 	}
 
 	private void selectChargeable() {
