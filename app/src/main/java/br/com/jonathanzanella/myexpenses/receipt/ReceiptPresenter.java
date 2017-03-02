@@ -31,6 +31,7 @@ class ReceiptPresenter {
 	static final String KEY_RECEIPT_UUID = "KeyReceiptUuid";
 	private static final String KEY_SOURCE_UUID = "KeySourceUuid";
 	private static final String KEY_ACCOUNT_UUID = "KeyAccountUuid";
+	private static final String KEY_DATE = "KeyDate";
 
 	private ReceiptContract.View view;
 	private ReceiptContract.EditView editView;
@@ -101,17 +102,18 @@ class ReceiptPresenter {
 			if (account != null)
 				onAccountSelected(account.getUuid());
 
-			date = receipt.getDate();
-			if (editView != null && date != null)
-				editView.onDateChanged(date);
+			if(date == null)
+				date = receipt.getDate();
 		} else {
 			if(editView != null)
 				editView.setTitle(R.string.new_receipt_title);
 
-			date = DateTime.now();
-			if(date != null)
-				editView.onDateChanged(date);
+			if(date == null)
+				date = DateTime.now();
 		}
+
+		if(editView != null && date != null)
+			editView.onDateChanged(date);
 	}
 
 	@UiThread
@@ -267,6 +269,9 @@ class ReceiptPresenter {
 
 				if(extras.containsKey(KEY_ACCOUNT_UUID))
 					account = accountRepository.find(extras.getString(KEY_ACCOUNT_UUID));
+
+				if(extras.containsKey(KEY_DATE))
+					date = new DateTime(extras.getLong(KEY_DATE));
 				return null;
 			}
 
@@ -285,6 +290,8 @@ class ReceiptPresenter {
 			outState.putString(KEY_SOURCE_UUID, source.getUuid());
 		if(account != null)
 			outState.putString(KEY_ACCOUNT_UUID, account.getUuid());
+		if(date != null)
+			outState.putLong(KEY_DATE, date.getMillis());
 	}
 
 	void onSourceSelected(final String sourceUuid) {
