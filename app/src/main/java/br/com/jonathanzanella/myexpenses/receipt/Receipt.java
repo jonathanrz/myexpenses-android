@@ -8,8 +8,6 @@ import com.google.gson.annotations.SerializedName;
 import org.joda.time.DateTime;
 
 import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
 
 import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.account.Account;
@@ -26,7 +24,6 @@ import lombok.Setter;
 
 @EqualsAndHashCode
 public class Receipt implements Transaction, UnsyncModel {
-	public static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
 	private AccountRepository accountRepository = null;
 	private ReceiptRepository receiptRepository = null;
 

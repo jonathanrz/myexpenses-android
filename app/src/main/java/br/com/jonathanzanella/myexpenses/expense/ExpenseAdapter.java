@@ -24,7 +24,6 @@ import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.bill.Bill;
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
 import br.com.jonathanzanella.myexpenses.database.Repository;
-import br.com.jonathanzanella.myexpenses.receipt.Receipt;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -64,7 +63,7 @@ class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHolder> {
 		@UiThread
 		public void setData(final Expense expense) {
 			name.setText(expense.getName());
-			date.setText(Receipt.sdf.format(expense.getDate().toDate()));
+			date.setText(Expense.sdf.format(expense.getDate().toDate()));
 			value.setText(NumberFormat.getCurrencyInstance().format(expense.getValue() / 100.0));
 			new AsyncTask<Void, Void, Chargeable>() {
 
