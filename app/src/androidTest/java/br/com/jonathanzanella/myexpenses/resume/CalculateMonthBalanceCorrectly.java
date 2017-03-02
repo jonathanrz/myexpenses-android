@@ -39,8 +39,8 @@ import br.com.jonathanzanella.myexpenses.views.MainActivity;
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.InstrumentationRegistry.getTargetContext;
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
@@ -158,10 +158,11 @@ public class CalculateMonthBalanceCorrectly {
 	}
 
 	private void validateExpectedBalance(String expectedBalance) {
-		onView(withText(expectedBalance)).perform(scrollTo());
 		onView(allOf(
 				withId(R.id.view_monthly_resume_balance),
-				isDisplayed()))
+				isDescendantOfA(allOf(
+						withId(R.id.view_monthly_resume),
+						isDisplayed()))))
 				.check(matches(withText(expectedBalance)));
 	}
 
