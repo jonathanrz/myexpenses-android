@@ -82,7 +82,7 @@ class ReceiptMonthlyResumeAdapter extends RecyclerView.Adapter<ReceiptMonthlyRes
 				@Override
 				protected void onPostExecute(Source s) {
 					super.onPostExecute(s);
-					if(source != null)
+					if(source != null && s != null)
 						source.setText(s.getName());
 				}
 			}.execute();
