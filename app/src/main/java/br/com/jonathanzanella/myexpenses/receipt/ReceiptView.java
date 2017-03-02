@@ -115,7 +115,7 @@ public class ReceiptView extends BaseView implements ViewPager.OnPageChangeListe
 							if(receipt != null) {
 								ReceiptMonthlyView view = getMonthView(receipt.getDate());
 								if (view != null)
-									view.addReceipt(receipt);
+									view.refreshData();
 							}
 						}
 					}.execute();

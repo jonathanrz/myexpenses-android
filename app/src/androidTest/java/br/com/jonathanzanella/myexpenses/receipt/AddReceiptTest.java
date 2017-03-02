@@ -8,6 +8,7 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.test.uiautomator.UiDevice;
 
+import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -36,6 +37,7 @@ import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.clickIntoView;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchErrorMessage;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.openMenuAndClickItem;
+import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.setTimeInDatePicker;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.typeTextIntoView;
 
 @RunWith(AndroidJUnit4.class)
@@ -86,16 +88,22 @@ public class AddReceiptTest {
 		final String receiptName = "Test";
 		typeTextIntoView(R.id.act_edit_receipt_name, receiptName);
 		typeTextIntoView(R.id.act_edit_receipt_income, "100");
+		clickIntoView(R.id.act_edit_receipt_date);
+		DateTime time = DateTime.now().plusMonths(1);
+		setTimeInDatePicker(time.getYear(), time.getMonthOfYear(), time.getDayOfMonth());
 
 		selectAccount();
 		selectSource();
 		matchToolbarTitle(newReceiptTitle);
+
+		onView(withId(R.id.act_edit_receipt_date)).check(matches(withText(Receipt.sdf.format(time.toDate()))));
 
 		clickIntoView(R.id.action_save);
 
 		matchToolbarTitle(receiptsTitle);
 
 		onView(withId(R.id.row_receipt_name)).check(matches(withText(receiptName)));
+		onView(withId(R.id.row_receipt_date)).check(matches(withText(Receipt.sdf.format(time.toDate()))));
 	}
 
 	@Test
