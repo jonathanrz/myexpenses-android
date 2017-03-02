@@ -80,7 +80,8 @@ class ExpenseMonthlyResumeAdapter extends RecyclerView.Adapter<ExpenseMonthlyRes
 					@Override
 					protected void onPostExecute(Chargeable chargeable) {
 						super.onPostExecute(chargeable);
-						source.setText(chargeable.getName());
+						if(source != null && chargeable != null)
+							source.setText(chargeable.getName());
 					}
 				}.execute();
 			}
