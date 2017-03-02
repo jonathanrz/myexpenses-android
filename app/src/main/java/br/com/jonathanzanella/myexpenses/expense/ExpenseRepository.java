@@ -276,7 +276,7 @@ public class ExpenseRepository implements ModelRepository<Expense> {
 		OperationResult result = new OperationResult();
 		if(StringUtils.isEmpty(expense.getName()))
 			result.addError(ValidationError.NAME);
-		if(expense.getValue() <= 0)
+		if(expense.getValue() == 0)
 			result.addError(ValidationError.AMOUNT);
 		if(expense.getDate() == null)
 			result.addError(ValidationError.DATE);
