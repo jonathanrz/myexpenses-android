@@ -88,10 +88,13 @@ public class AddExpenseTest {
 		final String expenseName = "Test";
 		typeTextIntoView(R.id.act_edit_expense_name, expenseName);
 		typeTextIntoView(R.id.act_edit_expense_value, "100");
+		clickIntoView(R.id.act_edit_expense_value_to_show_in_overview);
 		clickIntoView(R.id.act_edit_expense_date);
-		DateTime currentTime = new DateTime();
-		setTimeInDatePicker(currentTime.getYear(), currentTime.getMonthOfYear(), currentTime.getDayOfMonth());
+		DateTime time = DateTime.now().plusMonths(1);
+		setTimeInDatePicker(time.getYear(), time.getMonthOfYear(), time.getDayOfMonth());
 		selectChargeable();
+
+		onView(withId(R.id.act_edit_expense_date)).check(matches(withText(Expense.sdf.format(time.toDate()))));
 
 		clickIntoView(R.id.action_save);
 
@@ -99,6 +102,7 @@ public class AddExpenseTest {
 
 		onView(withId(R.id.row_expense_name)).check(matches(withText(expenseName)));
 		onView(withId(R.id.row_expense_bill_layout)).check(matches(not(isDisplayed())));
+		onView(withId(R.id.row_expense_date)).check(matches(withText(Expense.sdf.format(time.toDate()))));
 	}
 
 	@Test
@@ -162,8 +166,6 @@ public class AddExpenseTest {
 		selectChargeable();
 
 		clickIntoView(R.id.action_save);
-
-		Thread.sleep(2000);
 
 		matchToolbarTitle(expensesTitle);
 

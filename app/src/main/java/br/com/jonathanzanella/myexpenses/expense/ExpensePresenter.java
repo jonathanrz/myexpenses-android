@@ -35,6 +35,7 @@ class ExpensePresenter {
 	private static final int REQUEST_EDIT_EXPENSE = 1;
 	static final String KEY_EXPENSE_UUID = "KeyExpenseUuid";
 	private static final String KEY_BILL_UUID = "KeyBillUuid";
+	private static final String KEY_DATE = "KeyDate";
 
 	private ExpenseContract.View view;
 	private ExpenseContract.EditView editView;
@@ -104,14 +105,16 @@ class ExpensePresenter {
 			loadBill();
 			loadChargeable();
 
-			date = expense.getDate();
+			if(date == null)
+				date = expense.getDate();
 			if (editView != null && date != null)
 				editView.onDateChanged(date);
 		} else {
 			if(editView != null)
 				editView.setTitle(R.string.new_expense_title);
 
-			date = DateTime.now();
+			if(date == null)
+				date = DateTime.now();
 			if(editView != null && date != null)
 				editView.onDateChanged(date);
 		}
@@ -321,6 +324,8 @@ class ExpensePresenter {
 					loadExpense(extras.getString(KEY_EXPENSE_UUID));
 				if(extras.containsKey(KEY_BILL_UUID))
 					bill = billRepository.find(extras.getString(KEY_BILL_UUID));
+				if(extras.containsKey(KEY_DATE))
+					date = new DateTime(extras.getLong(KEY_DATE));
 				if(extras.containsKey(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_TYPE)) {
 					chargeable = findChargeable(
 							(ChargeableType) extras.getSerializable(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_TYPE),
@@ -342,6 +347,8 @@ class ExpensePresenter {
 			outState.putString(KEY_EXPENSE_UUID, expense.getUuid());
 		if(bill != null)
 			outState.putString(KEY_BILL_UUID, bill.getUuid());
+		if(date != null)
+			outState.putLong(KEY_DATE, date.getMillis());
 		if(chargeable != null) {
 			outState.putString(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_UUID, chargeable.getUuid());
 			outState.putSerializable(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_TYPE, chargeable.getChargeableType());

@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 public interface Transaction {
-	SimpleDateFormat sdf = new SimpleDateFormat("dd/MM", Locale.getDefault());
+	SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
 
 	String getName();
 	DateTime getDate();
