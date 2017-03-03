@@ -25,6 +25,7 @@ import br.com.jonathanzanella.myexpenses.helpers.builder.ReceiptBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder;
 import br.com.jonathanzanella.myexpenses.source.Source;
 import br.com.jonathanzanella.myexpenses.source.SourceRepository;
+import br.com.jonathanzanella.myexpenses.views.MainActivity;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.InstrumentationRegistry.getTargetContext;
@@ -32,13 +33,15 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.clickIntoView;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle;
+import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.openMenuAndClickItem;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class ShowReceiptActivityTest {
+public class ViewReceiptsTest {
 	@Rule
-	public ActivityTestRule<ShowReceiptActivity> activityTestRule = new ActivityTestRule<>(ShowReceiptActivity.class, true, false);
+	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class, true, false);
 
 	private Receipt receipt;
 	private ReceiptRepository repository;
@@ -65,9 +68,14 @@ public class ShowReceiptActivityTest {
 
 	@Test
 	public void shows_receipt_correctly() throws Exception {
-		Intent i = new Intent();
-		i.putExtra(ShowReceiptActivity.KEY_RECEIPT_UUID, receipt.getUuid());
-		activityTestRule.launchActivity(i);
+		activityTestRule.launchActivity(new Intent());
+
+		openMenuAndClickItem(R.string.receipts);
+
+		final String receiptsTitle = getTargetContext().getString(R.string.receipts);
+		matchToolbarTitle(receiptsTitle);
+
+		clickIntoView(receipt.getName(), R.id.row_receipt_name);
 
 		final String editReceiptTitle = getTargetContext().getString(R.string.receipt) + " " + receipt.getName();
 		matchToolbarTitle(editReceiptTitle);
