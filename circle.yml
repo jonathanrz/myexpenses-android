@@ -1,14 +1,18 @@
 dependencies:
   pre:
-    - echo y | android update sdk --no-ui --all
+    - echo y | android update sdk --no-ui --all --filter tools,platform-tools,build-tools-25.0.1,android-25,extra-google-m2repository,extra-google-google_play_services,extra-android-m2repository
 test:
   override:
+    - (./gradlew assemble):
+      timeout: 360
     # start the emulator
-    - emulator -avd circleci-android22 -no-audio -no-window:
+    - emulator -avd circleci-android25 -no-audio -no-window:
         background: true
         parallel: true
     # wait for it to have booted
     - circle-android wait-for-boot
+    - sleep 30
+    - adb shell input keyevent 82
     # run tests  against the emulator.
     - ./gradlew assembleDebug
     - ./gradlew connectedAndroidTest
