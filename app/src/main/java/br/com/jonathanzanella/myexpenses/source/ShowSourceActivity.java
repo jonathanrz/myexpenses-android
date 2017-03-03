@@ -9,7 +9,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
 
@@ -19,7 +19,7 @@ public class ShowSourceActivity extends BaseActivity implements SourceContract.V
 	@Bind(R.id.act_show_source_name)
 	TextView sourceName;
 
-	private SourcePresenter presenter = new SourcePresenter(new SourceRepository(new Repository<Source>(this)));
+	private SourcePresenter presenter = new SourcePresenter(new SourceRepository(new RepositoryImpl<Source>(this)));
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {

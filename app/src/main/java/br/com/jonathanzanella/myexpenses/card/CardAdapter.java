@@ -1,9 +1,7 @@
 package br.com.jonathanzanella.myexpenses.card;
 
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.annotation.WorkerThread;
@@ -18,7 +16,7 @@ import java.util.List;
 import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
-import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import butterknife.Bind;
@@ -27,7 +25,6 @@ import lombok.Setter;
 
 public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
 	protected List<Card> cards;
-	private CardAdapterPresenter presenter;
 	private CardRepository cardRepository;
 	private ExpenseRepository expenseRepository;
 
@@ -94,13 +91,12 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
 	}
 
 	public CardAdapter() {
-		cardRepository = new CardRepository(new Repository<Card>(MyApplication.getContext()), getExpenseRepository());
-		presenter = new CardAdapterPresenter(this, cardRepository);
+		cardRepository = new CardRepository(new RepositoryImpl<Card>(MyApplication.getContext()), getExpenseRepository());
 	}
 
 	private ExpenseRepository getExpenseRepository() {
 		if(expenseRepository == null)
-			expenseRepository = new ExpenseRepository(new Repository<Expense>(MyApplication.getContext()));
+			expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(MyApplication.getContext()));
 		return expenseRepository;
 	}
 

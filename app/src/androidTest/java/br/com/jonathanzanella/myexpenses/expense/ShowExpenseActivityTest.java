@@ -14,13 +14,12 @@ import org.junit.runner.RunWith;
 
 import java.text.NumberFormat;
 
-import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
 import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
-import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.ExpenseBuilder;
@@ -42,12 +41,12 @@ public class ShowExpenseActivityTest {
 	public ActivityTestRule<ShowExpenseActivity> activityTestRule = new ActivityTestRule<>(ShowExpenseActivity.class, true, false);
 
 	private Expense expense;
-	private ExpenseRepository repository = new ExpenseRepository(new Repository<Expense>(getTargetContext()));
+	private ExpenseRepository repository = new ExpenseRepository(new RepositoryImpl<Expense>(getTargetContext()));
 
 	@Before
 	public void setUp() throws Exception {
 		Account a = new AccountBuilder().build();
-		new AccountRepository(new Repository<Account>(MyApplication.getContext())).save(a);
+		new AccountRepository(new RepositoryImpl<Account>(getTargetContext())).save(a);
 
 		expense = new ExpenseBuilder().chargeable(a).build();
 		assertTrue(repository.save(expense).isValid());

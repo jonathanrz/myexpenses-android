@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.MyApplication;
-import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.log.Log;
@@ -89,13 +89,13 @@ public class CardApi implements UnsyncModelApi<Card> {
 
 	private ExpenseRepository getExpenseRepository() {
 		if(expenseRepository == null)
-			expenseRepository = new ExpenseRepository(new Repository<Expense>(MyApplication.getContext()));
+			expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(MyApplication.getContext()));
 		return expenseRepository;
 	}
 
 	private CardRepository getCardRepository() {
 		if(cardRepository == null)
-			cardRepository = new CardRepository(new Repository<Card>(MyApplication.getContext()), getExpenseRepository());
+			cardRepository = new CardRepository(new RepositoryImpl<Card>(MyApplication.getContext()), getExpenseRepository());
 		return cardRepository;
 	}
 }

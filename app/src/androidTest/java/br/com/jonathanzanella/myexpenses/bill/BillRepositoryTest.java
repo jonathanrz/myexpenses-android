@@ -21,7 +21,7 @@ import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.card.Card;
 import br.com.jonathanzanella.myexpenses.card.CardRepository;
 import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
-import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
@@ -40,8 +40,8 @@ import static org.hamcrest.Matchers.not;
 @LargeTest
 public class BillRepositoryTest {
 	private DateTime firstDayOfJune = new DateTime(2016, 6, 1, 0, 0, 0, 0);
-	private ExpenseRepository expenseRepository = new ExpenseRepository(new Repository<Expense>(getTargetContext()));
-	private BillRepository billRepository = new BillRepository(new Repository<Bill>(getTargetContext()), expenseRepository);
+	private ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(getTargetContext()));
+	private BillRepository billRepository = new BillRepository(new RepositoryImpl<Bill>(getTargetContext()), expenseRepository);
 
 	@After
 	public void tearDown() throws Exception {
@@ -92,11 +92,11 @@ public class BillRepositoryTest {
 		billRepository.save(bill);
 
 		Account account = new AccountBuilder().build();
-		AccountRepository accountRepository = new AccountRepository(new Repository<Account>(MyApplication.getContext()));
+		AccountRepository accountRepository = new AccountRepository(new RepositoryImpl<Account>(MyApplication.getContext()));
 		accountRepository.save(account);
 
 		Card card = new CardBuilder().account(account).build(accountRepository);
-		new CardRepository(new Repository<Card>(MyApplication.getContext()), expenseRepository).save(card);
+		new CardRepository(new RepositoryImpl<Card>(MyApplication.getContext()), expenseRepository).save(card);
 
 		Expense expense = new ExpenseBuilder()
 				.date(firstDayOfJune)

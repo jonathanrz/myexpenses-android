@@ -16,7 +16,7 @@ import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
-import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.builder.CardBuilder;
@@ -37,10 +37,10 @@ public class CardRepositoryTest {
 	public void setUp() throws Exception {
 		account = new Account();
 		account.setName("test");
-		accountRepository = new AccountRepository(new Repository<Account>(MyApplication.getContext()));
+		accountRepository = new AccountRepository(new RepositoryImpl<Account>(MyApplication.getContext()));
 		accountRepository.save(account);
-		ExpenseRepository expenseRepository = new ExpenseRepository(new Repository<Expense>(MyApplication.getContext()));
-		subject = new CardRepository(new Repository<Card>(MyApplication.getContext()), expenseRepository);
+		ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(MyApplication.getContext()));
+		subject = new CardRepository(new RepositoryImpl<Card>(MyApplication.getContext()), expenseRepository);
 	}
 
 	@After

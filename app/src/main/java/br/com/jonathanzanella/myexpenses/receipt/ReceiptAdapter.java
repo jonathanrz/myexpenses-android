@@ -3,7 +3,6 @@ package br.com.jonathanzanella.myexpenses.receipt;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.v7.widget.RecyclerView;
@@ -19,7 +18,7 @@ import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
-import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.source.Source;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -100,7 +99,7 @@ class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ViewHolder> {
 	}
 
 	ReceiptAdapter(Context context) {
-		presenter = new ReceiptAdapterPresenter(this, new ReceiptRepository(new Repository<Receipt>(context)));
+		presenter = new ReceiptAdapterPresenter(this, new ReceiptRepository(new RepositoryImpl<Receipt>(context)));
 	}
 
 	public void loadData(DateTime date) {
@@ -122,10 +121,6 @@ class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ViewHolder> {
 	@Override
 	public int getItemCount() {
 		return receipts != null ? receipts.size() : 0;
-	}
-
-	void addReceipt(@NonNull Receipt receipt) {
-		presenter.addReceipt(receipt);
 	}
 
 	@Nullable

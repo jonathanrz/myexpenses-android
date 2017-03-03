@@ -11,7 +11,7 @@ import org.joda.time.DateTime;
 import java.text.NumberFormat;
 
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapter;
@@ -30,7 +30,7 @@ class OverviewExpensesMonthlyView extends BaseView {
 
 	public OverviewExpensesMonthlyView(Context context, DateTime month) {
 		super(context);
-		ExpenseRepository expenseRepository = new ExpenseRepository(new Repository<Expense>(context));
+		ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(context));
 
 		WeeklyPagerAdapter adapter = new WeeklyPagerAdapter(getContext(), month, new WeeklyPagerAdapterBuilder() {
 

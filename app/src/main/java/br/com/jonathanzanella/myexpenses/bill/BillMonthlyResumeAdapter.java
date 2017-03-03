@@ -15,7 +15,7 @@ import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import butterknife.Bind;
@@ -61,8 +61,8 @@ public class BillMonthlyResumeAdapter extends RecyclerView.Adapter<BillMonthlyRe
 	}
 
 	public BillMonthlyResumeAdapter() {
-		ExpenseRepository expenseRepository = new ExpenseRepository(new Repository<Expense>(MyApplication.getContext()));
-		billRepository = new BillRepository(new Repository<Bill>(MyApplication.getContext()), expenseRepository);
+		ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(MyApplication.getContext()));
+		billRepository = new BillRepository(new RepositoryImpl<Bill>(MyApplication.getContext()), expenseRepository);
 	}
 
 	@Override

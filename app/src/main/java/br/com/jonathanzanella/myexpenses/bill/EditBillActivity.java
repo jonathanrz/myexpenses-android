@@ -13,7 +13,7 @@ import org.joda.time.DateTime;
 import java.text.NumberFormat;
 
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch;
@@ -43,8 +43,8 @@ public class EditBillActivity extends BaseActivity implements BillContract.EditV
 	private BillPresenter presenter;
 
 	public EditBillActivity() {
-		ExpenseRepository expenseRepository = new ExpenseRepository(new Repository<Expense>(this));
-		presenter = new BillPresenter(new BillRepository(new Repository<Bill>(this), expenseRepository));
+		ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(this));
+		presenter = new BillPresenter(new BillRepository(new RepositoryImpl<Bill>(this), expenseRepository));
 	}
 
 	@Override

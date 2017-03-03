@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.helpers.DateHelper;
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapter;
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapterBuilder;
@@ -50,7 +50,7 @@ public class ReceiptView extends BaseView implements ViewPager.OnPageChangeListe
 
     @Override
     protected void init() {
-	    repository = new ReceiptRepository(new Repository<Receipt>(getContext()));
+	    repository = new ReceiptRepository(new RepositoryImpl<Receipt>(getContext()));
         inflate(getContext(), R.layout.view_receipts, this);
         ButterKnife.bind(this);
 

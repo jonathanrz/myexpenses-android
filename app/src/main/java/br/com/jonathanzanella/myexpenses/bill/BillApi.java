@@ -9,7 +9,7 @@ import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.account.AccountApi;
-import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.log.Log;
@@ -26,8 +26,8 @@ public class BillApi implements UnsyncModelApi<Bill> {
 	private BillRepository billRepository;
 
 	public BillApi() {
-		ExpenseRepository expenseRepository = new ExpenseRepository(new Repository<Expense>(MyApplication.getContext()));
-		billRepository = new BillRepository(new Repository<Bill>(MyApplication.getContext()), expenseRepository);
+		ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(MyApplication.getContext()));
+		billRepository = new BillRepository(new RepositoryImpl<Bill>(MyApplication.getContext()), expenseRepository);
 	}
 
 	@Override

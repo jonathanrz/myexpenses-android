@@ -21,7 +21,7 @@ import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.bill.Bill;
 import br.com.jonathanzanella.myexpenses.bill.BillRepository;
 import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
-import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
@@ -62,10 +62,10 @@ public class CalculateMonthBalanceCorrectly {
 	@Before
 	public void setUp() throws Exception {
 		Account a = new AccountBuilder().build();
-		assertTrue(new AccountRepository(new Repository<Account>(getTargetContext())).save(a).isValid());
+		assertTrue(new AccountRepository(new RepositoryImpl<Account>(getTargetContext())).save(a).isValid());
 
 		Source s = new SourceBuilder().build();
-		assertTrue(new SourceRepository(new Repository<Source>(getTargetContext())).save(s).isValid());
+		assertTrue(new SourceRepository(new RepositoryImpl<Source>(getTargetContext())).save(s).isValid());
 
 		DateTime now = DateTime.now().withDayOfMonth(1);
 		Bill b = new BillBuilder()
@@ -73,8 +73,8 @@ public class CalculateMonthBalanceCorrectly {
 				.endDate(now.plusMonths(12))
 				.amount(BILL_AMOUNT)
 				.build();
-		assertTrue(new BillRepository(new Repository<Bill>(getTargetContext()),
-				new ExpenseRepository(new Repository<Expense>(getTargetContext()))).save(b).isValid());
+		assertTrue(new BillRepository(new RepositoryImpl<Bill>(getTargetContext()),
+				new ExpenseRepository(new RepositoryImpl<Expense>(getTargetContext()))).save(b).isValid());
 
 		generateThreeMonthlyReceipts(a, s);
 		generateThreeMonthlyExpenses(a);
@@ -88,7 +88,7 @@ public class CalculateMonthBalanceCorrectly {
 
 	private void generateThreeMonthlyReceipts(Account a, Source s) {
 		DateTime dateTime = DateTime.now();
-		ReceiptRepository receiptRepository = new ReceiptRepository(new Repository<Receipt>(getTargetContext()));
+		ReceiptRepository receiptRepository = new ReceiptRepository(new RepositoryImpl<Receipt>(getTargetContext()));
 		Receipt r = new ReceiptBuilder()
 				.account(a)
 				.source(s)
@@ -116,7 +116,7 @@ public class CalculateMonthBalanceCorrectly {
 
 	private void generateThreeMonthlyExpenses(Account a) {
 		DateTime dateTime = DateTime.now();
-		ExpenseRepository expenseRepository = new ExpenseRepository(new Repository<Expense>(getTargetContext()));
+		ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(getTargetContext()));
 		Expense r = new ExpenseBuilder()
 				.chargeable(a)
 				.date(dateTime)

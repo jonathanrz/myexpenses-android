@@ -11,7 +11,7 @@ import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
 import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType;
-import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -66,7 +66,7 @@ public class Card implements Chargeable, UnsyncModel {
 	@WorkerThread
 	private AccountRepository getAccountRepository() {
 		if(accountRepository == null)
-			accountRepository = new AccountRepository(new Repository<Account>(MyApplication.getContext()));
+			accountRepository = new AccountRepository(new RepositoryImpl<Account>(MyApplication.getContext()));
 		return accountRepository;
 	}
 

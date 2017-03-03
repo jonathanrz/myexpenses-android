@@ -14,7 +14,7 @@ import org.junit.runner.RunWith;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
-import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder;
 
 import static android.support.test.InstrumentationRegistry.getContext;
@@ -37,7 +37,7 @@ public class ListSourceActivityTest {
 	@Rule
 	public ActivityTestRule<ListSourceActivity> activityTestRule = new ActivityTestRule<>(ListSourceActivity.class, true, false);
 
-	private SourceRepository repository = new SourceRepository(new Repository<Source>(getContext()));
+	private SourceRepository repository = new SourceRepository(new RepositoryImpl<Source>(getContext()));
 
 	@After
 	public void tearDown() throws Exception {

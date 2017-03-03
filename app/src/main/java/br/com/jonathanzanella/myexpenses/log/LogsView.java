@@ -12,7 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.views.BaseView;
 import br.com.jonathanzanella.myexpenses.views.DateTimeView;
 import butterknife.Bind;
@@ -51,7 +51,7 @@ public class LogsView extends BaseView implements DateTimeView.Listener {
 		inflate(getContext(), R.layout.view_logs, this);
 		ButterKnife.bind(this);
 
-		adapter = new LogAdapter(new LogRepository(new Repository<Log>(getContext())));
+		adapter = new LogAdapter(new LogRepository(new RepositoryImpl<Log>(getContext())));
 		logs.setAdapter(adapter);
 		logs.setHasFixedSize(true);
 		logs.setLayoutManager(new LinearLayoutManager(getContext()));

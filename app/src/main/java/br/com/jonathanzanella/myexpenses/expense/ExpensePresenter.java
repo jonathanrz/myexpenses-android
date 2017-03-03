@@ -23,7 +23,7 @@ import br.com.jonathanzanella.myexpenses.bill.BillRepository;
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
 import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType;
 import br.com.jonathanzanella.myexpenses.chargeable.ListChargeableActivity;
-import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
@@ -73,8 +73,7 @@ class ExpensePresenter {
 
 					@Override
 					protected Void doInBackground(Void... voids) {
-						if (invalidateCache)
-							expense = repository.find(expense.getUuid());
+						expense = repository.find(expense.getUuid());
 						return null;
 					}
 
@@ -297,7 +296,7 @@ class ExpensePresenter {
 
 			@Override
 			protected Void doInBackground(Void... voids) {
-				bill = new BillRepository(new Repository<Bill>(MyApplication.getContext()), repository).find(uuid);
+				bill = new BillRepository(new RepositoryImpl<Bill>(MyApplication.getContext()), repository).find(uuid);
 				return null;
 			}
 

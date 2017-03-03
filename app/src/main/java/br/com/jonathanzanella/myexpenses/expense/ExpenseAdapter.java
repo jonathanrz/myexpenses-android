@@ -23,7 +23,7 @@ import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.bill.Bill;
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
-import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -112,7 +112,7 @@ class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHolder> {
 	}
 
 	ExpenseAdapter() {
-		expenseRepository = new ExpenseRepository(new Repository<Expense>(MyApplication.getContext()));
+		expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(MyApplication.getContext()));
 		presenter = new ExpenseAdapterPresenter(this, expenseRepository);
 	}
 

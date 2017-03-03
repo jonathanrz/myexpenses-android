@@ -18,7 +18,7 @@ import br.com.jonathanzanella.myexpenses.card.Card;
 import br.com.jonathanzanella.myexpenses.card.CardRepository;
 import br.com.jonathanzanella.myexpenses.card.CardType;
 import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
-import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.CardBuilder;
@@ -42,11 +42,11 @@ public class ExpenseRepositoryTest {
 	@Before
 	public void setUp() throws Exception {
 		account = new AccountBuilder().build();
-		AccountRepository accountRepository = new AccountRepository(new Repository<Account>(getTargetContext()));
+		AccountRepository accountRepository = new AccountRepository(new RepositoryImpl<Account>(getTargetContext()));
 		accountRepository.save(account);
 		creditCard = new CardBuilder().account(account).type(CardType.CREDIT).build(accountRepository);
-		repository = new ExpenseRepository(new Repository<Expense>(getTargetContext()));
-		new CardRepository(new Repository<Card>(getTargetContext()), repository).save(creditCard);
+		repository = new ExpenseRepository(new RepositoryImpl<Expense>(getTargetContext()));
+		new CardRepository(new RepositoryImpl<Card>(getTargetContext()), repository).save(creditCard);
 	}
 
 	@After

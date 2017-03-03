@@ -15,7 +15,7 @@ import java.util.List;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
-import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.receipt.Receipt;
 import br.com.jonathanzanella.myexpenses.receipt.ReceiptRepository;
 import br.com.jonathanzanella.myexpenses.source.Source;
@@ -33,9 +33,9 @@ public class ReceiptsInPeriodTestSuite {
 	private Account account = new Account();
 	private Source source = new Source();
 
-	private SourceRepository sourceRepository = new SourceRepository(new Repository<Source>(getContext()));
-	private AccountRepository accountRepository = new AccountRepository(new Repository<Account>(getContext()));
-	private ReceiptRepository receiptRepository = new ReceiptRepository(new Repository<Receipt>(getContext()));
+	private SourceRepository sourceRepository = new SourceRepository(new RepositoryImpl<Source>(getContext()));
+	private AccountRepository accountRepository = new AccountRepository(new RepositoryImpl<Account>(getContext()));
+	private ReceiptRepository receiptRepository = new ReceiptRepository(new RepositoryImpl<Receipt>(getContext()));
 
 	@Before
 	public void setUp() throws Exception {

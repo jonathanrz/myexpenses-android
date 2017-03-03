@@ -13,7 +13,7 @@ import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import lombok.Setter;
@@ -61,7 +61,7 @@ class SourceAdapter extends RecyclerView.Adapter<SourceAdapter.ViewHolder> {
 	}
 
 	SourceAdapter() {
-		presenter = new SourceAdapterPresenter(new SourceRepository(new Repository<Source>(MyApplication.getContext())));
+		presenter = new SourceAdapterPresenter(new SourceRepository(new RepositoryImpl<Source>(MyApplication.getContext())));
 		sources = presenter.getSources(false);
 	}
 

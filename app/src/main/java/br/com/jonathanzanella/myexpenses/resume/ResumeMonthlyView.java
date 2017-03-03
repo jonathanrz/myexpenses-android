@@ -17,7 +17,7 @@ import java.util.List;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.AccountAdapter;
 import br.com.jonathanzanella.myexpenses.bill.BillMonthlyResumeAdapter;
-import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.receipt.Receipt;
@@ -66,8 +66,8 @@ class ResumeMonthlyView extends BaseView {
 	@UiThread
 	protected void init() {
 		inflate(getContext(), R.layout.view_monthly_resume, this);
-		expenseRepository = new ExpenseRepository(new Repository<Expense>(getContext()));
-		receiptRepository = new ReceiptRepository(new Repository<Receipt>(getContext()));
+		expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(getContext()));
+		receiptRepository = new ReceiptRepository(new RepositoryImpl<Receipt>(getContext()));
 		ButterKnife.bind(this);
 
 		initAccount();

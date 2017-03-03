@@ -18,7 +18,7 @@ import br.com.jonathanzanella.myexpenses.card.Card;
 import br.com.jonathanzanella.myexpenses.card.CardRepository;
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
 import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType;
-import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
 import br.com.jonathanzanella.myexpenses.transaction.Transaction;
 import lombok.EqualsAndHashCode;
@@ -145,7 +145,7 @@ public class Expense implements Transaction, UnsyncModel {
 
 	@WorkerThread
 	public Bill getBill() {
-		return new BillRepository(new Repository<Bill>(MyApplication.getContext()), expenseRepository).find(billUuid);
+		return new BillRepository(new RepositoryImpl<Bill>(MyApplication.getContext()), expenseRepository).find(billUuid);
 	}
 
 	static Chargeable findChargeable(ChargeableType type, final String uuid) {
@@ -222,19 +222,19 @@ public class Expense implements Transaction, UnsyncModel {
 
 	private static AccountRepository getAccountRepository() {
 		if(accountRepository == null)
-			accountRepository = new AccountRepository(new Repository<Account>(MyApplication.getContext()));
+			accountRepository = new AccountRepository(new RepositoryImpl<Account>(MyApplication.getContext()));
 		return accountRepository;
 	}
 
 	private static CardRepository getCardRepository() {
 		if(cardRepository == null)
-			cardRepository = new CardRepository(new Repository<Card>(MyApplication.getContext()), expenseRepository);
+			cardRepository = new CardRepository(new RepositoryImpl<Card>(MyApplication.getContext()), expenseRepository);
 		return cardRepository;
 	}
 
 	private static ExpenseRepository getExpenseRepository() {
 		if(expenseRepository == null)
-			expenseRepository = new ExpenseRepository(new Repository<Expense>(MyApplication.getContext()));
+			expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(MyApplication.getContext()));
 		return expenseRepository;
 	}
 }

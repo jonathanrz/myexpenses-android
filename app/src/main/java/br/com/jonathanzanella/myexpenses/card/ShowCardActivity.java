@@ -14,7 +14,7 @@ import android.widget.Toast;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
-import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.expense.EditExpenseActivity;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
@@ -38,9 +38,9 @@ public class ShowCardActivity extends BaseActivity implements CardContract.View 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		ExpenseRepository expenseRepository = new ExpenseRepository(new Repository<Expense>(this));
-		presenter = new CardPresenter(new CardRepository(new Repository<Card>(this), expenseRepository),
-				new AccountRepository(new Repository<Account>(this)), expenseRepository);
+		ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(this));
+		presenter = new CardPresenter(new CardRepository(new RepositoryImpl<Card>(this), expenseRepository),
+				new AccountRepository(new RepositoryImpl<Account>(this)), expenseRepository);
 		setContentView(R.layout.activity_show_card);
 	}
 

@@ -16,7 +16,7 @@ import java.text.NumberFormat;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
-import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
@@ -41,8 +41,8 @@ public class ShowBillActivityTest {
 	public ActivityTestRule<ShowBillActivity> activityTestRule = new ActivityTestRule<>(ShowBillActivity.class, true, false);
 
 	private Bill bill;
-	private ExpenseRepository expenseRepository = new ExpenseRepository(new Repository<Expense>(getTargetContext()));
-	private BillRepository repository = new BillRepository(new Repository<Bill>(getTargetContext()), expenseRepository);
+	private ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(getTargetContext()));
+	private BillRepository repository = new BillRepository(new RepositoryImpl<Bill>(getTargetContext()), expenseRepository);
 
 	@Before
 	public void setUp() throws Exception {

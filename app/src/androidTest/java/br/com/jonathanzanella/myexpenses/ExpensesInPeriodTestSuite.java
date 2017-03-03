@@ -14,7 +14,7 @@ import java.util.List;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
-import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.overview.WeeklyPagerAdapter;
@@ -24,8 +24,8 @@ import static org.junit.Assert.assertThat;
 
 @RunWith(AndroidJUnit4.class)
 public class ExpensesInPeriodTestSuite {
-	private AccountRepository accountRepository = new AccountRepository(new Repository<Account>(MyApplication.getContext()));
-	private ExpenseRepository expenseRepository = new ExpenseRepository(new Repository<Expense>(MyApplication.getContext()));
+	private AccountRepository accountRepository = new AccountRepository(new RepositoryImpl<Account>(MyApplication.getContext()));
+	private ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(MyApplication.getContext()));
 	private DateTime firstDayOfJune = new DateTime(2016, 6, 1, 0, 0, 0, 0);
 	private DateTime lastDayOfJune = firstDayOfJune.dayOfMonth().withMaximumValue();
 	private DateTime firstDayOfJuly = firstDayOfJune.plusMonths(1);
