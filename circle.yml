@@ -12,8 +12,6 @@ dependencies:
     - ANDROID_HOME=/usr/local/android-sdk-linux ./gradlew dependencies
 test:
   override:
-    - (./gradlew assemble):
-      timeout: 360
     # start the emulator
     - emulator -avd circleci-android25 -no-audio -no-window:
         background: true
