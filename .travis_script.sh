@@ -2,7 +2,7 @@
 set -ev
 
 ./gradlew assembleDebug
-./gradlew connectedAndroidTest
+./gradlew connectedCheck
 
 if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then
 	./gradlew testfairyJonathan
