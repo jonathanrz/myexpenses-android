@@ -21,7 +21,7 @@ dependencies:
     - rm armeabi-v7a-24_r08.zip
 
   override:
-    - ANDROID_HOME=/usr/local/android-sdk-linux ./gradlew dependencies
+    - ANDROID_HOME=/usr/local/android-sdk-linux ./gradlew dependencies --debug
 
   cache_directories:
     - ~/.gradle
