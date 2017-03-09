@@ -11,6 +11,8 @@ dependencies:
     - echo y | android update sdk --no-ui --all --filter "extra-android-m2repository"
     # Android 24 ARM Google APIs system Image
     - echo y | android update sdk --no-ui --all --filter "sys-img-armeabi-v7a-google_apis-24"
+    - echo y | android update sdk --no-ui --all --filter "add-on"
+    - echo y | android update sdk --no-ui --all --filter "extra"
     # Create the android 24 AVD
     - echo no | android create avd -n circleci-android24-googleapis -t 'android-24' --abi google_apis/armeabi-v7a
     # software rendering is broken in revision 10, we'll use revision 08
