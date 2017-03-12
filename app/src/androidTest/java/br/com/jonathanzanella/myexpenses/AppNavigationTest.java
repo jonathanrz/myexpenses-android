@@ -5,7 +5,9 @@ import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.Gravity;
+import android.view.WindowManager;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,6 +26,19 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 public class AppNavigationTest {
 	@Rule
 	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
+
+	@Before
+	public void setUp() throws Exception {
+		final MainActivity activity = activityTestRule.getActivity();
+		Runnable wakeUpDevice = new Runnable() {
+			public void run() {
+				activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON |
+						WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
+						WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+			}
+		};
+		activity.runOnUiThread(wakeUpDevice);
+	}
 
 	@Test
 	public void clickOnAndroidHomeIcon_OpensNavigation() {
