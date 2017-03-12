@@ -30,3 +30,5 @@ test:
     - cp -r app/build/outputs/androidTest-results/* $CIRCLE_TEST_REPORTS
     - if [ $CIRCLE_BRANCH = 'master' ]; then ./gradlew testfairyThainara; fi
     - if [ $CIRCLE_BRANCH = 'master' ]; then ./gradlew testfairyJonathan; fi
+  post:
+    - bash <(curl -s https://codecov.io/bash)
