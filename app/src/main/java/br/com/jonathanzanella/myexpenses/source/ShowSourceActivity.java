@@ -1,7 +1,6 @@
 package br.com.jonathanzanella.myexpenses.source;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.Menu;
@@ -31,16 +30,8 @@ public class ShowSourceActivity extends BaseActivity implements SourceContract.V
 	protected void storeBundle(final Bundle extras) {
 		super.storeBundle(extras);
 
-		if(extras != null && extras.containsKey(KEY_SOURCE_UUID)) {
-			new AsyncTask<Void, Void, Void>() {
-
-				@Override
-				protected Void doInBackground(Void... voids) {
-					presenter.loadSource(extras.getString(KEY_SOURCE_UUID));
-					return null;
-				}
-			}.execute();
-		}
+		if(extras != null && extras.containsKey(KEY_SOURCE_UUID))
+			presenter.loadSource(extras.getString(KEY_SOURCE_UUID));
 	}
 
 	@Override
