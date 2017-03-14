@@ -25,7 +25,14 @@ test:
     - adb shell input keyevent 82
     # run tests  against the emulator.
     - ./gradlew assembleDebug
-    - ./gradlew connectedAndroidTest -PdisablePreDex
+    - ./gradlew testDebugUnitTest
+    - ./gradlew connectedAndroidTest -PdisablePreDex connectedAndroidTest -e package br.com.jonathanzanella.myexpenses.account
+    - ./gradlew connectedAndroidTest -PdisablePreDex connectedAndroidTest -e package br.com.jonathanzanella.myexpenses.bill
+    - ./gradlew connectedAndroidTest -PdisablePreDex connectedAndroidTest -e package br.com.jonathanzanella.myexpenses.card
+    - ./gradlew connectedAndroidTest -PdisablePreDex connectedAndroidTest -e package br.com.jonathanzanella.myexpenses.expense
+    - ./gradlew connectedAndroidTest -PdisablePreDex connectedAndroidTest -e package br.com.jonathanzanella.myexpenses.receipt
+    - ./gradlew connectedAndroidTest -PdisablePreDex connectedAndroidTest -e package br.com.jonathanzanella.myexpenses.resume
+    - ./gradlew connectedAndroidTest -PdisablePreDex connectedAndroidTest -e package br.com.jonathanzanella.myexpenses.source
     # copy the build outputs to artifacts
     - cp -r app/build/outputs $CIRCLE_ARTIFACTS
     # copy the test results to the test results directory.
