@@ -92,6 +92,17 @@ public class UIHelper {
 		}
 	}
 
+	public static void clickIntoView(String text, @IdRes int id) {
+		try {
+			onView(allOf(
+					withText(text),
+					withId(id)))
+					.perform(scrollTo()).perform(click());
+		} catch (PerformException e) {
+			onView(withText(text)).perform(click());
+		}
+	}
+
 	public static void checkSnackbarText(String text) {
 		onView(allOf(withId(android.support.design.R.id.snackbar_text), withText(text)))
 				.check(matches(isDisplayed()));
