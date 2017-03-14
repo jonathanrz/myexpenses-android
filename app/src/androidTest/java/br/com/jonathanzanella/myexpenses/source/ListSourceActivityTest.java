@@ -1,13 +1,11 @@
 package br.com.jonathanzanella.myexpenses.source;
 
 import android.content.Intent;
-import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.After;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,7 +15,6 @@ import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder;
 
-import static android.support.test.InstrumentationRegistry.getContext;
 import static android.support.test.InstrumentationRegistry.getTargetContext;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -27,21 +24,17 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static br.com.jonathanzanella.myexpenses.helpers.TestUtils.withRecyclerView;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle;
 
-/**
- * Created by jzanella on 8/28/16.
- */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-@Ignore("until dbflow are removed")
 public class ListSourceActivityTest {
 	@Rule
 	public ActivityTestRule<ListSourceActivity> activityTestRule = new ActivityTestRule<>(ListSourceActivity.class, true, false);
 
-	private SourceRepository repository = new SourceRepository(new RepositoryImpl<Source>(getContext()));
+	private SourceRepository repository = new SourceRepository(new RepositoryImpl<Source>(getTargetContext()));
 
 	@After
 	public void tearDown() throws Exception {
-		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
+		new DatabaseHelper(getTargetContext()).recreateTables();
 	}
 
 	@Test
