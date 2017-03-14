@@ -1,7 +1,8 @@
 #!/bin/bash
 set -ev
 
-./gradlew connectedAndroidTest
+./gradlew assembleDebug
+./gradlew connectedAndroidTest -PdisablePreDex
 
 if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then
 	./gradlew testfairyJonathan
