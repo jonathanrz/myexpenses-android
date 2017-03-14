@@ -8,7 +8,6 @@ import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -61,7 +60,6 @@ public class EditExpenseTest {
 	}
 
 	@Test
-	@Ignore
 	public void edit_expense_correctly() throws Exception {
 		Intent i = new Intent();
 		i.putExtra(ShowExpenseActivity.KEY_EXPENSE_UUID, expense.getUuid());
