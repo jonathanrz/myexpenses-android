@@ -22,9 +22,6 @@ import lombok.Setter;
 
 public class MonthTransactionsView extends BaseView implements MonthTransactionsContractView {
 	public static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("MMMM/yy", Locale.getDefault());
-	private MonthTransactionsPresenter presenter;
-	@Setter
-	private LoadTransactionsCallback loadTransactionsCallback;
 
 	@Bind(R.id.view_month_transactions_list)
 	RecyclerView list;
@@ -35,6 +32,10 @@ public class MonthTransactionsView extends BaseView implements MonthTransactions
 
 	@BindString(R.string.month_transactions)
 	String monthTransactionsTemplate;
+
+	private MonthTransactionsPresenter presenter;
+	@Setter
+	private LoadTransactionsCallback loadTransactionsCallback;
 
 	public MonthTransactionsView(Context context, AttributeSet attrs) {
 		super(context, attrs);

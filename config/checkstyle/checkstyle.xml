@@ -20,6 +20,12 @@
 			<property name="max" value="25"/>
 		</module>
 		<module name="ConstantName" />
+		<module name="CovariantEquals" />
+		<module name="CustomImportOrder" />
+		<module name="CyclomaticComplexity">
+			<property name="max" value="14"/>
+		</module>
+		<module name="DeclarationOrder" />
 		<module name="GenericWhitespace" />
 	</module>
 

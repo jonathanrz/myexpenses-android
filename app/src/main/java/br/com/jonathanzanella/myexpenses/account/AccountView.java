@@ -16,10 +16,11 @@ import butterknife.OnClick;
 
 public class AccountView extends BaseView {
 	private static final int REQUEST_ADD_ACCOUNT = 1003;
-	private AccountAdapter adapter;
 
 	@Bind(R.id.view_accounts_list)
 	RecyclerView accounts;
+
+	private AccountAdapter adapter;
 
 	public AccountView(Context context) {
 		super(context);

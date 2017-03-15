@@ -16,10 +16,11 @@ import butterknife.OnClick;
 
 public class BillView extends BaseView {
 	private static final int REQUEST_ADD_BILL = 1003;
-	private BillAdapter adapter;
 
 	@Bind(R.id.view_bills_list)
 	RecyclerView bills;
+	
+	private BillAdapter adapter;
 
 	public BillView(Context context) {
 		super(context);

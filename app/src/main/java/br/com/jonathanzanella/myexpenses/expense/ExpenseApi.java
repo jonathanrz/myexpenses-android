@@ -19,14 +19,14 @@ public class ExpenseApi implements UnsyncModelApi<Expense> {
     private ExpenseInterface expenseInterface;
     private ExpenseRepository expenseRepository;
 
+    public ExpenseApi(ExpenseRepository expenseRepository) {
+        this.expenseRepository = expenseRepository;
+    }
+
     private ExpenseInterface getInterface() {
         if(expenseInterface == null)
             expenseInterface = new Server().expenseInterface();
         return expenseInterface;
-    }
-
-    public ExpenseApi(ExpenseRepository expenseRepository) {
-        this.expenseRepository = expenseRepository;
     }
 
     @Override

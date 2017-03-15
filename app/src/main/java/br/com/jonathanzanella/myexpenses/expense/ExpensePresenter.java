@@ -32,8 +32,8 @@ import static android.app.Activity.RESULT_OK;
 import static br.com.jonathanzanella.myexpenses.expense.Expense.findChargeable;
 
 class ExpensePresenter {
-	private static final int REQUEST_EDIT_EXPENSE = 1;
 	static final String KEY_EXPENSE_UUID = "KeyExpenseUuid";
+	private static final int REQUEST_EDIT_EXPENSE = 1;
 	private static final String KEY_BILL_UUID = "KeyBillUuid";
 	private static final String KEY_DATE = "KeyDate";
 
