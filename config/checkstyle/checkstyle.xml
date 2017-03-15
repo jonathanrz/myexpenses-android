@@ -26,6 +26,17 @@
 			<property name="max" value="14"/>
 		</module>
 		<module name="DeclarationOrder" />
+		<module name="DescendantToken" />
+		<module name="EmptyBlock" />
+		<module name="EmptyForInitializerPad" />
+		<module name="EmptyForIteratorPad" />
+		<module name="EmptyStatement" />
+		<module name="EqualsAvoidNull" />
+		<module name="EqualsHashCode" />
+		<module name="ExecutableStatementCount">
+			<property name="max" value="35"/>
+		</module>
+		<module name="FinalClass" />
 		<module name="GenericWhitespace" />
 	</module>
 
