@@ -169,7 +169,7 @@ class ExpensePresenter {
 				@Override
 				protected void onPostExecute(Void aVoid) {
 					super.onPostExecute(aVoid);
-					view.showExpense(expense);
+					updateView();
 				}
 			}.execute();
 		}
