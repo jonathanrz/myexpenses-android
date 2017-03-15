@@ -5,6 +5,10 @@
 <module name="Checker">
 
 	<module name="TreeWalker">
+		<module name="AnnotationUseStyle" />
+		<module name="AnonInnerLength">
+			<property name="max" value="35"/>
+		</module>
 		<module name="GenericWhitespace" />
 	</module>
 
