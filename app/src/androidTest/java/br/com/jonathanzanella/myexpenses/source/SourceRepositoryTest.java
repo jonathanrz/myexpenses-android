@@ -1,6 +1,7 @@
 package br.com.jonathanzanella.myexpenses.source;
 
 import android.support.test.filters.LargeTest;
+import android.support.test.filters.SmallTest;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.After;
@@ -25,7 +26,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 
 @RunWith(AndroidJUnit4.class)
-@LargeTest
+@SmallTest
 public class SourceRepositoryTest {
 	private SourceRepository repository;
 

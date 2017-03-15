@@ -32,9 +32,6 @@ import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTit
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.openMenuAndClickItem;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.typeTextIntoView;
 
-/**
- * Created by jzanella on 7/24/16.
- */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class AddAccountTest {

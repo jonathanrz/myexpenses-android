@@ -2,6 +2,7 @@ package br.com.jonathanzanella.myexpenses.expense;
 
 import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.LargeTest;
+import android.support.test.filters.SmallTest;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.joda.time.DateTime;
@@ -32,7 +33,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 
 @RunWith(AndroidJUnit4.class)
-@LargeTest
+@SmallTest
 public class ExpenseRepositoryTest {
 	private ExpenseRepository repository;
 

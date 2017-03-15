@@ -2,6 +2,7 @@ package br.com.jonathanzanella.myexpenses.account;
 
 import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.LargeTest;
+import android.support.test.filters.SmallTest;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.After;
@@ -22,7 +23,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 
 @RunWith(AndroidJUnit4.class)
-@LargeTest
+@SmallTest
 public class AccountRepositoryTest {
 	private AccountRepository repository = new AccountRepository(new RepositoryImpl<Account>(MyApplication.getContext()));
 
