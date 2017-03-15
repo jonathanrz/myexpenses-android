@@ -26,13 +26,14 @@ test:
     # run tests  against the emulator.
     - ./gradlew assembleDebug
     - ./gradlew testDebugUnitTest
-    - ./gradlew connectedAndroidTest -PdisablePreDex connectedAndroidTest -e package br.com.jonathanzanella.myexpenses.account
-    - ./gradlew connectedAndroidTest -PdisablePreDex connectedAndroidTest -e package br.com.jonathanzanella.myexpenses.bill
-    - ./gradlew connectedAndroidTest -PdisablePreDex connectedAndroidTest -e package br.com.jonathanzanella.myexpenses.card
-    - ./gradlew connectedAndroidTest -PdisablePreDex connectedAndroidTest -e package br.com.jonathanzanella.myexpenses.expense
-    - ./gradlew connectedAndroidTest -PdisablePreDex connectedAndroidTest -e package br.com.jonathanzanella.myexpenses.receipt
-    - ./gradlew connectedAndroidTest -PdisablePreDex connectedAndroidTest -e package br.com.jonathanzanella.myexpenses.resume
-    - ./gradlew connectedAndroidTest -PdisablePreDex connectedAndroidTest -e package br.com.jonathanzanella.myexpenses.source
+    - ./gradlew installDebugAndroidTest
+    - adb shell am instrument -w br.com.jonathanzanella.myexpenses.account/android.support.test.runner.AndroidJUnitRunner
+    - adb shell am instrument -w br.com.jonathanzanella.myexpenses.bill/android.support.test.runner.AndroidJUnitRunner
+    - adb shell am instrument -w br.com.jonathanzanella.myexpenses.card/android.support.test.runner.AndroidJUnitRunner
+    - adb shell am instrument -w br.com.jonathanzanella.myexpenses.expense/android.support.test.runner.AndroidJUnitRunner
+    - adb shell am instrument -w br.com.jonathanzanella.myexpenses.receipt/android.support.test.runner.AndroidJUnitRunner
+    - adb shell am instrument -w br.com.jonathanzanella.myexpenses.resume/android.support.test.runner.AndroidJUnitRunner
+    - adb shell am instrument -w br.com.jonathanzanella.myexpenses.source/android.support.test.runner.AndroidJUnitRunner
     # copy the build outputs to artifacts
     - cp -r app/build/outputs $CIRCLE_ARTIFACTS
     # copy the test results to the test results directory.
