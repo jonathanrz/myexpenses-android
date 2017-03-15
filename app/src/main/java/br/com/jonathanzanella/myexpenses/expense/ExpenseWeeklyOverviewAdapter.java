@@ -22,7 +22,7 @@ import butterknife.ButterKnife;
 import lombok.Getter;
 
 public class ExpenseWeeklyOverviewAdapter extends RecyclerView.Adapter<ExpenseWeeklyOverviewAdapter.ViewHolder> {
-	public static final SimpleDateFormat sdf = new SimpleDateFormat("dd", Locale.getDefault());
+	private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("dd", Locale.getDefault());
 	@Getter
 	protected List<Expense> expenses;
 	@Getter
@@ -49,7 +49,7 @@ public class ExpenseWeeklyOverviewAdapter extends RecyclerView.Adapter<ExpenseWe
 		@UiThread
 		public void setData(final Expense expense) {
 			name.setText(expense.getName());
-			date.setText(sdf.format(expense.getDate().toDate()));
+			date.setText(SIMPLE_DATE_FORMAT.format(expense.getDate().toDate()));
 			income.setText(NumberFormat.getCurrencyInstance().format(expense.getValueToShowInOverview() / 100.0));
 
 			new AsyncTask<Void, Void, Chargeable>() {

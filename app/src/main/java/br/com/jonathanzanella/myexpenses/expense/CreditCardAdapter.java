@@ -49,7 +49,7 @@ class CreditCardAdapter extends RecyclerView.Adapter<CreditCardAdapter.ViewHolde
 
 		public void setData(Expense expense) {
 			if(date != null)
-				date.setText(Receipt.sdf.format(expense.getDate().toDate()));
+				date.setText(Receipt.SIMPLE_DATE_FORMAT.format(expense.getDate().toDate()));
 			value.setText(NumberFormat.getCurrencyInstance().format(expense.getValue() / 100.0));
 		}
 

@@ -17,7 +17,7 @@ import lombok.Setter;
 
 @EqualsAndHashCode
 public class Bill implements Transaction, UnsyncModel {
-	public static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
+	static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
 
 	@Setter @Getter
 	private long id;
@@ -98,7 +98,7 @@ public class Bill implements Transaction, UnsyncModel {
 				"\nuuid=" + uuid +
 				"\namount=" + amount +
 				"\ndueDate=" + dueDate +
-				"\ninitDate=" + sdf.format(initDate.toDate()) +
-				"\nendDate="+ sdf.format(endDate.toDate());
+				"\ninitDate=" + SIMPLE_DATE_FORMAT.format(initDate.toDate()) +
+				"\nendDate="+ SIMPLE_DATE_FORMAT.format(endDate.toDate());
 	}
 }

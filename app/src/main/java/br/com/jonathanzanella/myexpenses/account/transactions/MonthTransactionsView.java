@@ -21,7 +21,7 @@ import butterknife.ButterKnife;
 import lombok.Setter;
 
 public class MonthTransactionsView extends BaseView implements MonthTransactionsContractView {
-	public static final SimpleDateFormat sdf = new SimpleDateFormat("MMMM/yy", Locale.getDefault());
+	public static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("MMMM/yy", Locale.getDefault());
 	private MonthTransactionsPresenter presenter;
 	@Setter
 	private LoadTransactionsCallback loadTransactionsCallback;
@@ -57,7 +57,7 @@ public class MonthTransactionsView extends BaseView implements MonthTransactions
 	}
 
 	void showBalance(final Account account, final DateTime month, int balance) {
-		header.setText(monthTransactionsTemplate.concat(" ").concat(sdf.format(month.toDate())));
+		header.setText(monthTransactionsTemplate.concat(" ").concat(SIMPLE_DATE_FORMAT.format(month.toDate())));
 		presenter.showBalance(account, month, balance);
 	}
 

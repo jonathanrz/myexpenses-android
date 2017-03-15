@@ -9,6 +9,17 @@
 		<module name="AnonInnerLength">
 			<property name="max" value="35"/>
 		</module>
+		<module name="ArrayTypeStyle" />
+		<module name="AvoidEscapedUnicodeCharacters" />
+		<module name="AvoidStarImport" />
+		<module name="BooleanExpressionComplexity" />
+		<module name="ClassDataAbstractionCoupling">
+			<property name="max" value="15"/>
+		</module>
+		<module name="ClassFanOutComplexity">
+			<property name="max" value="25"/>
+		</module>
+		<module name="ConstantName" />
 		<module name="GenericWhitespace" />
 	</module>
 

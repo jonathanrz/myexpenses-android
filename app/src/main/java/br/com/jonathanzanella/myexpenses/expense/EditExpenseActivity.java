@@ -167,7 +167,7 @@ public class EditExpenseActivity extends BaseActivity implements ExpenseContract
 
 	@Override
 	public void onDateChanged(DateTime date) {
-		editDate.setText(Receipt.sdf.format(date.toDate()));
+		editDate.setText(Receipt.SIMPLE_DATE_FORMAT.format(date.toDate()));
 	}
 
 	@Override

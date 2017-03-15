@@ -145,7 +145,7 @@ public class EditReceiptActivity extends BaseActivity implements ReceiptContract
 
 	@Override
 	public void onDateChanged(DateTime date) {
-		editDate.setText(Receipt.sdf.format(date.toDate()));
+		editDate.setText(Receipt.SIMPLE_DATE_FORMAT.format(date.toDate()));
 	}
 
 	@Override

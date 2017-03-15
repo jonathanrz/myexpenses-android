@@ -115,7 +115,7 @@ public class EditBillActivity extends BaseActivity implements BillContract.EditV
 
 	@Override
 	public void onInitDateChanged(DateTime date) {
-		editInitDate.setText(Bill.sdf.format(date.toDate()));
+		editInitDate.setText(Bill.SIMPLE_DATE_FORMAT.format(date.toDate()));
 	}
 
 	@OnClick(R.id.act_edit_bill_end_date)
@@ -125,7 +125,7 @@ public class EditBillActivity extends BaseActivity implements BillContract.EditV
 
 	@Override
 	public void onEndDateChanged(DateTime date) {
-		editEndDate.setText(Bill.sdf.format(date.toDate()));
+		editEndDate.setText(Bill.SIMPLE_DATE_FORMAT.format(date.toDate()));
 	}
 
 	@Override

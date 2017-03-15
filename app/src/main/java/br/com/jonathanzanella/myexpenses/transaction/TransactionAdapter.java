@@ -46,7 +46,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 		}
 
 		public void setData(Transaction transaction) {
-			date.setText(Transaction.sdf.format(transaction.getDate().toDate()));
+			date.setText(Transaction.SIMPLE_DATE_FORMAT.format(transaction.getDate().toDate()));
 			name.setText(transaction.getName());
 			value.setText(NumberFormat.getCurrencyInstance().format(transaction.getAmount() / 100.0));
 			value.setTypeface(null, Typeface.NORMAL);

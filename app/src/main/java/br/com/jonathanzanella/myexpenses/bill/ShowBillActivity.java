@@ -113,7 +113,7 @@ public class ShowBillActivity extends BaseActivity implements BillContract.View 
 		billName.setText(bill.getName());
 		billAmount.setText(NumberFormat.getCurrencyInstance().format(bill.getAmount() / 100.0));
 		billDueDate.setText(String.valueOf(bill.getDueDate()));
-		billInitDate.setText(Bill.sdf.format(bill.getInitDate().toDate()));
-		billEndDate.setText(Bill.sdf.format(bill.getEndDate().toDate()));
+		billInitDate.setText(Bill.SIMPLE_DATE_FORMAT.format(bill.getInitDate().toDate()));
+		billEndDate.setText(Bill.SIMPLE_DATE_FORMAT.format(bill.getEndDate().toDate()));
 	}
 }

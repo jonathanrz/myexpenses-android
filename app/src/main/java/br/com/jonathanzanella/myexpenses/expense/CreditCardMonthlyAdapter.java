@@ -25,7 +25,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class CreditCardMonthlyAdapter extends RecyclerView.Adapter<CreditCardMonthlyAdapter.ViewHolder> {
-	public static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM", Locale.getDefault());
+	private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("dd/MM", Locale.getDefault());
 	protected List<Expense> expenses;
 	private int totalValue;
 	private CardRepository cardRepository;
@@ -58,7 +58,7 @@ public class CreditCardMonthlyAdapter extends RecyclerView.Adapter<CreditCardMon
 			if(name != null)
 				name.setText(expense.getName());
 			if(date != null)
-				date.setText(sdf.format(expense.getDate().toDate()));
+				date.setText(SIMPLE_DATE_FORMAT.format(expense.getDate().toDate()));
 			income.setText(NumberFormat.getCurrencyInstance().format(expense.getValue() / 100.0));
 			if(source != null)
 				source.setVisibility(View.GONE);

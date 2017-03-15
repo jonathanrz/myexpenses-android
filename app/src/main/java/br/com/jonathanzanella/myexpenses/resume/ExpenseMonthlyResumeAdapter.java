@@ -28,7 +28,7 @@ import butterknife.OnClick;
 import lombok.Getter;
 
 class ExpenseMonthlyResumeAdapter extends RecyclerView.Adapter<ExpenseMonthlyResumeAdapter.ViewHolder> {
-	public static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM", Locale.getDefault());
+	public static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("dd/MM", Locale.getDefault());
 	@Getter
 	protected List<Expense> expenses;
 	@Getter
@@ -64,7 +64,7 @@ class ExpenseMonthlyResumeAdapter extends RecyclerView.Adapter<ExpenseMonthlyRes
 			if(name != null)
 				name.setText(expense.getName());
 			if(date != null)
-				date.setText(sdf.format(expense.getDate().toDate()));
+				date.setText(SIMPLE_DATE_FORMAT.format(expense.getDate().toDate()));
 			income.setText(NumberFormat.getCurrencyInstance().format(expense.getValue() / 100.0));
 			income.setTypeface(null, Typeface.NORMAL);
 			if(!expense.isCharged())

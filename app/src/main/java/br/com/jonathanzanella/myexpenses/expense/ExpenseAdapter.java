@@ -63,7 +63,7 @@ class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHolder> {
 		@UiThread
 		public void setData(final Expense expense) {
 			name.setText(expense.getName());
-			date.setText(Expense.sdf.format(expense.getDate().toDate()));
+			date.setText(Expense.SIMPLE_DATE_FORMAT.format(expense.getDate().toDate()));
 			value.setText(NumberFormat.getCurrencyInstance().format(expense.getValue() / 100.0));
 			new AsyncTask<Void, Void, Chargeable>() {
 

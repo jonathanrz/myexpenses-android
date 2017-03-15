@@ -21,7 +21,7 @@ import butterknife.OnClick;
 
 public class LogsView extends BaseView implements DateTimeView.Listener {
 	private static final String LOG_TAG = LogsView.class.getSimpleName();
-	public static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
+	public static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
 	@Bind(R.id.view_logs_list)
 	RecyclerView logs;
 	@Bind(R.id.view_log_init_time)

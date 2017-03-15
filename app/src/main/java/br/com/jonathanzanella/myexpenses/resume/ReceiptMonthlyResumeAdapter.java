@@ -29,7 +29,7 @@ import butterknife.OnClick;
 import lombok.Getter;
 
 class ReceiptMonthlyResumeAdapter extends RecyclerView.Adapter<ReceiptMonthlyResumeAdapter.ViewHolder> {
-	public static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM", Locale.getDefault());
+	public static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("dd/MM", Locale.getDefault());
 	protected List<Receipt> receipts;
 	@Getter
 	private int totalValue;
@@ -66,7 +66,7 @@ class ReceiptMonthlyResumeAdapter extends RecyclerView.Adapter<ReceiptMonthlyRes
 			if(name != null)
 				name.setText(receipt.getName());
 			if(date != null)
-				date.setText(sdf.format(receipt.getDate().toDate()));
+				date.setText(SIMPLE_DATE_FORMAT.format(receipt.getDate().toDate()));
 			income.setText(receipt.getIncomeFormatted());
 			income.setTypeface(null, Typeface.NORMAL);
 			if(!receipt.isCredited())

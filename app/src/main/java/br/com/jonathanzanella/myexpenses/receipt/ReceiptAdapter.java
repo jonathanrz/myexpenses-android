@@ -53,7 +53,7 @@ class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ViewHolder> {
 		@UiThread
 		public void setData(final Receipt receipt) {
 			name.setText(receipt.getName());
-			date.setText(Receipt.sdf.format(receipt.getDate().toDate()));
+			date.setText(Receipt.SIMPLE_DATE_FORMAT.format(receipt.getDate().toDate()));
 			income.setText(NumberFormat.getCurrencyInstance().format(receipt.getIncome() / 100.0));
 
 			new AsyncTask<Void, Void, Source>() {

@@ -3,9 +3,6 @@ package br.com.jonathanzanella.myexpenses.account;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.text.SimpleDateFormat;
-import java.util.Locale;
-
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
 import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
@@ -15,8 +12,6 @@ import lombok.Setter;
 
 @EqualsAndHashCode
 public class Account implements Chargeable, UnsyncModel {
-	public static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
-
 	@Setter @Getter
 	long id;
 

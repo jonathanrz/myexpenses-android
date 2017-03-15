@@ -6,9 +6,9 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 class MonthlyPagerAdapterHelper {
-	private static final SimpleDateFormat sdf = new SimpleDateFormat("MMM/yy", Locale.getDefault());
+	private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("MMM/yy", Locale.getDefault());
 
 	String formatMonthForView(DateTime month) {
-		return sdf.format(month.toDate());
+		return SIMPLE_DATE_FORMAT.format(month.toDate());
 	}
 }

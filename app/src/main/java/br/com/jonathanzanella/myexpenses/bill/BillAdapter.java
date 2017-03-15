@@ -51,8 +51,8 @@ class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder> {
 			name.setText(bill.getName());
 			amount.setText(NumberFormat.getCurrencyInstance().format(bill.getAmount() / 100.0));
 			dueDate.setText(String.valueOf(bill.getDueDate()));
-			initDate.setText(Bill.sdf.format(bill.getInitDate().toDate()));
-			endDate.setText(Bill.sdf.format(bill.getEndDate().toDate()));
+			initDate.setText(Bill.SIMPLE_DATE_FORMAT.format(bill.getInitDate().toDate()));
+			endDate.setText(Bill.SIMPLE_DATE_FORMAT.format(bill.getEndDate().toDate()));
 		}
 
 		@Override

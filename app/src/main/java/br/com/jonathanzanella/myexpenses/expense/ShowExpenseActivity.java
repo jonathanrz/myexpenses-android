@@ -113,7 +113,7 @@ public class ShowExpenseActivity extends BaseActivity implements ExpenseContract
 	@Override
 	public void showExpense(final Expense expense) {
 		expenseName.setText(expense.getName());
-		expenseDate.setText(Receipt.sdf.format(expense.getDate().toDate()));
+		expenseDate.setText(Receipt.SIMPLE_DATE_FORMAT.format(expense.getDate().toDate()));
 		expenseIncome.setText(NumberFormat.getCurrencyInstance().format(expense.getValue() / 100.0));
 		expenseIncomeToShowInOverview.setText(NumberFormat.getCurrencyInstance().format(expense.getValueToShowInOverview() / 100.0));
 		new AsyncTask<Void, Void, Chargeable>() {
