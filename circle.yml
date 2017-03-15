@@ -26,15 +26,9 @@ test:
     # run tests  against the emulator.
     - ./gradlew assembleDebug
     - ./gradlew testDebugUnitTest
-    - ./gradlew installDebugAndroidTest
-    - ./gradlew app:connectedAndroidTest -Pandroid.testInstrumentationRunnerArguments.package=br.com.jonathanzanella.myexpenses.app
-    - ./gradlew app:connectedAndroidTest -Pandroid.testInstrumentationRunnerArguments.package=br.com.jonathanzanella.myexpenses.account
-    - ./gradlew app:connectedAndroidTest -Pandroid.testInstrumentationRunnerArguments.package=br.com.jonathanzanella.myexpenses.bill
-    - ./gradlew app:connectedAndroidTest -Pandroid.testInstrumentationRunnerArguments.package=br.com.jonathanzanella.myexpenses.card
-    - ./gradlew app:connectedAndroidTest -Pandroid.testInstrumentationRunnerArguments.package=br.com.jonathanzanella.myexpenses.expense
-    - ./gradlew app:connectedAndroidTest -Pandroid.testInstrumentationRunnerArguments.package=br.com.jonathanzanella.myexpenses.receipt
-    - ./gradlew app:connectedAndroidTest -Pandroid.testInstrumentationRunnerArguments.package=br.com.jonathanzanella.myexpenses.resume
-    - ./gradlew app:connectedAndroidTest -Pandroid.testInstrumentationRunnerArguments.package=br.com.jonathanzanella.myexpenses.source
+    - ./gradlew app:connectedAndroidTest -PdisablePreDex -Pandroid.testInstrumentationRunnerArguments.size=small
+    - ./gradlew app:connectedAndroidTest -PdisablePreDex -Pandroid.testInstrumentationRunnerArguments.size=medium
+    - ./gradlew app:connectedAndroidTest -PdisablePreDex -Pandroid.testInstrumentationRunnerArguments.size=large
     # copy the build outputs to artifacts
     - cp -r app/build/outputs $CIRCLE_ARTIFACTS
     # copy the test results to the test results directory.

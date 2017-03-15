@@ -3,6 +3,7 @@ package br.com.jonathanzanella.myexpenses.receipt;
 import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.LargeTest;
+import android.support.test.filters.MediumTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -35,7 +36,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle;
 
 @RunWith(AndroidJUnit4.class)
-@LargeTest
+@MediumTest
 public class ShowReceiptActivityTest {
 	@Rule
 	public ActivityTestRule<ShowReceiptActivity> activityTestRule = new ActivityTestRule<>(ShowReceiptActivity.class, true, false);

@@ -2,6 +2,7 @@ package br.com.jonathanzanella.myexpenses.account;
 
 import android.content.Intent;
 import android.support.test.filters.LargeTest;
+import android.support.test.filters.MediumTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -43,7 +44,7 @@ import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.core.AllOf.allOf;
 
 @RunWith(AndroidJUnit4.class)
-@LargeTest
+@MediumTest
 public class ShowAccountActivityTest {
 	private static final int ACCOUNT_BALANCE = 115;
 	private static final int EXPENSE_VALUE = 25;

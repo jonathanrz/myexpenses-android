@@ -3,6 +3,7 @@ package br.com.jonathanzanella.myexpenses.resume;
 import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.LargeTest;
+import android.support.test.filters.SmallTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -49,7 +50,7 @@ import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.Matchers.allOf;
 
 @RunWith(AndroidJUnit4.class)
-@LargeTest
+@SmallTest
 public class CalculateMonthBalanceCorrectly {
 	private static final int EXPENSE_VALUE = 100;
 	private static final int RECEIPT_INCOME = 200;

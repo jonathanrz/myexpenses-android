@@ -3,6 +3,7 @@ package br.com.jonathanzanella.myexpenses.bill;
 import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.LargeTest;
+import android.support.test.filters.MediumTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -31,11 +32,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static br.com.jonathanzanella.myexpenses.helpers.TestUtils.waitForIdling;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle;
 
-/**
- * Created by jzanella on 8/28/16.
- */
 @RunWith(AndroidJUnit4.class)
-@LargeTest
+@MediumTest
 public class ShowBillActivityTest {
 	@Rule
 	public ActivityTestRule<ShowBillActivity> activityTestRule = new ActivityTestRule<>(ShowBillActivity.class, true, false);

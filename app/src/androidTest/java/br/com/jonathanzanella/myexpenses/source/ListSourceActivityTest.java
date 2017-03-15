@@ -2,6 +2,7 @@ package br.com.jonathanzanella.myexpenses.source;
 
 import android.content.Intent;
 import android.support.test.filters.LargeTest;
+import android.support.test.filters.MediumTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -25,7 +26,7 @@ import static br.com.jonathanzanella.myexpenses.helpers.TestUtils.withRecyclerVi
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle;
 
 @RunWith(AndroidJUnit4.class)
-@LargeTest
+@MediumTestw
 public class ListSourceActivityTest {
 	@Rule
 	public ActivityTestRule<ListSourceActivity> activityTestRule = new ActivityTestRule<>(ListSourceActivity.class, true, false);
