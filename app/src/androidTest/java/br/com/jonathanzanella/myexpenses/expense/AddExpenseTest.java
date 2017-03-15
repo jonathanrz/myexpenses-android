@@ -24,7 +24,7 @@ import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.bill.Bill;
 import br.com.jonathanzanella.myexpenses.bill.BillRepository;
 import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
-import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.BillBuilder;
@@ -62,7 +62,7 @@ public class AddExpenseTest {
 			uiDevice.wakeUp();
 
 		account = new AccountBuilder().build();
-		new AccountRepository(new Repository<Account>(MyApplication.getContext())).save(account);
+		new AccountRepository(new RepositoryImpl<Account>(MyApplication.getContext())).save(account);
 	}
 
 	@After
@@ -147,8 +147,8 @@ public class AddExpenseTest {
 	@Test
 	public void add_new_expense_with_bill() throws Exception {
 		Bill bill = new BillBuilder().build();
-		ExpenseRepository expenseRepository = new ExpenseRepository(new Repository<Expense>(getTargetContext()));
-		new BillRepository(new Repository<Bill>(getTargetContext()), expenseRepository).save(bill);
+		ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(getTargetContext()));
+		new BillRepository(new RepositoryImpl<Bill>(getTargetContext()), expenseRepository).save(bill);
 
 		mainActivityTestRule.launchActivity(new Intent());
 

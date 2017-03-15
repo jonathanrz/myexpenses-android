@@ -18,7 +18,7 @@ import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.card.Card;
 import br.com.jonathanzanella.myexpenses.card.CardRepository;
 import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
-import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
@@ -60,11 +60,11 @@ public class ShowAccountActivityTest {
 
 	@Before
 	public void setUp() throws Exception {
-		repository = new AccountRepository(new Repository<Account>(getTargetContext()));
-		receiptRepository = new ReceiptRepository(new Repository<Receipt>(getTargetContext()));
-		expenseRepository = new ExpenseRepository(new Repository<Expense>(getTargetContext()));
-		cardRepository = new CardRepository(new Repository<Card>(getTargetContext()), expenseRepository);
-		sourceRepository = new SourceRepository(new Repository<Source>(getTargetContext()));
+		repository = new AccountRepository(new RepositoryImpl<Account>(getTargetContext()));
+		receiptRepository = new ReceiptRepository(new RepositoryImpl<Receipt>(getTargetContext()));
+		expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(getTargetContext()));
+		cardRepository = new CardRepository(new RepositoryImpl<Card>(getTargetContext()), expenseRepository);
+		sourceRepository = new SourceRepository(new RepositoryImpl<Source>(getTargetContext()));
 
 		account = new Account();
 		account.setName("test");

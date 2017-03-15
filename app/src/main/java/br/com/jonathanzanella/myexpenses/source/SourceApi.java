@@ -8,8 +8,7 @@ import java.io.IOException;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.MyApplication;
-import br.com.jonathanzanella.myexpenses.card.Card;
-import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.server.Server;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
@@ -24,7 +23,7 @@ public class SourceApi implements UnsyncModelApi<Source> {
 
     @Override
     public @Nullable List<Source> index() {
-        Call<List<Source>> caller = getInterface().index(new SourceRepository(new Repository<Source>(MyApplication.getContext())).greaterUpdatedAt());
+        Call<List<Source>> caller = getInterface().index(new SourceRepository(new RepositoryImpl<Source>(MyApplication.getContext())).greaterUpdatedAt());
 
         try {
             Response<List<Source>> response = caller.execute();
@@ -73,12 +72,12 @@ public class SourceApi implements UnsyncModelApi<Source> {
 
 	@Override
     public List<Source> unsyncModels() {
-        return new SourceRepository(new Repository<Source>(MyApplication.getContext())).unsync();
+        return new SourceRepository(new RepositoryImpl<Source>(MyApplication.getContext())).unsync();
     }
 
     @Override
     public long greaterUpdatedAt() {
-        return new SourceRepository(new Repository<Source>(MyApplication.getContext())).greaterUpdatedAt();
+        return new SourceRepository(new RepositoryImpl<Source>(MyApplication.getContext())).greaterUpdatedAt();
     }
 
 	private SourceInterface getInterface() {
@@ -89,7 +88,7 @@ public class SourceApi implements UnsyncModelApi<Source> {
 
 	private SourceRepository getSourceRepository() {
 		if(sourceRepository == null)
-			sourceRepository = new SourceRepository(new Repository<Source>(MyApplication.getContext()));
+			sourceRepository = new SourceRepository(new RepositoryImpl<Source>(MyApplication.getContext()));
 		return sourceRepository;
 	}
 }

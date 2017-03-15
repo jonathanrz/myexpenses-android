@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.MyApplication;
-import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.server.Server;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
@@ -85,7 +85,7 @@ public class AccountApi implements UnsyncModelApi<Account> {
 	@WorkerThread
 	public AccountRepository getRepository() {
 		if(accountRepository == null)
-			accountRepository = new AccountRepository(new Repository<Account>(MyApplication.getContext()));
+			accountRepository = new AccountRepository(new RepositoryImpl<Account>(MyApplication.getContext()));
 		return accountRepository;
 	}
 

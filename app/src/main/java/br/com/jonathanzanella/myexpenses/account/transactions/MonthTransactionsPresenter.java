@@ -7,11 +7,10 @@ import org.joda.time.DateTime;
 
 import java.util.List;
 
-import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.bill.Bill;
 import br.com.jonathanzanella.myexpenses.bill.BillRepository;
-import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.receipt.Receipt;
@@ -26,13 +25,15 @@ class MonthTransactionsPresenter implements LoadTransactionsCallback {
 	private MonthTransactionsContractView view;
 	private ReceiptRepository receiptRepository;
 	private ExpenseRepository expenseRepository;
+	private BillRepository billRepository;
 	private int currentBalance;
 
 	MonthTransactionsPresenter(Context ctx, MonthTransactionsContractView view) {
 		this.view = view;
 		adapter = new TransactionAdapter();
-		receiptRepository = new ReceiptRepository(new Repository<Receipt>(ctx));
-		expenseRepository = new ExpenseRepository(new Repository<Expense>(ctx));
+		receiptRepository = new ReceiptRepository(new RepositoryImpl<Receipt>(ctx));
+		expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(ctx));
+		billRepository = new BillRepository(new RepositoryImpl<Bill>(ctx), expenseRepository);
 	}
 
 	void showBalance(final Account account, final DateTime month, int balance) {
@@ -77,7 +78,7 @@ class MonthTransactionsPresenter implements LoadTransactionsCallback {
 
 					@Override
 					protected Void doInBackground(Void... voids) {
-						List<Bill> bills = new BillRepository(new Repository<Bill>(MyApplication.getContext()), expenseRepository).monthly(month);
+						List<Bill> bills = billRepository.monthly(month);
 						adapter.addTransactions(bills);
 						return null;
 					}

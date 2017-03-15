@@ -8,7 +8,7 @@ import android.view.MenuItem;
 import android.widget.EditText;
 
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.user.SelectUserView;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
@@ -23,7 +23,7 @@ public class EditSourceActivity extends BaseActivity implements SourceContract.E
 	@Bind(R.id.act_edit_source_user)
 	SelectUserView selectUserView;
 
-	private SourcePresenter presenter = new SourcePresenter(new SourceRepository(new Repository<Source>(this)));
+	private SourcePresenter presenter = new SourcePresenter(new SourceRepository(new RepositoryImpl<Source>(this)));
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -35,17 +35,8 @@ public class EditSourceActivity extends BaseActivity implements SourceContract.E
 	protected void storeBundle(final Bundle extras) {
 		super.storeBundle(extras);
 
-		if(extras != null && extras.containsKey(KEY_SOURCE_UUID)) {
-			new AsyncTask<Void, Void, Void>() {
-
-				@Override
-				protected Void doInBackground(Void... voids) {
-					presenter.loadSource(extras.getString(KEY_SOURCE_UUID));
-					return null;
-				}
-			}.execute();
-
-		}
+		if(extras != null && extras.containsKey(KEY_SOURCE_UUID))
+			presenter.loadSource(extras.getString(KEY_SOURCE_UUID));
 	}
 
 	@Override

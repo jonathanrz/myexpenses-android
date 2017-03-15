@@ -9,7 +9,7 @@ import java.util.Locale;
 
 import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
 import lombok.Getter;
 import lombok.Setter;
@@ -94,7 +94,7 @@ public class Log implements UnsyncModel {
 
 	private static LogRepository getLogRepository() {
 		if(logRepository == null)
-			logRepository = new LogRepository(new Repository<Log>(MyApplication.getContext()));
+			logRepository = new LogRepository(new RepositoryImpl<Log>(MyApplication.getContext()));
 		return logRepository;
 	}
 

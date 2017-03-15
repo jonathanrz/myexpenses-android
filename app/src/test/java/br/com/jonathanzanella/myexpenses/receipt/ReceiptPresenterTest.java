@@ -1,7 +1,6 @@
 package br.com.jonathanzanella.myexpenses.receipt;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -44,7 +43,6 @@ public class ReceiptPresenterTest {
 	}
 
 	@Test
-	@Ignore //TODO: check how to mock and interact with the AsyncTask
 	public void save_gets_data_from_screen_and_save_to_repository() {
 		when(view.fillReceipt(any(Receipt.class))).thenReturn(new Receipt());
 		when(repository.save(any(Receipt.class))).thenReturn(new OperationResult());
@@ -57,7 +55,6 @@ public class ReceiptPresenterTest {
 	}
 
 	@Test
-	@Ignore //TODO: check how to mock and interact with the AsyncTask
 	public void call_view_with_errors() {
 		OperationResult result = new OperationResult();
 		result.addError(ValidationError.NAME);

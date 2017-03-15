@@ -1,6 +1,7 @@
 package br.com.jonathanzanella.myexpenses.receipt;
 
 import android.support.test.filters.LargeTest;
+import android.support.test.filters.SmallTest;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.joda.time.DateTime;
@@ -14,7 +15,7 @@ import java.util.List;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
-import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.ReceiptBuilder;
@@ -28,11 +29,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 
-/**
- * Created by jzanella on 8/27/16.
- */
 @RunWith(AndroidJUnit4.class)
-@LargeTest
+@SmallTest
 public class ReceiptRepositoryTest {
 	private ReceiptRepository repository;
 
@@ -42,10 +40,10 @@ public class ReceiptRepositoryTest {
 	@Before
 	public void setUp() throws Exception {
 		account = new AccountBuilder().build();
-		new AccountRepository(new Repository<Account>(getTargetContext())).save(account);
+		new AccountRepository(new RepositoryImpl<Account>(getTargetContext())).save(account);
 		source = new SourceBuilder().build();
-		new SourceRepository(new Repository<Source>(getTargetContext())).save(source);
-		repository = new ReceiptRepository(new Repository<Receipt>(getTargetContext()));
+		new SourceRepository(new RepositoryImpl<Source>(getTargetContext())).save(source);
+		repository = new ReceiptRepository(new RepositoryImpl<Receipt>(getTargetContext()));
 	}
 
 	@After

@@ -15,12 +15,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
-import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder;
@@ -29,6 +28,7 @@ import br.com.jonathanzanella.myexpenses.source.SourceRepository;
 import br.com.jonathanzanella.myexpenses.views.MainActivity;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
+import static android.support.test.InstrumentationRegistry.getTargetContext;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -50,7 +50,7 @@ public class AddReceiptTest {
 
 	private Account account;
 	private Source source;
-	private SourceRepository sourceRepository = new SourceRepository(new Repository<Source>(getContext()));
+	private SourceRepository sourceRepository = new SourceRepository(new RepositoryImpl<Source>(getTargetContext()));
 
 	@Before
 	public void setUp() throws Exception {
@@ -59,7 +59,7 @@ public class AddReceiptTest {
 			uiDevice.wakeUp();
 
 		account = new AccountBuilder().build();
-		new AccountRepository(new Repository<Account>(MyApplication.getContext())).save(account);
+		new AccountRepository(new RepositoryImpl<Account>(getTargetContext())).save(account);
 
 		source = new SourceBuilder().build();
 		sourceRepository.save(source);
@@ -67,7 +67,7 @@ public class AddReceiptTest {
 
 	@After
 	public void tearDown() throws Exception {
-		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
+		new DatabaseHelper(getTargetContext()).recreateTables();
 		ActivityLifecycleHelper.closeAllActivities(getInstrumentation());
 	}
 
@@ -173,6 +173,6 @@ public class AddReceiptTest {
 	}
 
 	private Context getContext() {
-		return InstrumentationRegistry.getTargetContext();
+		return getTargetContext();
 	}
 }

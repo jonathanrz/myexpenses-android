@@ -1,7 +1,8 @@
 package br.com.jonathanzanella.myexpenses.source;
 
+import android.os.AsyncTask;
 import android.support.annotation.Nullable;
-import android.support.annotation.WorkerThread;
+import android.support.annotation.UiThread;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException;
@@ -52,9 +53,22 @@ class SourcePresenter {
 		}
 	}
 
-	@WorkerThread
+	@UiThread
 	void loadSource(final String uuid) {
-		source = repository.find(uuid);
+		new AsyncTask<Void, Void, Void>() {
+
+			@Override
+			protected Void doInBackground(Void... voids) {
+				source = repository.find(uuid);
+				return null;
+			}
+
+			@Override
+			protected void onPostExecute(Void aVoid) {
+				super.onPostExecute(aVoid);
+				viewUpdated();
+			}
+		}.execute();
 	}
 
 	void save() {

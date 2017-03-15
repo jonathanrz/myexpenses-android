@@ -1,7 +1,8 @@
-package br.com.jonathanzanella.myexpenses;
+package br.com.jonathanzanella.myexpenses.receipt;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.filters.SmallTest;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.joda.time.DateTime;
@@ -12,12 +13,11 @@ import org.junit.runner.RunWith;
 
 import java.util.List;
 
+import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
-import br.com.jonathanzanella.myexpenses.database.Repository;
-import br.com.jonathanzanella.myexpenses.receipt.Receipt;
-import br.com.jonathanzanella.myexpenses.receipt.ReceiptRepository;
+import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.source.Source;
 import br.com.jonathanzanella.myexpenses.source.SourceRepository;
 
@@ -25,6 +25,7 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 @RunWith(AndroidJUnit4.class)
+@SmallTest
 public class ReceiptsInPeriodTestSuite {
 	private DateTime firstDayOfJune = new DateTime(2016, 6, 1, 0, 0, 0, 0);
 	private DateTime lastDayOfJune = firstDayOfJune.dayOfMonth().withMaximumValue();
@@ -33,9 +34,9 @@ public class ReceiptsInPeriodTestSuite {
 	private Account account = new Account();
 	private Source source = new Source();
 
-	private SourceRepository sourceRepository = new SourceRepository(new Repository<Source>(getContext()));
-	private AccountRepository accountRepository = new AccountRepository(new Repository<Account>(getContext()));
-	private ReceiptRepository receiptRepository = new ReceiptRepository(new Repository<Receipt>(getContext()));
+	private SourceRepository sourceRepository = new SourceRepository(new RepositoryImpl<Source>(getContext()));
+	private AccountRepository accountRepository = new AccountRepository(new RepositoryImpl<Account>(getContext()));
+	private ReceiptRepository receiptRepository = new ReceiptRepository(new RepositoryImpl<Receipt>(getContext()));
 
 	@Before
 	public void setUp() throws Exception {

@@ -12,7 +12,7 @@ import java.text.NumberFormat;
 import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
-import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.source.Source;
 import br.com.jonathanzanella.myexpenses.source.SourceRepository;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
@@ -89,19 +89,19 @@ public class Receipt implements Transaction, UnsyncModel {
 
 	private AccountRepository getAccountRepository() {
 		if(accountRepository == null)
-			accountRepository = new AccountRepository(new Repository<Account>(MyApplication.getContext()));
+			accountRepository = new AccountRepository(new RepositoryImpl<Account>(MyApplication.getContext()));
 		return accountRepository;
 	}
 
 	private ReceiptRepository getReceiptRepository() {
 		if(receiptRepository == null)
-			receiptRepository = new ReceiptRepository(new Repository<Receipt>(MyApplication.getContext()));
+			receiptRepository = new ReceiptRepository(new RepositoryImpl<Receipt>(MyApplication.getContext()));
 		return receiptRepository;
 	}
 
 	@WorkerThread
 	public Source getSource() {
-		return new SourceRepository(new Repository<Source>(MyApplication.getContext())).find(sourceUuid);
+		return new SourceRepository(new RepositoryImpl<Source>(MyApplication.getContext())).find(sourceUuid);
 	}
 
 	public void setSource(@NonNull Source s) {

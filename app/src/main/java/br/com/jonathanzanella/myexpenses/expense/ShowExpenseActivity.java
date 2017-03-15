@@ -17,7 +17,7 @@ import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.bill.Bill;
 import br.com.jonathanzanella.myexpenses.bill.BillRepository;
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
-import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.receipt.Receipt;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
@@ -45,8 +45,8 @@ public class ShowExpenseActivity extends BaseActivity implements ExpenseContract
 	@UiThread
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
-		ExpenseRepository expenseRepository = new ExpenseRepository(new Repository<Expense>(this));
-		presenter = new ExpensePresenter(expenseRepository, new BillRepository(new Repository<Bill>(this), expenseRepository));
+		ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(this));
+		presenter = new ExpensePresenter(expenseRepository, new BillRepository(new RepositoryImpl<Bill>(this), expenseRepository));
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_show_expenses);
 	}

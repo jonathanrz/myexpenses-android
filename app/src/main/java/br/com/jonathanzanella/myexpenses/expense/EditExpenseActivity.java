@@ -21,7 +21,7 @@ import br.com.jonathanzanella.myexpenses.bill.ListBillActivity;
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
 import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType;
 import br.com.jonathanzanella.myexpenses.chargeable.ListChargeableActivity;
-import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch;
 import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.receipt.Receipt;
@@ -68,8 +68,8 @@ public class EditExpenseActivity extends BaseActivity implements ExpenseContract
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		ExpenseRepository expenseRepository = new ExpenseRepository(new Repository<Expense>(this));
-		presenter = new ExpensePresenter(expenseRepository, new BillRepository(new Repository<Bill>(this), expenseRepository));
+		ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(this));
+		presenter = new ExpensePresenter(expenseRepository, new BillRepository(new RepositoryImpl<Bill>(this), expenseRepository));
 		setContentView(R.layout.activity_edit_expense);
 	}
 

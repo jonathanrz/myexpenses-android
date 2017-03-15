@@ -11,7 +11,7 @@ import android.support.v4.view.ViewPager;
 import org.joda.time.DateTime;
 
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapter;
@@ -38,8 +38,8 @@ public class CreditCardInvoiceActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_credit_card_invoice);
 
-		cardRepository = new CardRepository(new Repository<Card>(getContext()),
-				new ExpenseRepository(new Repository<Expense>(getContext())));
+		cardRepository = new CardRepository(new RepositoryImpl<Card>(getContext()),
+				new ExpenseRepository(new RepositoryImpl<Expense>(getContext())));
 	}
 
 	@Override

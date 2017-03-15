@@ -1,6 +1,7 @@
-package br.com.jonathanzanella.myexpenses;
+package br.com.jonathanzanella.myexpenses.app;
 
 import android.content.Intent;
+import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -12,6 +13,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.helpers.UIHelper;
 import br.com.jonathanzanella.myexpenses.views.MainActivity;
 
@@ -44,7 +46,7 @@ public class AppNavigationTest {
 	public void clickOnAndroidHomeIcon_OpensNavigation() {
 		activityTestRule.launchActivity(new Intent());
 
-		onView(withId(R.id.act_main_drawer)).check(matches(isClosed(Gravity.START)));
+		onView(ViewMatchers.withId(R.id.act_main_drawer)).check(matches(isClosed(Gravity.START)));
 		UIHelper.openMenu();
 
 		onView(withId(R.id.act_main_drawer)).check(matches(isOpen(Gravity.START)));

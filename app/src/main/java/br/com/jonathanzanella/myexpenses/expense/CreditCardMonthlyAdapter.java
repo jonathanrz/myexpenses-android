@@ -20,7 +20,7 @@ import java.util.Locale;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.card.Card;
 import br.com.jonathanzanella.myexpenses.card.CardRepository;
-import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -70,8 +70,8 @@ public class CreditCardMonthlyAdapter extends RecyclerView.Adapter<CreditCardMon
 	}
 
 	public CreditCardMonthlyAdapter(Context context) {
-		cardRepository = new CardRepository(new Repository<Card>(context),
-				new ExpenseRepository(new Repository<Expense>(context)));
+		cardRepository = new CardRepository(new RepositoryImpl<Card>(context),
+				new ExpenseRepository(new RepositoryImpl<Expense>(context)));
 	}
 
 	@Override

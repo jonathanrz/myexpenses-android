@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.MyApplication;
-import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.server.Server;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
@@ -90,7 +90,7 @@ public class ReceiptApi implements UnsyncModelApi<Receipt> {
 
     private ReceiptRepository getReceiptRepository() {
         if(receiptRepository == null)
-            receiptRepository = new ReceiptRepository(new Repository<Receipt>(MyApplication.getContext()));
+            receiptRepository = new ReceiptRepository(new RepositoryImpl<Receipt>(MyApplication.getContext()));
         return receiptRepository;
     }
 }

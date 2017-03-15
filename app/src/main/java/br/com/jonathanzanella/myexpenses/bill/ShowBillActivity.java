@@ -11,7 +11,7 @@ import android.widget.TextView;
 import java.text.NumberFormat;
 
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
@@ -34,8 +34,8 @@ public class ShowBillActivity extends BaseActivity implements BillContract.View 
 	private BillPresenter presenter;
 
 	public ShowBillActivity() {
-		ExpenseRepository expenseRepository = new ExpenseRepository(new Repository<Expense>(this));
-		presenter = new BillPresenter(new BillRepository(new Repository<Bill>(this), expenseRepository));
+		ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(this));
+		presenter = new BillPresenter(new BillRepository(new RepositoryImpl<Bill>(this), expenseRepository));
 	}
 
 	@Override

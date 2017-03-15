@@ -15,7 +15,7 @@ import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.account.AccountApi;
 import br.com.jonathanzanella.myexpenses.bill.BillApi;
 import br.com.jonathanzanella.myexpenses.card.CardApi;
-import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseApi;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
@@ -39,7 +39,7 @@ public class SyncService extends GcmTaskService {
 		apis.add(new AccountApi());
 		apis.add(new BillApi());
 		apis.add(new CardApi());
-		apis.add(new ExpenseApi(new ExpenseRepository(new Repository<Expense>(MyApplication.getContext()))));
+		apis.add(new ExpenseApi(new ExpenseRepository(new RepositoryImpl<Expense>(MyApplication.getContext()))));
 		apis.add(new ReceiptApi());
 		apis.add(new SourceApi());
 	}

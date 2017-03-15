@@ -18,7 +18,7 @@ import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
-import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.ReceiptBuilder;
@@ -44,17 +44,16 @@ public class ViewReceiptsTest {
 	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class, true, false);
 
 	private Receipt receipt;
-	private ReceiptRepository repository;
 
 	@Before
 	public void setUp() throws Exception {
-		repository = new ReceiptRepository(new Repository<Receipt>(getTargetContext()));
+		ReceiptRepository repository = new ReceiptRepository(new RepositoryImpl<Receipt>(getTargetContext()));
 
 		Source s = new SourceBuilder().build();
-		new SourceRepository(new Repository<Source>(getTargetContext())).save(s);
+		new SourceRepository(new RepositoryImpl<Source>(getTargetContext())).save(s);
 
 		Account a = new AccountBuilder().build();
-		new AccountRepository(new Repository<Account>(getTargetContext())).save(a);
+		new AccountRepository(new RepositoryImpl<Account>(getTargetContext())).save(a);
 
 		receipt = new ReceiptBuilder().source(s).account(a).build();
 		repository.save(receipt);

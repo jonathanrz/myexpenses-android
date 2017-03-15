@@ -18,7 +18,7 @@ import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.account.ListAccountActivity;
-import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch;
 import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.source.ListSourceActivity;
@@ -54,9 +54,9 @@ public class EditReceiptActivity extends BaseActivity implements ReceiptContract
 	@Bind(R.id.act_edit_receipt_user)
 	SelectUserView selectUserView;
 
-	private ReceiptPresenter presenter = new ReceiptPresenter(new ReceiptRepository(new Repository<Receipt>(this)),
-			new SourceRepository(new Repository<Source>(this)),
-			new AccountRepository(new Repository<Account>(this)));
+	private ReceiptPresenter presenter = new ReceiptPresenter(new ReceiptRepository(new RepositoryImpl<Receipt>(this)),
+			new SourceRepository(new RepositoryImpl<Source>(this)),
+			new AccountRepository(new RepositoryImpl<Account>(this)));
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

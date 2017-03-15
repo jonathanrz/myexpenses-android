@@ -9,10 +9,10 @@ import android.widget.TextView;
 import java.text.NumberFormat;
 
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
+import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseWeeklyOverviewAdapter;
-import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.views.BaseView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -31,7 +31,7 @@ class OverviewExpensesWeeklyView extends BaseView {
 	public OverviewExpensesWeeklyView(Context context, WeeklyPagerAdapter.Period period) {
 		super(context);
 		this.period = period;
-		expenseRepository = new ExpenseRepository(new Repository<Expense>(context));
+		expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(context));
 	}
 
 	@Override

@@ -17,7 +17,7 @@ import java.util.List;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.card.Card;
 import br.com.jonathanzanella.myexpenses.card.CardRepository;
-import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.receipt.Receipt;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -59,8 +59,8 @@ class CreditCardAdapter extends RecyclerView.Adapter<CreditCardAdapter.ViewHolde
 	}
 
 	public CreditCardAdapter(Context context) {
-		ExpenseRepository expenseRepository = new ExpenseRepository(new Repository<Expense>(context));
-		cardRepository = new CardRepository(new Repository<Card>(context), expenseRepository);
+		ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(context));
+		cardRepository = new CardRepository(new RepositoryImpl<Card>(context), expenseRepository);
 	}
 
 	@Override

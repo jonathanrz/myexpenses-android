@@ -2,6 +2,7 @@ package br.com.jonathanzanella.myexpenses.expense;
 
 import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.LargeTest;
+import android.support.test.filters.SmallTest;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.joda.time.DateTime;
@@ -18,7 +19,7 @@ import br.com.jonathanzanella.myexpenses.card.Card;
 import br.com.jonathanzanella.myexpenses.card.CardRepository;
 import br.com.jonathanzanella.myexpenses.card.CardType;
 import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
-import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.CardBuilder;
@@ -32,7 +33,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 
 @RunWith(AndroidJUnit4.class)
-@LargeTest
+@SmallTest
 public class ExpenseRepositoryTest {
 	private ExpenseRepository repository;
 
@@ -42,11 +43,11 @@ public class ExpenseRepositoryTest {
 	@Before
 	public void setUp() throws Exception {
 		account = new AccountBuilder().build();
-		AccountRepository accountRepository = new AccountRepository(new Repository<Account>(getTargetContext()));
+		AccountRepository accountRepository = new AccountRepository(new RepositoryImpl<Account>(getTargetContext()));
 		accountRepository.save(account);
 		creditCard = new CardBuilder().account(account).type(CardType.CREDIT).build(accountRepository);
-		repository = new ExpenseRepository(new Repository<Expense>(getTargetContext()));
-		new CardRepository(new Repository<Card>(getTargetContext()), repository).save(creditCard);
+		repository = new ExpenseRepository(new RepositoryImpl<Expense>(getTargetContext()));
+		new CardRepository(new RepositoryImpl<Card>(getTargetContext()), repository).save(creditCard);
 	}
 
 	@After

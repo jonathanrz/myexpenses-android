@@ -1,7 +1,7 @@
 package br.com.jonathanzanella.myexpenses.card;
 
 import android.support.test.InstrumentationRegistry;
-import android.support.test.filters.LargeTest;
+import android.support.test.filters.SmallTest;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.After;
@@ -16,7 +16,7 @@ import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
-import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.builder.CardBuilder;
@@ -27,7 +27,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 
 @RunWith(AndroidJUnit4.class)
-@LargeTest
+@SmallTest
 public class CardRepositoryTest {
 	private CardRepository subject;
 	private Account account;
@@ -37,10 +37,10 @@ public class CardRepositoryTest {
 	public void setUp() throws Exception {
 		account = new Account();
 		account.setName("test");
-		accountRepository = new AccountRepository(new Repository<Account>(MyApplication.getContext()));
+		accountRepository = new AccountRepository(new RepositoryImpl<Account>(MyApplication.getContext()));
 		accountRepository.save(account);
-		ExpenseRepository expenseRepository = new ExpenseRepository(new Repository<Expense>(MyApplication.getContext()));
-		subject = new CardRepository(new Repository<Card>(MyApplication.getContext()), expenseRepository);
+		ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(MyApplication.getContext()));
+		subject = new CardRepository(new RepositoryImpl<Card>(MyApplication.getContext()), expenseRepository);
 	}
 
 	@After
