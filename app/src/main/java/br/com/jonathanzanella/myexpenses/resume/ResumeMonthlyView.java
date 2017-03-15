@@ -45,7 +45,6 @@ class ResumeMonthlyView extends BaseView {
 
 	int singleRowHeight;
 
-	private MonthlyPagerAdapterHelper monthlyPagerAdapterHelper = new MonthlyPagerAdapterHelper();
 	private AccountAdapter accountAdapter;
 	private ReceiptMonthlyResumeAdapter receiptAdapter;
 	private ExpenseMonthlyResumeAdapter expensesAdapter;

@@ -8,14 +8,12 @@ import java.util.List;
 
 class BillAdapterPresenter {
 	private BillRepository repository;
-	private BillAdapter adapter;
 
 	private List<Bill> bills;
 	private List<Bill> billsFiltered;
 
-	BillAdapterPresenter(BillAdapter adapter, BillRepository repository) {
+	BillAdapterPresenter(BillRepository repository) {
 		this.repository = repository;
-		this.adapter = adapter;
 		loadBills();
 	}
 

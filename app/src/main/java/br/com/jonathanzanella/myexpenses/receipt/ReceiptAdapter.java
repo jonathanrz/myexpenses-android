@@ -99,7 +99,7 @@ class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ViewHolder> {
 	}
 
 	ReceiptAdapter(Context context) {
-		presenter = new ReceiptAdapterPresenter(this, new ReceiptRepository(new RepositoryImpl<Receipt>(context)));
+		presenter = new ReceiptAdapterPresenter(new ReceiptRepository(new RepositoryImpl<Receipt>(context)));
 	}
 
 	public void loadData(DateTime date) {

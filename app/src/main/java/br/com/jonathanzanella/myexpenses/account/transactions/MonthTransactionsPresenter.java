@@ -21,11 +21,11 @@ import lombok.Getter;
 
 class MonthTransactionsPresenter implements LoadTransactionsCallback {
 	@Getter
-	final TransactionAdapter adapter;
-	private MonthTransactionsContractView view;
-	private ReceiptRepository receiptRepository;
-	private ExpenseRepository expenseRepository;
-	private BillRepository billRepository;
+	private final TransactionAdapter adapter;
+	private final MonthTransactionsContractView view;
+	private final ReceiptRepository receiptRepository;
+	private final ExpenseRepository expenseRepository;
+	private final BillRepository billRepository;
 	private int currentBalance;
 
 	MonthTransactionsPresenter(Context ctx, MonthTransactionsContractView view) {

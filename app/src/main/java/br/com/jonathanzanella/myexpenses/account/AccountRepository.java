@@ -16,8 +16,8 @@ import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 import static br.com.jonathanzanella.myexpenses.log.Log.warning;
 
 public class AccountRepository implements ModelRepository<Account> {
-	private Repository<Account> repository;
-	AccountTable accountTable = new AccountTable();
+	private final Repository<Account> repository;
+	private final AccountTable accountTable = new AccountTable();
 
 	public AccountRepository(Repository<Account> repository) {
 		this.repository = repository;

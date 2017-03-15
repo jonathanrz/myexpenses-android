@@ -5,10 +5,10 @@ import org.joda.time.DateTime;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-public class MonthlyPagerAdapterHelper {
+class MonthlyPagerAdapterHelper {
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("MMM/yy", Locale.getDefault());
 
-	public String formatMonthForView(DateTime month) {
+	String formatMonthForView(DateTime month) {
 		return sdf.format(month.toDate());
 	}
 }

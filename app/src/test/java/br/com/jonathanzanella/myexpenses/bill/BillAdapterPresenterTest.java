@@ -22,7 +22,7 @@ public class BillAdapterPresenterTest {
 	public void setUp() throws Exception {
 		initMocks(this);
 
-		presenter = new BillAdapterPresenter(adapter, repository);
+		presenter = new BillAdapterPresenter(repository);
 	}
 
 	@Test(expected = UnsupportedOperationException.class)

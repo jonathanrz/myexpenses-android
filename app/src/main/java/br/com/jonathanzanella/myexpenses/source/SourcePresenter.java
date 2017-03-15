@@ -9,10 +9,6 @@ import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
-/**
- * Created by jzanella on 8/27/16.
- */
-
 class SourcePresenter {
 	private SourceContract.View view;
 	@Nullable

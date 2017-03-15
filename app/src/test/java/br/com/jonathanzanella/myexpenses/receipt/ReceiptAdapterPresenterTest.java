@@ -24,7 +24,7 @@ public class ReceiptAdapterPresenterTest {
 	public void setUp() throws Exception {
 		initMocks(this);
 
-		presenter = new ReceiptAdapterPresenter(adapter, repository);
+		presenter = new ReceiptAdapterPresenter(repository);
 	}
 
 	@Test(expected = UnsupportedOperationException.class)

@@ -61,6 +61,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 		);
 
 		navigationView.setNavigationItemSelectedListener(this);
+		//noinspection deprecation
 		drawer.setDrawerListener(drawerToggle);
 		drawerToggle.syncState();
 

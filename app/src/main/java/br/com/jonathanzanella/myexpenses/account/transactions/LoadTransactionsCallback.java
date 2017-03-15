@@ -1,5 +1,5 @@
 package br.com.jonathanzanella.myexpenses.account.transactions;
 
-public interface LoadTransactionsCallback {
+interface LoadTransactionsCallback {
 	void onTransactionsLoaded(int balance);
 }
