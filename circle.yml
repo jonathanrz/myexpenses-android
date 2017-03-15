@@ -26,6 +26,7 @@ test:
     # run tests  against the emulator.
     - ./gradlew assembleDebug
     - ./gradlew testDebugUnitTest
+    - ./gradlew checkStyle
     - ./gradlew installDebugAndroidTest
     - ./gradlew app:connectedDebugAndroidTest -PdisablePreDex -Pandroid.testInstrumentationRunnerArguments.package=br.com.jonathanzanella.myexpenses.app
     - ./gradlew app:connectedDebugAndroidTest -PdisablePreDex -Pandroid.testInstrumentationRunnerArguments.package=br.com.jonathanzanella.myexpenses.account
