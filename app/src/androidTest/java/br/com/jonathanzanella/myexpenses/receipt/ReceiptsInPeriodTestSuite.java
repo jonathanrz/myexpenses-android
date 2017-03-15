@@ -1,4 +1,4 @@
-package br.com.jonathanzanella.myexpenses;
+package br.com.jonathanzanella.myexpenses.receipt;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -12,6 +12,7 @@ import org.junit.runner.RunWith;
 
 import java.util.List;
 
+import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
