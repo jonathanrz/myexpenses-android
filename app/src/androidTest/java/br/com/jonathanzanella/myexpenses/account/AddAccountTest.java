@@ -14,11 +14,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.text.NumberFormat;
-
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
+import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.views.MainActivity;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
@@ -74,7 +73,7 @@ public class AddAccountTest {
 		matchToolbarTitle(accountsTitle);
 
 		onView(withId(R.id.row_account_name)).check(matches(withText(accountTitle)));
-		String balance = NumberFormat.getCurrencyInstance().format(0);
+		String balance = CurrencyHelper.format(0);
 		onView(withId(R.id.row_account_balance)).check(matches(withText(balance)));
 	}
 

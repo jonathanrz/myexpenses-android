@@ -6,13 +6,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
 
-import java.text.NumberFormat;
-
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseWeeklyOverviewAdapter;
+import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.views.BaseView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -53,6 +52,6 @@ class OverviewExpensesWeeklyView extends BaseView {
 		adapter.setExpenses(expenseRepository.expenses(period));
 		adapter.notifyDataSetChanged();
 
-		total.setText(NumberFormat.getCurrencyInstance().format(adapter.getTotalValue() / 100.0));
+		total.setText(CurrencyHelper.format(adapter.getTotalValue()));
 	}
 }

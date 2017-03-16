@@ -8,12 +8,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import java.text.NumberFormat;
-
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
+import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
 
@@ -111,9 +110,9 @@ public class ShowBillActivity extends BaseActivity implements BillContract.View 
 	@Override
 	public void showBill(Bill bill) {
 		billName.setText(bill.getName());
-		billAmount.setText(NumberFormat.getCurrencyInstance().format(bill.getAmount() / 100.0));
+		billAmount.setText(CurrencyHelper.format(bill.getAmount()));
 		billDueDate.setText(String.valueOf(bill.getDueDate()));
-		billInitDate.setText(Bill.sdf.format(bill.getInitDate().toDate()));
-		billEndDate.setText(Bill.sdf.format(bill.getEndDate().toDate()));
+		billInitDate.setText(Bill.SIMPLE_DATE_FORMAT.format(bill.getInitDate().toDate()));
+		billEndDate.setText(Bill.SIMPLE_DATE_FORMAT.format(bill.getEndDate().toDate()));
 	}
 }

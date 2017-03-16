@@ -12,7 +12,6 @@ import android.widget.TextView;
 import org.joda.time.DateTime;
 
 import java.lang.ref.WeakReference;
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
@@ -21,16 +20,17 @@ import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.card.Card;
 import br.com.jonathanzanella.myexpenses.card.CardRepository;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
+import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class CreditCardMonthlyAdapter extends RecyclerView.Adapter<CreditCardMonthlyAdapter.ViewHolder> {
-	public static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM", Locale.getDefault());
+	private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("dd/MM", Locale.getDefault());
 	protected List<Expense> expenses;
 	private int totalValue;
 	private CardRepository cardRepository;
 
-	private enum VIEW_TYPE {
+	private enum ViewType {
 		TYPE_NORMAL,
 		TYPE_TOTAL
 	}
@@ -58,14 +58,14 @@ public class CreditCardMonthlyAdapter extends RecyclerView.Adapter<CreditCardMon
 			if(name != null)
 				name.setText(expense.getName());
 			if(date != null)
-				date.setText(sdf.format(expense.getDate().toDate()));
-			income.setText(NumberFormat.getCurrencyInstance().format(expense.getValue() / 100.0));
+				date.setText(SIMPLE_DATE_FORMAT.format(expense.getDate().toDate()));
+			income.setText(CurrencyHelper.format(expense.getValue()));
 			if(source != null)
 				source.setVisibility(View.GONE);
 		}
 
 		public void setTotal(int totalValue) {
-			income.setText(NumberFormat.getCurrencyInstance().format(totalValue / 100.0));
+			income.setText(CurrencyHelper.format(totalValue));
 		}
 	}
 
@@ -77,16 +77,16 @@ public class CreditCardMonthlyAdapter extends RecyclerView.Adapter<CreditCardMon
 	@Override
 	public int getItemViewType(int position) {
 		if(expenses != null && position == expenses.size()) {
-			return VIEW_TYPE.TYPE_TOTAL.ordinal();
+			return ViewType.TYPE_TOTAL.ordinal();
 		} else {
-			return VIEW_TYPE.TYPE_NORMAL.ordinal();
+			return ViewType.TYPE_NORMAL.ordinal();
 		}
 	}
 
 	@Override
 	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		View v;
-		if(viewType == VIEW_TYPE.TYPE_TOTAL.ordinal())
+		if(viewType == ViewType.TYPE_TOTAL.ordinal())
 			v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_monthly_resume_expense_total, parent, false);
 		else
 			v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_monthly_resume_expense, parent, false);

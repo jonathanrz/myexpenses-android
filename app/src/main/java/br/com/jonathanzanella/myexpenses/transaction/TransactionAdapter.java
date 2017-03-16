@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.lang.ref.WeakReference;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -18,6 +17,7 @@ import java.util.List;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.bill.Bill;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
+import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.helpers.TransactionsHelper;
 import br.com.jonathanzanella.myexpenses.receipt.Receipt;
 import butterknife.Bind;
@@ -46,9 +46,9 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 		}
 
 		public void setData(Transaction transaction) {
-			date.setText(Transaction.sdf.format(transaction.getDate().toDate()));
+			date.setText(Transaction.SIMPLE_DATE_FORMAT.format(transaction.getDate().toDate()));
 			name.setText(transaction.getName());
-			value.setText(NumberFormat.getCurrencyInstance().format(transaction.getAmount() / 100.0));
+			value.setText(CurrencyHelper.format(transaction.getAmount()));
 			value.setTypeface(null, Typeface.NORMAL);
 			if(transaction instanceof Receipt) {
 				value.setTextColor(getColor(R.color.receipt));

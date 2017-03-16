@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'testfairy'
 apply plugin: 'jacoco-android'
+apply plugin: 'checkstyle'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -187,4 +188,13 @@ repositories {
 }
 kapt {
     generateStubs = true
+}
+
+check.dependsOn 'checkstyle'
+
+task checkstyle(type: Checkstyle) {
+    configFile file("$project.rootDir/config/checkstyle/checkstyle.xml")
+    source 'src'
+    include '**/*.java'
+    classpath = files()
 }

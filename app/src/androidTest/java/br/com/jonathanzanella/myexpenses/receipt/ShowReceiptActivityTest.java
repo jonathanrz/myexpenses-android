@@ -2,7 +2,6 @@ package br.com.jonathanzanella.myexpenses.receipt;
 
 import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
-import android.support.test.filters.LargeTest;
 import android.support.test.filters.MediumTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -13,14 +12,13 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.text.NumberFormat;
-
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
+import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.ReceiptBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder;
@@ -73,7 +71,7 @@ public class ShowReceiptActivityTest {
 		final String editReceiptTitle = getTargetContext().getString(R.string.receipt) + " " + receipt.getName();
 		matchToolbarTitle(editReceiptTitle);
 
-		String incomeAsCurrency = NumberFormat.getCurrencyInstance().format(receipt.getIncome() / 100.0);
+		String incomeAsCurrency = CurrencyHelper.format(receipt.getIncome());
 		onView(withId(R.id.act_show_receipt_name)).check(matches(withText(receipt.getName())));
 		onView(withId(R.id.act_show_receipt_income)).check(matches(withText(incomeAsCurrency)));
 		Account account = receipt.getAccount();

@@ -2,7 +2,6 @@ package br.com.jonathanzanella.myexpenses.bill;
 
 import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
-import android.support.test.filters.LargeTest;
 import android.support.test.filters.MediumTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -13,14 +12,13 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.text.NumberFormat;
-
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
+import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.BillBuilder;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
@@ -65,7 +63,7 @@ public class ShowBillActivityTest {
 		final String editBillTitle = getTargetContext().getString(R.string.bill) + " " + bill.getName();
 		matchToolbarTitle(editBillTitle);
 
-		String balanceAsCurrency = NumberFormat.getCurrencyInstance().format(bill.getAmount() / 100.0);
+		String balanceAsCurrency = CurrencyHelper.format(bill.getAmount());
 		onView(withId(R.id.act_show_bill_name)).check(matches(withText(bill.getName())));
 		onView(withId(R.id.act_show_bill_amount)).check(matches(withText(balanceAsCurrency)));
 	}

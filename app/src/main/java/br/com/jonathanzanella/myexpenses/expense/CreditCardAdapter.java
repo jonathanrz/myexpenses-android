@@ -11,13 +11,13 @@ import android.widget.TextView;
 import org.joda.time.DateTime;
 
 import java.lang.ref.WeakReference;
-import java.text.NumberFormat;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.card.Card;
 import br.com.jonathanzanella.myexpenses.card.CardRepository;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
+import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.receipt.Receipt;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -27,7 +27,7 @@ class CreditCardAdapter extends RecyclerView.Adapter<CreditCardAdapter.ViewHolde
 	private int totalValue;
 	private CardRepository cardRepository;
 
-	private enum VIEW_TYPE {
+	private enum ViewType {
 		TYPE_NORMAL,
 		TYPE_TOTAL
 	}
@@ -49,12 +49,12 @@ class CreditCardAdapter extends RecyclerView.Adapter<CreditCardAdapter.ViewHolde
 
 		public void setData(Expense expense) {
 			if(date != null)
-				date.setText(Receipt.sdf.format(expense.getDate().toDate()));
-			value.setText(NumberFormat.getCurrencyInstance().format(expense.getValue() / 100.0));
+				date.setText(Receipt.SIMPLE_DATE_FORMAT.format(expense.getDate().toDate()));
+			value.setText(CurrencyHelper.format(expense.getValue()));
 		}
 
 		public void setTotal(int totalValue) {
-			value.setText(NumberFormat.getCurrencyInstance().format(totalValue / 100.0));
+			value.setText(CurrencyHelper.format(totalValue));
 		}
 	}
 
@@ -66,16 +66,16 @@ class CreditCardAdapter extends RecyclerView.Adapter<CreditCardAdapter.ViewHolde
 	@Override
 	public int getItemViewType(int position) {
 		if(expenses != null && position == expenses.size()) {
-			return VIEW_TYPE.TYPE_TOTAL.ordinal();
+			return ViewType.TYPE_TOTAL.ordinal();
 		} else {
-			return VIEW_TYPE.TYPE_NORMAL.ordinal();
+			return ViewType.TYPE_NORMAL.ordinal();
 		}
 	}
 
 	@Override
 	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		View v;
-		if(viewType == VIEW_TYPE.TYPE_TOTAL.ordinal())
+		if(viewType == ViewType.TYPE_TOTAL.ordinal())
 			v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_credit_card_expense_total, parent, false);
 		else
 			v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_credit_card_expense, parent, false);

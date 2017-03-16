@@ -26,7 +26,7 @@ import static org.junit.Assert.assertThat;
 
 @RunWith(AndroidJUnit4.class)
 @SmallTest
-public class ReceiptsInPeriodTestSuite {
+public class ReceiptsInPeriodTest {
 	private DateTime firstDayOfJune = new DateTime(2016, 6, 1, 0, 0, 0, 0);
 	private DateTime lastDayOfJune = firstDayOfJune.dayOfMonth().withMaximumValue();
 	private DateTime firstDayOfJuly = firstDayOfJune.plusMonths(1);

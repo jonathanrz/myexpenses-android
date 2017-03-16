@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.text.NumberFormat;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.MyApplication;
@@ -16,6 +15,7 @@ import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
+import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import lombok.Setter;
@@ -49,10 +49,10 @@ class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder> {
 
 		public void setData(Bill bill) {
 			name.setText(bill.getName());
-			amount.setText(NumberFormat.getCurrencyInstance().format(bill.getAmount() / 100.0));
+			amount.setText(CurrencyHelper.format(bill.getAmount()));
 			dueDate.setText(String.valueOf(bill.getDueDate()));
-			initDate.setText(Bill.sdf.format(bill.getInitDate().toDate()));
-			endDate.setText(Bill.sdf.format(bill.getEndDate().toDate()));
+			initDate.setText(Bill.SIMPLE_DATE_FORMAT.format(bill.getInitDate().toDate()));
+			endDate.setText(Bill.SIMPLE_DATE_FORMAT.format(bill.getEndDate().toDate()));
 		}
 
 		@Override
@@ -72,7 +72,8 @@ class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder> {
 
 	BillAdapter() {
 		ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(MyApplication.getContext()));
-		this.presenter = new BillAdapterPresenter(new BillRepository(new RepositoryImpl<Bill>(MyApplication.getContext()), expenseRepository));
+		BillRepository repository = new BillRepository(new RepositoryImpl<Bill>(MyApplication.getContext()), expenseRepository);
+		this.presenter = new BillAdapterPresenter(repository);
 		refreshData();
 	}
 

@@ -33,10 +33,9 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.core.Is.is;
 
-/**
- * Created by jzanella on 7/24/16.
- */
-public class UIHelper {
+public final class UIHelper {
+	private UIHelper() {}
+
 	public static void openMenu() {
 		onView(withContentDescription("Drawer Open")).perform(click());
 	}

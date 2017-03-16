@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE suppressions PUBLIC
+	"-//Puppy Crawl//DTD Suppressions 1.1//EN"
+	"http://www.puppycrawl.com/dtds/suppressions_1_1.dtd">
+
+<suppressions>
+	<suppress checks="IllegalCatch"
+	          files="ActivityLifecycleHelper.java"
+	          lines="40"/>
+	<suppress checks="InterfaceIsType"
+	          files="Environment.java" />
+	<suppress checks="MagicNumber"
+	          files=".*Test\.java"/>
+	<suppress checks="MagicNumber"
+	          files=".*Builder\.java"/>
+	<suppress checks="MethodName"
+	          files=".*Test\.java"/>
+</suppressions>

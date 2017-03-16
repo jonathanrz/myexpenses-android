@@ -8,12 +8,11 @@ import android.widget.TextView;
 
 import org.joda.time.DateTime;
 
-import java.text.NumberFormat;
-
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
+import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapter;
 import br.com.jonathanzanella.myexpenses.views.BaseView;
 import butterknife.Bind;
@@ -55,7 +54,7 @@ class OverviewExpensesMonthlyView extends BaseView {
 		for (Expense expense : expenseRepository.expenses(period))
 			total += expense.getValueToShowInOverview();
 
-		monthlyTotal.setText(NumberFormat.getCurrencyInstance().format(total / 100.0));
+		monthlyTotal.setText(CurrencyHelper.format(total));
 	}
 
 	@Override

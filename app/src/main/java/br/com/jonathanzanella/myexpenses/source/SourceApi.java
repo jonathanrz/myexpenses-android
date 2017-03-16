@@ -22,8 +22,10 @@ public class SourceApi implements UnsyncModelApi<Source> {
     private SourceRepository sourceRepository;
 
     @Override
-    public @Nullable List<Source> index() {
-        Call<List<Source>> caller = getInterface().index(new SourceRepository(new RepositoryImpl<Source>(MyApplication.getContext())).greaterUpdatedAt());
+    @Nullable
+    public List<Source> index() {
+	    long lastUpdatedAt = new SourceRepository(new RepositoryImpl<Source>(MyApplication.getContext())).greaterUpdatedAt();
+	    Call<List<Source>> caller = getInterface().index(lastUpdatedAt);
 
         try {
             Response<List<Source>> response = caller.execute();

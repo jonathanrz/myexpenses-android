@@ -3,7 +3,6 @@ package br.com.jonathanzanella.myexpenses.bill;
 import android.content.Context;
 import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
-import android.support.test.filters.LargeTest;
 import android.support.test.filters.MediumTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -85,9 +84,9 @@ public class AddBillTest {
 		matchToolbarTitle(billsTitle);
 
 		onView(withId(R.id.row_bill_name)).check(matches(withText(billTitle)));
-		String initDateText = Bill.sdf.format(initDate.toDate());
+		String initDateText = Bill.SIMPLE_DATE_FORMAT.format(initDate.toDate());
 		onView(withId(R.id.row_bill_init_date)).check(matches(withText(initDateText)));
-		String endDateText = Bill.sdf.format(endDate.toDate());
+		String endDateText = Bill.SIMPLE_DATE_FORMAT.format(endDate.toDate());
 		onView(withId(R.id.row_bill_end_date)).check(matches(withText(endDateText)));
 	}
 

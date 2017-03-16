@@ -7,8 +7,6 @@ import com.google.gson.annotations.SerializedName;
 
 import org.joda.time.DateTime;
 
-import java.text.NumberFormat;
-
 import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
@@ -19,6 +17,7 @@ import br.com.jonathanzanella.myexpenses.card.CardRepository;
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
 import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
+import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
 import br.com.jonathanzanella.myexpenses.transaction.Transaction;
 import lombok.EqualsAndHashCode;
@@ -140,7 +139,7 @@ public class Expense implements Transaction, UnsyncModel {
 	}
 
 	public void setBill(Bill bill) {
-		billUuid = (bill != null ? bill.getUuid() : null);
+		billUuid = bill != null ? bill.getUuid() : null;
 	}
 
 	@WorkerThread
@@ -188,7 +187,7 @@ public class Expense implements Transaction, UnsyncModel {
 	public String getData() {
 		return "name=" + name + "" +
 				"\nuuid=" + uuid +
-				"\ndate=" + sdf.format(date.toDate()) +
+				"\ndate=" + SIMPLE_DATE_FORMAT.format(date.toDate()) +
 				"\nvalue=" + value +
 				"\nremoved=" + removed;
 	}
@@ -211,7 +210,7 @@ public class Expense implements Transaction, UnsyncModel {
 	}
 
 	public String getIncomeFormatted() {
-		return NumberFormat.getCurrencyInstance().format(value / 100.0);
+		return CurrencyHelper.format(value);
 	}
 
 	void delete() {

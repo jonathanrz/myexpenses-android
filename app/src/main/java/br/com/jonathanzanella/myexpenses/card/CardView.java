@@ -19,10 +19,11 @@ import butterknife.OnClick;
 @UiThread
 public class CardView extends BaseView {
     private static final int REQUEST_ADD_CARD = 1005;
-    private CardAdapter adapter;
 
     @Bind(R.id.view_card_list)
     RecyclerView cards;
+
+	private CardAdapter adapter;
 
     public CardView(Context context) {
         super(context);

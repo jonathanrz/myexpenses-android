@@ -12,8 +12,6 @@ import android.widget.EditText;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 
-import java.text.NumberFormat;
-
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.bill.Bill;
 import br.com.jonathanzanella.myexpenses.bill.BillRepository;
@@ -22,6 +20,7 @@ import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
 import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType;
 import br.com.jonathanzanella.myexpenses.chargeable.ListChargeableActivity;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
+import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch;
 import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.receipt.Receipt;
@@ -130,9 +129,10 @@ public class EditExpenseActivity extends BaseActivity implements ExpenseContract
 		switch (requestCode) {
 			case REQUEST_SELECT_CHARGEABLE: {
 				if(resultCode == RESULT_OK) {
-					presenter.onChargeableSelected(
-							(ChargeableType) data.getSerializableExtra(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_TYPE),
-							data.getStringExtra(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_UUID));
+					String uuid = data.getStringExtra(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_UUID);
+					String keyChargeableSelectedType = ListChargeableActivity.KEY_CHARGEABLE_SELECTED_TYPE;
+					ChargeableType type = (ChargeableType) data.getSerializableExtra(keyChargeableSelectedType);
+					presenter.onChargeableSelected(type,uuid);
 				}
 				break;
 			}
@@ -167,7 +167,7 @@ public class EditExpenseActivity extends BaseActivity implements ExpenseContract
 
 	@Override
 	public void onDateChanged(DateTime date) {
-		editDate.setText(Receipt.sdf.format(date.toDate()));
+		editDate.setText(Receipt.SIMPLE_DATE_FORMAT.format(date.toDate()));
 	}
 
 	@Override
@@ -188,8 +188,10 @@ public class EditExpenseActivity extends BaseActivity implements ExpenseContract
 			@Override
 			protected void onPostExecute(Boolean hasChargeable) {
 				super.onPostExecute(hasChargeable);
-				if(!hasChargeable)
-					startActivityForResult(new Intent(EditExpenseActivity.this, ListChargeableActivity.class), REQUEST_SELECT_CHARGEABLE);
+				if(!hasChargeable) {
+					Intent intent = new Intent(EditExpenseActivity.this, ListChargeableActivity.class);
+					startActivityForResult(intent, REQUEST_SELECT_CHARGEABLE);
+				}
 			}
 		}.execute();
 	}
@@ -202,7 +204,7 @@ public class EditExpenseActivity extends BaseActivity implements ExpenseContract
 			if(editName.getText().toString().isEmpty())
 				editName.setText(bill.getName());
 			if(editValue.getText().toString().isEmpty())
-				editValue.setText(NumberFormat.getCurrencyInstance().format(bill.getAmount() / 100.0));
+				editValue.setText(CurrencyHelper.format(bill.getAmount()));
 			showInOverview.setChecked(false);
 			showInResume.setChecked(true);
 		} else {
@@ -279,8 +281,8 @@ public class EditExpenseActivity extends BaseActivity implements ExpenseContract
 	@Override
 	public void showExpense(Expense expense) {
 		editName.setText(expense.getName());
-		editValue.setText(NumberFormat.getCurrencyInstance().format(Math.abs(expense.getValue()) / 100.0));
-		editValueToShowInOverview.setText(NumberFormat.getCurrencyInstance().format(Math.abs(expense.getValueToShowInOverview()) / 100.0));
+		editValue.setText(CurrencyHelper.format(Math.abs(expense.getValue())));
+		editValueToShowInOverview.setText(CurrencyHelper.format(Math.abs(expense.getValueToShowInOverview())));
 		if(expense.isCharged()) {
 			//noinspection deprecation
 			editValue.setTextColor(getResources().getColor(R.color.value_unpaid));

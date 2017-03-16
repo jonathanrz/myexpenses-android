@@ -13,19 +13,19 @@ import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicReference;
 
-/**
- * Created by jzanella on 8/31/16.
- */
+public final class ActivityLifecycleHelper {
+	private static final int NUMBER_OF_RETRIES = 100;
+	private static final int THREAD_SLEEP_MILLI = 200;
 
-public class ActivityLifecycleHelper {
+	private ActivityLifecycleHelper() {}
+
 	public static void closeAllActivities(Instrumentation instrumentation) throws Exception {
-		final int NUMBER_OF_RETRIES = 100;
 		int i = 0;
 		while (closeActivity(instrumentation)) {
 			if (i++ > NUMBER_OF_RETRIES) {
 				throw new AssertionError("Limit of retries excesses");
 			}
-			Thread.sleep(200);
+			Thread.sleep(THREAD_SLEEP_MILLI);
 		}
 	}
 

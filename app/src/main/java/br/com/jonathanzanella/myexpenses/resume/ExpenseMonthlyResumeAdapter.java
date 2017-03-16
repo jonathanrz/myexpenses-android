@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
@@ -21,6 +20,7 @@ import br.com.jonathanzanella.myexpenses.card.CreditCardInvoiceActivity;
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ShowExpenseActivity;
+import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.helpers.TransactionsHelper;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -28,14 +28,14 @@ import butterknife.OnClick;
 import lombok.Getter;
 
 class ExpenseMonthlyResumeAdapter extends RecyclerView.Adapter<ExpenseMonthlyResumeAdapter.ViewHolder> {
-	public static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM", Locale.getDefault());
+	public static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("dd/MM", Locale.getDefault());
 	@Getter
 	protected List<Expense> expenses;
 	@Getter
 	private int totalValue;
 	private int totalUnpaidValue;
 
-	private enum VIEW_TYPE {
+	private enum ViewType {
 		TYPE_NORMAL,
 		TYPE_TOTAL_TO_PAY,
 		TYPE_TOTAL
@@ -64,8 +64,8 @@ class ExpenseMonthlyResumeAdapter extends RecyclerView.Adapter<ExpenseMonthlyRes
 			if(name != null)
 				name.setText(expense.getName());
 			if(date != null)
-				date.setText(sdf.format(expense.getDate().toDate()));
-			income.setText(NumberFormat.getCurrencyInstance().format(expense.getValue() / 100.0));
+				date.setText(SIMPLE_DATE_FORMAT.format(expense.getDate().toDate()));
+			income.setText(CurrencyHelper.format(expense.getValue()));
 			income.setTypeface(null, Typeface.NORMAL);
 			if(!expense.isCharged())
 				income.setTypeface(null, Typeface.BOLD);
@@ -88,12 +88,12 @@ class ExpenseMonthlyResumeAdapter extends RecyclerView.Adapter<ExpenseMonthlyRes
 		}
 
 		public void setTotal(int totalValue) {
-			income.setText(NumberFormat.getCurrencyInstance().format(totalValue / 100.0));
+			income.setText(CurrencyHelper.format(totalValue));
 		}
 
 		@OnClick(R.id.row_monthly_resume_expense_income)
 		public void onIncome() {
-			if(getItemViewType() != VIEW_TYPE.TYPE_NORMAL.ordinal())
+			if(getItemViewType() != ViewType.TYPE_NORMAL.ordinal())
 				return;
 
 			final Expense expense = getExpense(getAdapterPosition());
@@ -109,7 +109,7 @@ class ExpenseMonthlyResumeAdapter extends RecyclerView.Adapter<ExpenseMonthlyRes
 
 		@Override
 		public void onClick(View v) {
-			if(getItemViewType() != VIEW_TYPE.TYPE_NORMAL.ordinal())
+			if(getItemViewType() != ViewType.TYPE_NORMAL.ordinal())
 				return;
 
 			Expense expense = getExpense(getAdapterPosition());
@@ -131,20 +131,20 @@ class ExpenseMonthlyResumeAdapter extends RecyclerView.Adapter<ExpenseMonthlyRes
 	@Override
 	public int getItemViewType(int position) {
 		if(isTotalView(position)) {
-			return VIEW_TYPE.TYPE_TOTAL.ordinal();
+			return ViewType.TYPE_TOTAL.ordinal();
 		} else if(isTotalToPayView(position)) {
-			return VIEW_TYPE.TYPE_TOTAL_TO_PAY.ordinal();
+			return ViewType.TYPE_TOTAL_TO_PAY.ordinal();
 		} else {
-			return VIEW_TYPE.TYPE_NORMAL.ordinal();
+			return ViewType.TYPE_NORMAL.ordinal();
 		}
 	}
 
 	@Override
 	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		View v;
-		if(viewType == VIEW_TYPE.TYPE_TOTAL.ordinal())
+		if(viewType == ViewType.TYPE_TOTAL.ordinal())
 			v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_monthly_resume_expense_total, parent, false);
-		else if(viewType == VIEW_TYPE.TYPE_TOTAL_TO_PAY.ordinal())
+		else if(viewType == ViewType.TYPE_TOTAL_TO_PAY.ordinal())
 			v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_monthly_resume_expense_total_to_pay, parent, false);
 		else
 			v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_monthly_resume_expense, parent, false);
@@ -163,11 +163,11 @@ class ExpenseMonthlyResumeAdapter extends RecyclerView.Adapter<ExpenseMonthlyRes
 	}
 
 	private boolean isTotalView(int position) {
-		return (expenses != null && position == expenses.size() + 1);
+		return expenses != null && position == expenses.size() + 1;
 	}
 
 	private boolean isTotalToPayView(int position) {
-		return (expenses != null && position == expenses.size());
+		return expenses != null && position == expenses.size();
 	}
 
 	@Override

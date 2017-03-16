@@ -15,8 +15,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.text.NumberFormat;
-
 import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
@@ -26,6 +24,7 @@ import br.com.jonathanzanella.myexpenses.bill.BillRepository;
 import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
+import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.BillBuilder;
 import br.com.jonathanzanella.myexpenses.views.MainActivity;
@@ -94,7 +93,7 @@ public class AddExpenseTest {
 		setTimeInDatePicker(time.getYear(), time.getMonthOfYear(), time.getDayOfMonth());
 		selectChargeable();
 
-		onView(withId(R.id.act_edit_expense_date)).check(matches(withText(Expense.sdf.format(time.toDate()))));
+		onView(withId(R.id.act_edit_expense_date)).check(matches(withText(Expense.SIMPLE_DATE_FORMAT.format(time.toDate()))));
 
 		clickIntoView(R.id.action_save);
 
@@ -102,7 +101,7 @@ public class AddExpenseTest {
 
 		onView(withId(R.id.row_expense_name)).check(matches(withText(expenseName)));
 		onView(withId(R.id.row_expense_bill_layout)).check(matches(not(isDisplayed())));
-		onView(withId(R.id.row_expense_date)).check(matches(withText(Expense.sdf.format(time.toDate()))));
+		onView(withId(R.id.row_expense_date)).check(matches(withText(Expense.SIMPLE_DATE_FORMAT.format(time.toDate()))));
 	}
 
 	@Test
@@ -200,7 +199,7 @@ public class AddExpenseTest {
 		matchToolbarTitle(expensesTitle);
 
 		onView(withId(R.id.row_expense_name)).check(matches(withText(expenseName)));
-		String expectedValue = NumberFormat.getCurrencyInstance().format(((value * -1) / 100));
+		String expectedValue = CurrencyHelper.format(value * -1);
 		onView(withId(R.id.row_expense_value)).check(matches(withText(expectedValue)));
 	}
 

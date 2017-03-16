@@ -25,8 +25,8 @@ public class DateTimeView extends BaseView {
 		void onDateTimeChanged(DateTime currentTime);
 	}
 
-	public static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
-	public static final SimpleDateFormat hourFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+	public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
+	public static final SimpleDateFormat HOUR_FORMAT = new SimpleDateFormat("HH:mm", Locale.getDefault());
 	@Bind(R.id.view_datetime_date)
 	EditText date;
 	@Bind(R.id.view_datetime_hour)
@@ -62,8 +62,8 @@ public class DateTimeView extends BaseView {
 	}
 
 	private void onDateChanged() {
-		date.setText(dateFormat.format(currentTime.toDate()));
-		hour.setText(hourFormat.format(currentTime.toDate()));
+		date.setText(DATE_FORMAT.format(currentTime.toDate()));
+		hour.setText(HOUR_FORMAT.format(currentTime.toDate()));
 		if(listener != null)
 			listener.onDateTimeChanged(currentTime);
 	}

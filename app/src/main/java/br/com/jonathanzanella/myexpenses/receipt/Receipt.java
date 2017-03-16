@@ -7,12 +7,11 @@ import com.google.gson.annotations.SerializedName;
 
 import org.joda.time.DateTime;
 
-import java.text.NumberFormat;
-
 import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
+import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.source.Source;
 import br.com.jonathanzanella.myexpenses.source.SourceRepository;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
@@ -125,7 +124,7 @@ public class Receipt implements Transaction, UnsyncModel {
 	}
 
 	public String getIncomeFormatted() {
-		return NumberFormat.getCurrencyInstance().format(income / 100.0);
+		return CurrencyHelper.format(income);
 	}
 
 	void repeat() {
@@ -138,7 +137,7 @@ public class Receipt implements Transaction, UnsyncModel {
 	public String getData() {
 		return "name=" + name +
 				"\nuuid=" + uuid +
-				"\ndate=" + sdf.format(date.toDate()) +
+				"\ndate=" + SIMPLE_DATE_FORMAT.format(date.toDate()) +
 				"\nincome=" + income;
 	}
 

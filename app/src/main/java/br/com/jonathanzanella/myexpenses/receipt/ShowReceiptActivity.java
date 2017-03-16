@@ -8,12 +8,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import java.text.NumberFormat;
-
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
+import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.source.Source;
 import br.com.jonathanzanella.myexpenses.source.SourceRepository;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
@@ -108,8 +107,8 @@ public class ShowReceiptActivity extends BaseActivity implements ReceiptContract
 	@Override
 	public void showReceipt(final Receipt receipt) {
 		receiptName.setText(receipt.getName());
-		receiptDate.setText(Receipt.sdf.format(receipt.getDate().toDate()));
-		receiptIncome.setText(NumberFormat.getCurrencyInstance().format(receipt.getIncome() / 100.0));
+		receiptDate.setText(Receipt.SIMPLE_DATE_FORMAT.format(receipt.getDate().toDate()));
+		receiptIncome.setText(CurrencyHelper.format(receipt.getIncome()));
 
 		new AsyncTask<Void, Void, Source>() {
 

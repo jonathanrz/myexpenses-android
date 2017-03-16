@@ -12,13 +12,12 @@ import android.widget.EditText;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 
-import java.text.NumberFormat;
-
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.account.ListAccountActivity;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
+import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch;
 import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.source.ListSourceActivity;
@@ -145,7 +144,7 @@ public class EditReceiptActivity extends BaseActivity implements ReceiptContract
 
 	@Override
 	public void onDateChanged(DateTime date) {
-		editDate.setText(Receipt.sdf.format(date.toDate()));
+		editDate.setText(Receipt.SIMPLE_DATE_FORMAT.format(date.toDate()));
 	}
 
 	@Override
@@ -226,7 +225,7 @@ public class EditReceiptActivity extends BaseActivity implements ReceiptContract
 	@UiThread
 	public void showReceipt(final Receipt receipt) {
 		editName.setText(receipt.getName());
-		editIncome.setText(NumberFormat.getCurrencyInstance().format(receipt.getIncome() / 100.0));
+		editIncome.setText(CurrencyHelper.format(receipt.getIncome()));
 		if(receipt.isCredited())
 			//noinspection deprecation
 			editIncome.setTextColor(getResources().getColor(R.color.value_unpaid));

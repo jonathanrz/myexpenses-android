@@ -16,10 +16,11 @@ import butterknife.OnClick;
 
 public class SourceView extends BaseView {
     private static final int REQUEST_ADD_SOURCE = 1004;
-    private SourceAdapter adapter;
 
     @Bind(R.id.view_sources_list)
     RecyclerView sources;
+
+    private SourceAdapter adapter;
 
     public SourceView(Context context) {
         super(context);

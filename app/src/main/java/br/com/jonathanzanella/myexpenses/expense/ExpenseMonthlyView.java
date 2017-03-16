@@ -3,7 +3,6 @@ package br.com.jonathanzanella.myexpenses.expense;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,12 +16,11 @@ import butterknife.ButterKnife;
 
 @SuppressLint("ViewConstructor")
 class ExpenseMonthlyView extends BaseView {
-    private ExpenseAdapter adapter;
-
     @Bind(R.id.view_expenses_monthly_list)
     RecyclerView sources;
 
     private DateTime dateTime;
+    private ExpenseAdapter adapter;
 
     public ExpenseMonthlyView(Context context, DateTime dateTime) {
         super(context);

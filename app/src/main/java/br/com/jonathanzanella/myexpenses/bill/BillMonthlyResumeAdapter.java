@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import org.joda.time.DateTime;
 
-import java.text.NumberFormat;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.MyApplication;
@@ -18,6 +17,7 @@ import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
+import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import lombok.Getter;
@@ -28,7 +28,7 @@ public class BillMonthlyResumeAdapter extends RecyclerView.Adapter<BillMonthlyRe
 	private int totalValue;
 	private BillRepository billRepository;
 
-	private enum VIEW_TYPE {
+	private enum ViewType {
 		TYPE_NORMAL,
 		TYPE_TOTAL
 	}
@@ -52,11 +52,11 @@ public class BillMonthlyResumeAdapter extends RecyclerView.Adapter<BillMonthlyRe
 				name.setText(bill.getName());
 			if(day != null)
 				day.setText(String.valueOf(bill.getDueDate()));
-			amount.setText(NumberFormat.getCurrencyInstance().format(bill.getAmount() / 100.0));
+			amount.setText(CurrencyHelper.format(bill.getAmount()));
 		}
 
 		public void setTotal(int totalValue) {
-			amount.setText(NumberFormat.getCurrencyInstance().format(totalValue / 100.0));
+			amount.setText(CurrencyHelper.format(totalValue));
 		}
 	}
 
@@ -68,16 +68,16 @@ public class BillMonthlyResumeAdapter extends RecyclerView.Adapter<BillMonthlyRe
 	@Override
 	public int getItemViewType(int position) {
 		if(bills != null && position == bills.size()) {
-			return VIEW_TYPE.TYPE_TOTAL.ordinal();
+			return ViewType.TYPE_TOTAL.ordinal();
 		} else {
-			return VIEW_TYPE.TYPE_NORMAL.ordinal();
+			return ViewType.TYPE_NORMAL.ordinal();
 		}
 	}
 
 	@Override
 	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		View v;
-		if(viewType == VIEW_TYPE.TYPE_TOTAL.ordinal())
+		if(viewType == ViewType.TYPE_TOTAL.ordinal())
 			v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_monthly_resume_bill_total, parent, false);
 		else
 			v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_monthly_resume_bill, parent, false);

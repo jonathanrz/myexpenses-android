@@ -13,12 +13,12 @@ import android.widget.TextView;
 import org.joda.time.DateTime;
 
 import java.lang.ref.WeakReference;
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.helpers.TransactionsHelper;
 import br.com.jonathanzanella.myexpenses.receipt.Receipt;
 import br.com.jonathanzanella.myexpenses.receipt.ReceiptRepository;
@@ -29,14 +29,14 @@ import butterknife.OnClick;
 import lombok.Getter;
 
 class ReceiptMonthlyResumeAdapter extends RecyclerView.Adapter<ReceiptMonthlyResumeAdapter.ViewHolder> {
-	public static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM", Locale.getDefault());
+	public static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("dd/MM", Locale.getDefault());
 	protected List<Receipt> receipts;
 	@Getter
 	private int totalValue;
 	private int totalUnreceivedValue;
 	private ReceiptRepository receiptRepository;
 
-	private enum VIEW_TYPE {
+	private enum ViewType {
 		TYPE_NORMAL,
 		TYPE_TOTAL_TO_PAY,
 		TYPE_TOTAL
@@ -66,7 +66,7 @@ class ReceiptMonthlyResumeAdapter extends RecyclerView.Adapter<ReceiptMonthlyRes
 			if(name != null)
 				name.setText(receipt.getName());
 			if(date != null)
-				date.setText(sdf.format(receipt.getDate().toDate()));
+				date.setText(SIMPLE_DATE_FORMAT.format(receipt.getDate().toDate()));
 			income.setText(receipt.getIncomeFormatted());
 			income.setTypeface(null, Typeface.NORMAL);
 			if(!receipt.isCredited())
@@ -89,12 +89,12 @@ class ReceiptMonthlyResumeAdapter extends RecyclerView.Adapter<ReceiptMonthlyRes
 		}
 
 		public void setTotal(int totalValue) {
-			income.setText(NumberFormat.getCurrencyInstance().format(totalValue / 100.0));
+			income.setText(CurrencyHelper.format(totalValue));
 		}
 
 		@OnClick(R.id.row_monthly_resume_receipt_income)
 		public void onIncome() {
-			if(getItemViewType() != VIEW_TYPE.TYPE_NORMAL.ordinal())
+			if(getItemViewType() != ViewType.TYPE_NORMAL.ordinal())
 				return;
 
 			final Receipt receipt = adapterWeakReference.get().receipts.get(getAdapterPosition());
@@ -117,20 +117,20 @@ class ReceiptMonthlyResumeAdapter extends RecyclerView.Adapter<ReceiptMonthlyRes
 	@Override
 	public int getItemViewType(int position) {
 		if(isTotalView(position)) {
-			return VIEW_TYPE.TYPE_TOTAL.ordinal();
+			return ViewType.TYPE_TOTAL.ordinal();
 		} else if(isTotalToPayView(position)) {
-			return VIEW_TYPE.TYPE_TOTAL_TO_PAY.ordinal();
+			return ViewType.TYPE_TOTAL_TO_PAY.ordinal();
 		} else {
-			return VIEW_TYPE.TYPE_NORMAL.ordinal();
+			return ViewType.TYPE_NORMAL.ordinal();
 		}
 	}
 
 	@Override
 	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		View v;
-		if(viewType == VIEW_TYPE.TYPE_TOTAL.ordinal())
+		if(viewType == ViewType.TYPE_TOTAL.ordinal())
 			v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_monthly_resume_receipt_total, parent, false);
-		else if(viewType == VIEW_TYPE.TYPE_TOTAL_TO_PAY.ordinal())
+		else if(viewType == ViewType.TYPE_TOTAL_TO_PAY.ordinal())
 			v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_monthly_resume_receipt_total_to_receive, parent, false);
 		else
 			v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_monthly_resume_receipt, parent, false);
@@ -149,11 +149,11 @@ class ReceiptMonthlyResumeAdapter extends RecyclerView.Adapter<ReceiptMonthlyRes
 	}
 
 	private boolean isTotalView(int position) {
-		return (receipts != null && position == receipts.size() + 1);
+		return receipts != null && position == receipts.size() + 1;
 	}
 
 	private boolean isTotalToPayView(int position) {
-		return (receipts != null && position == receipts.size());
+		return receipts != null && position == receipts.size();
 	}
 
 	@Override

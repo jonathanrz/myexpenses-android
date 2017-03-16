@@ -16,7 +16,8 @@ public enum CardType {
 		this.value = value;
 	}
 
-	public static @Nullable CardType fromValue(String value) {
+	@Nullable
+	public static CardType fromValue(String value) {
 		for (CardType cardType : values()) {
 			if(cardType.getValue().equals(value))
 				return cardType;

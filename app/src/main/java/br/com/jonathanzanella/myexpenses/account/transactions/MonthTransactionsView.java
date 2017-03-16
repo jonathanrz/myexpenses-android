@@ -8,12 +8,12 @@ import android.widget.TextView;
 
 import org.joda.time.DateTime;
 
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
+import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.views.BaseView;
 import butterknife.Bind;
 import butterknife.BindString;
@@ -21,10 +21,7 @@ import butterknife.ButterKnife;
 import lombok.Setter;
 
 public class MonthTransactionsView extends BaseView implements MonthTransactionsContractView {
-	public static final SimpleDateFormat sdf = new SimpleDateFormat("MMMM/yy", Locale.getDefault());
-	private MonthTransactionsPresenter presenter;
-	@Setter
-	private LoadTransactionsCallback loadTransactionsCallback;
+	public static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("MMMM/yy", Locale.getDefault());
 
 	@Bind(R.id.view_month_transactions_list)
 	RecyclerView list;
@@ -35,6 +32,10 @@ public class MonthTransactionsView extends BaseView implements MonthTransactions
 
 	@BindString(R.string.month_transactions)
 	String monthTransactionsTemplate;
+
+	private MonthTransactionsPresenter presenter;
+	@Setter
+	private LoadTransactionsCallback loadTransactionsCallback;
 
 	public MonthTransactionsView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -57,13 +58,13 @@ public class MonthTransactionsView extends BaseView implements MonthTransactions
 	}
 
 	void showBalance(final Account account, final DateTime month, int balance) {
-		header.setText(monthTransactionsTemplate.concat(" ").concat(sdf.format(month.toDate())));
+		header.setText(monthTransactionsTemplate.concat(" ").concat(SIMPLE_DATE_FORMAT.format(month.toDate())));
 		presenter.showBalance(account, month, balance);
 	}
 
 	@Override
 	public void onBalanceUpdated(int balance) {
-		this.balance.setText(NumberFormat.getCurrencyInstance().format(balance / 100.0));
+		this.balance.setText(CurrencyHelper.format(balance));
 		//noinspection deprecation
 		this.balance.setTextColor(getResources().getColor(balance >= 0 ? R.color.value_unreceived : R.color.value_unpaid));
 

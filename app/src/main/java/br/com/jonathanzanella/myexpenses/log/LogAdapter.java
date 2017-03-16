@@ -40,7 +40,7 @@ class LogAdapter extends RecyclerView.Adapter<LogAdapter.ViewHolder> {
 			//noinspection deprecation
 			indicator.setBackgroundColor(indicator.getContext().getResources().getColor(log.getLogLevel().getColor()));
 			title.setText(log.getTitle());
-			date.setText(Log.sdf.format(log.getDate().toDate()));
+			date.setText(Log.SIMPLE_DATE_FORMAT.format(log.getDate().toDate()));
 			description.setText(log.getDescription());
 		}
 	}
@@ -65,7 +65,7 @@ class LogAdapter extends RecyclerView.Adapter<LogAdapter.ViewHolder> {
 		return filteredLogs != null ? filteredLogs.size() : 0;
 	}
 
-	public void loadData(DateTime initDate, DateTime endDate, Log.LOG_LEVEL logLevel, String filter) {
+	public void loadData(DateTime initDate, DateTime endDate, Log.LogLevel logLevel, String filter) {
 		List<Log> logs = logRepository.filter(initDate, endDate, logLevel);
 
 		filteredLogs = new ArrayList<>();

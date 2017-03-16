@@ -2,7 +2,6 @@ package br.com.jonathanzanella.myexpenses.resume;
 
 import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
-import android.support.test.filters.LargeTest;
 import android.support.test.filters.SmallTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -14,8 +13,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.text.NumberFormat;
-
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
@@ -26,6 +23,7 @@ import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
+import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.BillBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.ExpenseBuilder;
@@ -51,7 +49,7 @@ import static org.hamcrest.Matchers.allOf;
 
 @RunWith(AndroidJUnit4.class)
 @SmallTest
-public class CalculateMonthBalanceCorrectly {
+public class CalculateMonthBalanceCorrectlyTest {
 	private static final int EXPENSE_VALUE = 100;
 	private static final int RECEIPT_INCOME = 200;
 	private static final int BILL_AMOUNT = 25;
@@ -146,8 +144,8 @@ public class CalculateMonthBalanceCorrectly {
 
 		int balance = RECEIPT_INCOME - EXPENSE_VALUE - BILL_AMOUNT;
 		int twoMonthsBalance = RECEIPT_INCOME * 3 - EXPENSE_VALUE * 3 - BILL_AMOUNT;
-		String expectedBalance = NumberFormat.getCurrencyInstance().format((balance/100.0));
-		String twoMonthsExpectedBalance = NumberFormat.getCurrencyInstance().format((twoMonthsBalance/100.0));
+		String expectedBalance = CurrencyHelper.format(balance);
+		String twoMonthsExpectedBalance = CurrencyHelper.format(twoMonthsBalance);
 
 		validateExpectedBalance(expectedBalance);
 

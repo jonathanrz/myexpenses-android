@@ -9,7 +9,9 @@ import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.receipt.Receipt;
 import br.com.jonathanzanella.myexpenses.transaction.Transaction;
 
-public class TransactionsHelper {
+public final class TransactionsHelper {
+	private TransactionsHelper() {}
+
 	public interface DialogCallback {
 		void onPositiveButton();
 	}

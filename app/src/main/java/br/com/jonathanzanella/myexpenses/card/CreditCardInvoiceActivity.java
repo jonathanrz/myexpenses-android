@@ -63,7 +63,8 @@ public class CreditCardInvoiceActivity extends BaseActivity {
 			protected void onPostExecute(Void aVoid) {
 				super.onPostExecute(aVoid);
 
-				MonthlyPagerAdapter adapter = new MonthlyPagerAdapter(CreditCardInvoiceActivity.this, new MonthlyPagerAdapterBuilder() {
+				MonthlyPagerAdapter adapter = new MonthlyPagerAdapter(CreditCardInvoiceActivity.this,
+						new MonthlyPagerAdapterBuilder() {
 					@Override
 					public BaseView buildView(Context ctx, DateTime date) {
 						return new CreditCardInvoiceView(ctx, card, date);

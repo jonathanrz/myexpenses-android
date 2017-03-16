@@ -25,11 +25,12 @@ import lombok.Setter;
 
 public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
 	protected List<Card> cards;
-	private CardRepository cardRepository;
-	private ExpenseRepository expenseRepository;
 
 	@Setter
 	CardAdapterCallback callback;
+
+	private CardRepository cardRepository;
+	private ExpenseRepository expenseRepository;
 
 	class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 		@Bind(R.id.row_card_name)

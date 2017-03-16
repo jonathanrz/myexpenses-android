@@ -19,8 +19,8 @@ import lombok.Setter;
 
 @EqualsAndHashCode
 public class Card implements Chargeable, UnsyncModel {
-	private AccountRepository accountRepository;
 	private static final String LOG_TAG = "Card";
+	private AccountRepository accountRepository;
 
 	@Setter @Getter
 	private long id;
@@ -89,7 +89,7 @@ public class Card implements Chargeable, UnsyncModel {
 
 	@Override
 	public boolean canBePaidNextMonth() {
-		return (type == CardType.CREDIT);
+		return type == CardType.CREDIT;
 	}
 
 	@WorkerThread

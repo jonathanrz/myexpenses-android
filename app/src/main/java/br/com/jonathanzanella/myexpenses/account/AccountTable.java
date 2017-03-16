@@ -73,7 +73,7 @@ public final class AccountTable implements Table<Account> {
 		account.setBalance(c.getInt(c.getColumnIndexOrThrow(Fields.BALANCE.toString())));
 		account.setAccountToPayCreditCard(c.getLong(c.getColumnIndexOrThrow(Fields.ACCOUNT_TO_PAY_CREDIT_CARD.toString())) != 0);
 		account.setAccountToPayBills(c.getLong(c.getColumnIndexOrThrow(Fields.ACCOUNT_TO_PAY_BILLS.toString())) != 0);
-		account.setUserUuid((c.getString(c.getColumnIndexOrThrow(Fields.USER_UUID.toString()))));
+		account.setUserUuid(c.getString(c.getColumnIndexOrThrow(Fields.USER_UUID.toString())));
 		account.setServerId(c.getString(c.getColumnIndexOrThrow(Fields.SERVER_ID.toString())));
 		account.setCreatedAt(c.getLong(c.getColumnIndexOrThrow(Fields.CREATED_AT.toString())));
 		account.setUpdatedAt(c.getLong(c.getColumnIndexOrThrow(Fields.UPDATED_AT.toString())));

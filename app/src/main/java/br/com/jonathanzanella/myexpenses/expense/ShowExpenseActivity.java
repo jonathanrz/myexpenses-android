@@ -11,13 +11,12 @@ import android.view.View;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import java.text.NumberFormat;
-
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.bill.Bill;
 import br.com.jonathanzanella.myexpenses.bill.BillRepository;
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
+import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.receipt.Receipt;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
@@ -113,9 +112,9 @@ public class ShowExpenseActivity extends BaseActivity implements ExpenseContract
 	@Override
 	public void showExpense(final Expense expense) {
 		expenseName.setText(expense.getName());
-		expenseDate.setText(Receipt.sdf.format(expense.getDate().toDate()));
-		expenseIncome.setText(NumberFormat.getCurrencyInstance().format(expense.getValue() / 100.0));
-		expenseIncomeToShowInOverview.setText(NumberFormat.getCurrencyInstance().format(expense.getValueToShowInOverview() / 100.0));
+		expenseDate.setText(Receipt.SIMPLE_DATE_FORMAT.format(expense.getDate().toDate()));
+		expenseIncome.setText(CurrencyHelper.format(expense.getValue()));
+		expenseIncomeToShowInOverview.setText(CurrencyHelper.format(expense.getValueToShowInOverview()));
 		new AsyncTask<Void, Void, Chargeable>() {
 
 			@Override

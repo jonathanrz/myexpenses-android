@@ -13,8 +13,9 @@ import java.util.List;
 import br.com.jonathanzanella.myexpenses.views.BaseView;
 
 public class MonthlyPagerAdapter extends PagerAdapter {
-    private static final int TOTAL_MONTHS_VISIBLE = 25;
-    public static final int INIT_MONTH_VISIBLE = TOTAL_MONTHS_VISIBLE / 2;
+    @SuppressWarnings("WeakerAccess")
+    public static final int TOTAL_MONTHS_VISIBLE = 25;
+	public static final int INIT_MONTH_VISIBLE = TOTAL_MONTHS_VISIBLE / 2;
 
 	private MonthlyPagerAdapterHelper helper = new MonthlyPagerAdapterHelper();
     private Context context;

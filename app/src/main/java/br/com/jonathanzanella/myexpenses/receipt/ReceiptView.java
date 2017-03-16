@@ -133,7 +133,8 @@ public class ReceiptView extends BaseView implements ViewPager.OnPageChangeListe
 			view.filter(filter);
 	}
 
-	private @Nullable ReceiptMonthlyView getMonthView(DateTime date) {
+	@Nullable
+	private ReceiptMonthlyView getMonthView(DateTime date) {
 		for (Map.Entry<DateTime, WeakReference<ReceiptMonthlyView>> pair : views.entrySet()) {
 			DateTime viewDateFirstDay = DateHelper.firstDayOfMonth(pair.getKey());
 			DateTime viewDateLastDay = DateHelper.lastDayOfMonth(pair.getKey());

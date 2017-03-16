@@ -26,7 +26,7 @@ import br.com.jonathanzanella.myexpenses.source.SourceApi;
 
 public class SyncService extends GcmTaskService {
 	public static final String KEY_EXECUTE_SYNC = "KeyExecuteSync";
-	private static int NOTIFICATION_ID = 1;
+	private static int notificationId = 1;
 	private static final String LOG_TAG = SyncService.class.getSimpleName();
 	private List<UnsyncModelApi<? extends UnsyncModel>> apis;
 
@@ -79,7 +79,7 @@ public class SyncService extends GcmTaskService {
 		totalSaved = 0;
 		totalUpdated = 0;
 
-		SyncServiceNotification notification = new SyncServiceNotification(this, NOTIFICATION_ID++, apis.size());
+		SyncServiceNotification notification = new SyncServiceNotification(this, notificationId++, apis.size());
 
 		if(new ServerApi().healthCheck()) {
 			notification.incrementProgress();

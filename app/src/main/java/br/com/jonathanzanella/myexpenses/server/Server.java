@@ -33,6 +33,7 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Server {
+	private static final int TIMEOUT = 120;
 	private Retrofit retrofit;
 
 	private class HeaderInterceptor implements Interceptor {
@@ -70,8 +71,8 @@ public class Server {
 
 		OkHttpClient client = new OkHttpClient.Builder()
 									.addInterceptor(new HeaderInterceptor())
-									.connectTimeout(120, TimeUnit.SECONDS)
-									.readTimeout(120, TimeUnit.SECONDS)
+									.connectTimeout(TIMEOUT, TimeUnit.SECONDS)
+									.readTimeout(TIMEOUT, TimeUnit.SECONDS)
 									.build();
 
 		retrofit = new Retrofit.Builder()
