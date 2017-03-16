@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.LargeTest;
+import android.support.test.filters.MediumTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.test.uiautomator.UiDevice;
@@ -32,11 +33,8 @@ import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.openMenuAndClic
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.setTimeInDatePicker;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.typeTextIntoView;
 
-/**
- * Created by jzanella on 7/24/16.
- */
 @RunWith(AndroidJUnit4.class)
-@LargeTest
+@MediumTest
 public class AddBillTest {
 	@Rule
 	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
