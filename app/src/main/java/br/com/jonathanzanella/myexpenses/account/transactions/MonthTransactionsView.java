@@ -16,7 +16,6 @@ import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.views.BaseView;
 import butterknife.Bind;
-import butterknife.BindString;
 import butterknife.ButterKnife;
 import lombok.Setter;
 
@@ -30,7 +29,6 @@ public class MonthTransactionsView extends BaseView implements MonthTransactions
 	@Bind(R.id.view_month_transactions_balance)
 	TextView balance;
 
-	@BindString(R.string.month_transactions)
 	String monthTransactionsTemplate;
 
 	private MonthTransactionsPresenter presenter;
@@ -47,6 +45,7 @@ public class MonthTransactionsView extends BaseView implements MonthTransactions
 
 	@Override
 	protected void init() {
+		monthTransactionsTemplate = getResources().getString(R.string.month_transactions);
 		inflate(getContext(), R.layout.view_account_month_transactions, this);
 		ButterKnife.bind(this);
 		presenter = new MonthTransactionsPresenter(getContext(), this);
