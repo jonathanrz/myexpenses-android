@@ -8,7 +8,9 @@ import java.util.List;
 
 // copied from https://github.com/dannyroa/espresso-samples/blob/master/RecyclerView/app/src/androidTest/java/com/dannyroa/espresso_samples/recyclerview/TestUtils.java
 
-public class TestUtils {
+public final class TestUtils {
+	private TestUtils() {}
+
 	public static RecyclerViewMatcher withRecyclerView(final int recyclerViewId) {
 		return new RecyclerViewMatcher(recyclerViewId);
 	}

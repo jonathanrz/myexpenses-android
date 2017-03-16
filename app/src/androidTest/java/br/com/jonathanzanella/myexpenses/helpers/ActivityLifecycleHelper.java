@@ -13,11 +13,9 @@ import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicReference;
 
-/**
- * Created by jzanella on 8/31/16.
- */
+public final class ActivityLifecycleHelper {
+	private ActivityLifecycleHelper() {}
 
-public class ActivityLifecycleHelper {
 	public static void closeAllActivities(Instrumentation instrumentation) throws Exception {
 		final int NUMBER_OF_RETRIES = 100;
 		int i = 0;
