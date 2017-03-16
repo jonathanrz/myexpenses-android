@@ -89,7 +89,7 @@ public class Card implements Chargeable, UnsyncModel {
 
 	@Override
 	public boolean canBePaidNextMonth() {
-		return (type == CardType.CREDIT);
+		return type == CardType.CREDIT;
 	}
 
 	@WorkerThread

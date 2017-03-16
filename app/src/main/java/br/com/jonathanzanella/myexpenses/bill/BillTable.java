@@ -77,8 +77,8 @@ public final class BillTable implements Table<Bill> {
 		bill.setAmount(c.getInt(c.getColumnIndexOrThrow(Fields.AMOUNT.toString())));
 		bill.setDueDate(c.getInt(c.getColumnIndexOrThrow(Fields.DUE_DATE.toString())));
 		bill.setInitDate(new DateTime(c.getLong(c.getColumnIndexOrThrow(Fields.INIT_DATE.toString()))));
-		bill.setEndDate((new DateTime(c.getLong(c.getColumnIndexOrThrow(Fields.END_DATE.toString())))));
-		bill.setUserUuid((c.getString(c.getColumnIndexOrThrow(Fields.USER_UUID.toString()))));
+		bill.setEndDate(new DateTime(c.getLong(c.getColumnIndexOrThrow(Fields.END_DATE.toString()))));
+		bill.setUserUuid(c.getString(c.getColumnIndexOrThrow(Fields.USER_UUID.toString())));
 		bill.setServerId(c.getString(c.getColumnIndexOrThrow(Fields.SERVER_ID.toString())));
 		bill.setCreatedAt(c.getLong(c.getColumnIndexOrThrow(Fields.CREATED_AT.toString())));
 		bill.setUpdatedAt(c.getLong(c.getColumnIndexOrThrow(Fields.UPDATED_AT.toString())));

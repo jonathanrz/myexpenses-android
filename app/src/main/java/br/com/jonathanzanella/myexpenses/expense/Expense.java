@@ -139,7 +139,7 @@ public class Expense implements Transaction, UnsyncModel {
 	}
 
 	public void setBill(Bill bill) {
-		billUuid = (bill != null ? bill.getUuid() : null);
+		billUuid = bill != null ? bill.getUuid() : null;
 	}
 
 	@WorkerThread

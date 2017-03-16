@@ -119,6 +119,9 @@
 		</module>
 		<module name="TypecastParenPad" />
 		<module name="TypeName" />
+		<module name="UncommentedMain" />
+		<module name="UnnecessaryParentheses" />
+		<module name="UnusedImports" />
 	</module>
 
 	<module name="SuppressionFilter">

@@ -199,7 +199,7 @@ public class AddExpenseTest {
 		matchToolbarTitle(expensesTitle);
 
 		onView(withId(R.id.row_expense_name)).check(matches(withText(expenseName)));
-		String expectedValue = CurrencyHelper.format(((value * -1)));
+		String expectedValue = CurrencyHelper.format(value * -1);
 		onView(withId(R.id.row_expense_value)).check(matches(withText(expectedValue)));
 	}
 

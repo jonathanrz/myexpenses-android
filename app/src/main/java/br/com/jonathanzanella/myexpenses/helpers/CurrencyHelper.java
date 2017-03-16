@@ -7,10 +7,10 @@ public final class CurrencyHelper {
 	private CurrencyHelper() {}
 
 	public static String format(int cents) {
-		return NumberFormat.getCurrencyInstance().format((cents / TOTAL_CENTS));
+		return NumberFormat.getCurrencyInstance().format(cents / TOTAL_CENTS);
 	}
 
 	static String format(double cents) {
-		return NumberFormat.getCurrencyInstance().format((cents / TOTAL_CENTS));
+		return NumberFormat.getCurrencyInstance().format(cents / TOTAL_CENTS);
 	}
 }

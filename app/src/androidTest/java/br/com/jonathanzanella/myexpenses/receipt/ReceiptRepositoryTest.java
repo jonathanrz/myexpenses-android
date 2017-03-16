@@ -1,6 +1,5 @@
 package br.com.jonathanzanella.myexpenses.receipt;
 
-import android.support.test.filters.LargeTest;
 import android.support.test.filters.SmallTest;
 import android.support.test.runner.AndroidJUnit4;
 

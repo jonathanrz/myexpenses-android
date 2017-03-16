@@ -163,11 +163,11 @@ class ExpenseMonthlyResumeAdapter extends RecyclerView.Adapter<ExpenseMonthlyRes
 	}
 
 	private boolean isTotalView(int position) {
-		return (expenses != null && position == expenses.size() + 1);
+		return expenses != null && position == expenses.size() + 1;
 	}
 
 	private boolean isTotalToPayView(int position) {
-		return (expenses != null && position == expenses.size());
+		return expenses != null && position == expenses.size();
 	}
 
 	@Override
