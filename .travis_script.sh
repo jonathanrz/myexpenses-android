@@ -3,6 +3,7 @@ set -ev
 
 ./gradlew assembleDebug
 ./gradlew testDebugUnitTest
+./gradlew installDebugAndroidTest
 ./gradlew connectedAndroidTest -PdisablePreDex  -Pandroid.testInstrumentationRunnerArguments.size=small
 ./gradlew connectedAndroidTest -PdisablePreDex  -Pandroid.testInstrumentationRunnerArguments.size=medium
 ./gradlew connectedAndroidTest -PdisablePreDex  -Pandroid.testInstrumentationRunnerArguments.size=large
