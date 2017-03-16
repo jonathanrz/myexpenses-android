@@ -1,9 +1,11 @@
 #!/bin/bash
 set -ev
 
-./gradlew assembleDebug
+./gradlew build
+./gradlew jacocoTestReport
 ./gradlew testDebugUnitTest
 ./gradlew checkStyle
+./gradlew assembleDebugAndroidTest
 ./gradlew installDebugAndroidTest
 ./gradlew connectedDebugAndroidTest -PdisablePreDex  -Pandroid.testInstrumentationRunnerArguments.size=small
 ./gradlew connectedDebugAndroidTest -PdisablePreDex  -Pandroid.testInstrumentationRunnerArguments.size=medium
