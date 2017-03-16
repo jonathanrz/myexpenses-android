@@ -20,7 +20,7 @@ public class SyncView extends BaseView {
 	}
 
 	@OnClick(R.id.view_sync_sync_btn)
-	void Sync() {
+	void sync() {
 		Intent i = new Intent(getContext(), SyncService.class);
 		i.putExtra(SyncService.KEY_EXECUTE_SYNC, true);
 		getContext().startService(i);

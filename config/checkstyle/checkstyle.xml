@@ -68,6 +68,7 @@
 			<property name="tokens" value="METHOD_DEF"/>
 			<property name="max" value="67"/>
 		</module>
+		<module name="MethodName" />
 	</module>
 
 	<module name="SuppressionFilter">
