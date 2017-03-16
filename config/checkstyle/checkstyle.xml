@@ -58,6 +58,7 @@
 			<property name="ignorePattern" value="^ *\* *[^ ]+ // $"/>
 		</module>
 		<module name="LocalFinalVariableName" />
+		<module name="LocalVariableName" />
 	</module>
 
 	<module name="SuppressionFilter">
