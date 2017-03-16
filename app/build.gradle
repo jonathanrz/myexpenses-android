@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
 apply plugin: 'testfairy'
 apply plugin: 'jacoco-android'
 apply plugin: 'checkstyle'
@@ -186,6 +185,9 @@ configurations.compile.dependencies.each { compileDependency ->
 
 repositories {
     mavenCentral()
+}
+kapt {
+    generateStubs = true
 }
 
 check.dependsOn 'checkstyle'
