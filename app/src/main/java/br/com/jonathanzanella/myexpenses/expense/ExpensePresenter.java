@@ -206,7 +206,7 @@ class ExpensePresenter {
 		if(installment == 1)
 			expense.setName(originalName);
 		else
-			expense.setName(String.format(Environment.PTBR_LOCALE, "%s %02d/%02d", originalName, 1, installment));
+			expense.setName(formatExpenseName(installment, originalName, 1));
 
 		new AsyncTask<Void, Void, OperationResult>() {
 
@@ -223,8 +223,10 @@ class ExpensePresenter {
 					if(repetition == 1)
 						repetition = editView.getRepetition();
 					for(int i = 1; i < repetition; i++) {
-						if(installment != 1)
-							expense.setName(String.format(Environment.PTBR_LOCALE, "%s %02d/%02d", originalName, i + 1, installment));
+						if(installment != 1) {
+							String name = formatExpenseName(installment, originalName, i + 1);
+							expense.setName(name);
+						}
 						expense.repeat();
 						repository.saveAsync(expense);
 					}
@@ -236,6 +238,10 @@ class ExpensePresenter {
 				}
 			}
 		}.execute();
+	}
+
+	private String formatExpenseName(int installment, String originalName, int i) {
+		return String.format(Environment.PTBR_LOCALE, "%s %02d/%02d", originalName, i, installment);
 	}
 
 	@UiThread

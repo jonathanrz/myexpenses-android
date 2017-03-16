@@ -11,7 +11,8 @@ import org.hamcrest.TypeSafeMatcher;
 /**
  * Created by jzanella on 9/4/16.
  */
-// copied from https://github.com/dannyroa/espresso-samples/blob/master/RecyclerView/app/src/androidTest/java/com/dannyroa/espresso_samples/recyclerview/RecyclerViewMatcher.java
+// copied from https://github.com/dannyroa/espresso-samples/blob/master/RecyclerView/app/src/androidTest/java/com/
+// dannyroa/espresso_samples/recyclerview/RecyclerViewMatcher.java
 
 public class RecyclerViewMatcher {
 	private final int recyclerViewId;
@@ -46,7 +47,9 @@ public class RecyclerViewMatcher {
 					RecyclerView recyclerView = (RecyclerView) view.getRootView().findViewById(recyclerViewId);
 					if (recyclerView != null && recyclerView.getId() == recyclerViewId) {
 						childView = recyclerView.findViewHolderForAdapterPosition(position).itemView;
-					} else { return false; }
+					} else {
+						return false;
+					}
 				}
 
 				if (targetViewId == -1) {

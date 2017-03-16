@@ -15,6 +15,8 @@ import android.widget.DatePicker;
 
 import org.joda.time.DateTime;
 
+import java.util.Locale;
+
 import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
@@ -186,8 +188,11 @@ class ReceiptPresenter {
 					if(repetition == 1)
 						repetition = editView.getRepetition();
 					for(int i = 1; i < repetition; i++) {
-						if(installment != 1)
-							receipt.setName(String.format(Environment.PTBR_LOCALE, "%s %02d/%02d", originalName, i + 1, installment));
+						if(installment != 1) {
+							Locale locale = Environment.PTBR_LOCALE;
+							String name = String.format(locale, "%s %02d/%02d", originalName, i + 1, installment);
+							receipt.setName(name);
+						}
 						receipt.repeat();
 						repository.saveAsync(receipt);
 					}

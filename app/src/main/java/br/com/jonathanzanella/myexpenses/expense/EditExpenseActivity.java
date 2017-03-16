@@ -130,9 +130,10 @@ public class EditExpenseActivity extends BaseActivity implements ExpenseContract
 		switch (requestCode) {
 			case REQUEST_SELECT_CHARGEABLE: {
 				if(resultCode == RESULT_OK) {
-					presenter.onChargeableSelected(
-							(ChargeableType) data.getSerializableExtra(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_TYPE),
-							data.getStringExtra(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_UUID));
+					String uuid = data.getStringExtra(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_UUID);
+					String keyChargeableSelectedType = ListChargeableActivity.KEY_CHARGEABLE_SELECTED_TYPE;
+					ChargeableType type = (ChargeableType) data.getSerializableExtra(keyChargeableSelectedType);
+					presenter.onChargeableSelected(type,uuid);
 				}
 				break;
 			}
@@ -188,8 +189,10 @@ public class EditExpenseActivity extends BaseActivity implements ExpenseContract
 			@Override
 			protected void onPostExecute(Boolean hasChargeable) {
 				super.onPostExecute(hasChargeable);
-				if(!hasChargeable)
-					startActivityForResult(new Intent(EditExpenseActivity.this, ListChargeableActivity.class), REQUEST_SELECT_CHARGEABLE);
+				if(!hasChargeable) {
+					Intent intent = new Intent(EditExpenseActivity.this, ListChargeableActivity.class);
+					startActivityForResult(intent, REQUEST_SELECT_CHARGEABLE);
+				}
 			}
 		}.execute();
 	}

@@ -8,4 +8,6 @@
 	<suppress checks="IllegalCatch"
 	          files="ActivityLifecycleHelper.java"
 	          lines="38"/>
+	<suppress checks="InterfaceIsType"
+	          files="Environment.java" />
 </suppressions>

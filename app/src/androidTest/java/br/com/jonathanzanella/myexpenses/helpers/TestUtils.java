@@ -6,7 +6,8 @@ import android.util.Log;
 
 import java.util.List;
 
-// copied from https://github.com/dannyroa/espresso-samples/blob/master/RecyclerView/app/src/androidTest/java/com/dannyroa/espresso_samples/recyclerview/TestUtils.java
+// copied from https://github.com/dannyroa/espresso-samples/blob/master/RecyclerView/app/src/androidTest/java/com/
+// dannyroa/espresso_samples/recyclerview/TestUtils.java
 
 public final class TestUtils {
 	private TestUtils() {}

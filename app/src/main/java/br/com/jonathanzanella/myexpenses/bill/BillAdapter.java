@@ -72,7 +72,8 @@ class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder> {
 
 	BillAdapter() {
 		ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(MyApplication.getContext()));
-		this.presenter = new BillAdapterPresenter(new BillRepository(new RepositoryImpl<Bill>(MyApplication.getContext()), expenseRepository));
+		BillRepository repository = new BillRepository(new RepositoryImpl<Bill>(MyApplication.getContext()), expenseRepository);
+		this.presenter = new BillAdapterPresenter(repository);
 		refreshData();
 	}
 

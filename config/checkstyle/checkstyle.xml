@@ -7,7 +7,7 @@
 	<module name="TreeWalker">
 		<module name="AnnotationUseStyle" />
 		<module name="AnonInnerLength">
-			<property name="max" value="35"/>
+			<property name="max" value="37"/>
 		</module>
 		<module name="ArrayTypeStyle" />
 		<module name="AvoidEscapedUnicodeCharacters" />
@@ -43,6 +43,20 @@
 		</module>
 		<module name="HideUtilityClassConstructor" />
 		<module name="IllegalCatch" />
+		<module name="IllegalImport" />
+		<module name="IllegalInstantiation" />
+		<module name="IllegalThrows" />
+		<module name="InnerAssignment" />
+		<module name="InterfaceIsType" />
+		<module name="InterfaceTypeParameterName" />
+		<module name="JavaNCSS">
+			<property name="methodMaximum" value="57"/>
+		</module>
+		<module name="LeftCurly" />
+		<module name="LineLength">
+			<property name="max" value="150"/>
+			<property name="ignorePattern" value="^ *\* *[^ ]+ // $"/>
+		</module>
 	</module>
 
 	<module name="SuppressionFilter">
