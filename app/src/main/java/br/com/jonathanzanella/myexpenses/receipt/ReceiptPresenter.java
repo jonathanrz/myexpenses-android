@@ -224,9 +224,9 @@ class ReceiptPresenter {
 
 							@Override
 							protected Void doInBackground(Void... voids) {
-								Account account = receipt.getAccount();
-								account.credit(receipt.getIncome() * -1);
-								accountRepository.save(account);
+								Account acc = receipt.getAccount();
+								acc.credit(receipt.getIncome() * -1);
+								accountRepository.save(acc);
 
 								receipt.delete();
 								return null;

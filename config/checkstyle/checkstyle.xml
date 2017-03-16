@@ -38,6 +38,9 @@
 		</module>
 		<module name="FinalClass" />
 		<module name="GenericWhitespace" />
+		<module name="HiddenField">
+			<property name="tokens" value="VARIABLE_DEF"/>
+		</module>
 	</module>
 
 </module>
