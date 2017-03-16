@@ -36,6 +36,7 @@ test:
     - ./gradlew app:connectedDebugAndroidTest -PdisablePreDex -Pandroid.testInstrumentationRunnerArguments.package=br.com.jonathanzanella.myexpenses.receipt
     - ./gradlew app:connectedDebugAndroidTest -PdisablePreDex -Pandroid.testInstrumentationRunnerArguments.package=br.com.jonathanzanella.myexpenses.resume
     - ./gradlew app:connectedDebugAndroidTest -PdisablePreDex -Pandroid.testInstrumentationRunnerArguments.package=br.com.jonathanzanella.myexpenses.source
+    - ./gradlew jacocoTestReport
     # copy the build outputs to artifacts
     - cp -r app/build/outputs $CIRCLE_ARTIFACTS
     # copy the test results to the test results directory.
