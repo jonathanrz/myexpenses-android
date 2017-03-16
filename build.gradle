@@ -67,6 +67,19 @@ ext {
     testFairyToken = project.hasProperty('MyExpensesTestFairyToken') ? MyExpensesTestFairyToken : System.getenv('MYEXPENSES_TEST_FAIRY_TOKEN')
 }
 
+ext.getCurrentBranch = {
+    def branch = System.getenv('CIRCLE_BRANCH')
+    if (branch == "") {
+        def stdout = new ByteArrayOutputStream()
+        exec {
+            commandLine 'git', 'rev-parse', '--abbrev-ref', 'HEAD'
+            standardOutput = stdout
+        }
+        branch = stdout.toString().trim()
+    }
+    return branch
+}
+
 ext.gitCommitCount = {
     def stdout = new ByteArrayOutputStream()
     exec {
@@ -78,14 +91,9 @@ ext.gitCommitCount = {
 }
 
 ext.getVersionName = {
-    def stdout = new ByteArrayOutputStream()
-    exec {
-        commandLine 'git', 'rev-parse', '--abbrev-ref', 'HEAD'
-        standardOutput = stdout
-    }
-    def branch = stdout.toString().trim()
+    def branch = getCurrentBranch()
 
-    if (branch.equals("master")) {
+    if (branch == "master") {
         return gitCommitCount();
     } else {
         return branch;
