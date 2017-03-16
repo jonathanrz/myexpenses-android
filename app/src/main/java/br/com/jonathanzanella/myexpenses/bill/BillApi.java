@@ -22,7 +22,7 @@ import retrofit2.Response;
 @WorkerThread
 public class BillApi implements UnsyncModelApi<Bill> {
 	private static final String LOG_TAG = AccountApi.class.getSimpleName();
-	private BillInterface BillInterface;
+	private BillInterface billInterface;
 	private BillRepository billRepository;
 
 	public BillApi() {
@@ -90,8 +90,8 @@ public class BillApi implements UnsyncModelApi<Bill> {
 	}
 
 	private BillInterface getInterface() {
-		if(BillInterface == null)
-			BillInterface = new Server().billInterface();
-		return BillInterface;
+		if(billInterface == null)
+			billInterface = new Server().billInterface();
+		return billInterface;
 	}
 }
