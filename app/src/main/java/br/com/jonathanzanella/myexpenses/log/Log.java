@@ -19,7 +19,7 @@ public class Log implements UnsyncModel {
 	private static final String TAG = "Log";
 	private static LogRepository logRepository;
 
-	enum LOG_LEVEL {
+	enum LogLevel {
 		DEBUG,
 		INFO,
 		WARNING,
@@ -45,19 +45,19 @@ public class Log implements UnsyncModel {
 			List<String> logLevels = new ArrayList<>();
 			switch (this) {
 				case DEBUG:
-					logLevels.add(LOG_LEVEL.DEBUG.name());
+					logLevels.add(LogLevel.DEBUG.name());
 				case INFO:
-					logLevels.add(LOG_LEVEL.INFO.name());
+					logLevels.add(LogLevel.INFO.name());
 				case WARNING:
-					logLevels.add(LOG_LEVEL.WARNING.name());
+					logLevels.add(LogLevel.WARNING.name());
 				case ERROR:
-					logLevels.add(LOG_LEVEL.ERROR.name());
+					logLevels.add(LogLevel.ERROR.name());
 			}
 			return logLevels;
 		}
 
-		public static LOG_LEVEL getLogLevel(String logLevelAsString) {
-			for (LOG_LEVEL logLevel : values()) {
+		public static LogLevel getLogLevel(String logLevelAsString) {
+			for (LogLevel logLevel : values()) {
 				if(logLevel.name().equals(logLevelAsString))
 					return logLevel;
 			}
@@ -79,12 +79,12 @@ public class Log implements UnsyncModel {
 	private DateTime date;
 
 	@Setter
-	private LOG_LEVEL type;
+	private LogLevel type;
 
 	Log() {
 	}
 
-	LOG_LEVEL getLogLevel() {
+	LogLevel getLogLevel() {
 		return type;
 	}
 
@@ -98,7 +98,7 @@ public class Log implements UnsyncModel {
 		return logRepository;
 	}
 
-	private static void log(String title, String description, LOG_LEVEL logLevel) {
+	private static void log(String title, String description, LogLevel logLevel) {
 		Log log = new Log();
 		log.title = title;
 		log.description = description;
@@ -108,22 +108,22 @@ public class Log implements UnsyncModel {
 	}
 
 	public static void debug(String title, String description) {
-		log(title, description, LOG_LEVEL.DEBUG);
+		log(title, description, LogLevel.DEBUG);
 		android.util.Log.d(title, description);
 	}
 
 	public static void info(String title, String description) {
-		log(title, description, LOG_LEVEL.INFO);
+		log(title, description, LogLevel.INFO);
 		android.util.Log.i(title, description);
 	}
 
 	public static void warning(String title, String description) {
-		log(title, description, LOG_LEVEL.WARNING);
+		log(title, description, LogLevel.WARNING);
 		android.util.Log.w(title, description);
 	}
 
 	public static void error(String title, String description) {
-		log(title, description, LOG_LEVEL.ERROR);
+		log(title, description, LogLevel.ERROR);
 		android.util.Log.e(title, description);
 	}
 

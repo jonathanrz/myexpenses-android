@@ -30,7 +30,7 @@ public class CreditCardMonthlyAdapter extends RecyclerView.Adapter<CreditCardMon
 	private int totalValue;
 	private CardRepository cardRepository;
 
-	private enum VIEW_TYPE {
+	private enum ViewType {
 		TYPE_NORMAL,
 		TYPE_TOTAL
 	}
@@ -77,16 +77,16 @@ public class CreditCardMonthlyAdapter extends RecyclerView.Adapter<CreditCardMon
 	@Override
 	public int getItemViewType(int position) {
 		if(expenses != null && position == expenses.size()) {
-			return VIEW_TYPE.TYPE_TOTAL.ordinal();
+			return ViewType.TYPE_TOTAL.ordinal();
 		} else {
-			return VIEW_TYPE.TYPE_NORMAL.ordinal();
+			return ViewType.TYPE_NORMAL.ordinal();
 		}
 	}
 
 	@Override
 	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		View v;
-		if(viewType == VIEW_TYPE.TYPE_TOTAL.ordinal())
+		if(viewType == ViewType.TYPE_TOTAL.ordinal())
 			v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_monthly_resume_expense_total, parent, false);
 		else
 			v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_monthly_resume_expense, parent, false);

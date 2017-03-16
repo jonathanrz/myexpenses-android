@@ -111,6 +111,14 @@
 		<module name="SimplifyBooleanExpression" />
 		<module name="SimplifyBooleanReturn" />
 		<module name="StaticVariableName" />
+		<module name="StringLiteralEquality" />
+		<module name="SuperClone" />
+		<module name="SuperFinalize" />
+		<module name="ThrowsCount">
+			<property name="max" value="2"/>
+		</module>
+		<module name="TypecastParenPad" />
+		<module name="TypeName" />
 	</module>
 
 	<module name="SuppressionFilter">

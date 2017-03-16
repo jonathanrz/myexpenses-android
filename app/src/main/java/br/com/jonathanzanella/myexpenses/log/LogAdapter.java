@@ -65,7 +65,7 @@ class LogAdapter extends RecyclerView.Adapter<LogAdapter.ViewHolder> {
 		return filteredLogs != null ? filteredLogs.size() : 0;
 	}
 
-	public void loadData(DateTime initDate, DateTime endDate, Log.LOG_LEVEL logLevel, String filter) {
+	public void loadData(DateTime initDate, DateTime endDate, Log.LogLevel logLevel, String filter) {
 		List<Log> logs = logRepository.filter(initDate, endDate, logLevel);
 
 		filteredLogs = new ArrayList<>();

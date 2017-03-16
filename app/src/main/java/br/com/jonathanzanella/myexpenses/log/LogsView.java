@@ -82,20 +82,20 @@ public class LogsView extends BaseView implements DateTimeView.Listener {
 		adapter.notifyDataSetChanged();
 	}
 
-	private Log.LOG_LEVEL getLogLevel() {
+	private Log.LogLevel getLogLevel() {
 		switch (logLevel.getCheckedRadioButtonId()) {
 			case R.id.view_logs_log_level_error:
-				return Log.LOG_LEVEL.ERROR;
+				return Log.LogLevel.ERROR;
 			case R.id.view_logs_log_level_warning:
-				return Log.LOG_LEVEL.WARNING;
+				return Log.LogLevel.WARNING;
 			case R.id.view_logs_log_level_info:
-				return Log.LOG_LEVEL.INFO;
+				return Log.LogLevel.INFO;
 			case R.id.view_logs_log_level_debug:
-				return Log.LOG_LEVEL.DEBUG;
+				return Log.LogLevel.DEBUG;
 		}
 
 		Log.error(LOG_TAG, "new log level?");
-		return Log.LOG_LEVEL.DEBUG;
+		return Log.LogLevel.DEBUG;
 	}
 
 	@Override

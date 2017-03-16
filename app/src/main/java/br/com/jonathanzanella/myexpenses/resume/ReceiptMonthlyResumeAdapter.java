@@ -36,7 +36,7 @@ class ReceiptMonthlyResumeAdapter extends RecyclerView.Adapter<ReceiptMonthlyRes
 	private int totalUnreceivedValue;
 	private ReceiptRepository receiptRepository;
 
-	private enum VIEW_TYPE {
+	private enum ViewType {
 		TYPE_NORMAL,
 		TYPE_TOTAL_TO_PAY,
 		TYPE_TOTAL
@@ -94,7 +94,7 @@ class ReceiptMonthlyResumeAdapter extends RecyclerView.Adapter<ReceiptMonthlyRes
 
 		@OnClick(R.id.row_monthly_resume_receipt_income)
 		public void onIncome() {
-			if(getItemViewType() != VIEW_TYPE.TYPE_NORMAL.ordinal())
+			if(getItemViewType() != ViewType.TYPE_NORMAL.ordinal())
 				return;
 
 			final Receipt receipt = adapterWeakReference.get().receipts.get(getAdapterPosition());
@@ -117,20 +117,20 @@ class ReceiptMonthlyResumeAdapter extends RecyclerView.Adapter<ReceiptMonthlyRes
 	@Override
 	public int getItemViewType(int position) {
 		if(isTotalView(position)) {
-			return VIEW_TYPE.TYPE_TOTAL.ordinal();
+			return ViewType.TYPE_TOTAL.ordinal();
 		} else if(isTotalToPayView(position)) {
-			return VIEW_TYPE.TYPE_TOTAL_TO_PAY.ordinal();
+			return ViewType.TYPE_TOTAL_TO_PAY.ordinal();
 		} else {
-			return VIEW_TYPE.TYPE_NORMAL.ordinal();
+			return ViewType.TYPE_NORMAL.ordinal();
 		}
 	}
 
 	@Override
 	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		View v;
-		if(viewType == VIEW_TYPE.TYPE_TOTAL.ordinal())
+		if(viewType == ViewType.TYPE_TOTAL.ordinal())
 			v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_monthly_resume_receipt_total, parent, false);
-		else if(viewType == VIEW_TYPE.TYPE_TOTAL_TO_PAY.ordinal())
+		else if(viewType == ViewType.TYPE_TOTAL_TO_PAY.ordinal())
 			v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_monthly_resume_receipt_total_to_receive, parent, false);
 		else
 			v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_monthly_resume_receipt, parent, false);

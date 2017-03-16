@@ -35,7 +35,7 @@ class ExpenseMonthlyResumeAdapter extends RecyclerView.Adapter<ExpenseMonthlyRes
 	private int totalValue;
 	private int totalUnpaidValue;
 
-	private enum VIEW_TYPE {
+	private enum ViewType {
 		TYPE_NORMAL,
 		TYPE_TOTAL_TO_PAY,
 		TYPE_TOTAL
@@ -93,7 +93,7 @@ class ExpenseMonthlyResumeAdapter extends RecyclerView.Adapter<ExpenseMonthlyRes
 
 		@OnClick(R.id.row_monthly_resume_expense_income)
 		public void onIncome() {
-			if(getItemViewType() != VIEW_TYPE.TYPE_NORMAL.ordinal())
+			if(getItemViewType() != ViewType.TYPE_NORMAL.ordinal())
 				return;
 
 			final Expense expense = getExpense(getAdapterPosition());
@@ -109,7 +109,7 @@ class ExpenseMonthlyResumeAdapter extends RecyclerView.Adapter<ExpenseMonthlyRes
 
 		@Override
 		public void onClick(View v) {
-			if(getItemViewType() != VIEW_TYPE.TYPE_NORMAL.ordinal())
+			if(getItemViewType() != ViewType.TYPE_NORMAL.ordinal())
 				return;
 
 			Expense expense = getExpense(getAdapterPosition());
@@ -131,20 +131,20 @@ class ExpenseMonthlyResumeAdapter extends RecyclerView.Adapter<ExpenseMonthlyRes
 	@Override
 	public int getItemViewType(int position) {
 		if(isTotalView(position)) {
-			return VIEW_TYPE.TYPE_TOTAL.ordinal();
+			return ViewType.TYPE_TOTAL.ordinal();
 		} else if(isTotalToPayView(position)) {
-			return VIEW_TYPE.TYPE_TOTAL_TO_PAY.ordinal();
+			return ViewType.TYPE_TOTAL_TO_PAY.ordinal();
 		} else {
-			return VIEW_TYPE.TYPE_NORMAL.ordinal();
+			return ViewType.TYPE_NORMAL.ordinal();
 		}
 	}
 
 	@Override
 	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		View v;
-		if(viewType == VIEW_TYPE.TYPE_TOTAL.ordinal())
+		if(viewType == ViewType.TYPE_TOTAL.ordinal())
 			v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_monthly_resume_expense_total, parent, false);
-		else if(viewType == VIEW_TYPE.TYPE_TOTAL_TO_PAY.ordinal())
+		else if(viewType == ViewType.TYPE_TOTAL_TO_PAY.ordinal())
 			v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_monthly_resume_expense_total_to_pay, parent, false);
 		else
 			v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_monthly_resume_expense, parent, false);
