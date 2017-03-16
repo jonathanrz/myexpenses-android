@@ -8,12 +8,12 @@ import android.widget.TextView;
 
 import org.joda.time.DateTime;
 
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
+import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.views.BaseView;
 import butterknife.Bind;
 import butterknife.BindString;
@@ -64,7 +64,7 @@ public class MonthTransactionsView extends BaseView implements MonthTransactions
 
 	@Override
 	public void onBalanceUpdated(int balance) {
-		this.balance.setText(NumberFormat.getCurrencyInstance().format(balance / 100.0));
+		this.balance.setText(CurrencyHelper.format(balance));
 		//noinspection deprecation
 		this.balance.setTextColor(getResources().getColor(balance >= 0 ? R.color.value_unreceived : R.color.value_unpaid));
 

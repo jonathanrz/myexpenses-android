@@ -7,7 +7,11 @@
 <suppressions>
 	<suppress checks="IllegalCatch"
 	          files="ActivityLifecycleHelper.java"
-	          lines="38"/>
+	          lines="40"/>
 	<suppress checks="InterfaceIsType"
 	          files="Environment.java" />
+	<suppress checks="MagicNumber"
+	          files=".*Test\.java"/>
+	<suppress checks="MagicNumber"
+	          files=".*Builder\.java"/>
 </suppressions>

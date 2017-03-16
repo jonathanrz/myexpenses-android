@@ -10,11 +10,10 @@ import android.widget.TextView;
 
 import org.joda.time.DateTime;
 
-import java.text.NumberFormat;
-
 import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
+import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import lombok.Setter;
@@ -45,7 +44,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
 
 		public void setData(Account acc) {
 			name.setText(acc.getName());
-			balance.setText(NumberFormat.getCurrencyInstance().format(acc.getBalance() / 100.0));
+			balance.setText(CurrencyHelper.format(acc.getBalance()));
 			if(accountToPayCreditCard != null)
 				accountToPayCreditCard.setText(acc.isAccountToPayCreditCard() ? R.string.yes : R.string.no);
 		}

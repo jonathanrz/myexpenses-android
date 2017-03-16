@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import org.joda.time.DateTime;
 
-import java.text.NumberFormat;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.R;
@@ -20,6 +19,7 @@ import br.com.jonathanzanella.myexpenses.bill.BillMonthlyResumeAdapter;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
+import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.receipt.Receipt;
 import br.com.jonathanzanella.myexpenses.receipt.ReceiptRepository;
 import br.com.jonathanzanella.myexpenses.views.BaseView;
@@ -28,6 +28,7 @@ import butterknife.ButterKnife;
 
 @SuppressLint("ViewConstructor")
 class ResumeMonthlyView extends BaseView {
+	public static final int ACCOUNT_COLUMNS = 3;
 	@Bind(R.id.view_monthly_resume_accounts)
 	RecyclerView accounts;
 	@Bind(R.id.view_monthly_resume_receipts)
@@ -81,7 +82,7 @@ class ResumeMonthlyView extends BaseView {
 
 		accounts.setAdapter(accountAdapter);
 		accounts.setHasFixedSize(true);
-		accounts.setLayoutManager(new GridLayoutManager(getContext(), 3));
+		accounts.setLayoutManager(new GridLayoutManager(getContext(), ACCOUNT_COLUMNS));
 	}
 
 	private void initReceipts() {
@@ -169,7 +170,7 @@ class ResumeMonthlyView extends BaseView {
 	private void updateTotalExpenses() {
 		int totalExpensesValue = expensesAdapter.getTotalValue();
 		totalExpensesValue += billsAdapter.getTotalValue();
-		totalExpenses.setText(NumberFormat.getCurrencyInstance().format(totalExpensesValue / 100.0));
+		totalExpenses.setText(CurrencyHelper.format(totalExpensesValue));
 
 		updateBalance();
 	}
@@ -181,7 +182,7 @@ class ResumeMonthlyView extends BaseView {
 			public void run() {
 				receipts.getLayoutParams().height = singleRowHeight * receiptAdapter.getItemCount();
 				int totalReceiptsValue = receiptAdapter.getTotalValue();
-				totalReceipts.setText(NumberFormat.getCurrencyInstance().format(totalReceiptsValue / 100.0));
+				totalReceipts.setText(CurrencyHelper.format(totalReceiptsValue));
 
 				updateBalance();
 			}
@@ -194,7 +195,7 @@ class ResumeMonthlyView extends BaseView {
 		totalExpensesValue += billsAdapter.getTotalValue();
 
 		int balanceValue = receiptAdapter.getTotalValue() - totalExpensesValue;
-		balance.setText(NumberFormat.getCurrencyInstance().format(balanceValue / 100.0));
+		balance.setText(CurrencyHelper.format(balanceValue));
 		if(balanceValue >= 0) {
 			//noinspection deprecation
 			balance.setTextColor(getResources().getColor(R.color.value_unreceived));

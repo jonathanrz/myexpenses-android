@@ -13,12 +13,12 @@ import android.widget.TextView;
 import org.joda.time.DateTime;
 
 import java.lang.ref.WeakReference;
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
 import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.helpers.TransactionsHelper;
 import br.com.jonathanzanella.myexpenses.receipt.Receipt;
 import br.com.jonathanzanella.myexpenses.receipt.ReceiptRepository;
@@ -89,7 +89,7 @@ class ReceiptMonthlyResumeAdapter extends RecyclerView.Adapter<ReceiptMonthlyRes
 		}
 
 		public void setTotal(int totalValue) {
-			income.setText(NumberFormat.getCurrencyInstance().format(totalValue / 100.0));
+			income.setText(CurrencyHelper.format(totalValue));
 		}
 
 		@OnClick(R.id.row_monthly_resume_receipt_income)

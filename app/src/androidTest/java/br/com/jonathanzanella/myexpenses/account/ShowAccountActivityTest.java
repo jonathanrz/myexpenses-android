@@ -1,7 +1,6 @@
 package br.com.jonathanzanella.myexpenses.account;
 
 import android.content.Intent;
-import android.support.test.filters.LargeTest;
 import android.support.test.filters.MediumTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -13,8 +12,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.text.NumberFormat;
-
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.card.Card;
 import br.com.jonathanzanella.myexpenses.card.CardRepository;
@@ -23,6 +20,7 @@ import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
+import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.CardBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.ExpenseBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.ReceiptBuilder;
@@ -87,7 +85,7 @@ public class ShowAccountActivityTest {
 		final String editAccountTitle = getTargetContext().getString(R.string.account) + " " + account.getName();
 		matchToolbarTitle(editAccountTitle);
 
-		String balanceAsCurrency = NumberFormat.getCurrencyInstance().format(account.getBalance() / 100.0);
+		String balanceAsCurrency = CurrencyHelper.format(account.getBalance());
 		onView(withId(R.id.act_show_account_name)).check(matches(withText(account.getName())));
 		onView(withId(R.id.act_show_account_balance)).check(matches(withText(balanceAsCurrency)));
 	}
@@ -102,7 +100,7 @@ public class ShowAccountActivityTest {
 		launchActivity();
 
 		String billName = getTargetContext().getString(R.string.invoice) + " " + card.getName();
-		String value = NumberFormat.getCurrencyInstance().format(expense.getAmount() / 100.0);
+		String value = CurrencyHelper.format(expense.getAmount());
 
 		onView(withId(R.id.act_show_account_name)).check(matches(withText(account.getName())));
 		onView(withId(R.id.row_transaction_name)).check(matches(withText(billName)));
@@ -117,14 +115,14 @@ public class ShowAccountActivityTest {
 		launchActivity();
 
 		int expectedBalance = ACCOUNT_BALANCE + RECEIPT_INCOME - EXPENSE_VALUE;
-		String expectedValue = NumberFormat.getCurrencyInstance().format(expectedBalance / 100.0);
+		String expectedValue = CurrencyHelper.format(expectedBalance);
 		onView(allOf(
 				withId(R.id.view_month_transactions_balance),
 				isDescendantOfA(withId(R.id.view_account_transactions_this_month))))
 				.check(matches(withText(expectedValue)));
 
 		expectedBalance = expectedBalance + RECEIPT_INCOME - EXPENSE_VALUE;
-		expectedValue = NumberFormat.getCurrencyInstance().format(expectedBalance / 100.0);
+		expectedValue = CurrencyHelper.format(expectedBalance);
 		onView(allOf(
 				withId(R.id.view_month_transactions_balance),
 				isDescendantOfA(withId(R.id.view_account_transactions_next_month))))

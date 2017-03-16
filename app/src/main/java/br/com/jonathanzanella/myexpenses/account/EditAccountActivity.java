@@ -12,14 +12,13 @@ import org.apache.commons.lang3.StringUtils;
 import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
+import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch;
 import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.user.SelectUserView;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
-
-import static java.text.NumberFormat.getCurrencyInstance;
 
 public class EditAccountActivity extends BaseActivity implements AccountContract.EditView {
 	public static final String KEY_ACCOUNT_UUID = "KeyAccountUuid";
@@ -116,10 +115,10 @@ public class EditAccountActivity extends BaseActivity implements AccountContract
 		editName.setText(account.getName());
 		int balance = account.getBalance();
 		if(balance > 0) {
-			editBalance.setText(getCurrencyInstance().format(balance / 100.0));
+			editBalance.setText(CurrencyHelper.format(balance));
 			checkAccountBalanceNegative.setChecked(false);
 		} else {
-			editBalance.setText(getCurrencyInstance().format(balance * -1 / 100.0));
+			editBalance.setText(CurrencyHelper.format(balance * -1));
 			checkAccountBalanceNegative.setChecked(true);
 		}
 		checkToPayCreditCard.setChecked(account.isAccountToPayCreditCard());

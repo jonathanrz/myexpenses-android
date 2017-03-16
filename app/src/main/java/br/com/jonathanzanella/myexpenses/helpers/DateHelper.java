@@ -3,6 +3,11 @@ package br.com.jonathanzanella.myexpenses.helpers;
 import org.joda.time.DateTime;
 
 public final class DateHelper {
+	private static final int MAX_HOURS_OF_DAY = 23;
+	private static final int MAX_MINUTES_OF_HOUR = 59;
+	private static final int MAX_SECONDS_OF_MINUTE = 59;
+	private static final int MAX_MILLISECONDS_OF_SECOND = 999;
+
 	private DateHelper() {}
 
 	public static DateTime firstDayOfMonth(DateTime date) {
@@ -18,6 +23,6 @@ public final class DateHelper {
 	}
 
 	public static DateTime lastMillisOfDay(DateTime date) {
-		return date.withTime(23, 59, 59, 999);
+		return date.withTime(MAX_HOURS_OF_DAY, MAX_MINUTES_OF_HOUR, MAX_SECONDS_OF_MINUTE, MAX_MILLISECONDS_OF_SECOND);
 	}
 }

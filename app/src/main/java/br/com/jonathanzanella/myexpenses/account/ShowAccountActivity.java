@@ -9,12 +9,11 @@ import android.widget.TextView;
 
 import org.joda.time.DateTime;
 
-import java.text.NumberFormat;
-
 import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.transactions.TransactionsView;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
+import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.helpers.DateHelper;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
@@ -102,7 +101,7 @@ public class ShowAccountActivity extends BaseActivity implements AccountContract
 	@Override
 	public void showAccount(Account account) {
 		accountName.setText(account.getName());
-		accountBalance.setText(NumberFormat.getCurrencyInstance().format(account.getBalance() / 100.0));
+		accountBalance.setText(CurrencyHelper.format(account.getBalance()));
 		accountToPayCreditCard.setText(account.isAccountToPayCreditCard() ? R.string.yes : R.string.no);
 		accountToPayBills.setText(account.isAccountToPayBills() ? R.string.yes : R.string.no);
 

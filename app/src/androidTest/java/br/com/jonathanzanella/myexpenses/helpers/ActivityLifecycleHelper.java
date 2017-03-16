@@ -15,6 +15,8 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public final class ActivityLifecycleHelper {
 	private static final int NUMBER_OF_RETRIES = 100;
+	private static final int THREAD_SLEEP_MILLI = 200;
+
 	private ActivityLifecycleHelper() {}
 
 	public static void closeAllActivities(Instrumentation instrumentation) throws Exception {
@@ -23,7 +25,7 @@ public final class ActivityLifecycleHelper {
 			if (i++ > NUMBER_OF_RETRIES) {
 				throw new AssertionError("Limit of retries excesses");
 			}
-			Thread.sleep(200);
+			Thread.sleep(THREAD_SLEEP_MILLI);
 		}
 	}
 

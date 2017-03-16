@@ -15,8 +15,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.text.NumberFormat;
-
 import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
@@ -26,6 +24,7 @@ import br.com.jonathanzanella.myexpenses.bill.BillRepository;
 import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
+import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.BillBuilder;
 import br.com.jonathanzanella.myexpenses.views.MainActivity;
@@ -200,7 +199,7 @@ public class AddExpenseTest {
 		matchToolbarTitle(expensesTitle);
 
 		onView(withId(R.id.row_expense_name)).check(matches(withText(expenseName)));
-		String expectedValue = NumberFormat.getCurrencyInstance().format(((value * -1) / 100));
+		String expectedValue = CurrencyHelper.format(((value * -1)));
 		onView(withId(R.id.row_expense_value)).check(matches(withText(expectedValue)));
 	}
 

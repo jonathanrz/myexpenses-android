@@ -12,7 +12,6 @@ import android.widget.TextView;
 import org.joda.time.DateTime;
 
 import java.lang.ref.WeakReference;
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
@@ -21,6 +20,7 @@ import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.card.Card;
 import br.com.jonathanzanella.myexpenses.card.CardRepository;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
+import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -59,13 +59,13 @@ public class CreditCardMonthlyAdapter extends RecyclerView.Adapter<CreditCardMon
 				name.setText(expense.getName());
 			if(date != null)
 				date.setText(SIMPLE_DATE_FORMAT.format(expense.getDate().toDate()));
-			income.setText(NumberFormat.getCurrencyInstance().format(expense.getValue() / 100.0));
+			income.setText(CurrencyHelper.format(expense.getValue()));
 			if(source != null)
 				source.setVisibility(View.GONE);
 		}
 
 		public void setTotal(int totalValue) {
-			income.setText(NumberFormat.getCurrencyInstance().format(totalValue / 100.0));
+			income.setText(CurrencyHelper.format(totalValue));
 		}
 	}
 

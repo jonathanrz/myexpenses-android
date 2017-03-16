@@ -12,8 +12,6 @@ import android.widget.EditText;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 
-import java.text.NumberFormat;
-
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.bill.Bill;
 import br.com.jonathanzanella.myexpenses.bill.BillRepository;
@@ -22,6 +20,7 @@ import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
 import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType;
 import br.com.jonathanzanella.myexpenses.chargeable.ListChargeableActivity;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
+import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch;
 import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.receipt.Receipt;
@@ -205,7 +204,7 @@ public class EditExpenseActivity extends BaseActivity implements ExpenseContract
 			if(editName.getText().toString().isEmpty())
 				editName.setText(bill.getName());
 			if(editValue.getText().toString().isEmpty())
-				editValue.setText(NumberFormat.getCurrencyInstance().format(bill.getAmount() / 100.0));
+				editValue.setText(CurrencyHelper.format(bill.getAmount()));
 			showInOverview.setChecked(false);
 			showInResume.setChecked(true);
 		} else {
@@ -282,8 +281,8 @@ public class EditExpenseActivity extends BaseActivity implements ExpenseContract
 	@Override
 	public void showExpense(Expense expense) {
 		editName.setText(expense.getName());
-		editValue.setText(NumberFormat.getCurrencyInstance().format(Math.abs(expense.getValue()) / 100.0));
-		editValueToShowInOverview.setText(NumberFormat.getCurrencyInstance().format(Math.abs(expense.getValueToShowInOverview()) / 100.0));
+		editValue.setText(CurrencyHelper.format(Math.abs(expense.getValue())));
+		editValueToShowInOverview.setText(CurrencyHelper.format(Math.abs(expense.getValueToShowInOverview())));
 		if(expense.isCharged()) {
 			//noinspection deprecation
 			editValue.setTextColor(getResources().getColor(R.color.value_unpaid));

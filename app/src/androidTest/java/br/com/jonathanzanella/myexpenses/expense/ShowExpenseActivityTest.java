@@ -2,7 +2,6 @@ package br.com.jonathanzanella.myexpenses.expense;
 
 import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
-import android.support.test.filters.LargeTest;
 import android.support.test.filters.MediumTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -13,8 +12,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.text.NumberFormat;
-
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
@@ -22,6 +19,7 @@ import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
 import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
+import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.ExpenseBuilder;
 
@@ -68,7 +66,7 @@ public class ShowExpenseActivityTest {
 		final String editExpenseTitle = getTargetContext().getString(R.string.expense) + " " + expense.getName();
 		matchToolbarTitle(editExpenseTitle);
 
-		String incomeAsCurrency = NumberFormat.getCurrencyInstance().format(expense.getValue() / 100.0);
+		String incomeAsCurrency = CurrencyHelper.format(expense.getValue());
 		onView(withId(R.id.act_show_expense_name)).check(matches(withText(expense.getName())));
 		onView(withId(R.id.act_show_expense_value)).check(matches(withText(incomeAsCurrency)));
 		Chargeable chargeable = expense.getChargeable();

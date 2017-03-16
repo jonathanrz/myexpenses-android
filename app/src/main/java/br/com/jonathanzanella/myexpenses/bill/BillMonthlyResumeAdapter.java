@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import org.joda.time.DateTime;
 
-import java.text.NumberFormat;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.MyApplication;
@@ -18,6 +17,7 @@ import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
+import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import lombok.Getter;
@@ -52,11 +52,11 @@ public class BillMonthlyResumeAdapter extends RecyclerView.Adapter<BillMonthlyRe
 				name.setText(bill.getName());
 			if(day != null)
 				day.setText(String.valueOf(bill.getDueDate()));
-			amount.setText(NumberFormat.getCurrencyInstance().format(bill.getAmount() / 100.0));
+			amount.setText(CurrencyHelper.format(bill.getAmount()));
 		}
 
 		public void setTotal(int totalValue) {
-			amount.setText(NumberFormat.getCurrencyInstance().format(totalValue / 100.0));
+			amount.setText(CurrencyHelper.format(totalValue));
 		}
 	}
 

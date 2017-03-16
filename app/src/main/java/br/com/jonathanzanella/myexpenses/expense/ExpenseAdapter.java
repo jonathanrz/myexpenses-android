@@ -16,7 +16,6 @@ import android.widget.TextView;
 import org.joda.time.DateTime;
 
 import java.lang.ref.WeakReference;
-import java.text.NumberFormat;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.MyApplication;
@@ -24,6 +23,7 @@ import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.bill.Bill;
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
+import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -64,7 +64,7 @@ class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHolder> {
 		public void setData(final Expense expense) {
 			name.setText(expense.getName());
 			date.setText(Expense.SIMPLE_DATE_FORMAT.format(expense.getDate().toDate()));
-			value.setText(NumberFormat.getCurrencyInstance().format(expense.getValue() / 100.0));
+			value.setText(CurrencyHelper.format(expense.getValue()));
 			new AsyncTask<Void, Void, Chargeable>() {
 
 				@Override

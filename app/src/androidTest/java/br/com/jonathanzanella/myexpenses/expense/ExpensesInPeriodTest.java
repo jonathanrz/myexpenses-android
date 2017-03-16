@@ -25,7 +25,7 @@ import static org.junit.Assert.assertThat;
 
 @RunWith(AndroidJUnit4.class)
 @SmallTest
-public class ExpensesInPeriodTestSuite {
+public class ExpensesInPeriodTest {
 	private AccountRepository accountRepository = new AccountRepository(new RepositoryImpl<Account>(MyApplication.getContext()));
 	private ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(MyApplication.getContext()));
 	private DateTime firstDayOfJune = new DateTime(2016, 6, 1, 0, 0, 0, 0);

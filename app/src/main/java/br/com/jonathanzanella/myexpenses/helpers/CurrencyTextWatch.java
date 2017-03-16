@@ -4,8 +4,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
 
-import java.text.NumberFormat;
-
 public class CurrencyTextWatch implements TextWatcher {
 	private EditText edit;
 	private String current;
@@ -25,7 +23,7 @@ public class CurrencyTextWatch implements TextWatcher {
 			String cleanString = s.toString().replaceAll("[^\\d]", "");
 
 			double parsed = Double.parseDouble(cleanString);
-			String formatted = NumberFormat.getCurrencyInstance().format((parsed/100));
+			String formatted = CurrencyHelper.format(parsed);
 
 			current = formatted;
 			edit.setText(formatted);

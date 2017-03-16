@@ -13,12 +13,12 @@ import android.widget.TextView;
 
 import org.joda.time.DateTime;
 
-import java.text.NumberFormat;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
+import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.source.Source;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -54,7 +54,7 @@ class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ViewHolder> {
 		public void setData(final Receipt receipt) {
 			name.setText(receipt.getName());
 			date.setText(Receipt.SIMPLE_DATE_FORMAT.format(receipt.getDate().toDate()));
-			income.setText(NumberFormat.getCurrencyInstance().format(receipt.getIncome() / 100.0));
+			income.setText(CurrencyHelper.format(receipt.getIncome()));
 
 			new AsyncTask<Void, Void, Source>() {
 

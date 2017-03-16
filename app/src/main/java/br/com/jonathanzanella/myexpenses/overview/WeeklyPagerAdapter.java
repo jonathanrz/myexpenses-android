@@ -15,6 +15,10 @@ import br.com.jonathanzanella.myexpenses.helpers.DateHelper;
 import br.com.jonathanzanella.myexpenses.views.BaseView;
 
 public class WeeklyPagerAdapter extends PagerAdapter {
+
+	public static final int TOTAL_DAYS_OF_WEEK = 7;
+	public static final int LAST_DAY_OF_WEEK = 6;
+
 	public static class Period {
 		public DateTime init;
 		public DateTime end;
@@ -36,12 +40,12 @@ public class WeeklyPagerAdapter extends PagerAdapter {
 	    while(init.getMonthOfYear() == month.getMonthOfYear()) {
 		    Period period = new Period();
 		    period.init = init;
-		    period.end = init.plusDays(6);
+		    period.end = init.plusDays(LAST_DAY_OF_WEEK);
 		    if(period.end.getMonthOfYear() > month.getMonthOfYear()) {
 			    period.end.minusMonths(1);
 			    period.end = DateHelper.lastMillisOfDay(init.dayOfMonth().withMaximumValue());
 		    }
-		    init = init.plusDays(7);
+		    init = init.plusDays(TOTAL_DAYS_OF_WEEK);
 		    periods.add(period);
 	    }
     }

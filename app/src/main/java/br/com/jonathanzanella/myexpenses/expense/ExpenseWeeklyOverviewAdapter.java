@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
@@ -17,6 +16,7 @@ import java.util.Locale;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.card.CreditCardInvoiceActivity;
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
+import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import lombok.Getter;
@@ -50,7 +50,7 @@ public class ExpenseWeeklyOverviewAdapter extends RecyclerView.Adapter<ExpenseWe
 		public void setData(final Expense expense) {
 			name.setText(expense.getName());
 			date.setText(SIMPLE_DATE_FORMAT.format(expense.getDate().toDate()));
-			income.setText(NumberFormat.getCurrencyInstance().format(expense.getValueToShowInOverview() / 100.0));
+			income.setText(CurrencyHelper.format(expense.getValueToShowInOverview()));
 
 			new AsyncTask<Void, Void, Chargeable>() {
 

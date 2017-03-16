@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
@@ -21,6 +20,7 @@ import br.com.jonathanzanella.myexpenses.card.CreditCardInvoiceActivity;
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ShowExpenseActivity;
+import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.helpers.TransactionsHelper;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -65,7 +65,7 @@ class ExpenseMonthlyResumeAdapter extends RecyclerView.Adapter<ExpenseMonthlyRes
 				name.setText(expense.getName());
 			if(date != null)
 				date.setText(SIMPLE_DATE_FORMAT.format(expense.getDate().toDate()));
-			income.setText(NumberFormat.getCurrencyInstance().format(expense.getValue() / 100.0));
+			income.setText(CurrencyHelper.format(expense.getValue()));
 			income.setTypeface(null, Typeface.NORMAL);
 			if(!expense.isCharged())
 				income.setTypeface(null, Typeface.BOLD);
@@ -88,7 +88,7 @@ class ExpenseMonthlyResumeAdapter extends RecyclerView.Adapter<ExpenseMonthlyRes
 		}
 
 		public void setTotal(int totalValue) {
-			income.setText(NumberFormat.getCurrencyInstance().format(totalValue / 100.0));
+			income.setText(CurrencyHelper.format(totalValue));
 		}
 
 		@OnClick(R.id.row_monthly_resume_expense_income)

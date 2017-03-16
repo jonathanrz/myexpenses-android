@@ -59,6 +59,7 @@
 		</module>
 		<module name="LocalFinalVariableName" />
 		<module name="LocalVariableName" />
+		<module name="MagicNumber" />
 	</module>
 
 	<module name="SuppressionFilter">

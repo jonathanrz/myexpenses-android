@@ -10,12 +10,11 @@ import android.widget.EditText;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 
-import java.text.NumberFormat;
-
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
+import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch;
 import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.user.SelectUserView;
@@ -141,7 +140,7 @@ public class EditBillActivity extends BaseActivity implements BillContract.EditV
 	@Override
 	public void showBill(Bill bill) {
 		editName.setText(bill.getName());
-		editAmount.setText(NumberFormat.getCurrencyInstance().format(bill.getAmount() / 100.0));
+		editAmount.setText(CurrencyHelper.format(bill.getAmount()));
 		editDueDate.setText(String.valueOf(bill.getDueDate()));
 		selectUserView.setSelectedUser(bill.getUserUuid());
 	}
