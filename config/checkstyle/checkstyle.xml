@@ -122,6 +122,13 @@
 		<module name="UncommentedMain" />
 		<module name="UnnecessaryParentheses" />
 		<module name="UnusedImports" />
+		<module name="UpperEll" />
+		<module name="VariableDeclarationUsageDistance">
+			<property name="allowedDistance" value="6"/>
+			<property name="ignoreVariablePattern" value="^temp.*"/>
+			<property name="validateBetweenScopes" value="true"/>
+			<property name="ignoreFinal" value="false"/>
+		</module>
 	</module>
 
 	<module name="SuppressionFilter">
