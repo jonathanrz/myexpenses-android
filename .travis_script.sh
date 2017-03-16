@@ -4,9 +4,9 @@ set -ev
 ./gradlew assembleDebug
 ./gradlew testDebugUnitTest
 ./gradlew installDebugAndroidTest
-./gradlew connectedAndroidTest -PdisablePreDex  -Pandroid.testInstrumentationRunnerArguments.size=small
-./gradlew connectedAndroidTest -PdisablePreDex  -Pandroid.testInstrumentationRunnerArguments.size=medium
-./gradlew connectedAndroidTest -PdisablePreDex  -Pandroid.testInstrumentationRunnerArguments.size=large
+./gradlew connectedDebugAndroidTest -PdisablePreDex  -Pandroid.testInstrumentationRunnerArguments.size=small
+./gradlew connectedDebugAndroidTest -PdisablePreDex  -Pandroid.testInstrumentationRunnerArguments.size=medium
+./gradlew connectedDebugAndroidTest -PdisablePreDex  -Pandroid.testInstrumentationRunnerArguments.size=large
 
 if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then
 	./gradlew testfairyJonathan
