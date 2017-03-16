@@ -64,6 +64,10 @@
 		<module name="MethodCount">
 			<property name="maxTotal" value="42"/>
 		</module>
+		<module name="MethodLength">
+			<property name="tokens" value="METHOD_DEF"/>
+			<property name="max" value="67"/>
+		</module>
 	</module>
 
 	<module name="SuppressionFilter">
