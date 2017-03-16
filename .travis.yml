@@ -27,3 +27,6 @@ script: sh .travis_script.sh
 
 notifications:
   slack: myexpenses:FExuKgaFD3itm8F65dz2kjyT
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)

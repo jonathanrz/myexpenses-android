@@ -36,12 +36,9 @@ test:
     - ./gradlew app:connectedDebugAndroidTest -PdisablePreDex -Pandroid.testInstrumentationRunnerArguments.package=br.com.jonathanzanella.myexpenses.receipt
     - ./gradlew app:connectedDebugAndroidTest -PdisablePreDex -Pandroid.testInstrumentationRunnerArguments.package=br.com.jonathanzanella.myexpenses.resume
     - ./gradlew app:connectedDebugAndroidTest -PdisablePreDex -Pandroid.testInstrumentationRunnerArguments.package=br.com.jonathanzanella.myexpenses.source
-    - ./gradlew jacocoTestReport
     # copy the build outputs to artifacts
     - cp -r app/build/outputs $CIRCLE_ARTIFACTS
     # copy the test results to the test results directory.
     - cp -r app/build/outputs/androidTest-results/* $CIRCLE_TEST_REPORTS
     - if [ $CIRCLE_BRANCH = 'master' ]; then ./gradlew testfairyThainara; fi
     - if [ $CIRCLE_BRANCH = 'master' ]; then ./gradlew testfairyJonathan; fi
-  post:
-    - bash <(curl -s https://codecov.io/bash)
