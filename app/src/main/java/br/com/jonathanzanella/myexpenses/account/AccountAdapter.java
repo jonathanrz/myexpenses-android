@@ -94,7 +94,8 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
 		return presenter.getAccountsSize();
 	}
 
-	public @Nullable Account getAccount(int position) {
+	@Nullable
+	public Account getAccount(int position) {
 		return presenter.getAccount(position);
 	}
 

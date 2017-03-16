@@ -24,7 +24,8 @@ public class ReceiptApi implements UnsyncModelApi<Receipt> {
     private ReceiptRepository receiptRepository;
 
     @Override
-    public @Nullable List<Receipt> index() {
+    @Nullable
+    public List<Receipt> index() {
         Call<List<Receipt>> caller = getInterface().index(greaterUpdatedAt());
 
         try {

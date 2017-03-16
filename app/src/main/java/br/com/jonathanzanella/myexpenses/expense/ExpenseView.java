@@ -133,7 +133,8 @@ public class ExpenseView extends BaseView implements ViewPager.OnPageChangeListe
 			view.filter(filter);
 	}
 
-	private @Nullable ExpenseMonthlyView getMonthView(DateTime date) {
+	@Nullable
+	private ExpenseMonthlyView getMonthView(DateTime date) {
 		for (Map.Entry<DateTime, WeakReference<ExpenseMonthlyView>> pair : views.entrySet()) {
 			DateTime viewDateFirstDay = DateHelper.firstDayOfMonth(pair.getKey());
 			DateTime viewDateLastDay = DateHelper.lastDayOfMonth(pair.getKey());

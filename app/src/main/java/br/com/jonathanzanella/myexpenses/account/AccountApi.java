@@ -24,7 +24,8 @@ public class AccountApi implements UnsyncModelApi<Account> {
 	private AccountRepository accountRepository;
 
 	@Override
-	public @Nullable List<Account> index() {
+	@Nullable
+	public List<Account> index() {
 		Call<List<Account>> caller = getInterface().index(getRepository().greaterUpdatedAt());
 
 		try {

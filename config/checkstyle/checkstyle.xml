@@ -69,6 +69,11 @@
 			<property name="max" value="67"/>
 		</module>
 		<module name="MethodName" />
+		<module name="MethodParamPad" />
+		<module name="MethodTypeParameterName" />
+		<module name="MissingDeprecated" />
+		<module name="MissingOverride" />
+		<module name="ModifierOrder" />
 	</module>
 
 	<module name="SuppressionFilter">

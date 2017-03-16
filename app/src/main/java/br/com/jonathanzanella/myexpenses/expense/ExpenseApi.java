@@ -30,7 +30,8 @@ public class ExpenseApi implements UnsyncModelApi<Expense> {
     }
 
     @Override
-    public @Nullable List<Expense> index() {
+    @Nullable
+    public List<Expense> index() {
         Call<List<Expense>> caller = getInterface().index(greaterUpdatedAt());
 
         try {
