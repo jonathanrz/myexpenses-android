@@ -57,6 +57,7 @@
 			<property name="max" value="150"/>
 			<property name="ignorePattern" value="^ *\* *[^ ]+ // $"/>
 		</module>
+		<module name="LocalFinalVariableName" />
 	</module>
 
 	<module name="SuppressionFilter">

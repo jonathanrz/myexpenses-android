@@ -14,10 +14,10 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicReference;
 
 public final class ActivityLifecycleHelper {
+	private static final int NUMBER_OF_RETRIES = 100;
 	private ActivityLifecycleHelper() {}
 
 	public static void closeAllActivities(Instrumentation instrumentation) throws Exception {
-		final int NUMBER_OF_RETRIES = 100;
 		int i = 0;
 		while (closeActivity(instrumentation)) {
 			if (i++ > NUMBER_OF_RETRIES) {
