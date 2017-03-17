@@ -5,9 +5,6 @@ import com.google.gson.annotations.SerializedName;
 
 import org.joda.time.DateTime;
 
-import java.text.SimpleDateFormat;
-import java.util.Locale;
-
 import br.com.jonathanzanella.myexpenses.helpers.DateHelper;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
 import br.com.jonathanzanella.myexpenses.transaction.Transaction;
@@ -17,8 +14,6 @@ import lombok.Setter;
 
 @EqualsAndHashCode
 public class Bill implements Transaction, UnsyncModel {
-	static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
-
 	@Setter @Getter
 	private long id;
 

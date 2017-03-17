@@ -20,7 +20,7 @@ import butterknife.ButterKnife;
 import lombok.Setter;
 
 public class MonthTransactionsView extends BaseView implements MonthTransactionsContractView {
-	public static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("MMMM/yy", Locale.getDefault());
+	public final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("MMMM/yy", Locale.getDefault());
 
 	@Bind(R.id.view_month_transactions_list)
 	RecyclerView list;

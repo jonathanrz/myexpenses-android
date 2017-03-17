@@ -7,6 +7,19 @@
 		<Class name="~.*\.Manifest\$.*" />
 	</Match>
 	<Match>
+		<Class name="br.com.jonathanzanella.myexpenses.transaction.Transaction" />
+		<Bug pattern="STCAL_STATIC_SIMPLE_DATE_FORMAT_INSTANCE" />
+	</Match>
+	<Match>
+		<Class name="br.com.jonathanzanella.myexpenses.account.ListAccountActivity" />
+		<Method name="onPostCreate" />
+		<Bug pattern="RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE" />
+	</Match>
+	<Match>
+		<Class name="br.com.jonathanzanella.myexpenses.MyApplication" />
+		<Bug pattern="ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD" />
+	</Match>
+	<Match>
 		<Class name="~.*\.*Test" />
 		<Not>
 			<Bug code="IJU" />

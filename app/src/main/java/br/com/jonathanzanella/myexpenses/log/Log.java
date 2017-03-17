@@ -15,7 +15,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 public class Log implements UnsyncModel {
-	public static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("dd/MM/yy HH:mm:ss:SSSS", Locale.getDefault());
+	public final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("dd/MM/yy HH:mm:ss:SSSS", Locale.getDefault());
 	private static final String TAG = "Log";
 	private static LogRepository logRepository;
 

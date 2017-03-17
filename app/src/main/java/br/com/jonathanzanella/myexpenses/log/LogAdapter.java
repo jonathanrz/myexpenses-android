@@ -40,7 +40,7 @@ class LogAdapter extends RecyclerView.Adapter<LogAdapter.ViewHolder> {
 			//noinspection deprecation
 			indicator.setBackgroundColor(indicator.getContext().getResources().getColor(log.getLogLevel().getColor()));
 			title.setText(log.getTitle());
-			date.setText(Log.SIMPLE_DATE_FORMAT.format(log.getDate().toDate()));
+			date.setText(log.SIMPLE_DATE_FORMAT.format(log.getDate().toDate()));
 			description.setText(log.getDescription());
 		}
 	}
