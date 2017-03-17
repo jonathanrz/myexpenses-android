@@ -27,6 +27,7 @@ test:
     - ./gradlew assembleDebug
     - ./gradlew testDebugUnitTest
     - ./gradlew checkStyle
+    - ./gradlew findBugs
     - ./gradlew installDebugAndroidTest
     - ./gradlew app:connectedDebugAndroidTest -PdisablePreDex:
         timeout: 1800
