@@ -198,3 +198,9 @@ task checkstyle(type: Checkstyle) {
     include '**/*.java'
     classpath = files()
 }
+
+android {
+    lintOptions {
+        disable 'InvalidPackage','Overdraw',"UnusedResources","UselessParent","GoogleAppIndexingWarning","RelativeOverlap"
+    }
+}
