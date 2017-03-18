@@ -1,8 +1,7 @@
 #!/bin/bash
 set -ev
 
-./gradlew build
-./gradlew jacocoTestReport
+./gradlew assembleDebug
 ./gradlew testDebugUnitTest
 ./gradlew checkStyle
 ./gradlew findBugs

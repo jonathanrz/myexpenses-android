@@ -24,7 +24,8 @@ test:
     - sleep 30
     - adb shell input keyevent 82
     # run tests  against the emulator.
-    - ./gradlew assembleDebug
+    - ./gradlew build
+    - ./gradlew jacocoTestReport
     - ./gradlew testDebugUnitTest
     - ./gradlew checkStyle
     - ./gradlew findBugs
@@ -37,3 +38,4 @@ test:
     - cp -r app/build/outputs/androidTest-results/* $CIRCLE_TEST_REPORTS
     - if [ $CIRCLE_BRANCH = 'master' ]; then ./gradlew testfairyThainara; fi
     - if [ $CIRCLE_BRANCH = 'master' ]; then ./gradlew testfairyJonathan; fi
+    - bash <(curl -s https://codecov.io/bash)
