@@ -5,6 +5,7 @@ set -ev
 ./gradlew jacocoTestReport
 ./gradlew testDebugUnitTest
 ./gradlew checkStyle
+./gradlew findBugs
 ./gradlew assembleDebugAndroidTest
 ./gradlew installDebugAndroidTest
 ./gradlew connectedDebugAndroidTest -PdisablePreDex
