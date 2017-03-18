@@ -3,7 +3,7 @@ machine:
     PATH: "~/$CIRCLE_PROJECT_REPONAME/gradle-3.3/bin:$PATH"
     TERM: "dumb"
     ADB_INSTALL_TIMEOUT: "10"
-    GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2560m -XX:+HeapDumpOnOutOfMemoryError"'
+    GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx4096m -XX:+HeapDumpOnOutOfMemoryError"'
 
 dependencies:
   pre:
@@ -16,8 +16,8 @@ test:
   override:
     # start the emulator
     - emulator -avd circleci-android22 -no-audio -no-window:
-      background: true
-      parallel: true
+        background: true
+        parallel: true
     # wait for it to have booted
     - circle-android wait-for-boot
     # unlock the emulator screen
@@ -29,7 +29,7 @@ test:
     - ./gradlew checkStyle
     - ./gradlew installDebugAndroidTest
     - ./gradlew app:connectedDebugAndroidTest -PdisablePreDex
-      timeout: 1800
+        timeout: 1800
     # copy the build outputs to artifacts
     - cp -r app/build/outputs $CIRCLE_ARTIFACTS
     # copy the test results to the test results directory.
