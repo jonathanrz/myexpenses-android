@@ -29,7 +29,8 @@ test:
     - ./gradlew testDebugUnitTest
     - ./gradlew jacocoTestReport
     - ./gradlew checkStyle
-    - ./gradlew findBugs
+    - ./gradlew findBugs:
+        timeout: 1800
     - ./gradlew installDebugAndroidTest
     - ./gradlew app:connectedCheck -PdisablePreDex:
         timeout: 1800
