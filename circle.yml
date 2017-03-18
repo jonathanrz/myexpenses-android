@@ -29,7 +29,6 @@ test:
     - ./gradlew checkStyle
     - ./gradlew installDebugAndroidTest
     - ./gradlew app:connectedDebugAndroidTest -PdisablePreDex
-        timeout: 1800
     # copy the build outputs to artifacts
     - cp -r app/build/outputs $CIRCLE_ARTIFACTS
     # copy the test results to the test results directory.
