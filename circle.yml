@@ -16,8 +16,8 @@ test:
   override:
     # start the emulator
     - emulator -avd circleci-android22 -no-audio -no-window:
-        background: true
-        parallel: true
+      background: true
+      parallel: true
     # wait for it to have booted
     - circle-android wait-for-boot
     # unlock the emulator screen
@@ -28,14 +28,8 @@ test:
     - ./gradlew testDebugUnitTest
     - ./gradlew checkStyle
     - ./gradlew installDebugAndroidTest
-    - ./gradlew app:connectedDebugAndroidTest -PdisablePreDex -Pandroid.testInstrumentationRunnerArguments.package=br.com.jonathanzanella.myexpenses.app
-    - ./gradlew app:connectedDebugAndroidTest -PdisablePreDex -Pandroid.testInstrumentationRunnerArguments.package=br.com.jonathanzanella.myexpenses.account
-    - ./gradlew app:connectedDebugAndroidTest -PdisablePreDex -Pandroid.testInstrumentationRunnerArguments.package=br.com.jonathanzanella.myexpenses.bill
-    - ./gradlew app:connectedDebugAndroidTest -PdisablePreDex -Pandroid.testInstrumentationRunnerArguments.package=br.com.jonathanzanella.myexpenses.card
-    - ./gradlew app:connectedDebugAndroidTest -PdisablePreDex -Pandroid.testInstrumentationRunnerArguments.package=br.com.jonathanzanella.myexpenses.expense
-    - ./gradlew app:connectedDebugAndroidTest -PdisablePreDex -Pandroid.testInstrumentationRunnerArguments.package=br.com.jonathanzanella.myexpenses.receipt
-    - ./gradlew app:connectedDebugAndroidTest -PdisablePreDex -Pandroid.testInstrumentationRunnerArguments.package=br.com.jonathanzanella.myexpenses.resume
-    - ./gradlew app:connectedDebugAndroidTest -PdisablePreDex -Pandroid.testInstrumentationRunnerArguments.package=br.com.jonathanzanella.myexpenses.source
+    - ./gradlew app:connectedDebugAndroidTest -PdisablePreDex
+      timeout: 1800
     # copy the build outputs to artifacts
     - cp -r app/build/outputs $CIRCLE_ARTIFACTS
     # copy the test results to the test results directory.
