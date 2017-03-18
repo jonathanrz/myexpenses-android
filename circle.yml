@@ -26,12 +26,12 @@ test:
     # run tests  against the emulator.
     - ./gradlew assembleDebug
     - ./gradlew testDebugUnitTest
+    - ./gradlew jacocoTestReport
     - ./gradlew checkStyle
     - ./gradlew findBugs
     - ./gradlew installDebugAndroidTest
-    - ./gradlew app:connectedDebugAndroidTest -PdisablePreDex:
+    - ./gradlew app:connectedCheck -PdisablePreDex:
         timeout: 1800
-    - ./gradlew jacocoTestReport
     # copy the build outputs to artifacts
     - cp -r app/build/outputs $CIRCLE_ARTIFACTS
     # copy the test results to the test results directory.
