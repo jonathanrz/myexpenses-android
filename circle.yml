@@ -3,7 +3,7 @@ machine:
     PATH: "~/$CIRCLE_PROJECT_REPONAME/gradle-3.3/bin:$PATH"
     TERM: "dumb"
     ADB_INSTALL_TIMEOUT: "10"
-    GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx4096m -XX:+HeapDumpOnOutOfMemoryError"'
+    GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2560m -XX:+HeapDumpOnOutOfMemoryError"'
 
 dependencies:
   pre:
@@ -28,6 +28,9 @@ test:
     - ./gradlew assembleDebug
     - ./gradlew testDebugUnitTest
     - ./gradlew jacocoTestReport
+    - ./gradlew checkStyle
+    - ./gradlew findBugs:
+        timeout: 1800
     - ./gradlew installDebugAndroidTest
     - ./gradlew app:connectedCheck -PdisablePreDex:
         timeout: 1800
