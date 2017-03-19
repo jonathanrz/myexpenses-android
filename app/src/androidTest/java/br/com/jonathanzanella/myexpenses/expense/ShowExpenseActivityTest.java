@@ -39,8 +39,8 @@ public class ShowExpenseActivityTest {
 	@Rule
 	public ActivityTestRule<ShowExpenseActivity> activityTestRule = new ActivityTestRule<>(ShowExpenseActivity.class, true, false);
 
+	private final ExpenseRepository repository = new ExpenseRepository(new RepositoryImpl<Expense>(getTargetContext()));
 	private Expense expense;
-	private ExpenseRepository repository = new ExpenseRepository(new RepositoryImpl<Expense>(getTargetContext()));
 
 	@Before
 	public void setUp() throws Exception {

@@ -17,8 +17,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 class LogAdapter extends RecyclerView.Adapter<LogAdapter.ViewHolder> {
+	private final LogRepository logRepository;
 	private List<Log> filteredLogs;
-	private LogRepository logRepository;
 
 	public static class ViewHolder extends RecyclerView.ViewHolder {
 		@Bind(R.id.row_log_indicator)

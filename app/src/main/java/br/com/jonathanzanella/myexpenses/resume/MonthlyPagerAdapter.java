@@ -17,10 +17,10 @@ public class MonthlyPagerAdapter extends PagerAdapter {
     public static final int TOTAL_MONTHS_VISIBLE = 25;
 	public static final int INIT_MONTH_VISIBLE = TOTAL_MONTHS_VISIBLE / 2;
 
-	private MonthlyPagerAdapterHelper helper = new MonthlyPagerAdapterHelper();
-    private Context context;
-    private List<DateTime> months = new ArrayList<>();
-	private MonthlyPagerAdapterBuilder builder;
+	private final MonthlyPagerAdapterHelper helper = new MonthlyPagerAdapterHelper();
+    private final Context context;
+    private final List<DateTime> months = new ArrayList<>();
+	private final MonthlyPagerAdapterBuilder builder;
 
     public MonthlyPagerAdapter(Context context, MonthlyPagerAdapterBuilder builder) {
         this.context = context;

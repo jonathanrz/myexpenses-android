@@ -8,16 +8,13 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
-/**
- * Created by jzanella on 9/4/16.
- */
 // copied from https://github.com/dannyroa/espresso-samples/blob/master/RecyclerView/app/src/androidTest/java/com/
 // dannyroa/espresso_samples/recyclerview/RecyclerViewMatcher.java
 
 public class RecyclerViewMatcher {
 	private final int recyclerViewId;
 
-	public RecyclerViewMatcher(int recyclerViewId) {
+	RecyclerViewMatcher(int recyclerViewId) {
 		this.recyclerViewId = recyclerViewId;
 	}
 

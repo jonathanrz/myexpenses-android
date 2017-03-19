@@ -48,9 +48,9 @@ public class AddReceiptTest {
 	@Rule
 	public ActivityTestRule<EditReceiptActivity> editReceiptActivityTestRule = new ActivityTestRule<>(EditReceiptActivity.class);
 
+	private final SourceRepository sourceRepository = new SourceRepository(new RepositoryImpl<Source>(getTargetContext()));
 	private Account account;
 	private Source source;
-	private SourceRepository sourceRepository = new SourceRepository(new RepositoryImpl<Source>(getTargetContext()));
 
 	@Before
 	public void setUp() throws Exception {

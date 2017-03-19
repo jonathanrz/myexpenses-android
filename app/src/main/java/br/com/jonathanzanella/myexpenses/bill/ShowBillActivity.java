@@ -19,6 +19,8 @@ import butterknife.Bind;
 public class ShowBillActivity extends BaseActivity implements BillContract.View {
 	public static final String KEY_BILL_UUID = "KeyBillUuid";
 
+	private final BillPresenter presenter;
+
 	@Bind(R.id.act_show_bill_name)
 	TextView billName;
 	@Bind(R.id.act_show_bill_amount)
@@ -29,8 +31,6 @@ public class ShowBillActivity extends BaseActivity implements BillContract.View 
 	TextView billInitDate;
 	@Bind(R.id.act_show_bill_end_date)
 	TextView billEndDate;
-
-	private BillPresenter presenter;
 
 	public ShowBillActivity() {
 		ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(this));

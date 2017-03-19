@@ -22,8 +22,8 @@ import retrofit2.Response;
 @WorkerThread
 public class BillApi implements UnsyncModelApi<Bill> {
 	private static final String LOG_TAG = AccountApi.class.getSimpleName();
+	private final BillRepository billRepository;
 	private BillInterface billInterface;
-	private BillRepository billRepository;
 
 	public BillApi() {
 		ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(MyApplication.getContext()));

@@ -23,10 +23,10 @@ import butterknife.ButterKnife;
 import lombok.Getter;
 
 public class BillMonthlyResumeAdapter extends RecyclerView.Adapter<BillMonthlyResumeAdapter.ViewHolder> {
+	private final BillRepository billRepository;
 	protected List<Bill> bills;
 	@Getter
 	private int totalValue;
-	private BillRepository billRepository;
 
 	private enum ViewType {
 		TYPE_NORMAL,

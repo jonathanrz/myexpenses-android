@@ -14,8 +14,8 @@ import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
 class LogRepository {
-	private Repository<Log> repository;
-	private LogTable table = new LogTable();
+	private final Repository<Log> repository;
+	private final LogTable table = new LogTable();
 
 	LogRepository(Repository<Log> repository) {
 		this.repository = repository;

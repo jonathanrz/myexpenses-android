@@ -55,7 +55,7 @@ class MonthTransactionsPresenter implements LoadTransactionsCallback {
 	}
 
 	private class LoadData {
-		private LoadTransactionsCallback callback;
+		private final LoadTransactionsCallback callback;
 		private boolean loadedBills = false;
 		private boolean loadedExpenses = false;
 		private boolean loadedReceipts = false;

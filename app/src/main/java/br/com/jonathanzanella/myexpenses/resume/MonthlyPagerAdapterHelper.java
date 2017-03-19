@@ -9,6 +9,8 @@ class MonthlyPagerAdapterHelper {
 	private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("MMM/yy", Locale.getDefault());
 
 	String formatMonthForView(DateTime month) {
-		return SIMPLE_DATE_FORMAT.format(month.toDate());
+		synchronized (this) {
+			return SIMPLE_DATE_FORMAT.format(month.toDate());
+		}
 	}
 }

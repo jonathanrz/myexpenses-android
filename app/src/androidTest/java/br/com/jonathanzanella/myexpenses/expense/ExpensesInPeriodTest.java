@@ -26,11 +26,11 @@ import static org.junit.Assert.assertThat;
 @RunWith(AndroidJUnit4.class)
 @SmallTest
 public class ExpensesInPeriodTest {
-	private AccountRepository accountRepository = new AccountRepository(new RepositoryImpl<Account>(MyApplication.getContext()));
-	private ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(MyApplication.getContext()));
-	private DateTime firstDayOfJune = new DateTime(2016, 6, 1, 0, 0, 0, 0);
-	private DateTime lastDayOfJune = firstDayOfJune.dayOfMonth().withMaximumValue();
-	private DateTime firstDayOfJuly = firstDayOfJune.plusMonths(1);
+	private final AccountRepository accountRepository = new AccountRepository(new RepositoryImpl<Account>(MyApplication.getContext()));
+	private final ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(MyApplication.getContext()));
+	private final DateTime firstDayOfJune = new DateTime(2016, 6, 1, 0, 0, 0, 0);
+	private final DateTime lastDayOfJune = firstDayOfJune.dayOfMonth().withMaximumValue();
+	private final DateTime firstDayOfJuly = firstDayOfJune.plusMonths(1);
 
 	private Account account = new Account();
 

@@ -15,10 +15,11 @@ import butterknife.ButterKnife;
 
 @SuppressLint("ViewConstructor")
 class ReceiptMonthlyView extends BaseView {
+    private final DateTime dateTime;
+
     @Bind(R.id.view_receipts_monthly_list)
     RecyclerView sources;
 
-    private DateTime dateTime;
     private ReceiptAdapter adapter;
 
     public ReceiptMonthlyView(Context context, DateTime dateTime) {

@@ -35,11 +35,11 @@ class ReceiptPresenter {
 	private static final String KEY_ACCOUNT_UUID = "KeyAccountUuid";
 	private static final String KEY_DATE = "KeyDate";
 
+	private final ReceiptRepository repository;
+	private final SourceRepository sourceRepository;
+	private final AccountRepository accountRepository;
 	private ReceiptContract.View view;
 	private ReceiptContract.EditView editView;
-	private ReceiptRepository repository;
-	private SourceRepository sourceRepository;
-	private AccountRepository accountRepository;
 	private Receipt receipt;
 	private Source source;
 	private Account account;

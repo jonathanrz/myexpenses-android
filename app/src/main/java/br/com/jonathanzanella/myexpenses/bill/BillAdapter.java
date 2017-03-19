@@ -21,11 +21,11 @@ import butterknife.ButterKnife;
 import lombok.Setter;
 
 class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder> {
+	private final BillAdapterPresenter presenter;
+
 	protected List<Bill> bills;
 	@Setter
 	BillAdapterCallback callback;
-
-	private BillAdapterPresenter presenter;
 
 	public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 		@Bind(R.id.row_bill_name)
@@ -97,7 +97,7 @@ class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder> {
 		return bills != null ? bills.size() : 0;
 	}
 
-	public void refreshData() {
+	public final void refreshData() {
 		bills = presenter.getBills(true);
 	}
 

@@ -30,11 +30,11 @@ import lombok.Getter;
 
 class ReceiptMonthlyResumeAdapter extends RecyclerView.Adapter<ReceiptMonthlyResumeAdapter.ViewHolder> {
 	public static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("dd/MM", Locale.getDefault());
+	private final ReceiptRepository receiptRepository;
 	protected List<Receipt> receipts;
 	@Getter
 	private int totalValue;
 	private int totalUnreceivedValue;
-	private ReceiptRepository receiptRepository;
 
 	private enum ViewType {
 		TYPE_NORMAL,
@@ -65,8 +65,11 @@ class ReceiptMonthlyResumeAdapter extends RecyclerView.Adapter<ReceiptMonthlyRes
 		public void setData(final Receipt receipt) {
 			if(name != null)
 				name.setText(receipt.getName());
-			if(date != null)
-				date.setText(SIMPLE_DATE_FORMAT.format(receipt.getDate().toDate()));
+			if(date != null) {
+				synchronized (this) {
+					date.setText(SIMPLE_DATE_FORMAT.format(receipt.getDate().toDate()));
+				}
+			}
 			income.setText(receipt.getIncomeFormatted());
 			income.setTypeface(null, Typeface.NORMAL);
 			if(!receipt.isCredited())

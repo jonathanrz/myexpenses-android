@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.List;
 
 class ReceiptAdapterPresenter {
-	private ReceiptRepository repository;
+	private final ReceiptRepository repository;
 
 	private List<Receipt> receipts;
 	private List<Receipt> receiptsFiltered;

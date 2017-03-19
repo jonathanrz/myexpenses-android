@@ -23,6 +23,8 @@ import butterknife.Bind;
 public class EditAccountActivity extends BaseActivity implements AccountContract.EditView {
 	public static final String KEY_ACCOUNT_UUID = "KeyAccountUuid";
 
+	private final AccountPresenter presenter = new AccountPresenter(new AccountRepository(new RepositoryImpl<Account>(MyApplication.getContext())));
+
 	@Bind(R.id.act_edit_account_name)
 	EditText editName;
 	@Bind(R.id.act_edit_account_balance)
@@ -35,8 +37,6 @@ public class EditAccountActivity extends BaseActivity implements AccountContract
 	CheckBox checkToPayBill;
 	@Bind(R.id.act_edit_account_user)
 	SelectUserView selectUserView;
-
-	private AccountPresenter presenter = new AccountPresenter(new AccountRepository(new RepositoryImpl<Account>(MyApplication.getContext())));
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

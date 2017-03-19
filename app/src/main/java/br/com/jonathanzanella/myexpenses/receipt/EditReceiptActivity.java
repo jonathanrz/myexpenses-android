@@ -53,7 +53,7 @@ public class EditReceiptActivity extends BaseActivity implements ReceiptContract
 	@Bind(R.id.act_edit_receipt_user)
 	SelectUserView selectUserView;
 
-	private ReceiptPresenter presenter = new ReceiptPresenter(new ReceiptRepository(new RepositoryImpl<Receipt>(this)),
+	private final ReceiptPresenter presenter = new ReceiptPresenter(new ReceiptRepository(new RepositoryImpl<Receipt>(this)),
 			new SourceRepository(new RepositoryImpl<Source>(this)),
 			new AccountRepository(new RepositoryImpl<Account>(this)));
 

@@ -37,9 +37,9 @@ import static br.com.jonathanzanella.myexpenses.helpers.DateHelper.lastDayOfMont
 import static br.com.jonathanzanella.myexpenses.log.Log.warning;
 
 public class ExpenseRepository implements ModelRepository<Expense> {
-	private Repository<Expense> repository;
+	private final Repository<Expense> repository;
+	private final ExpenseTable table = new ExpenseTable();
 	private CardRepository cardRepository;
-	private ExpenseTable table = new ExpenseTable();
 
 	public ExpenseRepository(Repository<Expense> repository) {
 		this.repository = repository;

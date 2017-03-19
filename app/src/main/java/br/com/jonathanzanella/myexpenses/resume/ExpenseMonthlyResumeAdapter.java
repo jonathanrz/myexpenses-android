@@ -63,8 +63,11 @@ class ExpenseMonthlyResumeAdapter extends RecyclerView.Adapter<ExpenseMonthlyRes
 		public void setData(final Expense expense) {
 			if(name != null)
 				name.setText(expense.getName());
-			if(date != null)
-				date.setText(SIMPLE_DATE_FORMAT.format(expense.getDate().toDate()));
+			if(date != null) {
+				synchronized (this) {
+					date.setText(SIMPLE_DATE_FORMAT.format(expense.getDate().toDate()));
+				}
+			}
 			income.setText(CurrencyHelper.format(expense.getValue()));
 			income.setTypeface(null, Typeface.NORMAL);
 			if(!expense.isCharged())

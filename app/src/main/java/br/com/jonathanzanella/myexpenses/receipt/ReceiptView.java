@@ -28,13 +28,13 @@ import butterknife.OnClick;
 
 public class ReceiptView extends BaseView implements ViewPager.OnPageChangeListener {
 	private static final int REQUEST_ADD_RECEIPT = 1007;
+	private final Map<DateTime, WeakReference<ReceiptMonthlyView>> views = new HashMap<>();
+
 	@Bind(R.id.view_receipts_pager)
     ViewPager pager;
 
 	private MonthlyPagerAdapter adapter;
 	private ReceiptRepository repository;
-
-	private Map<DateTime, WeakReference<ReceiptMonthlyView>> views = new HashMap<>();
 
     public ReceiptView(Context context) {
         super(context);
@@ -101,27 +101,30 @@ public class ReceiptView extends BaseView implements ViewPager.OnPageChangeListe
 
 		switch (requestCode) {
 			case REQUEST_ADD_RECEIPT:
-				if(resultCode == Activity.RESULT_OK) {
-					new AsyncTask<Void, Void, Receipt>() {
-
-						@Override
-						protected Receipt doInBackground(Void... voids) {
-							return repository.find(data.getStringExtra(EditReceiptActivity.KEY_RECEIPT_UUID));
-						}
-
-						@Override
-						protected void onPostExecute(Receipt receipt) {
-							super.onPostExecute(receipt);
-							if(receipt != null) {
-								ReceiptMonthlyView view = getMonthView(receipt.getDate());
-								if (view != null)
-									view.refreshData();
-							}
-						}
-					}.execute();
-				}
+				if(resultCode == Activity.RESULT_OK)
+					loadExpense(data.getStringExtra(EditReceiptActivity.KEY_RECEIPT_UUID));
 				break;
 		}
+	}
+
+	private void loadExpense(final String uuid) {
+		new AsyncTask<Void, Void, Receipt>() {
+
+			@Override
+			protected Receipt doInBackground(Void... voids) {
+				return repository.find(uuid);
+			}
+
+			@Override
+			protected void onPostExecute(Receipt receipt) {
+				super.onPostExecute(receipt);
+				if(receipt != null) {
+					ReceiptMonthlyView view = getMonthView(receipt.getDate());
+					if (view != null)
+						view.refreshData();
+				}
+			}
+		}.execute();
 	}
 
 	@Override

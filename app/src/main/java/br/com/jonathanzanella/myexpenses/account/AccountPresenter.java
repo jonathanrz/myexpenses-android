@@ -10,10 +10,11 @@ import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
 class AccountPresenter {
+	private final AccountRepository repository;
+
 	private AccountContract.View view;
 	@Nullable
 	private AccountContract.EditView editView;
-	private AccountRepository repository;
 	private Account account;
 
 	AccountPresenter(AccountRepository repository) {
@@ -36,12 +37,12 @@ class AccountPresenter {
 
 	@UiThread
 	void viewUpdated(boolean invalidateCache) {
-		if (account != null) {
-			if(invalidateCache)
-				loadAccount(account.getUuid());
-		} else {
+		if (account == null) {
 			if(editView != null)
 				editView.setTitle(R.string.new_account_title);
+		} else {
+			if(invalidateCache)
+				loadAccount(account.getUuid());
 		}
 	}
 

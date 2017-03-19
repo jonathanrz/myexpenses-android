@@ -21,10 +21,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 public class DateTimeView extends BaseView {
-	public interface Listener {
-		void onDateTimeChanged(DateTime currentTime);
-	}
-
 	public final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
 	public final SimpleDateFormat hourFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
 
@@ -38,6 +34,10 @@ public class DateTimeView extends BaseView {
 
 	@Getter
 	private DateTime currentTime;
+
+	public interface Listener {
+		void onDateTimeChanged(DateTime currentTime);
+	}
 
 	public DateTimeView(Context context) {
 		super(context);

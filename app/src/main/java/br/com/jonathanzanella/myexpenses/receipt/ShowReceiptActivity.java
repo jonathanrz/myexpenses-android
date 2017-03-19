@@ -34,7 +34,7 @@ public class ShowReceiptActivity extends BaseActivity implements ReceiptContract
 	@Bind(R.id.act_show_receipt_show_in_resume)
 	TextView receiptShowInResume;
 
-	private ReceiptPresenter presenter = new ReceiptPresenter(new ReceiptRepository(new RepositoryImpl<Receipt>(this)),
+	private final ReceiptPresenter presenter = new ReceiptPresenter(new ReceiptRepository(new RepositoryImpl<Receipt>(this)),
 			new SourceRepository(new RepositoryImpl<Source>(this)),
 			new AccountRepository(new RepositoryImpl<Account>(this)));
 

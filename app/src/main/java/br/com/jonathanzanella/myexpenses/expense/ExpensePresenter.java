@@ -37,10 +37,11 @@ class ExpensePresenter {
 	private static final String KEY_BILL_UUID = "KeyBillUuid";
 	private static final String KEY_DATE = "KeyDate";
 
+	private final ExpenseRepository repository;
+	private final BillRepository billRepository;
+
 	private ExpenseContract.View view;
 	private ExpenseContract.EditView editView;
-	private ExpenseRepository repository;
-	private BillRepository billRepository;
 	private Expense expense;
 	private DateTime date;
 	private Bill bill;

@@ -22,9 +22,9 @@ import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 import static br.com.jonathanzanella.myexpenses.log.Log.warning;
 
 public class CardRepository implements ModelRepository<Card> {
-	private Repository<Card> repository;
-	private ExpenseRepository expenseRepository;
-	private CardTable table = new CardTable();
+	private final Repository<Card> repository;
+	private final ExpenseRepository expenseRepository;
+	private final CardTable table = new CardTable();
 
 	public CardRepository(Repository<Card> repository, ExpenseRepository expenseRepository) {
 		this.repository = repository;

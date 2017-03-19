@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 class BillAdapterPresenter {
-	private BillRepository repository;
+	private final BillRepository repository;
 
 	private List<Bill> bills;
 	private List<Bill> billsFiltered;

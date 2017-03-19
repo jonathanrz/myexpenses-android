@@ -30,14 +30,14 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 	List<Transaction> transactions = new ArrayList<>();
 
 	public static class ViewHolder extends RecyclerView.ViewHolder {
+		private final WeakReference<TransactionAdapter> adapterWeakReference;
+
 		@Bind(R.id.row_transaction_date)
 		TextView date;
 		@Bind(R.id.row_transaction_name)
 		TextView name;
 		@Bind(R.id.row_transaction_value)
 		TextView value;
-
-		private WeakReference<TransactionAdapter> adapterWeakReference;
 
 		public ViewHolder(View itemView, TransactionAdapter adapter) {
 			super(itemView);

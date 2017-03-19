@@ -29,7 +29,7 @@ public class SelectUserView extends BaseView {
 		inflate(getContext(), R.layout.view_select_user, this);
 		ButterKnife.bind(this);
 
-		if(Environment.CURRENT_USER.equals("Thainara"))
+		if("Thainara".equals(Environment.CURRENT_USER))
 			userThainara.setChecked(true);
 		else
 			userJonathan.setChecked(true);
