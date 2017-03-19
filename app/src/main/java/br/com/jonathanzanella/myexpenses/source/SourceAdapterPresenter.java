@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.List;
 
 class SourceAdapterPresenter {
-	private SourceRepository repository;
+	private final SourceRepository repository;
 
 	private List<Source> sources;
 

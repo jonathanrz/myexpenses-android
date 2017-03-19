@@ -32,9 +32,13 @@ public class ShowAccountActivity extends BaseActivity implements AccountContract
 	TextView accountToPayBills;
 	@Bind(R.id.act_show_account_transactions)
 	TransactionsView transactionsView;
-
-	private AccountPresenter presenter = new AccountPresenter(new AccountRepository(new RepositoryImpl<Account>(MyApplication.getContext())));
 	private DateTime monthToShow;
+
+	private final AccountPresenter presenter;
+
+	public ShowAccountActivity() {
+		presenter = new AccountPresenter(new AccountRepository(new RepositoryImpl<Account>(MyApplication.getContext())));
+	}
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {

@@ -29,6 +29,7 @@ import butterknife.ButterKnife;
 @SuppressLint("ViewConstructor")
 class ResumeMonthlyView extends BaseView {
 	public static final int ACCOUNT_COLUMNS = 3;
+
 	@Bind(R.id.view_monthly_resume_accounts)
 	RecyclerView accounts;
 	@Bind(R.id.view_monthly_resume_receipts)
@@ -46,13 +47,14 @@ class ResumeMonthlyView extends BaseView {
 
 	int singleRowHeight;
 
+	private final DateTime month;
+
 	private AccountAdapter accountAdapter;
 	private ReceiptMonthlyResumeAdapter receiptAdapter;
 	private ExpenseMonthlyResumeAdapter expensesAdapter;
 	private BillMonthlyResumeAdapter billsAdapter;
 	private ReceiptRepository receiptRepository;
 	private ExpenseRepository expenseRepository;
-	private DateTime month;
 
 	public ResumeMonthlyView(Context context, DateTime month) {
 		super(context);

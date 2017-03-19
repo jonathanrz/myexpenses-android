@@ -24,8 +24,8 @@ import static br.com.jonathanzanella.myexpenses.helpers.DateHelper.lastDayOfMont
 import static br.com.jonathanzanella.myexpenses.log.Log.warning;
 
 public class ReceiptRepository implements ModelRepository<Receipt> {
-	private Repository<Receipt> repository;
-	private ReceiptTable table = new ReceiptTable();
+	private final Repository<Receipt> repository;
+	private final ReceiptTable table = new ReceiptTable();
 
 	public ReceiptRepository(Repository<Receipt> repository) {
 		this.repository = repository;

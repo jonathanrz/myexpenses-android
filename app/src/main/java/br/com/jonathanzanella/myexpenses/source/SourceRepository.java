@@ -16,8 +16,8 @@ import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 import static br.com.jonathanzanella.myexpenses.log.Log.warning;
 
 public class SourceRepository implements ModelRepository<Source>  {
-	private Repository<Source> repository;
-	private SourceTable sourceTable = new SourceTable();
+	private final Repository<Source> repository;
+	private final SourceTable sourceTable = new SourceTable();
 
 	public SourceRepository(Repository<Source> repository) {
 		this.repository = repository;

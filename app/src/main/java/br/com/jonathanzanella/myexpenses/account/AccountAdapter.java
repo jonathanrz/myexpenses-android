@@ -19,7 +19,7 @@ import butterknife.ButterKnife;
 import lombok.Setter;
 
 public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHolder> {
-	private AccountAdapterPresenter presenter;
+	private final AccountAdapterPresenter presenter;
 
 	private boolean simplified = false;
 	private AccountAdapterCallback callback;
@@ -53,14 +53,14 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
 		public void onClick(View v) {
 			Account acc = getAccount(getAdapterPosition());
 			if(acc != null) {
-				if(callback != null) {
-					callback.onAccountSelected(acc);
-				} else {
+				if(callback == null) {
 					Intent i = new Intent(itemView.getContext(), ShowAccountActivity.class);
 					i.putExtra(ShowAccountActivity.KEY_ACCOUNT_UUID, acc.getUuid());
 					if(month != null)
 						i.putExtra(ShowAccountActivity.KEY_ACCOUNT_MONTH_TO_SHOW, month.getMillis());
 					itemView.getContext().startActivity(i);
+				} else {
+					callback.onAccountSelected(acc);
 				}
 			}
 		}

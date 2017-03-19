@@ -15,9 +15,11 @@ import br.com.jonathanzanella.myexpenses.helpers.DateHelper;
 import br.com.jonathanzanella.myexpenses.views.BaseView;
 
 public class WeeklyPagerAdapter extends PagerAdapter {
-
-	public static final int TOTAL_DAYS_OF_WEEK = 7;
-	public static final int LAST_DAY_OF_WEEK = 6;
+	private static final int TOTAL_DAYS_OF_WEEK = 7;
+	private static final int LAST_DAY_OF_WEEK = 6;
+	private final List<Period> periods = new ArrayList<>();
+	private final WeeklyPagerAdapterBuilder builder;
+    private final Context context;
 
 	public static class Period {
 		public DateTime init;
@@ -27,9 +29,6 @@ public class WeeklyPagerAdapter extends PagerAdapter {
 			return String.format(Environment.PTBR_LOCALE, "%02d - %02d", init.getDayOfMonth(), end.getDayOfMonth());
 		}
 	}
-    private Context context;
-    private List<Period> periods = new ArrayList<>();
-	private WeeklyPagerAdapterBuilder builder;
 
     WeeklyPagerAdapter(Context context, DateTime month, WeeklyPagerAdapterBuilder builder) {
         this.context = context;

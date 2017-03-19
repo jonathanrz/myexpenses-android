@@ -10,10 +10,10 @@ import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
 class SourcePresenter {
+	private final SourceRepository repository;
 	private SourceContract.View view;
 	@Nullable
 	private SourceContract.EditView editView;
-	private SourceRepository repository;
 	private Source source;
 
 	SourcePresenter(SourceRepository repository) {

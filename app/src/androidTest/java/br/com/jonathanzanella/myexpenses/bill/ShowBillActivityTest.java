@@ -37,8 +37,8 @@ public class ShowBillActivityTest {
 	public ActivityTestRule<ShowBillActivity> activityTestRule = new ActivityTestRule<>(ShowBillActivity.class, true, false);
 
 	private Bill bill;
-	private ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(getTargetContext()));
-	private BillRepository repository = new BillRepository(new RepositoryImpl<Bill>(getTargetContext()), expenseRepository);
+	private final ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(getTargetContext()));
+	private final BillRepository repository = new BillRepository(new RepositoryImpl<Bill>(getTargetContext()), expenseRepository);
 
 	@Before
 	public void setUp() throws Exception {

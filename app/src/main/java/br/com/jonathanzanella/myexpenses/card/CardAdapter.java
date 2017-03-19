@@ -29,7 +29,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
 	@Setter
 	CardAdapterCallback callback;
 
-	private CardRepository cardRepository;
+	private final CardRepository cardRepository;
 	private ExpenseRepository expenseRepository;
 
 	class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

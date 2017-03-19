@@ -23,9 +23,10 @@ class OverviewExpensesWeeklyView extends BaseView {
 	@Bind(R.id.view_overview_expenses_weekly_total)
 	TextView total;
 
+	private final WeeklyPagerAdapter.Period period;
+	private final ExpenseRepository expenseRepository;
+
 	private ExpenseWeeklyOverviewAdapter adapter;
-	private WeeklyPagerAdapter.Period period;
-	private ExpenseRepository expenseRepository;
 
 	public OverviewExpensesWeeklyView(Context context, WeeklyPagerAdapter.Period period) {
 		super(context);

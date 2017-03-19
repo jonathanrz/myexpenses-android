@@ -22,7 +22,7 @@ public class EditSourceActivity extends BaseActivity implements SourceContract.E
 	@Bind(R.id.act_edit_source_user)
 	SelectUserView selectUserView;
 
-	private SourcePresenter presenter = new SourcePresenter(new SourceRepository(new RepositoryImpl<Source>(this)));
+	private final SourcePresenter presenter = new SourcePresenter(new SourceRepository(new RepositoryImpl<Source>(this)));
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

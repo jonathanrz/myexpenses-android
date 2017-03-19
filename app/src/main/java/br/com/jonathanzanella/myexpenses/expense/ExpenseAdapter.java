@@ -28,10 +28,10 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHolder> {
+	private final ExpenseRepository expenseRepository;
+	private final ExpenseAdapterPresenter presenter;
 	private List<Expense> expenses;
-	private ExpenseAdapterPresenter presenter;
 	private DateTime date;
-	private ExpenseRepository expenseRepository;
 
 	public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 		@Bind(R.id.row_expense_name)

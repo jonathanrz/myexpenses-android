@@ -37,9 +37,9 @@ import static org.hamcrest.Matchers.not;
 @RunWith(AndroidJUnit4.class)
 @SmallTest
 public class BillRepositoryTest {
-	private DateTime firstDayOfJune = new DateTime(2016, 6, 1, 0, 0, 0, 0);
-	private ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(getTargetContext()));
-	private BillRepository billRepository = new BillRepository(new RepositoryImpl<Bill>(getTargetContext()), expenseRepository);
+	private final DateTime firstDayOfJune = new DateTime(2016, 6, 1, 0, 0, 0, 0);
+	private final ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(getTargetContext()));
+	private final BillRepository billRepository = new BillRepository(new RepositoryImpl<Bill>(getTargetContext()), expenseRepository);
 
 	@After
 	public void tearDown() throws Exception {

@@ -5,8 +5,8 @@ import android.os.AsyncTask;
 import java.util.List;
 
 class AccountAdapterPresenter {
-	private AccountRepository repository;
-	private AccountAdapter adapter;
+	private final AccountRepository repository;
+	private final AccountAdapter adapter;
 
 	private List<Account> accounts;
 
@@ -16,7 +16,7 @@ class AccountAdapterPresenter {
 		loadAccountsAsync();
 	}
 
-	void loadAccountsAsync() {
+	final void loadAccountsAsync() {
 		new AsyncTask<Void, Void, Void>() {
 
 			@Override

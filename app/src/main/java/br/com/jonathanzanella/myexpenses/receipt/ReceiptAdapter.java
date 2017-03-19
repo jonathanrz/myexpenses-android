@@ -25,7 +25,7 @@ import butterknife.ButterKnife;
 
 class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ViewHolder> {
 	protected List<Receipt> receipts;
-	private ReceiptAdapterPresenter presenter;
+	private final ReceiptAdapterPresenter presenter;
 	private DateTime date;
 
 	public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

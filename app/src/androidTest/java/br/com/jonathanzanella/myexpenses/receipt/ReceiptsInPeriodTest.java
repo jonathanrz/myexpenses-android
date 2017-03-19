@@ -27,16 +27,16 @@ import static org.junit.Assert.assertThat;
 @RunWith(AndroidJUnit4.class)
 @SmallTest
 public class ReceiptsInPeriodTest {
-	private DateTime firstDayOfJune = new DateTime(2016, 6, 1, 0, 0, 0, 0);
-	private DateTime lastDayOfJune = firstDayOfJune.dayOfMonth().withMaximumValue();
-	private DateTime firstDayOfJuly = firstDayOfJune.plusMonths(1);
+	private final DateTime firstDayOfJune = new DateTime(2016, 6, 1, 0, 0, 0, 0);
+	private final DateTime lastDayOfJune = firstDayOfJune.dayOfMonth().withMaximumValue();
+	private final DateTime firstDayOfJuly = firstDayOfJune.plusMonths(1);
 
-	private Account account = new Account();
-	private Source source = new Source();
+	private final Account account = new Account();
+	private final Source source = new Source();
 
-	private SourceRepository sourceRepository = new SourceRepository(new RepositoryImpl<Source>(getContext()));
-	private AccountRepository accountRepository = new AccountRepository(new RepositoryImpl<Account>(getContext()));
-	private ReceiptRepository receiptRepository = new ReceiptRepository(new RepositoryImpl<Receipt>(getContext()));
+	private final SourceRepository sourceRepository = new SourceRepository(new RepositoryImpl<Source>(getContext()));
+	private final AccountRepository accountRepository = new AccountRepository(new RepositoryImpl<Account>(getContext()));
+	private final ReceiptRepository receiptRepository = new ReceiptRepository(new RepositoryImpl<Receipt>(getContext()));
 
 	@Before
 	public void setUp() throws Exception {

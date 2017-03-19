@@ -5,7 +5,7 @@ import android.text.TextWatcher;
 import android.widget.EditText;
 
 public class CurrencyTextWatch implements TextWatcher {
-	private EditText edit;
+	private final EditText edit;
 	private String current;
 
 	public CurrencyTextWatch(EditText edit) {

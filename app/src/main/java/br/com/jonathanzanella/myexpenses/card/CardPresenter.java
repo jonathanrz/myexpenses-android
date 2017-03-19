@@ -26,13 +26,13 @@ import static android.app.Activity.RESULT_OK;
 
 class CardPresenter {
 	private static final int REQUEST_SELECT_ACCOUNT = 1006;
+	private final CardRepository repository;
+	private final AccountRepository accountRepository;
+	private final ExpenseRepository expenseRepository;
 
 	private CardContract.View view;
 	@Nullable
 	private CardContract.EditView editView;
-	private CardRepository repository;
-	private AccountRepository accountRepository;
-	private ExpenseRepository expenseRepository;
 	private Card card;
 	private Account account;
 
@@ -149,31 +149,31 @@ class CardPresenter {
 	void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
 			case REQUEST_SELECT_ACCOUNT: {
-				if(resultCode == RESULT_OK) {
-					new AsyncTask<String, Void, Account>() {
-
-						@Override
-						protected Account doInBackground(String... accountUuid) {
-							if(accountUuid.length != 1) {
-								throw new UnsupportedOperationException("Called with " + accountUuid.length +
-										" uuids, it should be called with only one");
-							}
-							return accountRepository.find(accountUuid[0]);
-						}
-
-						@Override
-						protected void onPostExecute(Account account) {
-							super.onPostExecute(account);
-							CardPresenter.this.account = account;
-							if(account != null && editView != null) {
-								editView.onAccountSelected(account);
-							}
-						}
-					}.execute(data.getStringExtra(ListAccountActivity.Companion.getKEY_ACCOUNT_SELECTED_UUID()));
-				}
+				if(resultCode == RESULT_OK)
+					loadAccount(data.getStringExtra(ListAccountActivity.Companion.getKEY_ACCOUNT_SELECTED_UUID()));
 				break;
 			}
 		}
+	}
+
+	@UiThread
+	private void loadAccount(final String uuid) {
+		new AsyncTask<Void, Void, Account>() {
+
+			@Override
+			protected Account doInBackground(Void... voids) {
+				return accountRepository.find(uuid);
+			}
+
+			@Override
+			protected void onPostExecute(Account account) {
+				super.onPostExecute(account);
+				CardPresenter.this.account = account;
+				if(account != null && editView != null) {
+					editView.onAccountSelected(account);
+				}
+			}
+		}.execute();
 	}
 
 	Expense generateCreditCardBill() {

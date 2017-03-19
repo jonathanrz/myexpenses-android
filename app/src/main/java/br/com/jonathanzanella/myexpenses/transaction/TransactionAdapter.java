@@ -37,7 +37,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 		@Bind(R.id.row_transaction_value)
 		TextView value;
 
-		private WeakReference<TransactionAdapter> adapterWeakReference;
+		private final WeakReference<TransactionAdapter> adapterWeakReference;
 
 		public ViewHolder(View itemView, TransactionAdapter adapter) {
 			super(itemView);

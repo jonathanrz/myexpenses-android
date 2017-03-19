@@ -18,7 +18,8 @@ class ReceiptMonthlyView extends BaseView {
     @Bind(R.id.view_receipts_monthly_list)
     RecyclerView sources;
 
-    private DateTime dateTime;
+	private final DateTime dateTime;
+
     private ReceiptAdapter adapter;
 
     public ReceiptMonthlyView(Context context, DateTime dateTime) {

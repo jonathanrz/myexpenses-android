@@ -19,7 +19,8 @@ class ExpenseMonthlyView extends BaseView {
     @Bind(R.id.view_expenses_monthly_list)
     RecyclerView sources;
 
-    private DateTime dateTime;
+	private final DateTime dateTime;
+
     private ExpenseAdapter adapter;
 
     public ExpenseMonthlyView(Context context, DateTime dateTime) {

@@ -28,7 +28,7 @@ public class SyncService extends GcmTaskService {
 	public static final String KEY_EXECUTE_SYNC = "KeyExecuteSync";
 	private static int notificationId = 1;
 	private static final String LOG_TAG = SyncService.class.getSimpleName();
-	private List<UnsyncModelApi<? extends UnsyncModel>> apis;
+	private final List<UnsyncModelApi<? extends UnsyncModel>> apis;
 
 	private int totalSaved;
 	private int totalUpdated;

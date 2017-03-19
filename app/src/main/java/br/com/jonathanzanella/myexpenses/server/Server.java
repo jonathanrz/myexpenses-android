@@ -34,7 +34,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Server {
 	private static final int TIMEOUT = 120;
-	private Retrofit retrofit;
+	private final Retrofit retrofit;
 
 	private class HeaderInterceptor implements Interceptor {
 		@Override

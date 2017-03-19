@@ -18,7 +18,7 @@ public class ShowSourceActivity extends BaseActivity implements SourceContract.V
 	@Bind(R.id.act_show_source_name)
 	TextView sourceName;
 
-	private SourcePresenter presenter = new SourcePresenter(new SourceRepository(new RepositoryImpl<Source>(this)));
+	private final SourcePresenter presenter = new SourcePresenter(new SourceRepository(new RepositoryImpl<Source>(this)));
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {

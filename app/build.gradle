@@ -4,6 +4,7 @@ apply plugin: 'testfairy'
 apply plugin: 'jacoco-android'
 apply plugin: 'checkstyle'
 apply plugin: 'findbugs'
+apply plugin: 'pmd'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -191,7 +192,7 @@ kapt {
     generateStubs = true
 }
 
-check.dependsOn 'checkstyle', 'findbugs'
+check.dependsOn 'checkstyle', 'findbugs', 'pmd'
 
 task checkstyle(type: Checkstyle) {
     configFile file("$project.rootDir/config/checkstyle/checkstyle.xml")
@@ -220,6 +221,24 @@ task findbugs(type: FindBugs, dependsOn: "assembleDebug") {
     }
 
     classpath = files()
+}
+
+task pmd(type: Pmd) {
+    ignoreFailures = false
+    ruleSetFiles = files("${project.rootDir}/config/pmd-ruleset.xml")
+    ruleSets = []
+
+    source 'src'
+    include '**/*.java'
+    exclude '**/gen/**'
+
+    reports {
+        xml.enabled = false
+        html.enabled = true
+        html {
+            destination "$project.buildDir/reports/pmd/pmd.html"
+        }
+    }
 }
 
 android {

@@ -49,7 +49,9 @@ public class ExpenseWeeklyOverviewAdapter extends RecyclerView.Adapter<ExpenseWe
 		@UiThread
 		public void setData(final Expense expense) {
 			name.setText(expense.getName());
-			date.setText(SIMPLE_DATE_FORMAT.format(expense.getDate().toDate()));
+			synchronized (this) {
+				date.setText(SIMPLE_DATE_FORMAT.format(expense.getDate().toDate()));
+			}
 			income.setText(CurrencyHelper.format(expense.getValueToShowInOverview()));
 
 			new AsyncTask<Void, Void, Chargeable>() {

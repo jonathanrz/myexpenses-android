@@ -56,7 +56,8 @@ public class CalculateMonthBalanceCorrectlyTest {
 
 	@Rule
 	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
-	private MonthlyPagerAdapterHelper monthlyPagerAdapterHelper = new MonthlyPagerAdapterHelper();
+
+	private final MonthlyPagerAdapterHelper monthlyPagerAdapterHelper = new MonthlyPagerAdapterHelper();
 
 	@Before
 	public void setUp() throws Exception {

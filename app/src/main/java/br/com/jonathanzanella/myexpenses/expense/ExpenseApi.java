@@ -16,8 +16,8 @@ import retrofit2.Response;
 
 public class ExpenseApi implements UnsyncModelApi<Expense> {
     private static final String LOG_TAG = ExpenseApi.class.getSimpleName();
+    private final ExpenseRepository expenseRepository;
     private ExpenseInterface expenseInterface;
-    private ExpenseRepository expenseRepository;
 
     public ExpenseApi(ExpenseRepository expenseRepository) {
         this.expenseRepository = expenseRepository;

@@ -39,7 +39,7 @@ public class EditBillActivity extends BaseActivity implements BillContract.EditV
 	@Bind(R.id.act_edit_bill_user)
 	SelectUserView selectUserView;
 
-	private BillPresenter presenter;
+	private final BillPresenter presenter;
 
 	public EditBillActivity() {
 		ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(this));

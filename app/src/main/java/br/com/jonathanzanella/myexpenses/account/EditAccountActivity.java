@@ -36,7 +36,11 @@ public class EditAccountActivity extends BaseActivity implements AccountContract
 	@Bind(R.id.act_edit_account_user)
 	SelectUserView selectUserView;
 
-	private AccountPresenter presenter = new AccountPresenter(new AccountRepository(new RepositoryImpl<Account>(MyApplication.getContext())));
+	private final AccountPresenter presenter;
+
+	public EditAccountActivity() {
+		presenter = new AccountPresenter(new AccountRepository(new RepositoryImpl<Account>(MyApplication.getContext())));
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

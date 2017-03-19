@@ -24,7 +24,7 @@ import static org.hamcrest.Matchers.not;
 @RunWith(AndroidJUnit4.class)
 @SmallTest
 public class AccountRepositoryTest {
-	private AccountRepository repository = new AccountRepository(new RepositoryImpl<Account>(MyApplication.getContext()));
+	private final AccountRepository repository = new AccountRepository(new RepositoryImpl<Account>(MyApplication.getContext()));
 
 	@After
 	public void tearDown() throws Exception {

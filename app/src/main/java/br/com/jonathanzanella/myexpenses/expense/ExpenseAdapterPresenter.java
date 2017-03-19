@@ -8,8 +8,8 @@ import java.util.Collections;
 import java.util.List;
 
 class ExpenseAdapterPresenter {
-	private ExpenseRepository repository;
-	private ExpenseAdapter adapter;
+	private final ExpenseRepository repository;
+	private final ExpenseAdapter adapter;
 
 	private List<Expense> receipts;
 	private List<Expense> receiptsFiltered;

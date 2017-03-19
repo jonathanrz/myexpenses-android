@@ -40,11 +40,10 @@ public class ShowReceiptActivityTest {
 	public ActivityTestRule<ShowReceiptActivity> activityTestRule = new ActivityTestRule<>(ShowReceiptActivity.class, true, false);
 
 	private Receipt receipt;
-	private ReceiptRepository repository;
 
 	@Before
 	public void setUp() throws Exception {
-		repository = new ReceiptRepository(new RepositoryImpl<Receipt>(getTargetContext()));
+		ReceiptRepository repository = new ReceiptRepository(new RepositoryImpl<Receipt>(getTargetContext()));
 
 		Source s = new SourceBuilder().build();
 		new SourceRepository(new RepositoryImpl<Source>(getTargetContext())).save(s);

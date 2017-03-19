@@ -22,7 +22,8 @@ class SourceAdapter extends RecyclerView.Adapter<SourceAdapter.ViewHolder> {
 	@Setter
 	SourceAdapterCallback callback;
 
-	private SourceAdapterPresenter presenter;
+	private final SourceAdapterPresenter presenter;
+
 	private List<Source> sources;
 
 	public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

@@ -24,9 +24,9 @@ import lombok.Getter;
 
 public class BillMonthlyResumeAdapter extends RecyclerView.Adapter<BillMonthlyResumeAdapter.ViewHolder> {
 	protected List<Bill> bills;
+	private final BillRepository billRepository;
 	@Getter
 	private int totalValue;
-	private BillRepository billRepository;
 
 	private enum ViewType {
 		TYPE_NORMAL,

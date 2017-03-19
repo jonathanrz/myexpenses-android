@@ -30,7 +30,7 @@ public class ShowBillActivity extends BaseActivity implements BillContract.View 
 	@Bind(R.id.act_show_bill_end_date)
 	TextView billEndDate;
 
-	private BillPresenter presenter;
+	private final BillPresenter presenter;
 
 	public ShowBillActivity() {
 		ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(this));

@@ -5,6 +5,7 @@ set -ev
 ./gradlew testDebugUnitTest
 ./gradlew checkStyle
 ./gradlew findBugs
+./gradlew pmd
 ./gradlew assembleDebugAndroidTest
 ./gradlew installDebugAndroidTest
 ./gradlew connectedDebugAndroidTest -PdisablePreDex  -Pandroid.testInstrumentationRunnerArguments.size=small

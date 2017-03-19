@@ -28,8 +28,8 @@ public class ShowSourceActivityTest {
 	@Rule
 	public ActivityTestRule<ShowSourceActivity> activityTestRule = new ActivityTestRule<>(ShowSourceActivity.class, true, false);
 
+	private final SourceRepository repository = new SourceRepository(new RepositoryImpl<Source>(getTargetContext()));
 	private Source source;
-	private SourceRepository repository = new SourceRepository(new RepositoryImpl<Source>(getTargetContext()));
 
 	@Before
 	public void setUp() throws Exception {
