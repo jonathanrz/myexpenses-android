@@ -16,12 +16,13 @@ import butterknife.Bind;
 
 public class EditSourceActivity extends BaseActivity implements SourceContract.EditView {
 	public static final String KEY_SOURCE_UUID = "KeySourceUuid";
-	private final SourcePresenter presenter = new SourcePresenter(new SourceRepository(new RepositoryImpl<Source>(this)));
 
 	@Bind(R.id.act_edit_source_name)
 	EditText editName;
 	@Bind(R.id.act_edit_source_user)
 	SelectUserView selectUserView;
+
+	private final SourcePresenter presenter = new SourcePresenter(new SourceRepository(new RepositoryImpl<Source>(this)));
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

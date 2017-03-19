@@ -21,11 +21,11 @@ import butterknife.ButterKnife;
 import lombok.Setter;
 
 class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder> {
-	private final BillAdapterPresenter presenter;
-
 	protected List<Bill> bills;
 	@Setter
 	BillAdapterCallback callback;
+
+	private final BillAdapterPresenter presenter;
 
 	public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 		@Bind(R.id.row_bill_name)

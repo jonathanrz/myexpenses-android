@@ -16,10 +16,10 @@ import butterknife.ButterKnife;
 
 @SuppressLint("ViewConstructor")
 class ExpenseMonthlyView extends BaseView {
-    private final DateTime dateTime;
-
     @Bind(R.id.view_expenses_monthly_list)
     RecyclerView sources;
+
+	private final DateTime dateTime;
 
     private ExpenseAdapter adapter;
 

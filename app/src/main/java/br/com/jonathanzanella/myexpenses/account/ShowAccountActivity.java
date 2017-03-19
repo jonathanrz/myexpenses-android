@@ -22,8 +22,6 @@ public class ShowAccountActivity extends BaseActivity implements AccountContract
 	public static final String KEY_ACCOUNT_UUID = "KeyAccountUuid";
 	public static final String KEY_ACCOUNT_MONTH_TO_SHOW = "KeyAccountMonthToShow";
 
-	private final AccountPresenter presenter = new AccountPresenter(new AccountRepository(new RepositoryImpl<Account>(MyApplication.getContext())));
-
 	@Bind(R.id.act_show_account_name)
 	TextView accountName;
 	@Bind(R.id.act_show_account_balance)
@@ -35,6 +33,12 @@ public class ShowAccountActivity extends BaseActivity implements AccountContract
 	@Bind(R.id.act_show_account_transactions)
 	TransactionsView transactionsView;
 	private DateTime monthToShow;
+
+	private final AccountPresenter presenter;
+
+	public ShowAccountActivity() {
+		presenter = new AccountPresenter(new AccountRepository(new RepositoryImpl<Account>(MyApplication.getContext())));
+	}
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {

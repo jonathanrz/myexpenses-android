@@ -19,10 +19,10 @@ import butterknife.ButterKnife;
 import lombok.Setter;
 
 class SourceAdapter extends RecyclerView.Adapter<SourceAdapter.ViewHolder> {
-	private final SourceAdapterPresenter presenter;
-
 	@Setter
 	SourceAdapterCallback callback;
+
+	private final SourceAdapterPresenter presenter;
 
 	private List<Source> sources;
 

@@ -30,8 +30,8 @@ import lombok.Getter;
 
 class ReceiptMonthlyResumeAdapter extends RecyclerView.Adapter<ReceiptMonthlyResumeAdapter.ViewHolder> {
 	public static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("dd/MM", Locale.getDefault());
-	private final ReceiptRepository receiptRepository;
 	protected List<Receipt> receipts;
+	private final ReceiptRepository receiptRepository;
 	@Getter
 	private int totalValue;
 	private int totalUnreceivedValue;

@@ -29,12 +29,12 @@ import butterknife.OnClick;
 public class ExpenseView extends BaseView implements ViewPager.OnPageChangeListener {
 	private static final int REQUEST_ADD_EXPENSE = 1006;
 
-	private final Map<DateTime, WeakReference<ExpenseMonthlyView>> views = new HashMap<>();
-
 	@Bind(R.id.view_expenses_pager)
     ViewPager pager;
 	MonthlyPagerAdapter adapter;
 	ExpenseRepository expenseRepository;
+
+	private final Map<DateTime, WeakReference<ExpenseMonthlyView>> views = new HashMap<>();
 
     public ExpenseView(Context context) {
         super(context);

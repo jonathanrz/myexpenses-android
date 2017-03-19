@@ -18,13 +18,13 @@ import butterknife.ButterKnife;
 
 @SuppressLint("ViewConstructor")
 class OverviewExpensesWeeklyView extends BaseView {
-	private final WeeklyPagerAdapter.Period period;
-	private final ExpenseRepository expenseRepository;
-
 	@Bind(R.id.view_overview_expenses_weekly_list)
 	RecyclerView list;
 	@Bind(R.id.view_overview_expenses_weekly_total)
 	TextView total;
+
+	private final WeeklyPagerAdapter.Period period;
+	private final ExpenseRepository expenseRepository;
 
 	private ExpenseWeeklyOverviewAdapter adapter;
 

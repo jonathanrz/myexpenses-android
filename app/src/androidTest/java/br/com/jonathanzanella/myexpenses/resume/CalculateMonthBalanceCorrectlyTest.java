@@ -54,10 +54,10 @@ public class CalculateMonthBalanceCorrectlyTest {
 	private static final int RECEIPT_INCOME = 200;
 	private static final int BILL_AMOUNT = 25;
 
-	private final MonthlyPagerAdapterHelper monthlyPagerAdapterHelper = new MonthlyPagerAdapterHelper();
-
 	@Rule
 	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
+
+	private final MonthlyPagerAdapterHelper monthlyPagerAdapterHelper = new MonthlyPagerAdapterHelper();
 
 	@Before
 	public void setUp() throws Exception {

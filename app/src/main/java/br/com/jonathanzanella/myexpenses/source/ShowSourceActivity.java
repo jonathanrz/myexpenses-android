@@ -14,10 +14,11 @@ import butterknife.Bind;
 
 public class ShowSourceActivity extends BaseActivity implements SourceContract.View {
 	public static final String KEY_SOURCE_UUID = "KeySourceUuid";
-	private final SourcePresenter presenter = new SourcePresenter(new SourceRepository(new RepositoryImpl<Source>(this)));
 
 	@Bind(R.id.act_show_source_name)
 	TextView sourceName;
+
+	private final SourcePresenter presenter = new SourcePresenter(new SourceRepository(new RepositoryImpl<Source>(this)));
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {

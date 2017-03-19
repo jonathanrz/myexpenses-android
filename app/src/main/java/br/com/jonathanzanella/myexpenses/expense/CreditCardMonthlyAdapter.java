@@ -26,8 +26,8 @@ import butterknife.ButterKnife;
 
 public class CreditCardMonthlyAdapter extends RecyclerView.Adapter<CreditCardMonthlyAdapter.ViewHolder> {
 	private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("dd/MM", Locale.getDefault());
-	private final CardRepository cardRepository;
 	protected List<Expense> expenses;
+	private final CardRepository cardRepository;
 	private int totalValue;
 
 	private enum ViewType {

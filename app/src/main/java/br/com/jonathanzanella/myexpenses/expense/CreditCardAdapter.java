@@ -23,8 +23,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 class CreditCardAdapter extends RecyclerView.Adapter<CreditCardAdapter.ViewHolder> {
-	private final CardRepository cardRepository;
 	protected List<Expense> expenses;
+	private final CardRepository cardRepository;
 	private int totalValue;
 
 	private enum ViewType {

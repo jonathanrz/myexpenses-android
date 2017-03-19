@@ -26,8 +26,6 @@ import butterknife.OnClick;
 public class EditBillActivity extends BaseActivity implements BillContract.EditView {
 	public static final String KEY_BILL_UUID = "KeyBillUuid";
 
-	private final BillPresenter presenter;
-
 	@Bind(R.id.act_edit_bill_name)
 	EditText editName;
 	@Bind(R.id.act_edit_bill_amount)
@@ -40,6 +38,8 @@ public class EditBillActivity extends BaseActivity implements BillContract.EditV
 	EditText editEndDate;
 	@Bind(R.id.act_edit_bill_user)
 	SelectUserView selectUserView;
+
+	private final BillPresenter presenter;
 
 	public EditBillActivity() {
 		ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(this));

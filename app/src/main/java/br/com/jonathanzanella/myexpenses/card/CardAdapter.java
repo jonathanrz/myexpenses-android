@@ -24,11 +24,12 @@ import butterknife.ButterKnife;
 import lombok.Setter;
 
 public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
-	private final CardRepository cardRepository;
 	protected List<Card> cards;
 
 	@Setter
 	CardAdapterCallback callback;
+
+	private final CardRepository cardRepository;
 	private ExpenseRepository expenseRepository;
 
 	class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

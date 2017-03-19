@@ -28,10 +28,11 @@ import butterknife.OnClick;
 
 public class ReceiptView extends BaseView implements ViewPager.OnPageChangeListener {
 	private static final int REQUEST_ADD_RECEIPT = 1007;
-	private final Map<DateTime, WeakReference<ReceiptMonthlyView>> views = new HashMap<>();
 
 	@Bind(R.id.view_receipts_pager)
     ViewPager pager;
+
+	private final Map<DateTime, WeakReference<ReceiptMonthlyView>> views = new HashMap<>();
 
 	private MonthlyPagerAdapter adapter;
 	private ReceiptRepository repository;
