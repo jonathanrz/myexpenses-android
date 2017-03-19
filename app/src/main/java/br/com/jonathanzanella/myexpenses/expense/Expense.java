@@ -7,6 +7,7 @@ import com.google.gson.annotations.SerializedName;
 
 import org.joda.time.DateTime;
 
+import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
@@ -90,6 +91,12 @@ public class Expense implements Transaction, UnsyncModel {
 	@Getter @Setter
 	private Card creditCard;
 
+	@Setter
+	private int repetition;
+	@Getter @Setter
+	private int installments;
+	private Chargeable chargeable;
+
 	@Override
 	public int getAmount() {
 		return getValue();
@@ -106,6 +113,7 @@ public class Expense implements Transaction, UnsyncModel {
 	}
 
 	public void setChargeable(Chargeable chargeable) {
+		this.chargeable = chargeable;
 		chargeableType = chargeable.getChargeableType();
 		chargeableUuid = chargeable.getUuid();
 	}
@@ -117,7 +125,9 @@ public class Expense implements Transaction, UnsyncModel {
 
 	@WorkerThread
 	public Chargeable getChargeable() {
-		return Expense.findChargeable(chargeableType, chargeableUuid);
+		if(chargeable == null)
+			chargeable = Expense.findChargeable(chargeableType, chargeableUuid);
+		return chargeable;
 	}
 
 	void uncharge() {
@@ -161,10 +171,35 @@ public class Expense implements Transaction, UnsyncModel {
 		return null;
 	}
 
-	void repeat() {
-		id = 0;
-		uuid = null;
-		date = date.plusMonths(1);
+	Expense repeat(String originalName, int index) {
+		Expense expense = new Expense();
+		if(installments > 1)
+			expense.name = formatExpenseName(originalName, index);
+		else
+			expense.name = originalName;
+		expense.date = date.plusMonths(1);
+		expense.value = value;
+		expense.valueToShowInOverview = valueToShowInOverview;
+		expense.chargeableUuid = chargeableUuid;
+		expense.chargeableType = chargeableType;
+		expense.billUuid = billUuid;
+		expense.chargedNextMonth = chargedNextMonth;
+		expense.ignoreInOverview = ignoreInOverview;
+		expense.ignoreInResume = ignoreInResume;
+		expense.userUuid = userUuid;
+		expense.creditCard = creditCard;
+		expense.repetition = repetition;
+		expense.installments = installments;
+		expense.chargeable = chargeable;
+		return expense;
+	}
+
+	int getRepetition() {
+		return Math.max(repetition, installments);
+	}
+
+	String formatExpenseName(String originalName, int i) {
+		return String.format(Environment.PTBR_LOCALE, "%s %02d/%02d", originalName, i, installments);
 	}
 
 	boolean isShowInOverview() {

@@ -223,12 +223,12 @@ public class EditExpenseActivity extends BaseActivity implements ExpenseContract
 		int value = 0;
 		String valueText = editValue.getText().toString().replaceAll("[^\\d]", "");
 		if(!StringUtils.isEmpty(valueText))
-			value = Integer.parseInt(valueText) / getInstallment();
+			value = Integer.parseInt(valueText);
 
 		int valueToShowInOverview = 0;
 		String valueToShowInOverviewText = editValueToShowInOverview.getText().toString().replaceAll("[^\\d]", "");
 		if(!StringUtils.isEmpty(valueToShowInOverviewText))
-			valueToShowInOverview = Integer.parseInt(valueToShowInOverviewText) / getInstallment();
+			valueToShowInOverview = Integer.parseInt(valueToShowInOverviewText);
 
 		if (checkRepayment.isChecked()) {
 			value *= -1;
@@ -240,6 +240,10 @@ public class EditExpenseActivity extends BaseActivity implements ExpenseContract
 		expense.showInOverview(showInOverview.isChecked());
 		expense.showInResume(showInResume.isChecked());
 		expense.setUserUuid(selectUserView.getSelectedUser());
+		expense.setInstallments(getInstallment());
+		expense.setRepetition(getRepetition());
+		if(expense.getInstallments() != 1)
+			expense.setName(expense.formatExpenseName(expense.getName(), 1));
 		return expense;
 	}
 
@@ -268,12 +272,10 @@ public class EditExpenseActivity extends BaseActivity implements ExpenseContract
 		}
 	}
 
-	@Override
 	public int getInstallment() {
 		return Integer.parseInt(editInstallment.getText().toString());
 	}
 
-	@Override
 	public int getRepetition() {
 		return Integer.parseInt(editRepetition.getText().toString());
 	}

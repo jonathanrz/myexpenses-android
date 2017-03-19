@@ -21,8 +21,6 @@ interface ExpenseContract {
 		Expense fillExpense(Expense expense);
 		void finishView();
 		void showError(ValidationError error);
-		int getInstallment();
-		int getRepetition();
 		void onDateChanged(DateTime date);
 		void onBillSelected(Bill bill);
 		void onChargeableSelected(Chargeable chargeable);

@@ -15,7 +15,6 @@ import android.widget.DatePicker;
 
 import org.joda.time.DateTime;
 
-import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.bill.Bill;
@@ -25,6 +24,7 @@ import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType;
 import br.com.jonathanzanella.myexpenses.chargeable.ListChargeableActivity;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException;
+import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
@@ -195,43 +195,43 @@ class ExpensePresenter {
 		if(expense == null)
 			expense = new Expense();
 		expense = editView.fillExpense(expense);
-		expense.setDate(date);
+		if(date != null)
+			expense.setDate(date);
 		if(bill != null)
 			expense.setBill(bill);
 		if(chargeable != null)
 			expense.setChargeable(chargeable);
-
-		final int installment = editView.getInstallment();
-
 		final String originalName = expense.getName();
-		if(installment == 1)
-			expense.setName(originalName);
-		else
-			expense.setName(formatExpenseName(installment, originalName, 1));
+		if(expense.getInstallments() != 1) {
+			expense.setName(expense.formatExpenseName(expense.getName(), 1));
+			expense.setValue(expense.getValue() / expense.getInstallments());
+			expense.setValueToShowInOverview(expense.getValueToShowInOverview() / expense.getInstallments());
+		}
 
 		new AsyncTask<Void, Void, OperationResult>() {
-
 			@Override
 			protected OperationResult doInBackground(Void... voids) {
-				return repository.save(expense);
+				OperationResult result = repository.save(expense);
+				if(result.isValid())
+					generateExpensesRepetition();
+
+				return result;
+			}
+
+			private void generateExpensesRepetition() {
+				for (int i = 1; i < expense.getRepetition(); i++) {
+					expense = expense.repeat(originalName, i + 1);
+					OperationResult repetitionResult = repository.save(expense);
+					if(!repetitionResult.isValid())
+						Log.error("ExpensePresenter", "Error saving repetition of expense " + expense.getData() +
+								" error=" + repetitionResult.getErrors().toString());
+				}
 			}
 
 			@Override
 			protected void onPostExecute(OperationResult result) {
 				super.onPostExecute(result);
 				if(result.isValid()) {
-					int repetition = installment;
-					if(repetition == 1)
-						repetition = editView.getRepetition();
-					for(int i = 1; i < repetition; i++) {
-						if(installment != 1) {
-							String name = formatExpenseName(installment, originalName, i + 1);
-							expense.setName(name);
-						}
-						expense.repeat();
-						repository.saveAsync(expense);
-					}
-
 					editView.finishView();
 				} else {
 					for (ValidationError validationError : result.getErrors())
@@ -239,10 +239,6 @@ class ExpensePresenter {
 				}
 			}
 		}.execute();
-	}
-
-	private String formatExpenseName(int installment, String originalName, int i) {
-		return String.format(Environment.PTBR_LOCALE, "%s %02d/%02d", originalName, i, installment);
 	}
 
 	@UiThread
