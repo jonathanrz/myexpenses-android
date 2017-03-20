@@ -6,8 +6,3 @@ set -ev
 ./gradlew checkStyle
 ./gradlew findBugs
 ./gradlew pmd
-./gradlew assembleDebugAndroidTest
-./gradlew installDebugAndroidTest
-./gradlew connectedDebugAndroidTest -PdisablePreDex  -Pandroid.testInstrumentationRunnerArguments.size=small
-./gradlew connectedDebugAndroidTest -PdisablePreDex  -Pandroid.testInstrumentationRunnerArguments.size=medium
-./gradlew connectedDebugAndroidTest -PdisablePreDex  -Pandroid.testInstrumentationRunnerArguments.size=large
