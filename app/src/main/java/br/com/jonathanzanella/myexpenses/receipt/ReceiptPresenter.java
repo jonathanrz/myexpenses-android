@@ -15,13 +15,11 @@ import android.widget.DatePicker;
 
 import org.joda.time.DateTime;
 
-import java.util.Locale;
-
-import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException;
+import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.source.Source;
 import br.com.jonathanzanella.myexpenses.source.SourceRepository;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
@@ -157,26 +155,38 @@ class ReceiptPresenter {
 		if(receipt == null)
 			receipt = new Receipt();
 		receipt = editView.fillReceipt(receipt);
+		if(date != null)
+			receipt.setDate(date);
 		if(source != null)
 			receipt.setSource(source);
 		if(account != null)
 			receipt.setAccount(account);
-		if(date != null)
-			receipt.setDate(date);
-
-		final int installment = editView.getInstallment();
 
 		final String originalName = receipt.getName();
-		if(installment == 1)
-			receipt.setName(originalName);
-		else
-			receipt.setName(String.format(Environment.PTBR_LOCALE, "%s %02d/%02d", originalName, 1, installment));
+		if(receipt.getInstallments() != 1) {
+			receipt.setName(receipt.formatReceiptName(receipt.getName(), 1));
+			receipt.setIncome(receipt.getIncome() / receipt.getInstallments());
+		}
 
 		new AsyncTask<Void, Void, OperationResult>() {
 
 			@Override
 			protected OperationResult doInBackground(Void... voids) {
-				return repository.save(receipt);
+				OperationResult result = repository.save(receipt);
+				if(result.isValid())
+					generateReceiptsRepetition();
+
+				return result;
+			}
+
+			private void generateReceiptsRepetition() {
+				for (int i = 1; i < receipt.getRepetition(); i++) {
+					receipt = receipt.repeat(originalName, i + 1);
+					OperationResult repetitionResult = repository.save(receipt);
+					if(!repetitionResult.isValid())
+						Log.error("ExpensePresenter", "Error saving repetition of receipt " + receipt.getData() +
+								" error=" + repetitionResult.getErrors().toString());
+				}
 			}
 
 			@Override
@@ -184,19 +194,6 @@ class ReceiptPresenter {
 				super.onPostExecute(result);
 
 				if(result.isValid()) {
-					int repetition = installment;
-					if(repetition == 1)
-						repetition = editView.getRepetition();
-					for(int i = 1; i < repetition; i++) {
-						if(installment != 1) {
-							Locale locale = Environment.PTBR_LOCALE;
-							String name = String.format(locale, "%s %02d/%02d", originalName, i + 1, installment);
-							receipt.setName(name);
-						}
-						receipt.repeat();
-						repository.saveAsync(receipt);
-					}
-
 					editView.finishView();
 				} else {
 					for (ValidationError validationError : result.getErrors())

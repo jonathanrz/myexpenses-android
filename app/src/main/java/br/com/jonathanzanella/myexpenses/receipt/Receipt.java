@@ -7,6 +7,7 @@ import com.google.gson.annotations.SerializedName;
 
 import org.joda.time.DateTime;
 
+import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
@@ -71,6 +72,13 @@ public class Receipt implements Transaction, UnsyncModel {
 	@Getter @Setter @Expose
 	private boolean removed;
 
+	@Setter
+	private int repetition = 1;
+	@Getter @Setter
+	private int installments = 1;
+	private Account account;
+	private Source source;
+
 	@Override
 	public int getAmount() {
 		return getIncome();
@@ -100,18 +108,24 @@ public class Receipt implements Transaction, UnsyncModel {
 
 	@WorkerThread
 	public Source getSource() {
-		return new SourceRepository(new RepositoryImpl<Source>(MyApplication.getContext())).find(sourceUuid);
+		if(source == null)
+			source = new SourceRepository(new RepositoryImpl<Source>(MyApplication.getContext())).find(sourceUuid);
+		return source;
 	}
 
 	public void setSource(@NonNull Source s) {
+		this.source = s;
 		sourceUuid = s.getUuid();
 	}
 
 	public Account getAccount() {
-		return getAccountRepository().find(accountUuid);
+		if(account == null)
+			account = getAccountRepository().find(accountUuid);
+		return account;
 	}
 
 	public void setAccount(@NonNull Account a) {
+		this.account = a;
 		accountUuid = a.getUuid();
 	}
 
@@ -127,10 +141,33 @@ public class Receipt implements Transaction, UnsyncModel {
 		return CurrencyHelper.format(income);
 	}
 
-	void repeat() {
-		id = 0;
-		uuid = null;
-		date = date.plusMonths(1);
+	Receipt repeat(String originalName, int index) {
+		Receipt receipt = new Receipt();
+		if(installments > 1)
+			receipt.name = formatReceiptName(originalName, index);
+		else
+			receipt.name = originalName;
+		receipt.date = date.plusMonths(1);
+		receipt.income = income;
+		receipt.sourceUuid = sourceUuid;
+		receipt.accountUuid = accountUuid;
+		receipt.ignoreInResume = ignoreInResume;
+		receipt.userUuid = userUuid;
+		receipt.serverId = serverId;
+		receipt.repetition = repetition;
+		receipt.installments = installments;
+		receipt.account = account;
+		receipt.source = source;
+
+		return receipt;
+	}
+
+	int getRepetition() {
+		return Math.max(repetition, installments);
+	}
+
+	String formatReceiptName(String originalName, int i) {
+		return String.format(Environment.PTBR_LOCALE, "%s %02d/%02d", originalName, i, installments);
 	}
 
 	@Override
@@ -142,9 +179,9 @@ public class Receipt implements Transaction, UnsyncModel {
 	}
 
 	public void credit() {
-		Account account = getAccount();
-		account.credit(getIncome());
-		getAccountRepository().save(account);
+		Account acc = getAccount();
+		acc.credit(getIncome());
+		getAccountRepository().save(acc);
 		setCredited(true);
 		getReceiptRepository().save(this);
 	}
@@ -154,5 +191,4 @@ public class Receipt implements Transaction, UnsyncModel {
 		sync = false;
 		getReceiptRepository().save(this);
 	}
-
 }

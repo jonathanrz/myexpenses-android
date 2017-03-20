@@ -190,6 +190,8 @@ public class EditReceiptActivity extends BaseActivity implements ReceiptContract
 			receipt.setIncome(Integer.parseInt(income));
 		receipt.setShowInResume(checkShowInResume.isChecked());
 		receipt.setUserUuid(selectUserView.getSelectedUser());
+		receipt.setInstallments(getInstallment());
+		receipt.setRepetition(getRepetition());
 		return receipt;
 	}
 
