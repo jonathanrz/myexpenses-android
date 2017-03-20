@@ -92,9 +92,9 @@ public class Expense implements Transaction, UnsyncModel {
 	private Card creditCard;
 
 	@Setter
-	private int repetition;
+	private int repetition = 1;
 	@Getter @Setter
-	private int installments;
+	private int installments = 1;
 	private Chargeable chargeable;
 
 	@Override
