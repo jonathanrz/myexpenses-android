@@ -242,8 +242,6 @@ public class EditExpenseActivity extends BaseActivity implements ExpenseContract
 		expense.setUserUuid(selectUserView.getSelectedUser());
 		expense.setInstallments(getInstallment());
 		expense.setRepetition(getRepetition());
-		if(expense.getInstallments() != 1)
-			expense.setName(expense.formatExpenseName(expense.getName(), 1));
 		return expense;
 	}
 
