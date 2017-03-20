@@ -37,6 +37,7 @@ public class ExpenseRepositoryTest {
 	private ExpenseRepository repository;
 
 	private Account account;
+	private Card debitCard;
 	private Card creditCard;
 
 	@Before
@@ -44,9 +45,12 @@ public class ExpenseRepositoryTest {
 		account = new AccountBuilder().build();
 		AccountRepository accountRepository = new AccountRepository(new RepositoryImpl<Account>(getTargetContext()));
 		accountRepository.save(account);
-		creditCard = new CardBuilder().account(account).type(CardType.CREDIT).build(accountRepository);
+		creditCard = new CardBuilder().name("CreditCard").account(account).type(CardType.CREDIT).build(accountRepository);
+		debitCard = new CardBuilder().name("DebitCard").account(account).type(CardType.DEBIT).build(accountRepository);
 		repository = new ExpenseRepository(new RepositoryImpl<Expense>(getTargetContext()));
-		new CardRepository(new RepositoryImpl<Card>(getTargetContext()), repository).save(creditCard);
+		CardRepository cardRepository = new CardRepository(new RepositoryImpl<Card>(getTargetContext()), repository);
+		cardRepository.save(debitCard);
+		cardRepository.save(creditCard);
 	}
 
 	@After
@@ -113,6 +117,28 @@ public class ExpenseRepositoryTest {
 		List<Expense> expenses = repository.expensesForResumeScreen(creditCardExpense.getDate());
 		assertThat(expenses.size(), is(1));
 		assertThat(expenses.get(0).getUuid(), is(accountExpense.getUuid()));
+	}
+
+	@Test
+	public void load_account_expenses_with_debit_card_expenses() throws Exception {
+		DateTime dateTime = DateTime.now();
+		Expense debitCardExpense = new ExpenseBuilder()
+				.name("DebitCardExpense")
+				.chargeable(debitCard)
+				.date(dateTime)
+				.build();
+		repository.save(debitCardExpense);
+		Expense accountExpense = new ExpenseBuilder()
+				.name("AccountExpense")
+				.chargeable(account)
+				.date(dateTime)
+				.build();
+		repository.save(accountExpense);
+
+		List<Expense> expenses = repository.accountExpenses(account, dateTime);
+		assertThat(expenses.size(), is(2));
+		assertThat(expenses.get(0).getUuid(), is(debitCardExpense.getUuid()));
+		assertThat(expenses.get(1).getUuid(), is(accountExpense.getUuid()));
 	}
 
 	@Test

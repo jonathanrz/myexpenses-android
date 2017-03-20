@@ -22,6 +22,7 @@ import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.builder.CardBuilder;
 
 import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -80,5 +81,14 @@ public class CardRepositoryTest {
 		assertThat(cards.size(), is(1));
 		assertThat(cards.get(0).getUuid(), is(correctCard.getUuid()));
 		assertFalse(cards.contains(wrongCard));
+	}
+
+	@Test
+	public void load_account_debit_card() throws Exception {
+		Card debitCard = new CardBuilder().account(account).type(CardType.DEBIT).build(accountRepository);
+		assertTrue(subject.save(debitCard).isValid());
+
+		Card loadedCard = subject.accountDebitCard(account);
+		assertThat(loadedCard.getUuid(), is(debitCard.getUuid()));
 	}
 }

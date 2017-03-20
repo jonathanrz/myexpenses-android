@@ -49,8 +49,10 @@ public class CardRepository implements ModelRepository<Card> {
 	@WorkerThread
 	public Card accountDebitCard(Account account) {
 		return repository.querySingle(table,
-				new Where(Fields.ACCOUNT_UUID).eq(account.getUuid())
-				.and(Fields.TYPE).eq(CardType.DEBIT.getValue()));
+				new Where(Fields.TYPE)
+						.eq(CardType.DEBIT.getValue())
+						.and(Fields.ACCOUNT_UUID)
+						.eq(account.getUuid()));
 	}
 
 	@WorkerThread
