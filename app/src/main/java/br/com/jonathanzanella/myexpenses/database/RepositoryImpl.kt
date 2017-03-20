@@ -63,8 +63,10 @@ class RepositoryImpl<T : UnsyncModel>(ctx: Context) : Repository<T> {
         ).use { c ->
             val sources = ArrayList<T>()
             c.moveToFirst()
-            while (!single && !c.isAfterLast) {
+            while (!c.isAfterLast) {
                 sources.add(table.fill(c))
+                if(single)
+                    break;
                 c.moveToNext()
             }
             db.close()
