@@ -132,15 +132,15 @@ public class Expense implements Transaction, UnsyncModel {
 
 	void uncharge() {
 		if(charged) {
-			Chargeable chargeable = getChargeable();
-			chargeable.credit(getValue());
-			switch (chargeable.getChargeableType()) {
+			Chargeable c = getChargeable();
+			c.credit(getValue());
+			switch (c.getChargeableType()) {
 				case ACCOUNT:
-					getAccountRepository().save((Account) chargeable);
+					getAccountRepository().save((Account) c);
 				case CREDIT_CARD:
 				case DEBIT_CARD:
-					if(chargeable instanceof Card)
-						getCardRepository().save((Card) chargeable);
+					if(c instanceof Card)
+						getCardRepository().save((Card) c);
 					else
 						throw new UnsupportedOperationException("Chargeable should be a card");
 			}
@@ -228,15 +228,15 @@ public class Expense implements Transaction, UnsyncModel {
 	}
 
 	public void debit() {
-		Chargeable chargeable = getChargeable();
-		chargeable.debit(getValue());
-		switch (chargeable.getChargeableType()) {
+		Chargeable c = getChargeable();
+		c.debit(getValue());
+		switch (c.getChargeableType()) {
 			case ACCOUNT:
-				getAccountRepository().save((Account) chargeable);
+				getAccountRepository().save((Account) c);
 				break;
 			case DEBIT_CARD:
 			case CREDIT_CARD:
-				getCardRepository().save((Card) chargeable);
+				getCardRepository().save((Card) c);
 				break;
 		}
 		setCharged(true);

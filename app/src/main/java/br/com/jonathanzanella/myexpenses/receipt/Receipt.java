@@ -179,9 +179,9 @@ public class Receipt implements Transaction, UnsyncModel {
 	}
 
 	public void credit() {
-		Account account = getAccount();
-		account.credit(getIncome());
-		getAccountRepository().save(account);
+		Account acc = getAccount();
+		acc.credit(getIncome());
+		getAccountRepository().save(acc);
 		setCredited(true);
 		getReceiptRepository().save(this);
 	}
