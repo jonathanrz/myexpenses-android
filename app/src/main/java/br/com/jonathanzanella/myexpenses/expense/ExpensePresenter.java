@@ -52,6 +52,13 @@ class ExpensePresenter {
 		this.billRepository = billRepository;
 	}
 
+	private void resetCache() {
+		date = null;
+		bill = null;
+		chargeable = null;
+		expense = null;
+	}
+
 	void attachView(ExpenseContract.View view) {
 		this.view = view;
 	}
@@ -181,6 +188,7 @@ class ExpensePresenter {
 		expense = repository.find(uuid);
 		if(expense == null)
 			throw new ExpenseNotFoundException(uuid);
+		resetCache();
 		return expense;
 	}
 
