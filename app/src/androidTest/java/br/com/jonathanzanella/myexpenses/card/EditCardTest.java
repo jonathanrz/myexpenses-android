@@ -23,6 +23,7 @@ import br.com.jonathanzanella.myexpenses.helpers.builder.CardBuilder;
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.InstrumentationRegistry.getTargetContext;
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
@@ -72,7 +73,7 @@ public class EditCardTest {
 		final String editExpenseTitle = getTargetContext().getString(R.string.edit_card_title);
 		matchToolbarTitle(editExpenseTitle);
 		onView(withId(R.id.act_edit_card_name)).check(matches(withText(card.getName())));
-		onView(withId(R.id.act_edit_card_account)).check(matches(withText(card.getAccount().getName())));
+		onView(withId(R.id.act_edit_card_account)).perform(scrollTo()).check(matches(withText(card.getAccount().getName())));
 		typeTextIntoView(R.id.act_edit_card_name, " changed");
 
 		clickIntoView(R.id.action_save);

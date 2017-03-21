@@ -9,80 +9,84 @@
         android:id="@+id/toolbar"
         layout="@layout/toolbar"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_margin="@dimen/default_spacing">
+	<ScrollView
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
 
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/default_spacing">
+	    <LinearLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:orientation="vertical"
+	        android:layout_margin="@dimen/default_spacing">
 
-            <android.support.v7.widget.AppCompatEditText
-                android:id="@+id/act_edit_card_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/name"/>
+	        <android.support.design.widget.TextInputLayout
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:layout_marginBottom="@dimen/default_spacing">
 
-        </android.support.design.widget.TextInputLayout>
+	            <android.support.v7.widget.AppCompatEditText
+	                android:id="@+id/act_edit_card_name"
+	                android:layout_width="match_parent"
+	                android:layout_height="wrap_content"
+	                android:hint="@string/name"/>
 
-	    <android.support.design.widget.TextInputLayout
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:layout_marginBottom="@dimen/default_spacing">
+	        </android.support.design.widget.TextInputLayout>
 
-		    <android.support.v7.widget.AppCompatEditText
-			    android:id="@+id/act_edit_card_account"
+		    <android.support.design.widget.TextInputLayout
 			    android:layout_width="match_parent"
 			    android:layout_height="wrap_content"
-			    android:inputType="none"
-			    android:clickable="true"
-			    android:focusable="false"
-			    android:hint="@string/account"/>
+			    android:layout_marginBottom="@dimen/default_spacing">
 
-	    </android.support.design.widget.TextInputLayout>
+			    <android.support.v7.widget.AppCompatEditText
+				    android:id="@+id/act_edit_card_account"
+				    android:layout_width="match_parent"
+				    android:layout_height="wrap_content"
+				    android:inputType="none"
+				    android:clickable="true"
+				    android:focusable="false"
+				    android:hint="@string/account"/>
 
-	    <TextView
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:text="@string/select_card_type"/>
+		    </android.support.design.widget.TextInputLayout>
 
-	    <View
-		    android:layout_width="match_parent"
-		    android:layout_height="1dp"
-		    android:background="@color/color_divider"
-		    android:layout_marginBottom="@dimen/min_spacing"/>
-
-	    <RadioGroup
-		    android:id="@+id/act_edit_card_type"
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:layout_marginBottom="@dimen/default_spacing"
-		    android:orientation="horizontal">
-
-		    <RadioButton
-			    android:id="@+id/act_edit_card_type_debit"
+		    <TextView
 			    android:layout_width="wrap_content"
 			    android:layout_height="wrap_content"
-			    android:layout_marginEnd="@dimen/default_spacing"
-			    android:hint="@string/debit"/>
+			    android:text="@string/select_card_type"/>
 
-		    <RadioButton
-			    android:id="@+id/act_edit_card_type_credit"
-			    android:layout_width="wrap_content"
+		    <View
+			    android:layout_width="match_parent"
+			    android:layout_height="1dp"
+			    android:background="@color/color_divider"
+			    android:layout_marginBottom="@dimen/min_spacing"/>
+
+		    <RadioGroup
+			    android:id="@+id/act_edit_card_type"
+			    android:layout_width="match_parent"
 			    android:layout_height="wrap_content"
-			    android:hint="@string/credit"/>
+			    android:layout_marginBottom="@dimen/default_spacing"
+			    android:orientation="horizontal">
 
-	    </RadioGroup>
+			    <RadioButton
+				    android:id="@+id/act_edit_card_type_debit"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:layout_marginEnd="@dimen/default_spacing"
+				    android:hint="@string/debit"/>
 
-	    <br.com.jonathanzanella.myexpenses.user.SelectUserView
-		    android:id="@+id/act_edit_card_user"
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:layout_marginBottom="@dimen/default_spacing"/>
+			    <RadioButton
+				    android:id="@+id/act_edit_card_type_credit"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:hint="@string/credit"/>
 
-    </LinearLayout>
+		    </RadioGroup>
 
+		    <br.com.jonathanzanella.myexpenses.user.SelectUserView
+			    android:id="@+id/act_edit_card_user"
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:layout_marginBottom="@dimen/default_spacing"/>
+
+	    </LinearLayout>
+	</ScrollView>
 </LinearLayout>
