@@ -21,13 +21,10 @@ import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import lombok.Setter;
 
 public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
 	protected List<Card> cards;
-
-	@Setter
-	CardAdapterCallback callback;
+	private CardAdapterCallback callback;
 
 	private final CardRepository cardRepository;
 	private ExpenseRepository expenseRepository;
@@ -125,5 +122,9 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
 	@Nullable
 	private Card getCreditCard(int position) {
 		return cards != null ? cards.get(position) : null;
+	}
+
+	public void setCallback(CardAdapterCallback callback) {
+		this.callback = callback;
 	}
 }

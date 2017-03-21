@@ -8,21 +8,25 @@ import com.facebook.stetho.Stetho;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
+import java.lang.ref.WeakReference;
+
 import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
-import lombok.Getter;
 
 public class MyApplication extends Application {
 	@SuppressLint("StaticFieldLeak")
-	@Getter
-	private static Context context;
+	private static WeakReference<Context> context;
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		MyApplication.context = getApplicationContext();
+		MyApplication.context = new WeakReference<>(getApplicationContext());
 
 		JodaTimeAndroid.init(this);
 		Stetho.initializeWithDefaults(this);
 		new DatabaseHelper(this).runMigrations();
+	}
+
+	public static Context getContext() {
+		return context.get();
 	}
 }

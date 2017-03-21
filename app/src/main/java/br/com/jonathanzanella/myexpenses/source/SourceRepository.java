@@ -63,10 +63,10 @@ public class SourceRepository implements ModelRepository<Source>  {
 	@Override
 	public void syncAndSave(final Source sourceSync) {
 		Source source = find(sourceSync.getUuid());
-		if(source != null && source.id != sourceSync.getId()) {
+		if(source != null && source.getId() != sourceSync.getId()) {
 			if(source.getUpdatedAt() != sourceSync.getUpdatedAt())
 				warning("Bill overwritten", sourceSync.getData());
-			sourceSync.setId(source.id);
+			sourceSync.setId(source.getId());
 		}
 
 		sourceSync.setSync(true);

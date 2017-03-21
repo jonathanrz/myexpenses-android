@@ -23,11 +23,9 @@ import br.com.jonathanzanella.myexpenses.receipt.Receipt;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import lombok.Getter;
 
 public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.ViewHolder> {
-	@Getter
-	List<Transaction> transactions = new ArrayList<>();
+	private List<Transaction> transactions = new ArrayList<>();
 
 	public static class ViewHolder extends RecyclerView.ViewHolder {
 		@Bind(R.id.row_transaction_date)
@@ -106,5 +104,9 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 				return -1;
 			}
 		});
+	}
+
+	public List<Transaction> getTransactions() {
+		return transactions;
 	}
 }

@@ -6,11 +6,9 @@ import android.util.Log
 import br.com.jonathanzanella.myexpenses.Environment
 import br.com.jonathanzanella.myexpenses.log.Log.warning
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel
-import lombok.Getter
 import java.util.*
 
 class RepositoryImpl<T : UnsyncModel>(ctx: Context) : Repository<T> {
-    @Getter
     val databaseHelper: DatabaseHelper
 
     init {

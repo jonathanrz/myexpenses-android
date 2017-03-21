@@ -11,8 +11,6 @@ import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
-import lombok.Getter;
-import lombok.Setter;
 
 public class Log implements UnsyncModel {
 	private static final String TAG = "Log";
@@ -66,19 +64,10 @@ public class Log implements UnsyncModel {
 		}
 	}
 
-	@Setter
 	private long id;
-
-	@Getter @Setter
 	private String title;
-
-	@Getter @Setter
 	private String description;
-
-	@Getter @Setter
 	private DateTime date;
-
-	@Setter
 	private LogLevel type;
 
 	Log() {
@@ -177,4 +166,40 @@ public class Log implements UnsyncModel {
 		throw new UnsupportedOperationException("Log isn't an unsync model");
 	}
 
+	@Override
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public DateTime getDate() {
+		return date;
+	}
+
+	public void setDate(DateTime date) {
+		this.date = date;
+	}
+
+	public LogLevel getType() {
+		return type;
+	}
+
+	public void setType(LogLevel type) {
+		this.type = type;
+	}
 }

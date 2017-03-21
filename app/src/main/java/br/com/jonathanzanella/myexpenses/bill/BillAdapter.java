@@ -18,12 +18,10 @@ import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import lombok.Setter;
 
 class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder> {
 	protected List<Bill> bills;
-	@Setter
-	BillAdapterCallback callback;
+	private BillAdapterCallback callback;
 
 	private final BillAdapterPresenter presenter;
 
@@ -109,5 +107,9 @@ class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder> {
 	public void filter(String filter) {
 		presenter.filter(filter);
 		bills = presenter.getBills(false);
+	}
+
+	public void setCallback(BillAdapterCallback callback) {
+		this.callback = callback;
 	}
 }

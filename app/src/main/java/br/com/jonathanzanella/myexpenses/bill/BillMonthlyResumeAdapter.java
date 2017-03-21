@@ -20,12 +20,10 @@ import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import lombok.Getter;
 
 public class BillMonthlyResumeAdapter extends RecyclerView.Adapter<BillMonthlyResumeAdapter.ViewHolder> {
 	protected List<Bill> bills;
 	private final BillRepository billRepository;
-	@Getter
 	private int totalValue;
 
 	private enum ViewType {
@@ -106,5 +104,9 @@ public class BillMonthlyResumeAdapter extends RecyclerView.Adapter<BillMonthlyRe
 		for (Bill bill : bills) {
 			totalValue += bill.getAmount();
 		}
+	}
+
+	public int getTotalValue() {
+		return totalValue;
 	}
 }

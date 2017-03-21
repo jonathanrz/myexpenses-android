@@ -1,7 +1,6 @@
 package br.com.jonathanzanella.myexpenses.validations;
 
 import br.com.jonathanzanella.myexpenses.R;
-import lombok.Getter;
 import lombok.ToString;
 
 @ToString
@@ -21,10 +20,13 @@ public enum ValidationError {
 	DESCRIPTION(R.string.error_message_name_not_informed),
 	LOG_LEVEL(R.string.error_message_log_level_not_informed);
 
-	@Getter
 	private int message;
 
 	ValidationError(int message) {
 		this.message = message;
+	}
+
+	public int getMessage() {
+		return message;
 	}
 }

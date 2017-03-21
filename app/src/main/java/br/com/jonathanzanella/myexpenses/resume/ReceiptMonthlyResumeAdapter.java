@@ -26,13 +26,11 @@ import br.com.jonathanzanella.myexpenses.source.Source;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import lombok.Getter;
 
 class ReceiptMonthlyResumeAdapter extends RecyclerView.Adapter<ReceiptMonthlyResumeAdapter.ViewHolder> {
 	public static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("dd/MM", Locale.getDefault());
 	protected List<Receipt> receipts;
 	private final ReceiptRepository receiptRepository;
-	@Getter
 	private int totalValue;
 	private int totalUnreceivedValue;
 
@@ -192,5 +190,9 @@ class ReceiptMonthlyResumeAdapter extends RecyclerView.Adapter<ReceiptMonthlyRes
 			if(!receipt.isCredited())
 				totalUnreceivedValue += receipt.getIncome();
 		}
+	}
+
+	int getTotalValue() {
+		return totalValue;
 	}
 }

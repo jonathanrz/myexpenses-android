@@ -2,14 +2,13 @@ package br.com.jonathanzanella.myexpenses.card;
 
 import android.support.annotation.Nullable;
 
-import lombok.Getter;
 import lombok.NonNull;
 
 public enum CardType {
 	CREDIT("CREDIT"),
 	DEBIT("DEBIT");
 
-	@NonNull @Getter
+	@NonNull
 	private final String value;
 
 	CardType(@NonNull String value) {
@@ -24,5 +23,9 @@ public enum CardType {
 		}
 
 		return null;
+	}
+
+	public String getValue() {
+		return value;
 	}
 }
