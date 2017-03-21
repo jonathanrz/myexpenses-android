@@ -29,6 +29,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.clickIntoView;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.typeTextIntoView;
+import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -48,7 +49,7 @@ public class EditCardTest {
 
 		card = new CardBuilder().account(a).build(accountRepository);
 		repository = new CardRepository(new RepositoryImpl<Card>(getTargetContext()), expenseRepository);
-		repository.save(card);
+		assertTrue(repository.save(card).isValid());
 	}
 
 	@After
