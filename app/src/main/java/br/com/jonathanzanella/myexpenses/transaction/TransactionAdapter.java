@@ -25,7 +25,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.ViewHolder> {
-	private List<Transaction> transactions = new ArrayList<>();
+	private final List<Transaction> transactions = new ArrayList<>();
 
 	public static class ViewHolder extends RecyclerView.ViewHolder {
 		@Bind(R.id.row_transaction_date)

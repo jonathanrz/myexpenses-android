@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OperationResult {
-	private List<ValidationError> errors = new ArrayList<>();
+	private final List<ValidationError> errors = new ArrayList<>();
 
 	public boolean isValid() {
 		return errors.isEmpty();
