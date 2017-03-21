@@ -92,7 +92,9 @@ class CardPresenter {
 				view.setTitle(title.concat(" ").concat(card.getName()));
 			}
 			view.showCard(card);
-			if (account != null)
+			if(account == null)
+				loadAccount(card.getAccountUuid());
+			else
 				editView.onAccountSelected(account);
 		} else {
 			if(editView != null)
