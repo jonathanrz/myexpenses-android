@@ -104,6 +104,7 @@ class CardPresenter {
 		card = repository.find(uuid);
 		if(card == null)
 			throw new CardNotFoundException(uuid);
+		updateView();
 	}
 
 	@UiThread
