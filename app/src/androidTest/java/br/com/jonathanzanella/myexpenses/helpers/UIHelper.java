@@ -132,9 +132,7 @@ public final class UIHelper {
 	}
 
 	public static void setTimeInDatePicker(int year, int month, int day) {
-		onView(withClassName(Matchers.equalTo(DatePicker.class.getName())))
-				.perform(scrollTo())
-				.perform(PickerActions.setDate(year, month, day));
+		onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(year, month, day));
 		onView(withText("OK")).perform(click());
 	}
 }
