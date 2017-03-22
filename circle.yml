@@ -29,7 +29,7 @@ test:
     - ./gradlew testDebugUnitTest
     - ./gradlew jacocoTestReport
     - ./gradlew installDebugAndroidTest
-    - ./gradlew app:connectedCheck -PdisablePreDex:
+    - ./gradlew app:connectedDebugAndroidTest -PdisablePreDex:
         timeout: 1800
     # copy the build outputs to artifacts
     - cp -r app/build/outputs $CIRCLE_ARTIFACTS
