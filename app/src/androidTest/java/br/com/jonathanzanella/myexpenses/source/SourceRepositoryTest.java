@@ -46,7 +46,7 @@ public class SourceRepositoryTest {
 		source.setName("test");
 		repository.save(source);
 
-		assertThat(source.id, is(not(0L)));
+		assertThat(source.getId(), is(not(0L)));
 		assertThat(source.getUuid(), is(not("")));
 	}
 
@@ -79,7 +79,7 @@ public class SourceRepositoryTest {
 	@Test
 	public void source_unsync_returns_only_not_synced() throws Exception {
 		Source sourceUnsync = new SourceBuilder().name("sourceUnsync").updatedAt(100L).build();
-		sourceUnsync.sync = false;
+		sourceUnsync.setSync(false);
 		repository.save(sourceUnsync);
 
 		Source sourceSync = new SourceBuilder().name("sourceSync").updatedAt(100L).build();

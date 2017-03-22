@@ -37,7 +37,7 @@ public class AccountRepositoryTest {
 		account.setName("test");
 		repository.save(account);
 
-		assertThat(account.id, is(not(0L)));
+		assertThat(account.getId(), is(not(0L)));
 		assertThat(account.getUuid(), is(not("")));
 	}
 
