@@ -28,7 +28,6 @@ test:
     - ./gradlew assembleDebug
     - ./gradlew testDebugUnitTest:
         timeout: 1800
-    - ./gradlew jacocoTestReport
     - ./gradlew app:connectedCheck -PdisablePreDex:
         timeout: 1800
     # copy the build outputs to artifacts
