@@ -76,7 +76,7 @@ public class ExpenseRepositoryTest {
 		repository.save(expense);
 
 		Expense loadExpense = repository.find(expense.getUuid());
-		assertThat(loadExpense, is(expense));
+		assertThat(loadExpense.getUuid(), is(expense.getUuid()));
 	}
 
 	@Test
@@ -97,8 +97,8 @@ public class ExpenseRepositoryTest {
 		repository.save(expenseB);
 
 		List<Expense> sources = repository.userExpenses();
-		assertThat(sources.get(0), is(expenseB));
-		assertThat(sources.get(1), is(expenseA));
+		assertThat(sources.get(0).getUuid(), is(expenseB.getUuid()));
+		assertThat(sources.get(1).getUuid(), is(expenseA.getUuid()));
 	}
 
 	@Test

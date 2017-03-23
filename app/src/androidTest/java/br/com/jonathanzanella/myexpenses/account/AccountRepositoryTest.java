@@ -15,8 +15,6 @@ import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -48,7 +46,7 @@ public class AccountRepositoryTest {
 		repository.save(account);
 
 		Account loadAccount = repository.find(account.getUuid());
-		assertThat(loadAccount, is(account));
+		assertThat(loadAccount.getUuid(), is(account.getUuid()));
 	}
 
 	@Test
@@ -65,7 +63,6 @@ public class AccountRepositoryTest {
 
 		List<Account> accounts = repository.userAccounts();
 		assertThat(accounts.size(), is(1));
-		assertTrue(accounts.contains(correctAccount));
-		assertFalse(accounts.contains(wrongAccount));
+		assertThat(accounts.get(0).getUuid(), is(correctAccount.getUuid()));
 	}
 }
