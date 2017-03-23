@@ -1,14 +1,14 @@
 machine:
   environment:
-    PATH: "~/$CIRCLE_PROJECT_REPONAME/gradle-3.4/bin:$PATH"
+    PATH: "~/$CIRCLE_PROJECT_REPONAME/gradle-2.9/bin:$PATH"
     TERM: "dumb"
     ADB_INSTALL_TIMEOUT: "10"
-    GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx1024m -XX:+HeapDumpOnOutOfMemoryError"'
+    GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError"'
 
 dependencies:
   pre:
     - "[[ ! -s \"$(git rev-parse --git-dir)/shallow\" ]] || git fetch --unshallow"
-    - wget "https://services.gradle.org/distributions/gradle-3.4-bin.zip"; unzip gradle-3.4-bin.zip
+    - wget "https://services.gradle.org/distributions/gradle-2.9-bin.zip"; unzip gradle-2.9-bin.zip
     - echo y | android update sdk --no-ui --all --filter tool,extra-android-m2repository,extra-android-support,extra-google-google_play_services,extra-google-m2repository
     - echo y | android update sdk --no-ui --all --filter android-25
     - echo y | android update sdk --no-ui --all --filter build-tools-25.0.2
@@ -29,7 +29,6 @@ test:
     - ./gradlew testDebugUnitTest:
         timeout: 1800
     - ./gradlew jacocoTestReport
-    - ./gradlew installDebugAndroidTest
     - ./gradlew app:connectedCheck -PdisablePreDex:
         timeout: 1800
     # copy the build outputs to artifacts
