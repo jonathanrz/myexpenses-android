@@ -27,7 +27,7 @@ test:
     - adb shell input keyevent 82
     # run tests  against the emulator.
     - ./gradlew assembleDebug
-    - ./gradlew jacocoTestDebugUnitTestReport:
+    - ./gradlew testDebugUnitTest:
         timeout: 1800
     - ./gradlew app:connectedCheck -PdisablePreDex:
         timeout: 1800
