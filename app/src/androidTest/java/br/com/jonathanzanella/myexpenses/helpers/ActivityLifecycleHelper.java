@@ -23,7 +23,7 @@ public final class ActivityLifecycleHelper {
 		int i = 0;
 		while (closeActivity(instrumentation)) {
 			if (i++ > NUMBER_OF_RETRIES) {
-				throw new AssertionError("Limit of retries excesses");
+				break;
 			}
 			Thread.sleep(THREAD_SLEEP_MILLI);
 		}

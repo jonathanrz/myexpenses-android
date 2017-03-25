@@ -4,7 +4,7 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.SmallTest;
 import android.support.test.runner.AndroidJUnit4;
 
-import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -24,8 +24,8 @@ import static org.hamcrest.Matchers.not;
 public class AccountRepositoryTest {
 	private final AccountRepository repository = new AccountRepository(new RepositoryImpl<Account>(MyApplication.getContext()));
 
-	@After
-	public void tearDown() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
 	}
 

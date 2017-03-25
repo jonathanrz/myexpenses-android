@@ -43,6 +43,8 @@ public class AddSourceTest {
 
 	@Before
 	public void setUp() throws Exception {
+		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
+
 		UiDevice uiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
 		if (!uiDevice.isScreenOn())
 			uiDevice.wakeUp();
@@ -50,7 +52,6 @@ public class AddSourceTest {
 
 	@After
 	public void tearDown() throws Exception {
-		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
 		ActivityLifecycleHelper.closeAllActivities(getInstrumentation());
 	}
 

@@ -42,6 +42,8 @@ public class ExpenseRepositoryTest {
 
 	@Before
 	public void setUp() throws Exception {
+		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
+
 		account = new AccountBuilder().build();
 		AccountRepository accountRepository = new AccountRepository(new RepositoryImpl<Account>(getTargetContext()));
 		accountRepository.save(account);
@@ -55,7 +57,6 @@ public class ExpenseRepositoryTest {
 
 	@After
 	public void tearDown() throws Exception {
-		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
 		ActivityLifecycleHelper.closeAllActivities(getInstrumentation());
 	}
 

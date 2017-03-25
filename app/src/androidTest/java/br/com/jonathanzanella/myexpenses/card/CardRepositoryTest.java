@@ -1,10 +1,8 @@
 package br.com.jonathanzanella.myexpenses.card;
 
-import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.SmallTest;
 import android.support.test.runner.AndroidJUnit4;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,7 +10,6 @@ import org.junit.runner.RunWith;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.Environment;
-import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
@@ -21,6 +18,7 @@ import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.builder.CardBuilder;
 
+import static android.support.test.InstrumentationRegistry.getTargetContext;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -36,17 +34,14 @@ public class CardRepositoryTest {
 
 	@Before
 	public void setUp() throws Exception {
+		new DatabaseHelper(getTargetContext()).recreateTables();
+
 		account = new Account();
 		account.setName("test");
-		accountRepository = new AccountRepository(new RepositoryImpl<Account>(MyApplication.getContext()));
+		accountRepository = new AccountRepository(new RepositoryImpl<Account>(getTargetContext()));
 		accountRepository.save(account);
-		ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(MyApplication.getContext()));
-		subject = new CardRepository(new RepositoryImpl<Card>(MyApplication.getContext()), expenseRepository);
-	}
-
-	@After
-	public void tearDown() throws Exception {
-		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
+		ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(getTargetContext()));
+		subject = new CardRepository(new RepositoryImpl<Card>(getTargetContext()), expenseRepository);
 	}
 
 	@Test

@@ -36,14 +36,11 @@ public class ExpensesInPeriodTest {
 
 	@Before
 	public void setUp() throws Exception {
+		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
+
 		account.setName("Account");
 		account.setUserUuid(Environment.CURRENT_USER_UUID);
 		accountRepository.save(account);
-	}
-
-	@After
-	public void tearDown() throws Exception {
-		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
 	}
 
 	private Expense newExpense(String name, DateTime date, int value) {

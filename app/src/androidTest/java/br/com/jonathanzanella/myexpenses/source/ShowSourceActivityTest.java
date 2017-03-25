@@ -33,14 +33,11 @@ public class ShowSourceActivityTest {
 
 	@Before
 	public void setUp() throws Exception {
+		new DatabaseHelper(getTargetContext()).recreateTables();
+
 		source = new Source();
 		source.setName("test");
 		repository.save(source);
-	}
-
-	@After
-	public void tearDown() throws Exception {
-		new DatabaseHelper(getTargetContext()).recreateTables();
 	}
 
 	@Test

@@ -1,7 +1,6 @@
 package br.com.jonathanzanella.myexpenses.receipt;
 
 import android.content.Context;
-import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.SmallTest;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -21,6 +20,7 @@ import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.source.Source;
 import br.com.jonathanzanella.myexpenses.source.SourceRepository;
 
+import static android.support.test.InstrumentationRegistry.getTargetContext;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
@@ -40,6 +40,8 @@ public class ReceiptsInPeriodTest {
 
 	@Before
 	public void setUp() throws Exception {
+		new DatabaseHelper(getTargetContext()).recreateTables();
+
 		account.setName("Account");
 		account.setUserUuid(Environment.CURRENT_USER_UUID);
 		accountRepository.save(account);
@@ -47,11 +49,6 @@ public class ReceiptsInPeriodTest {
 		source.setName("Source");
 		source.setUserUuid(Environment.CURRENT_USER_UUID);
 		sourceRepository.save(source);
-	}
-
-	@After
-	public void tearDown() throws Exception {
-		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
 	}
 
 	private Receipt newReceipt(String name, DateTime date, int value) {
@@ -83,6 +80,6 @@ public class ReceiptsInPeriodTest {
 	}
 
 	private Context getContext() {
-		return InstrumentationRegistry.getTargetContext();
+		return getTargetContext();
 	}
 }

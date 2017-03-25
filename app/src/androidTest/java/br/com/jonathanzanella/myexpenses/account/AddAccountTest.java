@@ -41,6 +41,8 @@ public class AddAccountTest {
 
 	@Before
 	public void setUp() throws Exception {
+		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
+
 		UiDevice uiDevice = UiDevice.getInstance(getInstrumentation());
 		if (!uiDevice.isScreenOn())
 			uiDevice.wakeUp();
@@ -48,7 +50,6 @@ public class AddAccountTest {
 
 	@After
 	public void tearDown() throws Exception {
-		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
 		ActivityLifecycleHelper.closeAllActivities(getInstrumentation());
 	}
 

@@ -54,6 +54,8 @@ public class AddReceiptTest {
 
 	@Before
 	public void setUp() throws Exception {
+		new DatabaseHelper(getTargetContext()).recreateTables();
+
 		UiDevice uiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
 		if (!uiDevice.isScreenOn())
 			uiDevice.wakeUp();
@@ -67,7 +69,6 @@ public class AddReceiptTest {
 
 	@After
 	public void tearDown() throws Exception {
-		new DatabaseHelper(getTargetContext()).recreateTables();
 		ActivityLifecycleHelper.closeAllActivities(getInstrumentation());
 	}
 

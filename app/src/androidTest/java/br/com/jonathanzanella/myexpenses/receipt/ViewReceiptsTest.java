@@ -46,6 +46,8 @@ public class ViewReceiptsTest {
 
 	@Before
 	public void setUp() throws Exception {
+		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
+
 		ReceiptRepository repository = new ReceiptRepository(new RepositoryImpl<Receipt>(getTargetContext()));
 
 		Source s = new SourceBuilder().build();
@@ -60,7 +62,6 @@ public class ViewReceiptsTest {
 
 	@After
 	public void tearDown() throws Exception {
-		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
 		ActivityLifecycleHelper.closeAllActivities(getInstrumentation());
 	}
 

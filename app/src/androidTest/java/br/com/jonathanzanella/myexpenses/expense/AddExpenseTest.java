@@ -15,7 +15,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
@@ -56,17 +55,18 @@ public class AddExpenseTest {
 
 	@Before
 	public void setUp() throws Exception {
+		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
+
 		UiDevice uiDevice = UiDevice.getInstance(getInstrumentation());
 		if (!uiDevice.isScreenOn())
 			uiDevice.wakeUp();
 
 		account = new AccountBuilder().build();
-		new AccountRepository(new RepositoryImpl<Account>(MyApplication.getContext())).save(account);
+		new AccountRepository(new RepositoryImpl<Account>(getTargetContext())).save(account);
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
 		ActivityLifecycleHelper.closeAllActivities(getInstrumentation());
 	}
 

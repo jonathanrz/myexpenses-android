@@ -6,7 +6,7 @@ import android.support.test.runner.AndroidJUnit4;
 
 import org.hamcrest.core.Is;
 import org.joda.time.DateTime;
-import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -41,8 +41,8 @@ public class BillRepositoryTest {
 	private final ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(getTargetContext()));
 	private final BillRepository billRepository = new BillRepository(new RepositoryImpl<Bill>(getTargetContext()), expenseRepository);
 
-	@After
-	public void tearDown() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
 	}
 
