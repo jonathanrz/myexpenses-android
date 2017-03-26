@@ -1,15 +1,12 @@
 machine:
   environment:
-    PATH: "~/$CIRCLE_PROJECT_REPONAME/gradle-3.3/bin:$PATH"
     TERM: "dumb"
     ADB_INSTALL_TIMEOUT: "10"
-    GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xms1024m -Xmx2048m -XX:+HeapDumpOnOutOfMemoryError"'
     _JAVA_OPTIONS: "-Xmx2048m -XX:ParallelGCThreads=2 -XX:ConcGCThreads=2 -XX:ParallelGCThreads=2 -Djava.util.concurrent.ForkJoinPool.common.parallelism=2"
 
 dependencies:
   pre:
     - "[[ ! -s \"$(git rev-parse --git-dir)/shallow\" ]] || git fetch --unshallow"
-    - wget "https://services.gradle.org/distributions/gradle-3.3-bin.zip"; unzip gradle-3.3-bin.zip
     - echo y | android update sdk --no-ui --all --filter tool,extra-android-m2repository,extra-android-support,extra-google-google_play_services,extra-google-m2repository
     - echo y | android update sdk --no-ui --all --filter android-25
     - echo y | android update sdk --no-ui --all --filter build-tools-25.0.2
@@ -26,9 +23,9 @@ test:
     - sleep 30
     - adb shell input keyevent 82
     # run tests  against the emulator.
-    - gradle testDebugUnitTest:
+    - ./gradlew testDebugUnitTest:
         timeout: 1800
-    - gradle app:connectedCheck -PdisablePreDex:
+    - ./gradlew app:connectedCheck -PdisablePreDex:
         timeout: 1800
     # copy the build outputs to artifacts
     - cp -r app/build/outputs $CIRCLE_ARTIFACTS
