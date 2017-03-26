@@ -26,14 +26,14 @@ test:
     - sleep 30
     - adb shell input keyevent 82
     # run tests  against the emulator.
-    - ./gradlew testDebugUnitTest:
+    - gradle testDebugUnitTest:
         timeout: 1800
-    - ./gradlew app:connectedCheck -PdisablePreDex:
+    - gradle app:connectedCheck -PdisablePreDex:
         timeout: 1800
     # copy the build outputs to artifacts
     - cp -r app/build/outputs $CIRCLE_ARTIFACTS
     # copy the test results to the test results directory.
     - cp -r app/build/outputs/androidTest-results/* $CIRCLE_TEST_REPORTS
-    - if [ $CIRCLE_BRANCH = 'master' ]; then ./gradlew testfairyThainara; fi
-    - if [ $CIRCLE_BRANCH = 'master' ]; then ./gradlew testfairyJonathan; fi
+    - if [ $CIRCLE_BRANCH = 'master' ]; then gradle testfairyThainara; fi
+    - if [ $CIRCLE_BRANCH = 'master' ]; then gradle testfairyJonathan; fi
     - bash <(curl -s https://codecov.io/bash)
