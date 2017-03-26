@@ -2,7 +2,7 @@ machine:
   environment:
     TERM: "dumb"
     ADB_INSTALL_TIMEOUT: "10"
-    _JAVA_OPTIONS: "-Xmx2048m -XX:ParallelGCThreads=2 -XX:ConcGCThreads=2 -XX:ParallelGCThreads=2 -Djava.util.concurrent.ForkJoinPool.common.parallelism=2"
+    _JAVA_OPTIONS: "-Xmx1024m -XX:ParallelGCThreads=2 -XX:ConcGCThreads=2 -XX:ParallelGCThreads=2 -Djava.util.concurrent.ForkJoinPool.common.parallelism=2"
 
 dependencies:
   pre:
