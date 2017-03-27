@@ -6,7 +6,7 @@ import android.support.test.runner.AndroidJUnit4;
 
 import org.hamcrest.core.Is;
 import org.joda.time.DateTime;
-import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -41,8 +41,8 @@ public class BillRepositoryTest {
 	private final ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(getTargetContext()));
 	private final BillRepository billRepository = new BillRepository(new RepositoryImpl<Bill>(getTargetContext()), expenseRepository);
 
-	@After
-	public void tearDown() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
 	}
 
@@ -135,7 +135,7 @@ public class BillRepositoryTest {
 
 		List<Bill> bills = billRepository.unsync();
 		assertThat(bills.size(), is(1));
-		assertThat(bills.get(0), is(billUnsync));
+		assertThat(bills.get(0).getUuid(), is(billUnsync.getUuid()));
 	}
 
 	@Test
@@ -147,7 +147,7 @@ public class BillRepositoryTest {
 		billRepository.save(billA);
 
 		List<Bill> bills = billRepository.userBills();
-		assertThat(bills.get(0), is(billA));
-		assertThat(bills.get(1), is(billB));
+		assertThat(bills.get(0).getUuid(), is(billA.getUuid()));
+		assertThat(bills.get(1).getUuid(), is(billB.getUuid()));
 	}
 }

@@ -17,8 +17,6 @@ import br.com.jonathanzanella.myexpenses.R;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import lombok.Getter;
-import lombok.Setter;
 
 public class DateTimeView extends BaseView {
 	public final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
@@ -29,10 +27,8 @@ public class DateTimeView extends BaseView {
 	@Bind(R.id.view_datetime_hour)
 	EditText hour;
 
-	@Setter
 	private Listener listener;
 
-	@Getter
 	private DateTime currentTime;
 
 	public interface Listener {
@@ -89,5 +85,13 @@ public class DateTimeView extends BaseView {
 				onDateChanged();
 			}
 		}, currentTime.getHourOfDay(), currentTime.getMinuteOfHour(), true).show();
+	}
+
+	public DateTime getCurrentTime() {
+		return currentTime;
+	}
+
+	public void setListener(Listener listener) {
+		this.listener = listener;
 	}
 }

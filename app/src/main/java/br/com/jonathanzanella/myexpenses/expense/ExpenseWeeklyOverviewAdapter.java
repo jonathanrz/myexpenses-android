@@ -19,13 +19,10 @@ import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import lombok.Getter;
 
 public class ExpenseWeeklyOverviewAdapter extends RecyclerView.Adapter<ExpenseWeeklyOverviewAdapter.ViewHolder> {
 	private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("dd", Locale.getDefault());
-	@Getter
 	protected List<Expense> expenses;
-	@Getter
 	private int totalValue;
 
 	public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -113,5 +110,13 @@ public class ExpenseWeeklyOverviewAdapter extends RecyclerView.Adapter<ExpenseWe
 
 	private Expense getExpense(int position) {
 		return expenses.get(position);
+	}
+
+	public List<Expense> getExpenses() {
+		return expenses;
+	}
+
+	public int getTotalValue() {
+		return totalValue;
 	}
 }

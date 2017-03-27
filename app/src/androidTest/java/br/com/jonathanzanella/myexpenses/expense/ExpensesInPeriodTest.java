@@ -5,7 +5,6 @@ import android.support.test.filters.SmallTest;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.joda.time.DateTime;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,14 +35,11 @@ public class ExpensesInPeriodTest {
 
 	@Before
 	public void setUp() throws Exception {
+		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
+
 		account.setName("Account");
 		account.setUserUuid(Environment.CURRENT_USER_UUID);
 		accountRepository.save(account);
-	}
-
-	@After
-	public void tearDown() throws Exception {
-		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
 	}
 
 	private Expense newExpense(String name, DateTime date, int value) {

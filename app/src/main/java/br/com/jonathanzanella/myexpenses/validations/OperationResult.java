@@ -3,11 +3,8 @@ package br.com.jonathanzanella.myexpenses.validations;
 import java.util.ArrayList;
 import java.util.List;
 
-import lombok.Getter;
-
 public class OperationResult {
-	@Getter
-	List<ValidationError> errors = new ArrayList<>();
+	private final List<ValidationError> errors = new ArrayList<>();
 
 	public boolean isValid() {
 		return errors.isEmpty();
@@ -15,5 +12,9 @@ public class OperationResult {
 
 	public void addError(ValidationError error) {
 		errors.add(error);
+	}
+
+	public List<ValidationError> getErrors() {
+		return errors;
 	}
 }

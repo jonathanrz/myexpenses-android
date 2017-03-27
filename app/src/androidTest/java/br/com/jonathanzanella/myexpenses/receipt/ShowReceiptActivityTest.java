@@ -1,7 +1,6 @@
 package br.com.jonathanzanella.myexpenses.receipt;
 
 import android.content.Intent;
-import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.MediumTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -43,6 +42,8 @@ public class ShowReceiptActivityTest {
 
 	@Before
 	public void setUp() throws Exception {
+		new DatabaseHelper(getTargetContext()).recreateTables();
+
 		ReceiptRepository repository = new ReceiptRepository(new RepositoryImpl<Receipt>(getTargetContext()));
 
 		Source s = new SourceBuilder().build();
@@ -57,7 +58,6 @@ public class ShowReceiptActivityTest {
 
 	@After
 	public void tearDown() throws Exception {
-		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
 		ActivityLifecycleHelper.closeAllActivities(getInstrumentation());
 	}
 

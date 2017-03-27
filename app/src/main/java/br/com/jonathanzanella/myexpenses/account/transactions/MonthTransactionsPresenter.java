@@ -17,10 +17,8 @@ import br.com.jonathanzanella.myexpenses.receipt.Receipt;
 import br.com.jonathanzanella.myexpenses.receipt.ReceiptRepository;
 import br.com.jonathanzanella.myexpenses.transaction.Transaction;
 import br.com.jonathanzanella.myexpenses.transaction.TransactionAdapter;
-import lombok.Getter;
 
 class MonthTransactionsPresenter implements LoadTransactionsCallback {
-	@Getter
 	private final TransactionAdapter adapter;
 	private final MonthTransactionsContractView view;
 	private final ReceiptRepository receiptRepository;
@@ -142,5 +140,9 @@ class MonthTransactionsPresenter implements LoadTransactionsCallback {
 			if(loadedBills && loadedExpenses && loadedReceipts)
 				callback.onTransactionsLoaded(currentBalance);
 		}
+	}
+
+	public TransactionAdapter getAdapter() {
+		return adapter;
 	}
 }

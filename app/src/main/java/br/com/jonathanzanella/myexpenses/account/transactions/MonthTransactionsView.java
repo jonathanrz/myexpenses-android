@@ -17,7 +17,6 @@ import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.views.BaseView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import lombok.Setter;
 
 public class MonthTransactionsView extends BaseView implements MonthTransactionsContractView {
 	public final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM/yy", Locale.getDefault());
@@ -32,7 +31,6 @@ public class MonthTransactionsView extends BaseView implements MonthTransactions
 	String monthTransactionsTemplate;
 
 	private MonthTransactionsPresenter presenter;
-	@Setter
 	private LoadTransactionsCallback loadTransactionsCallback;
 
 	public MonthTransactionsView(Context context, AttributeSet attrs) {
@@ -69,5 +67,9 @@ public class MonthTransactionsView extends BaseView implements MonthTransactions
 
 		if(loadTransactionsCallback != null)
 			loadTransactionsCallback.onTransactionsLoaded(balance);
+	}
+
+	public void setLoadTransactionsCallback(LoadTransactionsCallback loadTransactionsCallback) {
+		this.loadTransactionsCallback = loadTransactionsCallback;
 	}
 }

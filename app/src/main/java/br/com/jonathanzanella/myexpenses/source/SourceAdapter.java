@@ -16,10 +16,8 @@ import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import lombok.Setter;
 
 class SourceAdapter extends RecyclerView.Adapter<SourceAdapter.ViewHolder> {
-	@Setter
 	SourceAdapterCallback callback;
 
 	private final SourceAdapterPresenter presenter;
@@ -89,5 +87,9 @@ class SourceAdapter extends RecyclerView.Adapter<SourceAdapter.ViewHolder> {
 	@Nullable
 	private Source getSource(int position) {
 		return sources != null ? sources.get(position) : null;
+	}
+
+	public void setCallback(SourceAdapterCallback callback) {
+		this.callback = callback;
 	}
 }

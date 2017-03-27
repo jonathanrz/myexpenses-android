@@ -64,10 +64,10 @@ public class AccountRepository implements ModelRepository<Account> {
 	public void syncAndSave(final Account unsyncAccount) {
 		Account account = find(unsyncAccount.getUuid());
 
-		if(account != null && account.id != unsyncAccount.getId()) {
+		if(account != null && account.getId() != unsyncAccount.getId()) {
 			if(account.getUpdatedAt() != unsyncAccount.getUpdatedAt())
 				warning("Account overwritten", unsyncAccount.getData());
-			unsyncAccount.setId(account.id);
+			unsyncAccount.setId(account.getId());
 		}
 
 		unsyncAccount.setSync(true);

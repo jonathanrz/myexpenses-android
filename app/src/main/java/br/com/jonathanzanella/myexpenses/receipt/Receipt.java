@@ -17,64 +17,41 @@ import br.com.jonathanzanella.myexpenses.source.Source;
 import br.com.jonathanzanella.myexpenses.source.SourceRepository;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
 import br.com.jonathanzanella.myexpenses.transaction.Transaction;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NonNull;
-import lombok.Setter;
 
-@EqualsAndHashCode
 public class Receipt implements Transaction, UnsyncModel {
 	private AccountRepository accountRepository = null;
 	private ReceiptRepository receiptRepository = null;
 
-	@Setter @Getter
 	private long id;
-
-	@Getter @Setter @Expose
+	@Expose
 	private String uuid;
-
-	@Getter @Setter @Expose
+	@Expose
 	private String name;
-
-	@Getter @Setter @Expose
+	@Expose
 	private DateTime date;
-
-	@Getter @Setter @Expose
+	@Expose
 	private int income;
-
-	@Getter @Setter @Expose
+	@Expose
 	private String sourceUuid;
-
-	@Getter @Setter @Expose
+	@Expose
 	private String accountUuid;
-
-	@Getter @Setter @Expose
+	@Expose
 	private boolean credited;
-
-	@Getter @Setter @Expose
+	@Expose
 	private boolean ignoreInResume;
-
-	@Getter @Setter @Expose
+	@Expose
 	private String userUuid;
-
-	@Getter @Setter @Expose @SerializedName("_id")
+	@Expose @SerializedName("_id")
 	private String serverId;
-
-	@Getter @Setter @Expose @SerializedName("created_at")
+	@Expose @SerializedName("created_at")
 	private long createdAt;
-
-	@Getter @Setter @Expose @SerializedName("updated_at")
+	@Expose @SerializedName("updated_at")
 	private long updatedAt;
-
-	@Getter @Setter
 	private boolean sync;
-
-	@Getter @Setter @Expose
+	@Expose
 	private boolean removed;
-
-	@Setter
 	private int repetition = 1;
-	@Getter @Setter
 	private int installments = 1;
 	private Account account;
 	private Source source;
@@ -190,5 +167,153 @@ public class Receipt implements Transaction, UnsyncModel {
 		removed = true;
 		sync = false;
 		getReceiptRepository().save(this);
+	}
+
+	public void setAccountRepository(AccountRepository accountRepository) {
+		this.accountRepository = accountRepository;
+	}
+
+	@Override
+	public long getId() {
+		return id;
+	}
+
+	@Override
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	@Override
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
+
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	@Override
+	public DateTime getDate() {
+		return date;
+	}
+
+	public void setDate(DateTime date) {
+		this.date = date;
+	}
+
+	public int getIncome() {
+		return income;
+	}
+
+	public void setIncome(int income) {
+		this.income = income;
+	}
+
+	String getSourceUuid() {
+		return sourceUuid;
+	}
+
+	void setSourceUuid(String sourceUuid) {
+		this.sourceUuid = sourceUuid;
+	}
+
+	String getAccountUuid() {
+		return accountUuid;
+	}
+
+	void setAccountUuid(String accountUuid) {
+		this.accountUuid = accountUuid;
+	}
+
+	public boolean isCredited() {
+		return credited;
+	}
+
+	void setCredited(boolean credited) {
+		this.credited = credited;
+	}
+
+	boolean isIgnoreInResume() {
+		return ignoreInResume;
+	}
+
+	void setIgnoreInResume(boolean ignoreInResume) {
+		this.ignoreInResume = ignoreInResume;
+	}
+
+	public String getUserUuid() {
+		return userUuid;
+	}
+
+	public void setUserUuid(String userUuid) {
+		this.userUuid = userUuid;
+	}
+
+	@Override
+	public String getServerId() {
+		return serverId;
+	}
+
+	@Override
+	public void setServerId(String serverId) {
+		this.serverId = serverId;
+	}
+
+	@Override
+	public long getCreatedAt() {
+		return createdAt;
+	}
+
+	@Override
+	public void setCreatedAt(long createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	@Override
+	public long getUpdatedAt() {
+		return updatedAt;
+	}
+
+	@Override
+	public void setUpdatedAt(long updatedAt) {
+		this.updatedAt = updatedAt;
+	}
+
+	public boolean isSync() {
+		return sync;
+	}
+
+	@Override
+	public void setSync(boolean sync) {
+		this.sync = sync;
+	}
+
+	boolean isRemoved() {
+		return removed;
+	}
+
+	void setRemoved(boolean removed) {
+		this.removed = removed;
+	}
+
+	public void setRepetition(int repetition) {
+		this.repetition = repetition;
+	}
+
+	public int getInstallments() {
+		return installments;
+	}
+
+	public void setInstallments(int installments) {
+		this.installments = installments;
 	}
 }

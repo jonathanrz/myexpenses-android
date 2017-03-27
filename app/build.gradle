@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'testfairy'
 apply plugin: 'jacoco-android'
 apply plugin: 'checkstyle'
@@ -9,11 +10,6 @@ apply plugin: 'pmd'
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
-
-    dexOptions {
-        maxProcessCount 2
-        javaMaxHeapSize "2g"
-    }
 
     signingConfigs {
         jonathan {
@@ -38,7 +34,7 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode rootProject.ext.gitCommitCount()
         versionName "1.0.3." + rootProject.ext.getVersionName()
-        testInstrumentationRunner "br.com.jonathanzanella.myexpenses.MyTestRunner"
+        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
 
         jackOptions {
             enabled false
@@ -187,9 +183,6 @@ configurations.compile.dependencies.each { compileDependency ->
 
 repositories {
     mavenCentral()
-}
-kapt {
-    generateStubs = true
 }
 
 check.dependsOn 'checkstyle', 'findbugs', 'pmd'

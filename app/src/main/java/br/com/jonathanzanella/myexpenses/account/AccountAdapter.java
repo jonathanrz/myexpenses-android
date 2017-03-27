@@ -16,14 +16,12 @@ import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import lombok.Setter;
 
 public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHolder> {
 	private final AccountAdapterPresenter presenter;
 
 	private boolean simplified = false;
 	private AccountAdapterCallback callback;
-	@Setter
 	private DateTime month;
 
 	public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -105,5 +103,9 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
 
 	public void setSimplified(boolean simplified) {
 		this.simplified = simplified;
+	}
+
+	public void setMonth(DateTime month) {
+		this.month = month;
 	}
 }

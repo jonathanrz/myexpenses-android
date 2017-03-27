@@ -47,6 +47,8 @@ public class ShowCardActivityTest {
 
 	@Before
 	public void setUp() throws Exception {
+		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
+
 		account = new AccountBuilder().build();
 		accountRepository.save(account);
 
@@ -56,7 +58,6 @@ public class ShowCardActivityTest {
 
 	@After
 	public void tearDown() throws Exception {
-		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
 		ActivityLifecycleHelper.closeAllActivities(getInstrumentation());
 	}
 

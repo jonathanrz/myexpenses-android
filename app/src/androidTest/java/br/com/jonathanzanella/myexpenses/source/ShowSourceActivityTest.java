@@ -5,7 +5,6 @@ import android.support.test.filters.MediumTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -33,14 +32,11 @@ public class ShowSourceActivityTest {
 
 	@Before
 	public void setUp() throws Exception {
+		new DatabaseHelper(getTargetContext()).recreateTables();
+
 		source = new Source();
 		source.setName("test");
 		repository.save(source);
-	}
-
-	@After
-	public void tearDown() throws Exception {
-		new DatabaseHelper(getTargetContext()).recreateTables();
 	}
 
 	@Test

@@ -45,6 +45,8 @@ public class EditExpenseTest {
 
 	@Before
 	public void setUp() throws Exception {
+		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
+
 		Account a = new AccountBuilder().build();
 		new AccountRepository(new RepositoryImpl<Account>(MyApplication.getContext())).save(a);
 
@@ -55,7 +57,6 @@ public class EditExpenseTest {
 
 	@After
 	public void tearDown() throws Exception {
-		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
 		ActivityLifecycleHelper.closeAllActivities(getInstrumentation());
 	}
 

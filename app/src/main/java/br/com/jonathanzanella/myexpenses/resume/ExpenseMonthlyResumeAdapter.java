@@ -25,13 +25,10 @@ import br.com.jonathanzanella.myexpenses.helpers.TransactionsHelper;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import lombok.Getter;
 
 class ExpenseMonthlyResumeAdapter extends RecyclerView.Adapter<ExpenseMonthlyResumeAdapter.ViewHolder> {
 	public static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("dd/MM", Locale.getDefault());
-	@Getter
 	protected List<Expense> expenses;
-	@Getter
 	private int totalValue;
 	private int totalUnpaidValue;
 
@@ -196,5 +193,13 @@ class ExpenseMonthlyResumeAdapter extends RecyclerView.Adapter<ExpenseMonthlyRes
 
 	private Expense getExpense(int position) {
 		return expenses.get(position);
+	}
+
+	public List<Expense> getExpenses() {
+		return expenses;
+	}
+
+	public int getTotalValue() {
+		return totalValue;
 	}
 }

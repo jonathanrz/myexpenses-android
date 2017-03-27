@@ -62,7 +62,7 @@
 		<module name="MagicNumber" />
 		<module name="MemberName" />
 		<module name="MethodCount">
-			<property name="maxTotal" value="42"/>
+			<property name="maxTotal" value="65"/>
 		</module>
 		<module name="MethodLength">
 			<property name="tokens" value="METHOD_DEF"/>

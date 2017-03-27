@@ -6,44 +6,38 @@ import com.google.gson.annotations.SerializedName;
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
 import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 
-@EqualsAndHashCode
 public class Account implements Chargeable, UnsyncModel {
-	@Setter @Getter
-	long id;
+	private long id;
 
-	@Getter @Setter @Expose
-	String uuid;
+	@Expose
+	private String uuid;
 
-	@Getter @Setter @Expose
-	String name;
+	@Expose
+	private String name;
 
-	@Getter @Setter @Expose
-	int balance;
+	@Expose
+	private int balance;
 
-	@Getter @Setter @Expose
-	boolean accountToPayCreditCard;
+	@Expose
+	private boolean accountToPayCreditCard;
 
-	@Getter @Setter @Expose
-	boolean accountToPayBills;
+	@Expose
+	private boolean accountToPayBills;
 
-	@Getter @Setter @Expose
-	String userUuid;
+	@Expose
+	private String userUuid;
 
-	@Getter @Setter @Expose @SerializedName("_id")
-	String serverId;
+	@Expose @SerializedName("_id")
+	private String serverId;
 
-	@Getter @Setter @Expose @SerializedName("created_at")
-	long createdAt;
+	@Expose @SerializedName("created_at")
+	private long createdAt;
 
-	@Getter @Setter @Expose @SerializedName("updated_at")
-	long updatedAt;
+	@Expose @SerializedName("updated_at")
+	private long updatedAt;
 
-	@Getter @Setter
-	boolean sync;
+	private boolean sync;
 
 	public void credit(int value) {
 		balance += value;
@@ -71,5 +65,104 @@ public class Account implements Chargeable, UnsyncModel {
 				"\nbalance=" + balance +
 				"\naccountToPayCreditCard=" + accountToPayCreditCard +
 				"\nuserUuid=" + userUuid;
+	}
+
+	@Override
+	public long getId() {
+		return id;
+	}
+
+	@Override
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	@Override
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
+
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public int getBalance() {
+		return balance;
+	}
+
+	public void setBalance(int balance) {
+		this.balance = balance;
+	}
+
+	public boolean isAccountToPayCreditCard() {
+		return accountToPayCreditCard;
+	}
+
+	public void setAccountToPayCreditCard(boolean accountToPayCreditCard) {
+		this.accountToPayCreditCard = accountToPayCreditCard;
+	}
+
+	public boolean isAccountToPayBills() {
+		return accountToPayBills;
+	}
+
+	public void setAccountToPayBills(boolean accountToPayBills) {
+		this.accountToPayBills = accountToPayBills;
+	}
+
+	public String getUserUuid() {
+		return userUuid;
+	}
+
+	public void setUserUuid(String userUuid) {
+		this.userUuid = userUuid;
+	}
+
+	@Override
+	public String getServerId() {
+		return serverId;
+	}
+
+	@Override
+	public void setServerId(String serverId) {
+		this.serverId = serverId;
+	}
+
+	@Override
+	public long getCreatedAt() {
+		return createdAt;
+	}
+
+	@Override
+	public void setCreatedAt(long createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	@Override
+	public long getUpdatedAt() {
+		return updatedAt;
+	}
+
+	@Override
+	public void setUpdatedAt(long updatedAt) {
+		this.updatedAt = updatedAt;
+	}
+
+	public boolean isSync() {
+		return sync;
+	}
+
+	@Override
+	public void setSync(boolean sync) {
+		this.sync = sync;
 	}
 }

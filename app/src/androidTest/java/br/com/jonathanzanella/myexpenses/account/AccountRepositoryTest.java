@@ -4,7 +4,7 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.SmallTest;
 import android.support.test.runner.AndroidJUnit4;
 
-import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -15,8 +15,6 @@ import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -26,8 +24,8 @@ import static org.hamcrest.Matchers.not;
 public class AccountRepositoryTest {
 	private final AccountRepository repository = new AccountRepository(new RepositoryImpl<Account>(MyApplication.getContext()));
 
-	@After
-	public void tearDown() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
 	}
 
@@ -37,7 +35,7 @@ public class AccountRepositoryTest {
 		account.setName("test");
 		repository.save(account);
 
-		assertThat(account.id, is(not(0L)));
+		assertThat(account.getId(), is(not(0L)));
 		assertThat(account.getUuid(), is(not("")));
 	}
 
@@ -48,7 +46,7 @@ public class AccountRepositoryTest {
 		repository.save(account);
 
 		Account loadAccount = repository.find(account.getUuid());
-		assertThat(loadAccount, is(account));
+		assertThat(loadAccount.getUuid(), is(account.getUuid()));
 	}
 
 	@Test
@@ -65,7 +63,6 @@ public class AccountRepositoryTest {
 
 		List<Account> accounts = repository.userAccounts();
 		assertThat(accounts.size(), is(1));
-		assertTrue(accounts.contains(correctAccount));
-		assertFalse(accounts.contains(wrongAccount));
+		assertThat(accounts.get(0).getUuid(), is(correctAccount.getUuid()));
 	}
 }

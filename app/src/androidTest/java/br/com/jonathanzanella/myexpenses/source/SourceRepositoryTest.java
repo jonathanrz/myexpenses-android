@@ -18,8 +18,6 @@ import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.InstrumentationRegistry.getTargetContext;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -31,12 +29,13 @@ public class SourceRepositoryTest {
 
 	@Before
 	public void setUp() throws Exception {
+		new DatabaseHelper(getTargetContext()).recreateTables();
+
 		repository = new SourceRepository(new RepositoryImpl<Source>(getTargetContext()));
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		new DatabaseHelper(getTargetContext()).recreateTables();
 		ActivityLifecycleHelper.closeAllActivities(getInstrumentation());
 	}
 
@@ -46,7 +45,7 @@ public class SourceRepositoryTest {
 		source.setName("test");
 		repository.save(source);
 
-		assertThat(source.id, is(not(0L)));
+		assertThat(source.getId(), is(not(0L)));
 		assertThat(source.getUuid(), is(not("")));
 	}
 
@@ -72,14 +71,13 @@ public class SourceRepositoryTest {
 
 		List<Source> sources = repository.userSources();
 		assertThat(sources.size(), is(1));
-		assertTrue(sources.contains(correctSource));
-		assertFalse(sources.contains(wrongSource));
+		assertThat(sources.get(0).getUuid(), is(correctSource.getUuid()));
 	}
 
 	@Test
 	public void source_unsync_returns_only_not_synced() throws Exception {
 		Source sourceUnsync = new SourceBuilder().name("sourceUnsync").updatedAt(100L).build();
-		sourceUnsync.sync = false;
+		sourceUnsync.setSync(false);
 		repository.save(sourceUnsync);
 
 		Source sourceSync = new SourceBuilder().name("sourceSync").updatedAt(100L).build();
@@ -88,7 +86,7 @@ public class SourceRepositoryTest {
 
 		List<Source> sources = repository.unsync();
 		assertThat(sources.size(), is(1));
-		assertThat(sources.get(0), is(sourceUnsync));
+		assertThat(sources.get(0).getUuid(), is(sourceUnsync.getUuid()));
 	}
 
 	@Test
@@ -100,7 +98,7 @@ public class SourceRepositoryTest {
 		repository.save(sourceA);
 
 		List<Source> sources = repository.userSources();
-		assertThat(sources.get(0), is(sourceA));
-		assertThat(sources.get(1), is(sourceB));
+		assertThat(sources.get(0).getUuid(), is(sourceA.getUuid()));
+		assertThat(sources.get(1).getUuid(), is(sourceB.getUuid()));
 	}
 }

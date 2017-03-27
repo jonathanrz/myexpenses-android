@@ -59,6 +59,8 @@ public class ShowAccountActivityTest {
 
 	@Before
 	public void setUp() throws Exception {
+		new DatabaseHelper(getTargetContext()).recreateTables();
+
 		repository = new AccountRepository(new RepositoryImpl<Account>(getTargetContext()));
 		receiptRepository = new ReceiptRepository(new RepositoryImpl<Receipt>(getTargetContext()));
 		expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(getTargetContext()));
@@ -74,7 +76,6 @@ public class ShowAccountActivityTest {
 
 	@After
 	public void tearDown() throws Exception {
-		new DatabaseHelper(getTargetContext()).recreateTables();
 		ActivityLifecycleHelper.closeAllActivities(getInstrumentation());
 	}
 

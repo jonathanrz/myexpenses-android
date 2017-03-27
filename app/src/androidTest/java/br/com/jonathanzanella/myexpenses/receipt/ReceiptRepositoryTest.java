@@ -38,6 +38,8 @@ public class ReceiptRepositoryTest {
 
 	@Before
 	public void setUp() throws Exception {
+		new DatabaseHelper(getTargetContext()).recreateTables();
+
 		account = new AccountBuilder().build();
 		new AccountRepository(new RepositoryImpl<Account>(getTargetContext())).save(account);
 		source = new SourceBuilder().build();
@@ -47,7 +49,6 @@ public class ReceiptRepositoryTest {
 
 	@After
 	public void tearDown() throws Exception {
-		new DatabaseHelper(getTargetContext()).recreateTables();
 		ActivityLifecycleHelper.closeAllActivities(getInstrumentation());
 	}
 
