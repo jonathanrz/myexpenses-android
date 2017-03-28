@@ -58,7 +58,7 @@ class RepositoryImpl<T : UnsyncModel>(ctx: Context) : Repository<T> {
                 select?.parameters,
                 null,
                 null,
-                where?.orderBy()?.fieldName
+                where?.orderBy()?.toString()
         ).use { c ->
             val sources = ArrayList<T>()
             c.moveToFirst()
