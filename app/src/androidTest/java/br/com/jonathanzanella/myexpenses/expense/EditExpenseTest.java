@@ -6,6 +6,7 @@ import android.support.test.filters.MediumTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -32,6 +33,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.clickIntoView;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.typeTextIntoView;
+import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.core.Is.is;
 
 @RunWith(AndroidJUnit4.class)
@@ -50,9 +52,12 @@ public class EditExpenseTest {
 		Account a = new AccountBuilder().build();
 		new AccountRepository(new RepositoryImpl<Account>(MyApplication.getContext())).save(a);
 
-		expense = new ExpenseBuilder().chargeable(a).build();
+		expense = new ExpenseBuilder()
+				.date(DateTime.now().minusDays(1))
+				.chargeable(a)
+				.build();
 		repository = new ExpenseRepository(new RepositoryImpl<Expense>(getTargetContext()));
-		repository.save(expense);
+		assertTrue(repository.save(expense).isValid());
 	}
 
 	@After
@@ -74,6 +79,8 @@ public class EditExpenseTest {
 		final String editExpenseTitle = getTargetContext().getString(R.string.edit_expense_title);
 		matchToolbarTitle(editExpenseTitle);
 		onView(withId(R.id.act_edit_expense_name)).check(matches(withText(expense.getName())));
+		String expectedDate = Expense.SIMPLE_DATE_FORMAT.format(expense.getDate().toDate());
+		onView(withId(R.id.act_edit_expense_date)).check(matches(withText(expectedDate)));
 		typeTextIntoView(R.id.act_edit_expense_name, " changed");
 
 		clickIntoView(R.id.action_save);

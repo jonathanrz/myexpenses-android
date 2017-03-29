@@ -9,11 +9,7 @@ import br.com.jonathanzanella.myexpenses.sync.UnsyncModel
 import java.util.*
 
 class RepositoryImpl<T : UnsyncModel>(ctx: Context) : Repository<T> {
-    val databaseHelper: DatabaseHelper
-
-    init {
-        this.databaseHelper = DatabaseHelper(ctx)
-    }
+    val databaseHelper: DatabaseHelper = DatabaseHelper(ctx)
 
     override fun find(table: Table<T>, uuid: String?): T? {
         if (uuid == null)
@@ -30,7 +26,6 @@ class RepositoryImpl<T : UnsyncModel>(ctx: Context) : Repository<T> {
                 null
         ).use { c ->
             var data: T? = null
-            Log.i("teste", "found " + c.count + " for " + uuid)
             if (c.count > 0) {
                 c.moveToFirst()
                 data = table.fill(c)

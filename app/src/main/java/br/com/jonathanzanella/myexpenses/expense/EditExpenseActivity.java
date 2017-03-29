@@ -23,7 +23,6 @@ import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch;
 import br.com.jonathanzanella.myexpenses.log.Log;
-import br.com.jonathanzanella.myexpenses.receipt.Receipt;
 import br.com.jonathanzanella.myexpenses.user.SelectUserView;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
@@ -167,7 +166,7 @@ public class EditExpenseActivity extends BaseActivity implements ExpenseContract
 
 	@Override
 	public void onDateChanged(DateTime date) {
-		editDate.setText(Receipt.SIMPLE_DATE_FORMAT.format(date.toDate()));
+		editDate.setText(Expense.SIMPLE_DATE_FORMAT.format(date.toDate()));
 	}
 
 	@Override
