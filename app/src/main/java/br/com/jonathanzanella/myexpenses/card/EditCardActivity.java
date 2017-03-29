@@ -69,6 +69,12 @@ public class EditCardActivity extends BaseActivity implements CardContract.EditV
 					presenter.loadCard(extras.getString(KEY_CARD_UUID));
 				return null;
 			}
+
+			@Override
+			protected void onPostExecute(Void aVoid) {
+				super.onPostExecute(aVoid);
+				presenter.updateView();
+			}
 		}.execute();
 	}
 
