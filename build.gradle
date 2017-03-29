@@ -77,8 +77,6 @@ ext.getCurrentBranch = {
         }
         branch = stdout.toString().trim()
     }
-    if (branch?.trim())
-        branch = "master"
     return branch
 }
 
@@ -96,7 +94,7 @@ ext.gitCommitCount = {
 ext.getVersionName = {
     def branch = getCurrentBranch()
 
-    if (branch == "master") {
+    if (branch == "master" || branch) {
         return gitCommitCount();
     } else {
         return branch;
