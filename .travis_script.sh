@@ -6,3 +6,8 @@ set -ev
 ./gradlew checkStyle
 ./gradlew findBugs
 ./gradlew pmd
+
+if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then
+    ./gradlew testfairyJonathan
+    ./gradlew testfairyThainara
+fi
