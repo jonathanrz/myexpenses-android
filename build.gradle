@@ -68,7 +68,7 @@ ext {
 }
 
 ext.getCurrentBranch = {
-    def branch = System.getenv('CIRCLE_BRANCH')
+    def branch = System.getenv('TRAVIS_PULL_REQUEST_BRANCH')
     if (branch?.trim()) {
         def stdout = new ByteArrayOutputStream()
         exec {
@@ -83,6 +83,7 @@ ext.getCurrentBranch = {
 ext.gitCommitCount = {
     def stdout = new ByteArrayOutputStream()
     exec {
+        commandLine 'git', 'fetch', '--unshallow'
         commandLine 'git', 'rev-list', '--count', 'HEAD'
         standardOutput = stdout
     }
