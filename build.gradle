@@ -77,6 +77,8 @@ ext.getCurrentBranch = {
         }
         branch = stdout.toString().trim()
     }
+    if (branch?.trim())
+        branch = "master"
     return branch
 }
 
