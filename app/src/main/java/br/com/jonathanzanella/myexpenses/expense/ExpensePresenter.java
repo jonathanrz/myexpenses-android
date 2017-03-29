@@ -185,10 +185,10 @@ class ExpensePresenter {
 
 	@WorkerThread
 	Expense loadExpense(String uuid) {
+		resetCache();
 		expense = repository.find(uuid);
 		if(expense == null)
 			throw new ExpenseNotFoundException(uuid);
-		resetCache();
 		return expense;
 	}
 
