@@ -83,7 +83,6 @@ ext.getCurrentBranch = {
 ext.gitCommitCount = {
     def stdout = new ByteArrayOutputStream()
     exec {
-        commandLine 'git', 'fetch', '--unshallow'
         commandLine 'git', 'rev-list', '--count', 'HEAD'
         standardOutput = stdout
     }
