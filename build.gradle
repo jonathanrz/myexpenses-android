@@ -94,7 +94,9 @@ ext.gitCommitCount = {
 ext.getVersionName = {
     def branch = getCurrentBranch()
 
-    if (branch == "master" || branch) {
+    def hasBranch = branch?.trim()
+
+    if (!hasBranch || branch == "master") {
         return gitCommitCount();
     } else {
         return branch;
