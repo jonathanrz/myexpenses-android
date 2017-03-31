@@ -37,7 +37,8 @@ class CardPresenter {
 	private Card card;
 	private Account account;
 
-	CardPresenter(CardRepository repository, AccountRepository accountRepository, ExpenseRepository expenseRepository, ResourcesHelper resourcesHelper) {
+	CardPresenter(CardRepository repository, AccountRepository accountRepository,
+	              ExpenseRepository expenseRepository, ResourcesHelper resourcesHelper) {
 		this.repository = repository;
 		this.accountRepository = accountRepository;
 		this.expenseRepository = expenseRepository;
