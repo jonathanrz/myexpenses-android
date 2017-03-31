@@ -18,12 +18,6 @@ android {
             keyAlias "jonathanrz"
             keyPassword rootProject.ext.jonathanKeyPass
         }
-        thainara {
-            storeFile file("thainara.keystore")
-            storePassword rootProject.ext.thainaraKeyPass
-            keyAlias "jonathanrz"
-            keyPassword rootProject.ext.thainaraKeyPass
-        }
     }
 
     buildToolsVersion "$rootProject.buildToolsVersion"
@@ -62,16 +56,6 @@ android {
             // NB: If you want to use the default debug key for a (non-debug)
             // build type, you need to specify it:
             signingConfig signingConfigs.jonathan
-        }
-        thainara {
-            applicationIdSuffix '.thainara'
-            versionNameSuffix '-THAINARA'
-            buildConfigField 'String', 'MYEXPENSES_AUTH_TOKEN', rootProject.ext.authToken
-            debuggable true
-
-            // NB: If you want to use the default debug key for a (non-debug)
-            // build type, you need to specify it:
-            signingConfig signingConfigs.thainara
         }
         release {
             minifyEnabled false
