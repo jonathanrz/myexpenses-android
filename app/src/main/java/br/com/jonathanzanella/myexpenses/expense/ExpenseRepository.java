@@ -3,7 +3,6 @@ package br.com.jonathanzanella.myexpenses.expense;
 import android.os.AsyncTask;
 import android.support.annotation.UiThread;
 import android.support.annotation.WorkerThread;
-import android.util.Log;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
@@ -275,7 +274,6 @@ public class ExpenseRepository implements ModelRepository<Expense> {
 
 	@WorkerThread
 	public OperationResult save(Expense expense) {
-		Log.i("teste", "will save Expense with uuid=" + expense.getUuid());
 		OperationResult result = new OperationResult();
 		if(StringUtils.isEmpty(expense.getName()))
 			result.addError(ValidationError.NAME);
@@ -293,7 +291,6 @@ public class ExpenseRepository implements ModelRepository<Expense> {
 			expense.setSync(false);
 			repository.saveAtDatabase(table, expense);
 		}
-		Log.i("teste", "saved Expense with uuid=" + expense.getUuid() + " result=" + result.isValid());
 		return result;
 	}
 

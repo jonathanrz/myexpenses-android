@@ -1,5 +1,7 @@
 package br.com.jonathanzanella.myexpenses.expense;
 
+import android.util.Log;
+
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 
@@ -30,13 +32,6 @@ class ExpenseAdapterPresenter {
 		if(receiptsFiltered == null)
 			return null;
 		return Collections.unmodifiableList(receiptsFiltered);
-	}
-
-	void addExpense(Expense bill) {
-		receipts.add(bill);
-		if(receipts != receiptsFiltered)
-			receiptsFiltered.add(bill);
-		adapter.notifyItemInserted(receipts.size() - 1);
 	}
 
 	public void filter(String filter) {

@@ -1,6 +1,7 @@
 package br.com.jonathanzanella.myexpenses.expense;
 
 import android.content.Intent;
+import android.support.test.espresso.ViewInteraction;
 import android.support.test.rule.ActivityTestRule;
 
 import org.junit.After;
@@ -21,6 +22,7 @@ import br.com.jonathanzanella.myexpenses.views.MainActivity;
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.InstrumentationRegistry.getTargetContext;
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -33,7 +35,6 @@ import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.openMenuAndClic
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.typeTextIntoView;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.AllOf.allOf;
 
 public class ExpensesViewTest {
@@ -74,18 +75,15 @@ public class ExpensesViewTest {
 		clickIntoView(R.id.search);
 		typeTextIntoView(R.id.search_src_text, expense1.getName());
 
-		onView(allOf(
-				withId(R.id.row_expense_name),
-				allOf(
-					isDescendantOfA(withTagValue(is((Object)expense1.getUuid())))),
-					withText(expense1.getName()))
-		).check(matches(isDisplayed()));
+		onViewExpenseName(expense1).check(matches(isDisplayed()));
+		onViewExpenseName(expense2).check(doesNotExist());
+	}
 
-		onView(allOf(
+	private ViewInteraction onViewExpenseName(Expense expense) {
+		return onView(allOf(
 				withId(R.id.row_expense_name),
 				allOf(
-					isDescendantOfA(withTagValue(is((Object)expense2.getUuid())))),
-					withText(expense2.getName()))
-		).check(matches(not(isDisplayed())));
+					isDescendantOfA(withTagValue(is((Object)expense.getUuid())))),
+					withText(expense.getName())));
 	}
 }

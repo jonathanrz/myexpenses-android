@@ -5,7 +5,6 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.MediumTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.util.Log;
 
 import org.junit.After;
 import org.junit.Before;
@@ -77,25 +76,16 @@ public class ShowExpenseActivityTest {
 
 	@Test
 	public void calls_edit_expense_activity() throws Exception {
-		Log.i("teste", "init test");
 		Intent i = new Intent();
 		i.putExtra(ShowExpenseActivity.KEY_EXPENSE_UUID, expense.getUuid());
 		activityTestRule.launchActivity(i);
 
-		Log.i("teste", "launch activity");
-
 		final String showExpenseTitle = getTargetContext().getString(R.string.expense) + " " + expense.getName();
 		matchToolbarTitle(showExpenseTitle);
 
-		Log.i("teste", "match toolbar");
-
 		clickIntoView(R.id.action_edit);
-
-		Log.i("teste", "click edit");
 
 		final String editExpenseTitle = getTargetContext().getString(R.string.edit_expense_title);
 		matchToolbarTitle(editExpenseTitle);
-
-		Log.i("teste", "match toolbar 2");
 	}
 }
