@@ -1,24 +1,30 @@
 package br.com.jonathanzanella.myexpenses.receipt;
 
 import android.content.Intent;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.ViewInteraction;
+import android.support.test.filters.MediumTest;
 import android.support.test.rule.ActivityTestRule;
+import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
-import br.com.jonathanzanella.myexpenses.expense.Expense;
-import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
+import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
-import br.com.jonathanzanella.myexpenses.helpers.builder.ExpenseBuilder;
+import br.com.jonathanzanella.myexpenses.helpers.builder.ReceiptBuilder;
+import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder;
+import br.com.jonathanzanella.myexpenses.source.Source;
+import br.com.jonathanzanella.myexpenses.source.SourceRepository;
 import br.com.jonathanzanella.myexpenses.views.MainActivity;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
@@ -39,25 +45,32 @@ import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.AllOf.allOf;
 
+@RunWith(AndroidJUnit4.class)
+@MediumTest
 public class ReceiptsViewTest {
 	@Rule
-	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
+	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class, true, false);
 
-	private Expense expense1;
-	private Expense expense2;
+	private Receipt receipt;
+	private Receipt receipt2;
 
 	@Before
 	public void setUp() throws Exception {
-		new DatabaseHelper(getTargetContext()).recreateTables();
+		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
 
-		Account account = new AccountBuilder().build();
-		new AccountRepository(new RepositoryImpl<Account>(getTargetContext())).save(account);
+		ReceiptRepository repository = new ReceiptRepository(new RepositoryImpl<Receipt>(getTargetContext()));
 
-		ExpenseRepository repository = new ExpenseRepository(new RepositoryImpl<Expense>(getTargetContext()));
-		expense1 = new ExpenseBuilder().chargeable(account).name("Expense1").build();
-		assertTrue(repository.save(expense1).isValid());
-		expense2 = new ExpenseBuilder().chargeable(account).name("Expense2").build();
-		assertTrue(repository.save(expense2).isValid());
+		Source s = new SourceBuilder().build();
+		assertTrue(new SourceRepository(new RepositoryImpl<Source>(getTargetContext())).save(s).isValid());
+
+		Account a = new AccountBuilder().build();
+		assertTrue(new AccountRepository(new RepositoryImpl<Account>(getTargetContext())).save(a).isValid());
+
+		receipt = new ReceiptBuilder().name("receipt1").source(s).account(a).build();
+		assertTrue(repository.save(receipt).isValid());
+
+		receipt2 = new ReceiptBuilder().name("receipt2").source(s).account(a).build();
+		assertTrue(repository.save(receipt2).isValid());
 	}
 
 	@After
@@ -66,26 +79,50 @@ public class ReceiptsViewTest {
 	}
 
 	@Test
-	public void filter_just_show_expense1() throws Exception {
+	public void shows_receipt_correctly() throws Exception {
 		activityTestRule.launchActivity(new Intent());
 
-		openMenuAndClickItem(R.string.expenses);
+		openMenuAndClickItem(R.string.receipts);
 
-		final String expensesTitle = getTargetContext().getString(R.string.expenses);
-		matchToolbarTitle(expensesTitle);
+		final String receiptsTitle = getTargetContext().getString(R.string.receipts);
+		matchToolbarTitle(receiptsTitle);
 
-		clickIntoView(R.id.search);
-		typeTextIntoView(R.id.search_src_text, expense1.getName());
+		clickIntoView(receipt.getName(), R.id.row_receipt_name);
 
-		onViewExpenseName(expense1).check(matches(isDisplayed()));
-		onViewExpenseName(expense2).check(doesNotExist());
+		final String editReceiptTitle = getTargetContext().getString(R.string.receipt) + " " + receipt.getName();
+		matchToolbarTitle(editReceiptTitle);
+
+		String incomeAsCurrency = CurrencyHelper.format(receipt.getIncome());
+		onView(withId(R.id.act_show_receipt_name)).check(matches(withText(receipt.getName())));
+		onView(withId(R.id.act_show_receipt_income)).check(matches(withText(incomeAsCurrency)));
+		Account account = receipt.getAccount();
+		onView(withId(R.id.act_show_receipt_account)).check(matches(withText(account.getName())));
+
+		Source source = receipt.getSource();
+		onView(withId(R.id.act_show_receipt_source)).check(matches(withText(source.getName())));
 	}
 
-	private ViewInteraction onViewExpenseName(Expense expense) {
+	@Test
+	public void filter_do_not_show_receipt2() throws Exception {
+		activityTestRule.launchActivity(new Intent());
+
+		openMenuAndClickItem(R.string.receipts);
+
+		final String title = getTargetContext().getString(R.string.receipts);
+		matchToolbarTitle(title);
+
+		clickIntoView(R.id.search);
+		typeTextIntoView(R.id.search_src_text, receipt.getName());
+
+		onViewReceiptName(receipt).check(matches(isDisplayed()));
+		onViewReceiptName(receipt2).check(doesNotExist());
+	}
+
+	private ViewInteraction onViewReceiptName(Receipt receipt) {
 		return onView(allOf(
-				withId(R.id.row_expense_name),
+				withId(R.id.row_receipt_name),
 				allOf(
-					isDescendantOfA(withTagValue(is((Object)expense.getUuid())))),
-					withText(expense.getName())));
+					isDescendantOfA(withTagValue(is((Object)receipt.getUuid())))),
+					withText(receipt.getName())));
 	}
 }

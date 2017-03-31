@@ -131,6 +131,6 @@ class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ViewHolder> {
 
 	public void filter(String filter) {
 		presenter.filter(filter);
-		loadData(date);
+		receipts = presenter.getReceipts(false, date);
 	}
 }
