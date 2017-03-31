@@ -142,7 +142,8 @@ public class ReceiptView extends BaseView implements ViewPager.OnPageChangeListe
 		for (Map.Entry<DateTime, WeakReference<ReceiptMonthlyView>> pair : views.entrySet()) {
 			DateTime viewDateFirstDay = DateHelper.firstDayOfMonth(pair.getKey());
 			DateTime viewDateLastDay = DateHelper.lastDayOfMonth(pair.getKey());
-			if (date.isAfter(viewDateFirstDay) && date.isBefore(viewDateLastDay))
+			if (date.isEqual(viewDateFirstDay) || date.isEqual(viewDateLastDay) ||
+					(date.isAfter(viewDateFirstDay) && date.isBefore(viewDateLastDay)))
 				return pair.getValue().get();
 		}
 
