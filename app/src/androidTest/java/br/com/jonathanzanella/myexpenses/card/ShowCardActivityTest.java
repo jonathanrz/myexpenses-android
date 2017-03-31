@@ -6,6 +6,7 @@ import android.support.test.filters.MediumTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -21,8 +22,10 @@ import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
+import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.CardBuilder;
+import br.com.jonathanzanella.myexpenses.helpers.builder.ExpenseBuilder;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.InstrumentationRegistry.getTargetContext;
@@ -30,7 +33,9 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.clickIntoView;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle;
+import static junit.framework.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 @MediumTest
@@ -52,7 +57,7 @@ public class ShowCardActivityTest {
 		account = new AccountBuilder().build();
 		accountRepository.save(account);
 
-		card = new CardBuilder().account(account).build(accountRepository);
+		card = new CardBuilder().account(account).type(CardType.CREDIT).build(accountRepository);
 		repository.save(card);
 	}
 
@@ -63,14 +68,45 @@ public class ShowCardActivityTest {
 
 	@Test
 	public void shows_account_correctly() throws Exception {
-		Intent i = new Intent();
-		i.putExtra(ShowCardActivity.KEY_CREDIT_CARD_UUID, card.getUuid());
-		activityTestRule.launchActivity(i);
+		callActivity();
 
 		final String editCardTitle = getTargetContext().getString(R.string.card) + " " + card.getName();
 		matchToolbarTitle(editCardTitle);
 
 		onView(withId(R.id.act_show_card_name)).check(matches(withText(card.getName())));
 		onView(withId(R.id.act_show_card_account)).check(matches(withText(account.getName())));
+	}
+
+	private void callActivity() {
+		Intent i = new Intent();
+		i.putExtra(ShowCardActivity.KEY_CREDIT_CARD_UUID, card.getUuid());
+		activityTestRule.launchActivity(i);
+	}
+
+	@Test
+	public void generate_and_pay_credit_card_bill() throws Exception {
+		DateTime date = DateTime.now().minusMonths(1);
+		Expense expense1 = new ExpenseBuilder().chargeable(card).date(date).build();
+		assertTrue(expenseRepository.save(expense1).isValid());
+		Expense expense2 = new ExpenseBuilder().chargeable(card).date(date).build();
+		assertTrue(expenseRepository.save(expense2).isValid());
+
+		callActivity();
+
+		clickIntoView(R.id.act_show_card_pay_credit_card_bill);
+
+		String editExpenseTitle = getTargetContext().getString(R.string.edit_expense_title);
+		matchToolbarTitle(editExpenseTitle);
+
+		String cardBillName = getTargetContext().getString(R.string.invoice) + " " + card.getName();
+		onView(withId(R.id.act_edit_expense_name)).check(matches(withText(cardBillName)));
+		String cardBillValue = CurrencyHelper.format(expense1.getValue() + expense2.getValue());
+		onView(withId(R.id.act_edit_expense_value)).check(matches(withText(cardBillValue)));
+		onView(withId(R.id.act_edit_expense_chargeable)).check(matches(withText(card.getAccount().getName())));
+
+		expense1 = expenseRepository.find(expense1.getUuid());
+		assertTrue(expense1.isCharged());
+		expense2 = expenseRepository.find(expense1.getUuid());
+		assertTrue(expense2.isCharged());
 	}
 }

@@ -16,6 +16,7 @@ import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.account.ListAccountActivity;
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException;
+import br.com.jonathanzanella.myexpenses.exceptions.ValidationException;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.ResourcesHelper;
@@ -196,9 +197,12 @@ class CardPresenter {
 
 		Expense e = new Expense();
 		e.setName(resourcesHelper.getString(R.string.invoice) + " " + card.getName());
+		e.setDate(DateTime.now());
 		e.setValue(totalExpense);
 		e.setChargeable(card.getAccount());
-		expenseRepository.save(e);
+		OperationResult operationResult = expenseRepository.save(e);
+		if(!operationResult.isValid())
+			throw new ValidationException(operationResult);
 
 		return e;
 	}
