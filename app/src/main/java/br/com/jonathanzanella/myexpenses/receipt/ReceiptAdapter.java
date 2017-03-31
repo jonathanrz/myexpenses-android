@@ -52,6 +52,7 @@ class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ViewHolder> {
 
 		@UiThread
 		public void setData(final Receipt receipt) {
+			itemView.setTag(receipt.getUuid());
 			name.setText(receipt.getName());
 			date.setText(Receipt.SIMPLE_DATE_FORMAT.format(receipt.getDate().toDate()));
 			income.setText(CurrencyHelper.format(receipt.getIncome()));
@@ -130,6 +131,6 @@ class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ViewHolder> {
 
 	public void filter(String filter) {
 		presenter.filter(filter);
-		loadData(date);
+		receipts = presenter.getReceipts(false, date);
 	}
 }

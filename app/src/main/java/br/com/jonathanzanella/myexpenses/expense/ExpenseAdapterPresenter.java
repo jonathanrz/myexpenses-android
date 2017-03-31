@@ -32,13 +32,6 @@ class ExpenseAdapterPresenter {
 		return Collections.unmodifiableList(receiptsFiltered);
 	}
 
-	void addExpense(Expense bill) {
-		receipts.add(bill);
-		if(receipts != receiptsFiltered)
-			receiptsFiltered.add(bill);
-		adapter.notifyItemInserted(receipts.size() - 1);
-	}
-
 	public void filter(String filter) {
 		if(filter == null || filter.compareTo("") == 0) {
 			receiptsFiltered = receipts;

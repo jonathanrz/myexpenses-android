@@ -61,6 +61,7 @@ class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHolder> {
 
 		@UiThread
 		public void setData(final Expense expense) {
+			itemView.setTag(expense.getUuid());
 			name.setText(expense.getName());
 			date.setText(Expense.SIMPLE_DATE_FORMAT.format(expense.getDate().toDate()));
 			value.setText(CurrencyHelper.format(expense.getValue()));
