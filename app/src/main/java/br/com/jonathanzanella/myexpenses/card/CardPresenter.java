@@ -11,7 +11,6 @@ import org.joda.time.DateTime;
 
 import java.util.List;
 
-import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
@@ -19,6 +18,7 @@ import br.com.jonathanzanella.myexpenses.account.ListAccountActivity;
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
+import br.com.jonathanzanella.myexpenses.helpers.ResourcesHelper;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
@@ -29,6 +29,7 @@ class CardPresenter {
 	private final CardRepository repository;
 	private final AccountRepository accountRepository;
 	private final ExpenseRepository expenseRepository;
+	private final ResourcesHelper resourcesHelper;
 
 	private CardContract.View view;
 	@Nullable
@@ -36,10 +37,11 @@ class CardPresenter {
 	private Card card;
 	private Account account;
 
-	CardPresenter(CardRepository repository, AccountRepository accountRepository, ExpenseRepository expenseRepository) {
+	CardPresenter(CardRepository repository, AccountRepository accountRepository, ExpenseRepository expenseRepository, ResourcesHelper resourcesHelper) {
 		this.repository = repository;
 		this.accountRepository = accountRepository;
 		this.expenseRepository = expenseRepository;
+		this.resourcesHelper = resourcesHelper;
 	}
 
 	void attachView(CardContract.View view) {
@@ -179,8 +181,8 @@ class CardPresenter {
 		}.execute();
 	}
 
-	Expense generateCreditCardBill() {
-		List<Expense> expenses = repository.creditCardBills(card, DateTime.now().minusMonths(1));
+	Expense generateCreditCardBill(DateTime month) {
+		List<Expense> expenses = repository.creditCardBills(card, month);
 		int totalExpense = 0;
 		for (Expense expense : expenses) {
 			totalExpense += expense.getValue();
@@ -192,7 +194,7 @@ class CardPresenter {
 			return null;
 
 		Expense e = new Expense();
-		e.setName(MyApplication.getContext().getString(R.string.invoice) + " " + card.getName());
+		e.setName(resourcesHelper.getString(R.string.invoice) + " " + card.getName());
 		e.setValue(totalExpense);
 		e.setChargeable(card.getAccount());
 		expenseRepository.save(e);

@@ -11,6 +11,8 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.joda.time.DateTime;
+
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
@@ -18,6 +20,7 @@ import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.expense.EditExpenseActivity;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
+import br.com.jonathanzanella.myexpenses.helpers.ResourcesHelper;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -40,7 +43,7 @@ public class ShowCardActivity extends BaseActivity implements CardContract.View 
 		super.onCreate(savedInstanceState);
 		ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(this));
 		presenter = new CardPresenter(new CardRepository(new RepositoryImpl<Card>(this), expenseRepository),
-				new AccountRepository(new RepositoryImpl<Account>(this)), expenseRepository);
+				new AccountRepository(new RepositoryImpl<Account>(this)), expenseRepository, new ResourcesHelper(this));
 		setContentView(R.layout.activity_show_card);
 	}
 
@@ -118,7 +121,7 @@ public class ShowCardActivity extends BaseActivity implements CardContract.View 
 		new AsyncTask<Void, Void, Expense>() {
 			@Override
 			protected Expense doInBackground(Void... voids) {
-				return presenter.generateCreditCardBill();
+				return presenter.generateCreditCardBill(DateTime.now().minusMonths(1));
 			}
 
 			@Override

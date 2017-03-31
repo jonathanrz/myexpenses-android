@@ -1,15 +1,32 @@
 package br.com.jonathanzanella.myexpenses.card;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import br.com.jonathanzanella.myexpenses.R;
+import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
+import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
+import br.com.jonathanzanella.myexpenses.helper.builder.AccountBuilder;
+import br.com.jonathanzanella.myexpenses.helper.builder.CardBuilder;
+import br.com.jonathanzanella.myexpenses.helper.builder.ExpenseBuilder;
+import br.com.jonathanzanella.myexpenses.helpers.ResourcesHelper;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -25,13 +42,15 @@ public class CardPresenterTest {
 	private ExpenseRepository expenseRepository;
 	@Mock
 	private CardContract.EditView view;
+	@Mock
+	private ResourcesHelper resourcesHelper;
 
 	private CardPresenter presenter;
 
 	@Before
 	public void setUp() throws Exception {
 		initMocks(this);
-		presenter = new CardPresenter(repository, accountRepository, expenseRepository);
+		presenter = new CardPresenter(repository, accountRepository, expenseRepository, resourcesHelper);
 		presenter.attachView(view);
 	}
 
@@ -65,5 +84,49 @@ public class CardPresenterTest {
 		presenter.save();
 
 		verify(view, times(1)).showError(ValidationError.NAME);
+	}
+
+	@Test
+	public void generate_card_bill_value_correctly() throws Exception {
+		final String uuid = "uuid";
+		final int value = 100;
+		Account account = new AccountBuilder().build();
+		Card card = new CardBuilder().account(account).build(accountRepository);
+		when(repository.find(uuid)).thenReturn(card);
+		when(accountRepository.find(anyString())).thenReturn(account);
+		List<Expense> expenseList = new ArrayList<>();
+		expenseList.add(new ExpenseBuilder().value(value).build());
+		expenseList.add(new ExpenseBuilder().value(value).build());
+		when(repository.creditCardBills(any(Card.class), any(DateTime.class))).thenReturn(expenseList);
+
+		String invoice = "Fatura";
+		when(resourcesHelper.getString(R.string.invoice)).thenReturn(invoice);
+
+		presenter.loadCard(uuid);
+		Expense expense = presenter.generateCreditCardBill(new DateTime(2016, 9, 26, 0, 0, 0, DateTimeZone.UTC));
+
+		assertThat(expense.getName(), is(invoice + " " + card.getName()));
+		assertThat(expense.getValue(), is(value * expenseList.size()));
+		assertThat(expense.getChargeable().getName(), is(account.getName()));
+		assertTrue(expenseList.get(0).isCharged());
+		assertTrue(expenseList.get(1).isCharged());
+	}
+
+	@Test
+	public void not_generate_card_bill_when_there_are_no_expenses() throws Exception {
+		final String uuid = "uuid";
+		Account account = new AccountBuilder().build();
+		Card card = new CardBuilder().account(account).build(accountRepository);
+		when(repository.find(uuid)).thenReturn(card);
+		List<Expense> expenseList = new ArrayList<>();
+		when(repository.creditCardBills(any(Card.class), any(DateTime.class))).thenReturn(expenseList);
+
+		String invoice = "Fatura";
+		when(resourcesHelper.getString(R.string.invoice)).thenReturn(invoice);
+
+		presenter.loadCard(uuid);
+		Expense expense = presenter.generateCreditCardBill(new DateTime(2016, 9, 26, 0, 0, 0, DateTimeZone.UTC));
+
+		assertNull(expense);
 	}
 }
