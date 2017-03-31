@@ -1,7 +1,5 @@
 package br.com.jonathanzanella.myexpenses.expense;
 
-import android.util.Log;
-
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 
