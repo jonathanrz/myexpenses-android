@@ -50,6 +50,7 @@ public class CardPresenterTest {
 	@Before
 	public void setUp() throws Exception {
 		initMocks(this);
+		DateTimeZone.setDefault(DateTimeZone.UTC);
 		presenter = new CardPresenter(repository, accountRepository, expenseRepository, resourcesHelper);
 		presenter.attachView(view);
 	}
@@ -94,6 +95,7 @@ public class CardPresenterTest {
 		Card card = new CardBuilder().account(account).build(accountRepository);
 		when(repository.find(uuid)).thenReturn(card);
 		when(accountRepository.find(anyString())).thenReturn(account);
+		when(expenseRepository.save(any(Expense.class))).thenReturn(new OperationResult());
 		List<Expense> expenseList = new ArrayList<>();
 		expenseList.add(new ExpenseBuilder().value(value).build());
 		expenseList.add(new ExpenseBuilder().value(value).build());
