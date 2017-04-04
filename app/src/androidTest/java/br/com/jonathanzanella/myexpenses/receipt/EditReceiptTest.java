@@ -86,6 +86,7 @@ public class EditReceiptTest {
 		onView(withId(R.id.act_edit_receipt_name)).check(matches(withText(receipt.getName())));
 		String expectedDate = Receipt.SIMPLE_DATE_FORMAT.format(receipt.getDate().toDate());
 		onView(withId(R.id.act_edit_receipt_date)).check(matches(withText(expectedDate)));
+		onView(withId(R.id.act_edit_receipt_account)).check(matches(withText(receipt.getAccount().getName())));
 		typeTextIntoView(R.id.act_edit_receipt_name, " changed");
 
 		clickIntoView(R.id.action_save);
