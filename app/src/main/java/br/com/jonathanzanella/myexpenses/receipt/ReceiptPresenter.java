@@ -73,6 +73,7 @@ class ReceiptPresenter {
 					receipt = repository.find(receipt.getUuid());
 					source = receipt.getSource();
 					account = receipt.getAccount();
+					date = receipt.getDate();
 					return null;
 				}
 
