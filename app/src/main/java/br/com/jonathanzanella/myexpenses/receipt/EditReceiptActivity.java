@@ -92,6 +92,12 @@ public class EditReceiptActivity extends BaseActivity implements ReceiptContract
 	}
 
 	@Override
+	protected void onResume() {
+		super.onResume();
+		presenter.updateView();
+	}
+
+	@Override
 	protected void onStop() {
 		super.onStop();
 		presenter.detachView();

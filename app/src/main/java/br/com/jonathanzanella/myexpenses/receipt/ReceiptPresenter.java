@@ -49,6 +49,13 @@ class ReceiptPresenter {
 		this.accountRepository = accountRepository;
 	}
 
+	private void resetCache() {
+		date = null;
+		source = null;
+		account = null;
+		receipt = null;
+	}
+
 	void attachView(ReceiptContract.View view) {
 		this.view = view;
 	}
@@ -70,9 +77,7 @@ class ReceiptPresenter {
 
 				@Override
 				protected Void doInBackground(Void... voids) {
-					receipt = repository.find(receipt.getUuid());
-					source = receipt.getSource();
-					account = receipt.getAccount();
+					loadReceipt(receipt.getUuid());
 					return null;
 				}
 
@@ -87,7 +92,7 @@ class ReceiptPresenter {
 		}
 	}
 
-	private void updateView() {
+	public void updateView() {
 		if (receipt != null) {
 			if (editView != null) {
 				editView.setTitle(R.string.edit_receipt_title);
@@ -101,9 +106,9 @@ class ReceiptPresenter {
 				onSourceSelected(source.getUuid());
 			if (account != null)
 				onAccountSelected(account.getUuid());
-
 			if(date == null)
 				date = receipt.getDate();
+
 		} else {
 			if(editView != null)
 				editView.setTitle(R.string.new_receipt_title);
@@ -139,9 +144,13 @@ class ReceiptPresenter {
 
 	@WorkerThread
 	void loadReceipt(String uuid) {
+		resetCache();
 		receipt = repository.find(uuid);
 		if(receipt == null)
 			throw new ReceiptNotFoundException(uuid);
+		source = receipt.getSource();
+		account = receipt.getAccount();
+		date = receipt.getDate();
 	}
 
 	private void checkEditViewSet() {
@@ -263,11 +272,11 @@ class ReceiptPresenter {
 		new AsyncTask<Void, Void, Void>() {
 			@Override
 			protected Void doInBackground(Void... voids) {
-				if(extras.containsKey(KEY_SOURCE_UUID))
-					source = sourceRepository.find(extras.getString(KEY_SOURCE_UUID));
-
 				if(extras.containsKey(KEY_RECEIPT_UUID))
 					loadReceipt(extras.getString(KEY_RECEIPT_UUID));
+
+				if(extras.containsKey(KEY_SOURCE_UUID))
+					source = sourceRepository.find(extras.getString(KEY_SOURCE_UUID));
 
 				if(extras.containsKey(KEY_ACCOUNT_UUID))
 					account = accountRepository.find(extras.getString(KEY_ACCOUNT_UUID));
