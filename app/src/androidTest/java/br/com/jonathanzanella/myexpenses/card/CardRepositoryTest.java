@@ -16,6 +16,7 @@ import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
+import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.CardBuilder;
 
 import static android.support.test.InstrumentationRegistry.getTargetContext;
@@ -36,8 +37,7 @@ public class CardRepositoryTest {
 	public void setUp() throws Exception {
 		new DatabaseHelper(getTargetContext()).recreateTables();
 
-		account = new Account();
-		account.setName("test");
+		account = new AccountBuilder().build();
 		accountRepository = new AccountRepository(new RepositoryImpl<Account>(getTargetContext()));
 		accountRepository.save(account);
 		ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(getTargetContext()));
