@@ -119,7 +119,7 @@ public class ExpenseRepository implements ModelRepository<Expense> {
 	}
 
 	@WorkerThread
-	public List<Expense> alreadyPaidCardExpenses(DateTime month, Card card) {
+	public List<Expense> unpaidCardExpenses(DateTime month, Card card) {
 		List<Expense> expenses = new ArrayList<>();
 		DateTime lastMonth = month.minusMonths(1);
 

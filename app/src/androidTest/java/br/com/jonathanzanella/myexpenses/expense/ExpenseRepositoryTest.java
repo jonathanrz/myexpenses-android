@@ -1,6 +1,5 @@
 package br.com.jonathanzanella.myexpenses.expense;
 
-import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.SmallTest;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -42,17 +41,20 @@ public class ExpenseRepositoryTest {
 
 	@Before
 	public void setUp() throws Exception {
-		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
+		new DatabaseHelper(getTargetContext()).recreateTables();
 
-		account = new AccountBuilder().build();
+		account = new AccountBuilder()
+				.accountToPayBills(true)
+				.accountToPayCreditCard(true)
+				.build();
 		AccountRepository accountRepository = new AccountRepository(new RepositoryImpl<Account>(getTargetContext()));
-		accountRepository.save(account);
+		assertTrue(accountRepository.save(account).isValid());
 		creditCard = new CardBuilder().name("CreditCard").account(account).type(CardType.CREDIT).build(accountRepository);
 		debitCard = new CardBuilder().name("DebitCard").account(account).type(CardType.DEBIT).build(accountRepository);
 		repository = new ExpenseRepository(new RepositoryImpl<Expense>(getTargetContext()));
 		CardRepository cardRepository = new CardRepository(new RepositoryImpl<Card>(getTargetContext()), repository);
-		cardRepository.save(debitCard);
-		cardRepository.save(creditCard);
+		assertTrue(cardRepository.save(debitCard).isValid());
+		assertTrue(cardRepository.save(creditCard).isValid());
 	}
 
 	@After
@@ -63,7 +65,7 @@ public class ExpenseRepositoryTest {
 	@Test
 	public void can_save_expense() throws Exception {
 		Expense expense = new ExpenseBuilder().chargeable(account).build();
-		repository.save(expense);
+		assertTrue(repository.save(expense).isValid());
 
 		assertThat(expense.getId(), is(not(0L)));
 		assertThat(expense.getUuid(), is(not("")));
@@ -74,7 +76,7 @@ public class ExpenseRepositoryTest {
 		Expense expense = new ExpenseBuilder()
 				.chargeable(account)
 				.build();
-		repository.save(expense);
+		assertTrue(repository.save(expense).isValid());
 
 		Expense loadExpense = repository.find(expense.getUuid());
 		assertThat(loadExpense.getUuid(), is(expense.getUuid()));
@@ -88,14 +90,14 @@ public class ExpenseRepositoryTest {
 				.chargeable(account)
 				.date(date)
 				.build();
-		repository.save(expenseA);
+		assertTrue(repository.save(expenseA).isValid());
 
 		Expense expenseB = new ExpenseBuilder()
 				.name("b")
 				.chargeable(account)
 				.date(date.minusDays(1))
 				.build();
-		repository.save(expenseB);
+		assertTrue(repository.save(expenseB).isValid());
 
 		List<Expense> sources = repository.userExpenses();
 		assertThat(sources.get(0).getUuid(), is(expenseB.getUuid()));
@@ -108,12 +110,12 @@ public class ExpenseRepositoryTest {
 				.name("CreditCardExpense")
 				.chargeable(creditCard)
 				.build();
-		repository.save(creditCardExpense);
+		assertTrue(repository.save(creditCardExpense).isValid());
 		Expense accountExpense = new ExpenseBuilder()
 				.name("AccountExpense")
 				.chargeable(account)
 				.build();
-		repository.save(accountExpense);
+		assertTrue(repository.save(accountExpense).isValid());
 
 		List<Expense> expenses = repository.expensesForResumeScreen(creditCardExpense.getDate());
 		assertThat(expenses.size(), is(1));
@@ -128,13 +130,13 @@ public class ExpenseRepositoryTest {
 				.chargeable(debitCard)
 				.date(dateTime)
 				.build();
-		repository.save(debitCardExpense);
+		assertTrue(repository.save(debitCardExpense).isValid());
 		Expense accountExpense = new ExpenseBuilder()
 				.name("AccountExpense")
 				.chargeable(account)
 				.date(dateTime)
 				.build();
-		repository.save(accountExpense);
+		assertTrue(repository.save(accountExpense).isValid());
 
 		List<Expense> expenses = repository.accountExpenses(account, dateTime);
 		assertThat(expenses.size(), is(2));
@@ -159,5 +161,32 @@ public class ExpenseRepositoryTest {
 		List<Expense> expenses = repository.unsync();
 		assertThat(expenses.size(), is(1));
 		assertThat(expenses.get(0).getUuid(), is(expenseUnsync.getUuid()));
+	}
+
+	@Test
+	public void unpaid_card_expenses_only_show_credit_card_expenses() throws Exception {
+		DateTime dateTime = DateTime.now();
+		Expense debitCardExpense = new ExpenseBuilder()
+				.name("DebitCardExpense")
+				.chargeable(debitCard)
+				.date(dateTime)
+				.build();
+		assertTrue(repository.save(debitCardExpense).isValid());
+		Expense creditCardExpense = new ExpenseBuilder()
+				.name("CreditCardExpense")
+				.chargeable(creditCard)
+				.date(dateTime)
+				.build();
+		assertTrue(repository.save(creditCardExpense).isValid());
+		Expense accountExpense = new ExpenseBuilder()
+				.name("AccountExpense")
+				.chargeable(account)
+				.date(dateTime)
+				.build();
+		assertTrue(repository.save(accountExpense).isValid());
+
+		List<Expense> expenses = repository.unpaidCardExpenses(dateTime, creditCard);
+		assertThat(expenses.size(), is(1));
+		assertThat(expenses.get(0).getUuid(), is(creditCardExpense.getUuid()));
 	}
 }

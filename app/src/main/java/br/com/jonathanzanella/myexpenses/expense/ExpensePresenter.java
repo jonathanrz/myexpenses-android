@@ -189,6 +189,7 @@ class ExpensePresenter {
 		expense = repository.find(uuid);
 		if(expense == null)
 			throw new ExpenseNotFoundException(uuid);
+		date = expense.getDate();
 		return expense;
 	}
 
