@@ -101,7 +101,7 @@ public class CardRepository implements ModelRepository<Card> {
 
 	@WorkerThread
 	public List<Expense> creditCardBills(Card card, DateTime month) {
-		return expenseRepository.alreadyPaidCardExpenses(month, card);
+		return expenseRepository.unpaidCardExpenses(month, card);
 	}
 
 	@WorkerThread
