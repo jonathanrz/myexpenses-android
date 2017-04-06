@@ -2,7 +2,6 @@ package br.com.jonathanzanella.myexpenses.source;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -20,6 +19,7 @@ import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.views.MainActivity;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
+import static android.support.test.InstrumentationRegistry.getTargetContext;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -30,9 +30,6 @@ import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTit
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.openMenuAndClickItem;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.typeTextIntoView;
 
-/**
- * Created by jzanella on 7/24/16.
- */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class AddSourceTest {
@@ -43,9 +40,9 @@ public class AddSourceTest {
 
 	@Before
 	public void setUp() throws Exception {
-		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
+		new DatabaseHelper(getTargetContext()).recreateTables();
 
-		UiDevice uiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+		UiDevice uiDevice = UiDevice.getInstance(getInstrumentation());
 		if (!uiDevice.isScreenOn())
 			uiDevice.wakeUp();
 	}
@@ -92,6 +89,6 @@ public class AddSourceTest {
 	}
 
 	private Context getContext() {
-		return InstrumentationRegistry.getTargetContext();
+		return getTargetContext();
 	}
 }
