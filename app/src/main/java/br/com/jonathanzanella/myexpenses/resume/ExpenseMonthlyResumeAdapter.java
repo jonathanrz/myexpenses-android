@@ -58,6 +58,7 @@ class ExpenseMonthlyResumeAdapter extends RecyclerView.Adapter<ExpenseMonthlyRes
 
 		@UiThread
 		public void setData(final Expense expense) {
+			itemView.setTag(expense.getUuid());
 			if(name != null)
 				name.setText(expense.getName());
 			if(date != null) {

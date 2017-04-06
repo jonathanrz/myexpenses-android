@@ -61,6 +61,7 @@ class ReceiptMonthlyResumeAdapter extends RecyclerView.Adapter<ReceiptMonthlyRes
 
 		@UiThread
 		public void setData(final Receipt receipt) {
+			itemView.setTag(receipt.getUuid());
 			if(name != null)
 				name.setText(receipt.getName());
 			if(date != null) {
