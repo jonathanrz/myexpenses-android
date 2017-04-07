@@ -74,9 +74,9 @@ public class EditCardTest {
 
 		final String editExpenseTitle = getTargetContext().getString(R.string.edit_card_title);
 		matchToolbarTitle(editExpenseTitle);
-		sleep(100);
 		onView(withId(R.id.act_edit_card_name)).perform(scrollTo()).check(matches(withText(card.getName())));
 		onView(withId(R.id.act_edit_card_account)).perform(scrollTo()).check(matches(withText(card.getAccount().getName())));
+		sleep(500);
 		typeTextIntoView(R.id.act_edit_card_name, " changed");
 
 		clickIntoView(R.id.action_save);
