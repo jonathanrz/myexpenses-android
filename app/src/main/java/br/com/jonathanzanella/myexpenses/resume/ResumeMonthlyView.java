@@ -77,7 +77,7 @@ class ResumeMonthlyView extends BaseView {
 
 	private void initAccount() {
 		accountAdapter = new AccountAdapter();
-		accountAdapter.setSimplified(true);
+		accountAdapter.setFormat(AccountAdapter.Format.RESUME);
 
 		accounts.setAdapter(accountAdapter);
 		accounts.setHasFixedSize(true);

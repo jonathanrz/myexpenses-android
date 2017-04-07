@@ -27,12 +27,12 @@ class ListAccountActivity : BaseActivity(), AccountAdapterCallback {
 
         val adapter = AccountAdapter()
         adapter.setCallback(this)
-        adapter.setSimplified(true)
+        adapter.setFormat(AccountAdapter.Format.LIST)
 
         accounts.adapter = adapter
         accounts.setHasFixedSize(true)
         accounts.layoutManager = GridLayoutManager(this, 2)
-        accounts.itemAnimator = DefaultItemAnimator()
+        accounts.itemAnimator = DefaultItemAnimator() as RecyclerView.ItemAnimator?
     }
 
     override fun onAccountSelected(account: Account) {

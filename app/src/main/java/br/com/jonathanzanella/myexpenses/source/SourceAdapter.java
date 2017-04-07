@@ -13,6 +13,7 @@ import java.util.List;
 import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
+import br.com.jonathanzanella.myexpenses.helpers.AdapterColorHelper;
 import butterknife.Bind;
 import butterknife.BindColor;
 import butterknife.ButterKnife;
@@ -33,28 +34,19 @@ class SourceAdapter extends RecyclerView.Adapter<SourceAdapter.ViewHolder> {
 		@BindColor(R.color.color_list_even)
 		int evenColor;
 
+		private AdapterColorHelper adapterColorHelper;
+
 		public ViewHolder(View itemView) {
 			super(itemView);
 
 			ButterKnife.bind(this, itemView);
+			adapterColorHelper = new AdapterColorHelper(oddColor, evenColor);
 
 			itemView.setOnClickListener(this);
 		}
 
-		private int getColor(int position) {
-			position++;//Just to simplify mathematics
-			if(position % 4 == 0)
-				return oddColor;
-			else if(position % 2 == 0)
-				return evenColor;
-			else if((position + 1) % 4 == 0)
-				return evenColor;
-			else
-				return oddColor;
-		}
-
 		public void setData(Source source) {
-			itemView.setBackgroundColor(getColor(getAdapterPosition()));
+			itemView.setBackgroundColor(adapterColorHelper.getColor(getAdapterPosition()));
 			name.setText(source.getName());
 		}
 

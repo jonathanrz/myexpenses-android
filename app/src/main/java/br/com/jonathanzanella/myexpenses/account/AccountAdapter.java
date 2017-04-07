@@ -13,6 +13,7 @@ import org.joda.time.DateTime;
 import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
+import br.com.jonathanzanella.myexpenses.helpers.AdapterColorHelper;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import butterknife.Bind;
 import butterknife.BindColor;
@@ -21,9 +22,15 @@ import butterknife.ButterKnife;
 public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHolder> {
 	private final AccountAdapterPresenter presenter;
 
-	private boolean simplified = false;
+	private Format format = Format.NORMAL;
 	private AccountAdapterCallback callback;
 	private DateTime month;
+
+	public enum Format {
+		NORMAL,
+		RESUME,
+		LIST
+	}
 
 	public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 		@Bind(R.id.row_account_name)
@@ -38,17 +45,20 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
 		@BindColor(R.color.color_list_even)
 		int evenColor;
 
+		private AdapterColorHelper adapterColorHelper;
+
 		public ViewHolder(View itemView) {
 			super(itemView);
 
 			ButterKnife.bind(this, itemView);
+			adapterColorHelper = new AdapterColorHelper(oddColor, evenColor);
 
 			itemView.setOnClickListener(this);
 		}
 
 		public void setData(Account acc) {
-			if(!simplified)
-				itemView.setBackgroundColor(getAdapterPosition() % 2 == 0 ? evenColor : oddColor);
+			if(format != Format.RESUME)
+				itemView.setBackgroundColor(adapterColorHelper.getColor(getAdapterPosition()));
 
 			name.setText(acc.getName());
 			balance.setText(CurrencyHelper.format(acc.getBalance()));
@@ -88,7 +98,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
 	}
 
 	private int getLayout() {
-		return simplified ? R.layout.row_account_simplified : R.layout.row_account;
+		return format == Format.NORMAL ? R.layout.row_account : R.layout.row_account_simplified;
 	}
 
 	@Override
@@ -110,8 +120,8 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
 		this.callback = callback;
 	}
 
-	public void setSimplified(boolean simplified) {
-		this.simplified = simplified;
+	public void setFormat(Format format) {
+		this.format = format;
 	}
 
 	public void setMonth(DateTime month) {
