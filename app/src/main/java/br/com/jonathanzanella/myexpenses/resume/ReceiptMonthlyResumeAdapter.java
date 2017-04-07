@@ -1,5 +1,6 @@
 package br.com.jonathanzanella.myexpenses.resume;
 
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
@@ -12,7 +13,6 @@ import android.widget.TextView;
 
 import org.joda.time.DateTime;
 
-import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
@@ -22,6 +22,7 @@ import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.helpers.TransactionsHelper;
 import br.com.jonathanzanella.myexpenses.receipt.Receipt;
 import br.com.jonathanzanella.myexpenses.receipt.ReceiptRepository;
+import br.com.jonathanzanella.myexpenses.receipt.ShowReceiptActivity;
 import br.com.jonathanzanella.myexpenses.source.Source;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -40,7 +41,7 @@ class ReceiptMonthlyResumeAdapter extends RecyclerView.Adapter<ReceiptMonthlyRes
 		TYPE_TOTAL
 	}
 
-	public static class ViewHolder extends RecyclerView.ViewHolder {
+	public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 		@Bind(R.id.row_monthly_resume_receipt_name) @Nullable
 		TextView name;
 		@Bind(R.id.row_monthly_resume_receipt_date) @Nullable
@@ -50,13 +51,12 @@ class ReceiptMonthlyResumeAdapter extends RecyclerView.Adapter<ReceiptMonthlyRes
 		@Bind(R.id.row_monthly_resume_receipt_source) @Nullable
 		TextView source;
 
-		WeakReference<ReceiptMonthlyResumeAdapter> adapterWeakReference;
-
-		public ViewHolder(View itemView, ReceiptMonthlyResumeAdapter adapter) {
+		public ViewHolder(View itemView) {
 			super(itemView);
-			adapterWeakReference = new WeakReference<>(adapter);
 
 			ButterKnife.bind(this, itemView);
+
+			itemView.setOnClickListener(this);
 		}
 
 		@UiThread
@@ -99,16 +99,28 @@ class ReceiptMonthlyResumeAdapter extends RecyclerView.Adapter<ReceiptMonthlyRes
 			if(getItemViewType() != ViewType.TYPE_NORMAL.ordinal())
 				return;
 
-			final Receipt receipt = adapterWeakReference.get().receipts.get(getAdapterPosition());
+			final Receipt receipt = getReceipt(getAdapterPosition());
 			TransactionsHelper.showConfirmTransactionDialog(receipt, income.getContext(),
 					new TransactionsHelper.DialogCallback() {
 				@Override
 				public void onPositiveButton() {
-					ReceiptMonthlyResumeAdapter adapter = adapterWeakReference.get();
-					adapter.updateTotalValue();
-					adapter.notifyDataSetChanged();
+					updateTotalValue();
+					notifyDataSetChanged();
 				}
 			});
+		}
+
+		@Override
+		public void onClick(View v) {
+			if(getItemViewType() != ViewType.TYPE_NORMAL.ordinal())
+				return;
+
+			Receipt receipt = getReceipt(getAdapterPosition());
+			if(receipt != null) {
+				Intent i = new Intent(itemView.getContext(), ShowReceiptActivity.class);
+				i.putExtra(ShowReceiptActivity.KEY_RECEIPT_UUID, receipt.getUuid());
+				itemView.getContext().startActivity(i);
+			}
 		}
 	}
 
@@ -137,7 +149,7 @@ class ReceiptMonthlyResumeAdapter extends RecyclerView.Adapter<ReceiptMonthlyRes
 		else
 			v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_monthly_resume_receipt, parent, false);
 
-		return new ViewHolder(v, this);
+		return new ViewHolder(v);
 	}
 
 	@Override
@@ -181,6 +193,10 @@ class ReceiptMonthlyResumeAdapter extends RecyclerView.Adapter<ReceiptMonthlyRes
 					runnable.run();
 			}
 		}.execute();
+	}
+
+	private Receipt getReceipt(int position) {
+		return receipts.get(position);
 	}
 
 	private void updateTotalValue() {

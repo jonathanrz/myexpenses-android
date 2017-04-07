@@ -19,8 +19,11 @@ import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.ExpenseBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.ReceiptBuilder;
+import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder;
 import br.com.jonathanzanella.myexpenses.receipt.Receipt;
 import br.com.jonathanzanella.myexpenses.receipt.ReceiptRepository;
+import br.com.jonathanzanella.myexpenses.source.Source;
+import br.com.jonathanzanella.myexpenses.source.SourceRepository;
 import br.com.jonathanzanella.myexpenses.views.MainActivity;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
@@ -29,28 +32,26 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
 import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withTagValue;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.clickIntoView;
+import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.core.Is.is;
 
-public class UpdateAccountBalanceTest {
+public class ShowDetailScreenTest {
 	@Rule
 	public ActivityTestRule<MainActivity> mainActivityTestRule = new ActivityTestRule<>(MainActivity.class);
 
 	private Account account;
-	private AccountRepository accountRepository;
 
 	@Before
 	public void setUp() throws Exception {
 		new DatabaseHelper(getTargetContext()).recreateTables();
 
-		accountRepository = new AccountRepository(new RepositoryImpl<Account>(getTargetContext()));
+		AccountRepository accountRepository = new AccountRepository(new RepositoryImpl<Account>(getTargetContext()));
 
 		account = new AccountBuilder().build();
 		assertTrue(accountRepository.save(account).isValid());
@@ -62,36 +63,40 @@ public class UpdateAccountBalanceTest {
 	}
 
 	@Test
-	public void confirm_receipt_should_increase_account_balance() {
-		Receipt receipt = new ReceiptBuilder().account(account).income(1000).build();
+	public void open_receipt_screen_when_selecting_receipt() {
+		Source source = new SourceBuilder().build();
+		assertTrue(new SourceRepository(new RepositoryImpl<Source>(getTargetContext())).save(source).isValid());
+		Receipt receipt = new ReceiptBuilder().account(account).source(source).build();
 		assertTrue(new ReceiptRepository(new RepositoryImpl<Receipt>(getTargetContext())).save(receipt).isValid());
 
 		mainActivityTestRule.launchActivity(new Intent());
 
-		onView(allOf(
-				withId(R.id.row_monthly_resume_receipt_income),
-				isDescendantOfA(withTagValue(is((Object)receipt.getUuid())))))
+		onView(allOf(withId(R.id.row_monthly_resume_receipt_name),
+					isDescendantOfA(withTagValue(is((Object)receipt.getUuid())))))
 				.perform(scrollTo()).perform(click());
-		clickIntoView(getTargetContext().getString(android.R.string.yes));
 
-		account = accountRepository.find(account.getUuid());
-		assertThat(account.getBalance(), is(receipt.getIncome()));
+		final String showReceiptTitle = getTargetContext().getString(R.string.receipt) + " " + receipt.getName();
+		matchToolbarTitle(showReceiptTitle);
+
+		onView(withId(R.id.act_show_receipt_name)).check(matches(withText(receipt.getName())));
+		onView(withId(R.id.act_show_receipt_account)).check(matches(withText(account.getName())));
 	}
 
 	@Test
-	public void confirm_expense_should_decrease_account_balance() {
-		Expense expense = new ExpenseBuilder().chargeable(account).value(1000).build();
+	public void open_expense_screen_when_selecting_expense() {
+		Expense expense = new ExpenseBuilder().chargeable(account).build();
 		assertTrue(new ExpenseRepository(new RepositoryImpl<Expense>(getTargetContext())).save(expense).isValid());
 
 		mainActivityTestRule.launchActivity(new Intent());
 
-		onView(allOf(
-				withId(R.id.row_monthly_resume_expense_income),
-				isDescendantOfA(withTagValue(is((Object)expense.getUuid())))))
+		onView(allOf(withId(R.id.row_monthly_resume_expense_name),
+					isDescendantOfA(withTagValue(is((Object)expense.getUuid())))))
 				.perform(scrollTo()).perform(click());
-		clickIntoView(getTargetContext().getString(android.R.string.yes));
 
-		account = accountRepository.find(account.getUuid());
-		assertThat(account.getBalance(), is(expense.getValue() * -1));
+		final String showExpenseTitle = getTargetContext().getString(R.string.expense) + " " + expense.getName();
+		matchToolbarTitle(showExpenseTitle);
+
+		onView(withId(R.id.act_show_expense_name)).check(matches(withText(expense.getName())));
+		onView(withId(R.id.act_show_expense_chargeable)).check(matches(withText(account.getName())));
 	}
 }
