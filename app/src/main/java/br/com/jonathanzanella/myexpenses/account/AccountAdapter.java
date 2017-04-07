@@ -15,6 +15,7 @@ import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import butterknife.Bind;
+import butterknife.BindColor;
 import butterknife.ButterKnife;
 
 public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHolder> {
@@ -32,6 +33,11 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
 		@Bind(R.id.row_account_to_pay_credit_card) @Nullable
 		TextView accountToPayCreditCard;
 
+		@BindColor(R.color.color_list_odd)
+		int oddColor;
+		@BindColor(R.color.color_list_even)
+		int evenColor;
+
 		public ViewHolder(View itemView) {
 			super(itemView);
 
@@ -41,10 +47,13 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
 		}
 
 		public void setData(Account acc) {
+			if(!simplified)
+				itemView.setBackgroundColor(getAdapterPosition() % 2 == 0 ? evenColor : oddColor);
+
 			name.setText(acc.getName());
 			balance.setText(CurrencyHelper.format(acc.getBalance()));
 			if(accountToPayCreditCard != null)
-				accountToPayCreditCard.setText(acc.isAccountToPayCreditCard() ? R.string.yes : R.string.no);
+				accountToPayCreditCard.setVisibility(acc.isAccountToPayCreditCard() ? View.VISIBLE : View.GONE);
 		}
 
 		@Override
