@@ -16,6 +16,7 @@ import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.views.BaseView;
 import butterknife.Bind;
+import butterknife.BindDimen;
 import butterknife.ButterKnife;
 
 public class MonthTransactionsView extends BaseView implements MonthTransactionsContractView {
@@ -27,6 +28,9 @@ public class MonthTransactionsView extends BaseView implements MonthTransactions
 	TextView header;
 	@Bind(R.id.view_month_transactions_balance)
 	TextView balance;
+
+	@BindDimen(R.dimen.single_row_height)
+	int singleRowHeight;
 
 	String monthTransactionsTemplate;
 
@@ -67,6 +71,8 @@ public class MonthTransactionsView extends BaseView implements MonthTransactions
 
 		if(loadTransactionsCallback != null)
 			loadTransactionsCallback.onTransactionsLoaded(balance);
+
+		list.setMinimumHeight(list.getAdapter().getItemCount() * singleRowHeight);
 	}
 
 	public void setLoadTransactionsCallback(LoadTransactionsCallback loadTransactionsCallback) {
