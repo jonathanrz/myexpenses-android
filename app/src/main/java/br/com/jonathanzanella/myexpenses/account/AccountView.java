@@ -42,7 +42,7 @@ public class AccountView extends BaseView {
 		adapter = new AccountAdapter();
 
 		accounts.setAdapter(adapter);
-		accounts.setLayoutManager(new GridLayoutManager(getContext(), 1));
+		accounts.setLayoutManager(new GridLayoutManager(getContext(), 2));
 		accounts.setItemAnimator(new DefaultItemAnimator());
 	}
 
