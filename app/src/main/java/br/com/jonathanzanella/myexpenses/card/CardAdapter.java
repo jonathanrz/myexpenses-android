@@ -47,7 +47,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
 		@BindColor(R.color.color_list_even)
 		int evenColor;
 
-		private AdapterColorHelper adapterColorHelper;
+		private final AdapterColorHelper adapterColorHelper;
 
 		public ViewHolder(View itemView) {
 			super(itemView);

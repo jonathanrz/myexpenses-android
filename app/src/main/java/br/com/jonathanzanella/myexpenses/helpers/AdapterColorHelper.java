@@ -1,8 +1,8 @@
 package br.com.jonathanzanella.myexpenses.helpers;
 
 public class AdapterColorHelper {
-	private int oddColor;
-	private int evenColor;
+	private final int oddColor;
+	private final int evenColor;
 
 	public AdapterColorHelper(int oddColor, int evenColor) {
 		this.oddColor = oddColor;
