@@ -29,7 +29,8 @@ class LogRepository {
 	public List<Log> filter(DateTime initDate, DateTime endDate, Log.LogLevel logLevel) {
 		return repository.query(table, new Where(Fields.DATE).greaterThanOrEq(initDate.getMillis())
 							.and(Fields.DATE).lessThanOrEq(endDate.getMillis())
-							.and(Fields.TYPE).queryIn(logLevel.getLogLevelsAsString()));
+							.and(Fields.TYPE).queryIn(logLevel.getLogLevelsAsString())
+							.orderBy(Fields.DATE));
 	}
 
 	@WorkerThread

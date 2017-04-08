@@ -7,7 +7,10 @@ class Where(field: Fields) {
         internal var operation: String? = null
 
         override fun toString(): String {
-            return field.toString() + " " + operation + " ?"
+            var query = field.toString() + " " + operation
+            if(!query.contains("in ("))
+                query += " ?"
+            return query
         }
     }
 
@@ -68,7 +71,7 @@ class Where(field: Fields) {
     }
 
     fun queryIn(list: List<String>): Where {
-        var string = "("
+        var string = "in ("
         for (s in list) {
             string = string.plus("?,")
             values.add(s)
