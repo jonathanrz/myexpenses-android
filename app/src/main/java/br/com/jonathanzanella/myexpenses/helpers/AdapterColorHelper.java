@@ -9,14 +9,22 @@ public class AdapterColorHelper {
 		this.evenColor = evenColor;
 	}
 
+	private boolean isMultipleOfTwo(int position) {
+		return position % 2 == 0;
+	}
+
+	private boolean isMultipleOfFour(int position) {
+		return position % 4 == 0;
+	}
+
 	public int getColorForGridWithTwoColor(int position) {
-		if(position % 4 == 0)
+		if(isMultipleOfFour(position))
 			return oddColor;
-		else if(position % 2 == 0)
+		else if(isMultipleOfTwo(position))
 			return evenColor;
-		else if((position + 1) % 4 == 0)
+		else if(isMultipleOfFour(position + 1))
 			return oddColor;
-		else if((position + 1) % 2 == 0)
+		else if(isMultipleOfTwo(position + 1))
 			return evenColor;
 		else
 			return oddColor;
