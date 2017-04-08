@@ -11,11 +11,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/color_primary_text"
-	    android:layout_toStartOf="@id/row_bill_amount"
+	    android:layout_toStartOf="@+id/row_bill_amount"
 	    android:layout_alignParentStart="true"/>
 
     <TextView
-        android:id="@+id/row_bill_amount"
+        android:id="@id/row_bill_amount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
