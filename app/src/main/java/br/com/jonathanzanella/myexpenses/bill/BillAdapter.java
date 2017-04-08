@@ -15,8 +15,10 @@ import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
+import br.com.jonathanzanella.myexpenses.helpers.AdapterColorHelper;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import butterknife.Bind;
+import butterknife.BindColor;
 import butterknife.ButterKnife;
 
 class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder> {
@@ -32,25 +34,33 @@ class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder> {
 		TextView amount;
 		@Bind(R.id.row_bill_due_date)
 		TextView dueDate;
-		@Bind(R.id.row_bill_init_date)
-		TextView initDate;
-		@Bind(R.id.row_bill_end_date)
-		TextView endDate;
+		@Bind(R.id.row_bill_dates)
+		TextView dates;
+
+		@BindColor(R.color.color_list_odd)
+		int oddColor;
+		@BindColor(R.color.color_list_even)
+		int evenColor;
+
+		private AdapterColorHelper adapterColorHelper;
 
 		public ViewHolder(View itemView) {
 			super(itemView);
 
 			ButterKnife.bind(this, itemView);
+			adapterColorHelper = new AdapterColorHelper(oddColor, evenColor);
 
 			itemView.setOnClickListener(this);
 		}
 
 		public void setData(Bill bill) {
+			itemView.setBackgroundColor(adapterColorHelper.getColorForLinearLayout(getAdapterPosition()));
 			name.setText(bill.getName());
 			amount.setText(CurrencyHelper.format(bill.getAmount()));
 			dueDate.setText(String.valueOf(bill.getDueDate()));
-			initDate.setText(Bill.SIMPLE_DATE_FORMAT.format(bill.getInitDate().toDate()));
-			endDate.setText(Bill.SIMPLE_DATE_FORMAT.format(bill.getEndDate().toDate()));
+			String datesText = Bill.SIMPLE_DATE_FORMAT.format(bill.getInitDate().toDate()) + " - " +
+					Bill.SIMPLE_DATE_FORMAT.format(bill.getEndDate().toDate());
+			dates.setText(datesText);
 		}
 
 		@Override
