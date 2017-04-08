@@ -10,7 +10,9 @@
         android:id="@+id/row_receipt_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/color_primary_text"/>
+        android:textColor="@color/color_primary_text"
+	    android:layout_toStartOf="@id/row_receipt_date"
+	    android:layout_alignParentStart="true"/>
 
     <TextView
 	    android:id="@+id/row_receipt_date"
@@ -29,7 +31,7 @@
         android:textColor="@color/color_primary"/>
 
 	<LinearLayout
-		android:id="@+id/row_receipt_source_and_account_layout"
+		android:id="@+id/row_receipt_source_layout"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:orientation="horizontal"
@@ -51,10 +53,15 @@
 			android:layout_height="wrap_content"
 			android:textColor="@color/color_primary"/>
 
-		<View
-			android:layout_width="0dp"
-			android:layout_height="1dp"
-		    android:layout_weight="1"/>
+	</LinearLayout>
+
+	<LinearLayout
+		android:id="@+id/row_receipt_account_layout"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal"
+		android:layout_below="@id/row_receipt_source_layout"
+		android:layout_marginTop="@dimen/min_spacing">
 
 		<TextView
 			android:id="@+id/row_receipt_account_stt"
@@ -78,7 +85,7 @@
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:text="@string/show_in_resume"
-	    android:layout_below="@id/row_receipt_source_and_account_layout"
+	    android:layout_below="@id/row_receipt_source_layout"
 	    android:layout_alignParentEnd="true"
 	    android:textColor="@color/color_secondary_text"
 	    android:textSize="10sp"
