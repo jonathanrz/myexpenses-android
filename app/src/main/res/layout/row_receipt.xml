@@ -1,117 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/Card"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/default_spacing">
 
-    <TableLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="@dimen/min_spacing">
+    <TextView
+        android:id="@+id/row_receipt_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/color_primary_text"/>
 
-        <TableRow>
+    <TextView
+	    android:id="@+id/row_receipt_date"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:textColor="@color/color_secondary_text"
+	    android:layout_below="@id/row_receipt_name"
+	    android:textSize="8sp"
+	    tools:ignore="SmallSp"/>
 
-            <TextView
-                android:id="@+id/row_receipt_name_stt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/name"
-                android:layout_marginEnd="@dimen/min_spacing"/>
+    <TextView
+        android:id="@+id/row_receipt_income"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:textColor="@color/color_primary"/>
 
-            <TextView
-                android:id="@+id/row_receipt_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/color_primary"/>
+	<LinearLayout
+		android:id="@+id/row_receipt_source_and_account_layout"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal"
+		android:layout_below="@id/row_receipt_date"
+		android:layout_marginTop="@dimen/min_spacing">
 
-        </TableRow>
+		<TextView
+			android:id="@+id/row_receipt_source_stt"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/source"
+			android:layout_marginEnd="@dimen/min_spacing"
+			android:textSize="8sp"
+			tools:ignore="SmallSp"/>
 
-        <TableRow>
+		<TextView
+			android:id="@+id/row_receipt_source"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textColor="@color/color_primary"/>
 
-            <TextView
-                android:id="@+id/row_receipt_date_stt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/date"
-                android:layout_marginEnd="@dimen/min_spacing"/>
+		<View
+			android:layout_width="0dp"
+			android:layout_height="1dp"
+		    android:layout_weight="1"/>
 
-            <TextView
-                android:id="@+id/row_receipt_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/color_primary"/>
+		<TextView
+			android:id="@+id/row_receipt_account_stt"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/account"
+			android:layout_marginEnd="@dimen/min_spacing"
+			android:textSize="8sp"
+			tools:ignore="SmallSp"/>
 
-        </TableRow>
+		<TextView
+			android:id="@+id/row_receipt_account"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textColor="@color/color_primary"/>
 
-        <TableRow>
+	</LinearLayout>
 
-            <TextView
-                android:id="@+id/row_receipt_income_stt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/income"
-                android:layout_marginEnd="@dimen/min_spacing"/>
-
-            <TextView
-                android:id="@+id/row_receipt_income"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/color_primary"/>
-
-        </TableRow>
-
-        <TableRow>
-
-            <TextView
-                android:id="@+id/row_receipt_source_stt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/source"
-                android:layout_marginEnd="@dimen/min_spacing"/>
-
-            <TextView
-                android:id="@+id/row_receipt_source"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/color_primary"/>
-
-        </TableRow>
-
-        <TableRow>
-
-            <TextView
-                android:id="@+id/row_receipt_account_stt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/account"
-                android:layout_marginEnd="@dimen/min_spacing"/>
-
-            <TextView
-                android:id="@+id/row_receipt_account"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/color_primary"/>
-
-        </TableRow>
-
-        <TableRow>
-
-            <TextView
-                android:id="@+id/row_receipt_show_in_resume_stt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/show_in_resume"
-                android:layout_marginEnd="@dimen/min_spacing"/>
-
-            <TextView
-                android:id="@+id/row_receipt_show_in_resume"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/color_primary"/>
-
-        </TableRow>
-
-    </TableLayout>
-</android.support.v7.widget.CardView>
+    <TextView
+	    android:id="@+id/row_receipt_show_in_resume_stt"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:text="@string/show_in_resume"
+	    android:layout_below="@id/row_receipt_source_and_account_layout"
+	    android:layout_alignParentEnd="true"
+	    android:textColor="@color/color_secondary_text"
+	    android:textSize="10sp"
+	    tools:ignore="SmallSp"
+	    android:visibility="invisible"/>
+</RelativeLayout>

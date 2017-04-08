@@ -18,9 +18,11 @@ import java.util.List;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
+import br.com.jonathanzanella.myexpenses.helpers.AdapterColorHelper;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.source.Source;
 import butterknife.Bind;
+import butterknife.BindColor;
 import butterknife.ButterKnife;
 
 class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ViewHolder> {
@@ -39,13 +41,21 @@ class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ViewHolder> {
 		TextView source;
 		@Bind(R.id.row_receipt_account)
 		TextView account;
-		@Bind(R.id.row_receipt_show_in_resume)
+		@Bind(R.id.row_receipt_show_in_resume_stt)
 		TextView showInResume;
+
+		@BindColor(R.color.color_list_odd)
+		int oddColor;
+		@BindColor(R.color.color_list_even)
+		int evenColor;
+
+		private AdapterColorHelper adapterColorHelper;
 
 		public ViewHolder(View itemView) {
 			super(itemView);
 
 			ButterKnife.bind(this, itemView);
+			adapterColorHelper = new AdapterColorHelper(oddColor, evenColor);
 
 			itemView.setOnClickListener(this);
 		}
@@ -53,6 +63,7 @@ class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ViewHolder> {
 		@UiThread
 		public void setData(final Receipt receipt) {
 			itemView.setTag(receipt.getUuid());
+			itemView.setBackgroundColor(adapterColorHelper.getColorForLinearLayout(getAdapterPosition()));
 			name.setText(receipt.getName());
 			date.setText(Receipt.SIMPLE_DATE_FORMAT.format(receipt.getDate().toDate()));
 			income.setText(CurrencyHelper.format(receipt.getIncome()));
@@ -85,7 +96,7 @@ class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ViewHolder> {
 				}
 			}.execute();
 
-			showInResume.setText(receipt.isShowInResume() ? R.string.yes : R.string.no);
+			showInResume.setVisibility(receipt.isShowInResume() ? View.VISIBLE : View.INVISIBLE);
 		}
 
 		@Override
