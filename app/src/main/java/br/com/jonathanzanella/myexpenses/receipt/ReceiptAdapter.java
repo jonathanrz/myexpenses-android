@@ -63,7 +63,7 @@ class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ViewHolder> {
 		@UiThread
 		public void setData(final Receipt receipt) {
 			itemView.setTag(receipt.getUuid());
-			itemView.setBackgroundColor(adapterColorHelper.getColorForLinearLayout(getAdapterPosition()));
+			itemView.setBackgroundColor(adapterColorHelper.getColorForGridWithTwoColumns(getAdapterPosition()));
 			name.setText(receipt.getName());
 			date.setText(Receipt.SIMPLE_DATE_FORMAT.format(receipt.getDate().toDate()));
 			income.setText(CurrencyHelper.format(receipt.getIncome()));

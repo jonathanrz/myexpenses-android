@@ -9,12 +9,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TableRow;
 import android.widget.TextView;
 
 import org.joda.time.DateTime;
 
-import java.lang.ref.WeakReference;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.MyApplication;
@@ -22,8 +20,10 @@ import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.bill.Bill;
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
+import br.com.jonathanzanella.myexpenses.helpers.AdapterColorHelper;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import butterknife.Bind;
+import butterknife.BindColor;
 import butterknife.ButterKnife;
 
 class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHolder> {
@@ -32,7 +32,7 @@ class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHolder> {
 	private List<Expense> expenses;
 	private DateTime date;
 
-	public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+	public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 		@Bind(R.id.row_expense_name)
 		TextView name;
 		@Bind(R.id.row_expense_date)
@@ -41,20 +41,25 @@ class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHolder> {
 		TextView value;
 		@Bind(R.id.row_expense_chargeable)
 		TextView chargeable;
-		@Bind(R.id.row_expense_bill_layout)
-		View billLayout;
+		@Bind(R.id.row_expense_bill_stt)
+		TextView billViewStt;
 		@Bind(R.id.row_expense_bill)
 		TextView billView;
 		@Bind(R.id.row_expense_charge_next_month)
-		TableRow chargeNextMonth;
+		TextView chargeNextMonth;
 
-		WeakReference<ExpenseAdapter> adapterWeakReference;
+		@BindColor(R.color.color_list_odd)
+		int oddColor;
+		@BindColor(R.color.color_list_even)
+		int evenColor;
 
-		public ViewHolder(View itemView, ExpenseAdapter adapter) {
+		private final AdapterColorHelper adapterColorHelper;
+
+		public ViewHolder(View itemView) {
 			super(itemView);
-			adapterWeakReference = new WeakReference<>(adapter);
 
 			ButterKnife.bind(this, itemView);
+			adapterColorHelper = new AdapterColorHelper(oddColor, evenColor);
 
 			itemView.setOnClickListener(this);
 		}
@@ -62,6 +67,7 @@ class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHolder> {
 		@UiThread
 		public void setData(final Expense expense) {
 			itemView.setTag(expense.getUuid());
+			itemView.setBackgroundColor(adapterColorHelper.getColorForGridWithTwoColumns(getAdapterPosition()));
 			name.setText(expense.getName());
 			date.setText(Expense.SIMPLE_DATE_FORMAT.format(expense.getDate().toDate()));
 			value.setText(CurrencyHelper.format(expense.getValue()));
@@ -79,7 +85,7 @@ class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHolder> {
 				}
 			}.execute();
 
-			chargeNextMonth.setVisibility(expense.isChargedNextMonth() ? View.VISIBLE : View.GONE);
+			chargeNextMonth.setVisibility(expense.isChargedNextMonth() ? View.VISIBLE : View.INVISIBLE);
 			new AsyncTask<Void, Void, Bill>() {
 
 				@Override
@@ -91,9 +97,11 @@ class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHolder> {
 				protected void onPostExecute(Bill bill) {
 					super.onPostExecute(bill);
 					if(bill == null) {
-						billLayout.setVisibility(View.GONE);
+						billViewStt.setVisibility(View.INVISIBLE);
+						billView.setVisibility(View.INVISIBLE);
 					} else {
-						billLayout.setVisibility(View.VISIBLE);
+						billViewStt.setVisibility(View.VISIBLE);
+						billView.setVisibility(View.VISIBLE);
 						billView.setText(bill.getName());
 					}
 				}
@@ -102,7 +110,7 @@ class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHolder> {
 
 		@Override
 		public void onClick(View v) {
-			Expense expense = adapterWeakReference.get().getExpense(getAdapterPosition());
+			Expense expense = getExpense(getAdapterPosition());
 			if(expense != null) {
                 Intent i = new Intent(itemView.getContext(), ShowExpenseActivity.class);
                 i.putExtra(ShowExpenseActivity.KEY_EXPENSE_UUID, expense.getUuid());
@@ -119,7 +127,7 @@ class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHolder> {
 	@Override
 	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_expense, parent, false);
-		return new ViewHolder(v, this);
+		return new ViewHolder(v);
 	}
 
 	@Override
