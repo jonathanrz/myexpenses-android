@@ -12,5 +12,5 @@ public interface Environment {
 	long SYNC_PERIODIC_EXECUTION_FREQUENCY = 15L * 60L;
 	long SYNC_FLEX_EXECUTION = 2L * 60L;
 	String DB_NAME = "MyExpenses.db";
-	int DB_VERSION = 1;
+	int DB_VERSION = 2;
 }

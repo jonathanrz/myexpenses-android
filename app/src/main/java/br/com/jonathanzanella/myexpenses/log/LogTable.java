@@ -19,7 +19,11 @@ public final class LogTable implements Table<Log> {
 		db.execSQL(createTableSql());
 	}
 
-	public void onUpgrade(@NonNull SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
+	public void onUpgrade(@NonNull SQLiteDatabase db, int oldVersion, int newVersion) {
+		if(oldVersion == 1) {
+			onDrop(db);
+			onCreate(db);
+		}
 	}
 
 	@Override
