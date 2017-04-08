@@ -19,7 +19,10 @@ import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
+import br.com.jonathanzanella.myexpenses.helpers.AdapterColorHelper;
 import butterknife.Bind;
+import butterknife.BindColor;
+import butterknife.BindString;
 import butterknife.ButterKnife;
 
 public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
@@ -34,19 +37,30 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
 		TextView name;
 		@Bind(R.id.row_card_account)
 		TextView account;
-		@Bind(R.id.row_card_type)
-		TextView type;
+		@BindString(R.string.credit)
+		String credit;
+		@BindString(R.string.debit)
+		String debit;
+
+		@BindColor(R.color.color_list_odd)
+		int oddColor;
+		@BindColor(R.color.color_list_even)
+		int evenColor;
+
+		private AdapterColorHelper adapterColorHelper;
 
 		public ViewHolder(View itemView) {
 			super(itemView);
 
 			ButterKnife.bind(this, itemView);
+			adapterColorHelper = new AdapterColorHelper(oddColor, evenColor);
 
 			itemView.setOnClickListener(this);
 		}
 
 		@UiThread
 		public void setData(final Card card) {
+			itemView.setBackgroundColor(adapterColorHelper.getColorForLinearLayout(getAdapterPosition()));
 			new AsyncTask<Void, Void, Account>() {
 
 				@Override
@@ -61,16 +75,18 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
 				}
 			}.execute();
 
-			name.setText(card.getName());
+			String cardName = card.getName() + " - ";
 
 			switch (card.getType()) {
 				case CREDIT:
-					type.setText(R.string.credit);
+					cardName += credit;
 					break;
 				case DEBIT:
-					type.setText(R.string.debit);
+					cardName += debit;
 					break;
 			}
+
+			name.setText(cardName);
 		}
 
 		@Override

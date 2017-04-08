@@ -9,7 +9,7 @@ public class AdapterColorHelper {
 		this.evenColor = evenColor;
 	}
 
-	public int getColor(int position) {
+	public int getColorForGridWithTwoColor(int position) {
 		if(position % 4 == 0)
 			return oddColor;
 		else if(position % 2 == 0)
@@ -20,5 +20,12 @@ public class AdapterColorHelper {
 			return evenColor;
 		else
 			return oddColor;
+	}
+
+	public int getColorForLinearLayout(int position) {
+		if(position % 2 == 0)
+			return oddColor;
+		else
+			return evenColor;
 	}
 }

@@ -32,7 +32,7 @@ class ListAccountActivity : BaseActivity(), AccountAdapterCallback {
         accounts.adapter = adapter
         accounts.setHasFixedSize(true)
         accounts.layoutManager = GridLayoutManager(this, 2)
-        accounts.itemAnimator = DefaultItemAnimator() as RecyclerView.ItemAnimator?
+        accounts.itemAnimator = DefaultItemAnimator()
     }
 
     override fun onAccountSelected(account: Account) {
