@@ -47,6 +47,6 @@
 	    android:layout_below="@id/row_bill_name"
 	    android:layout_alignParentEnd="true"
 	    android:textColor="@color/color_secondary_text"
-	    android:textSize="10sp"
+	    android:textSize="8sp"
 	    tools:ignore="SmallSp"/>
 </RelativeLayout>

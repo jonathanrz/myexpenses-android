@@ -58,7 +58,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
 
 		public void setData(Account acc) {
 			if(format != Format.RESUME)
-				itemView.setBackgroundColor(adapterColorHelper.getColorForGridWithTwoColor(getAdapterPosition()));
+				itemView.setBackgroundColor(adapterColorHelper.getColorForGridWithTwoColumns(getAdapterPosition()));
 
 			name.setText(acc.getName());
 			balance.setText(CurrencyHelper.format(acc.getBalance()));

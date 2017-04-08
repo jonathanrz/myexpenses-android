@@ -17,7 +17,7 @@ public class AdapterColorHelper {
 		return position % 4 == 0;
 	}
 
-	public int getColorForGridWithTwoColor(int position) {
+	public int getColorForGridWithTwoColumns(int position) {
 		if(isMultipleOfFour(position))
 			return oddColor;
 		else if(isMultipleOfTwo(position))

@@ -54,7 +54,7 @@ class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder> {
 		}
 
 		public void setData(Bill bill) {
-			itemView.setBackgroundColor(adapterColorHelper.getColorForLinearLayout(getAdapterPosition()));
+			itemView.setBackgroundColor(adapterColorHelper.getColorForGridWithTwoColumns(getAdapterPosition()));
 			name.setText(bill.getName());
 			amount.setText(CurrencyHelper.format(bill.getAmount()));
 			dueDate.setText(String.valueOf(bill.getDueDate()));

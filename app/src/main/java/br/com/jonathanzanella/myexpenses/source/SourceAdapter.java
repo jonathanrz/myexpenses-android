@@ -46,7 +46,7 @@ class SourceAdapter extends RecyclerView.Adapter<SourceAdapter.ViewHolder> {
 		}
 
 		public void setData(Source source) {
-			itemView.setBackgroundColor(adapterColorHelper.getColorForGridWithTwoColor(getAdapterPosition()));
+			itemView.setBackgroundColor(adapterColorHelper.getColorForGridWithTwoColumns(getAdapterPosition()));
 			name.setText(source.getName());
 		}
 

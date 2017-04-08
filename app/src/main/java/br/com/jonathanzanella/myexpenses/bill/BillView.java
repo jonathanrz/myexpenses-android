@@ -42,7 +42,7 @@ public class BillView extends BaseView {
 		adapter = new BillAdapter();
 
 		bills.setAdapter(adapter);
-		bills.setLayoutManager(new GridLayoutManager(getContext(), 1));
+		bills.setLayoutManager(new GridLayoutManager(getContext(), 2));
 		bills.setItemAnimator(new DefaultItemAnimator());
 	}
 
