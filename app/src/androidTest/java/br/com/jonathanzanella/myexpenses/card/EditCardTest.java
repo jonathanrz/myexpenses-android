@@ -30,7 +30,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.clickIntoView;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.typeTextIntoView;
-import static java.lang.Thread.sleep;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -76,7 +75,6 @@ public class EditCardTest {
 		matchToolbarTitle(editExpenseTitle);
 		onView(withId(R.id.act_edit_card_name)).perform(scrollTo()).check(matches(withText(card.getName())));
 		onView(withId(R.id.act_edit_card_account)).perform(scrollTo()).check(matches(withText(card.getAccount().getName())));
-		sleep(500);
 		typeTextIntoView(R.id.act_edit_card_name, " changed");
 
 		clickIntoView(R.id.action_save);

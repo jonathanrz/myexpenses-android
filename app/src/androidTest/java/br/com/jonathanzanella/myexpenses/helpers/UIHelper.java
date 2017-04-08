@@ -72,7 +72,14 @@ public final class UIHelper {
 	}
 
 	public static void typeTextIntoView(@IdRes int view, String text) {
-		onView(withId(view)).perform(typeText(text)).perform(closeSoftKeyboard());
+		try {
+			onView(withId(view))
+					.perform(scrollTo())
+					.perform(typeText(text))
+					.perform(closeSoftKeyboard());
+		} catch (PerformException e) {
+			onView(withId(view)).perform(typeText(text)).perform(closeSoftKeyboard());
+		}
 	}
 
 	public static void clickIntoView(@IdRes int view) {
