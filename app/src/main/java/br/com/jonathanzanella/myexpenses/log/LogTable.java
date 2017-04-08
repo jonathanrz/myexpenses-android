@@ -11,7 +11,6 @@ import br.com.jonathanzanella.myexpenses.database.Fields;
 import br.com.jonathanzanella.myexpenses.database.SqlTypes;
 import br.com.jonathanzanella.myexpenses.database.Table;
 
-import static br.com.jonathanzanella.myexpenses.database.CursorHelper.getInt;
 import static br.com.jonathanzanella.myexpenses.database.CursorHelper.getLong;
 import static br.com.jonathanzanella.myexpenses.database.CursorHelper.getString;
 
@@ -20,7 +19,11 @@ public final class LogTable implements Table<Log> {
 		db.execSQL(createTableSql());
 	}
 
-	public void onUpgrade(@NonNull SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
+	public void onUpgrade(@NonNull SQLiteDatabase db, int oldVersion, int newVersion) {
+		if(oldVersion == 1) {
+			onDrop(db);
+			onCreate(db);
+		}
 	}
 
 	@Override
@@ -38,7 +41,7 @@ public final class LogTable implements Table<Log> {
 				Fields.ID + SqlTypes.PRIMARY_KEY + "," +
 				Fields.TITLE + SqlTypes.TEXT_NOT_NULL + "," +
 				Fields.DESCRIPTION + SqlTypes.TEXT_NOT_NULL + "," +
-				Fields.DATE + SqlTypes.TEXT_NOT_NULL + "," +
+				Fields.DATE + SqlTypes.DATE_NOT_NULL + "," +
 				Fields.TYPE + SqlTypes.TEXT_NOT_NULL + " )";
 	}
 
@@ -52,7 +55,7 @@ public final class LogTable implements Table<Log> {
 		ContentValues values = new ContentValues();
 		values.put(Fields.TITLE.toString(), log.getTitle());
 		values.put(Fields.DESCRIPTION.toString(), log.getDescription());
-		values.put(Fields.DATE.toString(), log.getDateAsString());
+		values.put(Fields.DATE.toString(), log.getDate().getMillis());
 		values.put(Fields.TYPE.toString(), log.getLogLevel().toString());
 		return values;
 	}
@@ -64,7 +67,7 @@ public final class LogTable implements Table<Log> {
 		log.setId(getLong(c, Fields.ID));
 		log.setTitle(getString(c, Fields.TITLE));
 		log.setDescription(getString(c, Fields.DESCRIPTION));
-		log.setDate(new DateTime(getInt(c, Fields.DATE)));
+		log.setDate(new DateTime(getLong(c, Fields.DATE)));
 		log.setType(Log.LogLevel.getLogLevel(getString(c, Fields.TYPE)));
 		return log;
 	}

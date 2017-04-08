@@ -1,100 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/Card"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:padding="@dimen/default_spacing">
 
-    <TableLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="@dimen/min_spacing">
+    <TextView
+        android:id="@+id/row_bill_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/color_primary_text"/>
 
-        <TableRow>
+    <TextView
+        android:id="@+id/row_bill_amount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:textColor="@color/color_primary"/>
 
-            <TextView
-                android:id="@+id/row_bill_name_stt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/name"
-                android:layout_marginEnd="@dimen/min_spacing"/>
+    <TextView
+        android:id="@+id/row_bill_balance_due_date_stt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/row_bill_name"
+        android:textColor="@color/color_secondary_text"
+        android:text="@string/due_date"
+        android:layout_marginEnd="@dimen/min_spacing"
+        android:textSize="10sp"
+        tools:ignore="SmallSp"/>
 
-            <TextView
-                android:id="@+id/row_bill_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-            android:textColor="@color/color_primary"/>
+    <TextView
+        android:id="@+id/row_bill_due_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/row_bill_name"
+        android:layout_toEndOf="@id/row_bill_balance_due_date_stt"
+        android:textColor="@color/color_primary"
+        android:textSize="10sp"
+        tools:ignore="SmallSp"/>
 
-        </TableRow>
-
-        <TableRow>
-
-            <TextView
-                android:id="@+id/row_bill_amount_stt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/amount"
-                android:layout_marginEnd="@dimen/min_spacing"/>
-
-            <TextView
-                android:id="@+id/row_bill_amount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/color_primary"/>
-
-        </TableRow>
-
-        <TableRow>
-
-            <TextView
-                android:id="@+id/row_bill_balance_due_date_stt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/due_date"
-                android:layout_marginEnd="@dimen/min_spacing"/>
-
-            <TextView
-                android:id="@+id/row_bill_due_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/color_primary"/>
-
-        </TableRow>
-
-        <TableRow>
-
-            <TextView
-                android:id="@+id/row_bill_init_date_stt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/start"
-                android:layout_marginEnd="@dimen/min_spacing"/>
-
-            <TextView
-                android:id="@+id/row_bill_init_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/color_primary"/>
-
-        </TableRow>
-
-        <TableRow>
-
-            <TextView
-                android:id="@+id/row_bill_end_date_stt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/end"
-                android:layout_marginEnd="@dimen/min_spacing"/>
-
-            <TextView
-                android:id="@+id/row_bill_end_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/color_primary"/>
-
-        </TableRow>
-
-    </TableLayout>
-</android.support.v7.widget.CardView>
+    <TextView
+	    android:id="@+id/row_bill_dates"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_below="@id/row_bill_name"
+	    android:layout_alignParentEnd="true"
+	    android:textColor="@color/color_secondary_text"
+	    android:textSize="8sp"
+	    tools:ignore="SmallSp"/>
+</RelativeLayout>

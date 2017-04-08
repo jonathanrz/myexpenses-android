@@ -9,6 +9,8 @@
 	<color name="color_secondary_text">#727272</color>
 	<color name="color_divider">#B6B6B6</color>
 	<color name="color_selected">#B6B6B6</color>
+	<color name="color_list_odd">#EAEAEA</color>
+	<color name="color_list_even">#EEEEEE</color>
 
 	<color name="value_paid">#1976D2</color>
 	<color name="value_unpaid">#c62828</color>

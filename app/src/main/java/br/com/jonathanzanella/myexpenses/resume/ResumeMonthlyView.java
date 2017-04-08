@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.UiThread;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
@@ -28,8 +27,6 @@ import butterknife.ButterKnife;
 
 @SuppressLint("ViewConstructor")
 class ResumeMonthlyView extends BaseView {
-	public static final int ACCOUNT_COLUMNS = 3;
-
 	@Bind(R.id.view_monthly_resume_accounts)
 	RecyclerView accounts;
 	@Bind(R.id.view_monthly_resume_receipts)
@@ -80,11 +77,11 @@ class ResumeMonthlyView extends BaseView {
 
 	private void initAccount() {
 		accountAdapter = new AccountAdapter();
-		accountAdapter.setSimplified(true);
+		accountAdapter.setFormat(AccountAdapter.Format.RESUME);
 
 		accounts.setAdapter(accountAdapter);
 		accounts.setHasFixedSize(true);
-		accounts.setLayoutManager(new GridLayoutManager(getContext(), ACCOUNT_COLUMNS));
+		accounts.setLayoutManager(new LinearLayoutManager(getContext()));
 	}
 
 	private void initReceipts() {

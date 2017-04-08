@@ -8,13 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.lang.ref.WeakReference;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
+import br.com.jonathanzanella.myexpenses.helpers.AdapterColorHelper;
 import butterknife.Bind;
+import butterknife.BindColor;
 import butterknife.ButterKnife;
 
 class SourceAdapter extends RecyclerView.Adapter<SourceAdapter.ViewHolder> {
@@ -24,32 +25,37 @@ class SourceAdapter extends RecyclerView.Adapter<SourceAdapter.ViewHolder> {
 
 	private List<Source> sources;
 
-	public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+	public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 		@Bind(R.id.row_source_name)
 		TextView name;
 
-		WeakReference<SourceAdapter> adapterWeakReference;
+		@BindColor(R.color.color_list_odd)
+		int oddColor;
+		@BindColor(R.color.color_list_even)
+		int evenColor;
 
-		public ViewHolder(View itemView, SourceAdapter adapter) {
+		private final AdapterColorHelper adapterColorHelper;
+
+		public ViewHolder(View itemView) {
 			super(itemView);
-			adapterWeakReference = new WeakReference<>(adapter);
 
 			ButterKnife.bind(this, itemView);
+			adapterColorHelper = new AdapterColorHelper(oddColor, evenColor);
 
 			itemView.setOnClickListener(this);
 		}
 
 		public void setData(Source source) {
+			itemView.setBackgroundColor(adapterColorHelper.getColorForGridWithTwoColumns(getAdapterPosition()));
 			name.setText(source.getName());
 		}
 
 		@Override
 		public void onClick(View v) {
-			SourceAdapter adapter = adapterWeakReference.get();
-			Source source = adapter.getSource(getAdapterPosition());
+			Source source = getSource(getAdapterPosition());
 			if (source != null) {
-				if(adapter.callback != null) {
-					adapter.callback.onSourceSelected(source);
+				if(callback != null) {
+					callback.onSourceSelected(source);
 				} else {
 					Intent i = new Intent(itemView.getContext(), ShowSourceActivity.class);
 					i.putExtra(ShowSourceActivity.KEY_SOURCE_UUID, source.getUuid());
@@ -71,7 +77,7 @@ class SourceAdapter extends RecyclerView.Adapter<SourceAdapter.ViewHolder> {
 	@Override
 	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_source, parent, false);
-		return new ViewHolder(v, this);
+		return new ViewHolder(v);
 	}
 
 	@Override

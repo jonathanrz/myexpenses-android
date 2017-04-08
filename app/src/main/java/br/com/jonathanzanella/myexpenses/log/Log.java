@@ -77,10 +77,6 @@ public class Log implements UnsyncModel {
 		return type;
 	}
 
-	String getDateAsString() {
-		return date.toString();
-	}
-
 	private static LogRepository getLogRepository() {
 		if(logRepository == null)
 			logRepository = new LogRepository(new RepositoryImpl<Log>(MyApplication.getContext()));

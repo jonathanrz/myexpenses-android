@@ -38,7 +38,7 @@ class ReceiptMonthlyView extends BaseView {
         adapter = new ReceiptAdapter(getContext());
 
         sources.setAdapter(adapter);
-        sources.setLayoutManager(new GridLayoutManager(getContext(), 1));
+        sources.setLayoutManager(new GridLayoutManager(getContext(), 2));
         sources.setItemAnimator(new DefaultItemAnimator());
     }
 

@@ -36,7 +36,7 @@ class ExpenseMonthlyView extends BaseView {
         adapter = new ExpenseAdapter();
 
         sources.setAdapter(adapter);
-        sources.setLayoutManager(new GridLayoutManager(getContext(), 1));
+        sources.setLayoutManager(new GridLayoutManager(getContext(), 2));
         sources.setItemAnimator(new DefaultItemAnimator());
     }
 

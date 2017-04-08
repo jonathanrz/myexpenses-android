@@ -27,7 +27,7 @@ class ListAccountActivity : BaseActivity(), AccountAdapterCallback {
 
         val adapter = AccountAdapter()
         adapter.setCallback(this)
-        adapter.setSimplified(true)
+        adapter.setFormat(AccountAdapter.Format.LIST)
 
         accounts.adapter = adapter
         accounts.setHasFixedSize(true)

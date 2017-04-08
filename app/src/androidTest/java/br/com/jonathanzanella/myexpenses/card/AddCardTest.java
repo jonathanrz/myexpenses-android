@@ -25,6 +25,7 @@ import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.views.MainActivity;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
+import static android.support.test.InstrumentationRegistry.getTargetContext;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -96,7 +97,7 @@ public class AddCardTest {
 
 		matchToolbarTitle(cardsTitle);
 
-		onView(withId(R.id.row_card_name)).check(matches(withText(accountTitle)));
+		onView(withId(R.id.row_card_name)).check(matches(withText(accountTitle + " - " + getTargetContext().getString(R.string.credit))));
 	}
 
 	@Test
