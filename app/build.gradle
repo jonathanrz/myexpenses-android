@@ -27,7 +27,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode rootProject.ext.gitCommitCount()
-        versionName "1.1.0." + rootProject.ext.getVersionName()
+        versionName "1.1.1." + rootProject.ext.getVersionName()
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
 
         jackOptions {
