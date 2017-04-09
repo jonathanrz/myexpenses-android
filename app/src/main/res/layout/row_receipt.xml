@@ -1,34 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="@dimen/default_spacing">
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:padding="@dimen/row_spacing">
 
-    <TextView
-        android:id="@+id/row_receipt_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/color_primary_text"
-	    android:layout_toStartOf="@+id/row_receipt_income"
-	    android:layout_alignParentStart="true"/>
+	<TextView
+		android:id="@+id/row_receipt_name"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:textColor="@color/color_primary_text"
+		android:layout_toStartOf="@+id/row_receipt_income"
+		android:layout_alignParentStart="true"
+		android:textSize="14sp"/>
 
-    <TextView
-	    android:id="@+id/row_receipt_date"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:textColor="@color/color_secondary_text"
-	    android:layout_below="@id/row_receipt_name"
-	    android:textSize="8sp"
-	    tools:ignore="SmallSp"/>
+	<TextView
+		android:id="@+id/row_receipt_date"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:textColor="@color/color_secondary_text"
+		android:layout_below="@id/row_receipt_name"
+		android:textSize="10sp"
+		tools:ignore="SmallSp"/>
 
-    <TextView
-        android:id="@id/row_receipt_income"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:textColor="@color/color_primary"/>
+	<TextView
+		android:id="@id/row_receipt_income"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentEnd="true"
+		android:textColor="@color/color_primary"
+		android:textSize="12sp"/>
 
 	<LinearLayout
 		android:id="@+id/row_receipt_source_layout"
@@ -51,7 +53,8 @@
 			android:id="@+id/row_receipt_source"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:textColor="@color/color_primary"/>
+			android:textColor="@color/color_primary"
+			android:textSize="12sp"/>
 
 	</LinearLayout>
 
@@ -60,8 +63,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:orientation="horizontal"
-		android:layout_below="@id/row_receipt_source_layout"
-		android:layout_marginTop="@dimen/min_spacing">
+		android:layout_below="@id/row_receipt_source_layout">
 
 		<TextView
 			android:id="@+id/row_receipt_account_stt"
@@ -76,19 +78,20 @@
 			android:id="@+id/row_receipt_account"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:textColor="@color/color_primary"/>
+			android:textColor="@color/color_primary"
+			android:textSize="12sp"/>
 
 	</LinearLayout>
 
-    <TextView
-	    android:id="@+id/row_receipt_show_in_resume_stt"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:text="@string/show_in_resume"
-	    android:layout_below="@id/row_receipt_source_layout"
-	    android:layout_alignParentEnd="true"
-	    android:textColor="@color/color_secondary_text"
-	    android:textSize="10sp"
-	    tools:ignore="SmallSp"
-	    android:visibility="invisible"/>
+	<TextView
+		android:id="@+id/row_receipt_show_in_resume_stt"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@string/show_in_resume"
+		android:layout_below="@id/row_receipt_account_layout"
+		android:layout_alignParentEnd="true"
+		android:textColor="@color/color_secondary_text"
+		android:textSize="10sp"
+		tools:ignore="SmallSp"
+		android:visibility="invisible"/>
 </RelativeLayout>
