@@ -39,9 +39,9 @@ public class SyncService extends GcmTaskService {
 		apis.add(new AccountApi());
 		apis.add(new BillApi());
 		apis.add(new CardApi());
+		apis.add(new SourceApi());
 		apis.add(new ExpenseApi(new ExpenseRepository(new RepositoryImpl<Expense>(MyApplication.getContext()))));
 		apis.add(new ReceiptApi());
-		apis.add(new SourceApi());
 	}
 
 	private void selfSchedule() {

@@ -21,8 +21,9 @@ public class Source implements UnsyncModel {
 
 	@Override
 	public String getData() {
-		return "name=" + getName() +
-				"\nuuid=" + getUuid();
+		return "name=" + name +
+				"\nuuid=" + uuid +
+				"\nserverId=" + serverId;
 	}
 
 	@Override

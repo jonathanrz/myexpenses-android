@@ -81,6 +81,7 @@ public class Bill implements Transaction, UnsyncModel {
 	public String getData() {
 		return "name=" + name +
 				"\nuuid=" + uuid +
+				"\nserverId=" + serverId +
 				"\namount=" + amount +
 				"\ndueDate=" + dueDate +
 				"\ninitDate=" + SIMPLE_DATE_FORMAT.format(initDate.toDate()) +
