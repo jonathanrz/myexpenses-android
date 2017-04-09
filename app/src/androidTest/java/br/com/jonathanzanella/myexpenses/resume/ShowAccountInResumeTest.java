@@ -32,7 +32,7 @@ import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.core.Is.is;
 
-public class ShowAccountInResume {
+public class ShowAccountInResumeTest {
 	@Rule
 	public ActivityTestRule<MainActivity> mainActivityTestRule = new ActivityTestRule<>(MainActivity.class);
 
