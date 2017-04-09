@@ -1,7 +1,6 @@
 package br.com.jonathanzanella.myexpenses;
 
 import java.util.Locale;
-import br.com.jonathanzanella.myexpenses.user.Users;
 
 public interface Environment {
 	Locale PTBR_LOCALE = new Locale("pt_BR");
