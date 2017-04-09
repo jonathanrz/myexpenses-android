@@ -56,6 +56,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
 		}
 
 		public void setData(Account acc) {
+			itemView.setTag(acc.getUuid());
 			if(format != Format.RESUME)
 				itemView.setBackgroundColor(adapterColorHelper.getColorForGridWithTwoColumns(getAdapterPosition()));
 
@@ -83,11 +84,11 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
 	}
 
 	public AccountAdapter() {
-		presenter = new AccountAdapterPresenter(this, new AccountRepository(new RepositoryImpl<Account>(MyApplication.getContext())));
+		presenter = new AccountAdapterPresenter(this, new AccountRepository(new RepositoryImpl<Account>(MyApplication.getContext())), format);
 	}
 
 	public void refreshData() {
-		presenter.loadAccountsAsync();
+		presenter.loadAccountsAsync(format);
 	}
 
 	@Override
@@ -121,6 +122,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
 
 	public void setFormat(Format format) {
 		this.format = format;
+		refreshData();
 	}
 
 	public void setMonth(DateTime month) {

@@ -10,18 +10,22 @@ class AccountAdapterPresenter {
 
 	private List<Account> accounts;
 
-	AccountAdapterPresenter(AccountAdapter adapter, AccountRepository repository) {
+	AccountAdapterPresenter(AccountAdapter adapter, AccountRepository repository, final AccountAdapter.Format format) {
 		this.repository = repository;
 		this.adapter = adapter;
-		loadAccountsAsync();
+		loadAccountsAsync(format);
 	}
 
-	final void loadAccountsAsync() {
+	final void loadAccountsAsync(final AccountAdapter.Format format) {
 		new AsyncTask<Void, Void, Void>() {
 
 			@Override
 			protected Void doInBackground(Void... voids) {
-				accounts = repository.all();
+				if(format == AccountAdapter.Format.RESUME) {
+					accounts = repository.forResumeScreen();
+				} else {
+					accounts = repository.all();
+				}
 				return null;
 			}
 
