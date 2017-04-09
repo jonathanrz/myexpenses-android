@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import br.com.jonathanzanella.myexpenses.database.Repository;
-import br.com.jonathanzanella.myexpenses.validations.OperationResult;
+import br.com.jonathanzanella.myexpenses.validations.ValidationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
 import static junit.framework.Assert.assertFalse;
@@ -31,7 +31,7 @@ public class SourceRepositoryUnitTest {
 	public void return_with_error_when_tried_to_save_source_without_name() throws Exception {
 		when(source.getName()).thenReturn(null);
 
-		OperationResult result = sourceRepository.save(source);
+		ValidationResult result = sourceRepository.save(source);
 
 		assertFalse(result.isValid());
 		assertTrue(result.getErrors().contains(ValidationError.NAME));

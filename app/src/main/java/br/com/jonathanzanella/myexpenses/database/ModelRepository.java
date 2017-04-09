@@ -1,7 +1,8 @@
 package br.com.jonathanzanella.myexpenses.database;
 
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
+import br.com.jonathanzanella.myexpenses.validations.ValidationResult;
 
 public interface ModelRepository<T extends UnsyncModel> {
-	void syncAndSave(final T unsyncAccount);
+	ValidationResult syncAndSave(final T unsyncAccount);
 }

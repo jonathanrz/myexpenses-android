@@ -148,6 +148,7 @@ public class Receipt implements Transaction, UnsyncModel {
 	public String getData() {
 		return "name=" + name +
 				"\nuuid=" + uuid +
+				"\nserverId=" + serverId +
 				"\ndate=" + SIMPLE_DATE_FORMAT.format(date.toDate()) +
 				"\nincome=" + income;
 	}

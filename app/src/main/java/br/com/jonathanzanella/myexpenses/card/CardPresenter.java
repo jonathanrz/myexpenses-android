@@ -20,7 +20,7 @@ import br.com.jonathanzanella.myexpenses.exceptions.ValidationException;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.ResourcesHelper;
-import br.com.jonathanzanella.myexpenses.validations.OperationResult;
+import br.com.jonathanzanella.myexpenses.validations.ValidationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
 import static android.app.Activity.RESULT_OK;
@@ -123,15 +123,15 @@ class CardPresenter {
 		if(account != null)
 			card.setAccount(account);
 
-		new AsyncTask<Void, Void, OperationResult>() {
+		new AsyncTask<Void, Void, ValidationResult>() {
 
 			@Override
-			protected OperationResult doInBackground(Void... voids) {
+			protected ValidationResult doInBackground(Void... voids) {
 				return repository.save(card);
 			}
 
 			@Override
-			protected void onPostExecute(OperationResult result) {
+			protected void onPostExecute(ValidationResult result) {
 				super.onPostExecute(result);
 
 				if(result.isValid()) {
@@ -200,9 +200,9 @@ class CardPresenter {
 		e.setDate(DateTime.now());
 		e.setValue(totalExpense);
 		e.setChargeable(card.getAccount());
-		OperationResult operationResult = expenseRepository.save(e);
-		if(!operationResult.isValid())
-			throw new ValidationException(operationResult);
+		ValidationResult validationResult = expenseRepository.save(e);
+		if(!validationResult.isValid())
+			throw new ValidationException(validationResult);
 
 		return e;
 	}

@@ -1,5 +1,6 @@
 package br.com.jonathanzanella.myexpenses.card;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
 
 import org.apache.commons.lang3.StringUtils;
@@ -15,8 +16,8 @@ import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.database.Where;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
-import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
+import br.com.jonathanzanella.myexpenses.validations.ValidationResult;
 
 import static br.com.jonathanzanella.myexpenses.log.Log.warning;
 
@@ -65,14 +66,8 @@ public class CardRepository implements ModelRepository<Card> {
 	}
 
 	@WorkerThread
-	public OperationResult save(Card card) {
-		OperationResult result = new OperationResult();
-		if(StringUtils.isEmpty(card.getName()))
-			result.addError(ValidationError.NAME);
-		if(card.getType() == null)
-			result.addError(ValidationError.CARD_TYPE);
-		if(card.getAccount() == null)
-			result.addError(ValidationError.ACCOUNT);
+	public ValidationResult save(Card card) {
+		ValidationResult result = validate(card);
 		if(result.isValid()) {
 			if(card.getId() == 0 && card.getUuid() == null)
 				card.setUuid(UUID.randomUUID().toString());
@@ -82,9 +77,27 @@ public class CardRepository implements ModelRepository<Card> {
 		return result;
 	}
 
+	@NonNull
+	private ValidationResult validate(Card card) {
+		ValidationResult result = new ValidationResult();
+		if(StringUtils.isEmpty(card.getName()))
+			result.addError(ValidationError.NAME);
+		if(card.getType() == null)
+			result.addError(ValidationError.CARD_TYPE);
+		if(card.getAccount() == null)
+			result.addError(ValidationError.ACCOUNT);
+		return result;
+	}
+
 	@WorkerThread
 	@Override
-	public void syncAndSave(final Card unsyncCard) {
+	public ValidationResult syncAndSave(final Card unsyncCard) {
+		ValidationResult result = validate(unsyncCard);
+		if(!result.isValid()) {
+			warning("Card sync validation failed", unsyncCard.getData() + "\nerrors: " + result.getErrorsAsString());
+			return result;
+		}
+
 		Card card = find(unsyncCard.getUuid());
 		if(card != null && card.getId() != unsyncCard.getId()) {
 			if(card.getUpdatedAt() != unsyncCard.getUpdatedAt())
@@ -94,6 +107,8 @@ public class CardRepository implements ModelRepository<Card> {
 
 		unsyncCard.setSync(true);
 		repository.saveAtDatabase(table, unsyncCard);
+
+		return result;
 	}
 
 	@WorkerThread

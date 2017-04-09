@@ -10,7 +10,7 @@ import java.util.List;
 import br.com.jonathanzanella.myexpenses.database.Fields;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.database.Where;
-import br.com.jonathanzanella.myexpenses.validations.OperationResult;
+import br.com.jonathanzanella.myexpenses.validations.ValidationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
 class LogRepository {
@@ -34,8 +34,8 @@ class LogRepository {
 	}
 
 	@WorkerThread
-	public OperationResult save(Log log) {
-		OperationResult result = new OperationResult();
+	public ValidationResult save(Log log) {
+		ValidationResult result = new ValidationResult();
 		if(StringUtils.isEmpty(log.getTitle()))
 			result.addError(ValidationError.TITLE);
 		if(StringUtils.isEmpty(log.getDescription()))

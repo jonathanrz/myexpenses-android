@@ -1,7 +1,7 @@
 package br.com.jonathanzanella.myexpenses.bill;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
-import android.support.test.espresso.idling.CountingIdlingResource;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
@@ -15,8 +15,8 @@ import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.database.Where;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
-import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
+import br.com.jonathanzanella.myexpenses.validations.ValidationResult;
 
 import static br.com.jonathanzanella.myexpenses.log.Log.warning;
 
@@ -79,8 +79,20 @@ public class BillRepository  implements ModelRepository<Bill> {
 	}
 
 	@WorkerThread
-	public OperationResult save(Bill bill) {
-		OperationResult result = new OperationResult();
+	public ValidationResult save(Bill bill) {
+		ValidationResult result = validate(bill);
+		if(result.isValid()) {
+			if(bill.getId() == 0 && bill.getUuid() == null)
+				bill.setUuid(UUID.randomUUID().toString());
+			bill.setSync(false);
+			repository.saveAtDatabase(billTable, bill);
+		}
+		return result;
+	}
+
+	@NonNull
+	private ValidationResult validate(Bill bill) {
+		ValidationResult result = new ValidationResult();
 		if(StringUtils.isEmpty(bill.getName()))
 			result.addError(ValidationError.NAME);
 		if(bill.getAmount() <= 0)
@@ -93,20 +105,18 @@ public class BillRepository  implements ModelRepository<Bill> {
 			result.addError(ValidationError.END_DATE);
 		if(bill.getInitDate() != null && bill.getEndDate() != null && bill.getInitDate().isAfter(bill.getEndDate()))
 			result.addError(ValidationError.INIT_DATE_GREATER_THAN_END_DATE);
-		if(result.isValid()) {
-			if(bill.getId() == 0 && bill.getUuid() == null)
-				bill.setUuid(UUID.randomUUID().toString());
-			bill.setSync(false);
-			repository.saveAtDatabase(billTable, bill);
-		}
 		return result;
 	}
 
 	@WorkerThread
 	@Override
-	public void syncAndSave(final Bill unsyncBill) {
-		final CountingIdlingResource idlingResource = new CountingIdlingResource("BillRepositorySave");
-		idlingResource.increment();
+	public ValidationResult syncAndSave(final Bill unsyncBill) {
+		ValidationResult result = validate(unsyncBill);
+		if(!result.isValid()) {
+			warning("Bill sync validation failed", unsyncBill.getData() + "\nerrors: " + result.getErrorsAsString());
+			return result;
+		}
+
 		Bill bill = find(unsyncBill.getUuid());
 		if(bill != null && bill.getId() != unsyncBill.getId()) {
 			if(bill.getUpdatedAt() != unsyncBill.getUpdatedAt())
@@ -116,6 +126,7 @@ public class BillRepository  implements ModelRepository<Bill> {
 
 		unsyncBill.setSync(true);
 		repository.saveAtDatabase(billTable, unsyncBill);
-		idlingResource.decrement();
+
+		return result;
 	}
 }

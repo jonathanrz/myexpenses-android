@@ -11,7 +11,7 @@ import org.joda.time.DateTime;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException;
-import br.com.jonathanzanella.myexpenses.validations.OperationResult;
+import br.com.jonathanzanella.myexpenses.validations.ValidationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
 class BillPresenter {
@@ -136,7 +136,7 @@ class BillPresenter {
 		bill = editView.fillBill(bill);
 		bill.setInitDate(initDate);
 		bill.setEndDate(endDate);
-		OperationResult result = repository.save(bill);
+		ValidationResult result = repository.save(bill);
 
 		if(result.isValid()) {
 			editView.finishView();

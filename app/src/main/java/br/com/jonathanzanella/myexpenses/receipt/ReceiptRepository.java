@@ -1,5 +1,6 @@
 package br.com.jonathanzanella.myexpenses.receipt;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
 
 import org.apache.commons.lang3.StringUtils;
@@ -13,8 +14,8 @@ import br.com.jonathanzanella.myexpenses.database.Fields;
 import br.com.jonathanzanella.myexpenses.database.ModelRepository;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.database.Where;
-import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
+import br.com.jonathanzanella.myexpenses.validations.ValidationResult;
 
 import static br.com.jonathanzanella.myexpenses.helpers.DateHelper.firstDayOfMonth;
 import static br.com.jonathanzanella.myexpenses.helpers.DateHelper.lastDayOfMonth;
@@ -80,8 +81,20 @@ public class ReceiptRepository implements ModelRepository<Receipt> {
 	}
 
 	@WorkerThread
-	public OperationResult save(Receipt receipt) {
-		OperationResult result = new OperationResult();
+	public ValidationResult save(Receipt receipt) {
+		ValidationResult result = validate(receipt);
+		if(result.isValid()) {
+			if(receipt.getId() == 0 && receipt.getUuid() == null)
+				receipt.setUuid(UUID.randomUUID().toString());
+			receipt.setSync(false);
+			repository.saveAtDatabase(table, receipt);
+		}
+		return result;
+	}
+
+	@NonNull
+	private ValidationResult validate(Receipt receipt) {
+		ValidationResult result = new ValidationResult();
 		if(StringUtils.isEmpty(receipt.getName()))
 			result.addError(ValidationError.NAME);
 		if(receipt.getAmount() <= 0)
@@ -92,18 +105,18 @@ public class ReceiptRepository implements ModelRepository<Receipt> {
 			result.addError(ValidationError.ACCOUNT);
 		if(receipt.getDate() == null)
 			result.addError(ValidationError.DATE);
-		if(result.isValid()) {
-			if(receipt.getId() == 0 && receipt.getUuid() == null)
-				receipt.setUuid(UUID.randomUUID().toString());
-			receipt.setSync(false);
-			repository.saveAtDatabase(table, receipt);
-		}
 		return result;
 	}
 
 	@WorkerThread
 	@Override
-	public void syncAndSave(final Receipt unsyncReceipt) {
+	public ValidationResult syncAndSave(final Receipt unsyncReceipt) {
+		ValidationResult result = validate(unsyncReceipt);
+		if(!result.isValid()) {
+			warning("Receipt sync validation failed", unsyncReceipt.getData() + "\nerrors: " + result.getErrorsAsString());
+			return result;
+		}
+
 		Receipt receipt = find(unsyncReceipt.getUuid());
 		if(receipt != null && receipt.getId() != unsyncReceipt.getId()) {
 			if(receipt.getUpdatedAt() != unsyncReceipt.getUpdatedAt())
@@ -113,5 +126,7 @@ public class ReceiptRepository implements ModelRepository<Receipt> {
 
 		unsyncReceipt.setSync(true);
 		repository.saveAtDatabase(table, unsyncReceipt);
+
+		return result;
 	}
 }

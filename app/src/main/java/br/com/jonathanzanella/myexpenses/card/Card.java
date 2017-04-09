@@ -107,6 +107,7 @@ public class Card implements Chargeable, UnsyncModel {
 	public String getData() {
 		return "name=" + name +
 				"\nuuid=" + uuid +
+				"\nserverId=" + serverId +
 				"\ntype=" + type +
 				"\naccount=" + accountUuid;
 	}

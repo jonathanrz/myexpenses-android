@@ -6,7 +6,7 @@ import android.support.annotation.UiThread;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException;
-import br.com.jonathanzanella.myexpenses.validations.OperationResult;
+import br.com.jonathanzanella.myexpenses.validations.ValidationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
 class AccountPresenter {
@@ -85,15 +85,15 @@ class AccountPresenter {
 			account = new Account();
 
 		account = editView.fillAccount(account);
-		new AsyncTask<Void, Void, OperationResult>() {
+		new AsyncTask<Void, Void, ValidationResult>() {
 
 			@Override
-			protected OperationResult doInBackground(Void... voids) {
+			protected ValidationResult doInBackground(Void... voids) {
 				return repository.save(account);
 			}
 
 			@Override
-			protected void onPostExecute(OperationResult result) {
+			protected void onPostExecute(ValidationResult result) {
 				super.onPostExecute(result);
 				if(result.isValid()) {
 					editView.finishView();

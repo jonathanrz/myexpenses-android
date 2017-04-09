@@ -59,6 +59,7 @@ public class Account implements Chargeable, UnsyncModel {
 	public String getData() {
 		return "name=" + name +
 				"\nuuid=" + uuid +
+				"\nserverId=" + serverId +
 				"\nbalance=" + balance +
 				"\naccountToPayCreditCard=" + accountToPayCreditCard;
 	}
