@@ -4,51 +4,39 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:padding="@dimen/default_spacing">
+    android:padding="@dimen/row_spacing">
 
     <TextView
+	    style="@style/RowPrincipalInformation"
         android:id="@+id/row_bill_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/color_primary_text"
 	    android:layout_toStartOf="@+id/row_bill_amount"
 	    android:layout_alignParentStart="true"/>
 
     <TextView
+	    style="@style/RowSecondaryInformation"
         android:id="@id/row_bill_amount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:textColor="@color/color_primary"/>
+        android:layout_alignParentEnd="true"/>
 
     <TextView
+	    style="@style/RowStaticInformation"
         android:id="@+id/row_bill_balance_due_date_stt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+	    android:text="@string/due_date"
         android:layout_below="@id/row_bill_name"
-        android:textColor="@color/color_secondary_text"
-        android:text="@string/due_date"
-        android:layout_marginEnd="@dimen/min_spacing"
-        android:textSize="10sp"
-        tools:ignore="SmallSp"/>
+        android:layout_alignBaseline="@+id/row_bill_due_date"
+        android:layout_marginEnd="@dimen/min_spacing"/>
 
     <TextView
-        android:id="@+id/row_bill_due_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/row_bill_name"
-        android:layout_toEndOf="@id/row_bill_balance_due_date_stt"
-        android:textColor="@color/color_primary"
-        android:textSize="10sp"
-        tools:ignore="SmallSp"/>
+	    style="@style/RowSecondaryInformation"
+	    android:id="@id/row_bill_due_date"
+	    android:layout_below="@id/row_bill_name"
+	    android:layout_toEndOf="@id/row_bill_balance_due_date_stt"
+	    android:textSize="10sp"
+	    tools:ignore="SmallSp"/>
 
     <TextView
+	    style="@style/RowStaticInformation"
 	    android:id="@+id/row_bill_dates"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
 	    android:layout_below="@id/row_bill_name"
 	    android:layout_alignParentEnd="true"
-	    android:textColor="@color/color_secondary_text"
-	    android:textSize="8sp"
-	    tools:ignore="SmallSp"/>
+	    android:layout_alignBaseline="@id/row_bill_due_date"/>
 </RelativeLayout>
