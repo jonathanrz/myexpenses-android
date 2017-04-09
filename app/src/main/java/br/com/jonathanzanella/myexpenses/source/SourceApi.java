@@ -84,7 +84,7 @@ public class SourceApi implements UnsyncModelApi<Source> {
 
 	private SourceInterface getInterface() {
 		if(sourceInterface == null)
-			sourceInterface = new Server().sourceInterface();
+			sourceInterface = new Server(MyApplication.getContext()).sourceInterface();
 		return sourceInterface;
 	}
 

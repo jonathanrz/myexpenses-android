@@ -11,7 +11,6 @@ import org.junit.runner.RunWith;
 
 import java.util.List;
 
-import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
@@ -42,17 +41,14 @@ public class ReceiptsInPeriodTest {
 		new DatabaseHelper(getTargetContext()).recreateTables();
 
 		account.setName("Account");
-		account.setUserUuid(Environment.CURRENT_USER_UUID);
 		accountRepository.save(account);
 
 		source.setName("Source");
-		source.setUserUuid(Environment.CURRENT_USER_UUID);
 		sourceRepository.save(source);
 	}
 
 	private Receipt newReceipt(String name, DateTime date, int value) {
 		Receipt receipt = new Receipt();
-		receipt.setUserUuid(Environment.CURRENT_USER_UUID);
 		receipt.setName(name);
 		receipt.setSource(source);
 		receipt.setAccount(account);

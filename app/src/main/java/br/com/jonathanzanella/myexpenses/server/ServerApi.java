@@ -2,6 +2,7 @@ package br.com.jonathanzanella.myexpenses.server;
 
 import java.io.IOException;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.log.Log;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -12,7 +13,7 @@ public class ServerApi {
 
 	private ServerInterface getInterface() {
 		if(serverInterface == null)
-			serverInterface = new Server().serverInterface();
+			serverInterface = new Server(MyApplication.getContext()).serverInterface();
 		return serverInterface;
 	}
 

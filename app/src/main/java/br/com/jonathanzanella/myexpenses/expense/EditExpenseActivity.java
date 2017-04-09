@@ -23,7 +23,6 @@ import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch;
 import br.com.jonathanzanella.myexpenses.log.Log;
-import br.com.jonathanzanella.myexpenses.user.SelectUserView;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
@@ -58,16 +57,17 @@ public class EditExpenseActivity extends BaseActivity implements ExpenseContract
 	EditText editRepetition;
 	@Bind(R.id.act_edit_expense_installment)
 	EditText editInstallment;
-	@Bind(R.id.act_edit_expense_user)
-	SelectUserView selectUserView;
 
-	private ExpensePresenter presenter;
+	private final ExpensePresenter presenter;
+
+	public EditExpenseActivity() {
+		ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(this));
+		presenter = new ExpensePresenter(expenseRepository, new BillRepository(new RepositoryImpl<Bill>(this), expenseRepository));
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(this));
-		presenter = new ExpensePresenter(expenseRepository, new BillRepository(new RepositoryImpl<Bill>(this), expenseRepository));
 		setContentView(R.layout.activity_edit_expense);
 	}
 
@@ -238,7 +238,6 @@ public class EditExpenseActivity extends BaseActivity implements ExpenseContract
 		expense.setChargedNextMonth(checkPayNextMonth.isChecked());
 		expense.showInOverview(showInOverview.isChecked());
 		expense.showInResume(showInResume.isChecked());
-		expense.setUserUuid(selectUserView.getSelectedUser());
 		expense.setInstallments(getInstallment());
 		expense.setRepetition(getRepetition());
 		return expense;
@@ -293,7 +292,5 @@ public class EditExpenseActivity extends BaseActivity implements ExpenseContract
 		checkPayNextMonth.setChecked(expense.isChargedNextMonth());
 		showInOverview.setChecked(expense.isShowInOverview());
 		showInResume.setChecked(expense.isShowInResume());
-
-		selectUserView.setSelectedUser(expense.getUserUuid());
 	}
 }

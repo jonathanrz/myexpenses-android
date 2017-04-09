@@ -32,9 +32,6 @@ public class Card implements Chargeable, UnsyncModel {
 	@Expose
 	private String accountUuid;
 
-	@Expose
-	private String userUuid;
-
 	@Expose @SerializedName("_id")
 	private String serverId;
 
@@ -160,14 +157,6 @@ public class Card implements Chargeable, UnsyncModel {
 
 	void setAccountUuid(String accountUuid) {
 		this.accountUuid = accountUuid;
-	}
-
-	public String getUserUuid() {
-		return userUuid;
-	}
-
-	public void setUserUuid(String userUuid) {
-		this.userUuid = userUuid;
 	}
 
 	@Override

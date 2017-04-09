@@ -14,7 +14,7 @@ class SourceAdapterPresenter {
 	}
 
 	private void loadSources() {
-		sources = repository.userSources();
+		sources = repository.all();
 	}
 
 	List<Source> getSources(boolean invalidateCache) {

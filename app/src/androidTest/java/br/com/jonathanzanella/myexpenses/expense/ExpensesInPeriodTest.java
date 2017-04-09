@@ -11,7 +11,6 @@ import org.junit.runner.RunWith;
 
 import java.util.List;
 
-import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
@@ -38,13 +37,11 @@ public class ExpensesInPeriodTest {
 		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
 
 		account.setName("Account");
-		account.setUserUuid(Environment.CURRENT_USER_UUID);
 		accountRepository.save(account);
 	}
 
 	private Expense newExpense(String name, DateTime date, int value) {
 		Expense expense = new Expense();
-		expense.setUserUuid(Environment.CURRENT_USER_UUID);
 		expense.setName(name);
 		expense.setChargeable(account);
 		expense.setDate(date);

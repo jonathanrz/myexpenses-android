@@ -132,7 +132,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
 
 	@WorkerThread
 	public void loadData() {
-		cards = cardRepository.userCards();
+		cards = cardRepository.all();
 	}
 
 	@Nullable

@@ -3,7 +3,6 @@ package br.com.jonathanzanella.myexpenses.database
 import android.content.Context
 import android.database.SQLException
 import android.util.Log
-import br.com.jonathanzanella.myexpenses.Environment
 import br.com.jonathanzanella.myexpenses.log.Log.warning
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel
 import java.util.*
@@ -66,10 +65,6 @@ class RepositoryImpl<T : UnsyncModel>(ctx: Context) : Repository<T> {
             db.close()
             return sources
         }
-    }
-
-    override fun userData(table: Table<T>): List<T> {
-        return query(table, Where(Fields.USER_UUID).eq(Environment.CURRENT_USER_UUID))
     }
 
     override fun unsync(table: Table<T>): List<T> {

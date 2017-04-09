@@ -1,7 +1,5 @@
 package br.com.jonathanzanella.myexpenses.receipt;
 
-import android.os.AsyncTask;
-import android.support.annotation.UiThread;
 import android.support.annotation.WorkerThread;
 
 import org.apache.commons.lang3.StringUtils;
@@ -10,7 +8,6 @@ import org.joda.time.DateTime;
 import java.util.List;
 import java.util.UUID;
 
-import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.database.Fields;
 import br.com.jonathanzanella.myexpenses.database.ModelRepository;
@@ -37,8 +34,8 @@ public class ReceiptRepository implements ModelRepository<Receipt> {
 	}
 
 	@WorkerThread
-	List<Receipt> userReceipts() {
-		return repository.query(table, new Where(Fields.USER_UUID).eq(Environment.CURRENT_USER_UUID).orderBy(Fields.DATE));
+	List<Receipt> all() {
+		return repository.query(table, new Where(null).orderBy(Fields.DATE));
 	}
 
 	@WorkerThread
@@ -56,7 +53,6 @@ public class ReceiptRepository implements ModelRepository<Receipt> {
 		Where where = new Where(Fields.DATE).greaterThanOrEq(firstDayOfMonth(month).getMillis())
 				.and(Fields.DATE).lessThanOrEq(lastDayOfMonth(month).getMillis())
 				.and(Fields.REMOVED).eq(false)
-				.and(Fields.USER_UUID).eq(Environment.CURRENT_USER_UUID)
 				.orderBy(Fields.DATE);
 		if(account != null)
 			where = where.and(Fields.ACCOUNT_UUID).eq(account.getUuid());
@@ -70,7 +66,6 @@ public class ReceiptRepository implements ModelRepository<Receipt> {
 							.and(Fields.DATE).lessThanOrEq(month.plusMonths(1).getMillis())
 							.and(Fields.IGNORE_IN_RESUME).eq(false)
 							.and(Fields.REMOVED).eq(false)
-							.and(Fields.USER_UUID).eq(Environment.CURRENT_USER_UUID)
 							.orderBy(Fields.DATE));
 	}
 
@@ -100,30 +95,10 @@ public class ReceiptRepository implements ModelRepository<Receipt> {
 		if(result.isValid()) {
 			if(receipt.getId() == 0 && receipt.getUuid() == null)
 				receipt.setUuid(UUID.randomUUID().toString());
-			if(receipt.getId() == 0 && receipt.getUserUuid() == null)
-				receipt.setUserUuid(Environment.CURRENT_USER_UUID);
 			receipt.setSync(false);
 			repository.saveAtDatabase(table, receipt);
 		}
 		return result;
-	}
-
-	@UiThread
-	void saveAsync(final Receipt receipt) {
-		new AsyncTask<Void, Void, OperationResult>() {
-
-			@Override
-			protected OperationResult doInBackground(Void... voids) {
-				return save(receipt);
-			}
-
-			@Override
-			protected void onPostExecute(OperationResult operationResult) {
-				super.onPostExecute(operationResult);
-				if(!operationResult.isValid())
-					throw new UnsupportedOperationException("Could not save receipt " + receipt.getUuid());
-			}
-		}.execute();
 	}
 
 	@WorkerThread

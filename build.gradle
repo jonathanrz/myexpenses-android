@@ -59,12 +59,6 @@ ext {
     supportLibraryVersion = '25.3.0'
     uiAutomatorVersion = '2.1.1'
     testButler = '1.0.0'
-
-    //Config variables
-    authToken = "\"" + (project.hasProperty('MyExpensesAuthToken') ? MyExpensesAuthToken : System.getenv('MYEXPENSES_AUTH_TOKEN')) + "\""
-    jonathanKeyPass = project.hasProperty('MyExpensesJonathanKeyPass') ? MyExpensesJonathanKeyPass : System.getenv('MYEXPENSES_JONATHAN_KEY_PASS')
-    thainaraKeyPass = project.hasProperty('MyExpensesThainaraKeyPass') ? MyExpensesThainaraKeyPass : System.getenv('MYEXPENSES_THAINARA_KEY_PASS')
-    testFairyToken = project.hasProperty('MyExpensesTestFairyToken') ? MyExpensesTestFairyToken : System.getenv('MYEXPENSES_TEST_FAIRY_TOKEN')
 }
 
 ext.getCurrentBranch = {

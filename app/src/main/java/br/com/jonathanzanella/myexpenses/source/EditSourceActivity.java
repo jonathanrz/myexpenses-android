@@ -9,7 +9,6 @@ import android.widget.EditText;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.log.Log;
-import br.com.jonathanzanella.myexpenses.user.SelectUserView;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
@@ -19,10 +18,12 @@ public class EditSourceActivity extends BaseActivity implements SourceContract.E
 
 	@Bind(R.id.act_edit_source_name)
 	EditText editName;
-	@Bind(R.id.act_edit_source_user)
-	SelectUserView selectUserView;
 
-	private final SourcePresenter presenter = new SourcePresenter(new SourceRepository(new RepositoryImpl<Source>(this)));
+	private final SourcePresenter presenter;
+
+	public EditSourceActivity() {
+		presenter = new SourcePresenter(new SourceRepository(new RepositoryImpl<Source>(this)));
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -59,13 +60,11 @@ public class EditSourceActivity extends BaseActivity implements SourceContract.E
 	@Override
 	public void showSource(Source source) {
 		editName.setText(source.getName());
-		selectUserView.setSelectedUser(source.getUserUuid());
 	}
 
 	@Override
 	public Source fillSource(Source source) {
 		source.setName(editName.getText().toString());
-		source.setUserUuid(selectUserView.getSelectedUser());
 		return source;
 	}
 

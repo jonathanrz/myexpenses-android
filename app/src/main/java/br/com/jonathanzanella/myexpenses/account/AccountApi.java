@@ -92,7 +92,7 @@ public class AccountApi implements UnsyncModelApi<Account> {
 
 	private AccountInterface getInterface() {
 		if(accountInterface == null)
-			accountInterface = new Server().accountInterface();
+			accountInterface = new Server(MyApplication.getContext()).accountInterface();
 		return accountInterface;
 	}
 }

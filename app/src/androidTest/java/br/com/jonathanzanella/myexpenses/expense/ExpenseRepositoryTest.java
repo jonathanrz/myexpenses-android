@@ -99,7 +99,7 @@ public class ExpenseRepositoryTest {
 				.build();
 		assertTrue(repository.save(expenseB).isValid());
 
-		List<Expense> sources = repository.userExpenses();
+		List<Expense> sources = repository.all();
 		assertThat(sources.get(0).getUuid(), is(expenseB.getUuid()));
 		assertThat(sources.get(1).getUuid(), is(expenseA.getUuid()));
 	}

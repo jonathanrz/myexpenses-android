@@ -65,9 +65,6 @@ public class Expense implements Transaction, UnsyncModel {
 	@Expose
 	private boolean ignoreInResume;
 
-	@Expose
-	private String userUuid;
-
 	@Expose @SerializedName("_id")
 	private String serverId;
 
@@ -177,7 +174,6 @@ public class Expense implements Transaction, UnsyncModel {
 		expense.chargedNextMonth = chargedNextMonth;
 		expense.ignoreInOverview = ignoreInOverview;
 		expense.ignoreInResume = ignoreInResume;
-		expense.userUuid = userUuid;
 		expense.creditCard = creditCard;
 		expense.repetition = repetition;
 		expense.installments = installments;
@@ -362,14 +358,6 @@ public class Expense implements Transaction, UnsyncModel {
 
 	void setIgnoreInResume(boolean ignoreInResume) {
 		this.ignoreInResume = ignoreInResume;
-	}
-
-	public String getUserUuid() {
-		return userUuid;
-	}
-
-	public void setUserUuid(String userUuid) {
-		this.userUuid = userUuid;
 	}
 
 	@Override

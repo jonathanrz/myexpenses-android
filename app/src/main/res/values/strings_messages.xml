@@ -18,4 +18,6 @@
 	<string name="error_message_title_not_informed">Informe o título</string>
 	<string name="error_message_description_not_informed">Informe a descrição</string>
 	<string name="error_message_log_level_not_informed">Informe o nível de log</string>
+	<string name="error_message_server_url_not_informed">Informe a url do servidor</string>
+	<string name="error_message_server_token_not_informed">Informe o Token do servidor</string>
 </resources>

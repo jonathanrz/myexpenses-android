@@ -12,7 +12,6 @@ import org.junit.runner.RunWith;
 
 import java.util.List;
 
-import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
@@ -29,7 +28,6 @@ import br.com.jonathanzanella.myexpenses.helpers.builder.ExpenseBuilder;
 
 import static android.support.test.InstrumentationRegistry.getTargetContext;
 import static br.com.jonathanzanella.myexpenses.helpers.TestUtils.waitForIdling;
-import static junit.framework.Assert.assertFalse;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -63,22 +61,6 @@ public class BillRepositoryTest {
 		Bill bill = billRepository.find(savedBill.getUuid());
 		assertThat(bill.getUuid(), is(savedBill.getUuid()));
 		assertThat(bill.getInitDate(), is(savedBill.getInitDate()));
-	}
-
-	@Test
-	public void load_only_user_accounts() throws Exception {
-		Bill correctBill = new BillBuilder().build();
-		correctBill.setUserUuid(Environment.CURRENT_USER_UUID);
-		billRepository.save(correctBill);
-
-		Bill wrongBill = new BillBuilder().name("test").build();
-		wrongBill.setUserUuid("wrong");
-		billRepository.save(wrongBill);
-
-		List<Bill> bills = billRepository.userBills();
-		assertThat(bills.size(), is(1));
-		assertThat(bills.get(0).getUuid(), is(correctBill.getUuid()));
-		assertFalse(bills.contains(wrongBill));
 	}
 
 	@Test
@@ -146,7 +128,7 @@ public class BillRepositoryTest {
 		Bill billA = new BillBuilder().name("a").build();
 		billRepository.save(billA);
 
-		List<Bill> bills = billRepository.userBills();
+		List<Bill> bills = billRepository.all();
 		assertThat(bills.get(0).getUuid(), is(billA.getUuid()));
 		assertThat(bills.get(1).getUuid(), is(billB.getUuid()));
 	}

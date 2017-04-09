@@ -43,7 +43,6 @@ public final class ReceiptTable implements Table<Receipt> {
 				Fields.ACCOUNT_UUID + SqlTypes.TEXT_NOT_NULL + "," +
 				Fields.CREDITED + SqlTypes.INT_NOT_NULL + "," +
 				Fields.IGNORE_IN_RESUME + SqlTypes.INT_NOT_NULL + "," +
-				Fields.USER_UUID + SqlTypes.TEXT_NOT_NULL + "," +
 				Fields.SERVER_ID + SqlTypes.TEXT_UNIQUE + "," +
 				Fields.CREATED_AT + SqlTypes.DATE + "," +
 				Fields.UPDATED_AT + SqlTypes.DATE + "," +
@@ -67,7 +66,6 @@ public final class ReceiptTable implements Table<Receipt> {
 		values.put(Fields.ACCOUNT_UUID.toString(), receipt.getAccountUuid());
 		values.put(Fields.CREDITED.toString(), receipt.isCredited() ? 1 : 0);
 		values.put(Fields.IGNORE_IN_RESUME.toString(), receipt.isIgnoreInResume() ? 1 : 0);
-		values.put(Fields.USER_UUID.toString(), receipt.getUserUuid());
 		values.put(Fields.SERVER_ID.toString(), receipt.getServerId());
 		values.put(Fields.CREATED_AT.toString(), receipt.getCreatedAt());
 		values.put(Fields.UPDATED_AT.toString(), receipt.getUpdatedAt());
@@ -89,7 +87,6 @@ public final class ReceiptTable implements Table<Receipt> {
 		receipt.setAccountUuid(getString(c, Fields.ACCOUNT_UUID));
 		receipt.setCredited(getInt(c, Fields.CREDITED) != 0);
 		receipt.setIgnoreInResume(getInt(c, Fields.IGNORE_IN_RESUME) != 0);
-		receipt.setUserUuid(getString(c, Fields.USER_UUID));
 		receipt.setServerId(getString(c, Fields.SERVER_ID));
 		receipt.setCreatedAt(getLong(c, Fields.CREATED_AT));
 		receipt.setUpdatedAt(getLong(c, Fields.UPDATED_AT));
@@ -111,7 +108,6 @@ public final class ReceiptTable implements Table<Receipt> {
 				Fields.ACCOUNT_UUID.toString(),
 				Fields.CREDITED.toString(),
 				Fields.IGNORE_IN_RESUME.toString(),
-				Fields.USER_UUID.toString(),
 				Fields.SERVER_ID.toString(),
 				Fields.CREATED_AT.toString(),
 				Fields.UPDATED_AT.toString(),

@@ -38,7 +38,6 @@ class ExpenseTable : Table<Expense> {
                 .append(Fields.CHARGE_NEXT_MONTH).append(SqlTypes.INT_NOT_NULL).append(",")
                 .append(Fields.IGNORE_IN_OVERVIEW).append(SqlTypes.INT_NOT_NULL).append(",")
                 .append(Fields.IGNORE_IN_RESUME).append(SqlTypes.INT_NOT_NULL).append(",")
-                .append(Fields.USER_UUID).append(SqlTypes.TEXT_NOT_NULL).append(",")
                 .append(Fields.SERVER_ID).append(SqlTypes.TEXT_UNIQUE).append(",")
                 .append(Fields.CREATED_AT).append(SqlTypes.DATE).append(",")
                 .append(Fields.UPDATED_AT).append(SqlTypes.DATE).append(",")
@@ -65,7 +64,6 @@ class ExpenseTable : Table<Expense> {
         values.put(Fields.CHARGE_NEXT_MONTH.toString(), if (data.isChargedNextMonth) 1 else 0)
         values.put(Fields.IGNORE_IN_OVERVIEW.toString(), if (data.isIgnoreInOverview) 1 else 0)
         values.put(Fields.IGNORE_IN_RESUME.toString(), if (data.isIgnoreInResume) 1 else 0)
-        values.put(Fields.USER_UUID.toString(), data.userUuid)
         values.put(Fields.SERVER_ID.toString(), data.serverId)
         values.put(Fields.CREATED_AT.toString(), data.createdAt)
         values.put(Fields.UPDATED_AT.toString(), data.updatedAt)
@@ -89,7 +87,6 @@ class ExpenseTable : Table<Expense> {
         expense.isChargedNextMonth = getInt(c, Fields.CHARGE_NEXT_MONTH) != 0
         expense.isIgnoreInOverview = getInt(c, Fields.IGNORE_IN_OVERVIEW) != 0
         expense.isIgnoreInResume = getInt(c, Fields.IGNORE_IN_RESUME) != 0
-        expense.userUuid = getString(c, Fields.USER_UUID)
         expense.serverId = getString(c, Fields.SERVER_ID)
         expense.createdAt = getLong(c, Fields.CREATED_AT)
         expense.updatedAt = getLong(c, Fields.UPDATED_AT)
@@ -112,7 +109,6 @@ class ExpenseTable : Table<Expense> {
                 Fields.CHARGE_NEXT_MONTH.toString(),
                 Fields.IGNORE_IN_OVERVIEW.toString(),
                 Fields.IGNORE_IN_RESUME.toString(),
-                Fields.USER_UUID.toString(),
                 Fields.SERVER_ID.toString(),
                 Fields.CREATED_AT.toString(),
                 Fields.UPDATED_AT.toString(),

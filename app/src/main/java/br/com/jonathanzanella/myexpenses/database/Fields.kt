@@ -6,7 +6,6 @@ enum class Fields constructor(private val fieldName: String) {
     TITLE("title"),
     DESCRIPTION("description"),
     UUID("uuid"),
-    USER_UUID("userUuid"),
     SERVER_ID("serverId"),
     CREATED_AT("createdAt"),
     UPDATED_AT("updatedAt"),

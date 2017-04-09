@@ -7,9 +7,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.List;
-
-import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
@@ -20,7 +17,6 @@ import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.CardBuilder;
 
 import static android.support.test.InstrumentationRegistry.getTargetContext;
-import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -60,22 +56,6 @@ public class CardRepositoryTest {
 
 		Card loadCard = subject.find(card.getUuid());
 		assertThat(loadCard.getUuid(), is(card.getUuid()));
-	}
-
-	@Test
-	public void load_only_user_cards() throws Exception {
-		Card correctCard = new CardBuilder().account(account).build(accountRepository);
-		correctCard.setUserUuid(Environment.CURRENT_USER_UUID);
-		subject.save(correctCard);
-
-		Card wrongCard = new CardBuilder().name("wrongCard").account(account).build(accountRepository);
-		wrongCard.setUserUuid("wrong");
-		subject.save(wrongCard);
-
-		List<Card> cards = subject.userCards();
-		assertThat(cards.size(), is(1));
-		assertThat(cards.get(0).getUuid(), is(correctCard.getUuid()));
-		assertFalse(cards.contains(wrongCard));
 	}
 
 	@Test

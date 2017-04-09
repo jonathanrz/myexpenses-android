@@ -18,7 +18,6 @@ import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.ResourcesHelper;
 import br.com.jonathanzanella.myexpenses.log.Log;
-import br.com.jonathanzanella.myexpenses.user.SelectUserView;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
@@ -38,17 +37,18 @@ public class EditCardActivity extends BaseActivity implements CardContract.EditV
 	EditText editAccount;
 	@Bind(R.id.act_edit_card_type)
 	RadioGroup radioType;
-	@Bind(R.id.act_edit_card_user)
-	SelectUserView selectUserView;
 
-	private CardPresenter presenter;
+	private final CardPresenter presenter;
+
+	public EditCardActivity() {
+		ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(this));
+		presenter = new CardPresenter(new CardRepository(new RepositoryImpl<Card>(this), expenseRepository),
+				new AccountRepository(new RepositoryImpl<Account>(this)), expenseRepository, new ResourcesHelper(this));
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(this));
-		presenter = new CardPresenter(new CardRepository(new RepositoryImpl<Card>(this), expenseRepository),
-				new AccountRepository(new RepositoryImpl<Account>(this)), expenseRepository, new ResourcesHelper(this));
 		setContentView(R.layout.activity_edit_card);
 	}
 
@@ -143,7 +143,6 @@ public class EditCardActivity extends BaseActivity implements CardContract.EditV
 				radioType.check(R.id.act_edit_card_type_debit);
 				break;
 		}
-		selectUserView.setSelectedUser(card.getUserUuid());
 	}
 
 	@Override
@@ -159,7 +158,6 @@ public class EditCardActivity extends BaseActivity implements CardContract.EditV
 				break;
 			}
 		}
-		card.setUserUuid(selectUserView.getSelectedUser());
 		return card;
 	}
 

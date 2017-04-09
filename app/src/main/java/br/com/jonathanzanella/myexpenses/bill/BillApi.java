@@ -91,7 +91,7 @@ public class BillApi implements UnsyncModelApi<Bill> {
 
 	private BillInterface getInterface() {
 		if(billInterface == null)
-			billInterface = new Server().billInterface();
+			billInterface = new Server(MyApplication.getContext()).billInterface();
 		return billInterface;
 	}
 }

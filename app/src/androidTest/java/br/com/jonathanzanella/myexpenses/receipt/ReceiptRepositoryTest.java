@@ -92,7 +92,7 @@ public class ReceiptRepositoryTest {
 				.build();
 		repository.save(receiptB);
 
-		List<Receipt> sources = repository.userReceipts();
+		List<Receipt> sources = repository.all();
 		assertThat(sources.get(0).getUuid(), is(receiptB.getUuid()));
 		assertThat(sources.get(1).getUuid(), is(receiptA.getUuid()));
 	}

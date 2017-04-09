@@ -19,10 +19,6 @@ class RepositoryMock<T : UnsyncModel>() : Repository<T> {
         throw NotImplementedError()
     }
 
-    override fun userData(table: Table<T>): List<T> {
-        throw NotImplementedError()
-    }
-
     override fun unsync(table: Table<T>): List<T> {
         throw NotImplementedError()
     }

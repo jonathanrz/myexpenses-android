@@ -7,9 +7,10 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 import java.util.UUID;
 
-import br.com.jonathanzanella.myexpenses.Environment;
+import br.com.jonathanzanella.myexpenses.database.Fields;
 import br.com.jonathanzanella.myexpenses.database.ModelRepository;
 import br.com.jonathanzanella.myexpenses.database.Repository;
+import br.com.jonathanzanella.myexpenses.database.Where;
 import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
@@ -29,8 +30,8 @@ public class AccountRepository implements ModelRepository<Account> {
 	}
 
 	@WorkerThread
-	List<Account> userAccounts() {
-		return repository.userData(accountTable);
+	List<Account> all() {
+		return repository.query(accountTable, new Where(null).orderBy(Fields.NAME));
 	}
 
 	@WorkerThread
@@ -51,8 +52,6 @@ public class AccountRepository implements ModelRepository<Account> {
 		if(result.isValid()) {
 			if(account.getId() == 0 && account.getUuid() == null)
 				account.setUuid(UUID.randomUUID().toString());
-			if(account.getId() == 0 && account.getUserUuid() == null)
-				account.setUserUuid(Environment.CURRENT_USER_UUID);
 			account.setSync(false);
 			repository.saveAtDatabase(accountTable, account);
 		}

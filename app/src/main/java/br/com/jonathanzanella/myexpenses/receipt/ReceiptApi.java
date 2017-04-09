@@ -85,7 +85,7 @@ public class ReceiptApi implements UnsyncModelApi<Receipt> {
 
     private ReceiptInterface getInterface() {
         if(receiptInterface == null)
-            receiptInterface = new Server().receiptInterface();
+            receiptInterface = new Server(MyApplication.getContext()).receiptInterface();
         return receiptInterface;
     }
 

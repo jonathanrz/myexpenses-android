@@ -90,6 +90,6 @@ public class EditExpenseTest {
 		expense = repository.find(expense.getUuid());
 
 		onView(withId(R.id.act_show_expense_name)).check(matches(withText(expense.getName())));
-		assertThat(repository.userExpenses().size(), is(1));
+		assertThat(repository.all().size(), is(1));
 	}
 }

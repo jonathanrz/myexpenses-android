@@ -6,8 +6,3 @@ set -ev
 ./gradlew checkStyle
 ./gradlew findBugs
 ./gradlew pmd
-
-git fetch --unshallow
-if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then
-    ./gradlew testfairyJonathan
-fi
