@@ -32,6 +32,8 @@ public class EditAccountActivity extends BaseActivity implements AccountContract
 	CheckBox checkToPayCreditCard;
 	@Bind(R.id.act_edit_account_to_pay_bills)
 	CheckBox checkToPayBill;
+	@Bind(R.id.act_edit_account_show_in_resume)
+	CheckBox checkShowInResume;
 
 	private final AccountPresenter presenter;
 
@@ -107,6 +109,7 @@ public class EditAccountActivity extends BaseActivity implements AccountContract
 			account.setBalance(balance);
 		account.setAccountToPayCreditCard(checkToPayCreditCard.isChecked());
 		account.setAccountToPayBills(checkToPayBill.isChecked());
+		account.setShowInResume(checkShowInResume.isChecked());
 		return account;
 	}
 
@@ -123,6 +126,7 @@ public class EditAccountActivity extends BaseActivity implements AccountContract
 		}
 		checkToPayCreditCard.setChecked(account.isAccountToPayCreditCard());
 		checkToPayBill.setChecked(account.isAccountToPayBills());
+		checkShowInResume.setChecked(account.showInResume());
 	}
 
 	@Override

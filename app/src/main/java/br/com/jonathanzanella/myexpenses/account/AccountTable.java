@@ -9,12 +9,18 @@ import br.com.jonathanzanella.myexpenses.database.Fields;
 import br.com.jonathanzanella.myexpenses.database.SqlTypes;
 import br.com.jonathanzanella.myexpenses.database.Table;
 
+import static br.com.jonathanzanella.myexpenses.database.CursorHelper.getInt;
+import static br.com.jonathanzanella.myexpenses.database.CursorHelper.getLong;
+import static br.com.jonathanzanella.myexpenses.database.CursorHelper.getString;
+
 public final class AccountTable implements Table<Account> {
 	public void onCreate(@NonNull SQLiteDatabase db) {
 		db.execSQL(createTableSql());
 	}
 
 	public void onUpgrade(@NonNull SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
+		if(oldVersion <= 5)
+			sqLiteDatabase.execSQL("ALTER TABLE " + getName() +  " ADD COLUMN " + Fields.SHOW_IN_RESUME + SqlTypes.INT + " DEFAULT 1");
 	}
 
 	@Override
@@ -35,6 +41,7 @@ public final class AccountTable implements Table<Account> {
 				Fields.BALANCE + SqlTypes.INT + "," +
 				Fields.ACCOUNT_TO_PAY_CREDIT_CARD + SqlTypes.INT + "," +
 				Fields.ACCOUNT_TO_PAY_BILLS + SqlTypes.INT + "," +
+				Fields.SHOW_IN_RESUME + SqlTypes.INT + "," +
 				Fields.SERVER_ID + SqlTypes.TEXT_UNIQUE + "," +
 				Fields.CREATED_AT + SqlTypes.DATE + "," +
 				Fields.UPDATED_AT + SqlTypes.DATE + "," +
@@ -54,6 +61,7 @@ public final class AccountTable implements Table<Account> {
 		values.put(Fields.BALANCE.toString(), account.getBalance());
 		values.put(Fields.ACCOUNT_TO_PAY_CREDIT_CARD.toString(), account.isAccountToPayCreditCard());
 		values.put(Fields.ACCOUNT_TO_PAY_BILLS.toString(), account.isAccountToPayBills());
+		values.put(Fields.SHOW_IN_RESUME.toString(), account.showInResume());
 		values.put(Fields.SERVER_ID.toString(), account.getServerId());
 		values.put(Fields.CREATED_AT.toString(), account.getCreatedAt());
 		values.put(Fields.UPDATED_AT.toString(), account.getUpdatedAt());
@@ -65,16 +73,17 @@ public final class AccountTable implements Table<Account> {
 	@Override
 	public Account fill(@NonNull Cursor c) {
 		Account account = new Account();
-		account.setId(c.getLong(c.getColumnIndexOrThrow(Fields.ID.toString())));
-		account.setName(c.getString(c.getColumnIndexOrThrow(Fields.NAME.toString())));
-		account.setUuid(c.getString(c.getColumnIndexOrThrow(Fields.UUID.toString())));
-		account.setBalance(c.getInt(c.getColumnIndexOrThrow(Fields.BALANCE.toString())));
-		account.setAccountToPayCreditCard(c.getLong(c.getColumnIndexOrThrow(Fields.ACCOUNT_TO_PAY_CREDIT_CARD.toString())) != 0);
-		account.setAccountToPayBills(c.getLong(c.getColumnIndexOrThrow(Fields.ACCOUNT_TO_PAY_BILLS.toString())) != 0);
-		account.setServerId(c.getString(c.getColumnIndexOrThrow(Fields.SERVER_ID.toString())));
-		account.setCreatedAt(c.getLong(c.getColumnIndexOrThrow(Fields.CREATED_AT.toString())));
-		account.setUpdatedAt(c.getLong(c.getColumnIndexOrThrow(Fields.UPDATED_AT.toString())));
-		account.setSync(c.getLong(c.getColumnIndexOrThrow(Fields.SYNC.toString())) != 0);
+		account.setId(getLong(c, Fields.ID));
+		account.setName(getString(c, Fields.NAME));
+		account.setUuid(getString(c, Fields.UUID));
+		account.setBalance(getInt(c, Fields.BALANCE));
+		account.setAccountToPayCreditCard(getInt(c, Fields.ACCOUNT_TO_PAY_CREDIT_CARD) != 0);
+		account.setAccountToPayBills(getInt(c, Fields.ACCOUNT_TO_PAY_BILLS) != 0);
+		account.setShowInResume(getInt(c, Fields.SHOW_IN_RESUME) != 0);
+		account.setServerId(getString(c, Fields.SERVER_ID));
+		account.setCreatedAt(getLong(c, Fields.CREATED_AT));
+		account.setUpdatedAt(getLong(c, Fields.UPDATED_AT));
+		account.setSync(getLong(c, Fields.SYNC) != 0);
 		return account;
 	}
 
@@ -88,6 +97,7 @@ public final class AccountTable implements Table<Account> {
 				Fields.BALANCE.toString(),
 				Fields.ACCOUNT_TO_PAY_CREDIT_CARD.toString(),
 				Fields.ACCOUNT_TO_PAY_BILLS.toString(),
+				Fields.SHOW_IN_RESUME.toString(),
 				Fields.SERVER_ID.toString(),
 				Fields.CREATED_AT.toString(),
 				Fields.UPDATED_AT.toString(),

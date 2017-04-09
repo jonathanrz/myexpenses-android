@@ -36,6 +36,11 @@ public class AccountRepository implements ModelRepository<Account> {
 	}
 
 	@WorkerThread
+	List<Account> forResumeScreen() {
+		return repository.query(accountTable, new Where(Fields.SHOW_IN_RESUME).eq(true).orderBy(Fields.NAME));
+	}
+
+	@WorkerThread
 	public long greaterUpdatedAt() {
 		return repository.greaterUpdatedAt(accountTable);
 	}

@@ -11,7 +11,10 @@ import br.com.jonathanzanella.myexpenses.log.LogTable
 import br.com.jonathanzanella.myexpenses.receipt.ReceiptTable
 import br.com.jonathanzanella.myexpenses.source.SourceTable
 
-class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, "MyExpenses", null, 5/*version*/) {
+private const val DB_NAME = "MyExpenses"
+private const val DB_VERSION = 6
+
+class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
     private val tables = arrayOf(AccountTable(), BillTable(), CardTable(), SourceTable(),
             ReceiptTable(), ExpenseTable(), LogTable())
 

@@ -1,11 +1,10 @@
-package br.com.jonathanzanella.myexpenses.expense;
+package br.com.jonathanzanella.myexpenses.account;
 
 import android.content.Intent;
 import android.support.test.filters.MediumTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -13,19 +12,17 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.account.Account;
-import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
-import br.com.jonathanzanella.myexpenses.helpers.builder.ExpenseBuilder;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.InstrumentationRegistry.getTargetContext;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
+import static android.support.test.espresso.matcher.ViewMatchers.isChecked;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.clickIntoView;
@@ -36,26 +33,20 @@ import static org.hamcrest.core.Is.is;
 
 @RunWith(AndroidJUnit4.class)
 @MediumTest
-public class EditExpenseTest {
+public class EditAccountTest {
 	@Rule
-	public ActivityTestRule<ShowExpenseActivity> activityTestRule = new ActivityTestRule<>(ShowExpenseActivity.class, true, false);
+	public ActivityTestRule<ShowAccountActivity> activityTestRule = new ActivityTestRule<>(ShowAccountActivity.class, true, false);
 
-	private Expense expense;
-	private ExpenseRepository repository;
+	private Account account;
+	private AccountRepository repository;
 
 	@Before
 	public void setUp() throws Exception {
 		new DatabaseHelper(getTargetContext()).recreateTables();
 
-		Account a = new AccountBuilder().build();
-		new AccountRepository(new RepositoryImpl<Account>(getTargetContext())).save(a);
-
-		expense = new ExpenseBuilder()
-				.date(DateTime.now().minusDays(1))
-				.chargeable(a)
-				.build();
-		repository = new ExpenseRepository(new RepositoryImpl<Expense>(getTargetContext()));
-		assertTrue(repository.save(expense).isValid());
+		account = new AccountBuilder().build();
+		repository = new AccountRepository(new RepositoryImpl<Account>(getTargetContext()));
+		assertTrue(repository.save(account).isValid());
 	}
 
 	@After
@@ -66,28 +57,29 @@ public class EditExpenseTest {
 	@Test
 	public void edit_expense_correctly() throws Exception {
 		Intent i = new Intent();
-		i.putExtra(ShowExpenseActivity.KEY_EXPENSE_UUID, expense.getUuid());
+		i.putExtra(ShowAccountActivity.KEY_ACCOUNT_UUID, account.getUuid());
 		activityTestRule.launchActivity(i);
 
-		final String showExpenseTitle = getTargetContext().getString(R.string.expense) + " " + expense.getName();
-		matchToolbarTitle(showExpenseTitle);
+		final String showAccountTitle = getTargetContext().getString(R.string.account) + " " + account.getName();
+		matchToolbarTitle(showAccountTitle);
 
 		clickIntoView(R.id.action_edit);
 
-		final String editExpenseTitle = getTargetContext().getString(R.string.edit_expense_title);
-		matchToolbarTitle(editExpenseTitle);
-		onView(withId(R.id.act_edit_expense_name)).check(matches(withText(expense.getName())));
-		String expectedDate = Expense.SIMPLE_DATE_FORMAT.format(expense.getDate().toDate());
-		onView(withId(R.id.act_edit_expense_date)).check(matches(withText(expectedDate)));
-		typeTextIntoView(R.id.act_edit_expense_name, " changed");
+		final String editAccountTitle = getTargetContext().getString(R.string.edit_account_title);
+		matchToolbarTitle(editAccountTitle);
+		onView(withId(R.id.act_edit_account_name)).check(matches(withText(account.getName())));
+		onView(withId(R.id.act_edit_account_show_in_resume)).check(matches(isChecked()));
+		clickIntoView(R.id.act_edit_account_show_in_resume);
+		typeTextIntoView(R.id.act_edit_account_name, " changed");
 
 		clickIntoView(R.id.action_save);
 
-		matchToolbarTitle(showExpenseTitle + " changed");
+		matchToolbarTitle(showAccountTitle + " changed");
 
-		expense = repository.find(expense.getUuid());
+		account = repository.find(account.getUuid());
 
-		onView(withId(R.id.act_show_expense_name)).check(matches(withText(expense.getName())));
+		onView(withId(R.id.act_show_account_name)).check(matches(withText(account.getName())));
 		assertThat(repository.all().size(), is(1));
+		assertThat(account.showInResume(), is(false));
 	}
 }
