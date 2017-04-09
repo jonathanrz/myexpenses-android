@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:orientation="vertical" android:layout_width="match_parent"
-	android:layout_height="match_parent">
+	android:orientation="vertical"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:padding="@dimen/default_spacing">
 
 	<android.support.design.widget.TextInputLayout
 		android:layout_width="match_parent"
@@ -25,6 +27,7 @@
 			android:id="@+id/view_sync_server_token"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
+			android:inputType="textPassword"
 			android:hint="@string/server_token"/>
 
 	</android.support.design.widget.TextInputLayout>

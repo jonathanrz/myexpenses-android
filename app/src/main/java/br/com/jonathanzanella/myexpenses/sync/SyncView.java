@@ -18,14 +18,21 @@ public class SyncView extends BaseView {
 	@Bind(R.id.view_sync_server_token)
 	EditText serverTokenView;
 
+	private ServerData serverData;
+
 	public SyncView(Context context) {
 		super(context);
 	}
 
 	@Override
 	protected void init() {
+		serverData = new ServerData(getContext());
+
 		inflate(getContext(), R.layout.view_sync, this);
 		ButterKnife.bind(this);
+
+		serverUrlView.setText(serverData.getServerUrl());
+		serverTokenView.setText(serverData.getServerToken());
 	}
 
 	@OnClick(R.id.view_sync_sync_btn)
@@ -43,7 +50,6 @@ public class SyncView extends BaseView {
 			return;
 		}
 
-		ServerData serverData = new ServerData(getContext());
 		serverData.updateInfo(serverUrl, serverToken);
 		Intent i = new Intent(getContext(), SyncService.class);
 		i.putExtra(SyncService.KEY_EXECUTE_SYNC, true);
