@@ -17,7 +17,6 @@ import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch;
 import br.com.jonathanzanella.myexpenses.log.Log;
-import br.com.jonathanzanella.myexpenses.user.SelectUserView;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
@@ -36,8 +35,6 @@ public class EditBillActivity extends BaseActivity implements BillContract.EditV
 	EditText editInitDate;
 	@Bind(R.id.act_edit_bill_end_date)
 	EditText editEndDate;
-	@Bind(R.id.act_edit_bill_user)
-	SelectUserView selectUserView;
 
 	private final BillPresenter presenter;
 
@@ -142,7 +139,6 @@ public class EditBillActivity extends BaseActivity implements BillContract.EditV
 		editName.setText(bill.getName());
 		editAmount.setText(CurrencyHelper.format(bill.getAmount()));
 		editDueDate.setText(String.valueOf(bill.getDueDate()));
-		selectUserView.setSelectedUser(bill.getUserUuid());
 	}
 
 	@Override
@@ -153,7 +149,7 @@ public class EditBillActivity extends BaseActivity implements BillContract.EditV
 		bill.setName(editName.getText().toString());
 		bill.setAmount(StringUtils.isEmpty(amountText) ? 0 : Integer.parseInt(amountText));
 		bill.setDueDate(StringUtils.isEmpty(dueDateText) ? 0 : Integer.parseInt(dueDateText));
-		bill.setUserUuid(selectUserView.getSelectedUser());
+
 		return bill;
 	}
 

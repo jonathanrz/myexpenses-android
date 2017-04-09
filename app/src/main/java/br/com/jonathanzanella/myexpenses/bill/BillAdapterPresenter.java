@@ -18,7 +18,7 @@ class BillAdapterPresenter {
 	}
 
 	private void loadBills() {
-		bills = repository.userBills();
+		bills = repository.all();
 		billsFiltered = bills;
 	}
 

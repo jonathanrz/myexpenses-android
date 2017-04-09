@@ -38,7 +38,6 @@ public final class BillTable implements Table<Bill> {
 				Fields.DUE_DATE + SqlTypes.INT + "," +
 				Fields.INIT_DATE + SqlTypes.DATE_NOT_NULL + "," +
 				Fields.END_DATE + SqlTypes.DATE_NOT_NULL + "," +
-				Fields.USER_UUID + SqlTypes.TEXT_NOT_NULL + "," +
 				Fields.SERVER_ID + SqlTypes.TEXT_UNIQUE + "," +
 				Fields.CREATED_AT + SqlTypes.DATE + "," +
 				Fields.UPDATED_AT + SqlTypes.DATE + "," +
@@ -59,7 +58,6 @@ public final class BillTable implements Table<Bill> {
 		values.put(Fields.DUE_DATE.toString(), bill.getDueDate());
 		values.put(Fields.INIT_DATE.toString(), bill.getInitDate().getMillis());
 		values.put(Fields.END_DATE.toString(), bill.getEndDate().getMillis());
-		values.put(Fields.USER_UUID.toString(), bill.getUserUuid());
 		values.put(Fields.SERVER_ID.toString(), bill.getServerId());
 		values.put(Fields.CREATED_AT.toString(), bill.getCreatedAt());
 		values.put(Fields.UPDATED_AT.toString(), bill.getUpdatedAt());
@@ -78,7 +76,6 @@ public final class BillTable implements Table<Bill> {
 		bill.setDueDate(c.getInt(c.getColumnIndexOrThrow(Fields.DUE_DATE.toString())));
 		bill.setInitDate(new DateTime(c.getLong(c.getColumnIndexOrThrow(Fields.INIT_DATE.toString()))));
 		bill.setEndDate(new DateTime(c.getLong(c.getColumnIndexOrThrow(Fields.END_DATE.toString()))));
-		bill.setUserUuid(c.getString(c.getColumnIndexOrThrow(Fields.USER_UUID.toString())));
 		bill.setServerId(c.getString(c.getColumnIndexOrThrow(Fields.SERVER_ID.toString())));
 		bill.setCreatedAt(c.getLong(c.getColumnIndexOrThrow(Fields.CREATED_AT.toString())));
 		bill.setUpdatedAt(c.getLong(c.getColumnIndexOrThrow(Fields.UPDATED_AT.toString())));
@@ -97,7 +94,6 @@ public final class BillTable implements Table<Bill> {
 				Fields.DUE_DATE.toString(),
 				Fields.INIT_DATE.toString(),
 				Fields.END_DATE.toString(),
-				Fields.USER_UUID.toString(),
 				Fields.SERVER_ID.toString(),
 				Fields.CREATED_AT.toString(),
 				Fields.UPDATED_AT.toString(),

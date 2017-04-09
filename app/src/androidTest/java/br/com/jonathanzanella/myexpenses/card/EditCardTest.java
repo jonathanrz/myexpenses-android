@@ -84,6 +84,6 @@ public class EditCardTest {
 		card = repository.find(card.getUuid());
 
 		onView(withId(R.id.act_show_card_name)).check(matches(withText(card.getName())));
-		assertThat(repository.userCards().size(), is(1));
+		assertThat(repository.all().size(), is(1));
 	}
 }

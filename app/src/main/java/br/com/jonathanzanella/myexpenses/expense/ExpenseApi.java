@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.IOException;
 import java.util.List;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.server.Server;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
@@ -25,7 +26,7 @@ public class ExpenseApi implements UnsyncModelApi<Expense> {
 
     private ExpenseInterface getInterface() {
         if(expenseInterface == null)
-            expenseInterface = new Server().expenseInterface();
+            expenseInterface = new Server(MyApplication.getContext()).expenseInterface();
         return expenseInterface;
     }
 

@@ -25,9 +25,6 @@ public class Account implements Chargeable, UnsyncModel {
 	@Expose
 	private boolean accountToPayBills;
 
-	@Expose
-	private String userUuid;
-
 	@Expose @SerializedName("_id")
 	private String serverId;
 
@@ -63,8 +60,7 @@ public class Account implements Chargeable, UnsyncModel {
 		return "name=" + name +
 				"\nuuid=" + uuid +
 				"\nbalance=" + balance +
-				"\naccountToPayCreditCard=" + accountToPayCreditCard +
-				"\nuserUuid=" + userUuid;
+				"\naccountToPayCreditCard=" + accountToPayCreditCard;
 	}
 
 	@Override
@@ -117,14 +113,6 @@ public class Account implements Chargeable, UnsyncModel {
 
 	public void setAccountToPayBills(boolean accountToPayBills) {
 		this.accountToPayBills = accountToPayBills;
-	}
-
-	public String getUserUuid() {
-		return userUuid;
-	}
-
-	public void setUserUuid(String userUuid) {
-		this.userUuid = userUuid;
 	}
 
 	@Override

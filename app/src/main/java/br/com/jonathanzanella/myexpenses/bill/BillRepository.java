@@ -9,7 +9,6 @@ import org.joda.time.DateTime;
 import java.util.List;
 import java.util.UUID;
 
-import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.database.Fields;
 import br.com.jonathanzanella.myexpenses.database.ModelRepository;
 import br.com.jonathanzanella.myexpenses.database.Repository;
@@ -37,8 +36,8 @@ public class BillRepository  implements ModelRepository<Bill> {
 	}
 
 	@WorkerThread
-	List<Bill> userBills() {
-		return repository.userData(billTable);
+	List<Bill> all() {
+		return repository.query(billTable, new Where(null).orderBy(Fields.NAME));
 	}
 
 	@WorkerThread
@@ -55,8 +54,7 @@ public class BillRepository  implements ModelRepository<Bill> {
 	public List<Bill> monthly(final DateTime month) {
 		final List<Expense> expenses = expenseRepository.monthly(month);
 		Where query = new Where(Fields.INIT_DATE).lessThanOrEq(month.getMillis())
-				.and(Fields.END_DATE).greaterThanOrEq(month.getMillis())
-				.and(Fields.USER_UUID).eq(Environment.CURRENT_USER_UUID);
+				.and(Fields.END_DATE).greaterThanOrEq(month.getMillis());
 		List<Bill> bills = repository.query(billTable, query);
 		for (int i = 0; i < bills.size(); i++) {
 			Bill bill = bills.get(i);
@@ -98,8 +96,6 @@ public class BillRepository  implements ModelRepository<Bill> {
 		if(result.isValid()) {
 			if(bill.getId() == 0 && bill.getUuid() == null)
 				bill.setUuid(UUID.randomUUID().toString());
-			if(bill.getId() == 0 && bill.getUserUuid() == null)
-				bill.setUserUuid(Environment.CURRENT_USER_UUID);
 			bill.setSync(false);
 			repository.saveAtDatabase(billTable, bill);
 		}

@@ -15,7 +15,6 @@ import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch;
 import br.com.jonathanzanella.myexpenses.log.Log;
-import br.com.jonathanzanella.myexpenses.user.SelectUserView;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
@@ -33,8 +32,6 @@ public class EditAccountActivity extends BaseActivity implements AccountContract
 	CheckBox checkToPayCreditCard;
 	@Bind(R.id.act_edit_account_to_pay_bills)
 	CheckBox checkToPayBill;
-	@Bind(R.id.act_edit_account_user)
-	SelectUserView selectUserView;
 
 	private final AccountPresenter presenter;
 
@@ -110,7 +107,6 @@ public class EditAccountActivity extends BaseActivity implements AccountContract
 			account.setBalance(balance);
 		account.setAccountToPayCreditCard(checkToPayCreditCard.isChecked());
 		account.setAccountToPayBills(checkToPayBill.isChecked());
-		account.setUserUuid(selectUserView.getSelectedUser());
 		return account;
 	}
 
@@ -127,7 +123,6 @@ public class EditAccountActivity extends BaseActivity implements AccountContract
 		}
 		checkToPayCreditCard.setChecked(account.isAccountToPayCreditCard());
 		checkToPayBill.setChecked(account.isAccountToPayBills());
-		selectUserView.setSelectedUser(account.getUserUuid());
 	}
 
 	@Override

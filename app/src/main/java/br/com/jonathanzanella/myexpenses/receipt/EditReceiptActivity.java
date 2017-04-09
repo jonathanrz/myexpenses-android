@@ -23,7 +23,6 @@ import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.source.ListSourceActivity;
 import br.com.jonathanzanella.myexpenses.source.Source;
 import br.com.jonathanzanella.myexpenses.source.SourceRepository;
-import br.com.jonathanzanella.myexpenses.user.SelectUserView;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.Bind;
@@ -50,12 +49,14 @@ public class EditReceiptActivity extends BaseActivity implements ReceiptContract
 	EditText editInstallment;
 	@Bind(R.id.act_edit_receipt_show_in_resume)
 	CheckBox checkShowInResume;
-	@Bind(R.id.act_edit_receipt_user)
-	SelectUserView selectUserView;
 
-	private final ReceiptPresenter presenter = new ReceiptPresenter(new ReceiptRepository(new RepositoryImpl<Receipt>(this)),
-			new SourceRepository(new RepositoryImpl<Source>(this)),
-			new AccountRepository(new RepositoryImpl<Account>(this)));
+	private final ReceiptPresenter presenter;
+
+	public EditReceiptActivity() {
+		presenter = new ReceiptPresenter(new ReceiptRepository(new RepositoryImpl<Receipt>(this)),
+				new SourceRepository(new RepositoryImpl<Source>(this)),
+				new AccountRepository(new RepositoryImpl<Account>(this)));
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -195,7 +196,6 @@ public class EditReceiptActivity extends BaseActivity implements ReceiptContract
 		if(!StringUtils.isEmpty(income))
 			receipt.setIncome(Integer.parseInt(income));
 		receipt.setShowInResume(checkShowInResume.isChecked());
-		receipt.setUserUuid(selectUserView.getSelectedUser());
 		receipt.setInstallments(getInstallment());
 		receipt.setRepetition(getRepetition());
 		return receipt;
@@ -253,6 +253,5 @@ public class EditReceiptActivity extends BaseActivity implements ReceiptContract
 		}.execute();
 
 		checkShowInResume.setChecked(receipt.isShowInResume());
-		selectUserView.setSelectedUser(receipt.getUserUuid());
 	}
 }

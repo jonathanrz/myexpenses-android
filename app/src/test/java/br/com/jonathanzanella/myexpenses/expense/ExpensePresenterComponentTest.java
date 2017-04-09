@@ -49,7 +49,7 @@ public class ExpensePresenterComponentTest {
 		when(view.fillExpense(any(Expense.class))).thenReturn(expense);
 		presenter.save();
 
-		List<Expense> expenses = repository.userExpenses();
+		List<Expense> expenses = repository.all();
 		assertThat(expenses.size(), is(3));
 		assertThat(expenses.get(0).getName(), is(name + " 01/03"));
 		assertThat(expenses.get(0).getDate().getMonthOfYear(), is(date.getMonthOfYear()));
@@ -76,7 +76,7 @@ public class ExpensePresenterComponentTest {
 		when(view.fillExpense(any(Expense.class))).thenReturn(expense);
 		presenter.save();
 
-		List<Expense> expenses = repository.userExpenses();
+		List<Expense> expenses = repository.all();
 		assertThat(expenses.size(), is(3));
 		assertThat(expenses.get(0).getName(), is(name));
 		assertThat(expenses.get(0).getDate().getMonthOfYear(), is(date.getMonthOfYear()));

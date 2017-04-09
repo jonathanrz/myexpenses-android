@@ -37,7 +37,6 @@ public final class CardTable implements Table<Card> {
 				Fields.UUID + SqlTypes.TEXT_UNIQUE_NOT_NULL + "," +
 				Fields.TYPE + SqlTypes.TEXT_NOT_NULL + "," +
 				Fields.ACCOUNT_UUID + SqlTypes.TEXT_NOT_NULL + "," +
-				Fields.USER_UUID + SqlTypes.TEXT_NOT_NULL + "," +
 				Fields.SERVER_ID + SqlTypes.TEXT_UNIQUE + "," +
 				Fields.CREATED_AT + SqlTypes.DATE + "," +
 				Fields.UPDATED_AT + SqlTypes.DATE + "," +
@@ -56,7 +55,6 @@ public final class CardTable implements Table<Card> {
 		values.put(Fields.UUID.toString(), card.getUuid());
 		values.put(Fields.TYPE.toString(), card.getType().getValue());
 		values.put(Fields.ACCOUNT_UUID.toString(), card.getAccountUuid());
-		values.put(Fields.USER_UUID.toString(), card.getUserUuid());
 		values.put(Fields.SERVER_ID.toString(), card.getServerId());
 		values.put(Fields.CREATED_AT.toString(), card.getCreatedAt());
 		values.put(Fields.UPDATED_AT.toString(), card.getUpdatedAt());
@@ -73,7 +71,6 @@ public final class CardTable implements Table<Card> {
 		card.setUuid(getString(c, Fields.UUID));
 		card.setType(CardType.fromValue(getString(c, Fields.TYPE)));
 		card.setAccountUuid(getString(c, Fields.ACCOUNT_UUID));
-		card.setUserUuid(getString(c, Fields.USER_UUID));
 		card.setServerId(getString(c, Fields.SERVER_ID));
 		card.setCreatedAt(getLong(c, Fields.CREATED_AT));
 		card.setUpdatedAt(getLong(c, Fields.UPDATED_AT));
@@ -90,7 +87,6 @@ public final class CardTable implements Table<Card> {
 				Fields.UUID.toString(),
 				Fields.TYPE.toString(),
 				Fields.ACCOUNT_UUID.toString(),
-				Fields.USER_UUID.toString(),
 				Fields.SERVER_ID.toString(),
 				Fields.CREATED_AT.toString(),
 				Fields.UPDATED_AT.toString(),

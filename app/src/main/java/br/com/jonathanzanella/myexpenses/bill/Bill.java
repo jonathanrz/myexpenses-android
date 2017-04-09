@@ -30,9 +30,6 @@ public class Bill implements Transaction, UnsyncModel {
 	@Expose
 	private DateTime endDate;
 
-	@Expose
-	private String userUuid;
-
 	@Expose @SerializedName("_id")
 	private String serverId;
 
@@ -135,20 +132,12 @@ public class Bill implements Transaction, UnsyncModel {
 		this.dueDate = dueDate;
 	}
 
-	public DateTime getInitDate() {
+	DateTime getInitDate() {
 		return initDate;
 	}
 
-	public DateTime getEndDate() {
+	DateTime getEndDate() {
 		return endDate;
-	}
-
-	public String getUserUuid() {
-		return userUuid;
-	}
-
-	public void setUserUuid(String userUuid) {
-		this.userUuid = userUuid;
 	}
 
 	@Override

@@ -35,7 +35,6 @@ public final class AccountTable implements Table<Account> {
 				Fields.BALANCE + SqlTypes.INT + "," +
 				Fields.ACCOUNT_TO_PAY_CREDIT_CARD + SqlTypes.INT + "," +
 				Fields.ACCOUNT_TO_PAY_BILLS + SqlTypes.INT + "," +
-				Fields.USER_UUID + SqlTypes.TEXT_NOT_NULL + "," +
 				Fields.SERVER_ID + SqlTypes.TEXT_UNIQUE + "," +
 				Fields.CREATED_AT + SqlTypes.DATE + "," +
 				Fields.UPDATED_AT + SqlTypes.DATE + "," +
@@ -55,7 +54,6 @@ public final class AccountTable implements Table<Account> {
 		values.put(Fields.BALANCE.toString(), account.getBalance());
 		values.put(Fields.ACCOUNT_TO_PAY_CREDIT_CARD.toString(), account.isAccountToPayCreditCard());
 		values.put(Fields.ACCOUNT_TO_PAY_BILLS.toString(), account.isAccountToPayBills());
-		values.put(Fields.USER_UUID.toString(), account.getUserUuid());
 		values.put(Fields.SERVER_ID.toString(), account.getServerId());
 		values.put(Fields.CREATED_AT.toString(), account.getCreatedAt());
 		values.put(Fields.UPDATED_AT.toString(), account.getUpdatedAt());
@@ -73,7 +71,6 @@ public final class AccountTable implements Table<Account> {
 		account.setBalance(c.getInt(c.getColumnIndexOrThrow(Fields.BALANCE.toString())));
 		account.setAccountToPayCreditCard(c.getLong(c.getColumnIndexOrThrow(Fields.ACCOUNT_TO_PAY_CREDIT_CARD.toString())) != 0);
 		account.setAccountToPayBills(c.getLong(c.getColumnIndexOrThrow(Fields.ACCOUNT_TO_PAY_BILLS.toString())) != 0);
-		account.setUserUuid(c.getString(c.getColumnIndexOrThrow(Fields.USER_UUID.toString())));
 		account.setServerId(c.getString(c.getColumnIndexOrThrow(Fields.SERVER_ID.toString())));
 		account.setCreatedAt(c.getLong(c.getColumnIndexOrThrow(Fields.CREATED_AT.toString())));
 		account.setUpdatedAt(c.getLong(c.getColumnIndexOrThrow(Fields.UPDATED_AT.toString())));
@@ -91,7 +88,6 @@ public final class AccountTable implements Table<Account> {
 				Fields.BALANCE.toString(),
 				Fields.ACCOUNT_TO_PAY_CREDIT_CARD.toString(),
 				Fields.ACCOUNT_TO_PAY_BILLS.toString(),
-				Fields.USER_UUID.toString(),
 				Fields.SERVER_ID.toString(),
 				Fields.CREATED_AT.toString(),
 				Fields.UPDATED_AT.toString(),

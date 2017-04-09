@@ -52,7 +52,7 @@ public class ReceiptPresenterComponentTest {
 		when(view.fillReceipt(any(Receipt.class))).thenReturn(receipt);
 		presenter.save();
 
-		List<Receipt> receipts = repository.userReceipts();
+		List<Receipt> receipts = repository.all();
 		assertThat(receipts.size(), is(3));
 		assertThat(receipts.get(0).getName(), is(name + " 01/03"));
 		assertThat(receipts.get(0).getDate().getMonthOfYear(), is(date.getMonthOfYear()));
@@ -79,7 +79,7 @@ public class ReceiptPresenterComponentTest {
 		when(view.fillReceipt(any(Receipt.class))).thenReturn(receipt);
 		presenter.save();
 
-		List<Receipt> receipts = repository.userReceipts();
+		List<Receipt> receipts = repository.all();
 		assertThat(receipts.size(), is(3));
 		assertThat(receipts.get(0).getName(), is(name));
 		assertThat(receipts.get(0).getDate().getMonthOfYear(), is(date.getMonthOfYear()));

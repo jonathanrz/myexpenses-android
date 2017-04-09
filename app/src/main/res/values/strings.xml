@@ -81,4 +81,6 @@
 	<string name="info">Info</string>
 	<string name="debug">Debug</string>
 	<string name="negative">Negativo</string>
+	<string name="server_url">Url do servidor</string>
+	<string name="server_token">Token do servidor</string>
 </resources>

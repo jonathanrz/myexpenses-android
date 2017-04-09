@@ -96,6 +96,6 @@ public class EditReceiptTest {
 		receipt = repository.find(receipt.getUuid());
 
 		onView(withId(R.id.act_show_receipt_name)).check(matches(withText(receipt.getName())));
-		assertThat(repository.userReceipts().size(), is(1));
+		assertThat(repository.all().size(), is(1));
 	}
 }

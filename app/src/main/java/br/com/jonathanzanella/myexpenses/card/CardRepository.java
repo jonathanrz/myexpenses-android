@@ -8,7 +8,6 @@ import org.joda.time.DateTime;
 import java.util.List;
 import java.util.UUID;
 
-import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.database.Fields;
 import br.com.jonathanzanella.myexpenses.database.ModelRepository;
@@ -37,8 +36,8 @@ public class CardRepository implements ModelRepository<Card> {
 	}
 
 	@WorkerThread
-	List<Card> userCards() {
-		return repository.userData(table);
+	List<Card> all() {
+		return repository.query(table, new Where(null).orderBy(Fields.NAME));
 	}
 
 	@WorkerThread
@@ -77,8 +76,6 @@ public class CardRepository implements ModelRepository<Card> {
 		if(result.isValid()) {
 			if(card.getId() == 0 && card.getUuid() == null)
 				card.setUuid(UUID.randomUUID().toString());
-			if(card.getId() == 0 && card.getUserUuid() == null)
-				card.setUserUuid(Environment.CURRENT_USER_UUID);
 			card.setSync(false);
 			repository.saveAtDatabase(table, card);
 		}

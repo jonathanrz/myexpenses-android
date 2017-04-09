@@ -1,7 +1,5 @@
 package br.com.jonathanzanella.myexpenses.expense;
 
-import android.os.AsyncTask;
-import android.support.annotation.UiThread;
 import android.support.annotation.WorkerThread;
 
 import org.apache.commons.lang3.StringUtils;
@@ -13,7 +11,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
-import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
@@ -57,8 +54,8 @@ public class ExpenseRepository implements ModelRepository<Expense> {
 	}
 
 	@WorkerThread
-	List<Expense> userExpenses() {
-		return repository.query(table, new Where(Fields.USER_UUID).eq(Environment.CURRENT_USER_UUID).orderBy(Fields.DATE));
+	List<Expense> all() {
+		return repository.query(table, new Where(null).orderBy(Fields.DATE));
 	}
 
 	@WorkerThread
@@ -77,7 +74,6 @@ public class ExpenseRepository implements ModelRepository<Expense> {
 		expenses.addAll(repository.query(table, queryBetween(initOfMonth, endOfMonth)
 				.and(Fields.REMOVED).eq(false)
 				.and(Fields.CHARGE_NEXT_MONTH).eq(false)
-				.and(Fields.USER_UUID).eq(Environment.CURRENT_USER_UUID)
 				.orderBy(Fields.DATE)));
 
 		return expenses;
@@ -268,8 +264,7 @@ public class ExpenseRepository implements ModelRepository<Expense> {
 
 	private Where queryBetweenUserDataAndNotRemoved(DateTime init, DateTime end) {
 		return queryBetween(init, end)
-				.and(Fields.REMOVED).eq(false)
-				.and(Fields.USER_UUID).eq(Environment.CURRENT_USER_UUID);
+				.and(Fields.REMOVED).eq(false);
 	}
 
 	@WorkerThread
@@ -286,30 +281,10 @@ public class ExpenseRepository implements ModelRepository<Expense> {
 		if(result.isValid()) {
 			if(expense.getId() == 0 && expense.getUuid() == null)
 				expense.setUuid(UUID.randomUUID().toString());
-			if(expense.getId() == 0 && expense.getUserUuid() == null)
-				expense.setUserUuid(Environment.CURRENT_USER_UUID);
 			expense.setSync(false);
 			repository.saveAtDatabase(table, expense);
 		}
 		return result;
-	}
-
-	@UiThread
-	void saveAsync(final Expense expense) {
-		new AsyncTask<Void, Void, OperationResult>() {
-
-			@Override
-			protected OperationResult doInBackground(Void... voids) {
-				return save(expense);
-			}
-
-			@Override
-			protected void onPostExecute(OperationResult operationResult) {
-				super.onPostExecute(operationResult);
-				if(!operationResult.isValid())
-					throw new UnsupportedOperationException("Could not save expense " + expense.getUuid());
-			}
-		}.execute();
 	}
 
 	@WorkerThread

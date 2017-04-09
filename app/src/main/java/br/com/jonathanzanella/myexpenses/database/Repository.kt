@@ -7,7 +7,6 @@ interface Repository<T : UnsyncModel> {
     fun querySingle(table: Table<T>, where: Where?): T?
     fun query(table: Table<T>, where: Where?): List<T>
     fun query(table: Table<T>, where: Where?, single: Boolean): List<T>
-    fun userData(table: Table<T>): List<T>
     fun unsync(table: Table<T>): List<T>
     fun greaterUpdatedAt(table: Table<T>): Long
     fun saveAtDatabase(table: Table<T>, data: T)

@@ -21,7 +21,7 @@ class AccountAdapterPresenter {
 
 			@Override
 			protected Void doInBackground(Void... voids) {
-				accounts = repository.userAccounts();
+				accounts = repository.all();
 				return null;
 			}
 

@@ -1,7 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'testfairy'
 apply plugin: 'jacoco-android'
 apply plugin: 'checkstyle'
 apply plugin: 'findbugs'
@@ -10,15 +9,6 @@ apply plugin: 'pmd'
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
-
-    signingConfigs {
-        jonathan {
-            storeFile file("jonathan.keystore")
-            storePassword rootProject.ext.jonathanKeyPass
-            keyAlias "jonathanrz"
-            keyPassword rootProject.ext.jonathanKeyPass
-        }
-    }
 
     buildToolsVersion "$rootProject.buildToolsVersion"
 
@@ -44,31 +34,12 @@ android {
         debug {
             applicationIdSuffix '.debug'
             versionNameSuffix '-DEBUG'
-            buildConfigField 'String', 'MYEXPENSES_AUTH_TOKEN', rootProject.ext.authToken
             testCoverageEnabled true
-        }
-        jonathan {
-            applicationIdSuffix '.jonathan'
-            versionNameSuffix '-JONATHAN'
-            buildConfigField 'String', 'MYEXPENSES_AUTH_TOKEN', rootProject.ext.authToken
-            debuggable true
-
-            // NB: If you want to use the default debug key for a (non-debug)
-            // build type, you need to specify it:
-            signingConfig signingConfigs.jonathan
         }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            buildConfigField 'String', 'MYEXPENSES_AUTH_TOKEN', rootProject.ext.authToken
         }
-    }
-
-    testfairyConfig {
-        apiKey rootProject.ext.testFairyToken
-        autoUpdate false
-        notify true
-        testersGroups "dev"
     }
 
     testOptions.unitTests.all {

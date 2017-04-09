@@ -11,8 +11,6 @@ public class Source implements UnsyncModel {
 	private String name;
 	@Expose
 	private String uuid;
-	@Expose
-	private String userUuid;
 	@Expose @SerializedName("_id")
 	private String serverId;
 	@Expose @SerializedName("created_at")
@@ -52,14 +50,6 @@ public class Source implements UnsyncModel {
 
 	public void setUuid(String uuid) {
 		this.uuid = uuid;
-	}
-
-	public String getUserUuid() {
-		return userUuid;
-	}
-
-	public void setUserUuid(String userUuid) {
-		this.userUuid = userUuid;
 	}
 
 	@Override

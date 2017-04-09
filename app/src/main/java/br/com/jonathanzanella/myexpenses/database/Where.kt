@@ -2,7 +2,7 @@ package br.com.jonathanzanella.myexpenses.database
 
 import java.util.*
 
-class Where(field: Fields) {
+class Where(field: Fields?) {
     private inner class Query internal constructor(internal var field: Fields) {
         internal var operation: String? = null
 
@@ -20,7 +20,8 @@ class Where(field: Fields) {
 
     init {
         queries = ArrayList<Query>()
-        queries.add(Query(field))
+        if(field != null)
+            queries.add(Query(field))
     }
 
     private fun setLastQueryOperation(operation: String) {

@@ -10,7 +10,6 @@ import org.junit.runner.RunWith;
 
 import java.util.List;
 
-import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
@@ -60,21 +59,6 @@ public class SourceRepositoryTest {
 	}
 
 	@Test
-	public void load_only_user_sources() throws Exception {
-		Source correctSource = new SourceBuilder().name("test").build();
-		correctSource.setUserUuid(Environment.CURRENT_USER_UUID);
-		repository.save(correctSource);
-
-		Source wrongSource = new SourceBuilder().name("test2").build();
-		wrongSource.setUserUuid("wrong");
-		repository.save(wrongSource);
-
-		List<Source> sources = repository.userSources();
-		assertThat(sources.size(), is(1));
-		assertThat(sources.get(0).getUuid(), is(correctSource.getUuid()));
-	}
-
-	@Test
 	public void source_unsync_returns_only_not_synced() throws Exception {
 		Source sourceUnsync = new SourceBuilder().name("sourceUnsync").updatedAt(100L).build();
 		sourceUnsync.setSync(false);
@@ -97,7 +81,7 @@ public class SourceRepositoryTest {
 		Source sourceA = new SourceBuilder().name("a").build();
 		repository.save(sourceA);
 
-		List<Source> sources = repository.userSources();
+		List<Source> sources = repository.all();
 		assertThat(sources.get(0).getUuid(), is(sourceA.getUuid()));
 		assertThat(sources.get(1).getUuid(), is(sourceB.getUuid()));
 	}

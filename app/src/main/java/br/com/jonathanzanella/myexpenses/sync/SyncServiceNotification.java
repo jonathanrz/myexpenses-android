@@ -6,14 +6,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 
-import br.com.jonathanzanella.myexpenses.Environment;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.views.MainActivity;
 
 class SyncServiceNotification {
 	private static final String CONTENT_TITLE = "My Expenses";
-	private static final String CONTENT_TEXT_SYNCING = Environment.CURRENT_USER + " data syncing";
-	private static final String CONTENT_TEXT_SYNCED = Environment.CURRENT_USER + " data synced";
+	private static final String CONTENT_TEXT_SYNCING = "Data syncing";
+	private static final String CONTENT_TEXT_SYNCED = "Data synced";
 	private final int notificationId;
 	private final NotificationManager notifyMgr;
 	private final NotificationCompat.Builder notification;

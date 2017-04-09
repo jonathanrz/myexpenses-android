@@ -3,6 +3,32 @@
 	android:orientation="vertical" android:layout_width="match_parent"
 	android:layout_height="match_parent">
 
+	<android.support.design.widget.TextInputLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="@dimen/default_spacing">
+
+		<android.support.v7.widget.AppCompatEditText
+			android:id="@+id/view_sync_server_url"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:hint="@string/server_url"/>
+
+	</android.support.design.widget.TextInputLayout>
+
+	<android.support.design.widget.TextInputLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="@dimen/default_spacing">
+
+		<android.support.v7.widget.AppCompatEditText
+			android:id="@+id/view_sync_server_token"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:hint="@string/server_token"/>
+
+	</android.support.design.widget.TextInputLayout>
+
 	<Button
 		android:id="@+id/view_sync_sync_btn"
 		android:layout_width="wrap_content"

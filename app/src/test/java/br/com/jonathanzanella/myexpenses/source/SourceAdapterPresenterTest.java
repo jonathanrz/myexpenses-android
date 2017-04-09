@@ -25,7 +25,7 @@ public class SourceAdapterPresenterTest {
 
 	@Test(expected = UnsupportedOperationException.class)
 	public void get_sources_return_unmodifiable_list() {
-		when(repository.userSources()).thenReturn(new ArrayList<Source>());
+		when(repository.all()).thenReturn(new ArrayList<Source>());
 
 		List<Source> sources = presenter.getSources(false);
 		sources.add(new Source());

@@ -27,7 +27,7 @@ public class BillAdapterPresenterTest {
 
 	@Test(expected = UnsupportedOperationException.class)
 	public void get_sources_return_unmodifiable_list() {
-		when(repository.userBills()).thenReturn(new ArrayList<Bill>());
+		when(repository.all()).thenReturn(new ArrayList<Bill>());
 
 		List<Bill> bills = presenter.getBills(false);
 		bills.add(new Bill());

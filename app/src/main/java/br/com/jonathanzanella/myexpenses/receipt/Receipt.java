@@ -40,8 +40,6 @@ public class Receipt implements Transaction, UnsyncModel {
 	private boolean credited;
 	@Expose
 	private boolean ignoreInResume;
-	@Expose
-	private String userUuid;
 	@Expose @SerializedName("_id")
 	private String serverId;
 	@Expose @SerializedName("created_at")
@@ -129,7 +127,6 @@ public class Receipt implements Transaction, UnsyncModel {
 		receipt.sourceUuid = sourceUuid;
 		receipt.accountUuid = accountUuid;
 		receipt.ignoreInResume = ignoreInResume;
-		receipt.userUuid = userUuid;
 		receipt.serverId = serverId;
 		receipt.repetition = repetition;
 		receipt.installments = installments;
@@ -248,14 +245,6 @@ public class Receipt implements Transaction, UnsyncModel {
 
 	void setIgnoreInResume(boolean ignoreInResume) {
 		this.ignoreInResume = ignoreInResume;
-	}
-
-	public String getUserUuid() {
-		return userUuid;
-	}
-
-	public void setUserUuid(String userUuid) {
-		this.userUuid = userUuid;
 	}
 
 	@Override

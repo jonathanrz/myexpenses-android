@@ -83,7 +83,7 @@ public class CardApi implements UnsyncModelApi<Card> {
 
 	private CardInterface getInterface() {
 		if(cardInterface == null)
-			cardInterface = new Server().cardInterface();
+			cardInterface = new Server(MyApplication.getContext()).cardInterface();
 		return cardInterface;
 	}
 

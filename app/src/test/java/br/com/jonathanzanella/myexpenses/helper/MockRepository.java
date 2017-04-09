@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.database.Repository;
@@ -36,13 +37,7 @@ public class MockRepository<T extends UnsyncModel> implements Repository<T> {
 	@NotNull
 	@Override
 	public List<T> query(@NotNull Table<T> table, @Nullable Where where, boolean single) {
-		throw new NotImplementedException("");
-	}
-
-	@NotNull
-	@Override
-	public List<T> userData(@NotNull Table<T> table) {
-		return models;
+		return Collections.singletonList(models.get(0));
 	}
 
 	@NotNull
