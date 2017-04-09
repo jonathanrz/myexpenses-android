@@ -1,5 +1,6 @@
 package br.com.jonathanzanella.myexpenses.receipt;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
 
 import com.google.gson.annotations.Expose;
@@ -17,7 +18,6 @@ import br.com.jonathanzanella.myexpenses.source.Source;
 import br.com.jonathanzanella.myexpenses.source.SourceRepository;
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel;
 import br.com.jonathanzanella.myexpenses.transaction.Transaction;
-import lombok.NonNull;
 
 public class Receipt implements Transaction, UnsyncModel {
 	private AccountRepository accountRepository = null;
@@ -97,7 +97,7 @@ public class Receipt implements Transaction, UnsyncModel {
 		return getAccount(false);
 	}
 
-	public Account loadAccount() {
+	private Account loadAccount() {
 		return getAccount(true);
 	}
 

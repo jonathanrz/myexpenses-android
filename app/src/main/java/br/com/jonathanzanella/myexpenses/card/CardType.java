@@ -1,8 +1,7 @@
 package br.com.jonathanzanella.myexpenses.card;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-
-import lombok.NonNull;
 
 public enum CardType {
 	CREDIT("CREDIT"),

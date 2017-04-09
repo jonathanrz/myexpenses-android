@@ -68,19 +68,9 @@ dependencies {
     //Play Services
     compile "com.google.android.gms:play-services-gcm:$rootProject.playServicesVersion"
 
-    //Lombok
-    provided "org.projectlombok:lombok:$rootProject.lombokVersion"
-    kapt "org.projectlombok:lombok:$rootProject.lombokVersion"
-    annotationProcessor "org.projectlombok:lombok:$rootProject.lombokVersion"
-
     //retrofit
     compile "com.squareup.retrofit2:retrofit:$rootProject.retrofitVersion"
     compile "com.squareup.retrofit2:converter-gson:$rootProject.retrofitVersion"
-    compile "com.squareup.retrofit2:adapter-rxjava:$rootProject.retrofitVersion"
-
-    //RxAndroid
-    compile "io.reactivex:rxandroid:$rootProject.rxAndroidVersion"
-    compile "io.reactivex:rxjava:$rootProject.rxJavaVersion"
 
     //JakeWharton
     compile "com.jakewharton:butterknife:$rootProject.butterKnifeVersion"
