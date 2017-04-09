@@ -16,6 +16,7 @@ enum class Fields constructor(private val fieldName: String) {
     CHARGE_NEXT_MONTH("chargedNextMonth"),
     IGNORE_IN_OVERVIEW("ignoreInOverview"),
     IGNORE_IN_RESUME("ignoreInResume"),
+    SHOW_IN_RESUME("showInResume"),
     DATE("date"),
     DUE_DATE("due_date"),
     INIT_DATE("init_date"),

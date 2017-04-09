@@ -15,6 +15,8 @@ public final class AccountTable implements Table<Account> {
 	}
 
 	public void onUpgrade(@NonNull SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
+		if(oldVersion <= 5)
+			sqLiteDatabase.execSQL("ALTER TABLE " + getName() +  " ADD COLUMN " + Fields.SHOW_IN_RESUME + SqlTypes.INT + " DEFAULT 1");
 	}
 
 	@Override
@@ -35,6 +37,7 @@ public final class AccountTable implements Table<Account> {
 				Fields.BALANCE + SqlTypes.INT + "," +
 				Fields.ACCOUNT_TO_PAY_CREDIT_CARD + SqlTypes.INT + "," +
 				Fields.ACCOUNT_TO_PAY_BILLS + SqlTypes.INT + "," +
+				Fields.SHOW_IN_RESUME + SqlTypes.INT + "," +
 				Fields.SERVER_ID + SqlTypes.TEXT_UNIQUE + "," +
 				Fields.CREATED_AT + SqlTypes.DATE + "," +
 				Fields.UPDATED_AT + SqlTypes.DATE + "," +
