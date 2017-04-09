@@ -13,7 +13,6 @@ class AccountAdapterPresenter {
 	AccountAdapterPresenter(AccountAdapter adapter, AccountRepository repository, final AccountAdapter.Format format) {
 		this.repository = repository;
 		this.adapter = adapter;
-		loadAccountsAsync(format);
 	}
 
 	final void loadAccountsAsync(final AccountAdapter.Format format) {
