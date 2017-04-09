@@ -15,7 +15,6 @@ import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.helpers.AdapterColorHelper;
 import butterknife.Bind;
-import butterknife.BindColor;
 import butterknife.ButterKnife;
 
 class SourceAdapter extends RecyclerView.Adapter<SourceAdapter.ViewHolder> {
@@ -29,17 +28,17 @@ class SourceAdapter extends RecyclerView.Adapter<SourceAdapter.ViewHolder> {
 		@Bind(R.id.row_source_name)
 		TextView name;
 
-		@BindColor(R.color.color_list_odd)
-		int oddColor;
-		@BindColor(R.color.color_list_even)
-		int evenColor;
-
 		private final AdapterColorHelper adapterColorHelper;
 
 		public ViewHolder(View itemView) {
 			super(itemView);
 
 			ButterKnife.bind(this, itemView);
+
+			//noinspection deprecation
+			int oddColor = itemView.getContext().getResources().getColor(R.color.color_list_odd);
+			//noinspection deprecation
+			int evenColor = itemView.getContext().getResources().getColor(R.color.color_list_even);
 			adapterColorHelper = new AdapterColorHelper(oddColor, evenColor);
 
 			itemView.setOnClickListener(this);

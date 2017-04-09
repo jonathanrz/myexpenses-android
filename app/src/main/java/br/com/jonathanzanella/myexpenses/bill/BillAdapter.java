@@ -18,7 +18,6 @@ import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.AdapterColorHelper;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import butterknife.Bind;
-import butterknife.BindColor;
 import butterknife.ButterKnife;
 
 class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder> {
@@ -37,17 +36,17 @@ class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder> {
 		@Bind(R.id.row_bill_dates)
 		TextView dates;
 
-		@BindColor(R.color.color_list_odd)
-		int oddColor;
-		@BindColor(R.color.color_list_even)
-		int evenColor;
-
 		private final AdapterColorHelper adapterColorHelper;
 
 		public ViewHolder(View itemView) {
 			super(itemView);
 
 			ButterKnife.bind(this, itemView);
+
+			//noinspection deprecation
+			int oddColor = itemView.getContext().getResources().getColor(R.color.color_list_odd);
+			//noinspection deprecation
+			int evenColor = itemView.getContext().getResources().getColor(R.color.color_list_even);
 			adapterColorHelper = new AdapterColorHelper(oddColor, evenColor);
 
 			itemView.setOnClickListener(this);

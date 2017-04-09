@@ -21,8 +21,6 @@ import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.AdapterColorHelper;
 import butterknife.Bind;
-import butterknife.BindColor;
-import butterknife.BindString;
 import butterknife.ButterKnife;
 
 public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
@@ -37,22 +35,23 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
 		TextView name;
 		@Bind(R.id.row_card_account)
 		TextView account;
-		@BindString(R.string.credit)
-		String credit;
-		@BindString(R.string.debit)
-		String debit;
-
-		@BindColor(R.color.color_list_odd)
-		int oddColor;
-		@BindColor(R.color.color_list_even)
-		int evenColor;
 
 		private final AdapterColorHelper adapterColorHelper;
+		private final String credit;
+		private final String debit;
 
 		public ViewHolder(View itemView) {
 			super(itemView);
 
 			ButterKnife.bind(this, itemView);
+
+			credit = itemView.getContext().getString(R.string.credit);
+			debit = itemView.getContext().getString(R.string.debit);
+
+			//noinspection deprecation
+			int oddColor = itemView.getContext().getResources().getColor(R.color.color_list_odd);
+			//noinspection deprecation
+			int evenColor = itemView.getContext().getResources().getColor(R.color.color_list_even);
 			adapterColorHelper = new AdapterColorHelper(oddColor, evenColor);
 
 			itemView.setOnClickListener(this);
