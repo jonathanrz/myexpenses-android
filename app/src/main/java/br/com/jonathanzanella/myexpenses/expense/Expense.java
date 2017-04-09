@@ -113,16 +113,16 @@ public class Expense implements Transaction, UnsyncModel {
 
 	@WorkerThread
 	public Chargeable getChargeableFromCache() {
-		return getChargeableFromCache(false);
+		return getChargeable(false);
 	}
 
 	@WorkerThread
-	public Chargeable loadChargeable() {
-		return getChargeableFromCache(true);
+	private Chargeable loadChargeable() {
+		return getChargeable(true);
 	}
 
 	@WorkerThread
-	private Chargeable getChargeableFromCache(boolean ignoreCache) {
+	private Chargeable getChargeable(boolean ignoreCache) {
 		if(chargeable == null || ignoreCache)
 			chargeable = Expense.findChargeable(chargeableType, chargeableUuid);
 		return chargeable;
