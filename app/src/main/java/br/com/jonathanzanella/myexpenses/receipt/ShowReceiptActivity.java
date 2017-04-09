@@ -128,7 +128,7 @@ public class ShowReceiptActivity extends BaseActivity implements ReceiptContract
 
 			@Override
 			protected Account doInBackground(Void... voids) {
-				return receipt.getAccount();
+				return receipt.getAccountFromCache();
 			}
 
 			@Override

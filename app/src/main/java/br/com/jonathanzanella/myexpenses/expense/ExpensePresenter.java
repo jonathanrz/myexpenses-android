@@ -132,7 +132,7 @@ class ExpensePresenter {
 
 			@Override
 			protected Chargeable doInBackground(Void... voids) {
-				chargeable = expense.getChargeable();
+				chargeable = expense.getChargeableFromCache();
 				return chargeable;
 			}
 
@@ -382,7 +382,7 @@ class ExpensePresenter {
 
 	@WorkerThread
 	boolean hasChargeable() {
-		return hasExpense() && expense.getChargeable() != null;
+		return hasExpense() && expense.getChargeableFromCache() != null;
 	}
 
 	@UiThread

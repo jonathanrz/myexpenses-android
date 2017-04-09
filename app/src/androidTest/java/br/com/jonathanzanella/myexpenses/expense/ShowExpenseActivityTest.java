@@ -70,7 +70,7 @@ public class ShowExpenseActivityTest {
 		String incomeAsCurrency = CurrencyHelper.format(expense.getValue());
 		onView(withId(R.id.act_show_expense_name)).check(matches(withText(expense.getName())));
 		onView(withId(R.id.act_show_expense_value)).check(matches(withText(incomeAsCurrency)));
-		Chargeable chargeable = expense.getChargeable();
+		Chargeable chargeable = expense.getChargeableFromCache();
 		onView(withId(R.id.act_show_expense_chargeable)).check(matches(withText(chargeable.getName())));
 	}
 

@@ -95,7 +95,7 @@ public class ReceiptsViewTest {
 		String incomeAsCurrency = CurrencyHelper.format(receipt.getIncome());
 		onView(withId(R.id.act_show_receipt_name)).check(matches(withText(receipt.getName())));
 		onView(withId(R.id.act_show_receipt_income)).check(matches(withText(incomeAsCurrency)));
-		Account account = receipt.getAccount();
+		Account account = receipt.getAccountFromCache();
 		onView(withId(R.id.act_show_receipt_account)).check(matches(withText(account.getName())));
 
 		Source source = receipt.getSource();

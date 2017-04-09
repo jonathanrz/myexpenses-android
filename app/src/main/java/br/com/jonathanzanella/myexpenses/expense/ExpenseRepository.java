@@ -289,7 +289,7 @@ public class ExpenseRepository implements ModelRepository<Expense> {
 			result.addError(ValidationError.AMOUNT);
 		if(expense.getDate() == null)
 			result.addError(ValidationError.DATE);
-		if(expense.getChargeable() == null)
+		if(expense.getChargeableFromCache() == null)
 			result.addError(ValidationError.CHARGEABLE);
 		return result;
 	}

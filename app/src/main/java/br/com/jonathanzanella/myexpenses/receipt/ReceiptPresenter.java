@@ -149,7 +149,7 @@ class ReceiptPresenter {
 		if(receipt == null)
 			throw new ReceiptNotFoundException(uuid);
 		source = receipt.getSource();
-		account = receipt.getAccount();
+		account = receipt.getAccountFromCache();
 		date = receipt.getDate();
 	}
 
@@ -235,7 +235,7 @@ class ReceiptPresenter {
 
 							@Override
 							protected Void doInBackground(Void... voids) {
-								Account acc = receipt.getAccount();
+								Account acc = receipt.getAccountFromCache();
 								acc.credit(receipt.getIncome() * -1);
 								accountRepository.save(acc);
 

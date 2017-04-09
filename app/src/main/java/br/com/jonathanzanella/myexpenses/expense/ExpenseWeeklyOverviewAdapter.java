@@ -55,7 +55,7 @@ public class ExpenseWeeklyOverviewAdapter extends RecyclerView.Adapter<ExpenseWe
 
 				@Override
 				protected Chargeable doInBackground(Void... voids) {
-					return expense.getChargeable();
+					return expense.getChargeableFromCache();
 				}
 
 				@Override

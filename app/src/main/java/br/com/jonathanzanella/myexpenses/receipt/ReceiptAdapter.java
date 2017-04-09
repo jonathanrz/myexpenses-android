@@ -85,7 +85,7 @@ class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ViewHolder> {
 
 				@Override
 				protected Account doInBackground(Void... voids) {
-					return receipt.getAccount();
+					return receipt.getAccountFromCache();
 				}
 
 				@Override

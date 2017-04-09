@@ -109,7 +109,7 @@ public class CardPresenterTest {
 
 		assertThat(expense.getName(), is(invoice + " " + card.getName()));
 		assertThat(expense.getValue(), is(value * expenseList.size()));
-		assertThat(expense.getChargeable().getName(), is(account.getName()));
+		assertThat(expense.getChargeableFromCache().getName(), is(account.getName()));
 		assertTrue(expenseList.get(0).isCharged());
 		assertTrue(expenseList.get(1).isCharged());
 	}

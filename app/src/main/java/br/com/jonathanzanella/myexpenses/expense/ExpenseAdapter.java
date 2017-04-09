@@ -74,7 +74,7 @@ class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHolder> {
 
 				@Override
 				protected Chargeable doInBackground(Void... voids) {
-					return expense.getChargeable();
+					return expense.getChargeableFromCache();
 				}
 
 				@Override

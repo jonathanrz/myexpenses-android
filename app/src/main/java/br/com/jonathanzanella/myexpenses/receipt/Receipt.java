@@ -93,8 +93,16 @@ public class Receipt implements Transaction, UnsyncModel {
 		sourceUuid = s.getUuid();
 	}
 
-	public Account getAccount() {
-		if(account == null)
+	Account getAccountFromCache() {
+		return getAccount(false);
+	}
+
+	public Account loadAccount() {
+		return getAccount(true);
+	}
+
+	private Account getAccount(boolean ignoreCache) {
+		if(account == null || ignoreCache)
 			account = getAccountRepository().find(accountUuid);
 		return account;
 	}
@@ -154,7 +162,7 @@ public class Receipt implements Transaction, UnsyncModel {
 	}
 
 	public void credit() {
-		Account acc = getAccount();
+		Account acc = loadAccount();
 		acc.credit(getIncome());
 		getAccountRepository().save(acc);
 		setCredited(true);
