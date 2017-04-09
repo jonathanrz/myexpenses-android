@@ -25,6 +25,9 @@ public class Account implements Chargeable, UnsyncModel {
 	@Expose
 	private boolean accountToPayBills;
 
+	@Expose
+	private boolean showInResume = true;
+
 	@Expose @SerializedName("_id")
 	private String serverId;
 
@@ -114,6 +117,14 @@ public class Account implements Chargeable, UnsyncModel {
 
 	public void setAccountToPayBills(boolean accountToPayBills) {
 		this.accountToPayBills = accountToPayBills;
+	}
+
+	public boolean showInResume() {
+		return showInResume;
+	}
+
+	public void setShowInResume(boolean showInResume) {
+		this.showInResume = showInResume;
 	}
 
 	@Override
