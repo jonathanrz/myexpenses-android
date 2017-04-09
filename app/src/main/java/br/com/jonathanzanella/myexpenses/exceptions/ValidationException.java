@@ -1,10 +1,10 @@
 package br.com.jonathanzanella.myexpenses.exceptions;
 
-import br.com.jonathanzanella.myexpenses.validations.OperationResult;
+import br.com.jonathanzanella.myexpenses.validations.ValidationResult;
 
 public class ValidationException extends RuntimeException {
 
-	public ValidationException(OperationResult operationResult) {
-		super(operationResult.getErrorsAsString());
+	public ValidationException(ValidationResult validationResult) {
+		super(validationResult.getErrorsAsString());
 	}
 }

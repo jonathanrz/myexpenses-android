@@ -25,7 +25,7 @@ import br.com.jonathanzanella.myexpenses.chargeable.ListChargeableActivity;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException;
 import br.com.jonathanzanella.myexpenses.log.Log;
-import br.com.jonathanzanella.myexpenses.validations.OperationResult;
+import br.com.jonathanzanella.myexpenses.validations.ValidationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
 import static android.app.Activity.RESULT_OK;
@@ -217,10 +217,10 @@ class ExpensePresenter {
 			expense.setValueToShowInOverview(expense.getValueToShowInOverview() / expense.getInstallments());
 		}
 
-		new AsyncTask<Void, Void, OperationResult>() {
+		new AsyncTask<Void, Void, ValidationResult>() {
 			@Override
-			protected OperationResult doInBackground(Void... voids) {
-				OperationResult result = repository.save(expense);
+			protected ValidationResult doInBackground(Void... voids) {
+				ValidationResult result = repository.save(expense);
 				if(result.isValid())
 					generateExpensesRepetition();
 
@@ -230,7 +230,7 @@ class ExpensePresenter {
 			private void generateExpensesRepetition() {
 				for (int i = 1; i < expense.getRepetition(); i++) {
 					expense = expense.repeat(originalName, i + 1);
-					OperationResult repetitionResult = repository.save(expense);
+					ValidationResult repetitionResult = repository.save(expense);
 					if(!repetitionResult.isValid())
 						Log.error("ExpensePresenter", "Error saving repetition of expense " + expense.getData() +
 								" error=" + repetitionResult.getErrors().toString());
@@ -238,7 +238,7 @@ class ExpensePresenter {
 			}
 
 			@Override
-			protected void onPostExecute(OperationResult result) {
+			protected void onPostExecute(ValidationResult result) {
 				super.onPostExecute(result);
 				if(result.isValid()) {
 					editView.finishView();

@@ -6,7 +6,7 @@ import android.support.annotation.UiThread;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException;
-import br.com.jonathanzanella.myexpenses.validations.OperationResult;
+import br.com.jonathanzanella.myexpenses.validations.ValidationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
 class SourcePresenter {
@@ -73,7 +73,7 @@ class SourcePresenter {
 		if(source == null)
 			source = new Source();
 		source = editView.fillSource(source);
-		OperationResult result = repository.save(source);
+		ValidationResult result = repository.save(source);
 
 		if(result.isValid()) {
 			editView.finishView();

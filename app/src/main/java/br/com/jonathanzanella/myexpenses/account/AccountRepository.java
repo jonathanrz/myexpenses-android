@@ -1,5 +1,6 @@
 package br.com.jonathanzanella.myexpenses.account;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
 
 import org.apache.commons.lang3.StringUtils;
@@ -11,8 +12,8 @@ import br.com.jonathanzanella.myexpenses.database.Fields;
 import br.com.jonathanzanella.myexpenses.database.ModelRepository;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.database.Where;
-import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
+import br.com.jonathanzanella.myexpenses.validations.ValidationResult;
 
 import static br.com.jonathanzanella.myexpenses.log.Log.warning;
 
@@ -45,10 +46,8 @@ public class AccountRepository implements ModelRepository<Account> {
 	}
 
 	@WorkerThread
-	public OperationResult save(Account account) {
-		OperationResult result = new OperationResult();
-		if(StringUtils.isEmpty(account.getName()))
-			result.addError(ValidationError.NAME);
+	public ValidationResult save(Account account) {
+		ValidationResult result = validate(account);
 		if(result.isValid()) {
 			if(account.getId() == 0 && account.getUuid() == null)
 				account.setUuid(UUID.randomUUID().toString());
@@ -58,9 +57,23 @@ public class AccountRepository implements ModelRepository<Account> {
 		return result;
 	}
 
+	@NonNull
+	private ValidationResult validate(Account account) {
+		ValidationResult result = new ValidationResult();
+		if(StringUtils.isEmpty(account.getName()))
+			result.addError(ValidationError.NAME);
+		return result;
+	}
+
 	@WorkerThread
 	@Override
-	public void syncAndSave(final Account unsyncAccount) {
+	public ValidationResult syncAndSave(final Account unsyncAccount) {
+		ValidationResult result = validate(unsyncAccount);
+		if(!result.isValid()) {
+			warning("Account sync validation failed", unsyncAccount.getData() + "\nerrors: " + result.getErrorsAsString());
+			return result;
+		}
+
 		Account account = find(unsyncAccount.getUuid());
 
 		if(account != null && account.getId() != unsyncAccount.getId()) {
@@ -71,5 +84,7 @@ public class AccountRepository implements ModelRepository<Account> {
 
 		unsyncAccount.setSync(true);
 		repository.saveAtDatabase(accountTable, unsyncAccount);
+
+		return result;
 	}
 }

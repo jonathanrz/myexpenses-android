@@ -6,7 +6,7 @@ import org.mockito.Mock;
 
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
-import br.com.jonathanzanella.myexpenses.validations.OperationResult;
+import br.com.jonathanzanella.myexpenses.validations.ValidationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
 import static junit.framework.Assert.assertFalse;
@@ -36,7 +36,7 @@ public class CardRepositoryUnitTest {
 	public void return_with_error_when_tried_to_save_account_without_name() throws Exception {
 		when(card.getName()).thenReturn(null);
 
-		OperationResult result = subject.save(card);
+		ValidationResult result = subject.save(card);
 
 		assertFalse(result.isValid());
 		assertTrue(result.getErrors().contains(ValidationError.NAME));
@@ -46,7 +46,7 @@ public class CardRepositoryUnitTest {
 	public void return_with_error_when_tried_to_save_account_without_type() throws Exception {
 		when(card.getName()).thenReturn("Test");
 
-		OperationResult result = subject.save(card);
+		ValidationResult result = subject.save(card);
 
 		assertFalse(result.isValid());
 		assertTrue(result.getErrors().contains(ValidationError.CARD_TYPE));
@@ -57,7 +57,7 @@ public class CardRepositoryUnitTest {
 		when(card.getName()).thenReturn("Test");
 		when(card.getType()).thenReturn(CardType.DEBIT);
 
-		OperationResult result = subject.save(card);
+		ValidationResult result = subject.save(card);
 
 		assertFalse(result.isValid());
 		assertTrue(result.getErrors().contains(ValidationError.ACCOUNT));

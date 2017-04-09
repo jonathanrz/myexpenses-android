@@ -4,7 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import br.com.jonathanzanella.myexpenses.validations.OperationResult;
+import br.com.jonathanzanella.myexpenses.validations.ValidationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
 import static org.mockito.Matchers.any;
@@ -32,7 +32,7 @@ public class BillPresenterTest {
 	@Test
 	public void save_gets_data_from_screen_and_save_to_repository() {
 		when(view.fillBill(any(Bill.class))).thenReturn(new Bill());
-		when(repository.save(any(Bill.class))).thenReturn(new OperationResult());
+		when(repository.save(any(Bill.class))).thenReturn(new ValidationResult());
 
 		presenter.save();
 
@@ -43,7 +43,7 @@ public class BillPresenterTest {
 
 	@Test
 	public void call_view_with_errors() {
-		OperationResult result = new OperationResult();
+		ValidationResult result = new ValidationResult();
 		result.addError(ValidationError.NAME);
 
 		when(view.fillBill(any(Bill.class))).thenReturn(new Bill());

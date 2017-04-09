@@ -22,7 +22,7 @@ import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException;
 import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.source.Source;
 import br.com.jonathanzanella.myexpenses.source.SourceRepository;
-import br.com.jonathanzanella.myexpenses.validations.OperationResult;
+import br.com.jonathanzanella.myexpenses.validations.ValidationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
 import static android.app.Activity.RESULT_OK;
@@ -177,11 +177,11 @@ class ReceiptPresenter {
 			receipt.setIncome(receipt.getIncome() / receipt.getInstallments());
 		}
 
-		new AsyncTask<Void, Void, OperationResult>() {
+		new AsyncTask<Void, Void, ValidationResult>() {
 
 			@Override
-			protected OperationResult doInBackground(Void... voids) {
-				OperationResult result = repository.save(receipt);
+			protected ValidationResult doInBackground(Void... voids) {
+				ValidationResult result = repository.save(receipt);
 				if(result.isValid())
 					generateReceiptsRepetition();
 
@@ -191,7 +191,7 @@ class ReceiptPresenter {
 			private void generateReceiptsRepetition() {
 				for (int i = 1; i < receipt.getRepetition(); i++) {
 					receipt = receipt.repeat(originalName, i + 1);
-					OperationResult repetitionResult = repository.save(receipt);
+					ValidationResult repetitionResult = repository.save(receipt);
 					if(!repetitionResult.isValid())
 						Log.error("ExpensePresenter", "Error saving repetition of receipt " + receipt.getData() +
 								" error=" + repetitionResult.getErrors().toString());
@@ -199,7 +199,7 @@ class ReceiptPresenter {
 			}
 
 			@Override
-			protected void onPostExecute(OperationResult result) {
+			protected void onPostExecute(ValidationResult result) {
 				super.onPostExecute(result);
 
 				if(result.isValid()) {

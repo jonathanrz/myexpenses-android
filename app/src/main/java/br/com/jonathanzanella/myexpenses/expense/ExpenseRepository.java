@@ -1,5 +1,6 @@
 package br.com.jonathanzanella.myexpenses.expense;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
 
 import org.apache.commons.lang3.StringUtils;
@@ -24,8 +25,8 @@ import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.database.Where;
 import br.com.jonathanzanella.myexpenses.helpers.DateHelper;
 import br.com.jonathanzanella.myexpenses.overview.WeeklyPagerAdapter;
-import br.com.jonathanzanella.myexpenses.validations.OperationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
+import br.com.jonathanzanella.myexpenses.validations.ValidationResult;
 
 import static br.com.jonathanzanella.myexpenses.chargeable.ChargeableType.ACCOUNT;
 import static br.com.jonathanzanella.myexpenses.chargeable.ChargeableType.DEBIT_CARD;
@@ -268,16 +269,8 @@ public class ExpenseRepository implements ModelRepository<Expense> {
 	}
 
 	@WorkerThread
-	public OperationResult save(Expense expense) {
-		OperationResult result = new OperationResult();
-		if(StringUtils.isEmpty(expense.getName()))
-			result.addError(ValidationError.NAME);
-		if(expense.getValue() == 0)
-			result.addError(ValidationError.AMOUNT);
-		if(expense.getDate() == null)
-			result.addError(ValidationError.DATE);
-		if(expense.getChargeable() == null)
-			result.addError(ValidationError.CHARGEABLE);
+	public ValidationResult save(Expense expense) {
+		ValidationResult result = validate(expense);
 		if(result.isValid()) {
 			if(expense.getId() == 0 && expense.getUuid() == null)
 				expense.setUuid(UUID.randomUUID().toString());
@@ -287,9 +280,29 @@ public class ExpenseRepository implements ModelRepository<Expense> {
 		return result;
 	}
 
+	@NonNull
+	private ValidationResult validate(Expense expense) {
+		ValidationResult result = new ValidationResult();
+		if(StringUtils.isEmpty(expense.getName()))
+			result.addError(ValidationError.NAME);
+		if(expense.getValue() == 0)
+			result.addError(ValidationError.AMOUNT);
+		if(expense.getDate() == null)
+			result.addError(ValidationError.DATE);
+		if(expense.getChargeable() == null)
+			result.addError(ValidationError.CHARGEABLE);
+		return result;
+	}
+
 	@WorkerThread
 	@Override
-	public void syncAndSave(final Expense unsyncExpense) {
+	public ValidationResult syncAndSave(final Expense unsyncExpense) {
+		ValidationResult result = validate(unsyncExpense);
+		if(!result.isValid()) {
+			warning("Expense sync validation failed", unsyncExpense.getData() + "\nerrors: " + result.getErrorsAsString());
+			return result;
+		}
+
 		Expense expense = find(unsyncExpense.getUuid());
 		if(expense != null && expense.getId() != unsyncExpense.getId()) {
 			if(expense.getUpdatedAt() != unsyncExpense.getUpdatedAt())
@@ -299,5 +312,7 @@ public class ExpenseRepository implements ModelRepository<Expense> {
 
 		unsyncExpense.setSync(true);
 		repository.saveAtDatabase(table, unsyncExpense);
+
+		return result;
 	}
 }

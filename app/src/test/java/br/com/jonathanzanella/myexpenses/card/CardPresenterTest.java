@@ -18,7 +18,7 @@ import br.com.jonathanzanella.myexpenses.helper.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helper.builder.CardBuilder;
 import br.com.jonathanzanella.myexpenses.helper.builder.ExpenseBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.ResourcesHelper;
-import br.com.jonathanzanella.myexpenses.validations.OperationResult;
+import br.com.jonathanzanella.myexpenses.validations.ValidationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
 import static org.hamcrest.core.Is.is;
@@ -64,7 +64,7 @@ public class CardPresenterTest {
 
 	@Test
 	public void save_gets_data_from_screen_and_save_to_repository() {
-		when(repository.save(any(Card.class))).thenReturn(new OperationResult());
+		when(repository.save(any(Card.class))).thenReturn(new ValidationResult());
 		when(view.fillCard(any(Card.class))).thenReturn(new Card(accountRepository));
 
 		presenter.save();
@@ -76,7 +76,7 @@ public class CardPresenterTest {
 
 	@Test
 	public void call_view_with_errors() {
-		OperationResult result = new OperationResult();
+		ValidationResult result = new ValidationResult();
 		result.addError(ValidationError.NAME);
 
 		when(view.fillCard(any(Card.class))).thenReturn(new Card(accountRepository));
@@ -95,7 +95,7 @@ public class CardPresenterTest {
 		Card card = new CardBuilder().account(account).build(accountRepository);
 		when(repository.find(uuid)).thenReturn(card);
 		when(accountRepository.find(anyString())).thenReturn(account);
-		when(expenseRepository.save(any(Expense.class))).thenReturn(new OperationResult());
+		when(expenseRepository.save(any(Expense.class))).thenReturn(new ValidationResult());
 		List<Expense> expenseList = new ArrayList<>();
 		expenseList.add(new ExpenseBuilder().value(value).build());
 		expenseList.add(new ExpenseBuilder().value(value).build());

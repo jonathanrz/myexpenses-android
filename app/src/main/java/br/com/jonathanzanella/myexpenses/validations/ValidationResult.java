@@ -3,7 +3,7 @@ package br.com.jonathanzanella.myexpenses.validations;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OperationResult {
+public class ValidationResult {
 	private final List<ValidationError> errors = new ArrayList<>();
 
 	public boolean isValid() {

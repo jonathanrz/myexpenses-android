@@ -8,7 +8,7 @@ import org.mockito.Mock;
 
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
-import br.com.jonathanzanella.myexpenses.validations.OperationResult;
+import br.com.jonathanzanella.myexpenses.validations.ValidationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 
 import static junit.framework.Assert.assertFalse;
@@ -36,7 +36,7 @@ public class BillRepositoryUnitTest {
 	public void return_with_error_when_tried_to_save_bill_without_name() throws Exception {
 		when(bill.getName()).thenReturn(null);
 
-		OperationResult result = billRepository.save(bill);
+		ValidationResult result = billRepository.save(bill);
 
 		assertFalse(result.isValid());
 		assertTrue(result.getErrors().contains(ValidationError.NAME));
@@ -47,7 +47,7 @@ public class BillRepositoryUnitTest {
 		when(bill.getName()).thenReturn("a");
 		when(bill.getAmount()).thenReturn(0);
 
-		OperationResult result = billRepository.save(bill);
+		ValidationResult result = billRepository.save(bill);
 
 		assertFalse(result.isValid());
 		assertTrue(result.getErrors().contains(ValidationError.AMOUNT));
@@ -57,7 +57,7 @@ public class BillRepositoryUnitTest {
 	public void return_with_error_when_tried_to_save_bill_without_due_date() throws Exception {
 		when(bill.getDueDate()).thenReturn(0);
 
-		OperationResult result = billRepository.save(bill);
+		ValidationResult result = billRepository.save(bill);
 
 		assertFalse(result.isValid());
 		assertTrue(result.getErrors().contains(ValidationError.DUE_DATE));
@@ -68,7 +68,7 @@ public class BillRepositoryUnitTest {
 		when(bill.getInitDate()).thenReturn(null);
 		when(bill.getEndDate()).thenReturn(null);
 
-		OperationResult result = billRepository.save(bill);
+		ValidationResult result = billRepository.save(bill);
 
 		assertFalse(result.isValid());
 		assertTrue(result.getErrors().contains(ValidationError.INIT_DATE));
@@ -80,7 +80,7 @@ public class BillRepositoryUnitTest {
 		when(bill.getInitDate()).thenReturn(new DateTime(2016, 10, 3, 0, 0, 0, DateTimeZone.UTC));
 		when(bill.getEndDate()).thenReturn(new DateTime(2016, 10, 2, 0, 0, 0, DateTimeZone.UTC));
 
-		OperationResult result = billRepository.save(bill);
+		ValidationResult result = billRepository.save(bill);
 
 		assertFalse(result.isValid());
 		assertTrue(result.getErrors().contains(ValidationError.INIT_DATE_GREATER_THAN_END_DATE));
