@@ -75,7 +75,7 @@ class ExpenseMonthlyResumeAdapter extends RecyclerView.Adapter<ExpenseMonthlyRes
 
 					@Override
 					protected Chargeable doInBackground(Void... voids) {
-						return expense.getChargeable();
+						return expense.getChargeableFromCache();
 					}
 
 					@Override

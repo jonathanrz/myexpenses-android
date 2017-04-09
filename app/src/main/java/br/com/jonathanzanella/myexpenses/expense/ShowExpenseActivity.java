@@ -119,7 +119,7 @@ public class ShowExpenseActivity extends BaseActivity implements ExpenseContract
 
 			@Override
 			protected Chargeable doInBackground(Void... voids) {
-				return expense.getChargeable();
+				return expense.getChargeableFromCache();
 			}
 
 			@Override

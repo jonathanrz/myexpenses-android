@@ -112,15 +112,25 @@ public class Expense implements Transaction, UnsyncModel {
 	}
 
 	@WorkerThread
-	public Chargeable getChargeable() {
-		if(chargeable == null)
+	public Chargeable getChargeableFromCache() {
+		return getChargeable(false);
+	}
+
+	@WorkerThread
+	private Chargeable loadChargeable() {
+		return getChargeable(true);
+	}
+
+	@WorkerThread
+	private Chargeable getChargeable(boolean ignoreCache) {
+		if(chargeable == null || ignoreCache)
 			chargeable = Expense.findChargeable(chargeableType, chargeableUuid);
 		return chargeable;
 	}
 
 	void uncharge() {
 		if(charged) {
-			Chargeable c = getChargeable();
+			Chargeable c = getChargeableFromCache();
 			c.credit(getValue());
 			switch (c.getChargeableType()) {
 				case ACCOUNT:
@@ -216,7 +226,7 @@ public class Expense implements Transaction, UnsyncModel {
 	}
 
 	public void debit() {
-		Chargeable c = getChargeable();
+		Chargeable c = loadChargeable();
 		c.debit(getValue());
 		switch (c.getChargeableType()) {
 			case ACCOUNT:

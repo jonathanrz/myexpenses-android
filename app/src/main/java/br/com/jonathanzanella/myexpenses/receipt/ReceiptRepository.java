@@ -101,7 +101,7 @@ public class ReceiptRepository implements ModelRepository<Receipt> {
 			result.addError(ValidationError.AMOUNT);
 		if(receipt.getSource() == null)
 			result.addError(ValidationError.SOURCE);
-		if(receipt.getAccount() == null)
+		if(receipt.getAccountFromCache() == null)
 			result.addError(ValidationError.ACCOUNT);
 		if(receipt.getDate() == null)
 			result.addError(ValidationError.DATE);
