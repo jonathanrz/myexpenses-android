@@ -7,6 +7,8 @@ import com.google.android.gms.gcm.GcmTaskService;
 import com.google.android.gms.gcm.PeriodicTask;
 import com.google.android.gms.gcm.TaskParams;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,6 +77,12 @@ public class SyncService extends GcmTaskService {
 
 	@Override
 	public int onRunTask(TaskParams taskParams) {
+		if(StringUtils.isEmpty(new ServerData(getBaseContext()).getServerUrl()) ||
+			StringUtils.isEmpty(new ServerData(getBaseContext()).getServerToken())) {
+			Log.debug(LOG_TAG, "Did not executed SyncService because server url and token are not informed");
+			return GcmNetworkManager.RESULT_SUCCESS;
+		}
+
 		Log.debug(LOG_TAG, "init SyncService, task: " + (taskParams != null ? taskParams.getTag() : "without task"));
 		totalSaved = 0;
 		totalUpdated = 0;
