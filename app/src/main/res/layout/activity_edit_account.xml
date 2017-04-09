@@ -61,6 +61,13 @@
 			android:layout_height="wrap_content"
 			android:hint="@string/account_to_pay_bills"
 			android:layout_marginBottom="@dimen/default_spacing"/>
+
+		<CheckBox
+			android:id="@+id/act_edit_account_show_in_resume"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:hint="@string/show_in_resume"
+			android:layout_marginBottom="@dimen/default_spacing"/>
 	</LinearLayout>
 
 </LinearLayout>
