@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.R;
-import butterknife.BindView;
+import butterknife.Bind;
 import butterknife.ButterKnife;
 
 class LogAdapter extends RecyclerView.Adapter<LogAdapter.ViewHolder> {
@@ -21,13 +21,13 @@ class LogAdapter extends RecyclerView.Adapter<LogAdapter.ViewHolder> {
 	private List<Log> filteredLogs;
 
 	public static class ViewHolder extends RecyclerView.ViewHolder {
-		@BindView(R.id.row_log_indicator)
+		@Bind(R.id.row_log_indicator)
 		View indicator;
-		@BindView(R.id.row_log_title)
+		@Bind(R.id.row_log_title)
 		TextView title;
-		@BindView(R.id.row_log_date)
+		@Bind(R.id.row_log_date)
 		TextView date;
-		@BindView(R.id.row_log_description)
+		@Bind(R.id.row_log_description)
 		TextView description;
 
 		public ViewHolder(View itemView) {

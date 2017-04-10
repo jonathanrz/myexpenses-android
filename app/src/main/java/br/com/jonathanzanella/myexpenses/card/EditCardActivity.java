@@ -20,7 +20,7 @@ import br.com.jonathanzanella.myexpenses.helpers.ResourcesHelper;
 import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
-import butterknife.BindView;
+import butterknife.Bind;
 import butterknife.OnClick;
 
 import static br.com.jonathanzanella.myexpenses.card.CardType.CREDIT;
@@ -29,13 +29,13 @@ import static br.com.jonathanzanella.myexpenses.card.CardType.DEBIT;
 public class EditCardActivity extends BaseActivity implements CardContract.EditView {
 	public static final String KEY_CARD_UUID = "KeyCardUuid";
 
-	@BindView(R.id.content_view)
+	@Bind(R.id.content_view)
 	View contentView;
-	@BindView(R.id.act_edit_card_name)
+	@Bind(R.id.act_edit_card_name)
 	EditText editName;
-	@BindView(R.id.act_edit_card_account)
+	@Bind(R.id.act_edit_card_account)
 	EditText editAccount;
-	@BindView(R.id.act_edit_card_type)
+	@Bind(R.id.act_edit_card_type)
 	RadioGroup radioType;
 
 	private final CardPresenter presenter;

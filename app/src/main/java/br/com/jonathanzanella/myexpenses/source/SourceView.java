@@ -10,14 +10,14 @@ import android.util.AttributeSet;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.views.BaseView;
-import butterknife.BindView;
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class SourceView extends BaseView {
     private static final int REQUEST_ADD_SOURCE = 1004;
 
-    @BindView(R.id.view_sources_list)
+    @Bind(R.id.view_sources_list)
     RecyclerView sources;
 
     private SourceAdapter adapter;

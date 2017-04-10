@@ -16,15 +16,15 @@ import br.com.jonathanzanella.myexpenses.card.Card;
 import br.com.jonathanzanella.myexpenses.card.CardAdapter;
 import br.com.jonathanzanella.myexpenses.card.CardAdapterCallback;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
-import butterknife.BindView;
+import butterknife.Bind;
 
 public class ListChargeableActivity extends BaseActivity implements AccountAdapterCallback, CardAdapterCallback {
 	public static final String KEY_CHARGEABLE_SELECTED_UUID = "KeyChargeableSelectUuid";
 	public static final String KEY_CHARGEABLE_SELECTED_TYPE = "KeyChargeableSelectType";
 
-	@BindView(R.id.act_chargeable_list_accounts)
+	@Bind(R.id.act_chargeable_list_accounts)
 	RecyclerView accounts;
-	@BindView(R.id.act_chargeable_list_cards)
+	@Bind(R.id.act_chargeable_list_cards)
 	RecyclerView cards;
 
 	@Override

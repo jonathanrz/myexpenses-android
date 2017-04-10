@@ -20,7 +20,7 @@ import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.AdapterColorHelper;
-import butterknife.BindView;
+import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
@@ -31,9 +31,9 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
 	private ExpenseRepository expenseRepository;
 
 	class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-		@BindView(R.id.row_card_name)
+		@Bind(R.id.row_card_name)
 		TextView name;
-		@BindView(R.id.row_card_account)
+		@Bind(R.id.row_card_account)
 		TextView account;
 
 		private final AdapterColorHelper adapterColorHelper;

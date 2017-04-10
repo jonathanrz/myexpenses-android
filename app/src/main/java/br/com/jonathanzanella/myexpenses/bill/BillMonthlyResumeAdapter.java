@@ -18,7 +18,7 @@ import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
-import butterknife.BindView;
+import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class BillMonthlyResumeAdapter extends RecyclerView.Adapter<BillMonthlyResumeAdapter.ViewHolder> {
@@ -32,11 +32,11 @@ public class BillMonthlyResumeAdapter extends RecyclerView.Adapter<BillMonthlyRe
 	}
 
 	public class ViewHolder extends RecyclerView.ViewHolder {
-		@BindView(R.id.row_monthly_resume_bill_name) @Nullable
+		@Bind(R.id.row_monthly_resume_bill_name) @Nullable
 		TextView name;
-		@BindView(R.id.row_monthly_resume_bill_day) @Nullable
+		@Bind(R.id.row_monthly_resume_bill_day) @Nullable
 		TextView day;
-		@BindView(R.id.row_monthly_resume_bill_amount)
+		@Bind(R.id.row_monthly_resume_bill_amount)
 		TextView amount;
 
 		public ViewHolder(View itemView) {

@@ -12,7 +12,7 @@ import android.util.AttributeSet;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.views.BaseView;
-import butterknife.BindView;
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -20,7 +20,7 @@ import butterknife.OnClick;
 public class CardView extends BaseView {
     private static final int REQUEST_ADD_CARD = 1005;
 
-    @BindView(R.id.view_card_list)
+    @Bind(R.id.view_card_list)
     RecyclerView cards;
 
 	private CardAdapter adapter;

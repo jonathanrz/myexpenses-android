@@ -10,14 +10,14 @@ import android.util.AttributeSet;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.views.BaseView;
-import butterknife.BindView;
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class AccountView extends BaseView {
 	private static final int REQUEST_ADD_ACCOUNT = 1003;
 
-	@BindView(R.id.view_accounts_list)
+	@Bind(R.id.view_accounts_list)
 	RecyclerView accounts;
 
 	private AccountAdapter adapter;

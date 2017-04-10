@@ -22,14 +22,14 @@ import br.com.jonathanzanella.myexpenses.helpers.DateHelper;
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapter;
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapterBuilder;
 import br.com.jonathanzanella.myexpenses.views.BaseView;
-import butterknife.BindView;
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class ExpenseView extends BaseView implements ViewPager.OnPageChangeListener {
 	private static final int REQUEST_ADD_EXPENSE = 1006;
 
-	@BindView(R.id.view_expenses_pager)
+	@Bind(R.id.view_expenses_pager)
     ViewPager pager;
 	MonthlyPagerAdapter adapter;
 	ExpenseRepository expenseRepository;

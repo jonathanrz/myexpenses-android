@@ -10,12 +10,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import br.com.jonathanzanella.myexpenses.R;
-import butterknife.BindView;
+import butterknife.Bind;
 import butterknife.ButterKnife;
 
 @UiThread
 public class BaseActivity extends AppCompatActivity {
-	@BindView(R.id.toolbar) @Nullable
+	@Bind(R.id.toolbar) @Nullable
 	Toolbar toolbar;
 
 	@Override

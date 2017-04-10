@@ -13,14 +13,14 @@ import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseWeeklyOverviewAdapter;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.views.BaseView;
-import butterknife.BindView;
+import butterknife.Bind;
 import butterknife.ButterKnife;
 
 @SuppressLint("ViewConstructor")
 class OverviewExpensesWeeklyView extends BaseView {
-	@BindView(R.id.view_overview_expenses_weekly_list)
+	@Bind(R.id.view_overview_expenses_weekly_list)
 	RecyclerView list;
-	@BindView(R.id.view_overview_expenses_weekly_total)
+	@Bind(R.id.view_overview_expenses_weekly_total)
 	TextView total;
 
 	private final WeeklyPagerAdapter.Period period;

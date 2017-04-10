@@ -11,12 +11,12 @@ import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
-import butterknife.BindView;
+import butterknife.Bind;
 
 public class EditSourceActivity extends BaseActivity implements SourceContract.EditView {
 	public static final String KEY_SOURCE_UUID = "KeySourceUuid";
 
-	@BindView(R.id.act_edit_source_name)
+	@Bind(R.id.act_edit_source_name)
 	EditText editName;
 
 	private final SourcePresenter presenter;

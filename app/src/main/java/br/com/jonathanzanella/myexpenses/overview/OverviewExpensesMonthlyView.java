@@ -15,16 +15,16 @@ import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapter;
 import br.com.jonathanzanella.myexpenses.views.BaseView;
-import butterknife.BindView;
+import butterknife.Bind;
 import butterknife.ButterKnife;
 
 @SuppressLint("ViewConstructor")
 class OverviewExpensesMonthlyView extends BaseView {
-	@BindView(R.id.view_overview_expenses_monthly_tabs)
+	@Bind(R.id.view_overview_expenses_monthly_tabs)
 	TabLayout tabs;
-	@BindView(R.id.view_overview_expenses_monthly_pager)
+	@Bind(R.id.view_overview_expenses_monthly_pager)
 	ViewPager pager;
-	@BindView(R.id.view_overview_expenses_monthly_total)
+	@Bind(R.id.view_overview_expenses_monthly_total)
 	TextView monthlyTotal;
 
 	public OverviewExpensesMonthlyView(Context context, DateTime month) {

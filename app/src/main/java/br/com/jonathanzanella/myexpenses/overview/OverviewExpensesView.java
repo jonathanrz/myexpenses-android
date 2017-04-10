@@ -12,11 +12,11 @@ import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapter;
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapterBuilder;
 import br.com.jonathanzanella.myexpenses.views.BaseView;
-import butterknife.BindView;
+import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class OverviewExpensesView extends BaseView {
-	@BindView(R.id.view_overview_expenses_pager)
+	@Bind(R.id.view_overview_expenses_pager)
 	ViewPager pager;
 
 	public OverviewExpensesView(Context context) {

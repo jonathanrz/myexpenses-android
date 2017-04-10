@@ -17,7 +17,7 @@ import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.card.CreditCardInvoiceActivity;
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
-import butterknife.BindView;
+import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class ExpenseWeeklyOverviewAdapter extends RecyclerView.Adapter<ExpenseWeeklyOverviewAdapter.ViewHolder> {
@@ -26,13 +26,13 @@ public class ExpenseWeeklyOverviewAdapter extends RecyclerView.Adapter<ExpenseWe
 	private int totalValue;
 
 	public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-		@BindView(R.id.row_weekly_overview_expense_name)
+		@Bind(R.id.row_weekly_overview_expense_name)
 		TextView name;
-		@BindView(R.id.row_weekly_overview_expense_date)
+		@Bind(R.id.row_weekly_overview_expense_date)
 		TextView date;
-		@BindView(R.id.row_weekly_overview_expense_income)
+		@Bind(R.id.row_weekly_overview_expense_income)
 		TextView income;
-		@BindView(R.id.row_weekly_overview_expense_source)
+		@Bind(R.id.row_weekly_overview_expense_source)
 		TextView source;
 
 		public ViewHolder(View itemView) {

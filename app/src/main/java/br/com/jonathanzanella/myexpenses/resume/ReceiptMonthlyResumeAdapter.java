@@ -24,7 +24,7 @@ import br.com.jonathanzanella.myexpenses.receipt.Receipt;
 import br.com.jonathanzanella.myexpenses.receipt.ReceiptRepository;
 import br.com.jonathanzanella.myexpenses.receipt.ShowReceiptActivity;
 import br.com.jonathanzanella.myexpenses.source.Source;
-import butterknife.BindView;
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -42,13 +42,13 @@ class ReceiptMonthlyResumeAdapter extends RecyclerView.Adapter<ReceiptMonthlyRes
 	}
 
 	public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-		@BindView(R.id.row_monthly_resume_receipt_name) @Nullable
+		@Bind(R.id.row_monthly_resume_receipt_name) @Nullable
 		TextView name;
-		@BindView(R.id.row_monthly_resume_receipt_date) @Nullable
+		@Bind(R.id.row_monthly_resume_receipt_date) @Nullable
 		TextView date;
-		@BindView(R.id.row_monthly_resume_receipt_income)
+		@Bind(R.id.row_monthly_resume_receipt_income)
 		TextView income;
-		@BindView(R.id.row_monthly_resume_receipt_source) @Nullable
+		@Bind(R.id.row_monthly_resume_receipt_source) @Nullable
 		TextView source;
 
 		public ViewHolder(View itemView) {

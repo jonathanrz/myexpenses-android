@@ -28,17 +28,17 @@ import br.com.jonathanzanella.myexpenses.receipt.ReceiptView;
 import br.com.jonathanzanella.myexpenses.resume.ResumeView;
 import br.com.jonathanzanella.myexpenses.source.SourceView;
 import br.com.jonathanzanella.myexpenses.sync.SyncView;
-import butterknife.BindView;
+import butterknife.Bind;
 
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, SearchView.OnQueryTextListener {
 	private static final String KEY_SELECTED_ITEM = "KeySelectedItem";
-	@BindView(R.id.act_main_drawer)
+	@Bind(R.id.act_main_drawer)
 	DrawerLayout drawer;
-	@BindView(R.id.act_main_navigation_view)
+	@Bind(R.id.act_main_navigation_view)
 	NavigationView navigationView;
-	@BindView(R.id.act_main_content)
+	@Bind(R.id.act_main_content)
 	FrameLayout content;
-	@BindView(R.id.tabs)
+	@Bind(R.id.tabs)
 	TabLayout tabs;
 
 	private BaseView currentView;

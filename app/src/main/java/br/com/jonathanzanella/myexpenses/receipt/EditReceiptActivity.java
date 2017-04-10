@@ -25,7 +25,7 @@ import br.com.jonathanzanella.myexpenses.source.Source;
 import br.com.jonathanzanella.myexpenses.source.SourceRepository;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
-import butterknife.BindView;
+import butterknife.Bind;
 import butterknife.OnClick;
 
 public class EditReceiptActivity extends BaseActivity implements ReceiptContract.EditView {
@@ -33,21 +33,21 @@ public class EditReceiptActivity extends BaseActivity implements ReceiptContract
 	private static final int REQUEST_SELECT_SOURCE = 1001;
 	private static final int REQUEST_SELECT_ACCOUNT = 1002;
 
-	@BindView(R.id.act_edit_receipt_name)
+	@Bind(R.id.act_edit_receipt_name)
 	EditText editName;
-	@BindView(R.id.act_edit_receipt_date)
+	@Bind(R.id.act_edit_receipt_date)
 	EditText editDate;
-	@BindView(R.id.act_edit_receipt_income)
+	@Bind(R.id.act_edit_receipt_income)
 	EditText editIncome;
-	@BindView(R.id.act_edit_receipt_source)
+	@Bind(R.id.act_edit_receipt_source)
 	EditText editSource;
-	@BindView(R.id.act_edit_receipt_account)
+	@Bind(R.id.act_edit_receipt_account)
 	EditText editAccount;
-	@BindView(R.id.act_edit_receipt_repetition)
+	@Bind(R.id.act_edit_receipt_repetition)
 	EditText editRepetition;
-	@BindView(R.id.act_edit_receipt_installment)
+	@Bind(R.id.act_edit_receipt_installment)
 	EditText editInstallment;
-	@BindView(R.id.act_edit_receipt_show_in_resume)
+	@Bind(R.id.act_edit_receipt_show_in_resume)
 	CheckBox checkShowInResume;
 
 	private final ReceiptPresenter presenter;

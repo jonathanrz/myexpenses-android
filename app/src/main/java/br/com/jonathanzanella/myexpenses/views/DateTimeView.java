@@ -14,7 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import br.com.jonathanzanella.myexpenses.R;
-import butterknife.BindView;
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -22,9 +22,9 @@ public class DateTimeView extends BaseView {
 	public final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
 	public final SimpleDateFormat hourFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
 
-	@BindView(R.id.view_datetime_date)
+	@Bind(R.id.view_datetime_date)
 	EditText date;
-	@BindView(R.id.view_datetime_hour)
+	@Bind(R.id.view_datetime_hour)
 	EditText hour;
 
 	private Listener listener;

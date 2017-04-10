@@ -25,7 +25,7 @@ import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch;
 import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
-import butterknife.BindView;
+import butterknife.Bind;
 import butterknife.OnClick;
 
 public class EditExpenseActivity extends BaseActivity implements ExpenseContract.EditView {
@@ -33,29 +33,29 @@ public class EditExpenseActivity extends BaseActivity implements ExpenseContract
 	private static final int REQUEST_SELECT_CHARGEABLE = 1003;
 	private static final int REQUEST_SELECT_BILL = 1004;
 
-	@BindView(R.id.act_edit_expense_name)
+	@Bind(R.id.act_edit_expense_name)
 	EditText editName;
-	@BindView(R.id.act_edit_expense_date)
+	@Bind(R.id.act_edit_expense_date)
 	EditText editDate;
-	@BindView(R.id.act_edit_expense_value)
+	@Bind(R.id.act_edit_expense_value)
 	EditText editValue;
-	@BindView(R.id.act_edit_expense_value_to_show_in_overview)
+	@Bind(R.id.act_edit_expense_value_to_show_in_overview)
 	EditText editValueToShowInOverview;
-	@BindView(R.id.act_edit_expense_repayment)
+	@Bind(R.id.act_edit_expense_repayment)
 	CheckBox checkRepayment;
-	@BindView(R.id.act_edit_expense_chargeable)
+	@Bind(R.id.act_edit_expense_chargeable)
 	EditText editChargeable;
-	@BindView(R.id.act_edit_expense_bill)
+	@Bind(R.id.act_edit_expense_bill)
 	EditText editBill;
-	@BindView(R.id.act_edit_expense_pay_next_month)
+	@Bind(R.id.act_edit_expense_pay_next_month)
 	CheckBox checkPayNextMonth;
-	@BindView(R.id.act_edit_expense_show_in_overview)
+	@Bind(R.id.act_edit_expense_show_in_overview)
 	CheckBox showInOverview;
-	@BindView(R.id.act_edit_expense_show_in_resume)
+	@Bind(R.id.act_edit_expense_show_in_resume)
 	CheckBox showInResume;
-	@BindView(R.id.act_edit_expense_repetition)
+	@Bind(R.id.act_edit_expense_repetition)
 	EditText editRepetition;
-	@BindView(R.id.act_edit_expense_installment)
+	@Bind(R.id.act_edit_expense_installment)
 	EditText editInstallment;
 
 	private final ExpensePresenter presenter;

@@ -10,11 +10,11 @@ import org.joda.time.DateTime;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.views.BaseView;
-import butterknife.BindView;
+import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class ResumeView extends BaseView {
-    @BindView(R.id.view_resume_pager)
+    @Bind(R.id.view_resume_pager)
     ViewPager pager;
 
     public ResumeView(Context context) {

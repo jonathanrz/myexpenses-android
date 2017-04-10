@@ -6,13 +6,14 @@ import android.os.Bundle
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
+
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.views.BaseActivity
-import butterknife.BindView
+import butterknife.Bind
 
 class ListAccountActivity : BaseActivity(), AccountAdapterCallback {
 
-    @BindView(R.id.act_account_list)
+    @Bind(R.id.act_account_list)
     lateinit var accounts: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {

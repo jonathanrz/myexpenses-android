@@ -11,12 +11,12 @@ import org.joda.time.DateTime;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.expense.CreditCardMonthlyAdapter;
 import br.com.jonathanzanella.myexpenses.views.BaseView;
-import butterknife.BindView;
+import butterknife.Bind;
 import butterknife.ButterKnife;
 
 @SuppressLint("ViewConstructor")
 public class CreditCardInvoiceView extends BaseView {
-	@BindView(R.id.view_credit_card_invoice_list)
+	@Bind(R.id.view_credit_card_invoice_list)
 	RecyclerView list;
 	private CreditCardMonthlyAdapter adapter;
 

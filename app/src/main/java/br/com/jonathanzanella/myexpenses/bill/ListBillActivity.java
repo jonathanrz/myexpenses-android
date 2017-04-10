@@ -9,12 +9,12 @@ import android.support.v7.widget.RecyclerView;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
-import butterknife.BindView;
+import butterknife.Bind;
 
 public class ListBillActivity extends BaseActivity implements BillAdapterCallback {
 	public static final String KEY_BILL_SELECTED_UUID = "KeyBillSelectUuid";
 
-	@BindView(R.id.act_bill_list)
+	@Bind(R.id.act_bill_list)
 	RecyclerView bills;
 
 	@Override

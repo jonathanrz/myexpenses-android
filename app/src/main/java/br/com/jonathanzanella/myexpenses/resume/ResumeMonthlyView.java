@@ -22,24 +22,24 @@ import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.receipt.Receipt;
 import br.com.jonathanzanella.myexpenses.receipt.ReceiptRepository;
 import br.com.jonathanzanella.myexpenses.views.BaseView;
-import butterknife.BindView;
+import butterknife.Bind;
 import butterknife.ButterKnife;
 
 @SuppressLint("ViewConstructor")
 class ResumeMonthlyView extends BaseView {
-	@BindView(R.id.view_monthly_resume_accounts)
+	@Bind(R.id.view_monthly_resume_accounts)
 	RecyclerView accounts;
-	@BindView(R.id.view_monthly_resume_receipts)
+	@Bind(R.id.view_monthly_resume_receipts)
 	RecyclerView receipts;
-	@BindView(R.id.view_monthly_resume_expenses)
+	@Bind(R.id.view_monthly_resume_expenses)
 	RecyclerView expenses;
-	@BindView(R.id.view_monthly_resume_bills)
+	@Bind(R.id.view_monthly_resume_bills)
 	RecyclerView bills;
-	@BindView(R.id.view_monthly_resume_total_receipts)
+	@Bind(R.id.view_monthly_resume_total_receipts)
 	TextView totalReceipts;
-	@BindView(R.id.view_monthly_resume_total_expenses)
+	@Bind(R.id.view_monthly_resume_total_expenses)
 	TextView totalExpenses;
-	@BindView(R.id.view_monthly_resume_balance)
+	@Bind(R.id.view_monthly_resume_balance)
 	TextView balance;
 
 	int singleRowHeight;

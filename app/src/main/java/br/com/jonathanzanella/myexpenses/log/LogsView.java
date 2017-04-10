@@ -8,24 +8,29 @@ import android.widget.RadioGroup;
 
 import org.joda.time.DateTime;
 
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.views.BaseView;
 import br.com.jonathanzanella.myexpenses.views.DateTimeView;
-import butterknife.BindView;
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class LogsView extends BaseView implements DateTimeView.Listener {
 	private static final String LOG_TAG = LogsView.class.getSimpleName();
 
-	@BindView(R.id.view_logs_list)
+	public final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yy HH:mm", Locale.getDefault());
+
+	@Bind(R.id.view_logs_list)
 	RecyclerView logs;
-	@BindView(R.id.view_log_init_time)
+	@Bind(R.id.view_log_init_time)
 	DateTimeView initTime;
-	@BindView(R.id.view_log_end_time)
+	@Bind(R.id.view_log_end_time)
 	DateTimeView endTime;
-	@BindView(R.id.view_logs_log_level)
+	@Bind(R.id.view_logs_log_level)
 	RadioGroup logLevel;
 
 	private LogAdapter adapter;

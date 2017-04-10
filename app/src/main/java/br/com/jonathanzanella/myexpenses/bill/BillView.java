@@ -10,14 +10,14 @@ import android.util.AttributeSet;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.views.BaseView;
-import butterknife.BindView;
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class BillView extends BaseView {
 	private static final int REQUEST_ADD_BILL = 1003;
 
-	@BindView(R.id.view_bills_list)
+	@Bind(R.id.view_bills_list)
 	RecyclerView bills;
 	
 	private BillAdapter adapter;

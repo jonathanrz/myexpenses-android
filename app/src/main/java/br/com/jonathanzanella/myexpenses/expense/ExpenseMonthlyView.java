@@ -11,12 +11,12 @@ import org.joda.time.DateTime;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.views.BaseView;
-import butterknife.BindView;
+import butterknife.Bind;
 import butterknife.ButterKnife;
 
 @SuppressLint("ViewConstructor")
 class ExpenseMonthlyView extends BaseView {
-    @BindView(R.id.view_expenses_monthly_list)
+    @Bind(R.id.view_expenses_monthly_list)
     RecyclerView sources;
 
 	private final DateTime dateTime;

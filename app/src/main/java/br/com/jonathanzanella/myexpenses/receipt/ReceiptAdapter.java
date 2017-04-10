@@ -21,7 +21,7 @@ import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.helpers.AdapterColorHelper;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.source.Source;
-import butterknife.BindView;
+import butterknife.Bind;
 import butterknife.ButterKnife;
 
 class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ViewHolder> {
@@ -30,17 +30,17 @@ class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ViewHolder> {
 	private DateTime date;
 
 	public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-		@BindView(R.id.row_receipt_name)
+		@Bind(R.id.row_receipt_name)
 		TextView name;
-		@BindView(R.id.row_receipt_date)
+		@Bind(R.id.row_receipt_date)
 		TextView date;
-		@BindView(R.id.row_receipt_income)
+		@Bind(R.id.row_receipt_income)
 		TextView income;
-		@BindView(R.id.row_receipt_source)
+		@Bind(R.id.row_receipt_source)
 		TextView source;
-		@BindView(R.id.row_receipt_account)
+		@Bind(R.id.row_receipt_account)
 		TextView account;
-		@BindView(R.id.row_receipt_show_in_resume_stt)
+		@Bind(R.id.row_receipt_show_in_resume_stt)
 		TextView showInResume;
 
 		private final AdapterColorHelper adapterColorHelper;

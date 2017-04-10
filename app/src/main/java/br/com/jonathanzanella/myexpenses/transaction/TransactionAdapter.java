@@ -20,7 +20,7 @@ import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.helpers.TransactionsHelper;
 import br.com.jonathanzanella.myexpenses.receipt.Receipt;
-import butterknife.BindView;
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -28,11 +28,11 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 	private final List<Transaction> transactions = new ArrayList<>();
 
 	public static class ViewHolder extends RecyclerView.ViewHolder {
-		@BindView(R.id.row_transaction_date)
+		@Bind(R.id.row_transaction_date)
 		TextView date;
-		@BindView(R.id.row_transaction_name)
+		@Bind(R.id.row_transaction_name)
 		TextView name;
-		@BindView(R.id.row_transaction_value)
+		@Bind(R.id.row_transaction_value)
 		TextView value;
 
 		private final WeakReference<TransactionAdapter> adapterWeakReference;

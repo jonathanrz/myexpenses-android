@@ -22,7 +22,7 @@ import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ShowExpenseActivity;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.helpers.TransactionsHelper;
-import butterknife.BindView;
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -39,13 +39,13 @@ class ExpenseMonthlyResumeAdapter extends RecyclerView.Adapter<ExpenseMonthlyRes
 	}
 
 	public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-		@BindView(R.id.row_monthly_resume_expense_name) @Nullable
+		@Bind(R.id.row_monthly_resume_expense_name) @Nullable
 		TextView name;
-		@BindView(R.id.row_monthly_resume_expense_date) @Nullable
+		@Bind(R.id.row_monthly_resume_expense_date) @Nullable
 		TextView date;
-		@BindView(R.id.row_monthly_resume_expense_income)
+		@Bind(R.id.row_monthly_resume_expense_income)
 		TextView income;
-		@BindView(R.id.row_monthly_resume_expense_source) @Nullable
+		@Bind(R.id.row_monthly_resume_expense_source) @Nullable
 		TextView source;
 
 		public ViewHolder(View itemView) {

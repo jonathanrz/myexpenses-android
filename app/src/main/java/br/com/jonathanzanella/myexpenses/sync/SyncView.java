@@ -8,14 +8,14 @@ import org.apache.commons.lang3.StringUtils;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.views.BaseView;
-import butterknife.BindView;
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class SyncView extends BaseView {
-	@BindView(R.id.view_sync_server_url)
+	@Bind(R.id.view_sync_server_url)
 	EditText serverUrlView;
-	@BindView(R.id.view_sync_server_token)
+	@Bind(R.id.view_sync_server_token)
 	EditText serverTokenView;
 
 	private ServerData serverData;
