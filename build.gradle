@@ -48,7 +48,7 @@ ext {
     retrofitVersion = '2.2.0'
     rulesVersion = '0.5'
     runnerVersion = '0.5'
-    stethoVersion = '1.3.0'
+    stethoVersion = '1.4.2'
     stickyHeadersVersion = '0.4.3@aar'
     supportLibraryVersion = '25.3.1'
     uiAutomatorVersion = '2.1.1'
