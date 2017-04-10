@@ -17,7 +17,6 @@ import br.com.jonathanzanella.myexpenses.source.Source;
 import br.com.jonathanzanella.myexpenses.source.SourceRepository;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class ShowReceiptActivity extends BaseActivity implements ReceiptContract.View {
 	public static final String KEY_RECEIPT_UUID = ReceiptPresenter.KEY_RECEIPT_UUID;
@@ -43,7 +42,6 @@ public class ShowReceiptActivity extends BaseActivity implements ReceiptContract
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_show_receipt);
-		ButterKnife.bind(this);
 	}
 
 	@Override

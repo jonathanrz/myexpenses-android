@@ -26,7 +26,6 @@ import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class EditExpenseActivity extends BaseActivity implements ExpenseContract.EditView {
@@ -70,7 +69,6 @@ public class EditExpenseActivity extends BaseActivity implements ExpenseContract
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edit_expense);
-		ButterKnife.bind(this);
 	}
 
 	@Override

@@ -12,7 +12,6 @@ import android.widget.TextView;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class ListSourceActivity extends BaseActivity implements SourceAdapterCallback {
 	public static final String KEY_SOURCE_SELECTED_UUID = "KeySourceSelectUuid";
@@ -26,7 +25,6 @@ public class ListSourceActivity extends BaseActivity implements SourceAdapterCal
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_list_source);
-		ButterKnife.bind(this);
 		setTitle(R.string.select_source_title);
 	}
 

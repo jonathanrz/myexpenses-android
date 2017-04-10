@@ -23,7 +23,6 @@ import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.ResourcesHelper;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class ShowCardActivity extends BaseActivity implements CardContract.View {
@@ -46,7 +45,6 @@ public class ShowCardActivity extends BaseActivity implements CardContract.View 
 		presenter = new CardPresenter(new CardRepository(new RepositoryImpl<Card>(this), expenseRepository),
 				new AccountRepository(new RepositoryImpl<Account>(this)), expenseRepository, new ResourcesHelper(this));
 		setContentView(R.layout.activity_show_card);
-		ButterKnife.bind(this);
 	}
 
 	@UiThread

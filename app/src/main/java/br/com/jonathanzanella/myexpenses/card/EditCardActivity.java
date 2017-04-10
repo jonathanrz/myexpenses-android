@@ -21,7 +21,6 @@ import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static br.com.jonathanzanella.myexpenses.card.CardType.CREDIT;
@@ -51,7 +50,6 @@ public class EditCardActivity extends BaseActivity implements CardContract.EditV
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edit_card);
-		ButterKnife.bind(this);
 	}
 
 	@Override

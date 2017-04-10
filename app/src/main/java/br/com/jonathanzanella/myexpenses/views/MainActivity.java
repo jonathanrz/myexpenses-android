@@ -29,7 +29,6 @@ import br.com.jonathanzanella.myexpenses.resume.ResumeView;
 import br.com.jonathanzanella.myexpenses.source.SourceView;
 import br.com.jonathanzanella.myexpenses.sync.SyncView;
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, SearchView.OnQueryTextListener {
 	private static final String KEY_SELECTED_ITEM = "KeySelectedItem";
@@ -50,7 +49,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		ButterKnife.bind(this);
 	}
 
 	@Override

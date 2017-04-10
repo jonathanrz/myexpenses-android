@@ -10,7 +10,6 @@ import android.support.v7.widget.RecyclerView;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class ListBillActivity extends BaseActivity implements BillAdapterCallback {
 	public static final String KEY_BILL_SELECTED_UUID = "KeyBillSelectUuid";
@@ -22,7 +21,6 @@ public class ListBillActivity extends BaseActivity implements BillAdapterCallbac
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_list_bill);
-		ButterKnife.bind(this);
 		setTitle(R.string.select_bill_title);
 	}
 

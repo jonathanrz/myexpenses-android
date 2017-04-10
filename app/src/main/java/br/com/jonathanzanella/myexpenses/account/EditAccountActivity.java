@@ -18,7 +18,6 @@ import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class EditAccountActivity extends BaseActivity implements AccountContract.EditView {
 	public static final String KEY_ACCOUNT_UUID = "KeyAccountUuid";
@@ -46,7 +45,6 @@ public class EditAccountActivity extends BaseActivity implements AccountContract
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edit_account);
-		ButterKnife.bind(this);
 	}
 
 	@Override

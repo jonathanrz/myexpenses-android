@@ -11,7 +11,6 @@ import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class ShowSourceActivity extends BaseActivity implements SourceContract.View {
 	public static final String KEY_SOURCE_UUID = "KeySourceUuid";
@@ -25,7 +24,6 @@ public class ShowSourceActivity extends BaseActivity implements SourceContract.V
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_show_source);
-		ButterKnife.bind(this);
 	}
 
 	@Override

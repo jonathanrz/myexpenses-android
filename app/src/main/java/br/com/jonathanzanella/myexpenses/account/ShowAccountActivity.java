@@ -17,7 +17,6 @@ import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.helpers.DateHelper;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class ShowAccountActivity extends BaseActivity implements AccountContract.View {
 	public static final String KEY_ACCOUNT_UUID = "KeyAccountUuid";
@@ -45,7 +44,6 @@ public class ShowAccountActivity extends BaseActivity implements AccountContract
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_show_account);
-		ButterKnife.bind(this);
 
 		if(monthToShow == null)
 			monthToShow = DateHelper.firstDayOfMonth(DateTime.now());
