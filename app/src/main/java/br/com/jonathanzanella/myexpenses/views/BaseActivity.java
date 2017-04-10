@@ -11,7 +11,6 @@ import android.view.View;
 
 import br.com.jonathanzanella.myexpenses.R;
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 @UiThread
 public class BaseActivity extends AppCompatActivity {
@@ -21,7 +20,6 @@ public class BaseActivity extends AppCompatActivity {
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
-		ButterKnife.bind(this);
 
 		if(toolbar != null) {
 			setSupportActionBar(toolbar);

@@ -19,6 +19,7 @@ import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapterBuilder;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import br.com.jonathanzanella.myexpenses.views.BaseView;
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class CreditCardInvoiceActivity extends BaseActivity {
 	public static final String KEY_CREDIT_CARD_UUID = "KeyCreateCardUuid";
@@ -37,6 +38,7 @@ public class CreditCardInvoiceActivity extends BaseActivity {
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_credit_card_invoice);
+		ButterKnife.bind(this);
 
 		cardRepository = new CardRepository(new RepositoryImpl<Card>(getContext()),
 				new ExpenseRepository(new RepositoryImpl<Expense>(getContext())));

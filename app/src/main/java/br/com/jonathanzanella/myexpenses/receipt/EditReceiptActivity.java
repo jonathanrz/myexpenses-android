@@ -26,6 +26,7 @@ import br.com.jonathanzanella.myexpenses.source.SourceRepository;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class EditReceiptActivity extends BaseActivity implements ReceiptContract.EditView {
@@ -62,6 +63,7 @@ public class EditReceiptActivity extends BaseActivity implements ReceiptContract
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edit_receipt);
+		ButterKnife.bind(this);
 	}
 
 	@Override

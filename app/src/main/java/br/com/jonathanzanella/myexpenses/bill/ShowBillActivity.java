@@ -15,6 +15,7 @@ import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class ShowBillActivity extends BaseActivity implements BillContract.View {
 	public static final String KEY_BILL_UUID = "KeyBillUuid";
@@ -41,6 +42,7 @@ public class ShowBillActivity extends BaseActivity implements BillContract.View 
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_show_bill);
+		ButterKnife.bind(this);
 	}
 
 	@Override

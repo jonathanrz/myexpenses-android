@@ -20,6 +20,7 @@ import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.receipt.Receipt;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class ShowExpenseActivity extends BaseActivity implements ExpenseContract.View {
 	public static final String KEY_EXPENSE_UUID = ExpensePresenter.KEY_EXPENSE_UUID;
@@ -46,6 +47,7 @@ public class ShowExpenseActivity extends BaseActivity implements ExpenseContract
 		presenter = new ExpensePresenter(expenseRepository, new BillRepository(new RepositoryImpl<Bill>(this), expenseRepository));
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_show_expenses);
+		ButterKnife.bind(this);
 	}
 
 	@UiThread

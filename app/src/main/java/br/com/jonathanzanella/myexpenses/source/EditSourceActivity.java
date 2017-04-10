@@ -12,6 +12,7 @@ import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class EditSourceActivity extends BaseActivity implements SourceContract.EditView {
 	public static final String KEY_SOURCE_UUID = "KeySourceUuid";
@@ -29,6 +30,7 @@ public class EditSourceActivity extends BaseActivity implements SourceContract.E
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edit_source);
+		ButterKnife.bind(this);
 	}
 
 	@Override

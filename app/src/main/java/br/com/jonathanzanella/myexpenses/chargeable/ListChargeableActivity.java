@@ -17,6 +17,7 @@ import br.com.jonathanzanella.myexpenses.card.CardAdapter;
 import br.com.jonathanzanella.myexpenses.card.CardAdapterCallback;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class ListChargeableActivity extends BaseActivity implements AccountAdapterCallback, CardAdapterCallback {
 	public static final String KEY_CHARGEABLE_SELECTED_UUID = "KeyChargeableSelectUuid";
@@ -31,6 +32,7 @@ public class ListChargeableActivity extends BaseActivity implements AccountAdapt
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_list_chargeable);
+		ButterKnife.bind(this);
 		setTitle(R.string.select_chargeable_title);
 	}
 
