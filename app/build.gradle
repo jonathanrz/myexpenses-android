@@ -79,7 +79,7 @@ dependencies {
 
     compile "net.danlew:android.joda:$rootProject.jodaVersion"
     compile "com.facebook.stetho:stetho:$rootProject.stethoVersion"
-    compile "org.apache.commons:commons-lang$rootProject.commonsLangVersion"
+    compile "org.apache.commons:commons-lang3:$rootProject.commonsLangVersion"
     compile "com.timehop.stickyheadersrecyclerview:library:$rootProject.stickyHeadersVersion"
     compile "com.android.support.test.espresso:espresso-idling-resource:$rootProject.ext.espressoVersion"
 
