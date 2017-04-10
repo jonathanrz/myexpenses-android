@@ -30,7 +30,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Server {
@@ -80,7 +79,6 @@ public class Server {
 									.build();
 
 		retrofit = new Retrofit.Builder()
-				.addCallAdapterFactory(RxJavaCallAdapterFactory.create())
 				.addConverterFactory(GsonConverterFactory.create(gson))
 				.baseUrl(serverData.getServerUrl())
 				.client(client)

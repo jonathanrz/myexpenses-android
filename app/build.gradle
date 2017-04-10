@@ -68,19 +68,9 @@ dependencies {
     //Play Services
     compile "com.google.android.gms:play-services-gcm:$rootProject.playServicesVersion"
 
-    //Lombok
-    provided "org.projectlombok:lombok:$rootProject.lombokVersion"
-    kapt "org.projectlombok:lombok:$rootProject.lombokVersion"
-    annotationProcessor "org.projectlombok:lombok:$rootProject.lombokVersion"
-
     //retrofit
     compile "com.squareup.retrofit2:retrofit:$rootProject.retrofitVersion"
     compile "com.squareup.retrofit2:converter-gson:$rootProject.retrofitVersion"
-    compile "com.squareup.retrofit2:adapter-rxjava:$rootProject.retrofitVersion"
-
-    //RxAndroid
-    compile "io.reactivex:rxandroid:$rootProject.rxAndroidVersion"
-    compile "io.reactivex:rxjava:$rootProject.rxJavaVersion"
 
     //JakeWharton
     compile "com.jakewharton:butterknife:$rootProject.butterKnifeVersion"
@@ -89,7 +79,7 @@ dependencies {
 
     compile "net.danlew:android.joda:$rootProject.jodaVersion"
     compile "com.facebook.stetho:stetho:$rootProject.stethoVersion"
-    compile "org.apache.commons:commons-lang$rootProject.commonsLangVersion"
+    compile "org.apache.commons:commons-lang3:$rootProject.commonsLangVersion"
     compile "com.timehop.stickyheadersrecyclerview:library:$rootProject.stickyHeadersVersion"
     compile "com.android.support.test.espresso:espresso-idling-resource:$rootProject.ext.espressoVersion"
 
@@ -102,14 +92,10 @@ dependencies {
     testCompile "org.hamcrest:hamcrest-all:$rootProject.ext.hamcrestVersion"
     testCompile "org.powermock:powermock-module-junit4:$rootProject.ext.powerMockito"
     testCompile "org.powermock:powermock-api-mockito:$rootProject.ext.powerMockito"
-    testCompile "org.javassist:javassist:$rootProject.ext.javassist"
 
     // Android Testing Support Library's runner and rules
     androidTestCompile "com.android.support.test:runner:$rootProject.ext.runnerVersion"
     androidTestCompile "com.android.support.test:rules:$rootProject.ext.rulesVersion"
-
-    //Test bundler
-    androidTestCompile "com.linkedin.testbutler:test-butler-library:$rootProject.ext.testButler"
 
     // Espresso UI Testing dependencies.
     androidTestCompile "com.android.support.test.espresso:espresso-core:$rootProject.ext.espressoVersion"
