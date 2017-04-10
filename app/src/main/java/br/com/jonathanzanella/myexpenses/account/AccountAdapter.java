@@ -15,7 +15,7 @@ import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.helpers.AdapterColorHelper;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHolder> {
@@ -32,11 +32,11 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
 	}
 
 	public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-		@Bind(R.id.row_account_name)
+		@BindView(R.id.row_account_name)
 		TextView name;
-		@Bind(R.id.row_account_balance)
+		@BindView(R.id.row_account_balance)
 		TextView balance;
-		@Bind(R.id.row_account_to_pay_credit_card) @Nullable
+		@BindView(R.id.row_account_to_pay_credit_card) @Nullable
 		TextView accountToPayCreditCard;
 
 		private final AdapterColorHelper adapterColorHelper;

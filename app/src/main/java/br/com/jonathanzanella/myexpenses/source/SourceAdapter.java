@@ -14,7 +14,7 @@ import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.helpers.AdapterColorHelper;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 class SourceAdapter extends RecyclerView.Adapter<SourceAdapter.ViewHolder> {
@@ -25,7 +25,7 @@ class SourceAdapter extends RecyclerView.Adapter<SourceAdapter.ViewHolder> {
 	private List<Source> sources;
 
 	public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-		@Bind(R.id.row_source_name)
+		@BindView(R.id.row_source_name)
 		TextView name;
 
 		private final AdapterColorHelper adapterColorHelper;

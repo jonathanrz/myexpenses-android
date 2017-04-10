@@ -17,7 +17,7 @@ import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.AdapterColorHelper;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder> {
@@ -27,13 +27,13 @@ class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder> {
 	private final BillAdapterPresenter presenter;
 
 	public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-		@Bind(R.id.row_bill_name)
+		@BindView(R.id.row_bill_name)
 		TextView name;
-		@Bind(R.id.row_bill_amount)
+		@BindView(R.id.row_bill_amount)
 		TextView amount;
-		@Bind(R.id.row_bill_due_date)
+		@BindView(R.id.row_bill_due_date)
 		TextView dueDate;
-		@Bind(R.id.row_bill_dates)
+		@BindView(R.id.row_bill_dates)
 		TextView dates;
 
 		private final AdapterColorHelper adapterColorHelper;

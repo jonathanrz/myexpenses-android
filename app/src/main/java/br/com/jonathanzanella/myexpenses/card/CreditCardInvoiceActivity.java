@@ -18,15 +18,15 @@ import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapter;
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapterBuilder;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
 import br.com.jonathanzanella.myexpenses.views.BaseView;
-import butterknife.Bind;
+import butterknife.BindView;
 
 public class CreditCardInvoiceActivity extends BaseActivity {
 	public static final String KEY_CREDIT_CARD_UUID = "KeyCreateCardUuid";
 	public static final String KEY_INIT_DATE = "KeyInitDate";
 
-	@Bind(R.id.tabs)
+	@BindView(R.id.tabs)
 	TabLayout tabs;
-	@Bind(R.id.act_credit_card_invoice_pager)
+	@BindView(R.id.act_credit_card_invoice_pager)
 	ViewPager pager;
 
 	private Card card;

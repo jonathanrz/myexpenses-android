@@ -17,22 +17,22 @@ import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch;
 import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
-import butterknife.Bind;
+import butterknife.BindView;
 
 public class EditAccountActivity extends BaseActivity implements AccountContract.EditView {
 	public static final String KEY_ACCOUNT_UUID = "KeyAccountUuid";
 
-	@Bind(R.id.act_edit_account_name)
+	@BindView(R.id.act_edit_account_name)
 	EditText editName;
-	@Bind(R.id.act_edit_account_balance)
+	@BindView(R.id.act_edit_account_balance)
 	EditText editBalance;
-	@Bind(R.id.act_edit_account_negative)
+	@BindView(R.id.act_edit_account_negative)
 	CheckBox checkAccountBalanceNegative;
-	@Bind(R.id.act_edit_account_to_pay_credit_card)
+	@BindView(R.id.act_edit_account_to_pay_credit_card)
 	CheckBox checkToPayCreditCard;
-	@Bind(R.id.act_edit_account_to_pay_bills)
+	@BindView(R.id.act_edit_account_to_pay_bills)
 	CheckBox checkToPayBill;
-	@Bind(R.id.act_edit_account_show_in_resume)
+	@BindView(R.id.act_edit_account_show_in_resume)
 	CheckBox checkShowInResume;
 
 	private final AccountPresenter presenter;

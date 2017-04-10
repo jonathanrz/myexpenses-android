@@ -11,14 +11,14 @@ import android.widget.TextView;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
-import butterknife.Bind;
+import butterknife.BindView;
 
 public class ListSourceActivity extends BaseActivity implements SourceAdapterCallback {
 	public static final String KEY_SOURCE_SELECTED_UUID = "KeySourceSelectUuid";
 
-	@Bind(R.id.act_sources_list)
+	@BindView(R.id.act_sources_list)
 	RecyclerView sources;
-	@Bind(R.id.act_sources_list_empty)
+	@BindView(R.id.act_sources_list_empty)
 	TextView emptyListView;
 
 	@Override

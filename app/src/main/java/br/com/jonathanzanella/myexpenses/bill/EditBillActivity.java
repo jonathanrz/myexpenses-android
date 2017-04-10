@@ -19,21 +19,21 @@ import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch;
 import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.OnClick;
 
 public class EditBillActivity extends BaseActivity implements BillContract.EditView {
 	public static final String KEY_BILL_UUID = "KeyBillUuid";
 
-	@Bind(R.id.act_edit_bill_name)
+	@BindView(R.id.act_edit_bill_name)
 	EditText editName;
-	@Bind(R.id.act_edit_bill_amount)
+	@BindView(R.id.act_edit_bill_amount)
 	EditText editAmount;
-	@Bind(R.id.act_edit_bill_due_date)
+	@BindView(R.id.act_edit_bill_due_date)
 	EditText editDueDate;
-	@Bind(R.id.act_edit_bill_init_date)
+	@BindView(R.id.act_edit_bill_init_date)
 	EditText editInitDate;
-	@Bind(R.id.act_edit_bill_end_date)
+	@BindView(R.id.act_edit_bill_end_date)
 	EditText editEndDate;
 
 	private final BillPresenter presenter;

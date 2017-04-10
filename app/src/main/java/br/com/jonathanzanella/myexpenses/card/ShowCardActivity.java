@@ -22,17 +22,17 @@ import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.ResourcesHelper;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.OnClick;
 
 public class ShowCardActivity extends BaseActivity implements CardContract.View {
 	public static final String KEY_CREDIT_CARD_UUID = "KeyCreateCardUuid";
 
-	@Bind(R.id.act_show_card_name)
+	@BindView(R.id.act_show_card_name)
 	TextView cardName;
-	@Bind(R.id.act_show_card_account)
+	@BindView(R.id.act_show_card_account)
 	TextView cardAccount;
-	@Bind(R.id.act_show_card_type)
+	@BindView(R.id.act_show_card_type)
 	TextView cardType;
 
 	private CardPresenter presenter;

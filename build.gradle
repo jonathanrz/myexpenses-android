@@ -36,7 +36,7 @@ ext {
     buildToolsVersion = '25.0.2'
 
     // App dependencies
-    butterKnifeVersion = '7.0.1'
+    butterKnifeVersion = '8.5.1'
     commonsLangVersion = '3:3.4'
     espressoVersion = '2.2.2'
     hamcrestVersion = '1.3'

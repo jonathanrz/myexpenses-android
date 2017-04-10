@@ -15,17 +15,17 @@ import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.views.BaseView;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MonthTransactionsView extends BaseView implements MonthTransactionsContractView {
 	public final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM/yy", Locale.getDefault());
 
-	@Bind(R.id.view_month_transactions_list)
+	@BindView(R.id.view_month_transactions_list)
 	RecyclerView list;
-	@Bind(R.id.view_month_transactions_header)
+	@BindView(R.id.view_month_transactions_header)
 	TextView header;
-	@Bind(R.id.view_month_transactions_balance)
+	@BindView(R.id.view_month_transactions_balance)
 	TextView balance;
 
 	int singleRowHeight;

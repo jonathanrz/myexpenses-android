@@ -8,13 +8,13 @@ import org.joda.time.DateTime;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.views.BaseView;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class TransactionsView extends BaseView {
-	@Bind(R.id.view_account_transactions_this_month)
+	@BindView(R.id.view_account_transactions_this_month)
 	MonthTransactionsView thisMonth;
-	@Bind(R.id.view_account_transactions_next_month)
+	@BindView(R.id.view_account_transactions_next_month)
 	MonthTransactionsView nextMonth;
 
 	public TransactionsView(Context context, AttributeSet attrs) {

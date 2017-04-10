@@ -10,12 +10,12 @@ import android.widget.TextView;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
-import butterknife.Bind;
+import butterknife.BindView;
 
 public class ShowSourceActivity extends BaseActivity implements SourceContract.View {
 	public static final String KEY_SOURCE_UUID = "KeySourceUuid";
 
-	@Bind(R.id.act_show_source_name)
+	@BindView(R.id.act_show_source_name)
 	TextView sourceName;
 
 	private final SourcePresenter presenter = new SourcePresenter(new SourceRepository(new RepositoryImpl<Source>(this)));

@@ -21,7 +21,7 @@ import br.com.jonathanzanella.myexpenses.card.Card;
 import br.com.jonathanzanella.myexpenses.card.CardRepository;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class CreditCardMonthlyAdapter extends RecyclerView.Adapter<CreditCardMonthlyAdapter.ViewHolder> {
@@ -36,13 +36,13 @@ public class CreditCardMonthlyAdapter extends RecyclerView.Adapter<CreditCardMon
 	}
 
 	public static class ViewHolder extends RecyclerView.ViewHolder {
-		@Bind(R.id.row_monthly_resume_expense_name) @Nullable
+		@BindView(R.id.row_monthly_resume_expense_name) @Nullable
 		TextView name;
-		@Bind(R.id.row_monthly_resume_expense_date) @Nullable
+		@BindView(R.id.row_monthly_resume_expense_date) @Nullable
 		TextView date;
-		@Bind(R.id.row_monthly_resume_expense_income)
+		@BindView(R.id.row_monthly_resume_expense_income)
 		TextView income;
-		@Bind(R.id.row_monthly_resume_expense_source) @Nullable
+		@BindView(R.id.row_monthly_resume_expense_source) @Nullable
 		TextView source;
 
 		WeakReference<CreditCardMonthlyAdapter> adapterWeakReference;

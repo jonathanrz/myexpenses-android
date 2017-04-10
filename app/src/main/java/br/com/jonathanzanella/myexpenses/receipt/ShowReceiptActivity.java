@@ -16,22 +16,22 @@ import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.source.Source;
 import br.com.jonathanzanella.myexpenses.source.SourceRepository;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
-import butterknife.Bind;
+import butterknife.BindView;
 
 public class ShowReceiptActivity extends BaseActivity implements ReceiptContract.View {
 	public static final String KEY_RECEIPT_UUID = ReceiptPresenter.KEY_RECEIPT_UUID;
 
-	@Bind(R.id.act_show_receipt_name)
+	@BindView(R.id.act_show_receipt_name)
 	TextView receiptName;
-	@Bind(R.id.act_show_receipt_date)
+	@BindView(R.id.act_show_receipt_date)
 	TextView receiptDate;
-	@Bind(R.id.act_show_receipt_income)
+	@BindView(R.id.act_show_receipt_income)
 	TextView receiptIncome;
-	@Bind(R.id.act_show_receipt_source)
+	@BindView(R.id.act_show_receipt_source)
 	TextView receiptSource;
-	@Bind(R.id.act_show_receipt_account)
+	@BindView(R.id.act_show_receipt_account)
 	TextView receiptAccount;
-	@Bind(R.id.act_show_receipt_show_in_resume)
+	@BindView(R.id.act_show_receipt_show_in_resume)
 	TextView receiptShowInResume;
 
 	private final ReceiptPresenter presenter = new ReceiptPresenter(new ReceiptRepository(new RepositoryImpl<Receipt>(this)),

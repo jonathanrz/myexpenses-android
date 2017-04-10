@@ -14,20 +14,20 @@ import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
-import butterknife.Bind;
+import butterknife.BindView;
 
 public class ShowBillActivity extends BaseActivity implements BillContract.View {
 	public static final String KEY_BILL_UUID = "KeyBillUuid";
 
-	@Bind(R.id.act_show_bill_name)
+	@BindView(R.id.act_show_bill_name)
 	TextView billName;
-	@Bind(R.id.act_show_bill_amount)
+	@BindView(R.id.act_show_bill_amount)
 	TextView billAmount;
-	@Bind(R.id.act_show_bill_due_date)
+	@BindView(R.id.act_show_bill_due_date)
 	TextView billDueDate;
-	@Bind(R.id.act_show_bill_init_date)
+	@BindView(R.id.act_show_bill_init_date)
 	TextView billInitDate;
-	@Bind(R.id.act_show_bill_end_date)
+	@BindView(R.id.act_show_bill_end_date)
 	TextView billEndDate;
 
 	private final BillPresenter presenter;

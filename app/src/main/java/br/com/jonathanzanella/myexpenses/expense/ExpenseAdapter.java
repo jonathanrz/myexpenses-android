@@ -22,7 +22,7 @@ import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.helpers.AdapterColorHelper;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHolder> {
@@ -32,19 +32,19 @@ class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHolder> {
 	private DateTime date;
 
 	public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-		@Bind(R.id.row_expense_name)
+		@BindView(R.id.row_expense_name)
 		TextView name;
-		@Bind(R.id.row_expense_date)
+		@BindView(R.id.row_expense_date)
 		TextView date;
-		@Bind(R.id.row_expense_value)
+		@BindView(R.id.row_expense_value)
 		TextView value;
-		@Bind(R.id.row_expense_chargeable)
+		@BindView(R.id.row_expense_chargeable)
 		TextView chargeable;
-		@Bind(R.id.row_expense_bill_stt)
+		@BindView(R.id.row_expense_bill_stt)
 		TextView billViewStt;
-		@Bind(R.id.row_expense_bill)
+		@BindView(R.id.row_expense_bill)
 		TextView billView;
-		@Bind(R.id.row_expense_charge_next_month)
+		@BindView(R.id.row_expense_charge_next_month)
 		TextView chargeNextMonth;
 
 		private final AdapterColorHelper adapterColorHelper;

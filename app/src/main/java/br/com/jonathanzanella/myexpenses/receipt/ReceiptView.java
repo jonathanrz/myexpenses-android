@@ -22,14 +22,14 @@ import br.com.jonathanzanella.myexpenses.helpers.DateHelper;
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapter;
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapterBuilder;
 import br.com.jonathanzanella.myexpenses.views.BaseView;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class ReceiptView extends BaseView implements ViewPager.OnPageChangeListener {
 	private static final int REQUEST_ADD_RECEIPT = 1007;
 
-	@Bind(R.id.view_receipts_pager)
+	@BindView(R.id.view_receipts_pager)
     ViewPager pager;
 
 	private final Map<DateTime, WeakReference<ReceiptMonthlyView>> views = new HashMap<>();

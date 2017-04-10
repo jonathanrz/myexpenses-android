@@ -19,24 +19,22 @@ import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.receipt.Receipt;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
-import butterknife.Bind;
+import butterknife.BindView;
 
 public class ShowExpenseActivity extends BaseActivity implements ExpenseContract.View {
 	public static final String KEY_EXPENSE_UUID = ExpensePresenter.KEY_EXPENSE_UUID;
 
-	@Bind(R.id.act_show_expense_name)
+	@BindView(R.id.act_show_expense_name)
 	TextView expenseName;
-	@Bind(R.id.act_show_expense_date)
+	@BindView(R.id.act_show_expense_date)
 	TextView expenseDate;
-	@Bind(R.id.act_show_expense_value)
+	@BindView(R.id.act_show_expense_value)
 	TextView expenseIncome;
-	@Bind(R.id.act_show_expense_value_to_show_in_overview)
+	@BindView(R.id.act_show_expense_value_to_show_in_overview)
 	TextView expenseIncomeToShowInOverview;
-	@Bind(R.id.act_show_expense_chargeable)
+	@BindView(R.id.act_show_expense_chargeable)
 	TextView expenseChargeable;
-	@Bind(R.id.act_show_expense_bill)
-	TextView expenseBill;
-	@Bind(R.id.act_show_expense_charge_next_month)
+	@BindView(R.id.act_show_expense_charge_next_month)
 	TableRow chargeNextMonth;
 
 	private ExpensePresenter presenter;

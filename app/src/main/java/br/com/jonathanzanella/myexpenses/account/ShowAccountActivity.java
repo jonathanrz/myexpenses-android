@@ -16,21 +16,21 @@ import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.helpers.DateHelper;
 import br.com.jonathanzanella.myexpenses.views.BaseActivity;
-import butterknife.Bind;
+import butterknife.BindView;
 
 public class ShowAccountActivity extends BaseActivity implements AccountContract.View {
 	public static final String KEY_ACCOUNT_UUID = "KeyAccountUuid";
 	public static final String KEY_ACCOUNT_MONTH_TO_SHOW = "KeyAccountMonthToShow";
 
-	@Bind(R.id.act_show_account_name)
+	@BindView(R.id.act_show_account_name)
 	TextView accountName;
-	@Bind(R.id.act_show_account_balance)
+	@BindView(R.id.act_show_account_balance)
 	TextView accountBalance;
-	@Bind(R.id.act_show_account_to_pay_credit_card)
+	@BindView(R.id.act_show_account_to_pay_credit_card)
 	TextView accountToPayCreditCard;
-	@Bind(R.id.act_show_account_to_pay_bills)
+	@BindView(R.id.act_show_account_to_pay_bills)
 	TextView accountToPayBills;
-	@Bind(R.id.act_show_account_transactions)
+	@BindView(R.id.act_show_account_transactions)
 	TransactionsView transactionsView;
 	private DateTime monthToShow;
 
