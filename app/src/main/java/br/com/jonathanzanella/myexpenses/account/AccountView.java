@@ -44,6 +44,7 @@ public class AccountView extends BaseView {
 		accounts.setAdapter(adapter);
 		accounts.setLayoutManager(new GridLayoutManager(getContext(), 2));
 		accounts.setItemAnimator(new DefaultItemAnimator());
+		adapter.setFormat(AccountAdapter.Format.LIST);
 	}
 
 	@OnClick(R.id.view_accounts_fab)

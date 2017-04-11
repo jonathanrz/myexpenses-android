@@ -6,7 +6,6 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.MediumTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.support.test.uiautomator.UiDevice;
 
 import org.junit.After;
 import org.junit.Before;
@@ -42,10 +41,6 @@ public class AddAccountTest {
 	@Before
 	public void setUp() throws Exception {
 		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
-
-		UiDevice uiDevice = UiDevice.getInstance(getInstrumentation());
-		if (!uiDevice.isScreenOn())
-			uiDevice.wakeUp();
 	}
 
 	@After
