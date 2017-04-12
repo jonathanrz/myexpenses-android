@@ -87,7 +87,7 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
     //Anko
-    compile "org.jetbrains.anko:anko-sdk19:$ankoVersion"
+    compile "org.jetbrains.anko:anko-sdk21:$ankoVersion"
     compile "org.jetbrains.anko:anko-support-v4:$ankoVersion"
     compile "org.jetbrains.anko:anko-appcompat-v7:$ankoVersion"
 
