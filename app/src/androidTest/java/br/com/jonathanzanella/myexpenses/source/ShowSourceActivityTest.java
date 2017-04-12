@@ -42,7 +42,7 @@ public class ShowSourceActivityTest {
 	@Test
 	public void shows_account_correctly() throws Exception {
 		Intent i = new Intent();
-		i.putExtra(ShowSourceActivity.KEY_SOURCE_UUID, source.getUuid());
+		i.putExtra(ShowSourceActivity.Companion.getKEY_SOURCE_UUID(), source.getUuid());
 		activityTestRule.launchActivity(i);
 
 		final String editSourceTitle = getTargetContext().getString(R.string.source) + " " + source.getName();
