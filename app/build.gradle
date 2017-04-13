@@ -90,6 +90,7 @@ dependencies {
     compile "org.jetbrains.anko:anko-sdk21:$ankoVersion"
     compile "org.jetbrains.anko:anko-support-v4:$ankoVersion"
     compile "org.jetbrains.anko:anko-appcompat-v7:$ankoVersion"
+    compile "org.jetbrains.anko:anko-design:$ankoVersion"
 
     // Dependencies for local unit tests
     testCompile "junit:junit:$rootProject.junitVersion"
