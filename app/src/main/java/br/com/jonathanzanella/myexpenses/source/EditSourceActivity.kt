@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.AppCompatEditText
 import android.support.v7.widget.Toolbar
@@ -14,10 +13,14 @@ import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
 import br.com.jonathanzanella.myexpenses.log.Log
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
-import br.com.jonathanzanella.myexpenses.views.appCompatEditText
-import br.com.jonathanzanella.myexpenses.views.textInputLayout
-import org.jetbrains.anko.*
-import org.jetbrains.anko.appcompat.v7.toolbar
+import br.com.jonathanzanella.myexpenses.views.anko.appCompatEditText
+import br.com.jonathanzanella.myexpenses.views.anko.tableViewFrame
+import br.com.jonathanzanella.myexpenses.views.anko.textInputLayout
+import br.com.jonathanzanella.myexpenses.views.anko.toolbar_template
+import org.jetbrains.anko.AnkoComponent
+import org.jetbrains.anko.AnkoContext
+import org.jetbrains.anko.setContentView
+import org.jetbrains.anko.verticalLayout
 
 class EditSourceActivity : AppCompatActivity(), SourceContract.EditView {
     private val presenter: SourcePresenter = SourcePresenter(SourceRepository(RepositoryImpl<Source>(this)))
@@ -120,19 +123,15 @@ class EditSourceActivityUi : AnkoComponent<EditSourceActivity> {
 
     override fun createView(ui: AnkoContext<EditSourceActivity>) = with(ui) {
         verticalLayout {
-            toolbar = toolbar(android.R.style.ThemeOverlay_Material_Dark) {
-                backgroundColor = ContextCompat.getColor(ctx, R.color.color_primary)
-            }.lparams(width = matchParent)
+            toolbar = toolbar_template()
 
-            frameLayout {
-                textInputLayout(R.style.LastTextInputLayout) {
+            tableViewFrame {
+                textInputLayout {
                     editName = appCompatEditText {
                         id = R.id.act_edit_source_name
                         hint = resources.getString(R.string.name)
-                    }.lparams(width = matchParent)
+                    }
                 }
-            }.lparams(height = matchParent, width = matchParent) {
-                margin = dip(16)
             }
         }
     }

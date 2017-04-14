@@ -8,60 +8,41 @@
 		<item name="colorAccent">@color/color_accent</item>
 	</style>
 
-	<style name="CardWithoutMargin">
-		<item name="cardCornerRadius">4dp</item>
-		<item name="android:background">@android:color/white</item>
-	</style>
-
-	<style name="Card" parent="@style/CardWithoutMargin">
-		<item name="android:layout_margin">@dimen/min_spacing</item>
-	</style>
-
-	<style name="HeaderTitle">
+	<style name="Toolbar" parent="ThemeOverlay.AppCompat.Dark">
+		<item name="android:orientation">vertical</item>
+		<item name="android:layout_width">match_parent</item>
 		<item name="android:layout_height">wrap_content</item>
+		<item name="android:background">@color/color_primary</item>
+		<item name="titleTextColor">@android:color/white</item>
+	</style>
+
+	<style name="ViewFrame">
+		<item name="android:layout_width">match_parent</item>
+		<item name="android:layout_height">match_parent</item>
+		<item name="android:layout_margin">@dimen/default_spacing</item>
+	</style>
+
+	<style name="Static">
 		<item name="android:layout_width">wrap_content</item>
-		<item name="android:textSize">20sp</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:layout_marginEnd">@dimen/min_spacing</item>
+	</style>
+
+	<style name="StaticWithData">
+		<item name="android:layout_width">wrap_content</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:layout_marginEnd">@dimen/min_spacing</item>
 		<item name="android:textColor">@color/color_primary</item>
 	</style>
 
-	<style name="ResumeRowCell">
-		<item name="android:layout_width">match_parent</item>
-		<item name="android:layout_height">@dimen/single_row_height</item>
-		<item name="android:padding">@dimen/min_spacing</item>
-	</style>
-
-	<style name="RowPrincipalInformation">
-		<item name="android:layout_width">wrap_content</item>
-		<item name="android:layout_height">wrap_content</item>
-		<item name="android:textColor">@color/color_primary_text</item>
-		<item name="android:textSize">14sp</item>
-	</style>
-
-	<style name="RowSecondaryInformation">
-		<item name="android:layout_width">wrap_content</item>
-		<item name="android:layout_height">wrap_content</item>
-		<item name="android:textColor">@color/color_primary</item>
-		<item name="android:textSize">12sp</item>
-	</style>
-
-	<style name="RowDetailInformation">
-		<item name="android:layout_width">wrap_content</item>
-		<item name="android:layout_height">wrap_content</item>
-		<item name="android:textColor">@color/color_secondary_text</item>
-		<item name="android:textSize">10sp</item>
-	</style>
-
-	<style name="RowStaticInformation">
-		<item name="android:layout_width">wrap_content</item>
-		<item name="android:layout_height">wrap_content</item>
-		<item name="android:textColor">@color/color_secondary_text</item>
-		<item name="android:textSize">8sp</item>
-	</style>
-
-	<style name="LastTextInputLayout">
+	<style name="TextInputLayout">
 		<item name="android:layout_width">match_parent</item>
 		<item name="android:layout_height">wrap_content</item>
-		<item name="android:layout_marginBottom">@dimen/default_spacing</item>
+	</style>
+
+	<style name="AppCompatEditText">
+		<item name="android:layout_width">match_parent</item>
+		<item name="android:layout_height">wrap_content</item>
 	</style>
 
 </resources>

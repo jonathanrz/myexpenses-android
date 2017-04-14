@@ -3,7 +3,6 @@ package br.com.jonathanzanella.myexpenses.source
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.Menu
@@ -11,8 +10,11 @@ import android.view.MenuItem
 import android.widget.TextView
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
+import br.com.jonathanzanella.myexpenses.views.anko.static
+import br.com.jonathanzanella.myexpenses.views.anko.staticWithData
+import br.com.jonathanzanella.myexpenses.views.anko.tableViewFrame
+import br.com.jonathanzanella.myexpenses.views.anko.toolbar_template
 import org.jetbrains.anko.*
-import org.jetbrains.anko.appcompat.v7.toolbar
 
 class ShowSourceActivity : AppCompatActivity(), SourceContract.View {
     private val presenter = SourcePresenter(SourceRepository(RepositoryImpl<Source>(this)))
@@ -99,25 +101,13 @@ class ShowSourceActivityUi : AnkoComponent<ShowSourceActivity> {
 
     override fun createView(ui: AnkoContext<ShowSourceActivity>) = with(ui) {
         verticalLayout {
-            toolbar = toolbar(android.R.style.ThemeOverlay_Material_Dark) {
-                backgroundColor = ContextCompat.getColor(ctx, R.color.color_primary)
-            }.lparams(width = matchParent)
+            toolbar = toolbar_template()
 
-            tableLayout {
+            tableViewFrame {
                 tableRow {
-                    textView {
-                        text = resources.getString(R.string.name)
-                    }.lparams {
-                        rightMargin = dip(5)
-                    }
-
-                    sourceName = textView {
-                        id = R.id.act_show_source_name
-                        textColor = ContextCompat.getColor(ctx, R.color.color_primary)
-                    }
+                    static { text = resources.getString(R.string.name) }
+                    sourceName = staticWithData { id = R.id.act_show_source_name }
                 }
-            }.lparams {
-                margin = dip(16)
             }
         }
     }
