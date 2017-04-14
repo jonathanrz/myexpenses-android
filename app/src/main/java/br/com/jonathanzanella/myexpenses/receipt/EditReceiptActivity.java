@@ -111,7 +111,7 @@ public class EditReceiptActivity extends BaseActivity implements ReceiptContract
 		switch (requestCode) {
 			case REQUEST_SELECT_SOURCE: {
 				if(resultCode == RESULT_OK) {
-					String sourceUUid = data.getStringExtra(ListSourceActivity.KEY_SOURCE_SELECTED_UUID);
+					String sourceUUid = data.getStringExtra(ListSourceActivity.Companion.getKEY_SOURCE_SELECTED_UUID());
 					if(sourceUUid != null)
 						presenter.onSourceSelected(sourceUUid);
 				}

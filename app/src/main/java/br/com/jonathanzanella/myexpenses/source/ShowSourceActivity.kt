@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
@@ -23,6 +22,8 @@ class ShowSourceActivity : AppCompatActivity(), SourceContract.View {
 
         storeBundle(savedInstanceState)
         storeBundle(intent.extras)
+
+        ui.toolbar.setup(this)
     }
 
     fun storeBundle(extras: Bundle?) {
@@ -39,14 +40,6 @@ class ShowSourceActivity : AppCompatActivity(), SourceContract.View {
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
         presenter.viewUpdated()
-
-        setSupportActionBar(ui.toolbar)
-        val actionBar = supportActionBar
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true)
-            actionBar.setDisplayHomeAsUpEnabled(true)
-            ui.toolbar.setNavigationOnClickListener { finish() }
-        }
     }
 
     override fun onStart() {
@@ -94,7 +87,7 @@ class ShowSourceActivity : AppCompatActivity(), SourceContract.View {
 
 class ShowSourceActivityUi : AnkoComponent<ShowSourceActivity> {
     lateinit var sourceName : TextView
-    lateinit var toolbar : Toolbar
+    lateinit var toolbar : TemplateToolbar
 
     override fun createView(ui: AnkoContext<ShowSourceActivity>) = with(ui) {
         verticalLayout {
