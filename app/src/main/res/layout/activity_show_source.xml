@@ -1,35 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+	<data>
+		<variable name="source" type="br.com.jonathanzanella.myexpenses.source.Source"/>
+	</data>
+	<LinearLayout
+		android:orientation="vertical"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
 
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/toolbar"/>
+		<include
+			android:id="@+id/toolbar"
+			layout="@layout/toolbar"/>
 
-    <TableLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/default_spacing">
+		<TableLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_margin="@dimen/default_spacing">
 
-        <TableRow>
+			<TableRow>
 
-            <TextView
-                android:id="@+id/act_show_source_name_stt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/name"
-                android:layout_marginEnd="@dimen/min_spacing"/>
+				<TextView
+					android:id="@+id/act_show_source_name_stt"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="@string/name"
+					android:layout_marginEnd="@dimen/min_spacing"/>
 
-            <TextView
-                android:id="@+id/act_show_source_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/color_primary"/>
+				<TextView
+					android:id="@+id/act_show_source_name"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textColor="@color/color_primary"
+					android:text="@{source.name}"/>
 
-        </TableRow>
+			</TableRow>
 
-    </TableLayout>
-</LinearLayout>
+		</TableLayout>
+	</LinearLayout>
+</layout>
