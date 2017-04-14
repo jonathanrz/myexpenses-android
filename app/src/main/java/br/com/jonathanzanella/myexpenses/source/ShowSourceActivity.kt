@@ -98,7 +98,7 @@ class ShowSourceActivityUi : AnkoComponent<ShowSourceActivity> {
 
     override fun createView(ui: AnkoContext<ShowSourceActivity>) = with(ui) {
         verticalLayout {
-            toolbar = toolbar_template()
+            toolbar = toolbarTemplate {}
 
             tableViewFrame {
                 tableRow {
@@ -106,6 +106,6 @@ class ShowSourceActivityUi : AnkoComponent<ShowSourceActivity> {
                     sourceName = staticWithData { id = R.id.act_show_source_name }
                 }
             }
-        }.applyRecursively { view -> applyTemplateViewLayouts(view) }
+        }.applyRecursively(::applyTemplateViewStyles)
     }
 }

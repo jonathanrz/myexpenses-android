@@ -117,7 +117,7 @@ class EditSourceActivityUi : AnkoComponent<EditSourceActivity> {
 
     override fun createView(ui: AnkoContext<EditSourceActivity>) = with(ui) {
         verticalLayout {
-            toolbar = toolbar_template()
+            toolbar = toolbarTemplate {}
 
             tableViewFrame {
                 textInputLayout {
@@ -127,7 +127,7 @@ class EditSourceActivityUi : AnkoComponent<EditSourceActivity> {
                     }
                 }
             }
-        }.applyRecursively { view -> applyTemplateViewLayouts(view) }
+        }.applyRecursively { view -> applyTemplateViewStyles(view) }
     }
 
 }

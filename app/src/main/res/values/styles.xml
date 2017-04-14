@@ -8,41 +8,4 @@
 		<item name="colorAccent">@color/color_accent</item>
 	</style>
 
-	<style name="Toolbar" parent="ThemeOverlay.AppCompat.Dark">
-		<item name="android:orientation">vertical</item>
-		<item name="android:layout_width">match_parent</item>
-		<item name="android:layout_height">wrap_content</item>
-		<item name="android:background">@color/color_primary</item>
-		<item name="titleTextColor">@android:color/white</item>
-	</style>
-
-	<style name="ViewFrame">
-		<item name="android:layout_width">match_parent</item>
-		<item name="android:layout_height">match_parent</item>
-		<item name="android:layout_margin">@dimen/default_spacing</item>
-	</style>
-
-	<style name="Static">
-		<item name="android:layout_width">wrap_content</item>
-		<item name="android:layout_height">wrap_content</item>
-		<item name="android:layout_marginEnd">@dimen/min_spacing</item>
-	</style>
-
-	<style name="StaticWithData">
-		<item name="android:layout_width">wrap_content</item>
-		<item name="android:layout_height">wrap_content</item>
-		<item name="android:layout_marginEnd">@dimen/min_spacing</item>
-		<item name="android:textColor">@color/color_primary</item>
-	</style>
-
-	<style name="TextInputLayout">
-		<item name="android:layout_width">match_parent</item>
-		<item name="android:layout_height">wrap_content</item>
-	</style>
-
-	<style name="AppCompatEditText">
-		<item name="android:layout_width">match_parent</item>
-		<item name="android:layout_height">wrap_content</item>
-	</style>
-
 </resources>
