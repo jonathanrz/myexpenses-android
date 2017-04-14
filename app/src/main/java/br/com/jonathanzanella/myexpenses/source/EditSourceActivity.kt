@@ -13,14 +13,8 @@ import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
 import br.com.jonathanzanella.myexpenses.log.Log
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
-import br.com.jonathanzanella.myexpenses.views.anko.appCompatEditText
-import br.com.jonathanzanella.myexpenses.views.anko.tableViewFrame
-import br.com.jonathanzanella.myexpenses.views.anko.textInputLayout
-import br.com.jonathanzanella.myexpenses.views.anko.toolbar_template
-import org.jetbrains.anko.AnkoComponent
-import org.jetbrains.anko.AnkoContext
-import org.jetbrains.anko.setContentView
-import org.jetbrains.anko.verticalLayout
+import br.com.jonathanzanella.myexpenses.views.anko.*
+import org.jetbrains.anko.*
 
 class EditSourceActivity : AppCompatActivity(), SourceContract.EditView {
     private val presenter: SourcePresenter = SourcePresenter(SourceRepository(RepositoryImpl<Source>(this)))
@@ -133,7 +127,7 @@ class EditSourceActivityUi : AnkoComponent<EditSourceActivity> {
                     }
                 }
             }
-        }
+        }.applyRecursively { view -> applyTemplateViewLayouts(view) }
     }
 
 }

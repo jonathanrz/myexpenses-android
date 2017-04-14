@@ -10,10 +10,7 @@ import android.view.MenuItem
 import android.widget.TextView
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
-import br.com.jonathanzanella.myexpenses.views.anko.static
-import br.com.jonathanzanella.myexpenses.views.anko.staticWithData
-import br.com.jonathanzanella.myexpenses.views.anko.tableViewFrame
-import br.com.jonathanzanella.myexpenses.views.anko.toolbar_template
+import br.com.jonathanzanella.myexpenses.views.anko.*
 import org.jetbrains.anko.*
 
 class ShowSourceActivity : AppCompatActivity(), SourceContract.View {
@@ -109,7 +106,6 @@ class ShowSourceActivityUi : AnkoComponent<ShowSourceActivity> {
                     sourceName = staticWithData { id = R.id.act_show_source_name }
                 }
             }
-        }
+        }.applyRecursively { view -> applyTemplateViewLayouts(view) }
     }
-
 }
