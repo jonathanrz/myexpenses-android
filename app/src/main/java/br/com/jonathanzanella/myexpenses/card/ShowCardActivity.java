@@ -27,6 +27,7 @@ import butterknife.OnClick;
 
 public class ShowCardActivity extends BaseActivity implements CardContract.View {
 	public static final String KEY_CREDIT_CARD_UUID = "KeyCreateCardUuid";
+	private static final int EDIT_CARD = 1001;
 
 	@Bind(R.id.act_show_card_name)
 	TextView cardName;
@@ -109,10 +110,17 @@ public class ShowCardActivity extends BaseActivity implements CardContract.View 
 			case R.id.action_edit:
 				Intent i = new Intent(this, EditCardActivity.class);
 				i.putExtra(EditCardActivity.KEY_CARD_UUID, presenter.getUuid());
-				startActivity(i);
+				startActivityForResult(i, EDIT_CARD);
 				break;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if(requestCode == EDIT_CARD && resultCode == RESULT_OK)
+			presenter.reloadCard();
 	}
 
 	@UiThread
