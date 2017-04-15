@@ -1,5 +1,6 @@
 package br.com.jonathanzanella.myexpenses.receipt;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -20,6 +21,7 @@ import butterknife.Bind;
 
 public class ShowReceiptActivity extends BaseActivity implements ReceiptContract.View {
 	public static final String KEY_RECEIPT_UUID = ReceiptPresenter.KEY_RECEIPT_UUID;
+	private static final int EDIT_RECEIPT = 1001;
 
 	@Bind(R.id.act_show_receipt_name)
 	TextView receiptName;
@@ -92,7 +94,9 @@ public class ShowReceiptActivity extends BaseActivity implements ReceiptContract
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_edit: {
-				presenter.edit(this);
+				Intent i = new Intent(this, EditReceiptActivity.class);
+				i.putExtra(EditReceiptActivity.KEY_RECEIPT_UUID, presenter.getUuid());
+				startActivityForResult(i, EDIT_RECEIPT);
 				break;
 			}
 			case R.id.action_delete: {
@@ -101,6 +105,14 @@ public class ShowReceiptActivity extends BaseActivity implements ReceiptContract
 			}
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if(requestCode == EDIT_RECEIPT && resultCode == RESULT_OK) {
+			presenter.refreshReceipt();
+		}
 	}
 
 	@UiThread
