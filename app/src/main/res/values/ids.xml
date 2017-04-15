@@ -2,4 +2,8 @@
 <resources>
 	<item type="id" name="act_show_source_name"/>
 	<item type="id" name="act_edit_source_name"/>
+	<item type="id" name="act_sources_list"/>
+	<item type="id" name="act_sources_list_empty"/>
+	<item type="id" name="view_sources_list"/>
+	<item type="id" name="view_sources_fab"/>
 </resources>

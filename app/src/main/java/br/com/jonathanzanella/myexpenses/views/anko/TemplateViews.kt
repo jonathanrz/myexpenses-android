@@ -1,21 +1,21 @@
 package br.com.jonathanzanella.myexpenses.views.anko
 
 import android.content.Context
+import android.support.design.widget.FloatingActionButton
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
+import android.view.Gravity
 import android.view.View
 import android.view.ViewManager
+import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TableLayout
 import android.widget.TextView
 import br.com.jonathanzanella.myexpenses.R
-import org.jetbrains.anko.backgroundColor
+import org.jetbrains.anko.*
 import org.jetbrains.anko.custom.ankoView
-import org.jetbrains.anko.margin
-import org.jetbrains.anko.matchParent
-import org.jetbrains.anko.textColor
 
 class TemplateToolbar(context: Context) : Toolbar(context) {
     fun setup(activity : AppCompatActivity) {
@@ -73,6 +73,18 @@ fun applyTemplateViewStyles(view: View) {
         }
         is RecyclerView -> {
             view.layoutParams.width = matchParent
+        }
+        is FloatingActionButton -> {
+            view.imageResource = R.drawable.ic_add_white_24dp
+            view.elevation = view.dip(6).toFloat()
+            view.layoutParams.height = view.dip(56)
+            view.layoutParams.width = view.dip(56)
+            when(view.layoutParams) {
+                is FrameLayout.LayoutParams -> {
+                    (view.layoutParams as FrameLayout.LayoutParams).gravity = Gravity.BOTTOM.or(Gravity.END)
+                    (view.layoutParams as FrameLayout.LayoutParams).margin = view.resources.getDimensionPixelSize(R.dimen.default_spacing)
+                }
+            }
         }
     }
 

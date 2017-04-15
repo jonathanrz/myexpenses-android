@@ -32,7 +32,7 @@ class ListSourceActivity : AppCompatActivity(), SourceAdapterCallback {
 
         ui.sources.adapter = adapter
         ui.sources.setHasFixedSize(true)
-        ui.sources.layoutManager = GridLayoutManager(this, 2)
+        ui.sources.layoutManager = GridLayoutManager(this, 2) as RecyclerView.LayoutManager?
         ui.sources.itemAnimator = DefaultItemAnimator()
 
         ui.emptyListView.visibility = if (adapter.itemCount == 0) View.VISIBLE else View.GONE
@@ -58,8 +58,11 @@ class ListSourceActivityUi : AnkoComponent<ListSourceActivity> {
     override fun createView(ui: AnkoContext<ListSourceActivity>) = with(ui) {
         verticalLayout {
             toolbar = toolbarTemplate {}
-            sources = recyclerView {}
-            emptyListView = emptyListMessageView { text = resources.getString(R.string.message_no_sources) }
+            sources = recyclerView { id = R.id.act_sources_list }
+            emptyListView = emptyListMessageView {
+                id = R.id.act_sources_list_empty
+                text = resources.getString(R.string.message_no_sources)
+            }
         }.applyRecursively(::applyTemplateViewStyles)
     }
 }
