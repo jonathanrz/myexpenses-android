@@ -21,6 +21,7 @@ import butterknife.Bind;
 public class ShowAccountActivity extends BaseActivity implements AccountContract.View {
 	public static final String KEY_ACCOUNT_UUID = "KeyAccountUuid";
 	public static final String KEY_ACCOUNT_MONTH_TO_SHOW = "KeyAccountMonthToShow";
+	private static final int EDIT_ACCOUNT = 1001;
 
 	@Bind(R.id.act_show_account_name)
 	TextView accountName;
@@ -96,7 +97,7 @@ public class ShowAccountActivity extends BaseActivity implements AccountContract
 			case R.id.action_edit:
 				Intent i = new Intent(this, EditAccountActivity.class);
 				i.putExtra(EditAccountActivity.KEY_ACCOUNT_UUID, presenter.getUuid());
-				startActivity(i);
+				startActivityForResult(i, EDIT_ACCOUNT);
 				break;
 		}
 		return super.onOptionsItemSelected(item);
@@ -110,5 +111,12 @@ public class ShowAccountActivity extends BaseActivity implements AccountContract
 		accountToPayBills.setText(account.isAccountToPayBills() ? R.string.yes : R.string.no);
 
 		transactionsView.showTransactions(account, monthToShow);
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if(requestCode == EDIT_ACCOUNT && resultCode == RESULT_OK)
+			presenter.reloadAccount();
 	}
 }

@@ -58,6 +58,11 @@ class AccountPresenter {
 	}
 
 	@UiThread
+	void reloadAccount() {
+		loadAccount(account.getUuid());
+	}
+
+	@UiThread
 	void loadAccount(final String uuid) {
 		new AsyncTask<Void, Void, Account>() {
 

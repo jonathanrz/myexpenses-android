@@ -55,7 +55,7 @@ public class EditAccountTest {
 	}
 
 	@Test
-	public void edit_expense_correctly() throws Exception {
+	public void edit_account_correctly() throws Exception {
 		Intent i = new Intent();
 		i.putExtra(ShowAccountActivity.KEY_ACCOUNT_UUID, account.getUuid());
 		activityTestRule.launchActivity(i);
