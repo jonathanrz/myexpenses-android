@@ -14,6 +14,7 @@ import android.widget.LinearLayout
 import android.widget.TableLayout
 import android.widget.TextView
 import br.com.jonathanzanella.myexpenses.R
+import br.com.jonathanzanella.myexpenses.account.transactions.TransactionsView
 import org.jetbrains.anko.*
 import org.jetbrains.anko.custom.ankoView
 
@@ -39,6 +40,8 @@ inline fun ViewManager.static(theme: Int = 0, init: Static.() -> Unit) = ankoVie
 inline fun ViewManager.staticWithData(theme: Int = 0, init: StaticWithData.() -> Unit) = ankoView(::StaticWithData, theme, init)
 inline fun ViewManager.emptyListMessageView(theme: Int = 0, init: EmptyListMessageView.() -> Unit) = ankoView(::EmptyListMessageView, theme, init)
 inline fun ViewManager.recyclerView(theme: Int = 0, init: RecyclerView.() -> Unit) = ankoView(::RecyclerView, theme, init)
+
+inline fun ViewManager.transactionsView(theme: Int = 0, init: TransactionsView.() -> Unit) = ankoView(::TransactionsView, theme, init)
 
 fun applyTemplateViewStyles(view: View) {
     when(view) {

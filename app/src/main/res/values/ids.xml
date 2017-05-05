@@ -6,4 +6,10 @@
 	<item type="id" name="act_sources_list_empty"/>
 	<item type="id" name="view_sources_list"/>
 	<item type="id" name="view_sources_fab"/>
+
+	<item type="id" name="act_show_account_name"/>
+	<item type="id" name="act_show_account_balance"/>
+	<item type="id" name="act_show_account_to_pay_credit_card"/>
+	<item type="id" name="act_show_account_to_pay_bills"/>
+	<item type="id" name="act_show_account_transactions"/>
 </resources>

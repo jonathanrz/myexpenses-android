@@ -17,6 +17,10 @@ public class TransactionsView extends BaseView {
 	@Bind(R.id.view_account_transactions_next_month)
 	MonthTransactionsView nextMonth;
 
+	public TransactionsView(Context context) {
+		super(context);
+	}
+
 	public TransactionsView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 	}

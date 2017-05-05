@@ -132,7 +132,7 @@ public class ShowAccountActivityTest {
 
 	private void launchActivity() {
 		Intent i = new Intent();
-		i.putExtra(ShowAccountActivity.KEY_ACCOUNT_UUID, account.getUuid());
+		i.putExtra(ShowAccountActivity.Companion.getKEY_ACCOUNT_UUID(), account.getUuid());
 		activityTestRule.launchActivity(i);
 	}
 

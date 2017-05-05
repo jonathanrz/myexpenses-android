@@ -72,9 +72,9 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
 			if(acc != null) {
 				if(callback == null) {
 					Intent i = new Intent(itemView.getContext(), ShowAccountActivity.class);
-					i.putExtra(ShowAccountActivity.KEY_ACCOUNT_UUID, acc.getUuid());
+					i.putExtra(ShowAccountActivity.Companion.getKEY_ACCOUNT_UUID(), acc.getUuid());
 					if(month != null)
-						i.putExtra(ShowAccountActivity.KEY_ACCOUNT_MONTH_TO_SHOW, month.getMillis());
+						i.putExtra(ShowAccountActivity.Companion.getKEY_ACCOUNT_MONTH_TO_SHOW(), month.getMillis());
 					itemView.getContext().startActivity(i);
 				} else {
 					callback.onAccountSelected(acc);
