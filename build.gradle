@@ -4,11 +4,9 @@ buildscript {
     ext.kotlin_version = '1.1.2-3'
     repositories {
         jcenter()
-        maven { url 'https://www.testfairy.com/maven' }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.2'
-        classpath 'com.testfairy.plugins.gradle:testfairy:1.12'
         classpath 'com.dicedmelon.gradle:jacoco-android:0.1.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
