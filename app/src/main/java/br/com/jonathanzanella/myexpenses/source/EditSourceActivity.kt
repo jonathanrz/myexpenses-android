@@ -122,5 +122,4 @@ class EditSourceActivityUi : AnkoComponent<EditSourceActivity> {
             }
         }.applyRecursively(::applyTemplateViewStyles)
     }
-
 }
