@@ -6,20 +6,26 @@ import android.os.Bundle
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
-
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.views.BaseActivity
-import butterknife.Bind
+import br.com.jonathanzanella.myexpenses.views.anko.TemplateToolbar
+import br.com.jonathanzanella.myexpenses.views.anko.recyclerView
+import br.com.jonathanzanella.myexpenses.views.anko.toolbarTemplate
+import org.jetbrains.anko.AnkoComponent
+import org.jetbrains.anko.AnkoContext
+import org.jetbrains.anko.setContentView
+import org.jetbrains.anko.verticalLayout
 
 class ListAccountActivity : BaseActivity(), AccountAdapterCallback {
-
-    @Bind(R.id.act_account_list)
-    lateinit var accounts: RecyclerView
+    private val ui = ListAccountActivityUi()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_list_account)
-        setTitle(R.string.select_account_title)
+
+        ui.setContentView(this)
+
+        ui.toolbar.title = getString(R.string.select_account_title)
+        ui.toolbar.setup(this)
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -29,20 +35,32 @@ class ListAccountActivity : BaseActivity(), AccountAdapterCallback {
         adapter.setCallback(this)
         adapter.setFormat(AccountAdapter.Format.LIST)
 
-        accounts.adapter = adapter
-        accounts.setHasFixedSize(true)
-        accounts.layoutManager = GridLayoutManager(this, 2)
-        accounts.itemAnimator = DefaultItemAnimator()
+        ui.accounts.adapter = adapter
+        ui.accounts.setHasFixedSize(true)
+        ui.accounts.layoutManager = GridLayoutManager(this, 2)
+        ui.accounts.itemAnimator = DefaultItemAnimator()
     }
 
     override fun onAccountSelected(account: Account) {
         val i = Intent()
-        i.putExtra(KEY_ACCOUNT_SELECTED_UUID, account.getUuid())
+        i.putExtra(KEY_ACCOUNT_SELECTED_UUID, account.uuid)
         setResult(Activity.RESULT_OK, i)
         finish()
     }
 
     companion object {
         val KEY_ACCOUNT_SELECTED_UUID = "KeyAccountSelectUuid"
+    }
+}
+
+class ListAccountActivityUi : AnkoComponent<ListAccountActivity> {
+    lateinit var toolbar : TemplateToolbar
+    lateinit var accounts: RecyclerView
+
+    override fun createView(ui: AnkoContext<ListAccountActivity>) = with(ui) {
+        verticalLayout {
+            toolbar = toolbarTemplate {}
+            accounts = recyclerView { id = R.id.act_account_list }
+        }
     }
 }

@@ -12,4 +12,5 @@
 	<item type="id" name="act_show_account_to_pay_credit_card"/>
 	<item type="id" name="act_show_account_to_pay_bills"/>
 	<item type="id" name="act_show_account_transactions"/>
+	<item type="id" name="act_account_list"/>
 </resources>
