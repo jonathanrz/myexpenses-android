@@ -16,7 +16,7 @@ import org.jetbrains.anko.design.floatingActionButton
 
 class SourceView : BaseView {
     private val ui = SourceViewUI()
-    private val adapter = SourceAdapter()
+    private val adapter = SourceAdapter(context)
 
 	constructor(context: Context) : super(context)
 	constructor(context: Context, attrs: AttributeSet) : super(context, attrs)

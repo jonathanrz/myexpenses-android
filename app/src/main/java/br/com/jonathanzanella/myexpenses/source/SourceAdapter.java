@@ -1,7 +1,9 @@
 package br.com.jonathanzanella.myexpenses.source;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +12,6 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.helpers.AdapterColorHelper;
@@ -35,10 +36,8 @@ class SourceAdapter extends RecyclerView.Adapter<SourceAdapter.ViewHolder> {
 
 			ButterKnife.bind(this, itemView);
 
-			//noinspection deprecation
-			int oddColor = itemView.getContext().getResources().getColor(R.color.color_list_odd);
-			//noinspection deprecation
-			int evenColor = itemView.getContext().getResources().getColor(R.color.color_list_even);
+			int oddColor = ContextCompat.getColor(itemView.getContext(), R.color.color_list_odd);
+			int evenColor = ContextCompat.getColor(itemView.getContext(), R.color.color_list_even);
 			adapterColorHelper = new AdapterColorHelper(oddColor, evenColor);
 
 			itemView.setOnClickListener(this);
@@ -64,8 +63,8 @@ class SourceAdapter extends RecyclerView.Adapter<SourceAdapter.ViewHolder> {
 		}
 	}
 
-	SourceAdapter() {
-		presenter = new SourceAdapterPresenter(new SourceRepository(new RepositoryImpl<Source>(MyApplication.getContext())));
+	SourceAdapter(Context ctx) {
+		presenter = new SourceAdapterPresenter(new SourceRepository(new RepositoryImpl<Source>(ctx)));
 		sources = presenter.getSources(false);
 	}
 

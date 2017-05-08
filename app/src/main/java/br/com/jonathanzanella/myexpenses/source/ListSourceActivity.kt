@@ -27,7 +27,7 @@ class ListSourceActivity : AppCompatActivity(), SourceAdapterCallback {
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
 
-        val adapter = SourceAdapter()
+        val adapter = SourceAdapter(this)
         adapter.setCallback(this)
 
         ui.sources.adapter = adapter
