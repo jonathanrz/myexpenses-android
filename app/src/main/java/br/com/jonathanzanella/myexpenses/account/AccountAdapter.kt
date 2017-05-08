@@ -116,8 +116,8 @@ class SimplifiedViewUI: AnkoComponent<ViewGroup> {
     lateinit var accountBalance : TextView
 
     override fun createView(ui: AnkoContext<ViewGroup>) = with(ui) {
-        resumeRowCell {
-            verticalLayout {
+        verticalLayout {
+            resumeRowCell {
                 accountName = textView {
                     id = R.id.row_account_name
                     ellipsize = TextUtils.TruncateAt.END

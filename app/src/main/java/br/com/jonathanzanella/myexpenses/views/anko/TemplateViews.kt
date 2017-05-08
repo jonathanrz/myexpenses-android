@@ -71,15 +71,15 @@ fun applyTemplateViewStyles(view: View) {
             view.textColor = ResourcesCompat.getColor(view.resources, R.color.color_primary, null)
         }
         is EmptyListMessageView -> {
-            view.layoutParams.height = 28
-            view.layoutParams.width = matchParent
-            view.padding = 5
-        }
-        is ResumeRowCell -> {
             view.layoutParams.height = matchParent
             view.layoutParams.width = matchParent
             view.gravity = View.TEXT_ALIGNMENT_CENTER
             view.visibility = View.GONE
+        }
+        is ResumeRowCell -> {
+            view.layoutParams.height = 28
+            view.layoutParams.width = matchParent
+            view.padding = 5
         }
         is RecyclerView -> {
             view.layoutParams.width = matchParent
