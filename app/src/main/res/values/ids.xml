@@ -12,11 +12,13 @@
 	<item type="id" name="act_show_account_to_pay_credit_card"/>
 	<item type="id" name="act_show_account_to_pay_bills"/>
 	<item type="id" name="act_show_account_transactions"/>
-	<item type="id" name="act_account_list"/>
 	<item type="id" name="act_edit_account_name"/>
 	<item type="id" name="act_edit_account_balance"/>
 	<item type="id" name="act_edit_account_negative"/>
 	<item type="id" name="act_edit_account_to_pay_credit_card"/>
 	<item type="id" name="act_edit_account_to_pay_bills"/>
 	<item type="id" name="act_edit_account_show_in_resume"/>
+	<item type="id" name="act_account_list"/>
+	<item type="id" name="view_accounts_list"/>
+	<item type="id" name="view_accounts_fab"/>
 </resources>
