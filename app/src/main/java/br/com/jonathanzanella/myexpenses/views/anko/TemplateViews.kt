@@ -33,12 +33,14 @@ class TableViewFrame(context: Context) : TableLayout(context)
 class Static(context: Context) : TextView(context)
 class StaticWithData(context: Context) : TextView(context)
 class EmptyListMessageView(context: Context) : TextView(context)
+class ResumeRowCell(context: Context) : LinearLayout(context)
 
 inline fun ViewManager.toolbarTemplate(theme: Int = R.style.ThemeOverlay_AppCompat_Dark, init: TemplateToolbar.() -> Unit) = ankoView(::TemplateToolbar, theme, init)
 inline fun ViewManager.tableViewFrame(theme: Int = 0, init: TableViewFrame.() -> Unit) = ankoView(::TableViewFrame, theme, init)
 inline fun ViewManager.static(theme: Int = 0, init: Static.() -> Unit) = ankoView(::Static, theme, init)
 inline fun ViewManager.staticWithData(theme: Int = 0, init: StaticWithData.() -> Unit) = ankoView(::StaticWithData, theme, init)
 inline fun ViewManager.emptyListMessageView(theme: Int = 0, init: EmptyListMessageView.() -> Unit) = ankoView(::EmptyListMessageView, theme, init)
+inline fun ViewManager.resumeRowCell(theme: Int = 0, init: ResumeRowCell.() -> Unit) = ankoView(::ResumeRowCell, theme, init)
 inline fun ViewManager.recyclerView(theme: Int = 0, init: RecyclerView.() -> Unit) = ankoView(::RecyclerView, theme, init)
 
 inline fun ViewManager.transactionsView(theme: Int = 0, init: TransactionsView.() -> Unit) = ankoView(::TransactionsView, theme, init)
@@ -69,6 +71,11 @@ fun applyTemplateViewStyles(view: View) {
             view.textColor = ResourcesCompat.getColor(view.resources, R.color.color_primary, null)
         }
         is EmptyListMessageView -> {
+            view.layoutParams.height = 28
+            view.layoutParams.width = matchParent
+            view.padding = 5
+        }
+        is ResumeRowCell -> {
             view.layoutParams.height = matchParent
             view.layoutParams.width = matchParent
             view.gravity = View.TEXT_ALIGNMENT_CENTER
