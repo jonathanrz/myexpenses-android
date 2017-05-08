@@ -77,7 +77,7 @@ fun applyTemplateViewStyles(view: View) {
             view.visibility = View.GONE
         }
         is ResumeRowCell -> {
-            view.layoutParams.height = 28
+            view.layoutParams.height = view.dip(28)
             view.layoutParams.width = matchParent
             view.padding = 5
         }
