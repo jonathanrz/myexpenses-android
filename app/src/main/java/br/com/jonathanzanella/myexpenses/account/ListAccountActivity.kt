@@ -3,11 +3,11 @@ package br.com.jonathanzanella.myexpenses.account
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.views.BaseActivity
 import br.com.jonathanzanella.myexpenses.views.anko.TemplateToolbar
 import br.com.jonathanzanella.myexpenses.views.anko.recyclerView
 import br.com.jonathanzanella.myexpenses.views.anko.toolbarTemplate
@@ -16,7 +16,7 @@ import org.jetbrains.anko.AnkoContext
 import org.jetbrains.anko.setContentView
 import org.jetbrains.anko.verticalLayout
 
-class ListAccountActivity : BaseActivity(), AccountAdapterCallback {
+class ListAccountActivity : AppCompatActivity(), AccountAdapterCallback {
     private val ui = ListAccountActivityUi()
 
     override fun onCreate(savedInstanceState: Bundle?) {
