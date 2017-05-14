@@ -56,7 +56,7 @@ public class ShowBillActivityTest {
 	@Test
 	public void shows_account_correctly() throws Exception {
 		Intent i = new Intent();
-		i.putExtra(ShowBillActivity.KEY_BILL_UUID, bill.getUuid());
+		i.putExtra(ShowBillActivity.Companion.getKEY_BILL_UUID(), bill.getUuid());
 		activityTestRule.launchActivity(i);
 
 		waitForIdling();

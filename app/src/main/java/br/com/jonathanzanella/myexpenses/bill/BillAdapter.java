@@ -70,7 +70,7 @@ class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder> {
 					callback.onBillSelected(bill);
 				} else {
 					Intent i = new Intent(itemView.getContext(), ShowBillActivity.class);
-					i.putExtra(ShowBillActivity.KEY_BILL_UUID, bill.getUuid());
+					i.putExtra(ShowBillActivity.Companion.getKEY_BILL_UUID(), bill.getUuid());
 					itemView.getContext().startActivity(i);
 				}
 			}
