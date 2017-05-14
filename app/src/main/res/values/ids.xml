@@ -42,4 +42,9 @@
 	<item type="id" name="act_bill_list"/>
 	<item type="id" name="view_bills_list"/>
 	<item type="id" name="view_bills_fab"/>
+	<item type="id" name="row_bill_name"/>
+	<item type="id" name="row_bill_amount"/>
+	<item type="id" name="row_bill_balance_due_date_stt"/>
+	<item type="id" name="row_bill_due_date"/>
+	<item type="id" name="row_bill_dates"/>
 </resources>
