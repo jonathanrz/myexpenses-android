@@ -56,4 +56,9 @@
 	<item type="id" name="act_show_card_account"/>
 	<item type="id" name="act_show_card_type"/>
 	<item type="id" name="act_show_card_pay_credit_card_bill"/>
+	<item type="id" name="act_edit_card_name"/>
+	<item type="id" name="act_edit_card_account"/>
+	<item type="id" name="act_edit_card_type"/>
+	<item type="id" name="act_edit_card_type_debit"/>
+	<item type="id" name="act_edit_card_type_credit"/>
 </resources>

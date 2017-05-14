@@ -40,7 +40,7 @@ class RowPrincipalInformation(context: Context) : TextView(context)
 class RowSecondaryInformation(context: Context) : TextView(context)
 class RowDetailInformation(context: Context) : TextView(context)
 class RowStaticInformation(context: Context) : TextView(context)
-class DateView(context: Context) : AppCompatEditText(context)
+class ClickableView(context: Context) : AppCompatEditText(context)
 class ResumeRowCell(context: Context) : LinearLayout(context)
 
 inline fun ViewManager.toolbarTemplate(theme: Int = R.style.ThemeOverlay_AppCompat_Dark, init: TemplateToolbar.() -> Unit) = ankoView(::TemplateToolbar, theme, init)
@@ -53,7 +53,7 @@ inline fun ViewManager.rowPrincipalInformation(theme: Int = 0, init: RowPrincipa
 inline fun ViewManager.rowSecondaryInformation(theme: Int = 0, init: RowSecondaryInformation.() -> Unit) = ankoView(::RowSecondaryInformation, theme, init)
 inline fun ViewManager.rowDetailInformation(theme: Int = 0, init: RowDetailInformation.() -> Unit) = ankoView(::RowDetailInformation, theme, init)
 inline fun ViewManager.rowStaticInformation(theme: Int = 0, init: RowStaticInformation.() -> Unit) = ankoView(::RowStaticInformation, theme, init)
-inline fun ViewManager.dateView(theme: Int = 0, init: DateView.() -> Unit) = ankoView(::DateView, theme, init)
+inline fun ViewManager.clickableView(theme: Int = 0, init: ClickableView.() -> Unit) = ankoView(::ClickableView, theme, init)
 inline fun ViewManager.resumeRowCell(theme: Int = 0, init: ResumeRowCell.() -> Unit) = ankoView(::ResumeRowCell, theme, init)
 inline fun ViewManager.recyclerView(theme: Int = 0, init: RecyclerView.() -> Unit) = ankoView(::RecyclerView, theme, init)
 
@@ -116,7 +116,7 @@ fun applyTemplateViewStyles(view: View) {
             view.textColor = ResourcesCompat.getColor(view.resources, R.color.color_secondary_text, null)
             view.textSize = view.sp(8).toFloat()
         }
-        is DateView -> {
+        is ClickableView -> {
             view.layoutParams.width = matchParent
             view.inputType = InputType.TYPE_NULL
             view.isFocusable = false

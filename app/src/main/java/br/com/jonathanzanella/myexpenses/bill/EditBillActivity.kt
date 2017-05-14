@@ -184,13 +184,13 @@ class EditBillActivityUi : AnkoComponent<EditBillActivity> {
                     }
                 }
                 textInputLayout {
-                    editInitDate = dateView {
+                    editInitDate = clickableView {
                         id = R.id.act_edit_bill_init_date
                         hint = resources.getString(R.string.start)
                     }
                 }
                 textInputLayout {
-                    editEndDate = dateView {
+                    editEndDate = clickableView {
                         id = R.id.act_edit_bill_end_date
                         hint = resources.getString(R.string.end)
                     }
