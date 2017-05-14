@@ -101,7 +101,7 @@ class ViewUI: AnkoComponent<ViewGroup> {
 
     override fun createView(ui: AnkoContext<ViewGroup>) = with(ui) {
         relativeLayout {
-            padding = view.resources.getDimensionPixelSize(R.dimen.default_spacing)
+            padding = context.resources.getDimensionPixelSize(R.dimen.default_spacing)
 
             billName = rowPrincipalInformation {
                 id = R.id.row_bill_name
@@ -120,22 +120,23 @@ class ViewUI: AnkoComponent<ViewGroup> {
                 id = R.id.row_bill_balance_due_date_stt
                 text = resources.getString(R.string.due_date)
             }.lparams {
-                marginEnd = view.dip(5)
+                marginEnd = context.dip(5)
                 baselineOf(R.id.row_bill_due_date)
                 below(R.id.row_bill_name)
             }
 
             billDueDate = rowSecondaryInformation {
                 id = R.id.row_bill_due_date
-                textSize = view.sp(10).toFloat()
+                textSize = context.sp(10).toFloat()
             }.lparams {
                 below(R.id.row_bill_name)
                 alignEnd(R.id.row_bill_balance_due_date_stt)
             }
 
-            billDates = rowSecondaryInformation {
+            billDates = textView {
                 id = R.id.row_bill_dates
-                textSize = view.sp(10).toFloat()
+                textColor = ResourcesCompat.getColor(view.resources, R.color.color_primary, null)
+                textSize = context.sp(10).toFloat()
             }.lparams {
                 below(R.id.row_bill_name)
                 alignParentEnd()
