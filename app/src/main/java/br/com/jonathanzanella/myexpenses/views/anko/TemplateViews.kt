@@ -36,6 +36,10 @@ class LinearViewFrame(context: Context) : LinearLayout(context)
 class Static(context: Context) : TextView(context)
 class StaticWithData(context: Context) : TextView(context)
 class EmptyListMessageView(context: Context) : TextView(context)
+class RowPrincipalInformation(context: Context) : TextView(context)
+class RowSecondaryInformation(context: Context) : TextView(context)
+class RowDetailInformation(context: Context) : TextView(context)
+class RowStaticInformation(context: Context) : TextView(context)
 class DateView(context: Context) : AppCompatEditText(context)
 class ResumeRowCell(context: Context) : LinearLayout(context)
 
@@ -45,6 +49,10 @@ inline fun ViewManager.linearViewFrame(theme: Int = 0, init: LinearViewFrame.() 
 inline fun ViewManager.static(theme: Int = 0, init: Static.() -> Unit) = ankoView(::Static, theme, init)
 inline fun ViewManager.staticWithData(theme: Int = 0, init: StaticWithData.() -> Unit) = ankoView(::StaticWithData, theme, init)
 inline fun ViewManager.emptyListMessageView(theme: Int = 0, init: EmptyListMessageView.() -> Unit) = ankoView(::EmptyListMessageView, theme, init)
+inline fun ViewManager.rowPrincipalInformation(theme: Int = 0, init: RowPrincipalInformation.() -> Unit) = ankoView(::RowPrincipalInformation, theme, init)
+inline fun ViewManager.rowSecondaryInformation(theme: Int = 0, init: RowSecondaryInformation.() -> Unit) = ankoView(::RowSecondaryInformation, theme, init)
+inline fun ViewManager.rowDetailInformation(theme: Int = 0, init: RowDetailInformation.() -> Unit) = ankoView(::RowDetailInformation, theme, init)
+inline fun ViewManager.rowStaticInformation(theme: Int = 0, init: RowStaticInformation.() -> Unit) = ankoView(::RowStaticInformation, theme, init)
 inline fun ViewManager.dateView(theme: Int = 0, init: DateView.() -> Unit) = ankoView(::DateView, theme, init)
 inline fun ViewManager.resumeRowCell(theme: Int = 0, init: ResumeRowCell.() -> Unit) = ankoView(::ResumeRowCell, theme, init)
 inline fun ViewManager.recyclerView(theme: Int = 0, init: RecyclerView.() -> Unit) = ankoView(::RecyclerView, theme, init)
@@ -90,6 +98,22 @@ fun applyTemplateViewStyles(view: View) {
             view.layoutParams.width = matchParent
             view.gravity = View.TEXT_ALIGNMENT_CENTER
             view.visibility = View.GONE
+        }
+        is RowPrincipalInformation -> {
+            view.textColor = ResourcesCompat.getColor(view.resources, R.color.color_primary_text, null)
+            view.textSize = view.sp(14).toFloat()
+        }
+        is RowSecondaryInformation -> {
+            view.textColor = ResourcesCompat.getColor(view.resources, R.color.color_primary, null)
+            view.textSize = view.sp(12).toFloat()
+        }
+        is RowDetailInformation -> {
+            view.textColor = ResourcesCompat.getColor(view.resources, R.color.color_secondary_text, null)
+            view.textSize = view.sp(10).toFloat()
+        }
+        is RowStaticInformation -> {
+            view.textColor = ResourcesCompat.getColor(view.resources, R.color.color_secondary_text, null)
+            view.textSize = view.sp(8).toFloat()
         }
         is DateView -> {
             view.layoutParams.width = matchParent
