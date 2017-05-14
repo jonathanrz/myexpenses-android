@@ -4,8 +4,10 @@ import android.content.Context
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.AppCompatEditText
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
+import android.text.InputType
 import android.view.Gravity
 import android.view.View
 import android.view.ViewManager
@@ -30,16 +32,20 @@ class TemplateToolbar(context: Context) : Toolbar(context) {
     }
 }
 class TableViewFrame(context: Context) : TableLayout(context)
+class LinearViewFrame(context: Context) : LinearLayout(context)
 class Static(context: Context) : TextView(context)
 class StaticWithData(context: Context) : TextView(context)
 class EmptyListMessageView(context: Context) : TextView(context)
+class DateView(context: Context) : AppCompatEditText(context)
 class ResumeRowCell(context: Context) : LinearLayout(context)
 
 inline fun ViewManager.toolbarTemplate(theme: Int = R.style.ThemeOverlay_AppCompat_Dark, init: TemplateToolbar.() -> Unit) = ankoView(::TemplateToolbar, theme, init)
 inline fun ViewManager.tableViewFrame(theme: Int = 0, init: TableViewFrame.() -> Unit) = ankoView(::TableViewFrame, theme, init)
+inline fun ViewManager.linearViewFrame(theme: Int = 0, init: LinearViewFrame.() -> Unit) = ankoView(::LinearViewFrame, theme, init)
 inline fun ViewManager.static(theme: Int = 0, init: Static.() -> Unit) = ankoView(::Static, theme, init)
 inline fun ViewManager.staticWithData(theme: Int = 0, init: StaticWithData.() -> Unit) = ankoView(::StaticWithData, theme, init)
 inline fun ViewManager.emptyListMessageView(theme: Int = 0, init: EmptyListMessageView.() -> Unit) = ankoView(::EmptyListMessageView, theme, init)
+inline fun ViewManager.dateView(theme: Int = 0, init: DateView.() -> Unit) = ankoView(::DateView, theme, init)
 inline fun ViewManager.resumeRowCell(theme: Int = 0, init: ResumeRowCell.() -> Unit) = ankoView(::ResumeRowCell, theme, init)
 inline fun ViewManager.recyclerView(theme: Int = 0, init: RecyclerView.() -> Unit) = ankoView(::RecyclerView, theme, init)
 
@@ -50,6 +56,15 @@ fun applyTemplateViewStyles(view: View) {
         is TemplateToolbar -> {
             view.backgroundColor = ResourcesCompat.getColor(view.resources, R.color.color_primary, null)
             view.layoutParams.width = matchParent
+        }
+        is LinearViewFrame -> {
+            view.layoutParams.height = matchParent
+            view.layoutParams.width = matchParent
+            when(view.layoutParams) {
+                is LinearLayout.LayoutParams -> {
+                    (view.layoutParams as LinearLayout.LayoutParams).margin = view.resources.getDimensionPixelSize(R.dimen.default_spacing)
+                }
+            }
         }
         is TableViewFrame -> {
             view.layoutParams.height = matchParent
@@ -75,6 +90,12 @@ fun applyTemplateViewStyles(view: View) {
             view.layoutParams.width = matchParent
             view.gravity = View.TEXT_ALIGNMENT_CENTER
             view.visibility = View.GONE
+        }
+        is DateView -> {
+            view.layoutParams.width = matchParent
+            view.inputType = InputType.TYPE_NULL
+            view.isFocusable = false
+            view.isClickable = true
         }
         is ResumeRowCell -> {
             view.layoutParams.height = view.dip(38)
