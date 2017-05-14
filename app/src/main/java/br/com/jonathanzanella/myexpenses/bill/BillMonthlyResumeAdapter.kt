@@ -18,7 +18,7 @@ import org.jetbrains.anko.*
 import org.joda.time.DateTime
 
 class BillMonthlyResumeAdapter : RecyclerView.Adapter<BillMonthlyResumeAdapter.ViewHolder>() {
-    private var bills: List<Bill>? = null
+    private var bills: List<Bill> = ArrayList()
     private val billRepository: BillRepository
     var totalValue: Int = 0
         private set
@@ -46,7 +46,7 @@ class BillMonthlyResumeAdapter : RecyclerView.Adapter<BillMonthlyResumeAdapter.V
     }
 
     override fun getItemViewType(position: Int): Int {
-        if (bills != null && position == bills!!.size) {
+        if (position == bills.size) {
             return ViewType.TYPE_TOTAL.ordinal
         } else {
             return ViewType.TYPE_NORMAL.ordinal
@@ -64,20 +64,20 @@ class BillMonthlyResumeAdapter : RecyclerView.Adapter<BillMonthlyResumeAdapter.V
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        if (position == bills!!.size)
+        if (position == bills.size)
             holder.setTotal(totalValue)
         else
-            holder.setData(bills!![position])
+            holder.setData(bills[position])
     }
 
     override fun getItemCount(): Int {
-        return if (bills != null) bills!!.size + 1 else 0
+        return bills.size + 1
     }
 
     @WorkerThread
     fun loadDataAsync(month: DateTime) {
         bills = billRepository.monthly(month)
-        totalValue = bills!!.sumBy { it.amount }
+        totalValue = bills.sumBy { it.amount }
     }
 }
 
