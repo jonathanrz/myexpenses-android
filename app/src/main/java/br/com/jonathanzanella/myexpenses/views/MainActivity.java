@@ -42,7 +42,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 	TabLayout tabs;
 
 	private BaseView currentView;
-	private String filter;
+	private String filter = "";
 	private int selectedItem = -1;
 
 	@Override

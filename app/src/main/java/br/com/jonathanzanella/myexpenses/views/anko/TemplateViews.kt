@@ -66,6 +66,7 @@ fun applyTemplateViewStyles(view: View) {
             view.layoutParams.width = matchParent
         }
         is LinearViewFrame -> {
+            view.orientation = LinearLayout.VERTICAL
             view.layoutParams.height = matchParent
             view.layoutParams.width = matchParent
             when(view.layoutParams) {

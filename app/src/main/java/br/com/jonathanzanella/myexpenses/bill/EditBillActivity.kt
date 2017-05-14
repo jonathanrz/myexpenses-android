@@ -18,7 +18,6 @@ import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch
 import br.com.jonathanzanella.myexpenses.log.Log
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.views.anko.*
-import butterknife.OnClick
 import org.apache.commons.lang3.StringUtils
 import org.jetbrains.anko.*
 import org.joda.time.DateTime
@@ -46,6 +45,8 @@ class EditBillActivity : AppCompatActivity(), BillContract.EditView {
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
         ui.editAmount.addTextChangedListener(CurrencyTextWatch(ui.editAmount))
+        ui.editInitDate.onClick { presenter.onInitDate(this) }
+        ui.editEndDate.onClick { presenter.onEndDate(this) }
         presenter.onViewUpdated(false)
     }
 
@@ -96,18 +97,8 @@ class EditBillActivity : AppCompatActivity(), BillContract.EditView {
         return true
     }
 
-    @OnClick(R.id.act_edit_bill_init_date)
-    internal fun onInitDate() {
-        presenter.onInitDate(this)
-    }
-
     override fun onInitDateChanged(date: DateTime) {
         ui.editInitDate.setText(Bill.SIMPLE_DATE_FORMAT.format(date.toDate()))
-    }
-
-    @OnClick(R.id.act_edit_bill_end_date)
-    internal fun onEndDate() {
-        presenter.onEndDate(this)
     }
 
     override fun onEndDateChanged(date: DateTime) {
