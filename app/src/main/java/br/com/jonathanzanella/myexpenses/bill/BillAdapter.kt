@@ -20,7 +20,6 @@ import org.jetbrains.anko.*
 
 internal class BillAdapter : RecyclerView.Adapter<BillAdapter.ViewHolder>() {
     private var callback: BillAdapterCallback? = null
-
     private val presenter: BillAdapterPresenter
 
     inner class ViewHolder(itemView: View, val ui : ViewUI) : RecyclerView.ViewHolder(itemView), View.OnClickListener {

@@ -23,12 +23,16 @@ class BillView : BaseView {
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
-    override fun init() {
+    override fun onAttachedToWindow() {
         addView(ui.createView(AnkoContext.Companion.create(context, this)))
 
         ui.bills.adapter = adapter
         ui.bills.layoutManager = GridLayoutManager(context, 2)
         ui.bills.itemAnimator = DefaultItemAnimator()
+    }
+
+    override fun init() {
+        //TODO: remove when convert BaseView to interface
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {

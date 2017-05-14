@@ -24,6 +24,10 @@
 		<Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" />
 	</Match>
 	<Match>
+		<Class name="br.com.jonathanzanella.myexpenses.bill.BillAdapter$ViewHolder" />
+		<Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" />
+	</Match>
+	<Match>
 		<Class name="br.com.jonathanzanella.myexpenses.source.SourceAdapter$ViewHolder" />
 		<Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" />
 	</Match>
