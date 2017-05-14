@@ -34,4 +34,9 @@
 	<item type="id" name="act_show_bill_due_date"/>
 	<item type="id" name="act_show_bill_init_date"/>
 	<item type="id" name="act_show_bill_end_date"/>
+	<item type="id" name="act_edit_bill_name"/>
+	<item type="id" name="act_edit_bill_amount"/>
+	<item type="id" name="act_edit_bill_due_date"/>
+	<item type="id" name="act_edit_bill_init_date"/>
+	<item type="id" name="act_edit_bill_end_date"/>
 </resources>
