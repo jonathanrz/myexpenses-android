@@ -14,6 +14,7 @@ import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapter
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapterBuilder
 import br.com.jonathanzanella.myexpenses.views.anko.TemplateToolbar
+import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
 import br.com.jonathanzanella.myexpenses.views.anko.toolbarTemplate
 import butterknife.Bind
 import org.jetbrains.anko.*
@@ -89,6 +90,6 @@ class CreditCardInvoiceActivityUi : AnkoComponent<CreditCardInvoiceActivity> {
             pager = viewPager {
                 id = R.id.act_credit_card_invoice_pager
             }.lparams(width = matchParent, height = matchParent)
-        }
+        }.applyRecursively(::applyTemplateViewStyles)
     }
 }

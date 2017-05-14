@@ -13,6 +13,7 @@ import br.com.jonathanzanella.myexpenses.expense.Expense
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.helpers.AdapterColorHelper
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
+import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
 import br.com.jonathanzanella.myexpenses.views.anko.rowPrincipalInformation
 import br.com.jonathanzanella.myexpenses.views.anko.rowSecondaryInformation
 import br.com.jonathanzanella.myexpenses.views.anko.rowStaticInformation
@@ -142,6 +143,6 @@ class ViewUI: AnkoComponent<ViewGroup> {
                 alignParentEnd()
                 baselineOf(R.id.row_bill_due_date)
             }
-        }
+        }.applyRecursively(::applyTemplateViewStyles)
     }
 }
