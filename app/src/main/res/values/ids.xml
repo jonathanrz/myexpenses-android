@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<item type="id" name="tabs"/>
+
 	<!-- source -->
 	<item type="id" name="act_show_source_name"/>
 	<item type="id" name="act_edit_source_name"/>
@@ -62,4 +64,5 @@
 	<item type="id" name="act_edit_card_type_debit"/>
 	<item type="id" name="act_edit_card_type_credit"/>
 	<item type="id" name="view_credit_card_invoice_list"/>
+	<item type="id" name="act_credit_card_invoice_pager"/>
 </resources>
