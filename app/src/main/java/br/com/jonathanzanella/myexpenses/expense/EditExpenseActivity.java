@@ -137,7 +137,7 @@ public class EditExpenseActivity extends BaseActivity implements ExpenseContract
 			}
 			case REQUEST_SELECT_BILL: {
 				if(resultCode == RESULT_OK)
-					presenter.onBillSelected(data.getStringExtra(ListBillActivity.KEY_BILL_SELECTED_UUID));
+					presenter.onBillSelected(data.getStringExtra(ListBillActivity.Companion.getKEY_BILL_SELECTED_UUID()));
 				break;
 			}
 		}
