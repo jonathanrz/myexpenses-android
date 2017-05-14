@@ -47,4 +47,7 @@
 	<item type="id" name="row_bill_balance_due_date_stt"/>
 	<item type="id" name="row_bill_due_date"/>
 	<item type="id" name="row_bill_dates"/>
+	<item type="id" name="row_monthly_resume_bill_name"/>
+	<item type="id" name="row_monthly_resume_bill_day"/>
+	<item type="id" name="row_monthly_resume_bill_amount"/>
 </resources>
