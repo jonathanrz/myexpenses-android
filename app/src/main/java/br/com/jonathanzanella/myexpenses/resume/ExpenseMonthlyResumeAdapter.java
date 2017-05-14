@@ -117,8 +117,8 @@ class ExpenseMonthlyResumeAdapter extends RecyclerView.Adapter<ExpenseMonthlyRes
 			if(expense != null) {
 				if(expense.getCreditCard() != null) {
 					Intent i = new Intent(itemView.getContext(), CreditCardInvoiceActivity.class);
-					i.putExtra(CreditCardInvoiceActivity.KEY_CREDIT_CARD_UUID, expense.getCreditCard().getUuid());
-					i.putExtra(CreditCardInvoiceActivity.KEY_INIT_DATE, expense.getDate());
+					i.putExtra(CreditCardInvoiceActivity.Companion.getKEY_CREDIT_CARD_UUID(), expense.getCreditCard().getUuid());
+					i.putExtra(CreditCardInvoiceActivity.Companion.getKEY_INIT_DATE(), expense.getDate());
 					itemView.getContext().startActivity(i);
 				} else {
 					Intent i = new Intent(itemView.getContext(), ShowExpenseActivity.class);
