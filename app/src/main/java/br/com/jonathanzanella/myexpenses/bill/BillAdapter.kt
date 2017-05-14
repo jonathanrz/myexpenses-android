@@ -120,14 +120,14 @@ class ViewUI: AnkoComponent<ViewGroup> {
                 id = R.id.row_bill_balance_due_date_stt
                 text = resources.getString(R.string.due_date)
             }.lparams {
-                marginEnd = context.dip(5)
+                marginEnd = dip(5)
                 baselineOf(R.id.row_bill_due_date)
                 below(R.id.row_bill_name)
             }
 
             billDueDate = rowSecondaryInformation {
                 id = R.id.row_bill_due_date
-                textSize = context.sp(10).toFloat()
+                textSize = 10f
             }.lparams {
                 below(R.id.row_bill_name)
                 alignEnd(R.id.row_bill_balance_due_date_stt)
@@ -135,8 +135,8 @@ class ViewUI: AnkoComponent<ViewGroup> {
 
             billDates = textView {
                 id = R.id.row_bill_dates
-                textColor = ResourcesCompat.getColor(view.resources, R.color.color_primary, null)
-                textSize = context.sp(10).toFloat()
+                textColor = ResourcesCompat.getColor(context.resources, R.color.color_primary, null)
+                textSize = 10f
             }.lparams {
                 below(R.id.row_bill_name)
                 alignParentEnd()
