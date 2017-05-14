@@ -63,7 +63,7 @@ public class EditCardTest {
 	@Test
 	public void edit_card_correctly() throws Exception {
 		Intent i = new Intent();
-		i.putExtra(ShowCardActivity.KEY_CREDIT_CARD_UUID, card.getUuid());
+		i.putExtra(ShowCardActivity.Companion.getKEY_CREDIT_CARD_UUID(), card.getUuid());
 		activityTestRule.launchActivity(i);
 
 		final String showExpenseTitle = getTargetContext().getString(R.string.card) + " " + card.getName();

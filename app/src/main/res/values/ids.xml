@@ -50,4 +50,10 @@
 	<item type="id" name="row_monthly_resume_bill_name"/>
 	<item type="id" name="row_monthly_resume_bill_day"/>
 	<item type="id" name="row_monthly_resume_bill_amount"/>
+
+	<!-- card -->
+	<item type="id" name="act_show_card_name"/>
+	<item type="id" name="act_show_card_account"/>
+	<item type="id" name="act_show_card_type"/>
+	<item type="id" name="act_show_card_pay_credit_card_bill"/>
 </resources>
