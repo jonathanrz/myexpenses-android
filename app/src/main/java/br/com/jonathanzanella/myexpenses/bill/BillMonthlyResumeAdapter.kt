@@ -20,7 +20,8 @@ import org.joda.time.DateTime
 class BillMonthlyResumeAdapter : RecyclerView.Adapter<BillMonthlyResumeAdapter.ViewHolder>() {
     private var bills: List<Bill>? = null
     private val billRepository: BillRepository
-    private var totalValue: Int = 0
+    var totalValue: Int = 0
+        private set
 
     private enum class ViewType {
         TYPE_NORMAL,
