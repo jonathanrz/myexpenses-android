@@ -62,7 +62,7 @@ class EditCardActivity : AppCompatActivity(), CardContract.EditView {
                 return null
             }
 
-            override fun onPostExecute(aVoid: Void) {
+            override fun onPostExecute(aVoid: Void?) {
                 super.onPostExecute(aVoid)
                 presenter.updateView()
             }
