@@ -65,4 +65,6 @@
 	<item type="id" name="act_edit_card_type_credit"/>
 	<item type="id" name="view_credit_card_invoice_list"/>
 	<item type="id" name="act_credit_card_invoice_pager"/>
+	<item type="id" name="view_card_list"/>
+	<item type="id" name="view_card_fab"/>
 </resources>
