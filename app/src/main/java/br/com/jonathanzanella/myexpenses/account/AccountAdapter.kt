@@ -2,6 +2,7 @@ package br.com.jonathanzanella.myexpenses.account
 
 import android.content.Intent
 import android.support.v4.content.ContextCompat
+import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.RecyclerView
 import android.text.TextUtils
 import android.view.View
@@ -127,7 +128,7 @@ class SimplifiedViewUI: AnkoComponent<ViewGroup> {
                 }
                 accountBalance = textView {
                     id = R.id.row_account_balance
-                    textColor = R.color.color_primary
+                    textColor = ResourcesCompat.getColor(resources, R.color.color_primary, null)
                 }.lparams {
                     marginEnd = 5
                 }
@@ -143,6 +144,8 @@ class NormalViewUI: AnkoComponent<ViewGroup> {
 
     override fun createView(ui: AnkoContext<ViewGroup>) = with(ui) {
         relativeLayout {
+            padding = view.resources.getDimensionPixelSize(R.dimen.default_spacing)
+
             accountName = textView {
                 id = R.id.row_account_name
                 textColor = R.color.color_primary_text

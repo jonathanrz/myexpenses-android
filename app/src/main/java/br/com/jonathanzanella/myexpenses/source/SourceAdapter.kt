@@ -77,6 +77,8 @@ class SourceAdapterViewUI: AnkoComponent<ViewGroup> {
 
     override fun createView(ui: AnkoContext<ViewGroup>) = with(ui) {
         verticalLayout {
+            padding = resources.getDimensionPixelSize(R.dimen.default_spacing)
+
             sourceName = textView {
                 id = R.id.row_source_name
                 textColor = R.color.color_primary_text

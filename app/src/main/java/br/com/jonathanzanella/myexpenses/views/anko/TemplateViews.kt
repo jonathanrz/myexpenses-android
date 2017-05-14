@@ -77,9 +77,9 @@ fun applyTemplateViewStyles(view: View) {
             view.visibility = View.GONE
         }
         is ResumeRowCell -> {
-            view.layoutParams.height = view.dip(28)
+            view.layoutParams.height = view.dip(38)
             view.layoutParams.width = matchParent
-            view.padding = 5
+            view.padding = view.resources.getDimensionPixelSize(R.dimen.row_spacing)
         }
         is RecyclerView -> {
             view.layoutParams.width = matchParent
