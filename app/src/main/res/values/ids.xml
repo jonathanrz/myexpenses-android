@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<!-- source -->
 	<item type="id" name="act_show_source_name"/>
 	<item type="id" name="act_edit_source_name"/>
 	<item type="id" name="act_sources_list"/>
@@ -8,6 +9,7 @@
 	<item type="id" name="view_sources_fab"/>
 	<item type="id" name="row_source_name"/>
 
+	<!-- account -->
 	<item type="id" name="act_show_account_name"/>
 	<item type="id" name="act_show_account_balance"/>
 	<item type="id" name="act_show_account_to_pay_credit_card"/>
@@ -25,4 +27,11 @@
 	<item type="id" name="row_account_name"/>
 	<item type="id" name="row_account_balance"/>
 	<item type="id" name="row_account_to_pay_credit_card"/>
+
+	<!-- bill -->
+	<item type="id" name="act_show_bill_name"/>
+	<item type="id" name="act_show_bill_amount"/>
+	<item type="id" name="act_show_bill_due_date"/>
+	<item type="id" name="act_show_bill_init_date"/>
+	<item type="id" name="act_show_bill_end_date"/>
 </resources>
