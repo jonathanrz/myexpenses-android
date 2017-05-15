@@ -174,7 +174,7 @@ class EditCardActivityUi : AnkoComponent<EditCardActivity> {
             toolbar = toolbarTemplate {}
 
             scrollView {
-                linearViewFrame {
+                verticalLayout {
                     textInputLayout {
                         editName = appCompatEditText {
                             id = R.id.act_edit_card_name
@@ -213,6 +213,8 @@ class EditCardActivityUi : AnkoComponent<EditCardActivity> {
                     }.lparams(width = matchParent) {
                         bottomMargin = resources.getDimensionPixelSize(R.dimen.default_spacing)
                     }
+                }.lparams {
+                    margin = resources.getDimensionPixelSize(R.dimen.default_spacing)
                 }
             }
         }.applyRecursively(::applyTemplateViewStyles)
