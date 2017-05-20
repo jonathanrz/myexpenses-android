@@ -60,34 +60,36 @@ inline fun ViewManager.recyclerView(theme: Int = 0, init: RecyclerView.() -> Uni
 inline fun ViewManager.transactionsView(theme: Int = 0, init: TransactionsView.() -> Unit) = ankoView(::TransactionsView, theme, init)
 
 fun applyTemplateViewStyles(view: View) {
+    val layoutParams = view.layoutParams
+
     when(view) {
         is TemplateToolbar -> {
             view.backgroundColor = ResourcesCompat.getColor(view.resources, R.color.color_primary, null)
-            view.layoutParams.width = matchParent
+            layoutParams.width = matchParent
         }
         is LinearViewFrame -> {
             view.orientation = LinearLayout.VERTICAL
-            view.layoutParams.height = matchParent
-            view.layoutParams.width = matchParent
-            when(view.layoutParams) {
+            layoutParams.height = matchParent
+            layoutParams.width = matchParent
+            when(layoutParams) {
                 is LinearLayout.LayoutParams -> {
-                    (view.layoutParams as LinearLayout.LayoutParams).margin = view.resources.getDimensionPixelSize(R.dimen.default_spacing)
+                    layoutParams.margin = view.resources.getDimensionPixelSize(R.dimen.default_spacing)
                 }
             }
         }
         is TableViewFrame -> {
             view.layoutParams.height = matchParent
             view.layoutParams.width = matchParent
-            when(view.layoutParams) {
+            when(layoutParams) {
                 is LinearLayout.LayoutParams -> {
-                    (view.layoutParams as LinearLayout.LayoutParams).margin = view.resources.getDimensionPixelSize(R.dimen.default_spacing)
+                    layoutParams.margin = view.resources.getDimensionPixelSize(R.dimen.default_spacing)
                 }
             }
         }
         is Static -> {
-            when(view.layoutParams) {
+            when(layoutParams) {
                 is LinearLayout.LayoutParams -> {
-                    (view.layoutParams as LinearLayout.LayoutParams).marginEnd = view.resources.getDimensionPixelSize(R.dimen.min_spacing)
+                    layoutParams.marginEnd = view.resources.getDimensionPixelSize(R.dimen.min_spacing)
                 }
             }
         }
@@ -135,10 +137,10 @@ fun applyTemplateViewStyles(view: View) {
             view.elevation = view.dip(6).toFloat()
             view.layoutParams.height = view.dip(56)
             view.layoutParams.width = view.dip(56)
-            when(view.layoutParams) {
+            when(layoutParams) {
                 is FrameLayout.LayoutParams -> {
-                    (view.layoutParams as FrameLayout.LayoutParams).gravity = Gravity.BOTTOM.or(Gravity.END)
-                    (view.layoutParams as FrameLayout.LayoutParams).margin = view.resources.getDimensionPixelSize(R.dimen.default_spacing)
+                    layoutParams.gravity = Gravity.BOTTOM.or(Gravity.END)
+                    layoutParams.margin = view.resources.getDimensionPixelSize(R.dimen.default_spacing)
                 }
             }
         }
