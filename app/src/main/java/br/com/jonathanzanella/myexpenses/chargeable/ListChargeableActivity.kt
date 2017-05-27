@@ -25,7 +25,7 @@ class ListChargeableActivity : AppCompatActivity(), AccountAdapterCallback, Card
         super.onCreate(savedInstanceState)
         ui.setContentView(this)
 
-        ui.toolbar.title = getString(R.string.select_account_title)
+        ui.toolbar.title = getString(R.string.select_chargeable_title)
         ui.toolbar.setup(this)
     }
 
