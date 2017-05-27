@@ -10,8 +10,6 @@ android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
 
-    buildToolsVersion "$rootProject.buildToolsVersion"
-
     defaultConfig {
         applicationId "br.com.jonathanzanella.myexpenses"
         minSdkVersion rootProject.ext.minSdkVersion

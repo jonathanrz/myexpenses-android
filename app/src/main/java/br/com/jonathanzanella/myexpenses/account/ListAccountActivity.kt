@@ -9,12 +9,10 @@ import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.views.anko.TemplateToolbar
+import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
 import br.com.jonathanzanella.myexpenses.views.anko.recyclerView
 import br.com.jonathanzanella.myexpenses.views.anko.toolbarTemplate
-import org.jetbrains.anko.AnkoComponent
-import org.jetbrains.anko.AnkoContext
-import org.jetbrains.anko.setContentView
-import org.jetbrains.anko.verticalLayout
+import org.jetbrains.anko.*
 
 class ListAccountActivity : AppCompatActivity(), AccountAdapterCallback {
     private val ui = ListAccountActivityUi()
@@ -53,7 +51,7 @@ class ListAccountActivity : AppCompatActivity(), AccountAdapterCallback {
     }
 }
 
-class ListAccountActivityUi : AnkoComponent<ListAccountActivity> {
+private class ListAccountActivityUi : AnkoComponent<ListAccountActivity> {
     lateinit var toolbar : TemplateToolbar
     lateinit var accounts: RecyclerView
 
@@ -62,5 +60,5 @@ class ListAccountActivityUi : AnkoComponent<ListAccountActivity> {
             toolbar = toolbarTemplate {}
             accounts = recyclerView { id = R.id.act_account_list }
         }
-    }
+    }.applyRecursively(::applyTemplateViewStyles)
 }

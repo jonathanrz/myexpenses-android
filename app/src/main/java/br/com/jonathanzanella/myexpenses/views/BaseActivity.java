@@ -37,7 +37,6 @@ public class BaseActivity extends AppCompatActivity {
 		ActionBar actionBar = getSupportActionBar();
 		if(actionBar != null) {
 			actionBar.setDisplayHomeAsUpEnabled(true);
-			actionBar.setDisplayHomeAsUpEnabled(true);
 			if(toolbar != null)
 				toolbar.setNavigationOnClickListener(new View.OnClickListener() {
 				@Override

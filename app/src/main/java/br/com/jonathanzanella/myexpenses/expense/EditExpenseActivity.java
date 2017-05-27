@@ -128,8 +128,8 @@ public class EditExpenseActivity extends BaseActivity implements ExpenseContract
 		switch (requestCode) {
 			case REQUEST_SELECT_CHARGEABLE: {
 				if(resultCode == RESULT_OK) {
-					String uuid = data.getStringExtra(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_UUID);
-					String keyChargeableSelectedType = ListChargeableActivity.KEY_CHARGEABLE_SELECTED_TYPE;
+					String uuid = data.getStringExtra(ListChargeableActivity.Companion.getKEY_CHARGEABLE_SELECTED_UUID());
+					String keyChargeableSelectedType = ListChargeableActivity.Companion.getKEY_CHARGEABLE_SELECTED_TYPE();
 					ChargeableType type = (ChargeableType) data.getSerializableExtra(keyChargeableSelectedType);
 					presenter.onChargeableSelected(type,uuid);
 				}

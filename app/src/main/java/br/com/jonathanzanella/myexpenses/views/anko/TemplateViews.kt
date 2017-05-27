@@ -35,6 +35,7 @@ class TableViewFrame(context: Context) : TableLayout(context)
 class LinearViewFrame(context: Context) : LinearLayout(context)
 class Static(context: Context) : TextView(context)
 class StaticWithData(context: Context) : TextView(context)
+class HeaderTitle(context: Context) : TextView(context)
 class EmptyListMessageView(context: Context) : TextView(context)
 class RowPrincipalInformation(context: Context) : TextView(context)
 class RowSecondaryInformation(context: Context) : TextView(context)
@@ -48,6 +49,7 @@ inline fun ViewManager.tableViewFrame(theme: Int = 0, init: TableViewFrame.() ->
 inline fun ViewManager.linearViewFrame(theme: Int = 0, init: LinearViewFrame.() -> Unit) = ankoView(::LinearViewFrame, theme, init)
 inline fun ViewManager.static(theme: Int = 0, init: Static.() -> Unit) = ankoView(::Static, theme, init)
 inline fun ViewManager.staticWithData(theme: Int = 0, init: StaticWithData.() -> Unit) = ankoView(::StaticWithData, theme, init)
+inline fun ViewManager.headerTitle(theme: Int = 0, init: HeaderTitle.() -> Unit) = ankoView(::HeaderTitle, theme, init)
 inline fun ViewManager.emptyListMessageView(theme: Int = 0, init: EmptyListMessageView.() -> Unit) = ankoView(::EmptyListMessageView, theme, init)
 inline fun ViewManager.rowPrincipalInformation(theme: Int = 0, init: RowPrincipalInformation.() -> Unit) = ankoView(::RowPrincipalInformation, theme, init)
 inline fun ViewManager.rowSecondaryInformation(theme: Int = 0, init: RowSecondaryInformation.() -> Unit) = ankoView(::RowSecondaryInformation, theme, init)
@@ -95,6 +97,10 @@ fun applyTemplateViewStyles(view: View) {
         }
         is StaticWithData -> {
             view.textColor = ResourcesCompat.getColor(view.resources, R.color.color_primary, null)
+        }
+        is HeaderTitle -> {
+            view.textColor = ResourcesCompat.getColor(view.resources, R.color.color_primary, null)
+            view.textSize = 20f
         }
         is EmptyListMessageView -> {
             view.layoutParams.height = matchParent

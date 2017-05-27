@@ -337,10 +337,10 @@ class ExpensePresenter {
 					bill = billRepository.find(extras.getString(KEY_BILL_UUID));
 				if(extras.containsKey(KEY_DATE))
 					date = new DateTime(extras.getLong(KEY_DATE));
-				if(extras.containsKey(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_TYPE)) {
+				if(extras.containsKey(ListChargeableActivity.Companion.getKEY_CHARGEABLE_SELECTED_TYPE())) {
 					chargeable = findChargeable(
-							(ChargeableType) extras.getSerializable(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_TYPE),
-							extras.getString(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_UUID));
+							(ChargeableType) extras.getSerializable(ListChargeableActivity.Companion.getKEY_CHARGEABLE_SELECTED_TYPE()),
+							extras.getString(ListChargeableActivity.Companion.getKEY_CHARGEABLE_SELECTED_UUID()));
 				}
 				return null;
 			}
@@ -361,8 +361,8 @@ class ExpensePresenter {
 		if(date != null)
 			outState.putLong(KEY_DATE, date.getMillis());
 		if(chargeable != null) {
-			outState.putString(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_UUID, chargeable.getUuid());
-			outState.putSerializable(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_TYPE, chargeable.getChargeableType());
+			outState.putString(ListChargeableActivity.Companion.getKEY_CHARGEABLE_SELECTED_UUID(), chargeable.getUuid());
+			outState.putSerializable(ListChargeableActivity.Companion.getKEY_CHARGEABLE_SELECTED_TYPE(), chargeable.getChargeableType());
 		}
 	}
 

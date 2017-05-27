@@ -69,4 +69,8 @@
 	<item type="id" name="view_card_fab"/>
 	<item type="id" name="row_card_name"/>
 	<item type="id" name="row_card_account"/>
+
+	<!-- chargeable -->
+	<item type="id" name="act_chargeable_list_accounts"/>
+	<item type="id" name="act_chargeable_list_cards"/>
 </resources>
