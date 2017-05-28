@@ -112,7 +112,7 @@ class ShowAccountActivity : AppCompatActivity(), AccountContract.View {
     }
 }
 
-class ShowAccountActivityUi : AnkoComponent<ShowAccountActivity> {
+private class ShowAccountActivityUi : AnkoComponent<ShowAccountActivity> {
     lateinit var toolbar : TemplateToolbar
     lateinit var accountName : TextView
     lateinit var accountBalance : TextView

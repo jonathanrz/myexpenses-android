@@ -103,7 +103,7 @@ class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ViewHolder> {
 			Receipt receipt = getReceipt(getAdapterPosition());
 			if(receipt != null) {
                 Intent i = new Intent(itemView.getContext(), ShowReceiptActivity.class);
-                i.putExtra(ShowReceiptActivity.KEY_RECEIPT_UUID, receipt.getUuid());
+                i.putExtra(ShowReceiptActivity.Companion.getKEY_RECEIPT_UUID(), receipt.getUuid());
                 itemView.getContext().startActivity(i);
 			}
 		}

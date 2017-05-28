@@ -73,4 +73,12 @@
 	<!-- chargeable -->
 	<item type="id" name="act_chargeable_list_accounts"/>
 	<item type="id" name="act_chargeable_list_cards"/>
+
+	<!-- receipt -->
+	<item type="id" name="act_show_receipt_name"/>
+	<item type="id" name="act_show_receipt_date"/>
+	<item type="id" name="act_show_receipt_income"/>
+	<item type="id" name="act_show_receipt_source"/>
+	<item type="id" name="act_show_receipt_account"/>
+	<item type="id" name="act_show_receipt_show_in_resume"/>
 </resources>
