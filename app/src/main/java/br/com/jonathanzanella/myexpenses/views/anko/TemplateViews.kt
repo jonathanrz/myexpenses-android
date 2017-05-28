@@ -110,19 +110,19 @@ fun applyTemplateViewStyles(view: View) {
         }
         is RowPrincipalInformation -> {
             view.textColor = ResourcesCompat.getColor(view.resources, R.color.color_primary_text, null)
-            view.textSize = view.sp(14).toFloat()
+            view.textSize = 14f
         }
         is RowSecondaryInformation -> {
             view.textColor = ResourcesCompat.getColor(view.resources, R.color.color_primary, null)
-            view.textSize = view.sp(12).toFloat()
+            view.textSize = 12f
         }
         is RowDetailInformation -> {
             view.textColor = ResourcesCompat.getColor(view.resources, R.color.color_secondary_text, null)
-            view.textSize = view.sp(10).toFloat()
+            view.textSize = 10f
         }
         is RowStaticInformation -> {
             view.textColor = ResourcesCompat.getColor(view.resources, R.color.color_secondary_text, null)
-            view.textSize = view.sp(8).toFloat()
+            view.textSize = 8f
         }
         is ClickableView -> {
             view.layoutParams.width = matchParent

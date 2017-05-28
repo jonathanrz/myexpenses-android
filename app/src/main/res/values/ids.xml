@@ -81,4 +81,12 @@
 	<item type="id" name="act_show_receipt_source"/>
 	<item type="id" name="act_show_receipt_account"/>
 	<item type="id" name="act_show_receipt_show_in_resume"/>
+	<item type="id" name="row_receipt_name"/>
+	<item type="id" name="row_receipt_date"/>
+	<item type="id" name="row_receipt_income"/>
+	<item type="id" name="row_receipt_source_layout"/>
+	<item type="id" name="row_receipt_source"/>
+	<item type="id" name="row_receipt_account_layout"/>
+	<item type="id" name="row_receipt_account"/>
+	<item type="id" name="row_receipt_show_in_resume_stt"/>
 </resources>
