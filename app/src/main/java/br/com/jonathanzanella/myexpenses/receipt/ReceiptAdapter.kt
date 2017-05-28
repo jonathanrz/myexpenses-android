@@ -20,12 +20,12 @@ import br.com.jonathanzanella.myexpenses.views.anko.*
 import org.jetbrains.anko.*
 import org.joda.time.DateTime
 
-internal class ReceiptAdapter(context: Context) : RecyclerView.Adapter<ReceiptAdapter.ViewHolder>() {
+open class ReceiptAdapter(context: Context) : RecyclerView.Adapter<ReceiptAdapter.ViewHolder>() {
     private var receipts: List<Receipt> = ArrayList()
     private val presenter: ReceiptAdapterPresenter = ReceiptAdapterPresenter(ReceiptRepository(RepositoryImpl<Receipt>(context)))
     private var date: DateTime? = null
 
-    inner class ViewHolder(itemView: View, val ui: ViewUI) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+    inner class ViewHolder internal constructor(itemView: View, internal val ui: ViewUI) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         private val adapterColorHelper: AdapterColorHelper
 
         init {
