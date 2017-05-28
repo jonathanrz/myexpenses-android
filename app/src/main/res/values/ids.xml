@@ -89,4 +89,6 @@
 	<item type="id" name="row_receipt_account_layout"/>
 	<item type="id" name="row_receipt_account"/>
 	<item type="id" name="row_receipt_show_in_resume_stt"/>
+	<item type="id" name="view_receipts_pager"/>
+	<item type="id" name="view_receipts_fab"/>
 </resources>
