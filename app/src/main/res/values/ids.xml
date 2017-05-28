@@ -91,4 +91,12 @@
 	<item type="id" name="row_receipt_show_in_resume_stt"/>
 	<item type="id" name="view_receipts_pager"/>
 	<item type="id" name="view_receipts_fab"/>
+	<item type="id" name="act_edit_receipt_name"/>
+	<item type="id" name="act_edit_receipt_date"/>
+	<item type="id" name="act_edit_receipt_income"/>
+	<item type="id" name="act_edit_receipt_source"/>
+	<item type="id" name="act_edit_receipt_account"/>
+	<item type="id" name="act_edit_receipt_show_in_resume"/>
+	<item type="id" name="act_edit_receipt_repetition"/>
+	<item type="id" name="act_edit_receipt_installment"/>
 </resources>
