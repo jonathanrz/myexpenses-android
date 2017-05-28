@@ -9,7 +9,6 @@ import android.support.v7.widget.AppCompatEditText
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.CheckBox
-import android.widget.EditText
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
@@ -131,10 +130,10 @@ class EditAccountActivity : AppCompatActivity(), AccountContract.EditView {
     }
 }
 
-class EditAccountActivityUi : AnkoComponent<EditAccountActivity> {
+private class EditAccountActivityUi : AnkoComponent<EditAccountActivity> {
     lateinit var toolbar : TemplateToolbar
     lateinit var editName : AppCompatEditText
-    lateinit var editBalance: EditText
+    lateinit var editBalance: AppCompatEditText
     lateinit var checkAccountBalanceNegative: CheckBox
     lateinit var checkToPayCreditCard: CheckBox
     lateinit var checkToPayBill: CheckBox
@@ -144,35 +143,37 @@ class EditAccountActivityUi : AnkoComponent<EditAccountActivity> {
         verticalLayout {
             toolbar = toolbarTemplate {}
 
-            tableViewFrame {
-                textInputLayout {
-                    editName = appCompatEditText {
-                        id = R.id.act_edit_account_name
-                        hint = resources.getString(R.string.name)
+            scrollView {
+                tableViewFrame {
+                    textInputLayout {
+                        editName = appCompatEditText {
+                            id = R.id.act_edit_account_name
+                            hint = resources.getString(R.string.name)
+                        }
                     }
-                }
-                textInputLayout {
-                    editBalance = appCompatEditText {
-                        id = R.id.act_edit_account_balance
-                        hint = resources.getString(R.string.balance)
+                    textInputLayout {
+                        editBalance = appCompatEditText {
+                            id = R.id.act_edit_account_balance
+                            hint = resources.getString(R.string.balance)
+                        }
                     }
+                    checkAccountBalanceNegative = checkBox {
+                        id = R.id.act_edit_account_negative
+                        hint = resources.getString(R.string.negative)
+                    }.lparams { bottomMargin = dip(5) }
+                    checkToPayCreditCard = checkBox {
+                        id = R.id.act_edit_account_to_pay_credit_card
+                        hint = resources.getString(R.string.account_to_pay_credit_card)
+                    }.lparams { bottomMargin = dip(5) }
+                    checkToPayBill = checkBox {
+                        id = R.id.act_edit_account_to_pay_bills
+                        hint = resources.getString(R.string.account_to_pay_bills)
+                    }.lparams { bottomMargin = dip(5) }
+                    checkShowInResume = checkBox {
+                        id = R.id.act_edit_account_show_in_resume
+                        hint = resources.getString(R.string.show_in_resume)
+                    }.lparams { bottomMargin = dip(5) }
                 }
-                checkAccountBalanceNegative = checkBox {
-                    id = R.id.act_edit_account_negative
-                    hint = resources.getString(R.string.negative)
-                }.lparams { bottomMargin = 16 }
-                checkToPayCreditCard = checkBox {
-                    id = R.id.act_edit_account_to_pay_credit_card
-                    hint = resources.getString(R.string.account_to_pay_credit_card)
-                }.lparams { bottomMargin = 16 }
-                checkToPayBill = checkBox {
-                    id = R.id.act_edit_account_to_pay_bills
-                    hint = resources.getString(R.string.account_to_pay_bills)
-                }.lparams { bottomMargin = 16 }
-                checkShowInResume = checkBox {
-                    id = R.id.act_edit_account_show_in_resume
-                    hint = resources.getString(R.string.show_in_resume)
-                }.lparams { bottomMargin = 16 }
             }
         }.applyRecursively(::applyTemplateViewStyles)
     }

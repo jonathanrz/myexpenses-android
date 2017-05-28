@@ -103,7 +103,7 @@ public class ReceiptView extends BaseView implements ViewPager.OnPageChangeListe
 		switch (requestCode) {
 			case REQUEST_ADD_RECEIPT:
 				if(resultCode == Activity.RESULT_OK)
-					loadExpense(data.getStringExtra(EditReceiptActivity.KEY_RECEIPT_UUID));
+					loadExpense(data.getStringExtra(EditReceiptActivity.Companion.getKEY_RECEIPT_UUID()));
 				break;
 		}
 	}
