@@ -144,35 +144,37 @@ private class EditAccountActivityUi : AnkoComponent<EditAccountActivity> {
             toolbar = toolbarTemplate {}
 
             scrollView {
-                tableViewFrame {
-                    textInputLayout {
-                        editName = appCompatEditText {
-                            id = R.id.act_edit_account_name
-                            hint = resources.getString(R.string.name)
+                linearLayout {
+                    tableViewFrame {
+                        textInputLayout {
+                            editName = appCompatEditText {
+                                id = R.id.act_edit_account_name
+                                hint = resources.getString(R.string.name)
+                            }
                         }
-                    }
-                    textInputLayout {
-                        editBalance = appCompatEditText {
-                            id = R.id.act_edit_account_balance
-                            hint = resources.getString(R.string.balance)
+                        textInputLayout {
+                            editBalance = appCompatEditText {
+                                id = R.id.act_edit_account_balance
+                                hint = resources.getString(R.string.balance)
+                            }
                         }
+                        checkAccountBalanceNegative = checkBox {
+                            id = R.id.act_edit_account_negative
+                            hint = resources.getString(R.string.negative)
+                        }.lparams { bottomMargin = dip(5) }
+                        checkToPayCreditCard = checkBox {
+                            id = R.id.act_edit_account_to_pay_credit_card
+                            hint = resources.getString(R.string.account_to_pay_credit_card)
+                        }.lparams { bottomMargin = dip(5) }
+                        checkToPayBill = checkBox {
+                            id = R.id.act_edit_account_to_pay_bills
+                            hint = resources.getString(R.string.account_to_pay_bills)
+                        }.lparams { bottomMargin = dip(5) }
+                        checkShowInResume = checkBox {
+                            id = R.id.act_edit_account_show_in_resume
+                            hint = resources.getString(R.string.show_in_resume)
+                        }.lparams { bottomMargin = dip(5) }
                     }
-                    checkAccountBalanceNegative = checkBox {
-                        id = R.id.act_edit_account_negative
-                        hint = resources.getString(R.string.negative)
-                    }.lparams { bottomMargin = dip(5) }
-                    checkToPayCreditCard = checkBox {
-                        id = R.id.act_edit_account_to_pay_credit_card
-                        hint = resources.getString(R.string.account_to_pay_credit_card)
-                    }.lparams { bottomMargin = dip(5) }
-                    checkToPayBill = checkBox {
-                        id = R.id.act_edit_account_to_pay_bills
-                        hint = resources.getString(R.string.account_to_pay_bills)
-                    }.lparams { bottomMargin = dip(5) }
-                    checkShowInResume = checkBox {
-                        id = R.id.act_edit_account_show_in_resume
-                        hint = resources.getString(R.string.show_in_resume)
-                    }.lparams { bottomMargin = dip(5) }
                 }
             }
         }.applyRecursively(::applyTemplateViewStyles)
