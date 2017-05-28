@@ -337,10 +337,10 @@ class ExpensePresenter {
 					bill = billRepository.find(extras.getString(KEY_BILL_UUID));
 				if(extras.containsKey(KEY_DATE))
 					date = new DateTime(extras.getLong(KEY_DATE));
-				if(extras.containsKey(ListChargeableActivity.Companion.getKEY_CHARGEABLE_SELECTED_TYPE())) {
-					chargeable = findChargeable(
-							(ChargeableType) extras.getSerializable(ListChargeableActivity.Companion.getKEY_CHARGEABLE_SELECTED_TYPE()),
-							extras.getString(ListChargeableActivity.Companion.getKEY_CHARGEABLE_SELECTED_UUID()));
+				String key = ListChargeableActivity.Companion.getKEY_CHARGEABLE_SELECTED_TYPE();
+				if(extras.containsKey(key)) {
+					String selectedUuid = extras.getString(ListChargeableActivity.Companion.getKEY_CHARGEABLE_SELECTED_UUID());
+					chargeable = findChargeable((ChargeableType) extras.getSerializable(key), selectedUuid);
 				}
 				return null;
 			}
