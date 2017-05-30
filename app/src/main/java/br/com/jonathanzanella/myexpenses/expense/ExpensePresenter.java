@@ -253,7 +253,7 @@ class ExpensePresenter {
 	@UiThread
 	void edit(Activity act) {
 		Intent i = new Intent(act, EditExpenseActivity.class);
-		i.putExtra(EditExpenseActivity.KEY_EXPENSE_UUID, getUuid());
+		i.putExtra(EditExpenseActivity.Companion.getKEY_EXPENSE_UUID(), getUuid());
 		act.startActivityForResult(i, REQUEST_EDIT_EXPENSE);
 	}
 
