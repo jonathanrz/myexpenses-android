@@ -66,7 +66,7 @@ public class EditExpenseTest {
 	@Test
 	public void edit_expense_correctly() throws Exception {
 		Intent i = new Intent();
-		i.putExtra(ShowExpenseActivity.KEY_EXPENSE_UUID, expense.getUuid());
+		i.putExtra(ShowExpenseActivity.Companion.getKEY_EXPENSE_UUID(), expense.getUuid());
 		activityTestRule.launchActivity(i);
 
 		final String showExpenseTitle = getTargetContext().getString(R.string.expense) + " " + expense.getName();

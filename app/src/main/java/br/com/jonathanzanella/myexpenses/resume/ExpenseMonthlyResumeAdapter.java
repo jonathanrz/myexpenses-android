@@ -122,7 +122,7 @@ class ExpenseMonthlyResumeAdapter extends RecyclerView.Adapter<ExpenseMonthlyRes
 					itemView.getContext().startActivity(i);
 				} else {
 					Intent i = new Intent(itemView.getContext(), ShowExpenseActivity.class);
-					i.putExtra(ShowExpenseActivity.KEY_EXPENSE_UUID, expense.getUuid());
+					i.putExtra(ShowExpenseActivity.Companion.getKEY_EXPENSE_UUID(), expense.getUuid());
 					itemView.getContext().startActivity(i);
 				}
 			}

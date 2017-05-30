@@ -112,7 +112,7 @@ class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHolder> {
 			Expense expense = getExpense(getAdapterPosition());
 			if(expense != null) {
                 Intent i = new Intent(itemView.getContext(), ShowExpenseActivity.class);
-                i.putExtra(ShowExpenseActivity.KEY_EXPENSE_UUID, expense.getUuid());
+                i.putExtra(ShowExpenseActivity.Companion.getKEY_EXPENSE_UUID(), expense.getUuid());
                 itemView.getContext().startActivity(i);
 			}
 		}
