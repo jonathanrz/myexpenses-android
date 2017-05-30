@@ -27,7 +27,6 @@ import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch
 import br.com.jonathanzanella.myexpenses.log.Log
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.views.anko.*
-import butterknife.OnClick
 import org.apache.commons.lang3.StringUtils
 import org.jetbrains.anko.*
 import org.joda.time.DateTime
@@ -130,8 +129,7 @@ class EditExpenseActivity : AppCompatActivity(), ExpenseContract.EditView {
         return super.onOptionsItemSelected(item)
     }
 
-    @OnClick(R.id.act_edit_expense_date)
-    internal fun onBalanceDate() {
+    internal fun onDate() {
         presenter.onDate(this)
     }
 
@@ -144,7 +142,6 @@ class EditExpenseActivity : AppCompatActivity(), ExpenseContract.EditView {
         ui.payNextMonth.visibility = if (chargeable.canBePaidNextMonth()) View.VISIBLE else View.GONE
     }
 
-    @OnClick(R.id.act_edit_expense_chargeable)
     internal fun onChargeable() {
         object : AsyncTask<Void, Void, Boolean>() {
 
@@ -177,7 +174,6 @@ class EditExpenseActivity : AppCompatActivity(), ExpenseContract.EditView {
         }
     }
 
-    @OnClick(R.id.act_edit_expense_bill)
     internal fun onBill() {
         startActivityForResult(Intent(this, ListBillActivity::class.java), REQUEST_SELECT_BILL)
     }
@@ -285,6 +281,7 @@ private class EditExpenseActivityUi : AnkoComponent<EditExpenseActivity> {
                         date = clickableView {
                             id = R.id.act_edit_expense_date
                             hint = resources.getString(R.string.date)
+                            onClick { ui.owner.onDate() }
                         }
                     }
                     textInputLayout {
@@ -311,12 +308,14 @@ private class EditExpenseActivityUi : AnkoComponent<EditExpenseActivity> {
                         chargeable = clickableView {
                             id = R.id.act_edit_expense_chargeable
                             hint = resources.getString(R.string.paid_with)
+                            onClick { ui.owner.onChargeable() }
                         }
                     }
                     textInputLayout {
                         bill = clickableView {
                             id = R.id.act_edit_expense_bill
                             hint = resources.getString(R.string.bill)
+                            onClick { ui.owner.onBill() }
                         }
                     }
                     payNextMonth = checkBox {
