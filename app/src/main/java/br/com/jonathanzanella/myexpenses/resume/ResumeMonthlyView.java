@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.UiThread;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
@@ -81,7 +82,7 @@ class ResumeMonthlyView extends BaseView {
 
 		accounts.setAdapter(accountAdapter);
 		accounts.setHasFixedSize(true);
-		accounts.setLayoutManager(new LinearLayoutManager(getContext()));
+		accounts.setLayoutManager(new GridLayoutManager(getContext(), 1));
 	}
 
 	private void initReceipts() {
@@ -107,7 +108,7 @@ class ResumeMonthlyView extends BaseView {
 
 		bills.setAdapter(billsAdapter);
 		bills.setHasFixedSize(true);
-		bills.setLayoutManager(new LinearLayoutManager(getContext()));
+		bills.setLayoutManager(new GridLayoutManager(getContext(), 1));
 		bills.setNestedScrollingEnabled(false);
 	}
 

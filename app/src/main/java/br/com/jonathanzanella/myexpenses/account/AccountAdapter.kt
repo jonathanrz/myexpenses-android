@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import br.com.jonathanzanella.myexpenses.MyApplication
 import br.com.jonathanzanella.myexpenses.R
+import br.com.jonathanzanella.myexpenses.account.AccountAdapter.Format.LIST
 import br.com.jonathanzanella.myexpenses.account.AccountAdapter.Format.NORMAL
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
 import br.com.jonathanzanella.myexpenses.helpers.AdapterColorHelper
@@ -81,7 +82,7 @@ class AccountAdapter : RecyclerView.Adapter<AccountAdapter.ViewHolder>() {
             val ui = NormalViewUI()
             return ViewHolder(ui.createView(AnkoContext.create(parent.context, parent)), ui.accountName, ui.accountBalance, ui.accountToPayCreditCard)
         } else {
-            val ui = SimplifiedViewUI()
+            val ui = SimplifiedViewUI(format)
             return ViewHolder(ui.createView(AnkoContext.create(parent.context, parent)), ui.accountName, ui.accountBalance, null)
         }
     }
@@ -112,32 +113,33 @@ class AccountAdapter : RecyclerView.Adapter<AccountAdapter.ViewHolder>() {
     }
 }
 
-class SimplifiedViewUI: AnkoComponent<ViewGroup> {
+private class SimplifiedViewUI(val format: AccountAdapter.Format): AnkoComponent<ViewGroup> {
     lateinit var accountName : TextView
     lateinit var accountBalance : TextView
 
     override fun createView(ui: AnkoContext<ViewGroup>) = with(ui) {
         verticalLayout {
             resumeRowCell {
+                when(format) {
+                    LIST -> padding = view.resources.getDimensionPixelSize(R.dimen.row_spacing)
+                    else -> padding = 0
+                }
                 accountName = textView {
                     id = R.id.row_account_name
                     ellipsize = TextUtils.TruncateAt.END
-                }.lparams(width = 0) {
-                    weight = 1.0f
-                    marginEnd = 5
+                }.lparams(width = 0, weight = 1f) {
+                    marginEnd = dip(5)
                 }
                 accountBalance = textView {
                     id = R.id.row_account_balance
                     textColor = ResourcesCompat.getColor(resources, R.color.color_primary, null)
-                }.lparams {
-                    marginEnd = 5
                 }
             }
         }.applyRecursively(::applyTemplateViewStyles)
     }
 }
 
-class NormalViewUI: AnkoComponent<ViewGroup> {
+private class NormalViewUI: AnkoComponent<ViewGroup> {
     lateinit var accountName : TextView
     lateinit var accountBalance : TextView
     lateinit var accountToPayCreditCard : TextView
@@ -172,6 +174,6 @@ class NormalViewUI: AnkoComponent<ViewGroup> {
                 alignParentEnd()
                 below(R.id.row_account_name)
             }
-        }
+        }.applyRecursively(::applyTemplateViewStyles)
     }
 }

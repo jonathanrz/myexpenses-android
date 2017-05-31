@@ -13,6 +13,7 @@ import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
 import br.com.jonathanzanella.myexpenses.expense.Expense
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
+import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
 import br.com.jonathanzanella.myexpenses.views.anko.resumeRowCell
 import org.jetbrains.anko.*
 import org.joda.time.DateTime
@@ -106,8 +107,7 @@ class NormalViewUI: AnkoComponent<ViewGroup> {
                     textColor = ResourcesCompat.getColor(resources, R.color.value_unpaid, null)
                 }
             }
-
-        }
+        }.applyRecursively(::applyTemplateViewStyles)
     }
 }
 
@@ -130,7 +130,6 @@ class TotalViewUI: AnkoComponent<ViewGroup> {
                     typeface = Typeface.defaultFromStyle(Typeface.BOLD)
                 }
             }
-
-        }
+        }.applyRecursively(::applyTemplateViewStyles)
     }
 }
