@@ -145,13 +145,13 @@ class EditExpenseActivity : AppCompatActivity(), ExpenseContract.EditView {
     internal fun onChargeable() {
         object : AsyncTask<Void, Void, Boolean>() {
 
-            override fun doInBackground(vararg voids: Void): Boolean? {
+            override fun doInBackground(vararg voids: Void): Boolean {
                 return presenter.hasChargeable()
             }
 
-            override fun onPostExecute(hasChargeable: Boolean?) {
+            override fun onPostExecute(hasChargeable: Boolean) {
                 super.onPostExecute(hasChargeable)
-                if (hasChargeable != null && hasChargeable) {
+                if (!hasChargeable) {
                     val intent = Intent(this@EditExpenseActivity, ListChargeableActivity::class.java)
                     startActivityForResult(intent, REQUEST_SELECT_CHARGEABLE)
                 }

@@ -22,8 +22,11 @@ public class CurrencyTextWatch implements TextWatcher {
 
 			String cleanString = s.toString().replaceAll("[^\\d]", "");
 
-			double parsed = Double.parseDouble(cleanString);
-			String formatted = CurrencyHelper.format(parsed);
+			String formatted = "";
+			if(!cleanString.isEmpty()) {
+				double parsed = Double.parseDouble(cleanString);
+				formatted = CurrencyHelper.format(parsed);
+			}
 
 			current = formatted;
 			edit.setText(formatted);

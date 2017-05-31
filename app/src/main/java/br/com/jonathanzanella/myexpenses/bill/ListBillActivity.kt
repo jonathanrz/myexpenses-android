@@ -9,12 +9,10 @@ import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.views.anko.TemplateToolbar
+import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
 import br.com.jonathanzanella.myexpenses.views.anko.recyclerView
 import br.com.jonathanzanella.myexpenses.views.anko.toolbarTemplate
-import org.jetbrains.anko.AnkoComponent
-import org.jetbrains.anko.AnkoContext
-import org.jetbrains.anko.setContentView
-import org.jetbrains.anko.verticalLayout
+import org.jetbrains.anko.*
 
 class ListBillActivity : AppCompatActivity(), BillAdapterCallback {
 
@@ -61,5 +59,5 @@ class ListBillActivityUi : AnkoComponent<ListBillActivity> {
             toolbar = toolbarTemplate {}
             bills = recyclerView { id = R.id.act_bill_list}
         }
-    }
+    }.applyRecursively(::applyTemplateViewStyles)
 }
