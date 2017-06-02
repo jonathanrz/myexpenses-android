@@ -25,7 +25,7 @@ open class ReceiptAdapter(context: Context) : RecyclerView.Adapter<ReceiptAdapte
     private val presenter: ReceiptAdapterPresenter = ReceiptAdapterPresenter(ReceiptRepository(RepositoryImpl<Receipt>(context)))
     private var date: DateTime? = null
 
-    inner class ViewHolder internal constructor(itemView: View, internal val ui: ViewUI) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+    inner class ViewHolder internal constructor(itemView: View, private val ui: ViewUI) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         private val adapterColorHelper: AdapterColorHelper
 
         init {
