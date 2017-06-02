@@ -99,4 +99,26 @@
 	<item type="id" name="act_edit_receipt_show_in_resume"/>
 	<item type="id" name="act_edit_receipt_repetition"/>
 	<item type="id" name="act_edit_receipt_installment"/>
+
+	<!-- expense -->
+	<item type="id" name="act_edit_expense_name"/>
+	<item type="id" name="act_edit_expense_date"/>
+	<item type="id" name="act_edit_expense_value"/>
+	<item type="id" name="act_edit_expense_value_to_show_in_overview"/>
+	<item type="id" name="act_edit_expense_repayment"/>
+	<item type="id" name="act_edit_expense_chargeable"/>
+	<item type="id" name="act_edit_expense_bill"/>
+	<item type="id" name="act_edit_expense_pay_next_month"/>
+	<item type="id" name="act_edit_expense_show_in_overview"/>
+	<item type="id" name="act_edit_expense_show_in_resume"/>
+	<item type="id" name="act_edit_expense_repetition"/>
+	<item type="id" name="act_edit_expense_installment"/>
+	<item type="id" name="act_show_expense_name"/>
+	<item type="id" name="act_show_expense_date"/>
+	<item type="id" name="act_show_expense_value"/>
+	<item type="id" name="act_show_expense_value_to_show_in_overview"/>
+	<item type="id" name="act_show_expense_chargeable"/>
+	<item type="id" name="act_show_expense_bill"/>
+	<item type="id" name="act_show_expense_charge_next_month"/>
+	<item type="id" name="view_expenses_pager"/>
 </resources>

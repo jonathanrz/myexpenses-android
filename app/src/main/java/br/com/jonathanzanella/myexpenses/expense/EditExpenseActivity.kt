@@ -341,7 +341,7 @@ private class EditExpenseActivityUi : AnkoComponent<EditExpenseActivity> {
                     }
                     textInputLayout {
                         repetition = appCompatEditText {
-                            id = R.id.act_edit_receipt_repetition
+                            id = R.id.act_edit_expense_repetition
                             hint = resources.getString(R.string.repetition)
                             inputType = InputType.TYPE_NUMBER_FLAG_DECIMAL
                             setText(R.string._1)
@@ -349,7 +349,7 @@ private class EditExpenseActivityUi : AnkoComponent<EditExpenseActivity> {
                     }
                     textInputLayout {
                         installment = appCompatEditText {
-                            id = R.id.act_edit_receipt_installment
+                            id = R.id.act_edit_expense_installment
                             hint = resources.getString(R.string.installments)
                             inputType = InputType.TYPE_NUMBER_FLAG_DECIMAL
                             setText(R.string._1)
