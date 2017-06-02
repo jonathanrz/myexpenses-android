@@ -44,7 +44,7 @@ internal class ExpenseMonthlyView(context: Context, private val dateTime: DateTi
                 return null
             }
 
-            override fun onPostExecute(aVoid: Void) {
+            override fun onPostExecute(aVoid: Void?) {
                 super.onPostExecute(aVoid)
                 adapter.notifyDataSetChanged()
             }
