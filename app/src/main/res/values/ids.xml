@@ -122,6 +122,7 @@
 	<item type="id" name="act_show_expense_charge_next_month"/>
 	<item type="id" name="view_expenses_pager"/>
 	<item type="id" name="view_expenses_fab"/>
+	<item type="id" name="view_expenses_monthly_list"/>
 	<item type="id" name="row_credit_card_expense_date"/>
 	<item type="id" name="row_credit_card_expense_value"/>
 	<item type="id" name="row_credit_card_monthly_date"/>
