@@ -134,7 +134,7 @@ private class ExpenseViewUI: AnkoComponent<ExpenseView> {
         frameLayout {
             pager = viewPager { R.id.view_expenses_pager }.lparams(width = matchParent, height = matchParent)
             floatingActionButton {
-                id = R.id.view_receipts_fab
+                id = R.id.view_expenses_fab
                 onClick { ui.owner.onFab() }
             }
         }.applyRecursively(::applyTemplateViewStyles)

@@ -13,6 +13,7 @@ import br.com.jonathanzanella.myexpenses.card.CardRepository
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
 import br.com.jonathanzanella.myexpenses.receipt.Receipt
+import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
 import org.jetbrains.anko.*
 import org.joda.time.DateTime
 
@@ -53,10 +54,10 @@ internal class CreditCardAdapter(context: Context) : RecyclerView.Adapter<Credit
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         if (viewType == ViewType.TYPE_TOTAL.ordinal) {
-            val ui = TotalViewUI()
+            val ui = CreditCardTotalViewUI()
             return ViewHolder(ui.createView(AnkoContext.create(parent.context, parent)), ui.value)
         } else {
-            val ui = ViewUI()
+            val ui = CreditCardViewUI()
             return ViewHolder(ui.createView(AnkoContext.create(parent.context, parent)), ui.value, ui.date)
         }
     }
@@ -79,7 +80,7 @@ internal class CreditCardAdapter(context: Context) : RecyclerView.Adapter<Credit
     }
 }
 
-private class ViewUI: AnkoComponent<ViewGroup> {
+private class CreditCardViewUI : AnkoComponent<ViewGroup> {
     lateinit var date : TextView
     lateinit var value : TextView
 
@@ -92,11 +93,11 @@ private class ViewUI: AnkoComponent<ViewGroup> {
                 view {}.lparams(width = 0, height = 1, weight = 1f)
                 value = textView { id = R.id.row_credit_card_expense_value }
             }.lparams { margin = resources.getDimensionPixelSize(R.dimen.min_spacing) }
-        }
+        }.applyRecursively(::applyTemplateViewStyles)
     }
 }
 
-private class TotalViewUI: AnkoComponent<ViewGroup> {
+private class CreditCardTotalViewUI : AnkoComponent<ViewGroup> {
     lateinit var value : TextView
 
     override fun createView(ui: AnkoContext<ViewGroup>) = with(ui) {
@@ -114,6 +115,6 @@ private class TotalViewUI: AnkoComponent<ViewGroup> {
                     typeface = Typeface.defaultFromStyle(Typeface.BOLD)
                 }
             }.lparams { margin = resources.getDimensionPixelSize(R.dimen.min_spacing) }
-        }
+        }.applyRecursively(::applyTemplateViewStyles)
     }
 }
