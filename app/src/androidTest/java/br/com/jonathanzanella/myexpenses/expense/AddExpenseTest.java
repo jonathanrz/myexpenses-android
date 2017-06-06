@@ -35,6 +35,7 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.clearAndTypeTextIntoView;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.clickIntoView;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchErrorMessage;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle;
@@ -189,8 +190,8 @@ public class AddExpenseTest {
 
 		final String expenseName = "Test";
 		int value = 100;
-		typeTextIntoView(R.id.act_edit_expense_name, expenseName);
-		typeTextIntoView(R.id.act_edit_expense_value, String.valueOf(value));
+		clearAndTypeTextIntoView(R.id.act_edit_expense_name, expenseName);
+		clearAndTypeTextIntoView(R.id.act_edit_expense_value, String.valueOf(value));
 		clickIntoView(R.id.act_edit_expense_repayment);
 		selectChargeable();
 

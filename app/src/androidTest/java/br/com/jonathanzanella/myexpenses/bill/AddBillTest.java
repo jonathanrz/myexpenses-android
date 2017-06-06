@@ -25,12 +25,12 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.clearAndTypeTextIntoView;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.clickIntoView;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchErrorMessage;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.openMenuAndClickItem;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.setTimeInDatePicker;
-import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.typeTextIntoView;
 
 @RunWith(AndroidJUnit4.class)
 @MediumTest
@@ -69,9 +69,9 @@ public class AddBillTest {
 		matchToolbarTitle(newBillTitle);
 
 		final String billTitle = "Test";
-		typeTextIntoView(R.id.act_edit_bill_name, billTitle);
-		typeTextIntoView(R.id.act_edit_bill_amount, "100");
-		typeTextIntoView(R.id.act_edit_bill_due_date, "1");
+		clearAndTypeTextIntoView(R.id.act_edit_bill_name, billTitle);
+		clearAndTypeTextIntoView(R.id.act_edit_bill_amount, "100");
+		clearAndTypeTextIntoView(R.id.act_edit_bill_due_date, "1");
 
 		clickIntoView(R.id.act_edit_bill_init_date);
 		DateTime initDate = new DateTime(2016, 10, 2, 0, 0);

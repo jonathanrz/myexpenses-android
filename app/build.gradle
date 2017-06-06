@@ -10,8 +10,6 @@ android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
 
-    buildToolsVersion "$rootProject.buildToolsVersion"
-
     defaultConfig {
         applicationId "br.com.jonathanzanella.myexpenses"
         minSdkVersion rootProject.ext.minSdkVersion
@@ -85,6 +83,12 @@ dependencies {
 
     //Kotlin
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
+    //Anko
+    compile "org.jetbrains.anko:anko-sdk21:$ankoVersion"
+    compile "org.jetbrains.anko:anko-support-v4:$ankoVersion"
+    compile "org.jetbrains.anko:anko-appcompat-v7:$ankoVersion"
+    compile "org.jetbrains.anko:anko-design:$ankoVersion"
 
     // Dependencies for local unit tests
     testCompile "junit:junit:$rootProject.junitVersion"

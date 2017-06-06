@@ -1,6 +1,7 @@
 package br.com.jonathanzanella.myexpenses.bill;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,10 +23,19 @@ class BillAdapterPresenter {
 		billsFiltered = bills;
 	}
 
+	@NotNull
+	public Bill getBill(int position) {
+		return billsFiltered.get(position);
+	}
+
 	List<Bill> getBills(boolean invalidateCache) {
 		if(invalidateCache)
 			loadBills();
 		return Collections.unmodifiableList(billsFiltered);
+	}
+
+	int getBillsCount() {
+		return billsFiltered.size();
 	}
 
 	public void filter(String filter) {

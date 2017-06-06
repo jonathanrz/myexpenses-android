@@ -92,7 +92,7 @@ class ReceiptPresenter {
 		}
 	}
 
-	public void updateView() {
+	void updateView() {
 		if (receipt != null) {
 			if (editView != null) {
 				editView.setTitle(R.string.edit_receipt_title);
@@ -137,7 +137,7 @@ class ReceiptPresenter {
 			@Override
 			protected void onPostExecute(Receipt receipt) {
 				super.onPostExecute(receipt);
-				view.showReceipt(receipt);
+				updateView();
 			}
 		}.execute();
 	}
@@ -210,13 +210,6 @@ class ReceiptPresenter {
 				}
 			}
 		}.execute();
-	}
-
-	@UiThread
-	void edit(Context ctx) {
-		Intent i = new Intent(ctx, EditReceiptActivity.class);
-		i.putExtra(EditReceiptActivity.KEY_RECEIPT_UUID, getUuid());
-		ctx.startActivity(i);
 	}
 
 	@UiThread

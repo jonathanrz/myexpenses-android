@@ -61,7 +61,7 @@ public class ShowExpenseActivityTest {
 	@Test
 	public void shows_expense_correctly() throws Exception {
 		Intent i = new Intent();
-		i.putExtra(ShowExpenseActivity.KEY_EXPENSE_UUID, expense.getUuid());
+		i.putExtra(ShowExpenseActivity.Companion.getKEY_EXPENSE_UUID(), expense.getUuid());
 		activityTestRule.launchActivity(i);
 
 		final String editExpenseTitle = getTargetContext().getString(R.string.expense) + " " + expense.getName();
@@ -77,7 +77,7 @@ public class ShowExpenseActivityTest {
 	@Test
 	public void calls_edit_expense_activity() throws Exception {
 		Intent i = new Intent();
-		i.putExtra(ShowExpenseActivity.KEY_EXPENSE_UUID, expense.getUuid());
+		i.putExtra(ShowExpenseActivity.Companion.getKEY_EXPENSE_UUID(), expense.getUuid());
 		activityTestRule.launchActivity(i);
 
 		final String showExpenseTitle = getTargetContext().getString(R.string.expense) + " " + expense.getName();

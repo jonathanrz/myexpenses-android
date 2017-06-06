@@ -79,7 +79,7 @@ public class ShowCardActivityTest {
 
 	private void callActivity() {
 		Intent i = new Intent();
-		i.putExtra(ShowCardActivity.KEY_CREDIT_CARD_UUID, card.getUuid());
+		i.putExtra(ShowCardActivity.Companion.getKEY_CREDIT_CARD_UUID(), card.getUuid());
 		activityTestRule.launchActivity(i);
 	}
 

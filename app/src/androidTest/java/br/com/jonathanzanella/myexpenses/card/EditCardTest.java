@@ -27,9 +27,9 @@ import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.clearAndTypeTextIntoView;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.clickIntoView;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle;
-import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.typeTextIntoView;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -63,7 +63,7 @@ public class EditCardTest {
 	@Test
 	public void edit_card_correctly() throws Exception {
 		Intent i = new Intent();
-		i.putExtra(ShowCardActivity.KEY_CREDIT_CARD_UUID, card.getUuid());
+		i.putExtra(ShowCardActivity.Companion.getKEY_CREDIT_CARD_UUID(), card.getUuid());
 		activityTestRule.launchActivity(i);
 
 		final String showExpenseTitle = getTargetContext().getString(R.string.card) + " " + card.getName();
@@ -74,7 +74,7 @@ public class EditCardTest {
 		final String editExpenseTitle = getTargetContext().getString(R.string.edit_card_title);
 		matchToolbarTitle(editExpenseTitle);
 		onView(withId(R.id.act_edit_card_name)).perform(scrollTo()).check(matches(withText(card.getName())));
-		typeTextIntoView(R.id.act_edit_card_name, " changed");
+		clearAndTypeTextIntoView(R.id.act_edit_card_name, card.getName() + " changed");
 		onView(withId(R.id.act_edit_card_account)).perform(scrollTo()).check(matches(withText(card.getAccount().getName())));
 
 		clickIntoView(R.id.action_save);

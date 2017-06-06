@@ -31,9 +31,9 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.clearAndTypeTextIntoView;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.clickIntoView;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle;
-import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.typeTextIntoView;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.core.Is.is;
 
@@ -73,7 +73,7 @@ public class EditReceiptTest {
 	@Test
 	public void edit_expense_correctly() throws Exception {
 		Intent i = new Intent();
-		i.putExtra(ShowReceiptActivity.KEY_RECEIPT_UUID, receipt.getUuid());
+		i.putExtra(ShowReceiptActivity.Companion.getKEY_RECEIPT_UUID(), receipt.getUuid());
 		activityTestRule.launchActivity(i);
 
 		final String showReceiptTitle = getTargetContext().getString(R.string.receipt) + " " + receipt.getName();
@@ -87,7 +87,7 @@ public class EditReceiptTest {
 		String expectedDate = Receipt.SIMPLE_DATE_FORMAT.format(receipt.getDate().toDate());
 		onView(withId(R.id.act_edit_receipt_date)).check(matches(withText(expectedDate)));
 		onView(withId(R.id.act_edit_receipt_account)).check(matches(withText(receipt.getAccountFromCache().getName())));
-		typeTextIntoView(R.id.act_edit_receipt_name, " changed");
+		clearAndTypeTextIntoView(R.id.act_edit_receipt_name, " changed");
 
 		clickIntoView(R.id.action_save);
 

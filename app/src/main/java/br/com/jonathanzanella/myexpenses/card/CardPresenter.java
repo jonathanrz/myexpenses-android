@@ -98,12 +98,30 @@ class CardPresenter {
 			view.showCard(card);
 			if(account == null)
 				loadAccount(card.getAccountUuid());
-			else
+			else if (editView != null)
 				editView.onAccountSelected(account);
 		} else {
 			if(editView != null)
 				editView.setTitle(R.string.new_card_title);
 		}
+	}
+
+	@UiThread
+	void reloadCard() {
+		new AsyncTask<Void, Void, Void>() {
+
+			@Override
+			protected Void doInBackground(Void... voids) {
+				loadCard(card.getUuid());
+				return null;
+			}
+
+			@Override
+			protected void onPostExecute(Void aVoid) {
+				super.onPostExecute(aVoid);
+				updateView();
+			}
+		}.execute();
 	}
 
 	@WorkerThread

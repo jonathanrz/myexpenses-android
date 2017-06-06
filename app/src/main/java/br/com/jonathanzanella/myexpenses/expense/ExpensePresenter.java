@@ -253,7 +253,7 @@ class ExpensePresenter {
 	@UiThread
 	void edit(Activity act) {
 		Intent i = new Intent(act, EditExpenseActivity.class);
-		i.putExtra(EditExpenseActivity.KEY_EXPENSE_UUID, getUuid());
+		i.putExtra(EditExpenseActivity.Companion.getKEY_EXPENSE_UUID(), getUuid());
 		act.startActivityForResult(i, REQUEST_EDIT_EXPENSE);
 	}
 
@@ -337,10 +337,10 @@ class ExpensePresenter {
 					bill = billRepository.find(extras.getString(KEY_BILL_UUID));
 				if(extras.containsKey(KEY_DATE))
 					date = new DateTime(extras.getLong(KEY_DATE));
-				if(extras.containsKey(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_TYPE)) {
-					chargeable = findChargeable(
-							(ChargeableType) extras.getSerializable(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_TYPE),
-							extras.getString(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_UUID));
+				String key = ListChargeableActivity.Companion.getKEY_CHARGEABLE_SELECTED_TYPE();
+				if(extras.containsKey(key)) {
+					String selectedUuid = extras.getString(ListChargeableActivity.Companion.getKEY_CHARGEABLE_SELECTED_UUID());
+					chargeable = findChargeable((ChargeableType) extras.getSerializable(key), selectedUuid);
 				}
 				return null;
 			}
@@ -361,8 +361,8 @@ class ExpensePresenter {
 		if(date != null)
 			outState.putLong(KEY_DATE, date.getMillis());
 		if(chargeable != null) {
-			outState.putString(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_UUID, chargeable.getUuid());
-			outState.putSerializable(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_TYPE, chargeable.getChargeableType());
+			outState.putString(ListChargeableActivity.Companion.getKEY_CHARGEABLE_SELECTED_UUID(), chargeable.getUuid());
+			outState.putSerializable(ListChargeableActivity.Companion.getKEY_CHARGEABLE_SELECTED_TYPE(), chargeable.getChargeableType());
 		}
 	}
 

@@ -64,7 +64,7 @@ public class ShowReceiptActivityTest {
 	@Test
 	public void shows_receipt_correctly() throws Exception {
 		Intent i = new Intent();
-		i.putExtra(ShowReceiptActivity.KEY_RECEIPT_UUID, receipt.getUuid());
+		i.putExtra(ShowReceiptActivity.Companion.getKEY_RECEIPT_UUID(), receipt.getUuid());
 		activityTestRule.launchActivity(i);
 
 		final String editReceiptTitle = getTargetContext().getString(R.string.receipt) + " " + receipt.getName();

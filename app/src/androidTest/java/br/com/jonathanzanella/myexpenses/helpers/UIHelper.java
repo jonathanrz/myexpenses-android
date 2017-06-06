@@ -19,6 +19,7 @@ import org.hamcrest.Matchers;
 import br.com.jonathanzanella.myexpenses.R;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.clearText;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
@@ -71,6 +72,24 @@ public final class UIHelper {
 		};
 	}
 
+	public static void clearAndTypeTextIntoView(@IdRes int view, String text) {
+		try {
+			onView(withId(view))
+					.perform(scrollTo())
+					.perform(clearText())
+					.perform(typeText(text))
+					.perform(closeSoftKeyboard());
+		} catch (PerformException e) {
+			onView(withId(view)).perform(typeText(text)).perform(closeSoftKeyboard());
+		}
+	}
+
+	/**
+	 *
+	 * @deprecated Sometimes when clicking into a edit with text makes android open a popup.
+	 * You should use clearAndTypeTextIntoView to first clear the edit text
+	 */
+	@Deprecated
 	public static void typeTextIntoView(@IdRes int view, String text) {
 		try {
 			onView(withId(view))
