@@ -2,7 +2,7 @@ package br.com.jonathanzanella.myexpenses.overview;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
 
@@ -43,7 +43,7 @@ class OverviewExpensesWeeklyView extends BaseView {
 
 		list.setAdapter(adapter);
 		list.setHasFixedSize(true);
-		list.setLayoutManager(new LinearLayoutManager(getContext()));
+		list.setLayoutManager(new GridLayoutManager(getContext(), 1));
 	}
 
 	@Override

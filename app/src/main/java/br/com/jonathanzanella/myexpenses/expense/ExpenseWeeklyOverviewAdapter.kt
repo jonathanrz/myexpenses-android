@@ -11,11 +11,9 @@ import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.card.CreditCardInvoiceActivity
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
+import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
 import br.com.jonathanzanella.myexpenses.views.anko.resumeRowCell
-import org.jetbrains.anko.AnkoComponent
-import org.jetbrains.anko.AnkoContext
-import org.jetbrains.anko.textView
-import org.jetbrains.anko.verticalLayout
+import org.jetbrains.anko.*
 import java.text.SimpleDateFormat
 import java.util.Locale
 import kotlin.collections.ArrayList
@@ -116,6 +114,6 @@ internal class ExpenseWeeklyOverviewUI : AnkoComponent<ViewGroup> {
                         }
                 income = textView { id = R.id.row_weekly_overview_expense_income }
             }
-        }
+        }.applyRecursively(::applyTemplateViewStyles)
     }
 }
