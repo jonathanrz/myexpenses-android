@@ -131,7 +131,7 @@ class ViewUI: AnkoComponent<ViewGroup> {
                 textSize = 10f
             }.lparams {
                 below(R.id.row_bill_name)
-                alignEnd(R.id.row_bill_balance_due_date_stt)
+                rightOf(R.id.row_bill_balance_due_date_stt)
             }
 
             billDates = textView {
