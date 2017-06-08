@@ -82,7 +82,7 @@ class ExpenseView@JvmOverloads constructor(
 
         when (requestCode) {
             REQUEST_ADD_EXPENSE -> if (resultCode == Activity.RESULT_OK)
-                loadExpense(data.getStringExtra(EditExpenseActivity.KEY_EXPENSE_UUID))
+                loadExpense(data!!.getStringExtra(EditExpenseActivity.KEY_EXPENSE_UUID))
         }
     }
 
