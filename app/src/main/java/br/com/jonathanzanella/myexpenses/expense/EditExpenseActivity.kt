@@ -269,6 +269,7 @@ private class EditExpenseActivityUi : AnkoComponent<EditExpenseActivity> {
             toolbar = toolbarTemplate {}
 
             scrollView {
+                padding = resources.getDimensionPixelSize(R.dimen.default_spacing)
                 linearLayout {
                     orientation = LinearLayout.VERTICAL
                     textInputLayout {
@@ -288,14 +289,14 @@ private class EditExpenseActivityUi : AnkoComponent<EditExpenseActivity> {
                         value = appCompatEditText {
                             id = R.id.act_edit_expense_value
                             hint = resources.getString(R.string.value)
-                            inputType = InputType.TYPE_NUMBER_FLAG_SIGNED
+                            inputType = InputType.TYPE_NUMBER_FLAG_DECIMAL
                         }
                     }
                     textInputLayout {
                         valueToShowInOverview = appCompatEditText {
                             id = R.id.act_edit_expense_value_to_show_in_overview
                             hint = resources.getString(R.string.income_to_show_in_overview)
-                            inputType = InputType.TYPE_NUMBER_FLAG_SIGNED
+                            inputType = InputType.TYPE_NUMBER_FLAG_DECIMAL
                         }
                     }
                     repayment = checkBox {
@@ -355,9 +356,7 @@ private class EditExpenseActivityUi : AnkoComponent<EditExpenseActivity> {
                             setText(R.string._1)
                         }
                     }
-                }.lparams(height = wrapContent, width = matchParent) {
-                    margin = resources.getDimensionPixelSize(R.dimen.default_spacing)
-                }
+                }.lparams(height = wrapContent, width = matchParent)
             }
         }.applyRecursively(::applyTemplateViewStyles)
     }
