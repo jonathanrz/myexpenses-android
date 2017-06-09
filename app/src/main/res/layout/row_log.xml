@@ -5,7 +5,7 @@
                 android:layout_height="wrap_content">
 
 	<View
-		android:id="@+id/row_log_indicator"
+		android:id="@+id/indicator"
 		android:layout_width="15dp"
 		android:layout_height="15dp"
 		android:layout_marginStart="@dimen/min_spacing"
@@ -15,17 +15,17 @@
 		/>
 
 	<TextView
-		android:id="@+id/row_log_title"
+		android:id="@+id/title"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:textColor="@color/color_primary"
-		android:layout_toEndOf="@id/row_log_indicator"
+		android:layout_toEndOf="@id/indicator"
 		android:layout_marginStart="@dimen/min_spacing"
 		android:layout_marginTop="@dimen/min_spacing"
 		tools:text="Account Overridden"/>
 
 	<TextView
-		android:id="@+id/row_log_date"
+		android:id="@+id/date"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:textColor="@color/color_primary"
@@ -35,12 +35,12 @@
 		tools:text="10/06/16 22:25:23:0100"/>
 
 	<TextView
-		android:id="@+id/row_log_description"
+		android:id="@+id/description"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:textColor="@color/color_primary_text"
-		android:layout_toEndOf="@id/row_log_indicator"
-		android:layout_below="@id/row_log_title"
+		android:layout_toEndOf="@id/indicator"
+		android:layout_below="@id/title"
 		android:layout_margin="@dimen/min_spacing"
 		tools:text="Uuid: 000\nName: teste"/>
 
