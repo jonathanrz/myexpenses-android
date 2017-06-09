@@ -88,7 +88,7 @@ class ShowAccountActivity : AppCompatActivity(), AccountContract.View {
         ui.accountToPayCreditCard.setText(if (account.isAccountToPayCreditCard) R.string.yes else R.string.no)
         ui.accountToPayBills.setText(if (account.isAccountToPayBills) R.string.yes else R.string.no)
 
-        ui.transactionsView.showTransactions(account, monthToShow)
+        ui.transactionsView.showTransactions(account, monthToShow!!)
     }
 
     override fun setTitle(string: String?) {

@@ -18,7 +18,6 @@ import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
 import br.com.jonathanzanella.myexpenses.receipt.Receipt
 import br.com.jonathanzanella.myexpenses.receipt.ReceiptRepository
 import br.com.jonathanzanella.myexpenses.views.BaseView
-import butterknife.ButterKnife
 import kotlinx.android.synthetic.main.view_monthly_resume.view.*
 import org.joda.time.DateTime
 
@@ -43,7 +42,6 @@ internal class ResumeMonthlyView(context: Context, private val month: DateTime) 
         View.inflate(context, R.layout.view_monthly_resume, this)
         expenseRepository = ExpenseRepository(RepositoryImpl<Expense>(context))
         receiptRepository = ReceiptRepository(RepositoryImpl<Receipt>(context))
-        ButterKnife.bind(this)
 
         initAccount()
         initReceipts()

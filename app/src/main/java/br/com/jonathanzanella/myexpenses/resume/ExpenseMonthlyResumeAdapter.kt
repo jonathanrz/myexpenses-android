@@ -8,23 +8,16 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-
-import java.text.SimpleDateFormat
-import java.util.Locale
-
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.R.string.*
 import br.com.jonathanzanella.myexpenses.card.CreditCardInvoiceActivity
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable
 import br.com.jonathanzanella.myexpenses.expense.Expense
 import br.com.jonathanzanella.myexpenses.expense.ShowExpenseActivity
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
 import br.com.jonathanzanella.myexpenses.helpers.TransactionsHelper
-import butterknife.Bind
-import butterknife.ButterKnife
-import butterknife.OnClick
 import kotlinx.android.synthetic.main.row_monthly_resume_expense.view.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 internal class ExpenseMonthlyResumeAdapter : RecyclerView.Adapter<ExpenseMonthlyResumeAdapter.ViewHolder>() {
     private var expenses: List<Expense>? = null

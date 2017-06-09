@@ -6,11 +6,11 @@
 
 	<TextView
 		style="@style/HeaderTitle"
-		android:id="@+id/view_month_transactions_header"
+		android:id="@+id/header"
 		android:text="@string/month_transactions"/>
 
 	<android.support.v7.widget.RecyclerView
-		android:id="@+id/view_month_transactions_list"
+		android:id="@+id/list"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"/>
 
@@ -29,7 +29,7 @@
 			android:layout_marginEnd="@dimen/min_spacing"/>
 
 		<TextView
-			android:id="@+id/view_month_transactions_balance"
+			android:id="@+id/balance"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:textStyle="bold"/>

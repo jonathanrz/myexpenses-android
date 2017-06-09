@@ -5,7 +5,7 @@
 	android:orientation="horizontal">
 
 	<android.support.v7.widget.AppCompatEditText
-		android:id="@+id/view_datetime_date"
+		android:id="@+id/date"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:inputType="none"
@@ -14,7 +14,7 @@
 		android:hint="@string/date"/>
 
 	<android.support.v7.widget.AppCompatEditText
-		android:id="@+id/view_datetime_hour"
+		android:id="@+id/hour"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:inputType="none"

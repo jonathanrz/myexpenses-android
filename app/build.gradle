@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'jacoco-android'
 apply plugin: 'checkstyle'
@@ -70,11 +69,6 @@ dependencies {
     //retrofit
     compile "com.squareup.retrofit2:retrofit:$rootProject.retrofitVersion"
     compile "com.squareup.retrofit2:converter-gson:$rootProject.retrofitVersion"
-
-    //JakeWharton
-    compile "com.jakewharton:butterknife:$rootProject.butterKnifeVersion"
-    kapt "com.jakewharton:butterknife:$rootProject.butterKnifeVersion"
-    annotationProcessor "com.jakewharton:butterknife:$rootProject.butterKnifeVersion"
 
     compile "net.danlew:android.joda:$rootProject.jodaVersion"
     compile "com.facebook.stetho:stetho:$rootProject.stethoVersion"
