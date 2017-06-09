@@ -16,7 +16,7 @@
 	        android:text="@string/accounts"/>
 
 	    <android.support.v7.widget.RecyclerView
-	        android:id="@+id/view_monthly_resume_accounts"
+	        android:id="@+id/accounts"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"/>
 
@@ -26,7 +26,7 @@
 	        android:layout_marginTop="@dimen/default_spacing"/>
 
 	    <android.support.v7.widget.RecyclerView
-	        android:id="@+id/view_monthly_resume_receipts"
+	        android:id="@+id/receipts"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"/>
 
@@ -36,7 +36,7 @@
 		    android:layout_marginTop="@dimen/default_spacing"/>
 
 	    <android.support.v7.widget.RecyclerView
-	        android:id="@+id/view_monthly_resume_expenses"
+	        android:id="@+id/expenses"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"/>
 
@@ -46,7 +46,7 @@
 			android:layout_marginTop="@dimen/default_spacing"/>
 
 		<android.support.v7.widget.RecyclerView
-			android:id="@+id/view_monthly_resume_bills"
+			android:id="@+id/bills"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"/>
 
@@ -68,7 +68,7 @@
 					android:text="@string/total_receipts"
 					android:textColor="@color/color_primary_text"/>
 				<TextView
-					android:id="@+id/view_monthly_resume_total_receipts"
+					android:id="@+id/totalReceipts"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:textColor="@color/value_unreceived"
@@ -83,7 +83,7 @@
 					android:text="@string/total_expenses"
 					android:textColor="@color/color_primary_text"/>
 				<TextView
-					android:id="@+id/view_monthly_resume_total_expenses"
+					android:id="@+id/totalExpenses"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:textColor="@color/value_unpaid"
@@ -98,7 +98,7 @@
 					android:text="@string/balance"
 					android:textColor="@color/color_primary_text"/>
 				<TextView
-					android:id="@+id/view_monthly_resume_balance"
+					android:id="@+id/balance"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:textColor="@color/value_unpaid"

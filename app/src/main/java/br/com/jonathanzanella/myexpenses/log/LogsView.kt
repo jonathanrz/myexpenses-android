@@ -47,7 +47,7 @@ class LogsView@JvmOverloads constructor(
     }
 
     private fun refreshAdapter() {
-        adapter.loadData(initTime.currentTime, endTime.currentTime, getLogLevel(), filterText)
+        adapter.loadData(initTime.currentTime, endTime.currentTime, getLogLevel(), filterText!!)
         adapter.notifyDataSetChanged()
     }
 
