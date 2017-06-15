@@ -55,7 +55,7 @@ internal class ReceiptMonthlyResumeAdapter(private val receiptRepository: Receip
 
             object : AsyncTask<Void, Void, Source>() {
 
-                override fun doInBackground(vararg voids: Void): Source {
+                override fun doInBackground(vararg voids: Void): Source? {
                     return receipt.source
                 }
 
