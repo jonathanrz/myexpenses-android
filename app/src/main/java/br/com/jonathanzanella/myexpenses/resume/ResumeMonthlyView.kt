@@ -88,8 +88,11 @@ internal class ResumeMonthlyView(context: Context, private val month: DateTime) 
     @UiThread
     override fun refreshData() {
         super.refreshData()
-        accountAdapter!!.refreshData()
-        accountAdapter!!.notifyDataSetChanged()
+        val adapter = accountAdapter
+        adapter?.let {
+            adapter.refreshData()
+            adapter.notifyDataSetChanged()
+        }
 
         loadReceipts()
         loadExpenses()
