@@ -104,8 +104,8 @@ public class ShowAccountActivityTest {
 		String value = CurrencyHelper.format(expense.getAmount());
 
 		onView(withId(R.id.act_show_account_name)).check(matches(withText(account.getName())));
-		onView(withId(R.id.row_transaction_name)).check(matches(withText(billName)));
-		onView(withId(R.id.row_transaction_value)).check(matches(withText(value)));
+		onView(withId(R.id.name)).check(matches(withText(billName)));
+		onView(withId(R.id.value)).check(matches(withText(value)));
 	}
 
 	@Test
@@ -118,15 +118,15 @@ public class ShowAccountActivityTest {
 		int expectedBalance = ACCOUNT_BALANCE + RECEIPT_INCOME - EXPENSE_VALUE;
 		String expectedValue = CurrencyHelper.format(expectedBalance);
 		onView(allOf(
-				withId(R.id.view_month_transactions_balance),
-				isDescendantOfA(withId(R.id.view_account_transactions_this_month))))
+				withId(R.id.balance),
+				isDescendantOfA(withId(R.id.thisMonth))))
 				.check(matches(withText(expectedValue)));
 
 		expectedBalance = expectedBalance + RECEIPT_INCOME - EXPENSE_VALUE;
 		expectedValue = CurrencyHelper.format(expectedBalance);
 		onView(allOf(
-				withId(R.id.view_month_transactions_balance),
-				isDescendantOfA(withId(R.id.view_account_transactions_next_month))))
+				withId(R.id.balance),
+				isDescendantOfA(withId(R.id.nextMonth))))
 				.check(matches(withText(expectedValue)));
 	}
 

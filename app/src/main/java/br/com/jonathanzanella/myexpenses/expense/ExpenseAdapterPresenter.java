@@ -28,7 +28,7 @@ class ExpenseAdapterPresenter {
 		if(invalidateCache)
 			loadExpenses(date);
 		if(receiptsFiltered == null)
-			return null;
+			return new ArrayList<>();
 		return Collections.unmodifiableList(receiptsFiltered);
 	}
 

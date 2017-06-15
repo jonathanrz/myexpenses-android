@@ -71,7 +71,7 @@ public class ShowDetailScreenTest {
 
 		mainActivityTestRule.launchActivity(new Intent());
 
-		onView(allOf(withId(R.id.row_monthly_resume_receipt_name),
+		onView(allOf(withId(R.id.name),
 					isDescendantOfA(withTagValue(is((Object)receipt.getUuid())))))
 				.perform(scrollTo()).perform(click());
 
@@ -89,7 +89,7 @@ public class ShowDetailScreenTest {
 
 		mainActivityTestRule.launchActivity(new Intent());
 
-		onView(allOf(withId(R.id.row_monthly_resume_expense_name),
+		onView(allOf(withId(R.id.name),
 					isDescendantOfA(withTagValue(is((Object)expense.getUuid())))))
 				.perform(scrollTo()).perform(click());
 

@@ -19,10 +19,10 @@ import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
 import kotlinx.android.synthetic.main.row_expense.view.*
 import org.joda.time.DateTime
 
-internal class ExpenseAdapter : RecyclerView.Adapter<ExpenseAdapter.ViewHolder>() {
+internal open class ExpenseAdapter : RecyclerView.Adapter<ExpenseAdapter.ViewHolder>() {
     private val expenseRepository = ExpenseRepository(RepositoryImpl<Expense>(MyApplication.getContext()))
     private val presenter: ExpenseAdapterPresenter
-    private var expenses = ArrayList<Expense>()
+    private var expenses: List<Expense> = ArrayList()
     private var date: DateTime? = null
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
@@ -58,7 +58,7 @@ internal class ExpenseAdapter : RecyclerView.Adapter<ExpenseAdapter.ViewHolder>(
             itemView.chargeNextMonth.setVisibility(if (expense.isChargedNextMonth) View.VISIBLE else View.INVISIBLE)
             object : AsyncTask<Void, Void, Bill>() {
 
-                override fun doInBackground(vararg voids: Void): Bill {
+                override fun doInBackground(vararg voids: Void): Bill? {
                     return expense.bill
                 }
 
@@ -104,7 +104,7 @@ internal class ExpenseAdapter : RecyclerView.Adapter<ExpenseAdapter.ViewHolder>(
     @WorkerThread
     fun loadData(date: DateTime) {
         expenses = expenseRepository.monthly(date) as ArrayList<Expense>
-        expenses = presenter.getExpenses(true, date) as ArrayList<Expense>
+        expenses = presenter.getExpenses(true, date)
         this.date = date
     }
 
@@ -114,6 +114,6 @@ internal class ExpenseAdapter : RecyclerView.Adapter<ExpenseAdapter.ViewHolder>(
 
     fun filter(filter: String) {
         presenter.filter(filter)
-        expenses = presenter.getExpenses(false, date) as ArrayList<Expense>
+        expenses = presenter.getExpenses(false, date)
     }
 }

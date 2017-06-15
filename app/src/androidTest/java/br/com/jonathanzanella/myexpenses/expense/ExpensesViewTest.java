@@ -64,7 +64,7 @@ public class ExpensesViewTest {
 	}
 
 	@Test
-	public void filter_just_show_expense1() throws Exception {
+	public void filter_just_show_expense() throws Exception {
 		activityTestRule.launchActivity(new Intent());
 
 		openMenuAndClickItem(R.string.expenses);
@@ -81,7 +81,7 @@ public class ExpensesViewTest {
 
 	private ViewInteraction onViewExpenseName(Expense expense) {
 		return onView(allOf(
-				withId(R.id.row_expense_name),
+				withId(R.id.name),
 				allOf(
 					isDescendantOfA(withTagValue(is((Object)expense.getUuid())))),
 					withText(expense.getName())));
