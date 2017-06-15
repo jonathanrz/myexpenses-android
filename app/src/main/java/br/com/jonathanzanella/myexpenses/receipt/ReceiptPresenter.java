@@ -106,7 +106,7 @@ class ReceiptPresenter {
 				onSourceSelected(source.getUuid());
 			if (account != null)
 				onAccountSelected(account.getUuid());
-			if(date == null)
+			if(date == null && receipt != null)
 				date = receipt.getDate();
 
 		} else {
