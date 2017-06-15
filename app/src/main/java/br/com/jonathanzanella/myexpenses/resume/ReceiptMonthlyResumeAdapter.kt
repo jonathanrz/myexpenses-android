@@ -19,9 +19,10 @@ import kotlinx.android.synthetic.main.row_monthly_resume_receipt.view.*
 import org.joda.time.DateTime
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 internal class ReceiptMonthlyResumeAdapter(private val receiptRepository: ReceiptRepository) : RecyclerView.Adapter<ReceiptMonthlyResumeAdapter.ViewHolder>() {
-    private var receipts: List<Receipt>? = null
+    private var receipts: List<Receipt> = ArrayList()
     var totalValue: Int = 0
         private set
     private var totalUnreceivedValue: Int = 0
@@ -123,19 +124,19 @@ internal class ReceiptMonthlyResumeAdapter(private val receiptRepository: Receip
         else if (isTotalToPayView(position))
             holder.setTotal(totalUnreceivedValue)
         else
-            holder.setData(receipts!![position])
+            holder.setData(receipts[position])
     }
 
     private fun isTotalView(position: Int): Boolean {
-        return receipts != null && position == receipts!!.size + 1
+        return position == receipts.size + 1
     }
 
     private fun isTotalToPayView(position: Int): Boolean {
-        return receipts != null && position == receipts!!.size
+        return position == receipts.size
     }
 
     override fun getItemCount(): Int {
-        return if (receipts != null) receipts!!.size + 2 else 0
+        return receipts.size + 2
     }
 
     fun loadDataAsync(month: DateTime, runnable: Runnable?) {
@@ -156,13 +157,13 @@ internal class ReceiptMonthlyResumeAdapter(private val receiptRepository: Receip
     }
 
     private fun getReceipt(position: Int): Receipt? {
-        return receipts!![position]
+        return receipts[position]
     }
 
     private fun updateTotalValue() {
         totalValue = 0
         totalUnreceivedValue = 0
-        for (receipt in receipts!!) {
+        for (receipt in receipts) {
             totalValue += receipt.income
             if (!receipt.isCredited)
                 totalUnreceivedValue += receipt.income

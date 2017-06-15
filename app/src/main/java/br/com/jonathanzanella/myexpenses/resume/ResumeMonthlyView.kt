@@ -128,8 +128,11 @@ internal class ResumeMonthlyView(context: Context, private val month: DateTime) 
 
             override fun onPostExecute(expensesList: List<Expense>) {
                 super.onPostExecute(expensesList)
-                expensesAdapter!!.setExpenses(expensesList)
-                expensesAdapter!!.notifyDataSetChanged()
+                val adapter = expensesAdapter
+                adapter?.let {
+                    adapter.setExpenses(expensesList)
+                    adapter.notifyDataSetChanged()
+                }
                 expenses!!.layoutParams.height = singleRowHeight * expensesAdapter!!.itemCount
 
                 updateTotalExpenses()
@@ -141,17 +144,18 @@ internal class ResumeMonthlyView(context: Context, private val month: DateTime) 
     private fun updateTotalExpenses() {
         var totalExpensesValue = expensesAdapter!!.totalValue
         totalExpensesValue += billsAdapter!!.totalValue
-        totalExpenses!!.text = CurrencyHelper.format(totalExpensesValue)
+        totalExpenses.text = CurrencyHelper.format(totalExpensesValue)
 
         updateBalance()
     }
 
     @UiThread
     private fun loadReceipts() {
-        receiptAdapter!!.loadDataAsync(month, Runnable {
-            receipts!!.layoutParams.height = singleRowHeight * receiptAdapter!!.itemCount
+        val adapter = receiptAdapter!!
+        adapter.loadDataAsync(month, Runnable {
+            receipts.layoutParams.height = singleRowHeight * adapter.itemCount
             val totalReceiptsValue = receiptAdapter!!.totalValue
-            totalReceipts!!.text = CurrencyHelper.format(totalReceiptsValue)
+            totalReceipts.text = CurrencyHelper.format(totalReceiptsValue)
 
             updateBalance()
         })

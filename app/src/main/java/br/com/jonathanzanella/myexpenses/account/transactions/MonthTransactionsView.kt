@@ -1,6 +1,7 @@
 package br.com.jonathanzanella.myexpenses.account.transactions
 
 import android.content.Context
+import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.util.AttributeSet
 import android.view.View
@@ -30,26 +31,24 @@ class MonthTransactionsView@JvmOverloads constructor(
         View.inflate(context, R.layout.view_account_month_transactions, this)
         presenter = MonthTransactionsPresenter(context, this)
 
-        list!!.adapter = presenter!!.adapter
-        list!!.setHasFixedSize(true)
-        list!!.layoutManager = LinearLayoutManager(context)
-        list!!.isNestedScrollingEnabled = false
+        list.adapter = presenter!!.adapter
+        list.setHasFixedSize(true)
+        list.layoutManager = LinearLayoutManager(context)
+        list.isNestedScrollingEnabled = false
     }
 
     internal fun showBalance(account: Account, month: DateTime, balance: Int) {
-        header!!.text = monthTransactionsTemplate + " " + simpleDateFormat.format(month.toDate())
+        header.text = monthTransactionsTemplate + " " + simpleDateFormat.format(month.toDate())
         presenter!!.showBalance(account, month, balance)
     }
 
     override fun onBalanceUpdated(balance: Int) {
-        this.balance!!.text = CurrencyHelper.format(balance)
+        this.balance.text = CurrencyHelper.format(balance)
+        this.balance.setTextColor(ResourcesCompat.getColor(resources, (if (balance >= 0) R.color.value_unreceived else R.color.value_unpaid), null))
 
-        this.balance!!.setTextColor(resources.getColor(if (balance >= 0) R.color.value_unreceived else R.color.value_unpaid))
+        loadTransactionsCallback?.onTransactionsLoaded(balance)
 
-        if (loadTransactionsCallback != null)
-            loadTransactionsCallback!!.onTransactionsLoaded(balance)
-
-        list!!.minimumHeight = list!!.adapter.itemCount * singleRowHeight
+        list.minimumHeight = list.adapter.itemCount * singleRowHeight
     }
 
     fun setLoadTransactionsCallback(loadTransactionsCallback: LoadTransactionsCallback) {

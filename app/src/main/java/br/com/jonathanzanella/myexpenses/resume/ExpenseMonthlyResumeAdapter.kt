@@ -18,9 +18,10 @@ import br.com.jonathanzanella.myexpenses.helpers.TransactionsHelper
 import kotlinx.android.synthetic.main.row_monthly_resume_expense.view.*
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 internal class ExpenseMonthlyResumeAdapter : RecyclerView.Adapter<ExpenseMonthlyResumeAdapter.ViewHolder>() {
-    private var expenses: List<Expense>? = null
+    private var expenses: List<Expense> = ArrayList()
     var totalValue: Int = 0
         private set
     private var totalUnpaidValue: Int = 0
@@ -128,19 +129,19 @@ internal class ExpenseMonthlyResumeAdapter : RecyclerView.Adapter<ExpenseMonthly
         else if (isTotalToPayView(position))
             holder.setTotal(totalUnpaidValue)
         else
-            holder.setData(expenses!![position])
+            holder.setData(expenses[position])
     }
 
     private fun isTotalView(position: Int): Boolean {
-        return expenses != null && position == expenses!!.size + 1
+        return position == expenses.size + 1
     }
 
     private fun isTotalToPayView(position: Int): Boolean {
-        return expenses != null && position == expenses!!.size
+        return position == expenses.size
     }
 
     override fun getItemCount(): Int {
-        return if (expenses != null) expenses!!.size + 2 else 0
+        return expenses.size + 2
     }
 
     fun setExpenses(expenses: List<Expense>) {
@@ -152,7 +153,7 @@ internal class ExpenseMonthlyResumeAdapter : RecyclerView.Adapter<ExpenseMonthly
         totalValue = 0
         totalUnpaidValue = 0
 
-        for (expense in expenses!!) {
+        for (expense in expenses) {
             totalValue += expense.value
             if (!expense.isCharged)
                 totalUnpaidValue += expense.value
@@ -160,7 +161,7 @@ internal class ExpenseMonthlyResumeAdapter : RecyclerView.Adapter<ExpenseMonthly
     }
 
     private fun getExpense(position: Int): Expense? {
-        return expenses!![position]
+        return expenses[position]
     }
 
     companion object {

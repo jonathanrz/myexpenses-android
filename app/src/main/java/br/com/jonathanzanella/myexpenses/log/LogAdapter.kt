@@ -34,7 +34,7 @@ internal class LogAdapter(private val logRepository: LogRepository) : RecyclerVi
     }
 
     override fun getItemCount(): Int {
-        return if (filteredLogs != null) filteredLogs!!.size else 0
+        return filteredLogs?.size ?: 0
     }
 
     fun loadData(initDate: DateTime, endDate: DateTime, logLevel: Log.LogLevel, filter: String) {

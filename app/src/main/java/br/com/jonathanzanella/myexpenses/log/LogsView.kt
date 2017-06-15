@@ -14,10 +14,11 @@ import org.joda.time.DateTime
 class LogsView@JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : BaseView(context, attrs, defStyleAttr), DateTimeView.Listener {
-    private var adapter = LogAdapter(LogRepository(RepositoryImpl<Log>(context)))
+    private val adapter = LogAdapter(LogRepository(RepositoryImpl<Log>(context)))
     private var filterText: String? = null
 
-    override fun init() {
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
         View.inflate(context, R.layout.view_logs, this)
 
         logs.adapter = adapter
@@ -36,6 +37,9 @@ class LogsView@JvmOverloads constructor(
         logLevelDebug.setOnClickListener { onLogLevel() }
 
         refreshAdapter()
+    }
+
+    override fun init() {
     }
 
     override fun onDateTimeChanged(currentTime: DateTime) {

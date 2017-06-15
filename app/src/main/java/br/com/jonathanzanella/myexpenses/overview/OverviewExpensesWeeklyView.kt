@@ -18,12 +18,17 @@ internal class OverviewExpensesWeeklyView(context: Context, private val period: 
     private val expenseRepository: ExpenseRepository = ExpenseRepository(RepositoryImpl<Expense>(context))
     private var adapter = ExpenseWeeklyOverviewAdapter()
 
-    override fun init() {
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+
         View.inflate(context, R.layout.view_overview_expenses_weekly, this)
 
         list.adapter = adapter
         list.setHasFixedSize(true)
         list.layoutManager = GridLayoutManager(context, 1)
+    }
+
+    override fun init() {
     }
 
     override fun refreshData() {

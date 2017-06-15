@@ -38,24 +38,26 @@ class DateTimeView@JvmOverloads constructor(
     }
 
     private fun onDateChanged() {
-        date.setText(dateFormat.format(currentTime!!.toDate()))
-        hour.setText(hourFormat.format(currentTime!!.toDate()))
-        if (listener != null)
-            listener!!.onDateTimeChanged(currentTime!!)
+        val time = currentTime!!
+        date.setText(dateFormat.format(time.toDate()))
+        hour.setText(hourFormat.format(time.toDate()))
+        listener?.onDateTimeChanged(time)
     }
 
     internal fun onDate() {
-        DatePickerDialog(context, DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-            currentTime = currentTime!!.withYear(year).withMonthOfYear(monthOfYear + 1).withDayOfMonth(dayOfMonth)
+        val time = currentTime!!
+        DatePickerDialog(context, DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
+            currentTime = currentTime?.withYear(year)?.withMonthOfYear(monthOfYear + 1)?.withDayOfMonth(dayOfMonth)
             onDateChanged()
-        }, currentTime!!.year, currentTime!!.monthOfYear - 1, currentTime!!.dayOfMonth).show()
+        }, time.year, time.monthOfYear - 1, time.dayOfMonth).show()
     }
 
     internal fun onHour() {
-        TimePickerDialog(context, TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
-            currentTime = currentTime!!.withHourOfDay(hourOfDay).withMinuteOfHour(minute)
+        val time = currentTime!!
+        TimePickerDialog(context, TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
+            currentTime = currentTime?.withHourOfDay(hourOfDay)?.withMinuteOfHour(minute)
             onDateChanged()
-        }, currentTime!!.hourOfDay, currentTime!!.minuteOfHour, true).show()
+        }, time.hourOfDay, time.minuteOfHour, true).show()
     }
 
     fun setListener(listener: Listener) {

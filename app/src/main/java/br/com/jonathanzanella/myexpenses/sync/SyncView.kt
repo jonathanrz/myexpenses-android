@@ -11,12 +11,17 @@ import org.apache.commons.lang3.StringUtils
 class SyncView(context: Context) : BaseView(context) {
     private var serverData = ServerData(context)
 
-    override fun init() {
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
         View.inflate(context, R.layout.view_sync, this)
 
         serverUrlView.setText(serverData.serverUrl)
         serverTokenView.setText(serverData.serverToken)
         syncBtn.setOnClickListener { sync() }
+
+    }
+
+    override fun init() {
     }
 
     internal fun sync() {
