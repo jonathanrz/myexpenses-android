@@ -160,7 +160,7 @@ public class CalculateMonthBalanceCorrectlyTest {
 
 	private void validateExpectedBalance(String expectedBalance) {
 		onView(allOf(
-				withId(R.id.view_monthly_resume_balance),
+				withId(R.id.balance),
 				isDescendantOfA(allOf(
 						withId(R.id.view_monthly_resume),
 						isDisplayed()))))

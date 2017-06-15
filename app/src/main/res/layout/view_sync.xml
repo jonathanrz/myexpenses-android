@@ -11,7 +11,7 @@
 		android:layout_marginBottom="@dimen/default_spacing">
 
 		<android.support.v7.widget.AppCompatEditText
-			android:id="@+id/view_sync_server_url"
+			android:id="@+id/serverUrlView"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:hint="@string/server_url"/>
@@ -24,7 +24,7 @@
 		android:layout_marginBottom="@dimen/default_spacing">
 
 		<android.support.v7.widget.AppCompatEditText
-			android:id="@+id/view_sync_server_token"
+			android:id="@+id/serverTokenView"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:inputType="textPassword"
@@ -33,7 +33,7 @@
 	</android.support.design.widget.TextInputLayout>
 
 	<Button
-		android:id="@+id/view_sync_sync_btn"
+		android:id="@+id/syncBtn"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_gravity="center_horizontal"

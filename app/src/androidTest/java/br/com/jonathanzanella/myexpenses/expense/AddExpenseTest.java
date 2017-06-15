@@ -100,9 +100,9 @@ public class AddExpenseTest {
 
 		matchToolbarTitle(expensesTitle);
 
-		onView(withId(R.id.row_expense_name)).check(matches(withText(expenseName)));
-		onView(withId(R.id.row_expense_bill_layout)).check(matches(not(isDisplayed())));
-		onView(withId(R.id.row_expense_date)).check(matches(withText(Expense.SIMPLE_DATE_FORMAT.format(time.toDate()))));
+		onView(withId(R.id.name)).check(matches(withText(expenseName)));
+		onView(withId(R.id.billLayout)).check(matches(not(isDisplayed())));
+		onView(withId(R.id.date)).check(matches(withText(Expense.SIMPLE_DATE_FORMAT.format(time.toDate()))));
 	}
 
 	@Test
@@ -169,9 +169,9 @@ public class AddExpenseTest {
 
 		matchToolbarTitle(expensesTitle);
 
-		onView(withId(R.id.row_expense_name)).check(matches(withText(bill.getName())));
-		onView(withId(R.id.row_expense_bill_layout)).check(matches(isDisplayed()));
-		onView(withId(R.id.row_expense_bill)).check(matches(withText(bill.getName())));
+		onView(withId(R.id.name)).check(matches(withText(bill.getName())));
+		onView(withId(R.id.billLayout)).check(matches(isDisplayed()));
+		onView(withId(R.id.bill)).check(matches(withText(bill.getName())));
 	}
 
 	@Test
@@ -199,9 +199,9 @@ public class AddExpenseTest {
 
 		matchToolbarTitle(expensesTitle);
 
-		onView(withId(R.id.row_expense_name)).check(matches(withText(expenseName)));
+		onView(withId(R.id.name)).check(matches(withText(expenseName)));
 		String expectedValue = CurrencyHelper.format(value * -1);
-		onView(withId(R.id.row_expense_value)).check(matches(withText(expectedValue)));
+		onView(withId(R.id.value)).check(matches(withText(expectedValue)));
 	}
 
 	private void selectChargeable() {

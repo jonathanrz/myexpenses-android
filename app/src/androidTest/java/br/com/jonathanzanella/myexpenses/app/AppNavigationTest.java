@@ -46,9 +46,9 @@ public class AppNavigationTest {
 	public void clickOnAndroidHomeIcon_OpensNavigation() {
 		activityTestRule.launchActivity(new Intent());
 
-		onView(ViewMatchers.withId(R.id.act_main_drawer)).check(matches(isClosed(Gravity.START)));
+		onView(ViewMatchers.withId(R.id.drawer)).check(matches(isClosed(Gravity.START)));
 		UIHelper.openMenu();
 
-		onView(withId(R.id.act_main_drawer)).check(matches(isOpen(Gravity.START)));
+		onView(withId(R.id.drawer)).check(matches(isOpen(Gravity.START)));
 	}
 }

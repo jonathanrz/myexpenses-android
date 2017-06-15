@@ -7,65 +7,65 @@
 
     <TextView
 	    style="@style/RowPrincipalInformation"
-        android:id="@+id/row_expense_name"
+        android:id="@+id/name"
 	    android:layout_marginEnd="@dimen/min_spacing"
-	    android:layout_toStartOf="@+id/row_expense_value"
+	    android:layout_toStartOf="@+id/value"
 	    android:layout_alignParentStart="true"/>
 
     <TextView
 	    style="@style/RowDetailInformation"
-        android:id="@+id/row_expense_date"
-        android:layout_below="@id/row_expense_name"/>
+        android:id="@+id/date"
+        android:layout_below="@id/name"/>
 
     <TextView
 	    style="@style/RowSecondaryInformation"
-        android:id="@id/row_expense_value"
+        android:id="@id/value"
         android:layout_alignParentEnd="true"/>
 
 	<LinearLayout
-		android:id="@+id/row_expense_chargeable_layout"
+		android:id="@+id/chargeableLayout"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_below="@id/row_expense_date"
+		android:layout_below="@id/date"
 		android:orientation="horizontal"
 		android:layout_marginTop="@dimen/min_spacing">
 
         <TextView
 	        style="@style/RowStaticInformation"
-            android:id="@+id/row_expense_chargeable_stt"
+            android:id="@+id/chargeableStt"
             android:text="@string/paid_with"
             android:layout_marginEnd="@dimen/min_spacing"/>
 
         <TextView
 	        style="@style/RowSecondaryInformation"
-            android:id="@+id/row_expense_chargeable"/>
+            android:id="@+id/chargeable"/>
 
 	</LinearLayout>
 
 	<LinearLayout
-		android:id="@+id/row_expense_bill_layout"
+		android:id="@+id/billLayout"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_below="@id/row_expense_chargeable_layout"
+		android:layout_below="@id/chargeableLayout"
 		android:orientation="horizontal">
 
 		<TextView
 			style="@style/RowStaticInformation"
-			android:id="@+id/row_expense_bill_stt"
+			android:id="@+id/billStt"
 			android:text="@string/bill"
 			android:layout_marginEnd="@dimen/min_spacing"/>
 
 		<TextView
 			style="@style/RowSecondaryInformation"
-			android:id="@+id/row_expense_bill"/>
+			android:id="@+id/bill"/>
 
 	</LinearLayout>
 
 	<TextView
 		style="@style/RowDetailInformation"
-		android:id="@+id/row_expense_charge_next_month"
+		android:id="@+id/chargeNextMonth"
         android:text="@string/pay_next_month"
-        android:layout_below="@id/row_expense_bill_layout"
+        android:layout_below="@id/billLayout"
         android:layout_alignParentEnd="true"
         android:visibility="invisible"/>
 

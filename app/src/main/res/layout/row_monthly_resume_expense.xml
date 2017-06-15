@@ -4,26 +4,26 @@
               style="@style/ResumeRowCell">
 
 	<TextView
-		android:id="@+id/row_monthly_resume_expense_date"
+		android:id="@+id/date"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_marginEnd="@dimen/min_spacing"/>
 
 	<TextView
-		android:id="@+id/row_monthly_resume_expense_source"
+		android:id="@+id/source"
 		android:layout_width="@dimen/resume_source_width"
 		android:layout_height="wrap_content"
 		android:layout_marginEnd="@dimen/min_spacing"/>
 
 	<TextView
-		android:id="@+id/row_monthly_resume_expense_name"
+		android:id="@+id/name"
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 		android:layout_weight="1"
 		android:layout_marginEnd="@dimen/min_spacing"/>
 
 	<TextView
-		android:id="@+id/row_monthly_resume_expense_income"
+		android:id="@+id/income"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:textColor="@color/expense"/>

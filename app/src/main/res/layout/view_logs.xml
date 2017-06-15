@@ -21,7 +21,7 @@
 				android:layout_marginEnd="@dimen/min_spacing"/>
 
 			<br.com.jonathanzanella.myexpenses.views.DateTimeView
-				android:id="@+id/view_log_init_time"
+				android:id="@+id/initTime"
 				android:layout_height="wrap_content"
 				android:layout_width="wrap_content"/>
 
@@ -37,7 +37,7 @@
 				android:layout_marginEnd="@dimen/min_spacing"/>
 
 			<br.com.jonathanzanella.myexpenses.views.DateTimeView
-				android:id="@+id/view_log_end_time"
+				android:id="@+id/endTime"
 				android:layout_height="wrap_content"
 				android:layout_width="wrap_content"/>
 
@@ -53,31 +53,31 @@
 				android:layout_marginEnd="@dimen/min_spacing"/>
 
 			<RadioGroup
-				android:id="@+id/view_logs_log_level"
+				android:id="@+id/logLevel"
 				android:orientation="horizontal"
 	            tools:ignore="SmallSp">
 
 				<RadioButton
-					android:id="@+id/view_logs_log_level_error"
+					android:id="@+id/logLevelError"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="@string/error"
 					android:textSize="10sp"/>
 				<RadioButton
-					android:id="@+id/view_logs_log_level_warning"
+					android:id="@+id/logLevelWarning"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="@string/warning"
 					android:textSize="10sp"/>
 				<RadioButton
-					android:id="@+id/view_logs_log_level_info"
+					android:id="@+id/logLevelInfo"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="@string/info"
 					android:checked="true"
 					android:textSize="10sp"/>
 				<RadioButton
-					android:id="@+id/view_logs_log_level_debug"
+					android:id="@+id/logLevelDebug"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="@string/debug"
@@ -89,7 +89,7 @@
 	</TableLayout>
 
 	<android.support.v7.widget.RecyclerView
-		android:id="@+id/view_logs_list"
+		android:id="@+id/logs"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"/>
 

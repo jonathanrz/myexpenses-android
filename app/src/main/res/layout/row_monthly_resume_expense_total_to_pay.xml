@@ -23,7 +23,7 @@
 			android:layout_marginEnd="@dimen/min_spacing"/>
 
 		<TextView
-			android:id="@+id/row_monthly_resume_expense_income"
+			android:id="@+id/income"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:textColor="@color/value_unpaid"

@@ -75,7 +75,6 @@ public final class UIHelper {
 	public static void clearAndTypeTextIntoView(@IdRes int view, String text) {
 		try {
 			onView(withId(view))
-					.perform(scrollTo())
 					.perform(clearText())
 					.perform(typeText(text))
 					.perform(closeSoftKeyboard());
