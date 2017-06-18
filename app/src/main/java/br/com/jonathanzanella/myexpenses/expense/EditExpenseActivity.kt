@@ -289,14 +289,14 @@ private class EditExpenseActivityUi : AnkoComponent<EditExpenseActivity> {
                         value = appCompatEditText {
                             id = R.id.act_edit_expense_value
                             hint = resources.getString(R.string.value)
-                            inputType = InputType.TYPE_NUMBER_FLAG_DECIMAL
+                            inputType = InputType.TYPE_CLASS_NUMBER
                         }
                     }
                     textInputLayout {
                         valueToShowInOverview = appCompatEditText {
                             id = R.id.act_edit_expense_value_to_show_in_overview
                             hint = resources.getString(R.string.income_to_show_in_overview)
-                            inputType = InputType.TYPE_NUMBER_FLAG_DECIMAL
+                            inputType = InputType.TYPE_CLASS_NUMBER
                         }
                     }
                     repayment = checkBox {
@@ -344,7 +344,7 @@ private class EditExpenseActivityUi : AnkoComponent<EditExpenseActivity> {
                         repetition = appCompatEditText {
                             id = R.id.act_edit_expense_repetition
                             hint = resources.getString(R.string.repetition)
-                            inputType = InputType.TYPE_NUMBER_FLAG_DECIMAL
+                            inputType = InputType.TYPE_CLASS_NUMBER
                             setText(R.string._1)
                         }
                     }
@@ -352,7 +352,7 @@ private class EditExpenseActivityUi : AnkoComponent<EditExpenseActivity> {
                         installment = appCompatEditText {
                             id = R.id.act_edit_expense_installment
                             hint = resources.getString(R.string.installments)
-                            inputType = InputType.TYPE_NUMBER_FLAG_DECIMAL
+                            inputType = InputType.TYPE_CLASS_NUMBER
                             setText(R.string._1)
                         }
                     }
