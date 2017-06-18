@@ -108,7 +108,7 @@ class ViewUI: AnkoComponent<ViewGroup> {
                 id = R.id.row_bill_name
             }.lparams {
                 alignParentStart()
-                alignStart(R.id.row_bill_amount)
+                leftOf(R.id.row_bill_amount)
             }
 
             billAmount = rowSecondaryInformation {
@@ -119,7 +119,7 @@ class ViewUI: AnkoComponent<ViewGroup> {
 
             rowStaticInformation {
                 id = R.id.row_bill_balance_due_date_stt
-                text = resources.getString(R.string.due_date)
+                text = resources.getString(R.string.due_date_abbrev)
             }.lparams {
                 marginEnd = dip(5)
                 baselineOf(R.id.row_bill_due_date)
