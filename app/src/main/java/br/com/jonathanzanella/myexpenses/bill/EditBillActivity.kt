@@ -59,7 +59,7 @@ class EditBillActivity : AppCompatActivity(), BillContract.EditView {
                     return null
                 }
 
-                override fun onPostExecute(aVoid: Void) {
+                override fun onPostExecute(aVoid: Void?) {
                     super.onPostExecute(aVoid)
                     presenter.onViewUpdated(false)
                 }
