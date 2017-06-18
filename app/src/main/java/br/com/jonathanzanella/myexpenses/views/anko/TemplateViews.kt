@@ -43,6 +43,7 @@ class RowDetailInformation(context: Context) : TextView(context)
 class RowStaticInformation(context: Context) : TextView(context)
 class ClickableView(context: Context) : AppCompatEditText(context)
 class ResumeRowCell(context: Context) : LinearLayout(context)
+class SingleRowCell(context: Context) : LinearLayout(context)
 
 inline fun ViewManager.toolbarTemplate(theme: Int = R.style.ThemeOverlay_AppCompat_Dark, init: TemplateToolbar.() -> Unit) = ankoView(::TemplateToolbar, theme, init)
 inline fun ViewManager.tableViewFrame(theme: Int = 0, init: TableViewFrame.() -> Unit) = ankoView(::TableViewFrame, theme, init)
@@ -57,6 +58,7 @@ inline fun ViewManager.rowDetailInformation(theme: Int = 0, init: RowDetailInfor
 inline fun ViewManager.rowStaticInformation(theme: Int = 0, init: RowStaticInformation.() -> Unit) = ankoView(::RowStaticInformation, theme, init)
 inline fun ViewManager.clickableView(theme: Int = 0, init: ClickableView.() -> Unit) = ankoView(::ClickableView, theme, init)
 inline fun ViewManager.resumeRowCell(theme: Int = 0, init: ResumeRowCell.() -> Unit) = ankoView(::ResumeRowCell, theme, init)
+inline fun ViewManager.singleRowCell(theme: Int = 0, init: SingleRowCell.() -> Unit) = ankoView(::SingleRowCell, theme, init)
 inline fun ViewManager.recyclerView(theme: Int = 0, init: RecyclerView.() -> Unit) = ankoView(::RecyclerView, theme, init)
 
 inline fun ViewManager.transactionsView(theme: Int = 0, init: TransactionsView.() -> Unit) = ankoView(::TransactionsView, theme, init)
@@ -132,6 +134,10 @@ fun applyTemplateViewStyles(view: View) {
         }
         is ResumeRowCell -> {
             view.layoutParams.height = view.dip(38)
+            view.layoutParams.width = matchParent
+        }
+        is SingleRowCell -> {
+            view.layoutParams.height = view.resources.getDimensionPixelSize(R.dimen.single_row_height)
             view.layoutParams.width = matchParent
         }
         is RecyclerView -> {
