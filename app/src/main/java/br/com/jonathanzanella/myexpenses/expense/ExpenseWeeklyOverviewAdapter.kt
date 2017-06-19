@@ -12,7 +12,7 @@ import br.com.jonathanzanella.myexpenses.card.CreditCardInvoiceActivity
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
 import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
-import br.com.jonathanzanella.myexpenses.views.anko.resumeRowCell
+import br.com.jonathanzanella.myexpenses.views.anko.singleRowCell
 import org.jetbrains.anko.*
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -101,7 +101,7 @@ internal class ExpenseWeeklyOverviewUI : AnkoComponent<ViewGroup> {
 
     override fun createView(ui: AnkoContext<ViewGroup>) = with(ui) {
         verticalLayout {
-            resumeRowCell {
+            singleRowCell {
                 date = textView { id = R.id.row_weekly_overview_expense_date }
                         .lparams { marginEnd = resources.getDimensionPixelSize(R.dimen.min_spacing) }
                 source = textView { id = R.id.row_weekly_overview_expense_source }

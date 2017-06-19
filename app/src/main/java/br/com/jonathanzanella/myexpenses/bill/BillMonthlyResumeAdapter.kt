@@ -4,6 +4,7 @@ import android.graphics.Typeface
 import android.support.annotation.WorkerThread
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.RecyclerView
+import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -15,6 +16,7 @@ import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
 import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
 import br.com.jonathanzanella.myexpenses.views.anko.resumeRowCell
+import br.com.jonathanzanella.myexpenses.views.anko.singleRowCell
 import org.jetbrains.anko.*
 import org.joda.time.DateTime
 
@@ -76,7 +78,7 @@ class BillMonthlyResumeAdapter : RecyclerView.Adapter<BillMonthlyResumeAdapter.V
     }
 
     @WorkerThread
-    fun loadDataAsync(month: DateTime) {
+    fun loadData(month: DateTime) {
         bills = billRepository.monthly(month)
         totalValue = bills.sumBy { it.amount }
     }
@@ -89,7 +91,7 @@ class NormalViewUI: AnkoComponent<ViewGroup> {
 
     override fun createView(ui: AnkoContext<ViewGroup>) = with(ui) {
         linearLayout {
-            resumeRowCell {
+            singleRowCell {
                 day = textView {
                     id = R.id.row_monthly_resume_bill_day
                 }.lparams {
@@ -106,6 +108,8 @@ class NormalViewUI: AnkoComponent<ViewGroup> {
                     id = R.id.row_monthly_resume_bill_amount
                     textColor = ResourcesCompat.getColor(resources, R.color.value_unpaid, null)
                 }
+
+                gravity = Gravity.CENTER_VERTICAL
             }
         }.applyRecursively(::applyTemplateViewStyles)
     }

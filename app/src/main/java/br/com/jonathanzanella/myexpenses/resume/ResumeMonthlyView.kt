@@ -104,7 +104,7 @@ internal class ResumeMonthlyView(context: Context, private val month: DateTime) 
         object : AsyncTask<Void, Void, Void>() {
 
             override fun doInBackground(vararg voids: Void): Void? {
-                billsAdapter!!.loadDataAsync(month)
+                billsAdapter!!.loadData(month)
                 return null
             }
 
