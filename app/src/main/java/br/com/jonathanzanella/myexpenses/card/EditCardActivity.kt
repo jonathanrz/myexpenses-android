@@ -110,7 +110,7 @@ class EditCardActivity : AppCompatActivity(), CardContract.EditView {
         presenter.showSelectAccountActivity(this)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         presenter.attachView(this)
         presenter.onActivityResult(requestCode, resultCode, data)

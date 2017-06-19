@@ -111,7 +111,7 @@ class ShowCardActivity : AppCompatActivity(), CardContract.View {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == EDIT_CARD && resultCode == Activity.RESULT_OK)
             presenter.reloadCard()
