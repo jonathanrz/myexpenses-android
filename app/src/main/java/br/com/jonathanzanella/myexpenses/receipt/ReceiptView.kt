@@ -71,7 +71,7 @@ class ReceiptView : BaseView, ViewPager.OnPageChangeListener {
 
         when (requestCode) {
             REQUEST_ADD_RECEIPT -> if (resultCode == Activity.RESULT_OK)
-                loadExpense(data.getStringExtra(EditReceiptActivity.KEY_RECEIPT_UUID))
+                loadExpense(data!!.getStringExtra(EditReceiptActivity.KEY_RECEIPT_UUID))
         }
     }
 

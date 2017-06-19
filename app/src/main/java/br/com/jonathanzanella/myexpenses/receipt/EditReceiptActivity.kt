@@ -90,14 +90,14 @@ class EditReceiptActivity : AppCompatActivity(), ReceiptContract.EditView {
         when (requestCode) {
             REQUEST_SELECT_SOURCE -> {
                 if (resultCode == Activity.RESULT_OK) {
-                    val sourceUUid = data.getStringExtra(ListSourceActivity.KEY_SOURCE_SELECTED_UUID)
+                    val sourceUUid = data!!.getStringExtra(ListSourceActivity.KEY_SOURCE_SELECTED_UUID)
                     if (sourceUUid != null)
                         presenter.onSourceSelected(sourceUUid)
                 }
             }
             REQUEST_SELECT_ACCOUNT -> {
                 if (resultCode == Activity.RESULT_OK) {
-                    val accountUuid = data.getStringExtra(ListAccountActivity.KEY_ACCOUNT_SELECTED_UUID)
+                    val accountUuid = data!!.getStringExtra(ListAccountActivity.KEY_ACCOUNT_SELECTED_UUID)
                     if (accountUuid != null)
                         presenter.onAccountSelected(accountUuid)
                 }
