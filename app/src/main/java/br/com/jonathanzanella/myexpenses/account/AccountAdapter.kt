@@ -122,7 +122,10 @@ private class SimplifiedViewUI(val format: AccountAdapter.Format): AnkoComponent
             resumeRowCell {
                 when(format) {
                     LIST -> padding = resources.getDimensionPixelSize(R.dimen.row_spacing)
-                    else -> padding = 0
+                    else -> {
+                        leftPadding = resources.getDimensionPixelSize(R.dimen.min_spacing)
+                        rightPadding = resources.getDimensionPixelSize(R.dimen.min_spacing)
+                    }
                 }
                 accountName = textView {
                     id = R.id.row_account_name

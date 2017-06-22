@@ -49,6 +49,11 @@ internal class ResumeMonthlyView(context: Context, private val month: DateTime) 
         initBills()
     }
 
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        refreshData()
+    }
+
     private fun initAccount() {
         accountAdapter = AccountAdapter()
         accountAdapter!!.setFormat(AccountAdapter.Format.RESUME)
@@ -56,6 +61,7 @@ internal class ResumeMonthlyView(context: Context, private val month: DateTime) 
         accounts.adapter = accountAdapter
         accounts.setHasFixedSize(true)
         accounts.layoutManager = GridLayoutManager(context, 1)
+        receipts.isNestedScrollingEnabled = false
     }
 
     private fun initReceipts() {
