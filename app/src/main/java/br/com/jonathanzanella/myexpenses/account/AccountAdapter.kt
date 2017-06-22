@@ -10,13 +10,12 @@ import android.view.ViewGroup
 import android.widget.TextView
 import br.com.jonathanzanella.myexpenses.MyApplication
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.account.AccountAdapter.Format.LIST
 import br.com.jonathanzanella.myexpenses.account.AccountAdapter.Format.NORMAL
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
 import br.com.jonathanzanella.myexpenses.helpers.AdapterColorHelper
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
+import br.com.jonathanzanella.myexpenses.log.Log
 import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
-import br.com.jonathanzanella.myexpenses.views.anko.resumeRowCell
 import org.jetbrains.anko.*
 import org.joda.time.DateTime
 
@@ -118,15 +117,24 @@ private class SimplifiedViewUI(val format: AccountAdapter.Format): AnkoComponent
     lateinit var accountBalance : TextView
 
     override fun createView(ui: AnkoContext<ViewGroup>) = with(ui) {
+        var height = wrapContent
+        when(format) {
+            AccountAdapter.Format.RESUME -> height = resources.getDimensionPixelSize(R.dimen.single_row_height)
+            AccountAdapter.Format.LIST -> height = resources.getDimensionPixelSize(R.dimen.resume_row_height)
+            else -> Log.error(javaClass.name, "unmapped format: $format")
+        }
+
         verticalLayout {
-            resumeRowCell {
+            linearLayout {
                 when(format) {
-                    LIST -> padding = resources.getDimensionPixelSize(R.dimen.row_spacing)
-                    else -> {
+                    AccountAdapter.Format.RESUME -> {
                         leftPadding = resources.getDimensionPixelSize(R.dimen.min_spacing)
                         rightPadding = resources.getDimensionPixelSize(R.dimen.min_spacing)
                     }
+                    AccountAdapter.Format.LIST -> padding = resources.getDimensionPixelSize(R.dimen.row_spacing)
+                    else -> Log.error(javaClass.name, "unmapped format: $format")
                 }
+
                 accountName = textView {
                     id = R.id.row_account_name
                     ellipsize = TextUtils.TruncateAt.END
@@ -137,7 +145,7 @@ private class SimplifiedViewUI(val format: AccountAdapter.Format): AnkoComponent
                     id = R.id.row_account_balance
                     textColor = ResourcesCompat.getColor(resources, R.color.color_primary, null)
                 }
-            }
+            }.lparams(height = height, width = matchParent)
         }.applyRecursively(::applyTemplateViewStyles)
     }
 }

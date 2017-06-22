@@ -133,7 +133,7 @@ fun applyTemplateViewStyles(view: View) {
             view.isClickable = true
         }
         is ResumeRowCell -> {
-            view.layoutParams.height = view.dip(38)
+            view.layoutParams.height = view.resources.getDimensionPixelSize(R.dimen.resume_row_height)
             view.layoutParams.width = matchParent
         }
         is SingleRowCell -> {

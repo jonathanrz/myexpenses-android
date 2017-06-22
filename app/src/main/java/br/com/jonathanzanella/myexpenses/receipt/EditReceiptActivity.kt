@@ -223,66 +223,67 @@ private class EditReceiptActivityUi : AnkoComponent<EditReceiptActivity> {
     lateinit var editInstallment: AppCompatEditText
 
     override fun createView(ui: AnkoContext<EditReceiptActivity>) = with(ui) {
-        scrollView {
-            verticalLayout {
-                toolbar = toolbarTemplate {}
-
-                tableViewFrame {
-                    textInputLayout {
-                        editName = appCompatEditText {
-                            id = R.id.act_edit_receipt_name
-                            hint = resources.getString(R.string.name)
+        verticalLayout {
+            toolbar = toolbarTemplate {}
+            scrollView {
+                verticalLayout {
+                    tableViewFrame {
+                        textInputLayout {
+                            editName = appCompatEditText {
+                                id = R.id.act_edit_receipt_name
+                                hint = resources.getString(R.string.name)
+                            }
                         }
-                    }
-                    textInputLayout {
-                        editDate = clickableView {
-                            id = R.id.act_edit_receipt_date
-                            hint = resources.getString(R.string.date)
-                            onClick { ui.owner.onDate() }
+                        textInputLayout {
+                            editDate = clickableView {
+                                id = R.id.act_edit_receipt_date
+                                hint = resources.getString(R.string.date)
+                                onClick { ui.owner.onDate() }
+                            }
                         }
-                    }
-                    textInputLayout {
-                        editIncome = appCompatEditText {
-                            id = R.id.act_edit_receipt_income
-                            hint = resources.getString(R.string.income)
-                            inputType = InputType.TYPE_CLASS_NUMBER
+                        textInputLayout {
+                            editIncome = appCompatEditText {
+                                id = R.id.act_edit_receipt_income
+                                hint = resources.getString(R.string.income)
+                                inputType = InputType.TYPE_CLASS_NUMBER
+                            }
                         }
-                    }
-                    textInputLayout {
-                        editSource = clickableView {
-                            id = R.id.act_edit_receipt_source
-                            hint = resources.getString(R.string.source)
-                            onClick { ui.owner.onSource() }
+                        textInputLayout {
+                            editSource = clickableView {
+                                id = R.id.act_edit_receipt_source
+                                hint = resources.getString(R.string.source)
+                                onClick { ui.owner.onSource() }
+                            }
                         }
-                    }
-                    textInputLayout {
-                        editAccount = clickableView {
-                            id = R.id.act_edit_receipt_account
-                            hint = resources.getString(R.string.account)
-                            onClick { ui.owner.onAccount() }
+                        textInputLayout {
+                            editAccount = clickableView {
+                                id = R.id.act_edit_receipt_account
+                                hint = resources.getString(R.string.account)
+                                onClick { ui.owner.onAccount() }
+                            }
                         }
-                    }
-                    checkShowInResume = checkBox {
-                        id = R.id.act_edit_receipt_show_in_resume
-                        hint = resources.getString(R.string.show_in_resume)
-                        isChecked = true
-                    }.lparams {
-                        bottomMargin = dip(5)
-                    }
-                    textInputLayout {
-                        editRepetition = appCompatEditText {
-                            id = R.id.act_edit_receipt_repetition
-                            hint = resources.getString(R.string.repetition)
-                            inputType = InputType.TYPE_CLASS_NUMBER
-                            setText(R.string._1)
+                        checkShowInResume = checkBox {
+                            id = R.id.act_edit_receipt_show_in_resume
+                            hint = resources.getString(R.string.show_in_resume)
+                            isChecked = true
+                        }.lparams {
+                            bottomMargin = dip(5)
                         }
-                    }
-                    textInputLayout {
-                        editInstallment = appCompatEditText {
-                            id = R.id.act_edit_receipt_installment
-                            hint = resources.getString(R.string.installments)
-                            inputType = InputType.TYPE_CLASS_NUMBER
-                            setText(R.string._1)
+                        textInputLayout {
+                            editRepetition = appCompatEditText {
+                                id = R.id.act_edit_receipt_repetition
+                                hint = resources.getString(R.string.repetition)
+                                inputType = InputType.TYPE_CLASS_NUMBER
+                                setText(R.string._1)
+                            }
+                        }
+                        textInputLayout {
+                            editInstallment = appCompatEditText {
+                                id = R.id.act_edit_receipt_installment
+                                hint = resources.getString(R.string.installments)
+                                inputType = InputType.TYPE_CLASS_NUMBER
+                                setText(R.string._1)
+                            }
                         }
                     }
                 }
