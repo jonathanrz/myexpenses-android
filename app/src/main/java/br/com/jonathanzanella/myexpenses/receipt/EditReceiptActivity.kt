@@ -245,7 +245,7 @@ private class EditReceiptActivityUi : AnkoComponent<EditReceiptActivity> {
                         editIncome = appCompatEditText {
                             id = R.id.act_edit_receipt_income
                             hint = resources.getString(R.string.income)
-                            inputType = InputType.TYPE_NUMBER_FLAG_DECIMAL
+                            inputType = InputType.TYPE_CLASS_NUMBER
                         }
                     }
                     textInputLayout {
@@ -273,7 +273,7 @@ private class EditReceiptActivityUi : AnkoComponent<EditReceiptActivity> {
                         editRepetition = appCompatEditText {
                             id = R.id.act_edit_receipt_repetition
                             hint = resources.getString(R.string.repetition)
-                            inputType = InputType.TYPE_NUMBER_FLAG_DECIMAL
+                            inputType = InputType.TYPE_CLASS_NUMBER
                             setText(R.string._1)
                         }
                     }
@@ -281,7 +281,7 @@ private class EditReceiptActivityUi : AnkoComponent<EditReceiptActivity> {
                         editInstallment = appCompatEditText {
                             id = R.id.act_edit_receipt_installment
                             hint = resources.getString(R.string.installments)
-                            inputType = InputType.TYPE_NUMBER_FLAG_DECIMAL
+                            inputType = InputType.TYPE_CLASS_NUMBER
                             setText(R.string._1)
                         }
                     }
