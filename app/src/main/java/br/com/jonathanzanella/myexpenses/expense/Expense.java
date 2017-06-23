@@ -1,5 +1,6 @@
 package br.com.jonathanzanella.myexpenses.expense;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
 
 import com.google.gson.annotations.Expose;
@@ -215,6 +216,7 @@ public class Expense implements Transaction, UnsyncModel {
 		ignoreInResume = !b;
 	}
 
+	@NonNull
 	@Override
 	public String getData() {
 		return "name=" + name + "" +
@@ -401,7 +403,8 @@ public class Expense implements Transaction, UnsyncModel {
 		this.updatedAt = updatedAt;
 	}
 
-	public boolean isSync() {
+	@Override
+	public boolean getSync() {
 		return sync;
 	}
 

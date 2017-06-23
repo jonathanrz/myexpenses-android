@@ -61,11 +61,11 @@ public final class AccountTable implements Table<Account> {
 		values.put(Fields.BALANCE.toString(), account.getBalance());
 		values.put(Fields.ACCOUNT_TO_PAY_CREDIT_CARD.toString(), account.isAccountToPayCreditCard());
 		values.put(Fields.ACCOUNT_TO_PAY_BILLS.toString(), account.isAccountToPayBills());
-		values.put(Fields.SHOW_IN_RESUME.toString(), account.showInResume());
+		values.put(Fields.SHOW_IN_RESUME.toString(), account.getShowInResume());
 		values.put(Fields.SERVER_ID.toString(), account.getServerId());
 		values.put(Fields.CREATED_AT.toString(), account.getCreatedAt());
 		values.put(Fields.UPDATED_AT.toString(), account.getUpdatedAt());
-		values.put(Fields.SYNC.toString(), account.isSync());
+		values.put(Fields.SYNC.toString(), account.getSync());
 		return values;
 	}
 

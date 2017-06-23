@@ -80,6 +80,6 @@ public class EditAccountTest {
 
 		onView(withId(R.id.act_show_account_name)).check(matches(withText(account.getName())));
 		assertThat(repository.all().size(), is(1));
-		assertThat(account.showInResume(), is(false));
+		assertThat(account.getShowInResume(), is(false));
 	}
 }

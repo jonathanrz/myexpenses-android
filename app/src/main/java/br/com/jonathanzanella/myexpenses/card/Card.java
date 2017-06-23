@@ -1,5 +1,6 @@
 package br.com.jonathanzanella.myexpenses.card;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
 import android.util.Log;
 
@@ -65,6 +66,7 @@ public class Card implements Chargeable, UnsyncModel {
 		accountUuid = account.getUuid();
 	}
 
+	@NonNull
 	@Override
 	public ChargeableType getChargeableType() {
 		switch (type) {
@@ -103,6 +105,7 @@ public class Card implements Chargeable, UnsyncModel {
 		}
 	}
 
+	@NonNull
 	@Override
 	public String getData() {
 		return "name=" + name +
@@ -190,7 +193,8 @@ public class Card implements Chargeable, UnsyncModel {
 		this.updatedAt = updatedAt;
 	}
 
-	public boolean isSync() {
+	@Override
+	public boolean getSync() {
 		return sync;
 	}
 

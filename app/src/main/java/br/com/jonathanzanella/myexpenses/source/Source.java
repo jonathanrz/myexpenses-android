@@ -1,5 +1,7 @@
 package br.com.jonathanzanella.myexpenses.source;
 
+import android.support.annotation.NonNull;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -19,6 +21,7 @@ public class Source implements UnsyncModel {
 	private long updatedAt;
 	private boolean sync;
 
+	@NonNull
 	@Override
 	public String getData() {
 		return "name=" + name +
@@ -83,7 +86,8 @@ public class Source implements UnsyncModel {
 		this.updatedAt = updatedAt;
 	}
 
-	public boolean isSync() {
+	@Override
+	public boolean getSync() {
 		return sync;
 	}
 

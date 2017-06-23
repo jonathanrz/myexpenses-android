@@ -132,14 +132,14 @@ class RepositoryImpl<T : UnsyncModel>(ctx: Context) : Repository<T> {
         val unsyncSource = find(table, unsyncModel.uuid)
         if (unsyncSource != null && unsyncSource.id != unsyncModel.id) {
             if (unsyncSource.updatedAt != unsyncModel.updatedAt)
-                warning("Source overwritten", unsyncModel.data)
+                warning("Source overwritten", unsyncModel.getData())
             unsyncModel.id = unsyncSource.id
         }
 
         unsyncModel.serverId = unsyncModel.serverId
         unsyncModel.createdAt = unsyncModel.createdAt
         unsyncModel.updatedAt = unsyncModel.updatedAt
-        unsyncModel.setSync(true)
+        unsyncModel.sync = true
         saveAtDatabase(table, unsyncModel)
     }
 }

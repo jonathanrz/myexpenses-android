@@ -70,7 +70,7 @@ public final class ReceiptTable implements Table<Receipt> {
 		values.put(Fields.CREATED_AT.toString(), receipt.getCreatedAt());
 		values.put(Fields.UPDATED_AT.toString(), receipt.getUpdatedAt());
 		values.put(Fields.REMOVED.toString(), receipt.isRemoved());
-		values.put(Fields.SYNC.toString(), receipt.isSync());
+		values.put(Fields.SYNC.toString(), receipt.getSync());
 		return values;
 	}
 

@@ -68,7 +68,7 @@ class ExpenseTable : Table<Expense> {
         values.put(Fields.CREATED_AT.toString(), data.createdAt)
         values.put(Fields.UPDATED_AT.toString(), data.updatedAt)
         values.put(Fields.REMOVED.toString(), if (data.isRemoved) 1 else 0)
-        values.put(Fields.SYNC.toString(), if (data.isSync) 1 else 0)
+        values.put(Fields.SYNC.toString(), if (data.sync) 1 else 0)
         return values
     }
 
@@ -91,7 +91,7 @@ class ExpenseTable : Table<Expense> {
         expense.createdAt = getLong(c, Fields.CREATED_AT)
         expense.updatedAt = getLong(c, Fields.UPDATED_AT)
         expense.isRemoved = getInt(c, Fields.REMOVED) != 0
-        expense.isSync = getLong(c, Fields.SYNC) != 0L
+        expense.sync = getLong(c, Fields.SYNC) != 0L
         return expense
     }
 

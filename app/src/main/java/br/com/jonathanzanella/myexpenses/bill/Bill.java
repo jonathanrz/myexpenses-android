@@ -1,5 +1,7 @@
 package br.com.jonathanzanella.myexpenses.bill;
 
+import android.support.annotation.NonNull;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -77,6 +79,7 @@ public class Bill implements Transaction, UnsyncModel {
 		return false;
 	}
 
+	@NonNull
 	@Override
 	public String getData() {
 		return "name=" + name +
@@ -171,7 +174,8 @@ public class Bill implements Transaction, UnsyncModel {
 		this.updatedAt = updatedAt;
 	}
 
-	public boolean isSync() {
+	@Override
+	public boolean getSync() {
 		return sync;
 	}
 

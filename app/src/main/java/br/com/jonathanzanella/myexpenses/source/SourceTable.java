@@ -51,7 +51,7 @@ public final class SourceTable implements Table<Source> {
 		values.put(Fields.SERVER_ID.toString(), source.getServerId());
 		values.put(Fields.CREATED_AT.toString(), source.getCreatedAt());
 		values.put(Fields.UPDATED_AT.toString(), source.getUpdatedAt());
-		values.put(Fields.SYNC.toString(), source.isSync());
+		values.put(Fields.SYNC.toString(), source.getSync());
 		return values;
 	}
 

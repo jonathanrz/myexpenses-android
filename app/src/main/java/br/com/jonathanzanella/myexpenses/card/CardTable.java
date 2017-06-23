@@ -58,7 +58,7 @@ public final class CardTable implements Table<Card> {
 		values.put(Fields.SERVER_ID.toString(), card.getServerId());
 		values.put(Fields.CREATED_AT.toString(), card.getCreatedAt());
 		values.put(Fields.UPDATED_AT.toString(), card.getUpdatedAt());
-		values.put(Fields.SYNC.toString(), card.isSync());
+		values.put(Fields.SYNC.toString(), card.getSync());
 		return values;
 	}
 

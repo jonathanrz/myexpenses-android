@@ -1,5 +1,8 @@
 package br.com.jonathanzanella.myexpenses.log;
 
+import android.support.annotation.NonNull;
+
+import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
 
 import java.text.SimpleDateFormat;
@@ -128,6 +131,11 @@ public class Log implements UnsyncModel {
 	}
 
 	@Override
+	public void setUuid(@Nullable String s) {
+		throw new UnsupportedOperationException("Log isn't an unsync model");
+	}
+
+	@Override
 	public void setServerId(String serverId) {
 		throw new UnsupportedOperationException("Log isn't an unsync model");
 	}
@@ -152,6 +160,7 @@ public class Log implements UnsyncModel {
 		throw new UnsupportedOperationException("Log isn't an unsync model");
 	}
 
+	@NonNull
 	@Override
 	public String getData() {
 		throw new UnsupportedOperationException("Log isn't an unsync model");
@@ -159,6 +168,11 @@ public class Log implements UnsyncModel {
 
 	@Override
 	public void setSync(boolean b) {
+		throw new UnsupportedOperationException("Log isn't an unsync model");
+	}
+
+	@Override
+	public boolean getSync() {
 		throw new UnsupportedOperationException("Log isn't an unsync model");
 	}
 

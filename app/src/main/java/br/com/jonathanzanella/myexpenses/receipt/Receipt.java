@@ -152,6 +152,7 @@ public class Receipt implements Transaction, UnsyncModel {
 		return String.format(Environment.PTBR_LOCALE, "%s %02d/%02d", originalName, i, installments);
 	}
 
+	@NonNull
 	@Override
 	public String getData() {
 		return "name=" + name +
@@ -286,7 +287,8 @@ public class Receipt implements Transaction, UnsyncModel {
 		this.updatedAt = updatedAt;
 	}
 
-	public boolean isSync() {
+	@Override
+	public boolean getSync() {
 		return sync;
 	}
 

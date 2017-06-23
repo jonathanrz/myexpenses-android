@@ -61,7 +61,7 @@ public final class BillTable implements Table<Bill> {
 		values.put(Fields.SERVER_ID.toString(), bill.getServerId());
 		values.put(Fields.CREATED_AT.toString(), bill.getCreatedAt());
 		values.put(Fields.UPDATED_AT.toString(), bill.getUpdatedAt());
-		values.put(Fields.SYNC.toString(), bill.isSync());
+		values.put(Fields.SYNC.toString(), bill.getSync());
 		return values;
 	}
 
