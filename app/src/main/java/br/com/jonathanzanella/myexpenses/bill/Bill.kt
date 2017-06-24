@@ -30,10 +30,11 @@ class Bill : Transaction, UnsyncModel {
     override fun getDate(): DateTime {
         if (month == null)
             month = DateTime.now()
+        val month = this.month!!
         val lastDayOfMonth = DateHelper.lastDayOfMonth(month).dayOfMonth
         if (dueDate > lastDayOfMonth)
-            return month!!.withDayOfMonth(lastDayOfMonth)
-        return month!!.withDayOfMonth(dueDate)
+            return month.withDayOfMonth(lastDayOfMonth)
+        return month.withDayOfMonth(dueDate)
     }
 
     override fun credited(): Boolean {
