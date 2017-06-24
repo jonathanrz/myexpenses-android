@@ -7,7 +7,7 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import org.joda.time.DateTime
 
-open class Bill : Transaction, UnsyncModel {
+class Bill : Transaction, UnsyncModel {
     override var id: Long = 0
 
     @Expose override var uuid: String? = null
@@ -15,16 +15,10 @@ open class Bill : Transaction, UnsyncModel {
     @Expose override var amount: Int = 0
     @Expose var dueDate: Int = 0
     @Expose var initDate: DateTime? = null
-        set(initDate) = if (initDate != null)
-            field = initDate.withMillisOfDay(0)
-        else
-            field = null
+        set(initDate) { field = initDate?.withMillisOfDay(0) }
 
     @Expose var endDate: DateTime? = null
-        set(endDate) = if (endDate != null)
-            field = endDate.withMillisOfDay(0)
-        else
-            field = null
+        set(endDate) { field = endDate?.withMillisOfDay(0) }
 
     @Expose @SerializedName("_id") override var serverId: String? = null
     @Expose @SerializedName("created_at") override var createdAt: Long = 0
