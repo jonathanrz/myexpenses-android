@@ -25,6 +25,7 @@ import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch
 import br.com.jonathanzanella.myexpenses.log.Log
+import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.views.anko.*
 import org.apache.commons.lang3.StringUtils
@@ -134,7 +135,7 @@ class EditExpenseActivity : AppCompatActivity(), ExpenseContract.EditView {
     }
 
     override fun onDateChanged(date: DateTime) {
-        ui.date.setText(Expense.SIMPLE_DATE_FORMAT.format(date.toDate()))
+        ui.date.setText(Transaction.SIMPLE_DATE_FORMAT.format(date.toDate()))
     }
 
     override fun onChargeableSelected(chargeable: Chargeable) {
@@ -179,7 +180,7 @@ class EditExpenseActivity : AppCompatActivity(), ExpenseContract.EditView {
     }
 
     override fun fillExpense(expense: Expense): Expense {
-        expense.name = ui.name.text.toString()
+        expense.setName(ui.name.text.toString())
         var value = 0
         val valueText = ui.value.text.toString().replace("[^\\d]".toRegex(), "")
         if (!StringUtils.isEmpty(valueText))

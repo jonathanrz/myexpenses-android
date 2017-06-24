@@ -85,7 +85,7 @@ class ReceiptView : BaseView, ViewPager.OnPageChangeListener {
             override fun onPostExecute(receipt: Receipt?) {
                 super.onPostExecute(receipt)
                 if (receipt != null) {
-                    val view = getMonthView(receipt.date)
+                    val view = getMonthView(receipt.getDate())
                     view?.refreshData()
                 }
             }

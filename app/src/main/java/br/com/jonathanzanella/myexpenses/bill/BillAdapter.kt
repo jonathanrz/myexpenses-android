@@ -13,6 +13,7 @@ import br.com.jonathanzanella.myexpenses.expense.Expense
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.helpers.AdapterColorHelper
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
+import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
 import br.com.jonathanzanella.myexpenses.views.anko.rowPrincipalInformation
 import br.com.jonathanzanella.myexpenses.views.anko.rowSecondaryInformation
@@ -39,8 +40,8 @@ open internal class BillAdapter : RecyclerView.Adapter<BillAdapter.ViewHolder>()
             ui.billName.text = bill.name
             ui.billAmount.text = CurrencyHelper.format(bill.amount)
             ui.billDueDate.text = bill.dueDate.toString()
-            val datesText = Bill.SIMPLE_DATE_FORMAT.format(bill.initDate.toDate()) + " - " +
-                    Bill.SIMPLE_DATE_FORMAT.format(bill.endDate.toDate())
+            val datesText = Transaction.SIMPLE_DATE_FORMAT.format(bill.initDate?.toDate()) + " - " +
+                    Transaction.SIMPLE_DATE_FORMAT.format(bill.endDate?.toDate())
             ui.billDates.text = datesText
         }
 

@@ -16,6 +16,7 @@ import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch
 import br.com.jonathanzanella.myexpenses.log.Log
+import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.views.anko.*
 import org.apache.commons.lang3.StringUtils
@@ -98,11 +99,11 @@ class EditBillActivity : AppCompatActivity(), BillContract.EditView {
     }
 
     override fun onInitDateChanged(date: DateTime) {
-        ui.editInitDate.setText(Bill.SIMPLE_DATE_FORMAT.format(date.toDate()))
+        ui.editInitDate.setText(Transaction.SIMPLE_DATE_FORMAT.format(date.toDate()))
     }
 
     override fun onEndDateChanged(date: DateTime) {
-        ui.editEndDate.setText(Bill.SIMPLE_DATE_FORMAT.format(date.toDate()))
+        ui.editEndDate.setText(Transaction.SIMPLE_DATE_FORMAT.format(date.toDate()))
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

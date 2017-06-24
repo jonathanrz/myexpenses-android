@@ -94,7 +94,7 @@ public class AddExpenseTest {
 		setTimeInDatePicker(time.getYear(), time.getMonthOfYear(), time.getDayOfMonth());
 		selectChargeable();
 
-		onView(withId(R.id.act_edit_expense_date)).check(matches(withText(Expense.SIMPLE_DATE_FORMAT.format(time.toDate()))));
+		onView(withId(R.id.act_edit_expense_date)).check(matches(withText(Expense.Companion.getSIMPLE_DATE_FORMAT().format(time.toDate()))));
 
 		clickIntoView(R.id.action_save);
 
@@ -102,7 +102,7 @@ public class AddExpenseTest {
 
 		onView(withId(R.id.name)).check(matches(withText(expenseName)));
 		onView(withId(R.id.billLayout)).check(matches(not(isDisplayed())));
-		onView(withId(R.id.date)).check(matches(withText(Expense.SIMPLE_DATE_FORMAT.format(time.toDate()))));
+		onView(withId(R.id.date)).check(matches(withText(Expense.Companion.getSIMPLE_DATE_FORMAT().format(time.toDate()))));
 	}
 
 	@Test

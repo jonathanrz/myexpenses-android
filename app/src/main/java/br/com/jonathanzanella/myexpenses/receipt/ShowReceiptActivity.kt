@@ -17,6 +17,7 @@ import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
 import br.com.jonathanzanella.myexpenses.source.Source
 import br.com.jonathanzanella.myexpenses.source.SourceRepository
+import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import br.com.jonathanzanella.myexpenses.views.anko.*
 import org.jetbrains.anko.*
 
@@ -105,7 +106,7 @@ class ShowReceiptActivity : AppCompatActivity(), ReceiptContract.View {
     @UiThread
     override fun showReceipt(receipt: Receipt) {
         ui.receiptName.text = receipt.name
-        ui.receiptDate.text = Receipt.SIMPLE_DATE_FORMAT.format(receipt.date.toDate())
+        ui.receiptDate.text = Transaction.SIMPLE_DATE_FORMAT.format(receipt.getDate().toDate())
         ui.receiptIncome.text = CurrencyHelper.format(receipt.income)
 
         object : AsyncTask<Void, Void, Source>() {

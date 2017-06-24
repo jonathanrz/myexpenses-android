@@ -97,14 +97,14 @@ public class AddReceiptTest {
 		selectSource();
 		matchToolbarTitle(newReceiptTitle);
 
-		onView(withId(R.id.act_edit_receipt_date)).check(matches(withText(Receipt.SIMPLE_DATE_FORMAT.format(time.toDate()))));
+		onView(withId(R.id.act_edit_receipt_date)).check(matches(withText(Receipt.Companion.getSIMPLE_DATE_FORMAT().format(time.toDate()))));
 
 		clickIntoView(R.id.action_save);
 
 		matchToolbarTitle(receiptsTitle);
 
 		onView(withId(R.id.row_receipt_name)).check(matches(withText(receiptName)));
-		onView(withId(R.id.row_receipt_date)).check(matches(withText(Receipt.SIMPLE_DATE_FORMAT.format(time.toDate()))));
+		onView(withId(R.id.row_receipt_date)).check(matches(withText(Receipt.Companion.getSIMPLE_DATE_FORMAT().format(time.toDate()))));
 	}
 
 	@Test

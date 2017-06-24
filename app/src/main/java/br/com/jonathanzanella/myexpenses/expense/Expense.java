@@ -222,7 +222,7 @@ public class Expense implements Transaction, UnsyncModel {
 		return "name=" + name + "" +
 				"\nuuid=" + uuid +
 				"\nserverId=" + serverId +
-				"\ndate=" + SIMPLE_DATE_FORMAT.format(date.toDate()) +
+				"\ndate=" + Companion.getSIMPLE_DATE_FORMAT().format(date.toDate()) +
 				"\nvalue=" + value +
 				"\nremoved=" + removed;
 	}

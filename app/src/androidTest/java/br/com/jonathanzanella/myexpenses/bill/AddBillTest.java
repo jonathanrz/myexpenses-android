@@ -85,8 +85,8 @@ public class AddBillTest {
 		matchToolbarTitle(billsTitle);
 
 		onView(withId(R.id.row_bill_name)).check(matches(withText(billTitle)));
-		String initDateText = Bill.SIMPLE_DATE_FORMAT.format(initDate.toDate());
-		String endDateText = Bill.SIMPLE_DATE_FORMAT.format(endDate.toDate());
+		String initDateText = Bill.Companion.getSIMPLE_DATE_FORMAT().format(initDate.toDate());
+		String endDateText = Bill.Companion.getSIMPLE_DATE_FORMAT().format(endDate.toDate());
 		onView(withId(R.id.row_bill_dates)).check(matches(withText(initDateText + " - " + endDateText)));
 	}
 

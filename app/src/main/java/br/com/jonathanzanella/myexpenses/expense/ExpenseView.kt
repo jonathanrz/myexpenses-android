@@ -96,7 +96,7 @@ class ExpenseView@JvmOverloads constructor(
             override fun onPostExecute(expense: Expense?) {
                 super.onPostExecute(expense)
                 if (expense != null) {
-                    val view = getMonthView(expense.date)
+                    val view = getMonthView(expense.getDate())
                     view?.refreshData()
                 }
             }

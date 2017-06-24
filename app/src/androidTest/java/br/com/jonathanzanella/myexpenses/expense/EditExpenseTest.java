@@ -77,7 +77,7 @@ public class EditExpenseTest {
 		final String editExpenseTitle = getTargetContext().getString(R.string.edit_expense_title);
 		matchToolbarTitle(editExpenseTitle);
 		onView(withId(R.id.act_edit_expense_name)).check(matches(withText(expense.getName())));
-		String expectedDate = Expense.SIMPLE_DATE_FORMAT.format(expense.getDate().toDate());
+		String expectedDate = Expense.Companion.getSIMPLE_DATE_FORMAT().format(expense.getDate().toDate());
 		onView(withId(R.id.act_edit_expense_date)).check(matches(withText(expectedDate)));
 		typeTextIntoView(R.id.act_edit_expense_name, " changed");
 

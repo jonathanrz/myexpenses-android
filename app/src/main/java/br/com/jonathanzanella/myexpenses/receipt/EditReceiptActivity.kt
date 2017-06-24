@@ -24,6 +24,7 @@ import br.com.jonathanzanella.myexpenses.log.Log
 import br.com.jonathanzanella.myexpenses.source.ListSourceActivity
 import br.com.jonathanzanella.myexpenses.source.Source
 import br.com.jonathanzanella.myexpenses.source.SourceRepository
+import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.views.anko.*
 import org.apache.commons.lang3.StringUtils
@@ -118,7 +119,7 @@ class EditReceiptActivity : AppCompatActivity(), ReceiptContract.EditView {
     }
 
     override fun onDateChanged(date: DateTime) {
-        ui.editDate.setText(Receipt.SIMPLE_DATE_FORMAT.format(date.toDate()))
+        ui.editDate.setText(Transaction.SIMPLE_DATE_FORMAT.format(date.toDate()))
     }
 
     override fun onSourceSelected(source: Source) {
@@ -155,7 +156,7 @@ class EditReceiptActivity : AppCompatActivity(), ReceiptContract.EditView {
     }
 
     override fun fillReceipt(receipt: Receipt): Receipt {
-        receipt.name = ui.editName.text.toString()
+        receipt.setName(ui.editName.text.toString())
         val income = ui.editIncome.text.toString().replace("[^\\d]".toRegex(), "")
         if (!StringUtils.isEmpty(income))
             receipt.income = Integer.parseInt(income)

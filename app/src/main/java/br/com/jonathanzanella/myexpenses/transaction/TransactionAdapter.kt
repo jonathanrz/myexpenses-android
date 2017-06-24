@@ -25,7 +25,7 @@ class TransactionAdapter : RecyclerView.Adapter<TransactionAdapter.ViewHolder>()
         }
 
         fun setData(transaction: Transaction) {
-            itemView.date.text = Transaction.SIMPLE_DATE_FORMAT.format(transaction.date.toDate())
+            itemView.date.text = Transaction.SIMPLE_DATE_FORMAT.format(transaction.getDate().toDate())
             itemView.name.text = transaction.name
             itemView.value.text = CurrencyHelper.format(transaction.amount)
             itemView.value.setTypeface(null, Typeface.NORMAL)
@@ -67,7 +67,7 @@ class TransactionAdapter : RecyclerView.Adapter<TransactionAdapter.ViewHolder>()
     fun addTransactions(transactions: List<Transaction>) {
         this.transactions.addAll(transactions)
         Collections.sort(this.transactions, Comparator<Transaction> { lhs, rhs ->
-            if (lhs.date.isAfter(rhs.date))
+            if (lhs.getDate().isAfter(rhs.getDate()))
                 return@Comparator 1
             -1
         })

@@ -84,7 +84,7 @@ public class EditReceiptTest {
 		final String editReceiptTitle = getTargetContext().getString(R.string.edit_receipt_title);
 		matchToolbarTitle(editReceiptTitle);
 		onView(withId(R.id.act_edit_receipt_name)).check(matches(withText(receipt.getName())));
-		String expectedDate = Receipt.SIMPLE_DATE_FORMAT.format(receipt.getDate().toDate());
+		String expectedDate = Receipt.Companion.getSIMPLE_DATE_FORMAT().format(receipt.getDate().toDate());
 		onView(withId(R.id.act_edit_receipt_date)).check(matches(withText(expectedDate)));
 		onView(withId(R.id.act_edit_receipt_account)).check(matches(withText(receipt.getAccountFromCache().getName())));
 		clearAndTypeTextIntoView(R.id.act_edit_receipt_name, receipt.getName() + " changed");

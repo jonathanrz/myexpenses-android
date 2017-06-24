@@ -16,6 +16,7 @@ import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
 import br.com.jonathanzanella.myexpenses.helpers.AdapterColorHelper
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
 import br.com.jonathanzanella.myexpenses.source.Source
+import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import br.com.jonathanzanella.myexpenses.views.anko.*
 import org.jetbrains.anko.*
 import org.joda.time.DateTime
@@ -41,7 +42,7 @@ open class ReceiptAdapter(context: Context) : RecyclerView.Adapter<ReceiptAdapte
             itemView.tag = receipt.uuid
             itemView.setBackgroundColor(adapterColorHelper.getColorForGridWithTwoColumns(adapterPosition))
             ui.name.text = receipt.name
-            ui.date.text = Receipt.SIMPLE_DATE_FORMAT.format(receipt.date.toDate())
+            ui.date.text = Transaction.SIMPLE_DATE_FORMAT.format(receipt.getDate().toDate())
             ui.income.text = CurrencyHelper.format(receipt.income)
 
             object : AsyncTask<Void, Void, Source>() {

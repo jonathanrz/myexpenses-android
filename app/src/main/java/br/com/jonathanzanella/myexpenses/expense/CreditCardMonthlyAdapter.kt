@@ -37,7 +37,7 @@ class CreditCardMonthlyAdapter(context: Context) : RecyclerView.Adapter<CreditCa
                 name.text = expense.name
             if (date != null) {
                 synchronized(this) {
-                    date.text = SIMPLE_DATE_FORMAT.format(expense.date.toDate())
+                    date.text = SIMPLE_DATE_FORMAT.format(expense.getDate().toDate())
                 }
             }
             income.text = CurrencyHelper.format(expense.value)

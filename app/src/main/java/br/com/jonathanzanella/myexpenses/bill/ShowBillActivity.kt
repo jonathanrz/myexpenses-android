@@ -13,6 +13,7 @@ import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
 import br.com.jonathanzanella.myexpenses.expense.Expense
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
+import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import br.com.jonathanzanella.myexpenses.views.anko.*
 import org.jetbrains.anko.*
 
@@ -98,11 +99,13 @@ class ShowBillActivity : AppCompatActivity(), BillContract.View {
     }
 
     override fun showBill(bill: Bill) {
-        ui.billName.text = bill.name
-        ui.billAmount.text = CurrencyHelper.format(bill.amount)
-        ui.billDueDate.text = bill.dueDate.toString()
-        ui.billInitDate.text = Bill.SIMPLE_DATE_FORMAT.format(bill.initDate.toDate())
-        ui.billEndDate.text = Bill.SIMPLE_DATE_FORMAT.format(bill.endDate.toDate())
+        ui.apply {
+            billName.text = bill.name
+            billAmount.text = CurrencyHelper.format(bill.amount)
+            billDueDate.text = bill.dueDate.toString()
+            billInitDate.text = Transaction.SIMPLE_DATE_FORMAT.format(bill.initDate?.toDate())
+            billEndDate.text = Transaction.SIMPLE_DATE_FORMAT.format(bill.endDate?.toDate())
+        }
     }
 
     companion object {

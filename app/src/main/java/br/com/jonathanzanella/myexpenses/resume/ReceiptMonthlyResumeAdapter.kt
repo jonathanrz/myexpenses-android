@@ -46,7 +46,7 @@ internal class ReceiptMonthlyResumeAdapter(private val receiptRepository: Receip
                 itemView.name.text = receipt.name
             if (itemView.date != null) {
                 synchronized(this) {
-                    itemView.date.text = SIMPLE_DATE_FORMAT.format(receipt.date.toDate())
+                    itemView.date.text = SIMPLE_DATE_FORMAT.format(receipt.getDate().toDate())
                 }
             }
             itemView.income.text = receipt.incomeFormatted

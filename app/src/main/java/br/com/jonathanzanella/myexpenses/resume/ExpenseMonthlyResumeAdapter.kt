@@ -45,7 +45,7 @@ internal class ExpenseMonthlyResumeAdapter : RecyclerView.Adapter<ExpenseMonthly
                 itemView.name.text = expense.name
             if (itemView.date != null) {
                 synchronized(this) {
-                    itemView.date.text = SIMPLE_DATE_FORMAT.format(expense.date.toDate())
+                    itemView.date.text = SIMPLE_DATE_FORMAT.format(expense.getDate().toDate())
                 }
             }
             itemView.income.text = CurrencyHelper.format(expense.value)
@@ -90,7 +90,7 @@ internal class ExpenseMonthlyResumeAdapter : RecyclerView.Adapter<ExpenseMonthly
                 if (expense.creditCard != null) {
                     val i = Intent(itemView.context, CreditCardInvoiceActivity::class.java)
                     i.putExtra(CreditCardInvoiceActivity.KEY_CREDIT_CARD_UUID, expense.creditCard.uuid)
-                    i.putExtra(CreditCardInvoiceActivity.KEY_INIT_DATE, expense.date)
+                    i.putExtra(CreditCardInvoiceActivity.KEY_INIT_DATE, expense.getDate())
                     itemView.context.startActivity(i)
                 } else {
                     val i = Intent(itemView.context, ShowExpenseActivity::class.java)
