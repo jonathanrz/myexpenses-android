@@ -7,7 +7,7 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import org.joda.time.DateTime
 
-class Bill : Transaction, UnsyncModel {
+open class Bill : Transaction, UnsyncModel {
     override var id: Long = 0
 
     @Expose override var uuid: String? = null

@@ -6,7 +6,7 @@ import br.com.jonathanzanella.myexpenses.sync.UnsyncModel
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-class Account : Chargeable, UnsyncModel {
+open class Account : Chargeable, UnsyncModel {
     override var id: Long = 0
     override var sync: Boolean = false
     override val chargeableType = ChargeableType.ACCOUNT
