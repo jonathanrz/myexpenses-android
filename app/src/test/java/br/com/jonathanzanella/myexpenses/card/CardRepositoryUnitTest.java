@@ -4,25 +4,23 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
-import br.com.jonathanzanella.myexpenses.validations.ValidationResult;
+import br.com.jonathanzanella.myexpenses.helper.builder.CardBuilder;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
+import br.com.jonathanzanella.myexpenses.validations.ValidationResult;
 
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
-import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-/**
- * Created by jzanella on 8/27/16.
- */
 public class CardRepositoryUnitTest {
 	private CardRepository subject;
 	@Mock
-	private ExpenseRepository expenseRepository;
+	private AccountRepository accountRepository;
 	@Mock
-	private Card card;
+	private ExpenseRepository expenseRepository;
 	@Mock
 	private Repository<Card> repository;
 
@@ -34,7 +32,7 @@ public class CardRepositoryUnitTest {
 
 	@Test
 	public void return_with_error_when_tried_to_save_account_without_name() throws Exception {
-		when(card.getName()).thenReturn(null);
+		Card card = new CardBuilder().name(null).build(accountRepository);
 
 		ValidationResult result = subject.save(card);
 
@@ -44,7 +42,7 @@ public class CardRepositoryUnitTest {
 
 	@Test
 	public void return_with_error_when_tried_to_save_account_without_type() throws Exception {
-		when(card.getName()).thenReturn("Test");
+		Card card = new CardBuilder().name("Test").build(accountRepository);
 
 		ValidationResult result = subject.save(card);
 
@@ -54,8 +52,10 @@ public class CardRepositoryUnitTest {
 
 	@Test
 	public void return_with_error_when_tried_to_save_account_without_account() throws Exception {
-		when(card.getName()).thenReturn("Test");
-		when(card.getType()).thenReturn(CardType.DEBIT);
+		Card card = new CardBuilder()
+				.name("Test")
+				.type(CardType.DEBIT)
+				.build(accountRepository);
 
 		ValidationResult result = subject.save(card);
 
