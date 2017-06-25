@@ -124,7 +124,7 @@ class ShowCardActivity : AppCompatActivity(), CardContract.View {
         object : AsyncTask<Void, Void, Account>() {
 
             override fun doInBackground(vararg voids: Void): Account {
-                return card.account
+                return card.account!!
             }
 
             override fun onPostExecute(account: Account) {

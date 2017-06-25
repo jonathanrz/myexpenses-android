@@ -48,7 +48,7 @@ class CardAdapter : RecyclerView.Adapter<CardAdapter.ViewHolder>() {
             object : AsyncTask<Void, Void, Account>() {
 
                 override fun doInBackground(vararg voids: Void): Account {
-                    return card.account
+                    return card.account!!
                 }
 
                 override fun onPostExecute(a: Account) {
