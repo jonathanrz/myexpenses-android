@@ -87,9 +87,10 @@ internal class ExpenseMonthlyResumeAdapter : RecyclerView.Adapter<ExpenseMonthly
 
             val expense = getExpense(adapterPosition)
             if (expense != null) {
-                if (expense.creditCard != null) {
+                val card = expense.creditCard
+                if (card != null) {
                     val i = Intent(itemView.context, CreditCardInvoiceActivity::class.java)
-                    i.putExtra(CreditCardInvoiceActivity.KEY_CREDIT_CARD_UUID, expense.creditCard.uuid)
+                    i.putExtra(CreditCardInvoiceActivity.KEY_CREDIT_CARD_UUID, card.uuid)
                     i.putExtra(CreditCardInvoiceActivity.KEY_INIT_DATE, expense.getDate())
                     itemView.context.startActivity(i)
                 } else {

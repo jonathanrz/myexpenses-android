@@ -76,7 +76,7 @@ class ExpenseTable : Table<Expense> {
         val expense = Expense()
         expense.id = getLong(c, Fields.ID)
         expense.uuid = getString(c, Fields.UUID)
-        expense.setName(getString(c, Fields.NAME))
+        expense.name = getString(c, Fields.NAME)
         expense.setDate(getDate(c, Fields.DATE))
         expense.value = getInt(c, Fields.VALUE)
         expense.valueToShowInOverview = getInt(c, Fields.VALUE_TO_SHOW_IN_OVERVIEW)

@@ -20,6 +20,7 @@ import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.ExpenseBuilder;
+import br.com.jonathanzanella.myexpenses.transaction.Transaction;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.InstrumentationRegistry.getTargetContext;
@@ -77,7 +78,7 @@ public class EditExpenseTest {
 		final String editExpenseTitle = getTargetContext().getString(R.string.edit_expense_title);
 		matchToolbarTitle(editExpenseTitle);
 		onView(withId(R.id.act_edit_expense_name)).check(matches(withText(expense.getName())));
-		String expectedDate = Expense.Companion.getSIMPLE_DATE_FORMAT().format(expense.getDate().toDate());
+		String expectedDate = Transaction.Companion.getSIMPLE_DATE_FORMAT().format(expense.getDate().toDate());
 		onView(withId(R.id.act_edit_expense_date)).check(matches(withText(expectedDate)));
 		typeTextIntoView(R.id.act_edit_expense_name, " changed");
 

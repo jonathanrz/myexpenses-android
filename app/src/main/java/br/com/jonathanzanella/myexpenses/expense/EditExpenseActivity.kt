@@ -180,7 +180,7 @@ class EditExpenseActivity : AppCompatActivity(), ExpenseContract.EditView {
     }
 
     override fun fillExpense(expense: Expense): Expense {
-        expense.setName(ui.name.text.toString())
+        expense.name = ui.name.text.toString()
         var value = 0
         val valueText = ui.value.text.toString().replace("[^\\d]".toRegex(), "")
         if (!StringUtils.isEmpty(valueText))

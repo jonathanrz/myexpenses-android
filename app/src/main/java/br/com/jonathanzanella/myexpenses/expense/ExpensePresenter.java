@@ -25,11 +25,10 @@ import br.com.jonathanzanella.myexpenses.chargeable.ListChargeableActivity;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException;
 import br.com.jonathanzanella.myexpenses.log.Log;
-import br.com.jonathanzanella.myexpenses.validations.ValidationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
+import br.com.jonathanzanella.myexpenses.validations.ValidationResult;
 
 import static android.app.Activity.RESULT_OK;
-import static br.com.jonathanzanella.myexpenses.expense.Expense.findChargeable;
 
 class ExpensePresenter {
 	static final String KEY_EXPENSE_UUID = "KeyExpenseUuid";
@@ -289,7 +288,7 @@ class ExpensePresenter {
 
 			@Override
 			protected Chargeable doInBackground(Void... voids) {
-				chargeable = Expense.findChargeable(type, uuid);
+				chargeable = Expense.Companion.findChargeable(type, uuid);
 				return chargeable;
 			}
 
@@ -340,7 +339,7 @@ class ExpensePresenter {
 				String key = ListChargeableActivity.Companion.getKEY_CHARGEABLE_SELECTED_TYPE();
 				if(extras.containsKey(key)) {
 					String selectedUuid = extras.getString(ListChargeableActivity.Companion.getKEY_CHARGEABLE_SELECTED_UUID());
-					chargeable = findChargeable((ChargeableType) extras.getSerializable(key), selectedUuid);
+					chargeable = Expense.Companion.findChargeable((ChargeableType) extras.getSerializable(key), selectedUuid);
 				}
 				return null;
 			}
