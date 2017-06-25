@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
+import br.com.jonathanzanella.myexpenses.helper.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helper.builder.CardBuilder;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult;
@@ -32,7 +33,10 @@ public class CardRepositoryUnitTest {
 
 	@Test
 	public void return_with_error_when_tried_to_save_account_without_name() throws Exception {
-		Card card = new CardBuilder().name(null).build(accountRepository);
+		Card card = new CardBuilder()
+				.name(null)
+				.account(new AccountBuilder().build())
+				.build(accountRepository);
 
 		ValidationResult result = subject.save(card);
 
@@ -42,7 +46,11 @@ public class CardRepositoryUnitTest {
 
 	@Test
 	public void return_with_error_when_tried_to_save_account_without_type() throws Exception {
-		Card card = new CardBuilder().name("Test").build(accountRepository);
+		Card card = new CardBuilder()
+				.name("Test")
+				.account(new AccountBuilder().build())
+				.type(null)
+				.build(accountRepository);
 
 		ValidationResult result = subject.save(card);
 
@@ -55,6 +63,7 @@ public class CardRepositoryUnitTest {
 		Card card = new CardBuilder()
 				.name("Test")
 				.type(CardType.DEBIT)
+				.account(new AccountBuilder().build())
 				.build(accountRepository);
 
 		ValidationResult result = subject.save(card);
