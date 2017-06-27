@@ -68,7 +68,7 @@ public final class LogTable implements Table<Log> {
 		log.setTitle(getString(c, Fields.TITLE));
 		log.setDescription(getString(c, Fields.DESCRIPTION));
 		log.setDate(new DateTime(getLong(c, Fields.DATE)));
-		log.setType(Log.LogLevel.getLogLevel(getString(c, Fields.TYPE)));
+		log.setType(Log.LogLevel.Companion.getLogLevel(getString(c, Fields.TYPE)));
 		return log;
 	}
 

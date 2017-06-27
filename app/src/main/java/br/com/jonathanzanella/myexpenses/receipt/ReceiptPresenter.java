@@ -193,7 +193,7 @@ class ReceiptPresenter {
 					receipt = receipt.repeat(originalName, i + 1);
 					ValidationResult repetitionResult = repository.save(receipt);
 					if(!repetitionResult.isValid())
-						Log.error("ExpensePresenter", "Error saving repetition of receipt " + receipt.getData() +
+						Log.Companion.error("ExpensePresenter", "Error saving repetition of receipt " + receipt.getData() +
 								" error=" + repetitionResult.getErrors().toString());
 				}
 			}

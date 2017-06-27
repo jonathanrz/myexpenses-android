@@ -79,11 +79,11 @@ public class SyncService extends GcmTaskService {
 	public int onRunTask(TaskParams taskParams) {
 		if(StringUtils.isEmpty(new ServerData(getBaseContext()).getServerUrl()) ||
 			StringUtils.isEmpty(new ServerData(getBaseContext()).getServerToken())) {
-			Log.debug(LOG_TAG, "Did not executed SyncService because server url and token are not informed");
+			Log.Companion.debug(LOG_TAG, "Did not executed SyncService because server url and token are not informed");
 			return GcmNetworkManager.RESULT_SUCCESS;
 		}
 
-		Log.debug(LOG_TAG, "init SyncService, task: " + (taskParams != null ? taskParams.getTag() : "without task"));
+		Log.Companion.debug(LOG_TAG, "init SyncService, task: " + (taskParams != null ? taskParams.getTag() : "without task"));
 		totalSaved = 0;
 		totalUpdated = 0;
 
@@ -96,42 +96,42 @@ public class SyncService extends GcmTaskService {
 				notification.incrementProgress();
 			}
 		} else {
-			Log.debug(LOG_TAG, "error in health check");
+			Log.Companion.debug(LOG_TAG, "error in health check");
 			return GcmNetworkManager.RESULT_FAILURE;
 		}
 
 		notification.showFinishedJobNotification(this, totalSaved, totalUpdated);
 
-		Log.debug(LOG_TAG, "end SyncService");
+		Log.Companion.debug(LOG_TAG, "end SyncService");
 		selfSchedule();
 		return GcmNetworkManager.RESULT_SUCCESS;
 	}
 
 	private void syncApi(final UnsyncModelApi<? extends UnsyncModel> api) {
 		final String logTag = LOG_TAG + "-" + api.getClass().getSimpleName();
-		Log.debug(logTag, "init sync");
+		Log.Companion.debug(logTag, "init sync");
 		List<? extends UnsyncModel> unsyncModels = api.index();
 		if(unsyncModels != null) {
 			for (UnsyncModel unsyncModel : unsyncModels) {
 				api.syncAndSave(unsyncModel);
 				totalSaved++;
-				Log.info(logTag, "Saved: " + unsyncModel.getData());
+				Log.Companion.info(logTag, "Saved: " + unsyncModel.getData());
 			}
 
 			syncLocalData(api);
-			Log.debug(logTag, "finished sync");
+			Log.Companion.debug(logTag, "finished sync");
 		} else {
-			Log.error(logTag, "error syncing");
+			Log.Companion.error(logTag, "error syncing");
 		}
 	}
 
 	private void syncLocalData(final UnsyncModelApi<? extends UnsyncModel> api) {
 		final String logTag = LOG_TAG + "-" + api.getClass().getSimpleName();
-		Log.debug(logTag, "init of syncLocalData");
+		Log.Companion.debug(logTag, "init of syncLocalData");
 		for (UnsyncModel unsyncModel : api.unsyncModels()) {
 			api.save(unsyncModel);
 			totalUpdated++;
 		}
-		Log.debug(logTag, "end of syncLocalData");
+		Log.Companion.debug(logTag, "end of syncLocalData");
 	}
 }

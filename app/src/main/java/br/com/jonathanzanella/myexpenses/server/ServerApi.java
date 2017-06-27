@@ -24,11 +24,11 @@ public class ServerApi {
 			if(response.isSuccessful()) {
 				return true;
 			} else {
-				Log.error(LOG_TAG, "Error in health-check: " + response.code() + " " + response.message());
+				Log.Companion.error(LOG_TAG, "Error in health-check: " + response.code() + " " + response.message());
 				return false;
 			}
 		} catch (IOException e) {
-			Log.error(LOG_TAG, "Error in health-check:" + e.getMessage());
+			Log.Companion.error(LOG_TAG, "Error in health-check:" + e.getMessage());
 			e.printStackTrace();
 			return false;
 		}

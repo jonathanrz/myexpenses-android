@@ -15,10 +15,9 @@ import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.database.Where;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
+import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult;
-
-import static br.com.jonathanzanella.myexpenses.log.Log.warning;
 
 public class BillRepository  implements ModelRepository<Bill> {
 	private final Repository<Bill> repository;
@@ -113,14 +112,14 @@ public class BillRepository  implements ModelRepository<Bill> {
 	public ValidationResult syncAndSave(final Bill unsyncBill) {
 		ValidationResult result = validate(unsyncBill);
 		if(!result.isValid()) {
-			warning("Bill sync validation failed", unsyncBill.getData() + "\nerrors: " + result.getErrorsAsString());
+			Log.Companion.warning("Bill sync validation failed", unsyncBill.getData() + "\nerrors: " + result.getErrorsAsString());
 			return result;
 		}
 
 		Bill bill = find(unsyncBill.getUuid());
 		if(bill != null && bill.getId() != unsyncBill.getId()) {
 			if(bill.getUpdatedAt() != unsyncBill.getUpdatedAt())
-				warning("Bill overwritten", unsyncBill.getData());
+				Log.Companion.warning("Bill overwritten", unsyncBill.getData());
 			unsyncBill.setId(bill.getId());
 		}
 

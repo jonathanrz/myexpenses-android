@@ -12,10 +12,9 @@ import br.com.jonathanzanella.myexpenses.database.Fields;
 import br.com.jonathanzanella.myexpenses.database.ModelRepository;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.database.Where;
+import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult;
-
-import static br.com.jonathanzanella.myexpenses.log.Log.warning;
 
 public class AccountRepository implements ModelRepository<Account> {
 	private final Repository<Account> repository;
@@ -75,7 +74,7 @@ public class AccountRepository implements ModelRepository<Account> {
 	public ValidationResult syncAndSave(final Account unsyncAccount) {
 		ValidationResult result = validate(unsyncAccount);
 		if(!result.isValid()) {
-			warning("Account sync validation failed", unsyncAccount.getData() + "\nerrors: " + result.getErrorsAsString());
+			Log.Companion.warning("Account sync validation failed", unsyncAccount.getData() + "\nerrors: " + result.getErrorsAsString());
 			return result;
 		}
 
@@ -83,7 +82,7 @@ public class AccountRepository implements ModelRepository<Account> {
 
 		if(account != null && account.getId() != unsyncAccount.getId()) {
 			if(account.getUpdatedAt() != unsyncAccount.getUpdatedAt())
-				warning("Account overwritten", unsyncAccount.getData());
+				Log.Companion.warning("Account overwritten", unsyncAccount.getData());
 			unsyncAccount.setId(account.getId());
 		}
 

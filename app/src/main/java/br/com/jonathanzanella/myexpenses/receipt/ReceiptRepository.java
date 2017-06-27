@@ -14,12 +14,12 @@ import br.com.jonathanzanella.myexpenses.database.Fields;
 import br.com.jonathanzanella.myexpenses.database.ModelRepository;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.database.Where;
+import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult;
 
 import static br.com.jonathanzanella.myexpenses.helpers.DateHelper.firstDayOfMonth;
 import static br.com.jonathanzanella.myexpenses.helpers.DateHelper.lastDayOfMonth;
-import static br.com.jonathanzanella.myexpenses.log.Log.warning;
 
 public class ReceiptRepository implements ModelRepository<Receipt> {
 	private final Repository<Receipt> repository;
@@ -113,14 +113,14 @@ public class ReceiptRepository implements ModelRepository<Receipt> {
 	public ValidationResult syncAndSave(final Receipt unsyncReceipt) {
 		ValidationResult result = validate(unsyncReceipt);
 		if(!result.isValid()) {
-			warning("Receipt sync validation failed", unsyncReceipt.getData() + "\nerrors: " + result.getErrorsAsString());
+			Log.Companion.warning("Receipt sync validation failed", unsyncReceipt.getData() + "\nerrors: " + result.getErrorsAsString());
 			return result;
 		}
 
 		Receipt receipt = find(unsyncReceipt.getUuid());
 		if(receipt != null && receipt.getId() != unsyncReceipt.getId()) {
 			if(receipt.getUpdatedAt() != unsyncReceipt.getUpdatedAt())
-				warning("Receipt overwritten", unsyncReceipt.getData());
+				Log.Companion.warning("Receipt overwritten", unsyncReceipt.getData());
 			unsyncReceipt.setId(receipt.getId());
 		}
 

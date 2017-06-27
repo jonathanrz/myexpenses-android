@@ -29,7 +29,7 @@ class AccountView : BaseView {
 
         ui.accounts.adapter = adapter
         ui.accounts.layoutManager = GridLayoutManager(context, 2)
-        ui.accounts.itemAnimator = DefaultItemAnimator() as RecyclerView.ItemAnimator?
+        ui.accounts.itemAnimator = DefaultItemAnimator()
         adapter.setFormat(AccountAdapter.Format.LIST)
     }
 

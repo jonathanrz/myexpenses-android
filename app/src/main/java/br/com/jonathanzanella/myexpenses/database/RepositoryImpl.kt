@@ -2,8 +2,7 @@ package br.com.jonathanzanella.myexpenses.database
 
 import android.content.Context
 import android.database.SQLException
-import android.util.Log
-import br.com.jonathanzanella.myexpenses.log.Log.warning
+import br.com.jonathanzanella.myexpenses.log.Log
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel
 import java.util.*
 
@@ -119,7 +118,7 @@ class RepositoryImpl<T : UnsyncModel>(ctx: Context) : Repository<T> {
                 val newId = db.insertOrThrow(table.name, null, table.fillContentValues(data))
                 data.id = newId
             } catch (e: SQLException) {
-                Log.e("Repository", "error inserting the record into the database, error=" + e.message)
+                Log.Companion.error("Repository", "error inserting the record into the database, error=" + e.message)
                 throw e
             }
         } else {
@@ -132,7 +131,7 @@ class RepositoryImpl<T : UnsyncModel>(ctx: Context) : Repository<T> {
         val unsyncSource = find(table, unsyncModel.uuid)
         if (unsyncSource != null && unsyncSource.id != unsyncModel.id) {
             if (unsyncSource.updatedAt != unsyncModel.updatedAt)
-                warning("Source overwritten", unsyncModel.getData())
+                Log.Companion.warning("Source overwritten", unsyncModel.getData())
             unsyncModel.id = unsyncSource.id
         }
 

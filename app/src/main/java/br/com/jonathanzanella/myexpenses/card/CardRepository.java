@@ -16,10 +16,9 @@ import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.database.Where;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
+import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult;
-
-import static br.com.jonathanzanella.myexpenses.log.Log.warning;
 
 public class CardRepository implements ModelRepository<Card> {
 	private final Repository<Card> repository;
@@ -94,14 +93,14 @@ public class CardRepository implements ModelRepository<Card> {
 	public ValidationResult syncAndSave(final Card unsyncCard) {
 		ValidationResult result = validate(unsyncCard);
 		if(!result.isValid()) {
-			warning("Card sync validation failed", unsyncCard.getData() + "\nerrors: " + result.getErrorsAsString());
+			Log.Companion.warning("Card sync validation failed", unsyncCard.getData() + "\nerrors: " + result.getErrorsAsString());
 			return result;
 		}
 
 		Card card = find(unsyncCard.getUuid());
 		if(card != null && card.getId() != unsyncCard.getId()) {
 			if(card.getUpdatedAt() != unsyncCard.getUpdatedAt())
-				warning("Card overwritten", unsyncCard.getData());
+				Log.Companion.warning("Card overwritten", unsyncCard.getData());
 			unsyncCard.setId(card.getId());
 		}
 

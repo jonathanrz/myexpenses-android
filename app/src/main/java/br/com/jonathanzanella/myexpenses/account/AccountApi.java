@@ -33,10 +33,10 @@ public class AccountApi implements UnsyncModelApi<Account> {
 			if(response.isSuccessful()) {
 				return response.body();
 			} else {
-				Log.error(LOG_TAG, "Index request error: " + response.message());
+				Log.Companion.error(LOG_TAG, "Index request error: " + response.message());
 			}
 		} catch (IOException e) {
-			Log.error(LOG_TAG, "Index request error: " + e.getMessage());
+			Log.Companion.error(LOG_TAG, "Index request error: " + e.getMessage());
 			e.printStackTrace();
 		}
 
@@ -56,12 +56,12 @@ public class AccountApi implements UnsyncModelApi<Account> {
 			Response<Account> response = caller.execute();
 			if(response.isSuccessful()) {
 				getRepository().syncAndSave(response.body());
-				Log.info(LOG_TAG, "Updated: " + account.getData());
+				Log.Companion.info(LOG_TAG, "Updated: " + account.getData());
 			} else {
-				Log.error(LOG_TAG, "Save request error: " + response.message() + " uuid: " + account.getUuid());
+				Log.Companion.error(LOG_TAG, "Save request error: " + response.message() + " uuid: " + account.getUuid());
 			}
 		} catch (IOException e) {
-			Log.error(LOG_TAG, "Save request error: " + e.getMessage() + " uuid: " + account.getUuid());
+			Log.Companion.error(LOG_TAG, "Save request error: " + e.getMessage() + " uuid: " + account.getUuid());
 			e.printStackTrace();
 		}
 	}

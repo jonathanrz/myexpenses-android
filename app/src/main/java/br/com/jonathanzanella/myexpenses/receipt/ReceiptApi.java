@@ -33,10 +33,10 @@ public class ReceiptApi implements UnsyncModelApi<Receipt> {
             if(response.isSuccessful()) {
                 return response.body();
             } else {
-                Log.error(LOG_TAG, "Index request error: " + response.message());
+                Log.Companion.error(LOG_TAG, "Index request error: " + response.message());
             }
         } catch (IOException e) {
-            Log.error(LOG_TAG, "Index request error: " + e.getMessage());
+            Log.Companion.error(LOG_TAG, "Index request error: " + e.getMessage());
             e.printStackTrace();
         }
 
@@ -56,12 +56,12 @@ public class ReceiptApi implements UnsyncModelApi<Receipt> {
             Response<Receipt> response = caller.execute();
             if(response.isSuccessful()) {
                 getReceiptRepository().syncAndSave(response.body());
-                Log.info(LOG_TAG, "Updated: " + receipt.getData());
+                Log.Companion.info(LOG_TAG, "Updated: " + receipt.getData());
             } else {
-                Log.error(LOG_TAG, "Save request error: " + response.message() + " uuid: " + receipt.getUuid());
+                Log.Companion.error(LOG_TAG, "Save request error: " + response.message() + " uuid: " + receipt.getUuid());
             }
         } catch (IOException e) {
-            Log.error(LOG_TAG, "Save request error: " + e.getMessage() + " uuid: " + receipt.getUuid());
+            Log.Companion.error(LOG_TAG, "Save request error: " + e.getMessage() + " uuid: " + receipt.getUuid());
             e.printStackTrace();
         }
     }

@@ -231,7 +231,7 @@ class ExpensePresenter {
 					expense = expense.repeat(originalName, i + 1);
 					ValidationResult repetitionResult = repository.save(expense);
 					if(!repetitionResult.isValid())
-						Log.error("ExpensePresenter", "Error saving repetition of expense " + expense.getData() +
+						Log.Companion.error("ExpensePresenter", "Error saving repetition of expense " + expense.getData() +
 								" error=" + repetitionResult.getErrors().toString());
 				}
 			}

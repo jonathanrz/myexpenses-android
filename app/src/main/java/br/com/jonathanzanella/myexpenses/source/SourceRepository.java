@@ -12,10 +12,9 @@ import br.com.jonathanzanella.myexpenses.database.Fields;
 import br.com.jonathanzanella.myexpenses.database.ModelRepository;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.database.Where;
+import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult;
-
-import static br.com.jonathanzanella.myexpenses.log.Log.warning;
 
 public class SourceRepository implements ModelRepository<Source>  {
 	private final Repository<Source> repository;
@@ -70,14 +69,14 @@ public class SourceRepository implements ModelRepository<Source>  {
 	public ValidationResult syncAndSave(final Source sourceSync) {
 		ValidationResult result = validate(sourceSync);
 		if(!result.isValid()) {
-			warning("Source sync validation failed", sourceSync.getData() + "\nerrors: " + result.getErrorsAsString());
+			Log.Companion.warning("Source sync validation failed", sourceSync.getData() + "\nerrors: " + result.getErrorsAsString());
 			return result;
 		}
 
 		Source source = find(sourceSync.getUuid());
 		if(source != null && source.getId() != sourceSync.getId()) {
 			if(source.getUpdatedAt() != sourceSync.getUpdatedAt())
-				warning("Source overwritten", sourceSync.getData());
+				Log.Companion.warning("Source overwritten", sourceSync.getData());
 			sourceSync.setId(source.getId());
 		}
 

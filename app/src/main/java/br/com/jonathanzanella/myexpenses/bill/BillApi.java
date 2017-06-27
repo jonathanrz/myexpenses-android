@@ -39,10 +39,10 @@ public class BillApi implements UnsyncModelApi<Bill> {
 			if(response.isSuccessful()) {
 				return response.body();
 			} else {
-				Log.error(LOG_TAG, "Index request error: " + response.message());
+				Log.Companion.error(LOG_TAG, "Index request error: " + response.message());
 			}
 		} catch (IOException e) {
-			Log.error(LOG_TAG, "Index request error: " + e.getMessage());
+			Log.Companion.error(LOG_TAG, "Index request error: " + e.getMessage());
 			e.printStackTrace();
 		}
 
@@ -62,12 +62,12 @@ public class BillApi implements UnsyncModelApi<Bill> {
             Response<Bill> response = caller.execute();
             if(response.isSuccessful()) {
                 billRepository.syncAndSave(response.body());
-	            Log.info(LOG_TAG, "Updated: " + bill.getData());
+	            Log.Companion.info(LOG_TAG, "Updated: " + bill.getData());
             } else {
-                Log.error(LOG_TAG, "Save request error: " + response.message() + " uuid: " + bill.getUuid());
+                Log.Companion.error(LOG_TAG, "Save request error: " + response.message() + " uuid: " + bill.getUuid());
             }
         } catch (IOException e) {
-	        Log.error(LOG_TAG, "Save request error: " + e.getMessage() + " uuid: " + bill.getUuid());
+	        Log.Companion.error(LOG_TAG, "Save request error: " + e.getMessage() + " uuid: " + bill.getUuid());
             e.printStackTrace();
         }
 	}

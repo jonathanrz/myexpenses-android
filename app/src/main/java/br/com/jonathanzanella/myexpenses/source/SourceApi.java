@@ -32,10 +32,10 @@ public class SourceApi implements UnsyncModelApi<Source> {
             if(response.isSuccessful()) {
                 return response.body();
             } else {
-                Log.error(LOG_TAG, "Index request error: " + response.message());
+                Log.Companion.error(LOG_TAG, "Index request error: " + response.message());
             }
         } catch (IOException e) {
-            Log.error(LOG_TAG, "Index request error: " + e.getMessage());
+            Log.Companion.error(LOG_TAG, "Index request error: " + e.getMessage());
             e.printStackTrace();
         }
 
@@ -55,12 +55,12 @@ public class SourceApi implements UnsyncModelApi<Source> {
             Response<Source> response = caller.execute();
             if(response.isSuccessful()) {
                 getSourceRepository().syncAndSave(response.body());
-	            Log.info(LOG_TAG, "Updated: " + source.getData());
+	            Log.Companion.info(LOG_TAG, "Updated: " + source.getData());
             } else {
-                Log.error(LOG_TAG, "Save request error: " + response.message() + " uuid: " + source.getUuid());
+                Log.Companion.error(LOG_TAG, "Save request error: " + response.message() + " uuid: " + source.getUuid());
             }
         } catch (IOException e) {
-            Log.error(LOG_TAG, "Save request error: " + e.getMessage() + " uuid: " + source.getUuid());
+            Log.Companion.error(LOG_TAG, "Save request error: " + e.getMessage() + " uuid: " + source.getUuid());
             e.printStackTrace();
         }
     }
