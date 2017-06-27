@@ -5,19 +5,17 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import br.com.jonathanzanella.myexpenses.database.Repository;
-import br.com.jonathanzanella.myexpenses.validations.ValidationResult;
+import br.com.jonathanzanella.myexpenses.helper.builder.ExpenseBuilder;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
+import br.com.jonathanzanella.myexpenses.validations.ValidationResult;
 
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
-import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class ExpenseRepositoryUnitTest {
 	private ExpenseRepository subject;
 
-	@Mock
-	private Expense expense;
 	@Mock
 	private Repository<Expense> repository;
 
@@ -29,7 +27,9 @@ public class ExpenseRepositoryUnitTest {
 
 	@Test
 	public void return_with_error_when_tried_to_save_source_without_name() throws Exception {
-		when(expense.getName()).thenReturn(null);
+		Expense expense = new ExpenseBuilder()
+				.name(null)
+				.build();
 
 		ValidationResult result = subject.save(expense);
 
