@@ -47,25 +47,25 @@ open class ReceiptAdapter(context: Context) : RecyclerView.Adapter<ReceiptAdapte
 
             object : AsyncTask<Void, Void, Source>() {
 
-                override fun doInBackground(vararg voids: Void): Source {
+                override fun doInBackground(vararg voids: Void): Source? {
                     return receipt.source
                 }
 
-                override fun onPostExecute(s: Source) {
+                override fun onPostExecute(s: Source?) {
                     super.onPostExecute(s)
-                    ui.source.text = s.name
+                    ui.source.text = s?.name
                 }
             }.execute()
 
             object : AsyncTask<Void, Void, Account>() {
 
-                override fun doInBackground(vararg voids: Void): Account {
+                override fun doInBackground(vararg voids: Void): Account? {
                     return receipt.accountFromCache
                 }
 
-                override fun onPostExecute(a: Account) {
+                override fun onPostExecute(a: Account?) {
                     super.onPostExecute(a)
-                    ui.account.text = a.name
+                    ui.account.text = a?.name
                 }
             }.execute()
 

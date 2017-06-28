@@ -111,25 +111,25 @@ class ShowReceiptActivity : AppCompatActivity(), ReceiptContract.View {
 
         object : AsyncTask<Void, Void, Source>() {
 
-            override fun doInBackground(vararg voids: Void): Source {
+            override fun doInBackground(vararg voids: Void): Source? {
                 return receipt.source
             }
 
-            override fun onPostExecute(source: Source) {
+            override fun onPostExecute(source: Source?) {
                 super.onPostExecute(source)
-                ui.receiptSource.text = source.name
+                ui.receiptSource.text = source?.name
             }
         }.execute()
 
         object : AsyncTask<Void, Void, Account>() {
 
-            override fun doInBackground(vararg voids: Void): Account {
+            override fun doInBackground(vararg voids: Void): Account? {
                 return receipt.accountFromCache
             }
 
-            override fun onPostExecute(account: Account) {
+            override fun onPostExecute(account: Account?) {
                 super.onPostExecute(account)
-                ui.receiptAccount.text = account.name
+                ui.receiptAccount.text = account?.name
             }
         }.execute()
 

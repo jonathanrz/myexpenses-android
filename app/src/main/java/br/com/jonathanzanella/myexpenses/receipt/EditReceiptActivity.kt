@@ -156,7 +156,7 @@ class EditReceiptActivity : AppCompatActivity(), ReceiptContract.EditView {
     }
 
     override fun fillReceipt(receipt: Receipt): Receipt {
-        receipt.setName(ui.editName.text.toString())
+        receipt.name = ui.editName.text.toString()
         val income = ui.editIncome.text.toString().replace("[^\\d]".toRegex(), "")
         if (!StringUtils.isEmpty(income))
             receipt.income = Integer.parseInt(income)
@@ -192,13 +192,13 @@ class EditReceiptActivity : AppCompatActivity(), ReceiptContract.EditView {
 
         object : AsyncTask<Void, Void, Source>() {
 
-            override fun doInBackground(vararg voids: Void): Source {
+            override fun doInBackground(vararg voids: Void): Source? {
                 return receipt.source
             }
 
-            override fun onPostExecute(source: Source) {
+            override fun onPostExecute(source: Source?) {
                 super.onPostExecute(source)
-                ui.editSource.setText(source.name)
+                ui.editSource.setText(source?.name)
             }
         }.execute()
 
