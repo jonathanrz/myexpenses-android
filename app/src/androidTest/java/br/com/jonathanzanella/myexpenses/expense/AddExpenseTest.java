@@ -95,7 +95,8 @@ public class AddExpenseTest {
 		setTimeInDatePicker(time.getYear(), time.getMonthOfYear(), time.getDayOfMonth());
 		selectChargeable();
 
-		onView(withId(R.id.act_edit_expense_date)).check(matches(withText(Transaction.Companion.getSIMPLE_DATE_FORMAT().format(time.toDate()))));
+		onView(withId(R.id.act_edit_expense_date))
+				.check(matches(withText(Transaction.Companion.getSIMPLE_DATE_FORMAT().format(time.toDate()))));
 
 		clickIntoView(R.id.action_save);
 
