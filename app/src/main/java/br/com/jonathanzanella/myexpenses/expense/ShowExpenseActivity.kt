@@ -106,13 +106,13 @@ class ShowExpenseActivity : AppCompatActivity(), ExpenseContract.View {
         ui.showInOverview.text = CurrencyHelper.format(expense.valueToShowInOverview)
         object : AsyncTask<Void, Void, Chargeable>() {
 
-            override fun doInBackground(vararg voids: Void): Chargeable {
+            override fun doInBackground(vararg voids: Void): Chargeable? {
                 return expense.chargeableFromCache
             }
 
-            override fun onPostExecute(chargeable: Chargeable) {
+            override fun onPostExecute(chargeable: Chargeable?) {
                 super.onPostExecute(chargeable)
-                ui.chargeable.text = chargeable.name
+                ui.chargeable.text = chargeable?.name
             }
         }.execute()
         ui.chargeNextMonth.visibility = if (expense.isChargedNextMonth) View.VISIBLE else View.GONE

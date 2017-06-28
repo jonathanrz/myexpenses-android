@@ -46,17 +46,17 @@ internal open class ExpenseAdapter : RecyclerView.Adapter<ExpenseAdapter.ViewHol
             itemView.value.text = CurrencyHelper.format(expense.value)
             object : AsyncTask<Void, Void, Chargeable>() {
 
-                override fun doInBackground(vararg voids: Void): Chargeable {
+                override fun doInBackground(vararg voids: Void): Chargeable? {
                     return expense.chargeableFromCache
                 }
 
-                override fun onPostExecute(c: Chargeable) {
+                override fun onPostExecute(c: Chargeable?) {
                     super.onPostExecute(c)
-                    itemView.chargeable.setText(c.name)
+                    itemView.chargeable.text = c?.name
                 }
             }.execute()
 
-            itemView.chargeNextMonth.setVisibility(if (expense.isChargedNextMonth) View.VISIBLE else View.INVISIBLE)
+            itemView.chargeNextMonth.visibility = if (expense.isChargedNextMonth) View.VISIBLE else View.INVISIBLE
             object : AsyncTask<Void, Void, Bill>() {
 
                 override fun doInBackground(vararg voids: Void): Bill? {

@@ -54,7 +54,7 @@ internal class ExpenseMonthlyResumeAdapter : RecyclerView.Adapter<ExpenseMonthly
                 itemView.income!!.setTypeface(null, Typeface.BOLD)
 
             object : AsyncTask<Void, Void, Chargeable>() {
-                override fun doInBackground(vararg voids: Void): Chargeable {
+                override fun doInBackground(vararg voids: Void): Chargeable? {
                     return expense.chargeableFromCache
                 }
 
