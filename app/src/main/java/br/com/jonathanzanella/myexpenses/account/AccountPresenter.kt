@@ -6,7 +6,7 @@ import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult
 
-internal class AccountPresenter(private val repository: AccountRepository) {
+class AccountPresenter(private val repository: AccountRepository) {
 
     private var view: AccountContract.View? = null
     private var editView: AccountContract.EditView? = null

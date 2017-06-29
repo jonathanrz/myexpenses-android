@@ -5,7 +5,7 @@ import android.support.annotation.StringRes
 
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 
-internal interface AccountContract {
+interface AccountContract {
     interface View {
         val context: Context
         fun setTitle(@StringRes string: Int)

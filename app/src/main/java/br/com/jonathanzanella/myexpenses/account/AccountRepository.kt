@@ -11,7 +11,7 @@ import br.com.jonathanzanella.myexpenses.validations.ValidationResult
 import org.apache.commons.lang3.StringUtils
 import java.util.*
 
-class AccountRepository(private val repository: Repository<Account>) : ModelRepository<Account> {
+open class AccountRepository(private val repository: Repository<Account>) : ModelRepository<Account> {
     private val accountTable = AccountTable()
 
     @WorkerThread
