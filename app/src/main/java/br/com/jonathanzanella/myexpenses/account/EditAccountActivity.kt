@@ -1,7 +1,6 @@
 package br.com.jonathanzanella.myexpenses.account
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -20,7 +19,7 @@ import org.apache.commons.lang3.StringUtils
 import org.jetbrains.anko.*
 
 class EditAccountActivity : AppCompatActivity(), AccountContract.EditView {
-
+    override val context = this
     private val ui = EditAccountActivityUi()
     private val presenter = AccountPresenter(AccountRepository(RepositoryImpl<Account>(this)))
 
@@ -62,12 +61,8 @@ class EditAccountActivity : AppCompatActivity(), AccountContract.EditView {
         super.onStop()
     }
 
-    override fun setTitle(string: String?) {
+    override fun setTitle(string: String) {
         ui.toolbar.title = string
-    }
-
-    override fun getContext(): Context {
-        return this
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

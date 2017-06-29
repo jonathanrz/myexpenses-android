@@ -1,7 +1,6 @@
 package br.com.jonathanzanella.myexpenses.account
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -19,7 +18,7 @@ import org.jetbrains.anko.*
 import org.joda.time.DateTime
 
 class ShowAccountActivity : AppCompatActivity(), AccountContract.View {
-
+    override val context = this
     private var monthToShow: DateTime? = null
     private val ui = ShowAccountActivityUi()
     private val presenter = AccountPresenter(AccountRepository(RepositoryImpl<Account>(this)))
@@ -91,12 +90,8 @@ class ShowAccountActivity : AppCompatActivity(), AccountContract.View {
         ui.transactionsView.showTransactions(account, monthToShow!!)
     }
 
-    override fun setTitle(string: String?) {
+    override fun setTitle(string: String) {
         ui.toolbar.title = string
-    }
-
-    override fun getContext(): Context {
-        return this
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

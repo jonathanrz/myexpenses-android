@@ -87,7 +87,7 @@ class Receipt : Transaction, UnsyncModel {
 
     private fun getAccount(ignoreCache: Boolean): Account? {
         if (account == null || ignoreCache)
-            account = accountRepository.find(accountUuid)
+            account = accountRepository.find(accountUuid!!)
         return account
     }
 

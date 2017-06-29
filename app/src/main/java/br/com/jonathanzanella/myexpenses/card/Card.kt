@@ -43,7 +43,7 @@ class Card : Chargeable, UnsyncModel {
 
     var account: Account?
         @WorkerThread
-        get() = accountRepository?.find(accountUuid)
+        get() = accountRepository?.find(accountUuid!!)
         set(account) {
             accountUuid = account!!.uuid
         }
