@@ -18,7 +18,7 @@ internal class AccountAdapterPresenter(private val adapter: AccountAdapter, priv
                 return null
             }
 
-            override fun onPostExecute(aVoid: Void) {
+            override fun onPostExecute(aVoid: Void?) {
                 super.onPostExecute(aVoid)
                 adapter.notifyDataSetChanged()
             }
