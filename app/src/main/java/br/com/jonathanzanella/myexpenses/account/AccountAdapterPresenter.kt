@@ -30,5 +30,7 @@ internal class AccountAdapterPresenter(private val adapter: AccountAdapter, priv
     }
 
     val accountsSize: Int
-        get() = if (accounts == null) 0 else accounts!!.size
+        get() {
+            return accounts?.size ?: 0
+        }
 }
