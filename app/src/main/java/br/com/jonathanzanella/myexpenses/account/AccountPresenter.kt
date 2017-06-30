@@ -39,12 +39,14 @@ class AccountPresenter(private val repository: AccountRepository) {
 
     @UiThread
     private fun updateView() {
-        if (editView != null) {
-            editView!!.setTitle(R.string.edit_account_title)
+        val v = editView
+        if (v != null) {
+            v.setTitle(R.string.edit_account_title)
         } else {
-            val v = view!!
-            val title = v.context.getString(R.string.account)
-            v.setTitle(title + " " + account!!.name)
+            view!!.let {
+                val title = it.context.getString(R.string.account)
+                it.setTitle(title + " " + account!!.name)
+            }
         }
         view!!.showAccount(account!!)
     }
@@ -73,13 +75,12 @@ class AccountPresenter(private val repository: AccountRepository) {
 
     @UiThread
     fun save() {
-        if (editView == null)
-            throw InvalidMethodCallException("save", javaClass.toString(), "View should be a Edit View")
+        val v = editView ?: throw InvalidMethodCallException("save", javaClass.toString(), "View should be a Edit View")
 
         if (account == null)
             account = Account()
 
-        account = editView!!.fillAccount(account!!)
+        account = v.fillAccount(account!!)
         object : AsyncTask<Void, Void, ValidationResult>() {
 
             override fun doInBackground(vararg voids: Void): ValidationResult {
@@ -89,15 +90,15 @@ class AccountPresenter(private val repository: AccountRepository) {
             override fun onPostExecute(result: ValidationResult) {
                 super.onPostExecute(result)
                 if (result.isValid) {
-                    editView!!.finishView()
+                    v.finishView()
                 } else {
                     for (validationError in result.errors)
-                        editView!!.showError(validationError)
+                        v.showError(validationError)
                 }
             }
         }.execute()
     }
 
     val uuid: String?
-        get() = if (account != null) account!!.uuid else null
+        get() = account?.uuid
 }
