@@ -1,6 +1,5 @@
 package br.com.jonathanzanella.myexpenses.receipt
 
-import android.support.annotation.WorkerThread
 import br.com.jonathanzanella.myexpenses.Environment
 import br.com.jonathanzanella.myexpenses.MyApplication
 import br.com.jonathanzanella.myexpenses.account.Account
@@ -86,8 +85,11 @@ class Receipt : Transaction, UnsyncModel {
     }
 
     private fun getAccount(ignoreCache: Boolean): Account? {
-        if (account == null || ignoreCache)
-            account = accountRepository.find(accountUuid!!)
+        if (account == null || ignoreCache) {
+            accountUuid?.let {
+                account = accountRepository.find(it)
+            }
+        }
         return account
     }
 
