@@ -43,12 +43,16 @@ class Card : Chargeable, UnsyncModel {
 
     var account: Account?
         @WorkerThread
-        get() = accountRepository?.find(accountUuid!!)
+        get() {
+            return accountUuid?.let {
+                accountRepository?.find(it)
+            }
+        }
         set(account) {
             accountUuid = account!!.uuid
         }
 
-    override val chargeableType: ChargeableType
+        override val chargeableType: ChargeableType
         get() {
             when (type) {
                 CardType.CREDIT -> return ChargeableType.CREDIT_CARD
@@ -59,37 +63,37 @@ class Card : Chargeable, UnsyncModel {
             return ChargeableType.DEBIT_CARD
         }
 
-    override fun canBePaidNextMonth(): Boolean {
-        return type == CardType.CREDIT
-    }
-
-    @WorkerThread
-    override fun debit(value: Int) {
-        if (type == CardType.DEBIT) {
-            val account = account
-            account!!.debit(value)
-            accountRepository!!.save(account)
+        override fun canBePaidNextMonth(): Boolean {
+            return type == CardType.CREDIT
         }
-    }
 
-    @WorkerThread
-    override fun credit(value: Int) {
-        if (type == CardType.DEBIT) {
-            val account = account
-            account!!.credit(value)
-            accountRepository!!.save(account)
+        @WorkerThread
+        override fun debit(value: Int) {
+            if (type == CardType.DEBIT) {
+                val account = account
+                account!!.debit(value)
+                accountRepository!!.save(account)
+            }
         }
-    }
 
-    override fun getData(): String {
-        return "name=" + name +
-                "\nuuid=" + uuid +
-                "\nserverId=" + serverId +
-                "\ntype=" + type +
-                "\naccount=" + accountUuid
-    }
+        @WorkerThread
+        override fun credit(value: Int) {
+            if (type == CardType.DEBIT) {
+                val account = account
+                account!!.credit(value)
+                accountRepository!!.save(account)
+            }
+        }
 
-    companion object {
+        override fun getData(): String {
+            return "name=" + name +
+                    "\nuuid=" + uuid +
+                    "\nserverId=" + serverId +
+                    "\ntype=" + type +
+                    "\naccount=" + accountUuid
+        }
+
+        companion object {
         private val LOG_TAG = "Card"
     }
 }
