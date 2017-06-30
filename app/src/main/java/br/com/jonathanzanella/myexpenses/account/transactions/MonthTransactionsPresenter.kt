@@ -67,7 +67,7 @@ internal class MonthTransactionsPresenter(ctx: Context, private val view: MonthT
                         return null
                     }
 
-                    override fun onPostExecute(v: Void) {
+                    override fun onPostExecute(v: Void?) {
                         super.onPostExecute(v)
                         adapter.notifyDataSetChanged()
                         loadedBills = true
@@ -90,7 +90,7 @@ internal class MonthTransactionsPresenter(ctx: Context, private val view: MonthT
                     return null
                 }
 
-                override fun onPostExecute(v: Void) {
+                override fun onPostExecute(v: Void?) {
                     super.onPostExecute(v)
                     adapter.notifyDataSetChanged()
                     loadedExpenses = true
