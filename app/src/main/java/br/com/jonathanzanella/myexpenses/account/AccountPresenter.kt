@@ -42,8 +42,9 @@ class AccountPresenter(private val repository: AccountRepository) {
         if (editView != null) {
             editView!!.setTitle(R.string.edit_account_title)
         } else {
-            val title = view!!.context.getString(R.string.account)
-            view!!.setTitle(title + " " + account!!.name)
+            val v = view!!
+            val title = v.context.getString(R.string.account)
+            v.setTitle(title + " " + account!!.name)
         }
         view!!.showAccount(account!!)
     }
