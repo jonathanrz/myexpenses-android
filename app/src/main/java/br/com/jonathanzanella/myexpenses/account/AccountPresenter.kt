@@ -28,12 +28,12 @@ class AccountPresenter(private val repository: AccountRepository) {
 
     @UiThread
     fun viewUpdated(invalidateCache: Boolean) {
-        if (account == null) {
-            if (editView != null)
-                editView!!.setTitle(R.string.new_account_title)
+        val acc = account
+        if (acc == null) {
+            editView?.setTitle(R.string.new_account_title)
         } else {
             if (invalidateCache)
-                loadAccount(account!!.uuid!!)
+                loadAccount(acc.uuid!!)
         }
     }
 
