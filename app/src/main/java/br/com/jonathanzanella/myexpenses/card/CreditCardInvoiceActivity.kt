@@ -51,7 +51,7 @@ class CreditCardInvoiceActivity : AppCompatActivity() {
                 return null
             }
 
-            override fun onPostExecute(aVoid: Void) {
+            override fun onPostExecute(aVoid: Void?) {
                 super.onPostExecute(aVoid)
 
                 val adapter = MonthlyPagerAdapter(this@CreditCardInvoiceActivity,

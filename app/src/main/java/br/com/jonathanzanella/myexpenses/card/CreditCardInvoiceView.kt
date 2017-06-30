@@ -31,7 +31,7 @@ class CreditCardInvoiceView(context: Context, val creditCard: Card, val month: D
                 return null
             }
 
-            override fun onPostExecute(aVoid: Void) {
+            override fun onPostExecute(aVoid: Void?) {
                 super.onPostExecute(aVoid)
                 adapter.notifyDataSetChanged()
             }

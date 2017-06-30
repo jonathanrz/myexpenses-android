@@ -108,7 +108,7 @@ internal class MonthTransactionsPresenter(ctx: Context, private val view: MonthT
                     return null
                 }
 
-                override fun onPostExecute(aVoid: Void) {
+                override fun onPostExecute(aVoid: Void?) {
                     super.onPostExecute(aVoid)
                     adapter.notifyDataSetChanged()
                     loadedReceipts = true
