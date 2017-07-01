@@ -9,7 +9,7 @@ import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException
 import org.joda.time.DateTime
 
-internal class BillPresenter(private val repository: BillRepository) {
+class BillPresenter(private val repository: BillRepository) {
     private var view: BillContract.View? = null
     private var editView: BillContract.EditView? = null
     private var bill: Bill? = null

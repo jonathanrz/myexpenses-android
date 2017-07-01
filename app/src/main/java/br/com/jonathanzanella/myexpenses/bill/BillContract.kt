@@ -5,7 +5,7 @@ import android.support.annotation.StringRes
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import org.joda.time.DateTime
 
-internal interface BillContract {
+interface BillContract {
     interface View {
         val context: Context
         fun setTitle(@StringRes string: Int)
