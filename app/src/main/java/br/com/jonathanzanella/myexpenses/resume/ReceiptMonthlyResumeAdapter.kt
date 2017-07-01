@@ -63,7 +63,7 @@ internal class ReceiptMonthlyResumeAdapter(private val receiptRepository: Receip
                 override fun onPostExecute(s: Source?) {
                     super.onPostExecute(s)
                     if (s != null)
-                        itemView.source.text = s.name
+                        itemView.source?.text = s.name
                 }
             }.execute()
         }
