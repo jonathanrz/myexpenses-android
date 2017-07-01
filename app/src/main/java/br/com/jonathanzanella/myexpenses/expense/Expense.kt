@@ -211,7 +211,7 @@ class Expense : Transaction, UnsyncModel {
         private var cardRepository: CardRepository? = null
             get() {
                 if (field == null)
-                    field = CardRepository(RepositoryImpl<Card>(MyApplication.getContext()), expenseRepository)
+                    field = CardRepository(RepositoryImpl<Card>(MyApplication.getContext()), expenseRepository!!)
                 return field
             }
         private var expenseRepository: ExpenseRepository? = null
