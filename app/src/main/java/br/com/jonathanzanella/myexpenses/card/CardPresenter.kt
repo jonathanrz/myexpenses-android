@@ -18,8 +18,8 @@ import br.com.jonathanzanella.myexpenses.helpers.ResourcesHelper
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult
 import org.joda.time.DateTime
 
-internal class CardPresenter(private val repository: CardRepository, private val accountRepository: AccountRepository,
-                             private val expenseRepository: ExpenseRepository, private val resourcesHelper: ResourcesHelper) {
+class CardPresenter(private val repository: CardRepository, private val accountRepository: AccountRepository,
+                     private val expenseRepository: ExpenseRepository, private val resourcesHelper: ResourcesHelper) {
 
     private var view: CardContract.View? = null
     private var editView: CardContract.EditView? = null

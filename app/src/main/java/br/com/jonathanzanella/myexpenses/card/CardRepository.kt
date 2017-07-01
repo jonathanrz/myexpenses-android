@@ -15,7 +15,7 @@ import org.apache.commons.lang3.StringUtils
 import org.joda.time.DateTime
 import java.util.*
 
-class CardRepository(private val repository: Repository<Card>, private val expenseRepository: ExpenseRepository) : ModelRepository<Card> {
+open class CardRepository(private val repository: Repository<Card>, private val expenseRepository: ExpenseRepository) : ModelRepository<Card> {
     private val table = CardTable()
 
     @WorkerThread
