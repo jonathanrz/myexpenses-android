@@ -55,23 +55,24 @@ class BillPresenter(private val repository: BillRepository) {
     }
 
     fun updateView() {
-        if (bill != null) {
-            if (editView != null) {
-                editView!!.setTitle(R.string.edit_bill_title)
+        val v = editView
+        val b = bill
+        if (b != null) {
+            if (v != null) {
+                v.setTitle(R.string.edit_bill_title)
             } else {
-                val title = view!!.context.getString(R.string.bill)
-                view!!.setTitle(title + " " + bill!!.name)
+                view!!.let {
+                    val title = it.context.getString(R.string.bill)
+                    it.setTitle(title + " " + b.name)
+                }
             }
-            view!!.showBill(bill!!)
-            initDate = bill!!.initDate
-            if (editView != null)
-                editView!!.onInitDateChanged(initDate!!)
-            endDate = bill!!.endDate
-            if (editView != null)
-                editView!!.onEndDateChanged(endDate!!)
+            view!!.showBill(b)
+            initDate = b.initDate
+            v?.onInitDateChanged(initDate!!)
+            endDate = b.endDate
+            v?.onEndDateChanged(endDate!!)
         } else {
-            if (editView != null)
-                editView!!.setTitle(R.string.new_bill_title)
+            v?.setTitle(R.string.new_bill_title)
         }
     }
 
@@ -113,22 +114,24 @@ class BillPresenter(private val repository: BillRepository) {
 
     fun save() {
         checkEditViewSet()
+
+        val v = editView!!
         val b = when(bill) {
-            null -> editView!!.fillBill(Bill())
-            else -> editView!!.fillBill(bill!!)
+            null -> v.fillBill(Bill())
+            else -> v.fillBill(bill!!)
         }
         b.initDate = initDate
         b.endDate = endDate
         val result = repository.save(b)
 
         if (result.isValid) {
-            editView!!.finishView()
+            v.finishView()
         } else {
             for (validationError in result.errors)
-                editView!!.showError(validationError)
+                v.showError(validationError)
         }
     }
 
     val uuid: String?
-        get() = if (bill != null) bill!!.uuid else null
+        get() = bill?.uuid
 }
