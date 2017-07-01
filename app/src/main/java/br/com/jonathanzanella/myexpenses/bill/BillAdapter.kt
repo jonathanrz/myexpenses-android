@@ -20,7 +20,7 @@ import br.com.jonathanzanella.myexpenses.views.anko.rowSecondaryInformation
 import br.com.jonathanzanella.myexpenses.views.anko.rowStaticInformation
 import org.jetbrains.anko.*
 
-open internal class BillAdapter : RecyclerView.Adapter<BillAdapter.ViewHolder>() {
+open class BillAdapter : RecyclerView.Adapter<BillAdapter.ViewHolder>() {
     private var callback: BillAdapterCallback? = null
     private val presenter: BillAdapterPresenter
 

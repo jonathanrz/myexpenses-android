@@ -1,6 +1,5 @@
 package br.com.jonathanzanella.myexpenses.bill
 
-import android.content.Context
 import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
@@ -18,7 +17,7 @@ import br.com.jonathanzanella.myexpenses.views.anko.*
 import org.jetbrains.anko.*
 
 class ShowBillActivity : AppCompatActivity(), BillContract.View {
-
+    override val context = this
     private val presenter: BillPresenter
     private val ui = ShowBillActivityUi()
 
@@ -74,12 +73,8 @@ class ShowBillActivity : AppCompatActivity(), BillContract.View {
         presenter.detachView()
     }
 
-    override fun setTitle(string: String?) {
+    override fun setTitle(string: String) {
         ui.toolbar.title = string
-    }
-
-    override fun getContext(): Context {
-        return this
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
