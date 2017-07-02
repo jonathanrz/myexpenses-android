@@ -5,7 +5,7 @@ import android.support.annotation.UiThread
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException
 
-internal class SourcePresenter(private val repository: SourceRepository) {
+class SourcePresenter(private val repository: SourceRepository) {
     private var view: SourceContract.View? = null
     private var editView: SourceContract.EditView? = null
     private var source: Source? = null
