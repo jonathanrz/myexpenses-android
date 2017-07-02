@@ -18,7 +18,7 @@ object CursorHelper {
         return DateTime(c.getLong(c.getColumnIndexOrThrow(field.toString())))
     }
 
-    @JvmStatic fun getString(c: Cursor, field: Fields): String {
+    @JvmStatic fun getString(c: Cursor, field: Fields): String? {
         return c.getString(c.getColumnIndexOrThrow(field.toString()))
     }
 }

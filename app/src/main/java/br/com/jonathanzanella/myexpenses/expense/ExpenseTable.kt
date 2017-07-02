@@ -83,8 +83,8 @@ class ExpenseTable : Table<Expense> {
         expense.setDate(getDate(c, Fields.DATE))
         expense.value = getInt(c, Fields.VALUE)
         expense.valueToShowInOverview = getInt(c, Fields.VALUE_TO_SHOW_IN_OVERVIEW)
-        expense.setChargeable(getString(c, Fields.CHARGEABLE_UUID),
-                ChargeableType.getType(getString(c, Fields.CHARGEABLE_TYPE)))
+        expense.setChargeable(getString(c, Fields.CHARGEABLE_UUID)!!,
+                ChargeableType.getType(getString(c, Fields.CHARGEABLE_TYPE)!!))
         expense.billUuid = getString(c, Fields.BILL_UUID)
         expense.isCharged = getInt(c, Fields.CHARGED) != 0
         expense.isChargedNextMonth = getInt(c, Fields.CHARGE_NEXT_MONTH) != 0
