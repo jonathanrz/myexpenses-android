@@ -38,10 +38,12 @@ class ReceiptView : BaseView, ViewPager.OnPageChangeListener {
         addView(ui.createView(AnkoContext.Companion.create(context, this)))
 
         repository = ReceiptRepository(RepositoryImpl<Receipt>(context))
-        adapter = MonthlyPagerAdapter(context, MonthlyPagerAdapterBuilder { ctx, date ->
-            val view = ReceiptMonthlyView(ctx, date)
-            views.put(date, WeakReference(view))
-            view
+        adapter = MonthlyPagerAdapter(context, object : MonthlyPagerAdapterBuilder {
+            override fun buildView(ctx: Context, date: DateTime): BaseView {
+                val view = ReceiptMonthlyView(ctx, date)
+                views.put(date, WeakReference(view))
+                return view
+            }
         })
 
         ui.pager.adapter = adapter

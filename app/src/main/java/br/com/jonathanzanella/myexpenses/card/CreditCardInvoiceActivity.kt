@@ -1,5 +1,6 @@
 package br.com.jonathanzanella.myexpenses.card
 
+import android.content.Context
 import android.os.AsyncTask
 import android.os.Bundle
 import android.support.annotation.UiThread
@@ -12,6 +13,7 @@ import br.com.jonathanzanella.myexpenses.expense.Expense
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapter
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapterBuilder
+import br.com.jonathanzanella.myexpenses.views.BaseView
 import br.com.jonathanzanella.myexpenses.views.anko.TemplateToolbar
 import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
 import br.com.jonathanzanella.myexpenses.views.anko.toolbarTemplate
@@ -54,10 +56,13 @@ class CreditCardInvoiceActivity : AppCompatActivity() {
             override fun onPostExecute(aVoid: Void?) {
                 super.onPostExecute(aVoid)
 
-                val adapter = MonthlyPagerAdapter(this@CreditCardInvoiceActivity,
-                        MonthlyPagerAdapterBuilder { ctx, date -> CreditCardInvoiceView(ctx, card!!, date) })
+                val adapter = MonthlyPagerAdapter(this@CreditCardInvoiceActivity, object : MonthlyPagerAdapterBuilder {
+                    override fun buildView(ctx: Context, date: DateTime): BaseView {
+                        return CreditCardInvoiceView(ctx, card!!, date)
+                    }
+                })
                 ui.pager.adapter = adapter
-                ui.pager.currentItem = adapter.getDatePosition(initDate)
+                ui.pager.currentItem = adapter.getDatePosition(initDate!!)
                 ui.tabs.setupWithViewPager(ui.pager)
             }
         }.execute()

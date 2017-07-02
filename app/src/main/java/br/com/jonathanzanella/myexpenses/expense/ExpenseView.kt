@@ -33,11 +33,13 @@ class ExpenseView@JvmOverloads constructor(
     private val views = HashMap<DateTime, WeakReference<ExpenseMonthlyView>>()
 
     init {
-        adapter = MonthlyPagerAdapter(context, MonthlyPagerAdapterBuilder { ctx, date ->
-            val view = ExpenseMonthlyView(ctx, date)
-            views.put(date, WeakReference(view))
-            view.filter(filter)
-            view
+        adapter = MonthlyPagerAdapter(context, object : MonthlyPagerAdapterBuilder {
+            override fun buildView(ctx: Context, date: DateTime): BaseView {
+                val view = ExpenseMonthlyView(ctx, date)
+                views.put(date, WeakReference(view))
+                view.filter(filter)
+                return view
+            }
         })
     }
 
