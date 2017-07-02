@@ -63,8 +63,8 @@ public class ExpensesInPeriodTest {
 		expenseRepository.save(firstOfJuly);
 
 		WeeklyPagerAdapter.Period period = new WeeklyPagerAdapter.Period();
-		period.init = firstDayOfJune;
-		period.end = lastDayOfJune;
+		period.setInit(firstDayOfJune);
+		period.setEnd(lastDayOfJune);
 
 		List<Expense> expenses = expenseRepository.expenses(period);
 		assertThat(expenses.size(), is(2));
@@ -90,8 +90,8 @@ public class ExpensesInPeriodTest {
 		expenseRepository.save(firstOfJuly);
 
 		WeeklyPagerAdapter.Period period = new WeeklyPagerAdapter.Period();
-		period.init = firstDayOfJune;
-		period.end = firstDayOfJune.plusDays(6);
+		period.setInit(firstDayOfJune);
+		period.setEnd(firstDayOfJune.plusDays(6));
 
 		List<Expense> expenses = expenseRepository.expenses(period);
 		assertThat(expenses.size(), is(2));

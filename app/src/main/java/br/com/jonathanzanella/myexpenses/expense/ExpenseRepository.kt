@@ -1,36 +1,25 @@
 package br.com.jonathanzanella.myexpenses.expense
 
 import android.support.annotation.WorkerThread
-
-import org.apache.commons.lang3.StringUtils
-import org.joda.time.DateTime
-
-import java.util.ArrayList
-import java.util.Collections
-import java.util.Comparator
-import java.util.UUID
-
 import br.com.jonathanzanella.myexpenses.MyApplication
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.card.Card
 import br.com.jonathanzanella.myexpenses.card.CardRepository
 import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType
-import br.com.jonathanzanella.myexpenses.database.Fields
-import br.com.jonathanzanella.myexpenses.database.ModelRepository
-import br.com.jonathanzanella.myexpenses.database.Repository
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
-import br.com.jonathanzanella.myexpenses.database.Where
+import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType.ACCOUNT
+import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType.DEBIT_CARD
+import br.com.jonathanzanella.myexpenses.database.*
 import br.com.jonathanzanella.myexpenses.helpers.DateHelper
+import br.com.jonathanzanella.myexpenses.helpers.DateHelper.firstDayOfMonth
+import br.com.jonathanzanella.myexpenses.helpers.DateHelper.lastDayOfMonth
 import br.com.jonathanzanella.myexpenses.log.Log
 import br.com.jonathanzanella.myexpenses.overview.WeeklyPagerAdapter
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult
-
-import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType.ACCOUNT
-import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType.DEBIT_CARD
-import br.com.jonathanzanella.myexpenses.helpers.DateHelper.firstDayOfMonth
-import br.com.jonathanzanella.myexpenses.helpers.DateHelper.lastDayOfMonth
+import org.apache.commons.lang3.StringUtils
+import org.joda.time.DateTime
+import java.util.*
 
 open class ExpenseRepository(private val repository: Repository<Expense>) : ModelRepository<Expense> {
     private val table = ExpenseTable()
@@ -77,8 +66,8 @@ open class ExpenseRepository(private val repository: Repository<Expense>) : Mode
     fun expenses(period: WeeklyPagerAdapter.Period, card: Card?): List<Expense> {
         val expenses = ArrayList<Expense>()
 
-        if (period.init.dayOfMonth == 1) {
-            val date = DateHelper.firstDayOfMonth(period.init)
+        if (period.init?.dayOfMonth == 1) {
+            val date = DateHelper.firstDayOfMonth(period.init!!)
             val initOfMonth = date.minusMonths(1)
             val endOfMonth = DateHelper.lastDayOfMonth(initOfMonth)
 
@@ -91,8 +80,8 @@ open class ExpenseRepository(private val repository: Repository<Expense>) : Mode
             expenses.addAll(repository.query(table, where))
         }
 
-        val init = DateHelper.firstMillisOfDay(period.init)
-        val end = DateHelper.lastMillisOfDay(period.end)
+        val init = DateHelper.firstMillisOfDay(period.init!!)
+        val end = DateHelper.lastMillisOfDay(period.end!!)
 
         var where = queryBetweenUserDataAndNotRemoved(init, end)
                 .and(Fields.CHARGE_NEXT_MONTH).eq(false)

@@ -18,7 +18,11 @@ internal class OverviewExpensesMonthlyView(context: Context, month: DateTime) : 
     init {
         val expenseRepository = ExpenseRepository(RepositoryImpl<Expense>(context))
 
-        val adapter = WeeklyPagerAdapter(getContext(), month, WeeklyPagerAdapterBuilder { ctx, period -> OverviewExpensesWeeklyView(ctx, period) })
+        val adapter = WeeklyPagerAdapter(getContext(), month, object : WeeklyPagerAdapterBuilder {
+            override fun buildView(ctx: Context, period: WeeklyPagerAdapter.Period): BaseView {
+                return OverviewExpensesWeeklyView(ctx, period)
+            }
+        })
 
         pager!!.adapter = adapter
         pager!!.currentItem = MonthlyPagerAdapter.INIT_MONTH_VISIBLE
