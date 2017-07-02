@@ -58,7 +58,7 @@ class Receipt : Transaction, UnsyncModel {
     var source: Source? = null
         get() {
             if (field == null)
-                field = SourceRepository(RepositoryImpl<Source>(MyApplication.getContext())).find(sourceUuid)
+                field = SourceRepository(RepositoryImpl<Source>(MyApplication.getContext())).find(sourceUuid!!)
             return field
         }
         set(s) {

@@ -1,7 +1,6 @@
 package br.com.jonathanzanella.myexpenses.source
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -16,6 +15,7 @@ import br.com.jonathanzanella.myexpenses.views.anko.*
 import org.jetbrains.anko.*
 
 class EditSourceActivity : AppCompatActivity(), SourceContract.EditView {
+    override val context = this
     private val presenter: SourcePresenter = SourcePresenter(SourceRepository(RepositoryImpl<Source>(this)))
     private val ui = EditSourceActivityUi()
 
@@ -49,12 +49,8 @@ class EditSourceActivity : AppCompatActivity(), SourceContract.EditView {
         presenter.detachView()
     }
 
-    override fun setTitle(string: String?) {
+    override fun setTitle(string: String) {
         ui.toolbar.title = string
-    }
-
-    override fun getContext(): Context {
-        return this
     }
 
     override fun showSource(source: Source) {
