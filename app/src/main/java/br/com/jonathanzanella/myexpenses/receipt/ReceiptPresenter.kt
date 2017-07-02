@@ -59,7 +59,7 @@ class ReceiptPresenter(private val repository: ReceiptRepository, private val so
                     return null
                 }
 
-                override fun onPostExecute(aVoid: Void) {
+                override fun onPostExecute(aVoid: Void?) {
                     super.onPostExecute(aVoid)
                     updateView()
                 }
