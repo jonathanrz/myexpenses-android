@@ -66,21 +66,25 @@ class CardPresenter(private val repository: CardRepository, private val accountR
 
     @UiThread
     fun updateView() {
-        if (card != null) {
-            if (editView != null) {
-                editView!!.setTitle(R.string.edit_card_title)
+        val c = card
+        val v = editView
+        if (c != null) {
+            if (v != null) {
+                v.setTitle(R.string.edit_card_title)
             } else {
-                val title = view!!.context.getString(R.string.card)
-                view!!.setTitle(title + " " + card!!.name)
+                view!!.let {
+                    val title = it.context.getString(R.string.card)
+                    it.setTitle(title + " " + c.name)
+                }
             }
-            view!!.showCard(card!!)
-            if (account == null)
-                loadAccount(card!!.accountUuid!!)
-            else if (editView != null)
-                editView!!.onAccountSelected(account!!)
+            view!!.showCard(c)
+            val a = account
+            if (a == null)
+                loadAccount(c.accountUuid!!)
+            else
+                v?.onAccountSelected(a)
         } else {
-            if (editView != null)
-                editView!!.setTitle(R.string.new_card_title)
+            v?.setTitle(R.string.new_card_title)
         }
     }
 
@@ -109,11 +113,10 @@ class CardPresenter(private val repository: CardRepository, private val accountR
 
     @UiThread
     fun save() {
-        if (editView == null)
-            throw InvalidMethodCallException("save", javaClass.toString(), "View should be a Edit View")
+        val v = editView ?: throw InvalidMethodCallException("save", javaClass.toString(), "View should be a Edit View")
         if (card == null)
             card = Card(accountRepository)
-        card = editView!!.fillCard(card!!)
+        card = v.fillCard(card!!)
         if (account != null)
             card!!.account = account
 
@@ -127,17 +130,17 @@ class CardPresenter(private val repository: CardRepository, private val accountR
                 super.onPostExecute(result)
 
                 if (result.isValid) {
-                    editView!!.finishView()
+                    v.finishView()
                 } else {
                     for (validationError in result.errors)
-                        editView!!.showError(validationError)
+                        v.showError(validationError)
                 }
             }
         }.execute()
     }
 
     val uuid: String?
-        get() = if (card != null) card!!.uuid else null
+        get() = card?.uuid
 
     fun showSelectAccountActivity(act: Activity) {
         if (card == null)
@@ -164,15 +167,16 @@ class CardPresenter(private val repository: CardRepository, private val accountR
             override fun onPostExecute(account: Account?) {
                 super.onPostExecute(account)
                 this@CardPresenter.account = account
-                if (account != null && editView != null) {
-                    editView!!.onAccountSelected(account)
+                if (account != null) {
+                    editView?.onAccountSelected(account)
                 }
             }
         }.execute()
     }
 
     fun generateCreditCardBill(month: DateTime): Expense? {
-        val expenses = repository.creditCardBills(card!!, month)
+        val c = card!!
+        val expenses = repository.creditCardBills(c, month)
         var totalExpense = 0
         for (expense in expenses) {
             totalExpense += expense.value
@@ -184,10 +188,10 @@ class CardPresenter(private val repository: CardRepository, private val accountR
             return null
 
         val e = Expense()
-        e.name = resourcesHelper.getString(R.string.invoice) + " " + card!!.name
+        e.name = resourcesHelper.getString(R.string.invoice) + " " + c.name
         e.setDate(DateTime.now())
         e.value = totalExpense
-        e.setChargeable(card!!.account!!)
+        e.setChargeable(c.account!!)
         val validationResult = expenseRepository.save(e)
         if (!validationResult.isValid)
             throw ValidationException(validationResult)
