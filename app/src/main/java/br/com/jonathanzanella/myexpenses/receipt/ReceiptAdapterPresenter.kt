@@ -4,7 +4,7 @@ import org.apache.commons.lang3.StringUtils
 import org.joda.time.DateTime
 import java.util.*
 
-internal class ReceiptAdapterPresenter(private val repository: ReceiptRepository) {
+class ReceiptAdapterPresenter(private val repository: ReceiptRepository) {
 
     private var receipts: MutableList<Receipt>? = null
     private var receiptsFiltered: MutableList<Receipt>? = null

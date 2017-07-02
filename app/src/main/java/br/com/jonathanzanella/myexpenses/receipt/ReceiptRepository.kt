@@ -14,7 +14,7 @@ import org.apache.commons.lang3.StringUtils
 import org.joda.time.DateTime
 import java.util.*
 
-class ReceiptRepository(private val repository: Repository<Receipt>) : ModelRepository<Receipt> {
+open class ReceiptRepository(private val repository: Repository<Receipt>) : ModelRepository<Receipt> {
     private val table = ReceiptTable()
 
     @WorkerThread
