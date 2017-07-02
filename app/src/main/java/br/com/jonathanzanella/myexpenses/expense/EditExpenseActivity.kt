@@ -1,7 +1,6 @@
 package br.com.jonathanzanella.myexpenses.expense
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
@@ -33,7 +32,7 @@ import org.jetbrains.anko.*
 import org.joda.time.DateTime
 
 class EditExpenseActivity : AppCompatActivity(), ExpenseContract.EditView {
-
+    override val context = this
     private val ui = EditExpenseActivityUi()
     private val presenter: ExpensePresenter
 
@@ -91,12 +90,8 @@ class EditExpenseActivity : AppCompatActivity(), ExpenseContract.EditView {
         presenter.detachView()
     }
 
-    override fun setTitle(string: String?) {
+    override fun setTitle(string: String) {
         ui.toolbar.title = string
-    }
-
-    override fun getContext(): Context {
-        return this
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

@@ -1,6 +1,5 @@
 package br.com.jonathanzanella.myexpenses.expense
 
-import android.content.Context
 import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
@@ -17,13 +16,12 @@ import br.com.jonathanzanella.myexpenses.bill.BillRepository
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
-import br.com.jonathanzanella.myexpenses.receipt.Receipt
 import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import br.com.jonathanzanella.myexpenses.views.anko.*
 import org.jetbrains.anko.*
 
 class ShowExpenseActivity : AppCompatActivity(), ExpenseContract.View {
-
+    override val context = this
     private val ui = ShowExpenseActivityUi()
     private var presenter: ExpensePresenter
 
@@ -73,12 +71,8 @@ class ShowExpenseActivity : AppCompatActivity(), ExpenseContract.View {
         presenter.detachView()
     }
 
-    override fun setTitle(string: String?) {
+    override fun setTitle(string: String) {
         ui.toolbar.title = string
-    }
-
-    override fun getContext(): Context {
-        return this
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

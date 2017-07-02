@@ -89,7 +89,7 @@ class ExpenseView@JvmOverloads constructor(
     private fun loadExpense(uuid: String) {
         object : AsyncTask<Void, Void, Expense>() {
 
-            override fun doInBackground(vararg voids: Void): Expense {
+            override fun doInBackground(vararg voids: Void): Expense? {
                 return expenseRepository.find(uuid)
             }
 

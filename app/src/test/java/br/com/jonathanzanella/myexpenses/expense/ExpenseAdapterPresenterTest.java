@@ -14,8 +14,6 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class ExpenseAdapterPresenterTest {
 	@Mock
-	private ExpenseAdapter adapter;
-	@Mock
 	private ExpenseRepository repository;
 
 	private ExpenseAdapterPresenter presenter;
@@ -24,7 +22,7 @@ public class ExpenseAdapterPresenterTest {
 	public void setUp() throws Exception {
 		initMocks(this);
 
-		presenter = new ExpenseAdapterPresenter(adapter, repository);
+		presenter = new ExpenseAdapterPresenter(repository);
 	}
 
 	@Test(expected = UnsupportedOperationException.class)

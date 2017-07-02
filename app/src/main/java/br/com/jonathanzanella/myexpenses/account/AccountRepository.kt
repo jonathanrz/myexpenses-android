@@ -59,23 +59,23 @@ open class AccountRepository(private val repository: Repository<Account>) : Mode
     }
 
     @WorkerThread
-    override fun syncAndSave(unsyncAccount: Account): ValidationResult {
-        val result = validate(unsyncAccount)
+    override fun syncAndSave(unsync: Account): ValidationResult {
+        val result = validate(unsync)
         if (!result.isValid) {
-            Log.warning("Account sync validation failed", unsyncAccount.getData() + "\nerrors: " + result.errorsAsString)
+            Log.warning("Account sync validation failed", unsync.getData() + "\nerrors: " + result.errorsAsString)
             return result
         }
 
-        val account = find(unsyncAccount.uuid!!)
+        val account = find(unsync.uuid!!)
 
-        if (account != null && account.id != unsyncAccount.id) {
-            if (account.updatedAt != unsyncAccount.updatedAt)
-                Log.warning("Account overwritten", unsyncAccount.getData())
-            unsyncAccount.id = account.id
+        if (account != null && account.id != unsync.id) {
+            if (account.updatedAt != unsync.updatedAt)
+                Log.warning("Account overwritten", unsync.getData())
+            unsync.id = account.id
         }
 
-        unsyncAccount.sync = true
-        repository.saveAtDatabase(accountTable, unsyncAccount)
+        unsync.sync = true
+        repository.saveAtDatabase(accountTable, unsync)
 
         return result
     }
