@@ -16,9 +16,7 @@ class ExpenseAdapterPresenter(private val repository: ExpenseRepository) {
     fun getExpenses(invalidateCache: Boolean, date: DateTime?): List<Expense> {
         if (invalidateCache)
             loadExpenses(date!!)
-        if (receiptsFiltered == null)
-            return ArrayList()
-        return Collections.unmodifiableList(receiptsFiltered!!)
+        return Collections.unmodifiableList(receiptsFiltered ?: ArrayList())
     }
 
     fun filter(filter: String?) {
@@ -28,9 +26,8 @@ class ExpenseAdapterPresenter(private val repository: ExpenseRepository) {
         }
 
         receiptsFiltered = ArrayList<Expense>()
-        for (bill in receipts!!) {
-            if (StringUtils.containsIgnoreCase(bill.name, filter))
-                receiptsFiltered!!.add(bill)
-        }
+        receipts!!
+                .filter { StringUtils.containsIgnoreCase(it.name, filter) }
+                .forEach { receiptsFiltered!!.add(it) }
     }
 }

@@ -54,12 +54,13 @@ class ExpensePresenter(private val repository: ExpenseRepository, private val bi
 
     @UiThread
     fun onViewUpdated(invalidateCache: Boolean) {
-        if (expense != null) {
+        val e = expense
+        if (e != null) {
             if (invalidateCache) {
                 object : AsyncTask<Void, Void, Void>() {
 
                     override fun doInBackground(vararg voids: Void): Void? {
-                        expense = repository.find(expense!!.uuid!!)
+                        expense = repository.find(e.uuid!!)
                         return null
                     }
 
@@ -77,30 +78,31 @@ class ExpensePresenter(private val repository: ExpenseRepository, private val bi
     }
 
     private fun updateView() {
-        if (expense != null) {
-            if (editView != null) {
-                editView!!.setTitle(R.string.edit_expense_title)
+        val v = editView
+        val e = expense
+        if (e != null) {
+            if (v != null) {
+                v.setTitle(R.string.edit_expense_title)
             } else {
-                val title = view!!.context.getString(R.string.expense)
-                view!!.setTitle(title + " " + expense!!.name)
+                view!!.let {
+                    val title = it.context.getString(R.string.expense)
+                    it.setTitle(title + " " + e.name)
+                }
             }
-            view!!.showExpense(expense!!)
+            view!!.showExpense(e)
 
             loadBill()
             loadChargeable()
 
-            if (date == null)
-                date = expense!!.getDate()
-            if (editView != null && date != null)
-                editView!!.onDateChanged(date!!)
+            date = date ?: e.getDate()
+            val d = date
+            if (d != null)
+                v?.onDateChanged(d)
         } else {
-            if (editView != null)
-                editView!!.setTitle(R.string.new_expense_title)
+            v?.setTitle(R.string.new_expense_title)
 
-            if (date == null)
-                date = DateTime.now()
-            if (editView != null && date != null)
-                editView!!.onDateChanged(date!!)
+            date = date ?: DateTime.now()
+            v?.onDateChanged(date!!)
         }
     }
 
@@ -114,8 +116,8 @@ class ExpensePresenter(private val repository: ExpenseRepository, private val bi
 
             override fun onPostExecute(chargeable: Chargeable?) {
                 super.onPostExecute(chargeable)
-                if (editView != null && chargeable != null)
-                    editView!!.onChargeableSelected(chargeable)
+                if (chargeable != null)
+                    editView?.onChargeableSelected(chargeable)
             }
         }.execute()
     }
@@ -130,19 +132,21 @@ class ExpensePresenter(private val repository: ExpenseRepository, private val bi
 
             override fun onPostExecute(aVoid: Void?) {
                 super.onPostExecute(aVoid)
-                if (editView != null && bill != null)
-                    editView!!.onBillSelected(bill!!)
+                val b = bill
+                if (b != null)
+                    editView?.onBillSelected(b)
             }
         }.execute()
     }
 
     @UiThread
     fun refreshExpense() {
-        if (expense != null) {
+        val e = expense
+        if (e != null) {
             object : AsyncTask<Void, Void, Void>() {
 
                 override fun doInBackground(vararg voids: Void): Void? {
-                    loadExpense(expense!!.uuid!!)
+                    loadExpense(e.uuid!!)
                     return null
                 }
 
@@ -163,33 +167,28 @@ class ExpensePresenter(private val repository: ExpenseRepository, private val bi
         return e
     }
 
-    private fun checkEditViewSet() {
-        if (editView == null)
-            throw InvalidMethodCallException("save", javaClass.toString(), "View should be a Edit View")
+    private fun checkEditViewSet() : ExpenseContract.EditView {
+        return editView ?: throw InvalidMethodCallException("save", javaClass.toString(), "View should be a Edit View")
     }
 
     @UiThread
     fun save() {
-        checkEditViewSet()
-        if (expense == null)
-            expense = Expense()
-        expense = editView!!.fillExpense(expense!!)
-        if (date != null)
-            expense!!.setDate(date!!)
-        if (bill != null)
-            expense!!.bill = bill
-        if (chargeable != null)
-            expense!!.setChargeable(chargeable!!)
-        val originalName = expense!!.name
-        if (expense!!.installments != 1) {
-            expense!!.name = expense!!.formatExpenseName(expense!!.name!!, 1)
-            expense!!.value = expense!!.value / expense!!.installments
-            expense!!.valueToShowInOverview = expense!!.valueToShowInOverview / expense!!.installments
+        val v = checkEditViewSet()
+        val e = v.fillExpense(expense ?: Expense())
+        date?.let { e.setDate(it) }
+        chargeable?.let { e.setChargeable(it) }
+        bill?.let { e.bill = it }
+
+        val originalName = e.name
+        if (e.installments != 1) {
+            e.name = e.formatExpenseName(e.name!!, 1)
+            e.value = e.value / e.installments
+            e.valueToShowInOverview = e.valueToShowInOverview / e.installments
         }
 
         object : AsyncTask<Void, Void, ValidationResult>() {
             override fun doInBackground(vararg voids: Void): ValidationResult {
-                val result = repository.save(expense!!)
+                val result = repository.save(e)
                 if (result.isValid)
                     generateExpensesRepetition()
 
@@ -197,11 +196,11 @@ class ExpensePresenter(private val repository: ExpenseRepository, private val bi
             }
 
             private fun generateExpensesRepetition() {
-                for (i in 1..expense!!.repetition - 1) {
-                    expense = expense!!.repeat(originalName!!, i + 1)
-                    val repetitionResult = repository.save(expense!!)
+                for (i in 1..e.repetition - 1) {
+                    val exp = e.repeat(originalName!!, i + 1)
+                    val repetitionResult = repository.save(exp)
                     if (!repetitionResult.isValid)
-                        Log.error("ExpensePresenter", "Error saving repetition of expense " + expense!!.getData() +
+                        Log.error("ExpensePresenter", "Error saving repetition of expense " + exp.getData() +
                                 " error=" + repetitionResult.errors.toString())
                 }
             }
@@ -209,10 +208,10 @@ class ExpensePresenter(private val repository: ExpenseRepository, private val bi
             override fun onPostExecute(result: ValidationResult) {
                 super.onPostExecute(result)
                 if (result.isValid) {
-                    editView!!.finishView()
+                    v.finishView()
                 } else {
                     for (validationError in result.errors)
-                        editView!!.showError(validationError)
+                        v.showError(validationError)
                 }
             }
         }.execute()
@@ -230,16 +229,19 @@ class ExpensePresenter(private val repository: ExpenseRepository, private val bi
         AlertDialog.Builder(act)
                 .setTitle(android.R.string.dialog_alert_title)
                 .setMessage(R.string.message_confirm_deletion)
-                .setPositiveButton(android.R.string.yes) { dialog, which ->
+                .setPositiveButton(android.R.string.yes) { dialog, _ ->
                     dialog.dismiss()
 
-                    expense!!.uncharge()
-                    expense!!.delete()
+                    expense!!.apply {
+                        uncharge()
+                        delete()
+                    }
+
                     val i = Intent()
                     act.setResult(RESULT_OK, i)
                     act.finish()
                 }
-                .setNegativeButton(android.R.string.no) { dialog, which -> dialog.dismiss() }
+                .setNegativeButton(android.R.string.no) { dialog, _ -> dialog.dismiss() }
                 .show()
     }
 
@@ -271,14 +273,15 @@ class ExpensePresenter(private val repository: ExpenseRepository, private val bi
 
             override fun onPostExecute(aVoid: Void?) {
                 super.onPostExecute(aVoid)
-                if (bill != null)
-                    editView!!.onBillSelected(bill!!)
+                val b = bill
+                if (b != null)
+                    editView!!.onBillSelected(b)
             }
         }.execute()
     }
 
     val uuid: String?
-        get() = if (expense != null) expense!!.uuid else null
+        get() = expense?.uuid
 
     @UiThread
     fun storeBundle(extras: Bundle) {
@@ -307,15 +310,12 @@ class ExpensePresenter(private val repository: ExpenseRepository, private val bi
     }
 
     fun onSaveInstanceState(outState: Bundle) {
-        if (expense != null)
-            outState.putString(KEY_EXPENSE_UUID, expense!!.uuid)
-        if (bill != null)
-            outState.putString(KEY_BILL_UUID, bill!!.uuid)
-        if (date != null)
-            outState.putLong(KEY_DATE, date!!.millis)
-        if (chargeable != null) {
-            outState.putString(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_UUID, chargeable!!.uuid)
-            outState.putSerializable(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_TYPE, chargeable!!.chargeableType)
+        expense?.let { outState.putString(KEY_EXPENSE_UUID, it.uuid) }
+        bill?.let { outState.putString(KEY_BILL_UUID, it.uuid) }
+        date?.let { outState.putLong(KEY_DATE, it.millis) }
+        chargeable?.let {
+            outState.putString(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_UUID, it.uuid)
+            outState.putSerializable(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_TYPE, it.chargeableType)
         }
     }
 
@@ -329,13 +329,9 @@ class ExpensePresenter(private val repository: ExpenseRepository, private val bi
         }
     }
 
-    private fun hasExpense(): Boolean {
-        return expense != null
-    }
-
     @WorkerThread
     fun hasChargeable(): Boolean {
-        return hasExpense() && expense!!.chargeableFromCache != null
+        return expense?.chargeableFromCache != null
     }
 
     @UiThread
