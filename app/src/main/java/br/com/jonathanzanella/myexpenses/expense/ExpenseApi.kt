@@ -14,7 +14,7 @@ class ExpenseApi(private val expenseRepository: ExpenseRepository) : UnsyncModel
         Server(MyApplication.getContext()).expenseInterface()
     }
 
-    override fun index(): List<Expense>? {
+    override fun index(): List<Expense> {
         val caller = expenseInterface.index(greaterUpdatedAt())
 
         try {
@@ -23,13 +23,13 @@ class ExpenseApi(private val expenseRepository: ExpenseRepository) : UnsyncModel
                 return response.body()
             } else {
                 Log.error(LOG_TAG, "Index request error: " + response.message())
+                return ArrayList()
             }
         } catch (e: IOException) {
             Log.error(LOG_TAG, "Index request error: " + e.message)
             e.printStackTrace()
+            return ArrayList()
         }
-
-        return null
     }
 
     override fun save(model: UnsyncModel) {

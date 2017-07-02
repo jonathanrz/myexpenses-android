@@ -33,7 +33,7 @@ abstract class BaseView : FrameLayout {
 
     protected abstract fun init()
 
-    open fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {}
+    open fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {}
 
     open fun refreshData() {}
 

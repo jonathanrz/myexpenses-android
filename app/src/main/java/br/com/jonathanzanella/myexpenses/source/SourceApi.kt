@@ -18,7 +18,7 @@ class SourceApi : UnsyncModelApi<Source> {
         SourceRepository(RepositoryImpl<Source>(MyApplication.getContext()))
     }
 
-    override fun index(): List<Source>? {
+    override fun index(): List<Source> {
         val lastUpdatedAt = SourceRepository(RepositoryImpl<Source>(MyApplication.getContext())).greaterUpdatedAt()
         val caller = sourceInterface.index(lastUpdatedAt)
 
@@ -28,13 +28,13 @@ class SourceApi : UnsyncModelApi<Source> {
                 return response.body()
             } else {
                 Log.error(LOG_TAG, "Index request error: " + response.message())
+                return ArrayList()
             }
         } catch (e: IOException) {
             Log.error(LOG_TAG, "Index request error: " + e.message)
             e.printStackTrace()
+            return ArrayList()
         }
-
-        return null
     }
 
     override fun save(model: UnsyncModel) {

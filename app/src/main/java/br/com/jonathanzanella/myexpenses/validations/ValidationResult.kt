@@ -3,7 +3,7 @@ package br.com.jonathanzanella.myexpenses.validations
 import java.util.*
 
 class ValidationResult {
-    private val errors = ArrayList<ValidationError>()
+    val errors = ArrayList<ValidationError>()
 
     val isValid: Boolean
         get() = errors.isEmpty()

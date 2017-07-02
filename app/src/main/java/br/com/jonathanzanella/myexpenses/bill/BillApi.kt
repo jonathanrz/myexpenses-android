@@ -26,7 +26,7 @@ class BillApi : UnsyncModelApi<Bill> {
         billRepository = BillRepository(RepositoryImpl<Bill>(MyApplication.getContext()), expenseRepository)
     }
 
-    override fun index(): List<Bill>? {
+    override fun index(): List<Bill> {
         val caller = billInterface.index(billRepository.greaterUpdatedAt())
 
         try {
@@ -35,13 +35,13 @@ class BillApi : UnsyncModelApi<Bill> {
                 return response.body()
             } else {
                 Log.error(LOG_TAG, "Index request error: " + response.message())
+                return ArrayList()
             }
         } catch (e: IOException) {
             Log.error(LOG_TAG, "Index request error: " + e.message)
             e.printStackTrace()
+            return ArrayList()
         }
-
-        return null
     }
 
     override fun save(model: UnsyncModel) {

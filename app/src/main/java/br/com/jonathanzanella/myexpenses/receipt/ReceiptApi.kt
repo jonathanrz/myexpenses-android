@@ -20,7 +20,7 @@ class ReceiptApi : UnsyncModelApi<Receipt> {
         ReceiptRepository(RepositoryImpl<Receipt>(MyApplication.getContext()))
     }
 
-    override fun index(): List<Receipt>? {
+    override fun index(): List<Receipt> {
         val caller = receiptInterface.index(greaterUpdatedAt())
 
         try {
@@ -29,13 +29,13 @@ class ReceiptApi : UnsyncModelApi<Receipt> {
                 return response.body()
             } else {
                 Log.error(LOG_TAG, "Index request error: " + response.message())
+                return ArrayList()
             }
         } catch (e: IOException) {
             Log.error(LOG_TAG, "Index request error: " + e.message)
             e.printStackTrace()
+            return ArrayList()
         }
-
-        return null
     }
 
     override fun save(model: UnsyncModel) {

@@ -13,11 +13,15 @@ import java.io.IOException
 
 @WorkerThread
 class AccountApi : UnsyncModelApi<Account> {
-    private var accountInterface: AccountInterface? = null
-    private var accountRepository: AccountRepository? = null
+    private val accountInterface: AccountInterface by lazy {
+        Server(MyApplication.getContext()).accountInterface()
+    }
+    val repository: AccountRepository by lazy {
+        AccountRepository(RepositoryImpl<Account>(MyApplication.getContext()))
+    }
 
-    override fun index(): List<Account>? {
-        val caller = `interface`.index(repository.greaterUpdatedAt())
+    override fun index(): List<Account> {
+        val caller = accountInterface.index(repository.greaterUpdatedAt())
 
         try {
             val response = caller.execute()
@@ -25,22 +29,22 @@ class AccountApi : UnsyncModelApi<Account> {
                 return response.body()
             } else {
                 Log.error(LOG_TAG, "Index request error: " + response.message())
+                return ArrayList()
             }
         } catch (e: IOException) {
             Log.error(LOG_TAG, "Index request error: " + e.message)
             e.printStackTrace()
+            return ArrayList()
         }
-
-        return null
     }
 
     override fun save(model: UnsyncModel) {
         val account = model as Account
         val caller: Call<Account>
         if (StringUtils.isEmpty(account.serverId))
-            caller = `interface`.create(account)
+            caller = accountInterface.create(account)
         else
-            caller = `interface`.update(account.serverId!!, account)
+            caller = accountInterface.update(account.serverId!!, account)
 
         try {
             val response = caller.execute()
@@ -57,10 +61,10 @@ class AccountApi : UnsyncModelApi<Account> {
 
     }
 
-    override fun syncAndSave(unsyncAccount: UnsyncModel) {
-        if (unsyncAccount !is Account)
+    override fun syncAndSave(unsync: UnsyncModel) {
+        if (unsync !is Account)
             throw UnsupportedOperationException("UnsyncModel is not an Account")
-        repository.syncAndSave(unsyncAccount)
+        repository.syncAndSave(unsync)
     }
 
     override fun unsyncModels(): List<Account> {
@@ -69,14 +73,6 @@ class AccountApi : UnsyncModelApi<Account> {
 
     override fun greaterUpdatedAt(): Long {
         return repository.greaterUpdatedAt()
-    }
-
-    val repository: AccountRepository by lazy {
-        AccountRepository(RepositoryImpl<Account>(MyApplication.getContext()))
-    }
-
-    private val `interface`: AccountInterface by lazy {
-        Server(MyApplication.getContext()).accountInterface()
     }
 
     companion object {
