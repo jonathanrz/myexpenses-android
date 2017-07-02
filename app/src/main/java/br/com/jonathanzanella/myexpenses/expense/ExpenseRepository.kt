@@ -32,7 +32,7 @@ import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType.DEBIT_CARD
 import br.com.jonathanzanella.myexpenses.helpers.DateHelper.firstDayOfMonth
 import br.com.jonathanzanella.myexpenses.helpers.DateHelper.lastDayOfMonth
 
-class ExpenseRepository(private val repository: Repository<Expense>) : ModelRepository<Expense> {
+open class ExpenseRepository(private val repository: Repository<Expense>) : ModelRepository<Expense> {
     private val table = ExpenseTable()
     private val cardRepository: CardRepository by lazy {
         CardRepository(RepositoryImpl<Card>(MyApplication.getContext()), this)
