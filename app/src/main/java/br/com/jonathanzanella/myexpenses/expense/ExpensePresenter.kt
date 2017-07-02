@@ -269,7 +269,7 @@ class ExpensePresenter(private val repository: ExpenseRepository, private val bi
                 return null
             }
 
-            override fun onPostExecute(aVoid: Void) {
+            override fun onPostExecute(aVoid: Void?) {
                 super.onPostExecute(aVoid)
                 if (bill != null)
                     editView!!.onBillSelected(bill!!)
@@ -299,7 +299,7 @@ class ExpensePresenter(private val repository: ExpenseRepository, private val bi
                 return null
             }
 
-            override fun onPostExecute(aVoid: Void) {
+            override fun onPostExecute(aVoid: Void?) {
                 super.onPostExecute(aVoid)
                 updateView()
             }
