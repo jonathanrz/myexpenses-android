@@ -115,6 +115,6 @@ internal open class ExpenseAdapter : RecyclerView.Adapter<ExpenseAdapter.ViewHol
 
     fun filter(filter: String) {
         presenter.filter(filter)
-        expenses = presenter.getExpenses(false, date!!)
+        expenses = presenter.getExpenses(false, date)
     }
 }

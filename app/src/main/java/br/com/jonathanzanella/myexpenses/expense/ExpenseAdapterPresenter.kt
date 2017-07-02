@@ -13,9 +13,9 @@ class ExpenseAdapterPresenter(private val repository: ExpenseRepository) {
         receiptsFiltered = receipts
     }
 
-    fun getExpenses(invalidateCache: Boolean, date: DateTime): List<Expense> {
+    fun getExpenses(invalidateCache: Boolean, date: DateTime?): List<Expense> {
         if (invalidateCache)
-            loadExpenses(date)
+            loadExpenses(date!!)
         if (receiptsFiltered == null)
             return ArrayList()
         return Collections.unmodifiableList(receiptsFiltered!!)
