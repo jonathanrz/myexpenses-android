@@ -1,7 +1,6 @@
 package br.com.jonathanzanella.myexpenses.receipt
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
@@ -22,7 +21,7 @@ import br.com.jonathanzanella.myexpenses.views.anko.*
 import org.jetbrains.anko.*
 
 class ShowReceiptActivity : AppCompatActivity(), ReceiptContract.View {
-
+    override val context = this
     private val ui = ShowReceiptActivityUi()
 
     private val presenter = ReceiptPresenter(ReceiptRepository(RepositoryImpl<Receipt>(this)),
@@ -69,12 +68,8 @@ class ShowReceiptActivity : AppCompatActivity(), ReceiptContract.View {
         presenter.detachView()
     }
 
-    override fun setTitle(string: String?) {
+    override fun setTitle(string: String) {
         ui.toolbar.title = string
-    }
-
-    override fun getContext(): Context {
-        return this
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

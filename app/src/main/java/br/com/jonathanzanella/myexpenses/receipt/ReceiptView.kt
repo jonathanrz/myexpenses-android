@@ -78,7 +78,7 @@ class ReceiptView : BaseView, ViewPager.OnPageChangeListener {
     private fun loadExpense(uuid: String) {
         object : AsyncTask<Void, Void, Receipt>() {
 
-            override fun doInBackground(vararg voids: Void): Receipt {
+            override fun doInBackground(vararg voids: Void): Receipt? {
                 return repository!!.find(uuid)
             }
 

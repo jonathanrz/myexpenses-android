@@ -1,7 +1,6 @@
 package br.com.jonathanzanella.myexpenses.receipt
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
@@ -32,7 +31,12 @@ import org.jetbrains.anko.*
 import org.joda.time.DateTime
 
 class EditReceiptActivity : AppCompatActivity(), ReceiptContract.EditView {
+    override val installment: Int
+        get() = Integer.parseInt(ui.editInstallment.text.toString())
+    override val repetition: Int
+        get() = Integer.parseInt(ui.editRepetition.text.toString())
 
+    override val context = this
     private val ui = EditReceiptActivityUi()
     private val presenter: ReceiptPresenter = ReceiptPresenter(ReceiptRepository(RepositoryImpl<Receipt>(this)),
             SourceRepository(RepositoryImpl<Source>(this)),
@@ -77,12 +81,8 @@ class EditReceiptActivity : AppCompatActivity(), ReceiptContract.EditView {
         presenter.detachView()
     }
 
-    override fun setTitle(string: String?) {
+    override fun setTitle(string: String) {
         ui.toolbar.title = string
-    }
-
-    override fun getContext(): Context {
-        return this
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -118,8 +118,8 @@ class EditReceiptActivity : AppCompatActivity(), ReceiptContract.EditView {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onDateChanged(date: DateTime) {
-        ui.editDate.setText(Transaction.SIMPLE_DATE_FORMAT.format(date.toDate()))
+    override fun onDateChanged(balanceDate: DateTime) {
+        ui.editDate.setText(Transaction.SIMPLE_DATE_FORMAT.format(balanceDate.toDate()))
     }
 
     override fun onSourceSelected(source: Source) {
@@ -128,14 +128,6 @@ class EditReceiptActivity : AppCompatActivity(), ReceiptContract.EditView {
 
     override fun onAccountSelected(account: Account) {
         ui.editAccount.setText(account.name)
-    }
-
-    override fun getInstallment(): Int {
-        return Integer.parseInt(ui.editInstallment.text.toString())
-    }
-
-    override fun getRepetition(): Int {
-        return Integer.parseInt(ui.editRepetition.text.toString())
     }
 
     internal fun onDate() {
