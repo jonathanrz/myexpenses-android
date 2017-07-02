@@ -3,7 +3,9 @@ package br.com.jonathanzanella.myexpenses.account
 import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import br.com.jonathanzanella.myexpenses.database.CursorHelper.*
+import br.com.jonathanzanella.myexpenses.database.CursorHelper.getInt
+import br.com.jonathanzanella.myexpenses.database.CursorHelper.getLong
+import br.com.jonathanzanella.myexpenses.database.CursorHelper.getString
 import br.com.jonathanzanella.myexpenses.database.Fields
 import br.com.jonathanzanella.myexpenses.database.SqlTypes
 import br.com.jonathanzanella.myexpenses.database.Table
