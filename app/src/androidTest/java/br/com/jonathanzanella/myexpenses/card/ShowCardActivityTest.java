@@ -43,9 +43,9 @@ public class ShowCardActivityTest {
 	@Rule
 	public ActivityTestRule<ShowCardActivity> activityTestRule = new ActivityTestRule<>(ShowCardActivity.class, true, false);
 
-	private final ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(MyApplication.getContext()));
-	private final CardRepository repository = new CardRepository(new RepositoryImpl<Card>(MyApplication.getContext()), expenseRepository);
-	private final AccountRepository accountRepository = new AccountRepository(new RepositoryImpl<Account>(MyApplication.getContext()));
+	private final ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(MyApplication.Companion.getContext()));
+	private final CardRepository repository = new CardRepository(new RepositoryImpl<Card>(MyApplication.Companion.getContext()), expenseRepository);
+	private final AccountRepository accountRepository = new AccountRepository(new RepositoryImpl<Account>(MyApplication.Companion.getContext()));
 
 	private Card card;
 	private Account account;

@@ -19,7 +19,7 @@ import static org.hamcrest.Matchers.not;
 @RunWith(AndroidJUnit4.class)
 @SmallTest
 public class AccountRepositoryTest {
-	private final AccountRepository repository = new AccountRepository(new RepositoryImpl<Account>(MyApplication.getContext()));
+	private final AccountRepository repository = new AccountRepository(new RepositoryImpl<Account>(MyApplication.Companion.getContext()));
 
 	@Before
 	public void setUp() throws Exception {

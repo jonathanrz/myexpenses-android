@@ -56,7 +56,7 @@ public class AddCardTest {
 			uiDevice.wakeUp();
 
 		account = new AccountBuilder().build();
-		new AccountRepository(new RepositoryImpl<Account>(MyApplication.getContext())).save(account);
+		new AccountRepository(new RepositoryImpl<Account>(MyApplication.Companion.getContext())).save(account);
 	}
 
 	@After
