@@ -70,32 +70,32 @@ class ReceiptPresenter(private val repository: ReceiptRepository, private val so
     }
 
     fun updateView() {
-        if (receipt != null) {
-            if (editView != null) {
-                editView!!.setTitle(R.string.edit_receipt_title)
+        val r = receipt
+        if (r != null) {
+            val v = editView
+            if (v != null) {
+                v.setTitle(R.string.edit_receipt_title)
             } else {
-                val title = view!!.context.getString(R.string.receipt)
-                view!!.setTitle(title + " " + receipt!!.name)
+                view!!.let {
+                    val title = it.context.getString(R.string.receipt)
+                    it.setTitle(title + " " + r.name)
+                }
             }
-            view!!.showReceipt(receipt!!)
+            view!!.showReceipt(r)
 
-            if (source != null)
-                onSourceSelected(source!!.uuid!!)
-            if (account != null)
-                onAccountSelected(account!!.uuid!!)
-            if (date == null && receipt != null)
-                date = receipt!!.getDate()
+            source?.let { onSourceSelected(it.uuid!!) }
+            account?.let { onAccountSelected(it.uuid!!) }
 
+            if (date == null)
+                date = r.getDate()
         } else {
-            if (editView != null)
-                editView!!.setTitle(R.string.new_receipt_title)
+            editView?.setTitle(R.string.new_receipt_title)
 
             if (date == null)
                 date = DateTime.now()
         }
 
-        if (editView != null && date != null)
-            editView!!.onDateChanged(date!!)
+        editView?.onDateChanged(date!!)
     }
 
     @UiThread
@@ -120,12 +120,13 @@ class ReceiptPresenter(private val repository: ReceiptRepository, private val so
     @WorkerThread
     fun loadReceipt(uuid: String) {
         resetCache()
-        receipt = repository.find(uuid)
-        if (receipt == null)
-            throw ReceiptNotFoundException(uuid)
-        source = receipt!!.source
-        account = receipt!!.accountFromCache
-        date = receipt!!.getDate()
+        val r = repository.find(uuid) ?: throw ReceiptNotFoundException(uuid)
+        receipt = r
+        r.let {
+            source = it.source
+            account = it.accountFromCache
+            date = it.getDate()
+        }
     }
 
     private fun checkEditViewSet() {
@@ -136,20 +137,18 @@ class ReceiptPresenter(private val repository: ReceiptRepository, private val so
     @UiThread
     fun save() {
         checkEditViewSet()
-        if (receipt == null)
-            receipt = Receipt()
-        receipt = editView!!.fillReceipt(receipt!!)
-        if (date != null)
-            receipt!!.setDate(date!!)
-        if (source != null)
-            receipt!!.source = source
-        if (account != null)
-            receipt!!.setAccount(account!!)
+        receipt = editView!!.fillReceipt(receipt ?: Receipt())
+        var r = receipt!!
+        date?.let { r.setDate(it) }
+        account?.let { r.setAccount(it) }
 
-        val originalName = receipt!!.name
-        if (receipt!!.installments != 1) {
-            receipt!!.name = receipt!!.formatReceiptName(receipt!!.name!!, 1)
-            receipt!!.income = receipt!!.income / receipt!!.installments
+        if (source != null)
+            r.source = source
+
+        val originalName = r.name
+        if (r.installments != 1) {
+            r.name = r.formatReceiptName(r.name!!, 1)
+            r.income = r.income / r.installments
         }
 
         object : AsyncTask<Void, Void, ValidationResult>() {
@@ -163,11 +162,12 @@ class ReceiptPresenter(private val repository: ReceiptRepository, private val so
             }
 
             private fun generateReceiptsRepetition() {
-                for (i in 1..receipt!!.repetition - 1) {
-                    receipt = receipt!!.repeat(originalName!!, i + 1)
-                    val repetitionResult = repository.save(receipt!!)
+                for (i in 1..r.repetition - 1) {
+                    r = r.repeat(originalName!!, i + 1)
+                    receipt = r
+                    val repetitionResult = repository.save(r)
                     if (!repetitionResult.isValid)
-                        Log.error("ExpensePresenter", "Error saving repetition of receipt " + receipt!!.getData() +
+                        Log.error("ExpensePresenter", "Error saving repetition of receipt " + r.getData() +
                                 " error=" + repetitionResult.errors.toString())
                 }
             }
@@ -198,11 +198,14 @@ class ReceiptPresenter(private val repository: ReceiptRepository, private val so
                         //TODO: add loading
 
                         override fun doInBackground(vararg voids: Void): Void? {
-                            val acc = receipt!!.accountFromCache
-                            acc!!.credit(receipt!!.income * -1)
-                            accountRepository.save(acc)
+                            receipt!!.let {
+                                val acc = it.accountFromCache
+                                acc!!.credit(it.income * -1)
+                                accountRepository.save(acc)
 
-                            receipt!!.delete()
+                                it.delete()
+                            }
+
                             return null
                         }
 
@@ -219,7 +222,7 @@ class ReceiptPresenter(private val repository: ReceiptRepository, private val so
     }
 
     val uuid: String?
-        get() = if (receipt != null) receipt!!.uuid else null
+        get() = receipt?.uuid
 
     @UiThread
     fun storeBundle(extras: Bundle) {
@@ -247,14 +250,10 @@ class ReceiptPresenter(private val repository: ReceiptRepository, private val so
     }
 
     fun onSaveInstanceState(outState: Bundle) {
-        if (receipt != null)
-            outState.putString(KEY_RECEIPT_UUID, receipt!!.uuid)
-        if (source != null)
-            outState.putString(KEY_SOURCE_UUID, source!!.uuid)
-        if (account != null)
-            outState.putString(KEY_ACCOUNT_UUID, account!!.uuid)
-        if (date != null)
-            outState.putLong(KEY_DATE, date!!.millis)
+        receipt?.let { outState.putString(KEY_RECEIPT_UUID, it.uuid) }
+        source?.let { outState.putString(KEY_SOURCE_UUID, it.uuid) }
+        account?.let { outState.putString(KEY_ACCOUNT_UUID, it.uuid) }
+        date?.let { outState.putLong(KEY_DATE, it.millis) }
     }
 
     fun onSourceSelected(sourceUuid: String) {
@@ -267,8 +266,7 @@ class ReceiptPresenter(private val repository: ReceiptRepository, private val so
 
             override fun onPostExecute(aVoid: Void?) {
                 super.onPostExecute(aVoid)
-                if (editView != null)
-                    editView!!.onSourceSelected(source!!)
+                editView?.onSourceSelected(source!!)
             }
         }.execute()
     }
