@@ -174,7 +174,7 @@ class ExpensePresenter(private val repository: ExpenseRepository, private val bi
     @UiThread
     fun save() {
         val v = checkEditViewSet()
-        val e = v.fillExpense(expense ?: Expense())
+        var e = v.fillExpense(expense ?: Expense())
         date?.let { e.setDate(it) }
         chargeable?.let { e.setChargeable(it) }
         bill?.let { e.bill = it }
@@ -197,10 +197,10 @@ class ExpensePresenter(private val repository: ExpenseRepository, private val bi
 
             private fun generateExpensesRepetition() {
                 for (i in 1..e.repetition - 1) {
-                    val exp = e.repeat(originalName!!, i + 1)
-                    val repetitionResult = repository.save(exp)
+                    e = e.repeat(originalName!!, i + 1)
+                    val repetitionResult = repository.save(e)
                     if (!repetitionResult.isValid)
-                        Log.error("ExpensePresenter", "Error saving repetition of expense " + exp.getData() +
+                        Log.error("ExpensePresenter", "Error saving repetition of expense " + e.getData() +
                                 " error=" + repetitionResult.errors.toString())
                 }
             }
