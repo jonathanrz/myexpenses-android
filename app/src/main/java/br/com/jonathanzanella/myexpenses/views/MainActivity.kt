@@ -70,11 +70,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        for (i in 0..content!!.childCount - 1) {
-            val v = content!!.getChildAt(i)
-            if (v is BaseView)
-                v.onActivityResult(requestCode, resultCode, data)
-        }
+        (0..content!!.childCount - 1)
+                .map { content!!.getChildAt(it) }
+                .forEach { (it as? BaseView)?.onActivityResult(requestCode, resultCode, data) }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

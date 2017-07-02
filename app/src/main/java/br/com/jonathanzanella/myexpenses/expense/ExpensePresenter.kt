@@ -174,7 +174,8 @@ class ExpensePresenter(private val repository: ExpenseRepository, private val bi
     @UiThread
     fun save() {
         val v = checkEditViewSet()
-        var e = v.fillExpense(expense ?: Expense())
+        expense = v.fillExpense(expense ?: Expense())
+        var e = expense!!
         date?.let { e.setDate(it) }
         chargeable?.let { e.setChargeable(it) }
         bill?.let { e.bill = it }
