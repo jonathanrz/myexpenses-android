@@ -34,7 +34,7 @@ public class WeeklyPagerAdapter extends PagerAdapter {
         this.context = context;
 	    this.builder = builder;
 
-	    DateTime init = DateHelper.firstMillisOfDay(month.withDayOfMonth(1));
+	    DateTime init = DateHelper.INSTANCE.firstMillisOfDay(month.withDayOfMonth(1));
 
 	    while(init.getMonthOfYear() == month.getMonthOfYear()) {
 		    Period period = new Period();
@@ -42,7 +42,7 @@ public class WeeklyPagerAdapter extends PagerAdapter {
 		    period.end = init.plusDays(LAST_DAY_OF_WEEK);
 		    if(period.end.getMonthOfYear() > month.getMonthOfYear()) {
 			    period.end.minusMonths(1);
-			    period.end = DateHelper.lastMillisOfDay(init.dayOfMonth().withMaximumValue());
+			    period.end = DateHelper.INSTANCE.lastMillisOfDay(init.dayOfMonth().withMaximumValue());
 		    }
 		    init = init.plusDays(TOTAL_DAYS_OF_WEEK);
 		    periods.add(period);

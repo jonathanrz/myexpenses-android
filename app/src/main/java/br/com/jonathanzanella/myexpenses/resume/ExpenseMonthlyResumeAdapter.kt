@@ -75,10 +75,12 @@ internal class ExpenseMonthlyResumeAdapter : RecyclerView.Adapter<ExpenseMonthly
                 return
 
             val expense = getExpense(adapterPosition)
-            TransactionsHelper.showConfirmTransactionDialog(expense, itemView.income.context) {
-                updateTotalValue()
-                notifyDataSetChanged()
-            }
+            TransactionsHelper.showConfirmTransactionDialog(expense!!, itemView.income.context, object: TransactionsHelper.DialogCallback {
+                override fun onPositiveButton() {
+                    updateTotalValue()
+                    notifyDataSetChanged()
+                }
+            })
         }
 
         override fun onClick(v: View) {

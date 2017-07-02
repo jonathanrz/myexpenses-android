@@ -14,12 +14,10 @@ import br.com.jonathanzanella.myexpenses.database.Fields;
 import br.com.jonathanzanella.myexpenses.database.ModelRepository;
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.database.Where;
+import br.com.jonathanzanella.myexpenses.helpers.DateHelper;
 import br.com.jonathanzanella.myexpenses.log.Log;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult;
-
-import static br.com.jonathanzanella.myexpenses.helpers.DateHelper.firstDayOfMonth;
-import static br.com.jonathanzanella.myexpenses.helpers.DateHelper.lastDayOfMonth;
 
 public class ReceiptRepository implements ModelRepository<Receipt> {
 	private final Repository<Receipt> repository;
@@ -51,8 +49,8 @@ public class ReceiptRepository implements ModelRepository<Receipt> {
 
 	@WorkerThread
 	private Where monthlyQuery(DateTime month, Account account) {
-		Where where = new Where(Fields.DATE).greaterThanOrEq(firstDayOfMonth(month).getMillis())
-				.and(Fields.DATE).lessThanOrEq(lastDayOfMonth(month).getMillis())
+		Where where = new Where(Fields.DATE).greaterThanOrEq(DateHelper.firstDayOfMonth(month).getMillis())
+				.and(Fields.DATE).lessThanOrEq(DateHelper.lastDayOfMonth(month).getMillis())
 				.and(Fields.REMOVED).eq(false)
 				.orderBy(Fields.DATE);
 		if(account != null)

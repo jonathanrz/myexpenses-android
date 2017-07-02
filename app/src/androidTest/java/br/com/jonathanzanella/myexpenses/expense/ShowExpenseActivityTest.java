@@ -67,7 +67,7 @@ public class ShowExpenseActivityTest {
 		final String editExpenseTitle = getTargetContext().getString(R.string.expense) + " " + expense.getName();
 		matchToolbarTitle(editExpenseTitle);
 
-		String incomeAsCurrency = CurrencyHelper.format(expense.getValue());
+		String incomeAsCurrency = CurrencyHelper.INSTANCE.format(expense.getValue());
 		onView(withId(R.id.act_show_expense_name)).check(matches(withText(expense.getName())));
 		onView(withId(R.id.act_show_expense_value)).check(matches(withText(incomeAsCurrency)));
 		Chargeable chargeable = expense.getChargeableFromCache();

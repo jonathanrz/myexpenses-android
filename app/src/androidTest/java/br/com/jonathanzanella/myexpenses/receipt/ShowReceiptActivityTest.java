@@ -70,7 +70,7 @@ public class ShowReceiptActivityTest {
 		final String editReceiptTitle = getTargetContext().getString(R.string.receipt) + " " + receipt.getName();
 		matchToolbarTitle(editReceiptTitle);
 
-		String incomeAsCurrency = CurrencyHelper.format(receipt.getIncome());
+		String incomeAsCurrency = CurrencyHelper.INSTANCE.format(receipt.getIncome());
 		onView(withId(R.id.act_show_receipt_name)).check(matches(withText(receipt.getName())));
 		onView(withId(R.id.act_show_receipt_income)).check(matches(withText(incomeAsCurrency)));
 		Account account = receipt.getAccountFromCache();

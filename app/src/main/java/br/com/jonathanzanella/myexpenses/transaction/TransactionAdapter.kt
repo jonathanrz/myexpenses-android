@@ -43,7 +43,11 @@ class TransactionAdapter : RecyclerView.Adapter<TransactionAdapter.ViewHolder>()
         fun onValue() {
             val adapterPosition = adapterPosition
             val transaction = transactions[adapterPosition]
-            TransactionsHelper.showConfirmTransactionDialog(transaction, itemView.date.context) { notifyItemChanged(adapterPosition) }
+            TransactionsHelper.showConfirmTransactionDialog(transaction, itemView.date.context, object: TransactionsHelper.DialogCallback {
+                override fun onPositiveButton() {
+                    notifyItemChanged(adapterPosition)
+                }
+            })
         }
 
         private fun getColor(@ColorRes color: Int): Int {

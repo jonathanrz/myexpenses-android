@@ -77,10 +77,12 @@ internal class ReceiptMonthlyResumeAdapter(private val receiptRepository: Receip
                 return
 
             val receipt = getReceipt(adapterPosition)
-            TransactionsHelper.showConfirmTransactionDialog(receipt, itemView.income.context) {
-                updateTotalValue()
-                notifyDataSetChanged()
-            }
+            TransactionsHelper.showConfirmTransactionDialog(receipt!!, itemView.income.context, object: TransactionsHelper.DialogCallback {
+                override fun onPositiveButton() {
+                    updateTotalValue()
+                    notifyDataSetChanged()
+                }
+            })
         }
 
         override fun onClick(v: View) {

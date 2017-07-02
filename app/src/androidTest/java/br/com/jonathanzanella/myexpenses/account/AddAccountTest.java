@@ -69,7 +69,7 @@ public class AddAccountTest {
 		matchToolbarTitle(accountsTitle);
 
 		onView(withId(R.id.row_account_name)).check(matches(withText(accountTitle)));
-		String balance = CurrencyHelper.format(0);
+		String balance = CurrencyHelper.INSTANCE.format(0);
 		onView(withId(R.id.row_account_balance)).check(matches(withText(balance)));
 	}
 

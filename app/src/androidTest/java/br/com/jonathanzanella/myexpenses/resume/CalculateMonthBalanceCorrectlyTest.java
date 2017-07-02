@@ -146,8 +146,8 @@ public class CalculateMonthBalanceCorrectlyTest {
 
 		int balance = RECEIPT_INCOME - EXPENSE_VALUE - BILL_AMOUNT;
 		int twoMonthsBalance = RECEIPT_INCOME * 3 - EXPENSE_VALUE * 3 - BILL_AMOUNT;
-		String expectedBalance = CurrencyHelper.format(balance);
-		String twoMonthsExpectedBalance = CurrencyHelper.format(twoMonthsBalance);
+		String expectedBalance = CurrencyHelper.INSTANCE.format(balance);
+		String twoMonthsExpectedBalance = CurrencyHelper.INSTANCE.format(twoMonthsBalance);
 
 		validateExpectedBalance(expectedBalance);
 

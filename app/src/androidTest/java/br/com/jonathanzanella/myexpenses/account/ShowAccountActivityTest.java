@@ -86,7 +86,7 @@ public class ShowAccountActivityTest {
 		final String editAccountTitle = getTargetContext().getString(R.string.account) + " " + account.getName();
 		matchToolbarTitle(editAccountTitle);
 
-		String balanceAsCurrency = CurrencyHelper.format(account.getBalance());
+		String balanceAsCurrency = CurrencyHelper.INSTANCE.format(account.getBalance());
 		onView(withId(R.id.act_show_account_name)).check(matches(withText(account.getName())));
 		onView(withId(R.id.act_show_account_balance)).check(matches(withText(balanceAsCurrency)));
 	}
@@ -101,7 +101,7 @@ public class ShowAccountActivityTest {
 		launchActivity();
 
 		String billName = getTargetContext().getString(R.string.invoice) + " " + card.getName();
-		String value = CurrencyHelper.format(expense.getAmount());
+		String value = CurrencyHelper.INSTANCE.format(expense.getAmount());
 
 		onView(withId(R.id.act_show_account_name)).check(matches(withText(account.getName())));
 		onView(withId(R.id.name)).check(matches(withText(billName)));
@@ -116,14 +116,14 @@ public class ShowAccountActivityTest {
 		launchActivity();
 
 		int expectedBalance = ACCOUNT_BALANCE + RECEIPT_INCOME - EXPENSE_VALUE;
-		String expectedValue = CurrencyHelper.format(expectedBalance);
+		String expectedValue = CurrencyHelper.INSTANCE.format(expectedBalance);
 		onView(allOf(
 				withId(R.id.balance),
 				isDescendantOfA(withId(R.id.thisMonth))))
 				.check(matches(withText(expectedValue)));
 
 		expectedBalance = expectedBalance + RECEIPT_INCOME - EXPENSE_VALUE;
-		expectedValue = CurrencyHelper.format(expectedBalance);
+		expectedValue = CurrencyHelper.INSTANCE.format(expectedBalance);
 		onView(allOf(
 				withId(R.id.balance),
 				isDescendantOfA(withId(R.id.nextMonth))))

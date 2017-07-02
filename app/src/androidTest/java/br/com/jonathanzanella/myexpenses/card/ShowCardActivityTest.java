@@ -100,7 +100,7 @@ public class ShowCardActivityTest {
 
 		String cardBillName = getTargetContext().getString(R.string.invoice) + " " + card.getName();
 		onView(withId(R.id.act_edit_expense_name)).check(matches(withText(cardBillName)));
-		String cardBillValue = CurrencyHelper.format(expense1.getValue() + expense2.getValue());
+		String cardBillValue = CurrencyHelper.INSTANCE.format(expense1.getValue() + expense2.getValue());
 		onView(withId(R.id.act_edit_expense_value)).check(matches(withText(cardBillValue)));
 		onView(withId(R.id.act_edit_expense_chargeable)).check(matches(withText(card.getAccount().getName())));
 
