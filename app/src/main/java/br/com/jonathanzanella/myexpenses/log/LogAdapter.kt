@@ -38,7 +38,7 @@ internal class LogAdapter(private val logRepository: LogRepository) : RecyclerVi
     }
 
     fun loadData(initDate: DateTime, endDate: DateTime, logLevel: Log.LogLevel, filter: String) {
-        val logs = logRepository.filter(initDate, endDate, logLevel)
+        val logs = logRepository.filter(initDate, endDate, logLevel) as MutableList<Log>
 
         filteredLogs = ArrayList<Log>()
         if (StringUtils.isNotEmpty(filter)) {
