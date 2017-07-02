@@ -25,17 +25,20 @@ class SourcePresenter(private val repository: SourceRepository) {
     }
 
     fun viewUpdated() {
-        if (source != null) {
-            if (editView != null) {
-                editView!!.setTitle(R.string.edit_source_title)
+        val s = source
+        if (s != null) {
+            val v = editView
+            if (v != null) {
+                v.setTitle(R.string.edit_source_title)
             } else {
-                val title = view!!.context.getString(R.string.source)
-                view!!.setTitle(title + " " + source!!.name)
+                view!!.let {
+                    val title = it.context.getString(R.string.source)
+                    it.setTitle(title + " " + s.name)
+                }
             }
-            view!!.showSource(source!!)
+            view!!.showSource(s)
         } else {
-            if (editView != null)
-                editView!!.setTitle(R.string.new_source_title)
+            editView?.setTitle(R.string.new_source_title)
         }
     }
 
@@ -57,7 +60,7 @@ class SourcePresenter(private val repository: SourceRepository) {
 
     fun save() {
         val v = editView ?: throw InvalidMethodCallException("save", javaClass.toString(), "View should be a Edit View")
-        source = editView!!.fillSource(source ?: Source())
+        source = v.fillSource(source ?: Source())
         val result = repository.save(source!!)
 
         if (result.isValid) {
@@ -69,5 +72,5 @@ class SourcePresenter(private val repository: SourceRepository) {
     }
 
     val uuid: String?
-        get() = if (source != null) source!!.uuid else null
+        get() = source?.uuid
 }
