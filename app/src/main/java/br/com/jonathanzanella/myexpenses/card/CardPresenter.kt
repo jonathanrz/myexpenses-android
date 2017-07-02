@@ -51,7 +51,7 @@ class CardPresenter(private val repository: CardRepository, private val accountR
                         return null
                     }
 
-                    override fun onPostExecute(aVoid: Void) {
+                    override fun onPostExecute(aVoid: Void?) {
                         super.onPostExecute(aVoid)
                         updateView()
                     }

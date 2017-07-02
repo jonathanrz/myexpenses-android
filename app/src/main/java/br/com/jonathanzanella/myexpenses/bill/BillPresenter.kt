@@ -41,7 +41,7 @@ class BillPresenter(private val repository: BillRepository) {
                         return null
                     }
 
-                    override fun onPostExecute(aVoid: Void) {
+                    override fun onPostExecute(aVoid: Void?) {
                         super.onPostExecute(aVoid)
                         updateView()
                     }

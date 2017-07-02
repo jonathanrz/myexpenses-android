@@ -48,7 +48,7 @@ internal class SourcePresenter(private val repository: SourceRepository) {
                 return null
             }
 
-            override fun onPostExecute(aVoid: Void) {
+            override fun onPostExecute(aVoid: Void?) {
                 super.onPostExecute(aVoid)
                 viewUpdated()
             }
