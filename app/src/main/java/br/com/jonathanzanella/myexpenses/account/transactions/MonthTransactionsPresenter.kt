@@ -1,7 +1,6 @@
 package br.com.jonathanzanella.myexpenses.account.transactions
 
 import android.content.Context
-import android.os.AsyncTask
 import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.bill.Bill
 import br.com.jonathanzanella.myexpenses.bill.BillRepository
@@ -11,21 +10,16 @@ import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.receipt.Receipt
 import br.com.jonathanzanella.myexpenses.receipt.ReceiptRepository
 import br.com.jonathanzanella.myexpenses.transaction.TransactionAdapter
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 import org.joda.time.DateTime
 
 internal class MonthTransactionsPresenter(ctx: Context, private val view: MonthTransactionsContractView) : LoadTransactionsCallback {
-    val adapter: TransactionAdapter
-    private val receiptRepository: ReceiptRepository
-    private val expenseRepository: ExpenseRepository
-    private val billRepository: BillRepository
+    val adapter = TransactionAdapter()
+    private val receiptRepository = ReceiptRepository(RepositoryImpl<Receipt>(ctx))
+    private val expenseRepository = ExpenseRepository(RepositoryImpl<Expense>(ctx))
+    private val billRepository = BillRepository(RepositoryImpl<Bill>(ctx), expenseRepository)
     private var currentBalance: Int = 0
-
-    init {
-        adapter = TransactionAdapter()
-        receiptRepository = ReceiptRepository(RepositoryImpl<Receipt>(ctx))
-        expenseRepository = ExpenseRepository(RepositoryImpl<Expense>(ctx))
-        billRepository = BillRepository(RepositoryImpl<Bill>(ctx), expenseRepository)
-    }
 
     fun showBalance(account: Account, month: DateTime, balance: Int) {
         currentBalance = balance
@@ -34,10 +28,9 @@ internal class MonthTransactionsPresenter(ctx: Context, private val view: MonthT
 
     override fun onTransactionsLoaded(balance: Int) {
         for (transaction in adapter.getTransactions()) {
-            if (!transaction.credited()) {
-                currentBalance += transaction.amount
-            } else if (!transaction.debited()) {
-                currentBalance -= transaction.amount
+            with(transaction) {
+                if (!credited()) currentBalance += amount
+                if (!debited()) currentBalance -= amount
             }
         }
 
@@ -56,65 +49,49 @@ internal class MonthTransactionsPresenter(ctx: Context, private val view: MonthT
         }
 
         private fun loadBills(account: Account, month: DateTime) {
-            loadedBills = false
-
-            if (account.isAccountToPayBills) {
-                object : AsyncTask<Void, Void, Void>() {
-
-                    override fun doInBackground(vararg voids: Void): Void? {
-                        val bills = billRepository.monthly(month)
-                        adapter.addTransactions(bills)
-                        return null
-                    }
-
-                    override fun onPostExecute(v: Void?) {
-                        super.onPostExecute(v)
-                        adapter.notifyDataSetChanged()
-                        loadedBills = true
-                        onDataLoaded()
-                    }
-                }.execute()
-            } else {
+            if (!account.isAccountToPayBills) {
                 loadedBills = true
+                return
+            }
+
+            loadedBills = false
+            doAsync {
+                adapter.addTransactions(billRepository.monthly(month))
+                loadedBills = true
+
+                uiThread {
+                    adapter.notifyDataSetChanged()
+                    onDataLoaded()
+                }
             }
         }
 
         private fun loadExpenses(account: Account, month: DateTime) {
             loadedExpenses = false
 
-            object : AsyncTask<Void, Void, Void>() {
+            doAsync {
+                adapter.addTransactions(expenseRepository.accountExpenses(account, month))
+                loadedExpenses = true
 
-                override fun doInBackground(vararg voids: Void): Void? {
-                    val expenses = expenseRepository.accountExpenses(account, month)
-                    adapter.addTransactions(expenses)
-                    return null
-                }
-
-                override fun onPostExecute(v: Void?) {
-                    super.onPostExecute(v)
+                uiThread {
                     adapter.notifyDataSetChanged()
-                    loadedExpenses = true
                     onDataLoaded()
                 }
-            }.execute()
+            }
         }
 
         private fun loadReceipts(account: Account, month: DateTime) {
             loadedReceipts = false
 
-            object : AsyncTask<Void, Void, Void>() {
-                override fun doInBackground(vararg voids: Void): Void? {
-                    adapter.addTransactions(receiptRepository.monthly(month, account))
-                    return null
-                }
+            doAsync {
+                adapter.addTransactions(receiptRepository.monthly(month, account))
+                loadedReceipts = true
 
-                override fun onPostExecute(aVoid: Void?) {
-                    super.onPostExecute(aVoid)
+                uiThread {
                     adapter.notifyDataSetChanged()
-                    loadedReceipts = true
                     onDataLoaded()
                 }
-            }.execute()
+            }
         }
 
         private fun onDataLoaded() {
