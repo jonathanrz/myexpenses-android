@@ -24,21 +24,36 @@ class MonthTransactionsView@JvmOverloads constructor(
     private val presenter = MonthTransactionsPresenter(context, this)
     private var loadTransactionsCallback: LoadTransactionsCallback? = null
 
-    init {
-        list.adapter = presenter.adapter
-        list.setHasFixedSize(true)
-        list.layoutManager = LinearLayoutManager(context)
-        list.isNestedScrollingEnabled = false
-    }
+    private var account : Account? = null
+    private var month : DateTime? = null
+    private var balanceValue : Int? = null
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         View.inflate(context, R.layout.view_account_month_transactions, this)
+
+        list.adapter = presenter.adapter
+        list.setHasFixedSize(true)
+        list.layoutManager = LinearLayoutManager(context)
+        list.isNestedScrollingEnabled = false
+
+        account?.let {
+            showBalance(account!!, month!!, balanceValue!!)
+            account = null
+            month = null
+            balanceValue = null
+        }
     }
 
     internal fun showBalance(account: Account, month: DateTime, balance: Int) {
-        header.text = "$monthTransactionsTemplate $simpleDateFormat.format(month.toDate())"
-        presenter.showBalance(account, month, balance)
+        if(header != null) {
+            header.text = "$monthTransactionsTemplate $simpleDateFormat.format(month.toDate())"
+            presenter.showBalance(account, month, balance)
+        } else {
+            this.account = account
+            this.month = month
+            this.balanceValue = balance
+        }
     }
 
     override fun onBalanceUpdated(balance: Int) {
