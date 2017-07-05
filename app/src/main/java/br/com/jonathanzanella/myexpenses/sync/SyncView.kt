@@ -21,9 +21,6 @@ class SyncView(context: Context) : BaseView(context) {
 
     }
 
-    override fun init() {
-    }
-
     internal fun sync() {
         val serverUrl = serverUrlView.text.toString()
         val serverToken = serverTokenView.text.toString()

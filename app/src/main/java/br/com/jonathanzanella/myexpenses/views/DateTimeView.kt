@@ -26,7 +26,9 @@ class DateTimeView@JvmOverloads constructor(
         fun onDateTimeChanged(currentTime: DateTime)
     }
 
-    override fun init() {
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+
         View.inflate(context, R.layout.view_datetime, this)
         date.setOnClickListener { onDate() }
         hour.setOnClickListener { onHour() }

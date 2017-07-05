@@ -28,9 +28,6 @@ internal class OverviewExpensesWeeklyView(context: Context, private val period: 
         list.layoutManager = GridLayoutManager(context, 1)
     }
 
-    override fun init() {
-    }
-
     override fun refreshData() {
         super.refreshData()
 

@@ -30,10 +30,6 @@ internal class ExpenseMonthlyView(context: Context, private val dateTime: DateTi
         ui.expenses.itemAnimator = DefaultItemAnimator()
     }
 
-    override fun init() {
-        //TODO: remove when convert BaseView to interface
-    }
-
     override fun refreshData() {
         super.refreshData()
 

@@ -38,7 +38,8 @@ internal class OverviewExpensesMonthlyView(context: Context, month: DateTime) : 
         total.text = CurrencyHelper.format(expenseRepository.expenses(period).sumBy { it.valueToShowInOverview })
     }
 
-    override fun init() {
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
         View.inflate(context, R.layout.view_overview_expenses_monthly, this)
     }
 }

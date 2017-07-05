@@ -17,22 +17,23 @@ import java.util.*
 class MonthTransactionsView@JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : BaseView(context, attrs, defStyleAttr), MonthTransactionsContractView {
-    val simpleDateFormat = SimpleDateFormat("MMMM/yy", Locale.getDefault())
 
-    private var singleRowHeight: Int = 0
+    val simpleDateFormat = SimpleDateFormat("MMMM/yy", Locale.getDefault())
+    private var singleRowHeight = context.resources.getDimensionPixelSize(R.dimen.single_row_height)
     private val monthTransactionsTemplate = resources.getString(R.string.month_transactions)
     private val presenter = MonthTransactionsPresenter(context, this)
     private var loadTransactionsCallback: LoadTransactionsCallback? = null
 
-    override fun init() {
-        singleRowHeight = context.resources.getDimensionPixelSize(R.dimen.single_row_height)
-
-        View.inflate(context, R.layout.view_account_month_transactions, this)
-
+    init {
         list.adapter = presenter.adapter
         list.setHasFixedSize(true)
         list.layoutManager = LinearLayoutManager(context)
         list.isNestedScrollingEnabled = false
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        View.inflate(context, R.layout.view_account_month_transactions, this)
     }
 
     internal fun showBalance(account: Account, month: DateTime, balance: Int) {

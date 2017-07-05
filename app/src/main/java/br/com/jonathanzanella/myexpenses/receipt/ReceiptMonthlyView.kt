@@ -34,10 +34,6 @@ internal class ReceiptMonthlyView(context: Context, private val dateTime: DateTi
         ui.receipts.itemAnimator = DefaultItemAnimator()
     }
 
-    override fun init() {
-        //TODO: remove when convert BaseView to interface
-    }
-
     override fun refreshData() {
         super.refreshData()
 

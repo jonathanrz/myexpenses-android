@@ -14,7 +14,9 @@ import org.joda.time.DateTime
 class OverviewExpensesView@JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : BaseView(context, attrs, defStyleAttr) {
-    override fun init() {
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
         View.inflate(context, R.layout.view_overview_expenses, this)
 
         val adapter = MonthlyPagerAdapter(context, object : MonthlyPagerAdapterBuilder {

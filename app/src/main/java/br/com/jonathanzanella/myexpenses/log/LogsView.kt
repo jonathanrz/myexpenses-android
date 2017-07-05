@@ -39,9 +39,6 @@ class LogsView@JvmOverloads constructor(
         refreshAdapter()
     }
 
-    override fun init() {
-    }
-
     override fun onDateTimeChanged(currentTime: DateTime) {
         refreshAdapter()
     }

@@ -31,10 +31,6 @@ class BillView : BaseView {
         ui.bills.itemAnimator = DefaultItemAnimator()
     }
 
-    override fun init() {
-        //TODO: remove when convert BaseView to interface
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 

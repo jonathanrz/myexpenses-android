@@ -41,10 +41,6 @@ class CreditCardInvoiceView(context: Context, val creditCard: Card, val month: D
         ui.list.setHasFixedSize(true)
         ui.list.layoutManager = LinearLayoutManager(context)
     }
-
-    override fun init() {
-        //TODO: remove when convert BaseView to interface
-    }
 }
 
 class CreditCardInvoiceViewUI: AnkoComponent<CreditCardInvoiceView> {

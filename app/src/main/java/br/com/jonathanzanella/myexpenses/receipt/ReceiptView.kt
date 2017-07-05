@@ -51,10 +51,6 @@ class ReceiptView : BaseView, ViewPager.OnPageChangeListener {
         ui.pager.addOnPageChangeListener(this)
     }
 
-    override fun init() {
-        //TODO: remove when convert BaseView to interface
-    }
-
     override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
 
     override fun onPageSelected(position: Int) {
