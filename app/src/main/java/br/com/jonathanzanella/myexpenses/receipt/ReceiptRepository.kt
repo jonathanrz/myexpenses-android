@@ -90,28 +90,28 @@ open class ReceiptRepository(private val repository: Repository<Receipt>) : Mode
             result.addError(ValidationError.SOURCE)
         if (receipt.accountFromCache == null)
             result.addError(ValidationError.ACCOUNT)
-        if (receipt.getDate() == null)
+        if (!receipt.isDatePresent())
             result.addError(ValidationError.DATE)
         return result
     }
 
     @WorkerThread
-    override fun syncAndSave(unsyncReceipt: Receipt): ValidationResult {
-        val result = validate(unsyncReceipt)
+    override fun syncAndSave(unsync: Receipt): ValidationResult {
+        val result = validate(unsync)
         if (!result.isValid) {
-            Log.warning("Receipt sync validation failed", unsyncReceipt.getData() + "\nerrors: " + result.errorsAsString)
+            Log.warning("Receipt sync validation failed", unsync.getData() + "\nerrors: " + result.errorsAsString)
             return result
         }
 
-        val receipt = find(unsyncReceipt.uuid!!)
-        if (receipt != null && receipt.id != unsyncReceipt.id) {
-            if (receipt.updatedAt != unsyncReceipt.updatedAt)
-                Log.warning("Receipt overwritten", unsyncReceipt.getData())
-            unsyncReceipt.id = receipt.id
+        val receipt = find(unsync.uuid!!)
+        if (receipt != null && receipt.id != unsync.id) {
+            if (receipt.updatedAt != unsync.updatedAt)
+                Log.warning("Receipt overwritten", unsync.getData())
+            unsync.id = receipt.id
         }
 
-        unsyncReceipt.sync = true
-        repository.saveAtDatabase(table, unsyncReceipt)
+        unsync.sync = true
+        repository.saveAtDatabase(table, unsync)
 
         return result
     }

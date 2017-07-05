@@ -76,22 +76,22 @@ open class CardRepository(private val repository: Repository<Card>, private val 
     }
 
     @WorkerThread
-    override fun syncAndSave(unsyncCard: Card): ValidationResult {
-        val result = validate(unsyncCard)
+    override fun syncAndSave(unsync: Card): ValidationResult {
+        val result = validate(unsync)
         if (!result.isValid) {
-            Log.warning("Card sync validation failed", unsyncCard.getData() + "\nerrors: " + result.errorsAsString)
+            Log.warning("Card sync validation failed", unsync.getData() + "\nerrors: " + result.errorsAsString)
             return result
         }
 
-        val card = find(unsyncCard.uuid!!)
-        if (card != null && card.id != unsyncCard.id) {
-            if (card.updatedAt != unsyncCard.updatedAt)
-                Log.warning("Card overwritten", unsyncCard.getData())
-            unsyncCard.id = card.id
+        val card = find(unsync.uuid!!)
+        if (card != null && card.id != unsync.id) {
+            if (card.updatedAt != unsync.updatedAt)
+                Log.warning("Card overwritten", unsync.getData())
+            unsync.id = card.id
         }
 
-        unsyncCard.sync = true
-        repository.saveAtDatabase(table, unsyncCard)
+        unsync.sync = true
+        repository.saveAtDatabase(table, unsync)
 
         return result
     }

@@ -341,7 +341,7 @@ class ExpensePresenter(private val repository: ExpenseRepository, private val bi
         var time = date
         if (time == null)
             time = DateTime.now()
-        DatePickerDialog(ctx, DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+        DatePickerDialog(ctx, DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
             if (date == null)
                 date = DateTime.now()
             date = date!!.withYear(year).withMonthOfYear(monthOfYear + 1).withDayOfMonth(dayOfMonth)

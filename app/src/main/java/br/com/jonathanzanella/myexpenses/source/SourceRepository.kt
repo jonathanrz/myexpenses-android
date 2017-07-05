@@ -54,22 +54,22 @@ open class SourceRepository(private val repository: Repository<Source>) : ModelR
     }
 
     @WorkerThread
-    override fun syncAndSave(sourceSync: Source): ValidationResult {
-        val result = validate(sourceSync)
+    override fun syncAndSave(unsync: Source): ValidationResult {
+        val result = validate(unsync)
         if (!result.isValid) {
-            Log.warning("Source sync validation failed", sourceSync.getData() + "\nerrors: " + result.errorsAsString)
+            Log.warning("Source sync validation failed", unsync.getData() + "\nerrors: " + result.errorsAsString)
             return result
         }
 
-        val source = find(sourceSync.uuid!!)
-        if (source != null && source.id != sourceSync.id) {
-            if (source.updatedAt != sourceSync.updatedAt)
-                Log.warning("Source overwritten", sourceSync.getData())
-            sourceSync.id = source.id
+        val source = find(unsync.uuid!!)
+        if (source != null && source.id != unsync.id) {
+            if (source.updatedAt != unsync.updatedAt)
+                Log.warning("Source overwritten", unsync.getData())
+            unsync.id = source.id
         }
 
-        sourceSync.sync = true
-        repository.saveAtDatabase(sourceTable, sourceSync)
+        unsync.sync = true
+        repository.saveAtDatabase(sourceTable, unsync)
 
         return result
     }

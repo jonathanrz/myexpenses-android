@@ -96,22 +96,22 @@ open class BillRepository(private val repository: Repository<Bill>, private val 
     }
 
     @WorkerThread
-    override fun syncAndSave(unsyncBill: Bill): ValidationResult {
-        val result = validate(unsyncBill)
+    override fun syncAndSave(unsync: Bill): ValidationResult {
+        val result = validate(unsync)
         if (!result.isValid) {
-            Log.warning("Bill sync validation failed", unsyncBill.getData() + "\nerrors: " + result.errorsAsString)
+            Log.warning("Bill sync validation failed", unsync.getData() + "\nerrors: " + result.errorsAsString)
             return result
         }
 
-        val bill = find(unsyncBill.uuid!!)
-        if (bill != null && bill.id != unsyncBill.id) {
-            if (bill.updatedAt != unsyncBill.updatedAt)
-                Log.warning("Bill overwritten", unsyncBill.getData())
-            unsyncBill.id = bill.id
+        val bill = find(unsync.uuid!!)
+        if (bill != null && bill.id != unsync.id) {
+            if (bill.updatedAt != unsync.updatedAt)
+                Log.warning("Bill overwritten", unsync.getData())
+            unsync.id = bill.id
         }
 
-        unsyncBill.sync = true
-        repository.saveAtDatabase(billTable, unsyncBill)
+        unsync.sync = true
+        repository.saveAtDatabase(billTable, unsync)
 
         return result
     }

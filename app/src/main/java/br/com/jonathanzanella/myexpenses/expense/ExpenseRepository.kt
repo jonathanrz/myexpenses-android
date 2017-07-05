@@ -262,7 +262,7 @@ open class ExpenseRepository(private val repository: Repository<Expense>) : Mode
             result.addError(ValidationError.NAME)
         if (expense.value == 0)
             result.addError(ValidationError.AMOUNT)
-        if (expense.getDate() == null)
+        if (!expense.dateIsPresent())
             result.addError(ValidationError.DATE)
         if (expense.chargeableFromCache == null)
             result.addError(ValidationError.CHARGEABLE)

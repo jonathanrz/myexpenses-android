@@ -81,7 +81,7 @@ class BillPresenter(private val repository: BillRepository) {
         var time = initDate
         if (time == null)
             time = DateTime.now()
-        DatePickerDialog(ctx, DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+        DatePickerDialog(ctx, DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
             if (initDate == null)
                 initDate = DateTime.now()
             initDate = initDate!!.withYear(year).withMonthOfYear(monthOfYear + 1).withDayOfMonth(dayOfMonth)
@@ -94,7 +94,7 @@ class BillPresenter(private val repository: BillRepository) {
         var time = initDate
         if (time == null)
             time = DateTime.now()
-        DatePickerDialog(ctx, DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+        DatePickerDialog(ctx, DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
             if (endDate == null)
                 endDate = DateTime.now()
             endDate = endDate!!.withYear(year).withMonthOfYear(monthOfYear + 1).withDayOfMonth(dayOfMonth)

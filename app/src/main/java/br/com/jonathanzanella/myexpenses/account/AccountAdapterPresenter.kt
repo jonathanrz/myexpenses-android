@@ -2,7 +2,7 @@ package br.com.jonathanzanella.myexpenses.account
 
 import android.os.AsyncTask
 
-internal class AccountAdapterPresenter(private val adapter: AccountAdapter, private val repository: AccountRepository, format: AccountAdapter.Format) {
+internal class AccountAdapterPresenter(private val adapter: AccountAdapter, private val repository: AccountRepository) {
 
     private var accounts: List<Account>? = null
 

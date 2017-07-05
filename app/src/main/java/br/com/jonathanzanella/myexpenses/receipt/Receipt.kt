@@ -154,6 +154,8 @@ class Receipt : Transaction, UnsyncModel {
         receiptRepository.save(this)
     }
 
+    fun isDatePresent() = date != null
+
     override fun getDate(): DateTime {
         return date!!
     }

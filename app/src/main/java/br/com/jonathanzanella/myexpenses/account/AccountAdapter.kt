@@ -20,7 +20,7 @@ import org.jetbrains.anko.*
 import org.joda.time.DateTime
 
 class AccountAdapter(val month : DateTime) : RecyclerView.Adapter<AccountAdapter.ViewHolder>() {
-    private val presenter: AccountAdapterPresenter
+    private val presenter = AccountAdapterPresenter(this, AccountRepository(RepositoryImpl<Account>(MyApplication.getContext())))
 
     private var format = NORMAL
     private var callback: AccountAdapterCallback? = null
@@ -64,10 +64,6 @@ class AccountAdapter(val month : DateTime) : RecyclerView.Adapter<AccountAdapter
                 callback!!.onAccountSelected(acc)
             }
         }
-    }
-
-    init {
-        presenter = AccountAdapterPresenter(this, AccountRepository(RepositoryImpl<Account>(MyApplication.getContext())), format)
     }
 
     fun refreshData() {

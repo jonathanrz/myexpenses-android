@@ -15,10 +15,10 @@ class LogTable : Table<Log> {
         db.execSQL(createTableSql())
     }
 
-    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
+    override fun onUpgrade(sqLiteDatabase: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         if (oldVersion == 1) {
-            onDrop(db)
-            onCreate(db)
+            onDrop(sqLiteDatabase)
+            onCreate(sqLiteDatabase)
         }
     }
 
@@ -42,12 +42,12 @@ class LogTable : Table<Log> {
         return "DROP TABLE IF EXISTS " + name
     }
 
-    override fun fillContentValues(log: Log): ContentValues {
+    override fun fillContentValues(data: Log): ContentValues {
         val values = ContentValues()
-        values.put(Fields.TITLE.toString(), log.title)
-        values.put(Fields.DESCRIPTION.toString(), log.description)
-        values.put(Fields.DATE.toString(), log.date!!.millis)
-        values.put(Fields.TYPE.toString(), log.logLevel.toString())
+        values.put(Fields.TITLE.toString(), data.title)
+        values.put(Fields.DESCRIPTION.toString(), data.description)
+        values.put(Fields.DATE.toString(), data.date!!.millis)
+        values.put(Fields.TYPE.toString(), data.logLevel.toString())
         return values
     }
 

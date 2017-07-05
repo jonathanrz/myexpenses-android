@@ -50,6 +50,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         navigationView!!.setNavigationItemSelectedListener(this)
 
+        @Suppress("DEPRECATION")
         drawer!!.setDrawerListener(drawerToggle)
         drawerToggle.syncState()
 

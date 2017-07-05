@@ -46,7 +46,7 @@ object TransactionsHelper {
                     expense.debit()
                     dialogCallback.onPositiveButton()
                 }
-                .setNegativeButton(android.R.string.no) { dialogInterface, i -> dialogInterface.dismiss() }
+                .setNegativeButton(android.R.string.no) { dialogInterface, _ -> dialogInterface.dismiss() }
                 .show()
     }
 }

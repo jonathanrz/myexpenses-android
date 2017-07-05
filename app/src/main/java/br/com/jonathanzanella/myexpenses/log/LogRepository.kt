@@ -33,8 +33,6 @@ internal class LogRepository(private val repository: Repository<Log>) {
             result.addError(ValidationError.DESCRIPTION)
         if (log.date == null)
             result.addError(ValidationError.DATE)
-        if (log.logLevel == null)
-            result.addError(ValidationError.LOG_LEVEL)
         if (result.isValid)
             repository.saveAtDatabase(table, log)
         return result

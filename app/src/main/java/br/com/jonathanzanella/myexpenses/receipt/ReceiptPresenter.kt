@@ -190,7 +190,7 @@ class ReceiptPresenter(private val repository: ReceiptRepository, private val so
         AlertDialog.Builder(act)
                 .setTitle(android.R.string.dialog_alert_title)
                 .setMessage(R.string.message_confirm_deletion)
-                .setPositiveButton(android.R.string.yes) { dialog, which ->
+                .setPositiveButton(android.R.string.yes) { dialog, _ ->
                     dialog.dismiss()
 
                     object : AsyncTask<Void, Void, Void>() {
@@ -217,7 +217,7 @@ class ReceiptPresenter(private val repository: ReceiptRepository, private val so
                         }
                     }.execute()
                 }
-                .setNegativeButton(android.R.string.no) { dialog, which -> dialog.dismiss() }
+                .setNegativeButton(android.R.string.no) { dialog, _ -> dialog.dismiss() }
                 .show()
     }
 
@@ -296,7 +296,7 @@ class ReceiptPresenter(private val repository: ReceiptRepository, private val so
         var time = date
         if (time == null)
             time = DateTime.now()
-        DatePickerDialog(ctx, DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+        DatePickerDialog(ctx, DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
             if (date == null)
                 date = DateTime.now()
             date = date!!.withYear(year).withMonthOfYear(monthOfYear + 1).withDayOfMonth(dayOfMonth)

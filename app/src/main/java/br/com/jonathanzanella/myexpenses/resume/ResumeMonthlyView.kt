@@ -114,7 +114,7 @@ internal class ResumeMonthlyView(context: Context, private val month: DateTime) 
         object : AsyncTask<Void, Void, List<Expense>>() {
 
             override fun doInBackground(vararg voids: Void): List<Expense> {
-                return expenseRepository!!.expensesForResumeScreen(month)
+                return expenseRepository.expensesForResumeScreen(month)
             }
 
             override fun onPostExecute(expensesList: List<Expense>) {

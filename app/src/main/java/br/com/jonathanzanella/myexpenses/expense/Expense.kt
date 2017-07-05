@@ -192,6 +192,8 @@ class Expense : Transaction, UnsyncModel {
         expenseRepository!!.save(this)
     }
 
+    fun dateIsPresent() = date != null
+
     override fun getDate(): DateTime {
         return date!!
     }

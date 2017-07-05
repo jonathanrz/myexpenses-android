@@ -23,13 +23,13 @@ import org.apache.commons.lang3.StringUtils
 import java.util.*
 
 class SyncService : GcmTaskService() {
-    private val apis: MutableList<UnsyncModelApi<out UnsyncModel>>
+    private val apis: MutableList<UnsyncModelApi<UnsyncModel>>
 
     private var totalSaved: Int = 0
     private var totalUpdated: Int = 0
 
     init {
-        apis = ArrayList<UnsyncModelApi<out UnsyncModel>>()
+        apis = ArrayList<UnsyncModelApi<UnsyncModel>>()
         apis.add(AccountApi())
         apis.add(BillApi())
         apis.add(CardApi())
@@ -91,25 +91,21 @@ class SyncService : GcmTaskService() {
         return GcmNetworkManager.RESULT_SUCCESS
     }
 
-    private fun syncApi(api: UnsyncModelApi<out UnsyncModel>) {
+    private fun syncApi(api: UnsyncModelApi<UnsyncModel>) {
         val logTag = LOG_TAG + "-" + api.javaClass.simpleName
         Log.debug(logTag, "init sync")
         val unsyncModels = api.index()
-        if (unsyncModels != null) {
-            for (unsyncModel in unsyncModels) {
-                api.syncAndSave(unsyncModel)
-                totalSaved++
-                Log.info(logTag, "Saved: " + unsyncModel.getData())
-            }
-
-            syncLocalData(api)
-            Log.debug(logTag, "finished sync")
-        } else {
-            Log.error(logTag, "error syncing")
+        for (unsyncModel in unsyncModels) {
+            api.syncAndSave(unsyncModel)
+            totalSaved++
+            Log.info(logTag, "Saved: " + unsyncModel.getData())
         }
+
+        syncLocalData(api)
+        Log.debug(logTag, "finished sync")
     }
 
-    private fun syncLocalData(api: UnsyncModelApi<out UnsyncModel>) {
+    private fun syncLocalData(api: UnsyncModelApi<UnsyncModel>) {
         val logTag = LOG_TAG + "-" + api.javaClass.simpleName
         Log.debug(logTag, "init of syncLocalData")
         for (unsyncModel in api.unsyncModels()) {
