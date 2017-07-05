@@ -34,7 +34,6 @@ internal class ResumeMonthlyView(context: Context, private val month: DateTime) 
 
     init {
         singleRowHeight = resources.getDimensionPixelSize(R.dimen.single_row_height)
-        accountAdapter!!.setMonth(month)
     }
 
     @UiThread
@@ -55,7 +54,7 @@ internal class ResumeMonthlyView(context: Context, private val month: DateTime) 
     }
 
     private fun initAccount() {
-        accountAdapter = AccountAdapter()
+        accountAdapter = AccountAdapter(month)
         accountAdapter!!.setFormat(AccountAdapter.Format.RESUME)
 
         accounts.adapter = accountAdapter

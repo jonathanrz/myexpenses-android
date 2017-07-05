@@ -13,11 +13,12 @@ import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
 import br.com.jonathanzanella.myexpenses.views.anko.recyclerView
 import org.jetbrains.anko.*
 import org.jetbrains.anko.design.floatingActionButton
+import org.joda.time.DateTime
 
 class AccountView : BaseView {
 
     private val ui = AccountViewUI()
-    private var adapter = AccountAdapter()
+    private var adapter = AccountAdapter(DateTime.now())
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)

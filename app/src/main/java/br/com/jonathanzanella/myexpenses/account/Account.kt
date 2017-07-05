@@ -25,19 +25,17 @@ open class Account : Chargeable, UnsyncModel {
         balance += value
     }
 
-    override fun canBePaidNextMonth(): Boolean {
-        return false
-    }
+    override fun canBePaidNextMonth() = false
 
     override fun debit(value: Int) {
         balance -= value
     }
 
     override fun getData(): String {
-        return "name=" + name +
-                "\nuuid=" + uuid +
-                "\nserverId=" + serverId +
-                "\nbalance=" + balance +
-                "\naccountToPayCreditCard=" + isAccountToPayCreditCard
+        return "name=$name" +
+                "\nuuid=$uuid" +
+                "\nserverId=$serverId" +
+                "\nbalance=$balance" +
+                "\naccountToPayCreditCard=$isAccountToPayCreditCard"
     }
 }

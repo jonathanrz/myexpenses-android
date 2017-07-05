@@ -17,6 +17,7 @@ import br.com.jonathanzanella.myexpenses.card.CardAdapter
 import br.com.jonathanzanella.myexpenses.card.CardAdapterCallback
 import br.com.jonathanzanella.myexpenses.views.anko.*
 import org.jetbrains.anko.*
+import org.joda.time.DateTime
 
 class ListChargeableActivity : AppCompatActivity(), AccountAdapterCallback, CardAdapterCallback {
     private val ui = ListChargeableActivityUi()
@@ -37,7 +38,7 @@ class ListChargeableActivity : AppCompatActivity(), AccountAdapterCallback, Card
     }
 
     private fun initAccounts() {
-        val adapter = AccountAdapter()
+        val adapter = AccountAdapter(DateTime.now())
         adapter.setCallback(this)
         adapter.setFormat(AccountAdapter.Format.LIST)
 
