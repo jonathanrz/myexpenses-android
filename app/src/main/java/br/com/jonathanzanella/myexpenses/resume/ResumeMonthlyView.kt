@@ -35,18 +35,16 @@ internal class ResumeMonthlyView(context: Context, private val month: DateTime) 
 
     init {
         singleRowHeight = resources.getDimensionPixelSize(R.dimen.single_row_height)
-
-        initAccount()
-        initReceipts()
-        initExpenses()
-        initBills()
     }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         View.inflate(context, R.layout.view_monthly_resume, this)
 
-        refreshData()
+        initAccount()
+        initReceipts()
+        initExpenses()
+        initBills()
     }
 
     private fun initAccount() {
