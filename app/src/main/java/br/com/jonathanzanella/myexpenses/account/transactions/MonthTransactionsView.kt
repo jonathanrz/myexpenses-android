@@ -38,7 +38,7 @@ class MonthTransactionsView@JvmOverloads constructor(
         list.isNestedScrollingEnabled = false
 
         account?.let {
-            showBalance(account!!, month!!, balanceValue!!)
+            showBalance(it, month!!, balanceValue!!)
             account = null
             month = null
             balanceValue = null
