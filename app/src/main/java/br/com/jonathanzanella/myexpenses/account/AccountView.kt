@@ -12,6 +12,7 @@ import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.views.FilterableView
 import br.com.jonathanzanella.myexpenses.views.RefreshableView
 import br.com.jonathanzanella.myexpenses.views.ResultableView
+import br.com.jonathanzanella.myexpenses.views.TabableView
 import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
 import br.com.jonathanzanella.myexpenses.views.anko.recyclerView
 import org.jetbrains.anko.*
@@ -20,7 +21,7 @@ import org.joda.time.DateTime
 
 class AccountView@JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : FrameLayout(context, attrs, defStyleAttr), RefreshableView, ResultableView, FilterableView {
+) : FrameLayout(context, attrs, defStyleAttr), RefreshableView, ResultableView, FilterableView, TabableView {
     override var filter: String = ""
 
     private val ui = AccountViewUI()

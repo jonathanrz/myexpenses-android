@@ -129,61 +129,61 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.menu_resume -> {
                 addViewToContent(ResumeView(this))
                 setTitle(R.string.app_name)
-                drawer!!.closeDrawers()
+                drawer.closeDrawers()
                 return true
             }
             R.id.menu_accounts -> {
                 addViewToContent(AccountView(this))
                 setTitle(R.string.accounts)
-                drawer!!.closeDrawers()
+                drawer.closeDrawers()
                 return true
             }
             R.id.menu_sources -> {
                 addViewToContent(SourceView(this))
                 setTitle(R.string.sources)
-                drawer!!.closeDrawers()
+                drawer.closeDrawers()
                 return true
             }
             R.id.menu_credit_card -> {
                 addViewToContent(CardView(this))
                 setTitle(R.string.credit_card)
-                drawer!!.closeDrawers()
+                drawer.closeDrawers()
                 return true
             }
             R.id.menu_receipts -> {
                 addViewToContent(ReceiptView(this))
                 setTitle(R.string.receipts)
-                drawer!!.closeDrawers()
+                drawer.closeDrawers()
                 return true
             }
             R.id.menu_expenses -> {
                 addViewToContent(ExpenseView(this))
                 setTitle(R.string.expenses)
-                drawer!!.closeDrawers()
+                drawer.closeDrawers()
                 return true
             }
             R.id.menu_bills -> {
                 addViewToContent(BillView(this))
                 setTitle(R.string.bills)
-                drawer!!.closeDrawers()
+                drawer.closeDrawers()
                 return true
             }
             R.id.menu_overview -> {
                 addViewToContent(OverviewExpensesView(this))
                 setTitle(R.string.overview)
-                drawer!!.closeDrawers()
+                drawer.closeDrawers()
                 return true
             }
             R.id.menu_sync -> {
                 addViewToContent(SyncView(this))
                 setTitle(R.string.sync)
-                drawer!!.closeDrawers()
+                drawer.closeDrawers()
                 return true
             }
             R.id.menu_log -> {
                 addViewToContent(LogsView(this))
                 setTitle(R.string.log)
-                drawer!!.closeDrawers()
+                drawer.closeDrawers()
                 return true
             }
         }

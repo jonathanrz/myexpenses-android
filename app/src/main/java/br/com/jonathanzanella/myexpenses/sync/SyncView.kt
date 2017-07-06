@@ -6,12 +6,13 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
 import br.com.jonathanzanella.myexpenses.R
+import br.com.jonathanzanella.myexpenses.views.TabableView
 import kotlinx.android.synthetic.main.view_sync.view.*
 import org.apache.commons.lang3.StringUtils
 
 class SyncView@JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : FrameLayout(context, attrs, defStyleAttr) {
+) : FrameLayout(context, attrs, defStyleAttr), TabableView {
     private var serverData = ServerData(context)
 
     init {

@@ -12,6 +12,7 @@ import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.views.FilterableView
 import br.com.jonathanzanella.myexpenses.views.RefreshableView
 import br.com.jonathanzanella.myexpenses.views.ResultableView
+import br.com.jonathanzanella.myexpenses.views.TabableView
 import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
 import br.com.jonathanzanella.myexpenses.views.anko.recyclerView
 import org.jetbrains.anko.*
@@ -19,7 +20,7 @@ import org.jetbrains.anko.design.floatingActionButton
 
 class SourceView@JvmOverloads constructor(
 		context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : FrameLayout(context, attrs, defStyleAttr), RefreshableView, ResultableView, FilterableView {
+) : FrameLayout(context, attrs, defStyleAttr), RefreshableView, ResultableView, FilterableView, TabableView {
 	override var filter = ""
 	private val ui = SourceViewUI()
     private val adapter = SourceAdapter(context)
