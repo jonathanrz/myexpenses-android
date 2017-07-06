@@ -95,9 +95,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onQueryTextChange(newText: String): Boolean {
         filter = newText
-        val view = currentView
-        if(view is BaseView)
-            view.filter(newText)
+        (currentView as? FilterableView)!!.filter(newText)
         return false
     }
 
@@ -115,10 +113,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         child.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT)
         content!!.addView(child)
-        (child as? TabableView)?.setTabs(tabs)
-        if(child is BaseView) {
-            child.filter(filter)
-        }
+        (child as? TabableView)!!.setTabs(tabs)
+        (child as? FilterableView)?.filter(filter)
         currentView = child
     }
 

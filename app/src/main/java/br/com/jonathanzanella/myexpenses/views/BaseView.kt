@@ -4,9 +4,4 @@ import android.support.annotation.UiThread
 
 @UiThread
 interface BaseView {
-    var filter: String
-
-    fun filter(s: String) {
-        filter = s
-    }
 }

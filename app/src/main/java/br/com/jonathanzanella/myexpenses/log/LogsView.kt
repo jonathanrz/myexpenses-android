@@ -9,12 +9,13 @@ import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
 import br.com.jonathanzanella.myexpenses.views.BaseView
 import br.com.jonathanzanella.myexpenses.views.DateTimeView
+import br.com.jonathanzanella.myexpenses.views.FilterableView
 import kotlinx.android.synthetic.main.view_logs.view.*
 import org.joda.time.DateTime
 
 class LogsView@JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : FrameLayout(context, attrs, defStyleAttr), BaseView, DateTimeView.Listener {
+) : FrameLayout(context, attrs, defStyleAttr), BaseView, FilterableView, DateTimeView.Listener {
 
     override var filter = ""
     private val adapter = LogAdapter(LogRepository(RepositoryImpl<Log>(context)))
