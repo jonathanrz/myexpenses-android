@@ -14,7 +14,6 @@ import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
 import br.com.jonathanzanella.myexpenses.helpers.DateHelper
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapter
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapterBuilder
-import br.com.jonathanzanella.myexpenses.views.BaseView
 import br.com.jonathanzanella.myexpenses.views.FilterableView
 import br.com.jonathanzanella.myexpenses.views.ResultableView
 import br.com.jonathanzanella.myexpenses.views.TabableView
@@ -28,7 +27,7 @@ import java.util.*
 
 class ReceiptView@JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : FrameLayout(context, attrs, defStyleAttr), BaseView, ResultableView, TabableView, FilterableView, ViewPager.OnPageChangeListener {
+) : FrameLayout(context, attrs, defStyleAttr), ResultableView, TabableView, FilterableView, ViewPager.OnPageChangeListener {
     override var filter = ""
     private val views = HashMap<DateTime, WeakReference<ReceiptMonthlyView>>()
 

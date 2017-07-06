@@ -18,14 +18,13 @@ import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
 import br.com.jonathanzanella.myexpenses.receipt.Receipt
 import br.com.jonathanzanella.myexpenses.receipt.ReceiptRepository
-import br.com.jonathanzanella.myexpenses.views.BaseView
 import br.com.jonathanzanella.myexpenses.views.FilterableView
 import br.com.jonathanzanella.myexpenses.views.RefreshableView
 import kotlinx.android.synthetic.main.view_monthly_resume.view.*
 import org.joda.time.DateTime
 
 @SuppressLint("ViewConstructor")
-internal class ResumeMonthlyView(context: Context, private val month: DateTime) : FrameLayout(context), BaseView, RefreshableView, FilterableView {
+internal class ResumeMonthlyView(context: Context, private val month: DateTime) : FrameLayout(context), RefreshableView, FilterableView {
     override var filter = ""
     var singleRowHeight: Int = 0
 

@@ -7,7 +7,6 @@ import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.widget.FrameLayout
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.views.BaseView
 import br.com.jonathanzanella.myexpenses.views.FilterableView
 import br.com.jonathanzanella.myexpenses.views.RefreshableView
 import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
@@ -19,7 +18,7 @@ import org.jetbrains.anko.frameLayout
 import org.joda.time.DateTime
 
 @SuppressLint("ViewConstructor")
-internal class ReceiptMonthlyView(context: Context, private val dateTime: DateTime) : FrameLayout(context), BaseView, RefreshableView, FilterableView {
+internal class ReceiptMonthlyView(context: Context, private val dateTime: DateTime) : FrameLayout(context), RefreshableView, FilterableView {
     override var filter = ""
     private val ui = ReceiptMonthlyViewUI()
     private var adapter = ReceiptAdapter(context)

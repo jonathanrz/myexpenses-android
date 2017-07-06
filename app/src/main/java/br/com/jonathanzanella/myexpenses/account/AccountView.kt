@@ -9,7 +9,6 @@ import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
 import android.widget.FrameLayout
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.views.BaseView
 import br.com.jonathanzanella.myexpenses.views.FilterableView
 import br.com.jonathanzanella.myexpenses.views.RefreshableView
 import br.com.jonathanzanella.myexpenses.views.ResultableView
@@ -21,7 +20,7 @@ import org.joda.time.DateTime
 
 class AccountView@JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : FrameLayout(context, attrs, defStyleAttr), BaseView, RefreshableView, ResultableView, FilterableView {
+) : FrameLayout(context, attrs, defStyleAttr), RefreshableView, ResultableView, FilterableView {
     override var filter: String = ""
 
     private val ui = AccountViewUI()

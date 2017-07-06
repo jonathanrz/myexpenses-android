@@ -8,7 +8,6 @@ import android.widget.FrameLayout
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapter
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapterBuilder
-import br.com.jonathanzanella.myexpenses.views.BaseView
 import br.com.jonathanzanella.myexpenses.views.FilterableView
 import br.com.jonathanzanella.myexpenses.views.TabableView
 import kotlinx.android.synthetic.main.view_overview_expenses.view.*
@@ -16,7 +15,7 @@ import org.joda.time.DateTime
 
 class OverviewExpensesView@JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : FrameLayout(context, attrs, defStyleAttr), BaseView, TabableView, FilterableView {
+) : FrameLayout(context, attrs, defStyleAttr), TabableView, FilterableView {
     override var filter = ""
 
     init {
