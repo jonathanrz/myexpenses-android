@@ -16,6 +16,7 @@ import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapter
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapterBuilder
 import br.com.jonathanzanella.myexpenses.views.BaseView
 import br.com.jonathanzanella.myexpenses.views.ResultableView
+import br.com.jonathanzanella.myexpenses.views.TabableView
 import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
 import org.jetbrains.anko.*
 import org.jetbrains.anko.design.floatingActionButton
@@ -26,7 +27,7 @@ import java.util.*
 
 class ExpenseView@JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : FrameLayout(context, attrs, defStyleAttr), BaseView, ResultableView, ViewPager.OnPageChangeListener {
+) : FrameLayout(context, attrs, defStyleAttr), BaseView, ResultableView, TabableView, ViewPager.OnPageChangeListener {
 
     override var filter = ""
     private val ui = ExpenseViewUI()

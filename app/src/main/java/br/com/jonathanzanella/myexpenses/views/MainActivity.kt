@@ -115,8 +115,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         child.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT)
         content!!.addView(child)
+        (child as? TabableView)?.setTabs(tabs)
         if(child is BaseView) {
-            child.setTabs(tabs)
             child.filter(filter)
         }
         currentView = child
