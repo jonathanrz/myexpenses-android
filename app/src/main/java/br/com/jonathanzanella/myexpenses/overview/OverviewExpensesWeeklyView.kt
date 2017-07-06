@@ -12,10 +12,11 @@ import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.expense.ExpenseWeeklyOverviewAdapter
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
 import br.com.jonathanzanella.myexpenses.views.BaseView
+import br.com.jonathanzanella.myexpenses.views.RefreshableView
 import kotlinx.android.synthetic.main.view_overview_expenses_weekly.view.*
 
 @SuppressLint("ViewConstructor")
-internal class OverviewExpensesWeeklyView(context: Context, private val period: WeeklyPagerAdapter.Period) : FrameLayout(context), BaseView {
+internal class OverviewExpensesWeeklyView(context: Context, private val period: WeeklyPagerAdapter.Period) : FrameLayout(context), BaseView, RefreshableView {
     override var filter = ""
     private val expenseRepository: ExpenseRepository = ExpenseRepository(RepositoryImpl<Expense>(context))
     private var adapter = ExpenseWeeklyOverviewAdapter()
@@ -31,8 +32,6 @@ internal class OverviewExpensesWeeklyView(context: Context, private val period: 
     }
 
     override fun refreshData() {
-        super.refreshData()
-
         adapter.setExpenses(expenseRepository.expenses(period))
         adapter.notifyDataSetChanged()
 

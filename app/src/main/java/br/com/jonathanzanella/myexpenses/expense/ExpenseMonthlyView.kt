@@ -8,13 +8,14 @@ import android.support.v7.widget.RecyclerView
 import android.widget.FrameLayout
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.views.BaseView
+import br.com.jonathanzanella.myexpenses.views.RefreshableView
 import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
 import br.com.jonathanzanella.myexpenses.views.anko.recyclerView
 import org.jetbrains.anko.*
 import org.joda.time.DateTime
 
 @SuppressLint("ViewConstructor")
-internal class ExpenseMonthlyView(context: Context, private val dateTime: DateTime) : FrameLayout(context), BaseView {
+internal class ExpenseMonthlyView(context: Context, private val dateTime: DateTime) : FrameLayout(context), BaseView, RefreshableView {
 
     override var filter = ""
     private val ui = ExpenseMonthlyViewUI()
@@ -29,8 +30,6 @@ internal class ExpenseMonthlyView(context: Context, private val dateTime: DateTi
     }
 
     override fun refreshData() {
-        super.refreshData()
-
         doAsync {
             adapter.loadData(dateTime)
 

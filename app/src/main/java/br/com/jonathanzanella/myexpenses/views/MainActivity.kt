@@ -104,15 +104,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onResume() {
         super.onResume()
 
-        for (i in 0..content!!.childCount - 1) {
-            val v = content!!.getChildAt(i)
-            if (v is BaseView)
-                v.refreshData()
-        }
+        (0..content.childCount - 1)
+                .map { content.getChildAt(it) }
+                .filterIsInstance<RefreshableView>()
+                .forEach { it.refreshData() }
     }
 
     private fun addViewToContent(child: View) {
-        content!!.removeAllViews()
+        content.removeAllViews()
         child.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT)
         content!!.addView(child)

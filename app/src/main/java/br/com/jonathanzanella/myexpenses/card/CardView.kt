@@ -12,6 +12,7 @@ import android.util.AttributeSet
 import android.widget.FrameLayout
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.views.BaseView
+import br.com.jonathanzanella.myexpenses.views.RefreshableView
 import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
 import br.com.jonathanzanella.myexpenses.views.anko.recyclerView
 import org.jetbrains.anko.*
@@ -20,7 +21,7 @@ import org.jetbrains.anko.design.floatingActionButton
 @UiThread
 class CardView@JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : FrameLayout(context, attrs, defStyleAttr), BaseView {
+) : FrameLayout(context, attrs, defStyleAttr), BaseView, RefreshableView {
     override var filter = ""
     private var ui = CardViewUI()
     private var adapter = CardAdapter()
@@ -56,8 +57,6 @@ class CardView@JvmOverloads constructor(
     }
 
     override fun refreshData() {
-        super.refreshData()
-
         object : AsyncTask<Void, Void, Void>() {
 
             override fun doInBackground(vararg voids: Void): Void? {

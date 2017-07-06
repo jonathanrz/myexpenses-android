@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import br.com.jonathanzanella.myexpenses.Environment
 import br.com.jonathanzanella.myexpenses.helpers.DateHelper
-import br.com.jonathanzanella.myexpenses.views.BaseView
+import br.com.jonathanzanella.myexpenses.views.RefreshableView
 import org.joda.time.DateTime
 import java.util.*
 
@@ -42,7 +42,7 @@ class WeeklyPagerAdapter internal constructor(private val context: Context, mont
     override fun instantiateItem(collection: ViewGroup, position: Int): Any {
         val view = builder.buildView(context, periods[position])
         collection.addView(view)
-        if(view is BaseView)
+        if(view is RefreshableView)
             view.refreshData()
         return view
     }

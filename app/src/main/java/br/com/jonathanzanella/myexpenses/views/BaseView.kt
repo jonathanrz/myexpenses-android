@@ -11,8 +11,6 @@ interface BaseView {
 
     fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {}
 
-    fun refreshData() {}
-
     fun setTabs(tabs: TabLayout) {
         tabs.visibility = View.GONE
     }

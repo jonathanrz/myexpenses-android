@@ -10,6 +10,7 @@ import android.util.AttributeSet
 import android.widget.FrameLayout
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.views.BaseView
+import br.com.jonathanzanella.myexpenses.views.RefreshableView
 import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
 import br.com.jonathanzanella.myexpenses.views.anko.recyclerView
 import org.jetbrains.anko.*
@@ -17,7 +18,7 @@ import org.jetbrains.anko.design.floatingActionButton
 
 class BillView@JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : FrameLayout(context, attrs, defStyleAttr), BaseView {
+) : FrameLayout(context, attrs, defStyleAttr), BaseView, RefreshableView {
     override var filter = ""
     private val ui = BillViewUI()
     private var adapter: BillAdapter = BillAdapter()
@@ -40,8 +41,6 @@ class BillView@JvmOverloads constructor(
     }
 
     override fun refreshData() {
-        super.refreshData()
-
         adapter.refreshData()
         adapter.notifyDataSetChanged()
     }
