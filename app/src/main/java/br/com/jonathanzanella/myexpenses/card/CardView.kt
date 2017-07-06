@@ -13,6 +13,7 @@ import android.widget.FrameLayout
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.views.BaseView
 import br.com.jonathanzanella.myexpenses.views.RefreshableView
+import br.com.jonathanzanella.myexpenses.views.ResultableView
 import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
 import br.com.jonathanzanella.myexpenses.views.anko.recyclerView
 import org.jetbrains.anko.*
@@ -21,7 +22,7 @@ import org.jetbrains.anko.design.floatingActionButton
 @UiThread
 class CardView@JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : FrameLayout(context, attrs, defStyleAttr), BaseView, RefreshableView {
+) : FrameLayout(context, attrs, defStyleAttr), BaseView, RefreshableView, ResultableView {
     override var filter = ""
     private var ui = CardViewUI()
     private var adapter = CardAdapter()
@@ -37,8 +38,6 @@ class CardView@JvmOverloads constructor(
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
         when (requestCode) {
             REQUEST_ADD_CARD -> if (resultCode == Activity.RESULT_OK)
                 object : AsyncTask<Void, Void, Void>() {

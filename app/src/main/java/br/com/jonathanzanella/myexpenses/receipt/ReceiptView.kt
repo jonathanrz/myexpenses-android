@@ -15,6 +15,7 @@ import br.com.jonathanzanella.myexpenses.helpers.DateHelper
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapter
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapterBuilder
 import br.com.jonathanzanella.myexpenses.views.BaseView
+import br.com.jonathanzanella.myexpenses.views.ResultableView
 import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
 import org.jetbrains.anko.*
 import org.jetbrains.anko.design.floatingActionButton
@@ -25,7 +26,7 @@ import java.util.*
 
 class ReceiptView@JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : FrameLayout(context, attrs, defStyleAttr), BaseView, ViewPager.OnPageChangeListener {
+) : FrameLayout(context, attrs, defStyleAttr), BaseView, ResultableView, ViewPager.OnPageChangeListener {
     override var filter = ""
     private val views = HashMap<DateTime, WeakReference<ReceiptMonthlyView>>()
 
@@ -64,8 +65,6 @@ class ReceiptView@JvmOverloads constructor(
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
         when (requestCode) {
             REQUEST_ADD_RECEIPT -> if (resultCode == Activity.RESULT_OK)
                 loadExpense(data!!.getStringExtra(EditReceiptActivity.KEY_RECEIPT_UUID))

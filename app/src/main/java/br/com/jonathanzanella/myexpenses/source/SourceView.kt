@@ -11,6 +11,7 @@ import android.widget.FrameLayout
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.views.BaseView
 import br.com.jonathanzanella.myexpenses.views.RefreshableView
+import br.com.jonathanzanella.myexpenses.views.ResultableView
 import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
 import br.com.jonathanzanella.myexpenses.views.anko.recyclerView
 import org.jetbrains.anko.*
@@ -18,7 +19,7 @@ import org.jetbrains.anko.design.floatingActionButton
 
 class SourceView@JvmOverloads constructor(
 		context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : FrameLayout(context, attrs, defStyleAttr), BaseView, RefreshableView {
+) : FrameLayout(context, attrs, defStyleAttr), BaseView, RefreshableView, ResultableView {
 	override var filter = ""
 	private val ui = SourceViewUI()
     private val adapter = SourceAdapter(context)
@@ -32,8 +33,6 @@ class SourceView@JvmOverloads constructor(
 	}
 
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-		super.onActivityResult(requestCode, resultCode, data)
-
 		when (requestCode) {
 			REQUEST_ADD_SOURCE -> if (resultCode == Activity.RESULT_OK)
                 refreshData()

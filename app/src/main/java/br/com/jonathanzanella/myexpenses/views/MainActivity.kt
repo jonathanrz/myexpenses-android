@@ -74,7 +74,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         (0..content!!.childCount - 1)
                 .map { content!!.getChildAt(it) }
-                .forEach { (it as? BaseView)?.onActivityResult(requestCode, resultCode, data) }
+                .forEach { (it as? ResultableView)?.onActivityResult(requestCode, resultCode, data) }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
