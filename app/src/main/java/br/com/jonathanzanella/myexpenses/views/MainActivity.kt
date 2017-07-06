@@ -12,6 +12,7 @@ import android.support.v7.widget.SearchView
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.view.ViewGroup
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.AccountView
@@ -27,7 +28,7 @@ import br.com.jonathanzanella.myexpenses.sync.SyncView
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, SearchView.OnQueryTextListener {
-    private var currentView: BaseView? = null
+    private lateinit var currentView: View
     private var filter = ""
     private var selectedItem = -1
 
@@ -94,7 +95,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onQueryTextChange(newText: String): Boolean {
         filter = newText
-        currentView!!.filter(newText)
+        val view = currentView
+        if(view is BaseView)
+            view.filter(newText)
         return false
     }
 
@@ -108,13 +111,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
-    private fun addViewToContent(child: BaseView) {
+    private fun addViewToContent(child: View) {
         content!!.removeAllViews()
         child.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT)
         content!!.addView(child)
-        child.setTabs(tabs)
-        child.filter(filter)
+        if(child is BaseView) {
+            child.setTabs(tabs)
+            child.filter(filter)
+        }
         currentView = child
     }
 

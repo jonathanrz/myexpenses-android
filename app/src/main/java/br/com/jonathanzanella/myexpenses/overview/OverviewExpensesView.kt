@@ -4,6 +4,7 @@ import android.content.Context
 import android.support.design.widget.TabLayout
 import android.util.AttributeSet
 import android.view.View
+import android.widget.FrameLayout
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapter
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapterBuilder
@@ -13,14 +14,15 @@ import org.joda.time.DateTime
 
 class OverviewExpensesView@JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : BaseView(context, attrs, defStyleAttr) {
+) : FrameLayout(context, attrs, defStyleAttr), BaseView {
+    override var filter = ""
 
-    override fun onAttachedToWindow() {
+    init {
         super.onAttachedToWindow()
         View.inflate(context, R.layout.view_overview_expenses, this)
 
         val adapter = MonthlyPagerAdapter(context, object : MonthlyPagerAdapterBuilder {
-            override fun buildView(ctx: Context, date: DateTime): BaseView {
+            override fun buildView(ctx: Context, date: DateTime): View {
                 return OverviewExpensesMonthlyView(ctx, date)
             }
         })

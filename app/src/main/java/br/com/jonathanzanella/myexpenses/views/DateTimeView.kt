@@ -5,6 +5,7 @@ import android.app.TimePickerDialog
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
+import android.widget.FrameLayout
 import br.com.jonathanzanella.myexpenses.R
 import kotlinx.android.synthetic.main.view_datetime.view.*
 import org.joda.time.DateTime
@@ -13,7 +14,7 @@ import java.util.*
 
 class DateTimeView@JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : BaseView(context, attrs, defStyleAttr) {
+) : FrameLayout(context, attrs, defStyleAttr) {
     val dateFormat = SimpleDateFormat("dd/MM/yy", Locale.getDefault())
     val hourFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
 
@@ -26,9 +27,7 @@ class DateTimeView@JvmOverloads constructor(
         fun onDateTimeChanged(currentTime: DateTime)
     }
 
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-
+    init {
         View.inflate(context, R.layout.view_datetime, this)
         date.setOnClickListener { onDate() }
         hour.setOnClickListener { onHour() }

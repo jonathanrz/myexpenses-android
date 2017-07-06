@@ -8,6 +8,7 @@ import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.util.AttributeSet
 import android.view.View
+import android.widget.FrameLayout
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
 import br.com.jonathanzanella.myexpenses.helpers.DateHelper
@@ -24,8 +25,9 @@ import java.util.*
 
 class ExpenseView@JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : BaseView(context, attrs, defStyleAttr), ViewPager.OnPageChangeListener {
+) : FrameLayout(context, attrs, defStyleAttr), BaseView, ViewPager.OnPageChangeListener {
 
+    override var filter = ""
     private val ui = ExpenseViewUI()
     internal var adapter: MonthlyPagerAdapter
     internal var expenseRepository: ExpenseRepository = ExpenseRepository(RepositoryImpl<Expense>(context))
@@ -33,19 +35,16 @@ class ExpenseView@JvmOverloads constructor(
     private val views = HashMap<DateTime, WeakReference<ExpenseMonthlyView>>()
 
     init {
+        addView(ui.createView(AnkoContext.Companion.create(context, this)))
+
         adapter = MonthlyPagerAdapter(context, object : MonthlyPagerAdapterBuilder {
-            override fun buildView(ctx: Context, date: DateTime): BaseView {
+            override fun buildView(ctx: Context, date: DateTime): View {
                 val view = ExpenseMonthlyView(ctx, date)
                 views.put(date, WeakReference(view))
                 view.filter(filter)
                 return view
             }
         })
-    }
-
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-        addView(ui.createView(AnkoContext.Companion.create(context, this)))
 
         ui.pager.adapter = adapter
         ui.pager.currentItem = MonthlyPagerAdapter.INIT_MONTH_VISIBLE

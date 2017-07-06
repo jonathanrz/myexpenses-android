@@ -5,6 +5,7 @@ import android.content.Context
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.widget.FrameLayout
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.views.BaseView
 import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
@@ -16,18 +17,16 @@ import org.jetbrains.anko.frameLayout
 import org.joda.time.DateTime
 
 @SuppressLint("ViewConstructor")
-internal class ReceiptMonthlyView(context: Context, private val dateTime: DateTime) : BaseView(context) {
+internal class ReceiptMonthlyView(context: Context, private val dateTime: DateTime) : FrameLayout(context), BaseView {
+    override var filter = ""
     private val ui = ReceiptMonthlyViewUI()
     private var adapter = ReceiptAdapter(context)
 
     init {
+        addView(ui.createView(AnkoContext.Companion.create(context, this)))
+
         adapter.loadData(dateTime)
         adapter.notifyDataSetChanged()
-    }
-
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-        addView(ui.createView(AnkoContext.Companion.create(context, this)))
 
         ui.receipts.adapter = adapter
         ui.receipts.layoutManager = GridLayoutManager(context, 2)

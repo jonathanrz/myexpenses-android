@@ -19,8 +19,8 @@ class ExpenseAdapterPresenter(private val repository: ExpenseRepository) {
         return Collections.unmodifiableList(receiptsFiltered ?: ArrayList())
     }
 
-    fun filter(filter: String?) {
-        if (filter == null || filter.compareTo("") == 0) {
+    fun filter(filter: String) {
+        if (filter.compareTo("") == 0) {
             receiptsFiltered = receipts
             return
         }

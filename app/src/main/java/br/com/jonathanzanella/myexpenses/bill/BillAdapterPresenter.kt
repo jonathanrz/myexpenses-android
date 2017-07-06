@@ -29,8 +29,8 @@ class BillAdapterPresenter(private val repository: BillRepository) {
     val billsCount: Int
         get() = billsFiltered!!.size
 
-    fun filter(filter: String?) {
-        if (filter == null || filter.compareTo("") == 0) {
+    fun filter(filter: String) {
+        if (filter.compareTo("") == 0) {
             billsFiltered = bills
             return
         }

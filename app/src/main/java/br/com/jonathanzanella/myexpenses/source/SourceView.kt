@@ -7,6 +7,7 @@ import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
+import android.widget.FrameLayout
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.views.BaseView
 import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
@@ -14,16 +15,14 @@ import br.com.jonathanzanella.myexpenses.views.anko.recyclerView
 import org.jetbrains.anko.*
 import org.jetbrains.anko.design.floatingActionButton
 
-class SourceView : BaseView {
-    private val ui = SourceViewUI()
+class SourceView@JvmOverloads constructor(
+		context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+) : FrameLayout(context, attrs, defStyleAttr), BaseView {
+	override var filter = ""
+	private val ui = SourceViewUI()
     private val adapter = SourceAdapter(context)
 
-	constructor(context: Context) : super(context)
-	constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
-	constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
-
-	override fun onAttachedToWindow() {
-		super.onAttachedToWindow()
+	init {
 		addView(ui.createView(AnkoContext.Companion.create(context, this)))
 
         ui.sources.adapter = adapter

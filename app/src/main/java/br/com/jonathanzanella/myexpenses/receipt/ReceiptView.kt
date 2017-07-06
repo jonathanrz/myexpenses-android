@@ -8,6 +8,7 @@ import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.util.AttributeSet
 import android.view.View
+import android.widget.FrameLayout
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
 import br.com.jonathanzanella.myexpenses.helpers.DateHelper
@@ -22,24 +23,22 @@ import org.joda.time.DateTime
 import java.lang.ref.WeakReference
 import java.util.*
 
-class ReceiptView : BaseView, ViewPager.OnPageChangeListener {
+class ReceiptView@JvmOverloads constructor(
+        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+) : FrameLayout(context, attrs, defStyleAttr), BaseView, ViewPager.OnPageChangeListener {
+    override var filter = ""
     private val views = HashMap<DateTime, WeakReference<ReceiptMonthlyView>>()
 
     private val ui = ReceiptViewUI()
     private var adapter: MonthlyPagerAdapter? = null
     private var repository: ReceiptRepository? = null
 
-    constructor(context: Context) : super(context)
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
-
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
+    init {
         addView(ui.createView(AnkoContext.Companion.create(context, this)))
 
         repository = ReceiptRepository(RepositoryImpl<Receipt>(context))
         adapter = MonthlyPagerAdapter(context, object : MonthlyPagerAdapterBuilder {
-            override fun buildView(ctx: Context, date: DateTime): BaseView {
+            override fun buildView(ctx: Context, date: DateTime): View {
                 val view = ReceiptMonthlyView(ctx, date)
                 views.put(date, WeakReference(view))
                 return view

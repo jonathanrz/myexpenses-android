@@ -4,6 +4,7 @@ import android.content.Context
 import android.support.v4.view.PagerAdapter
 import android.view.View
 import android.view.ViewGroup
+import br.com.jonathanzanella.myexpenses.views.BaseView
 import org.joda.time.DateTime
 import java.util.*
 
@@ -22,7 +23,8 @@ class MonthlyPagerAdapter(private val context: Context, private val builder: Mon
     override fun instantiateItem(collection: ViewGroup, position: Int): Any {
         val view = builder.buildView(context, months[position])
         collection.addView(view)
-        view.refreshData()
+        if(view is BaseView)
+            view.refreshData()
         return view
     }
 

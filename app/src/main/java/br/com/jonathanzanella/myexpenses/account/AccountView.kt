@@ -7,6 +7,7 @@ import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
+import android.widget.FrameLayout
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.views.BaseView
 import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
@@ -15,17 +16,15 @@ import org.jetbrains.anko.*
 import org.jetbrains.anko.design.floatingActionButton
 import org.joda.time.DateTime
 
-class AccountView : BaseView {
+class AccountView@JvmOverloads constructor(
+        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+) : FrameLayout(context, attrs, defStyleAttr), BaseView {
+    override var filter: String = ""
 
     private val ui = AccountViewUI()
     private var adapter = AccountAdapter(DateTime.now())
 
-    constructor(context: Context) : super(context)
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
-
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
+    init {
         addView(ui.createView(AnkoContext.Companion.create(context, this)))
 
         ui.accounts.adapter = adapter
@@ -47,7 +46,6 @@ class AccountView : BaseView {
         super.refreshData()
 
         adapter.refreshData()
-        adapter.notifyDataSetChanged()
     }
 
     companion object {

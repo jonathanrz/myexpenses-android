@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.support.v7.widget.GridLayoutManager
 import android.view.View
+import android.widget.FrameLayout
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
 import br.com.jonathanzanella.myexpenses.expense.Expense
@@ -14,7 +15,8 @@ import br.com.jonathanzanella.myexpenses.views.BaseView
 import kotlinx.android.synthetic.main.view_overview_expenses_weekly.view.*
 
 @SuppressLint("ViewConstructor")
-internal class OverviewExpensesWeeklyView(context: Context, private val period: WeeklyPagerAdapter.Period) : BaseView(context) {
+internal class OverviewExpensesWeeklyView(context: Context, private val period: WeeklyPagerAdapter.Period) : FrameLayout(context), BaseView {
+    override var filter = ""
     private val expenseRepository: ExpenseRepository = ExpenseRepository(RepositoryImpl<Expense>(context))
     private var adapter = ExpenseWeeklyOverviewAdapter()
 

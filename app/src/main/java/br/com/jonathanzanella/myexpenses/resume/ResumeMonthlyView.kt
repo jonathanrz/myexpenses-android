@@ -8,6 +8,7 @@ import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
+import android.widget.FrameLayout
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.AccountAdapter
 import br.com.jonathanzanella.myexpenses.bill.BillMonthlyResumeAdapter
@@ -22,7 +23,8 @@ import kotlinx.android.synthetic.main.view_monthly_resume.view.*
 import org.joda.time.DateTime
 
 @SuppressLint("ViewConstructor")
-internal class ResumeMonthlyView(context: Context, private val month: DateTime) : BaseView(context) {
+internal class ResumeMonthlyView(context: Context, private val month: DateTime) : FrameLayout(context), BaseView {
+    override var filter = ""
     var singleRowHeight: Int = 0
 
     private var receiptRepository = ReceiptRepository(RepositoryImpl<Receipt>(context))
@@ -35,10 +37,7 @@ internal class ResumeMonthlyView(context: Context, private val month: DateTime) 
 
     init {
         singleRowHeight = resources.getDimensionPixelSize(R.dimen.single_row_height)
-    }
 
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
         View.inflate(context, R.layout.view_monthly_resume, this)
 
         initAccount()
