@@ -34,7 +34,8 @@ class MonthTransactionsView@JvmOverloads constructor(
     }
 
     internal fun showBalance(account: Account, month: DateTime, balance: Int) {
-        header.text = "$monthTransactionsTemplate $simpleDateFormat.format(month.toDate())"
+        val date = simpleDateFormat.format(month.toDate())
+        header.text = "$monthTransactionsTemplate $date"
         presenter.showBalance(account, month, balance)
     }
 

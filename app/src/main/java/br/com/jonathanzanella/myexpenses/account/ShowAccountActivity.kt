@@ -119,7 +119,7 @@ private class ShowAccountActivityUi : AnkoComponent<ShowAccountActivity> {
         verticalLayout {
             toolbar = toolbarTemplate {}
 
-            tableViewFrame {
+            tableLayout {
                 tableRow {
                     static { text = resources.getString(R.string.name) }
                     accountName = staticWithData { id = R.id.act_show_account_name }
@@ -136,11 +136,15 @@ private class ShowAccountActivityUi : AnkoComponent<ShowAccountActivity> {
                     static { text = resources.getString(R.string.account_to_pay_bills) }
                     accountToPayBills = staticWithData { id = R.id.act_show_account_to_pay_bills }
                 }
-            }
+            }.lparams { margin = resources.getDimensionPixelSize(R.dimen.default_spacing) }
 
             transactionsView = transactionsView {
                 id = R.id.act_show_account_transactions
-            }.lparams(width = FrameLayout.LayoutParams.MATCH_PARENT)
+            }.lparams(width = FrameLayout.LayoutParams.MATCH_PARENT) {
+                leftMargin = resources.getDimensionPixelSize(R.dimen.default_spacing)
+                rightMargin = resources.getDimensionPixelSize(R.dimen.default_spacing)
+                bottomMargin = resources.getDimensionPixelSize(R.dimen.default_spacing)
+            }
         }.applyRecursively(::applyTemplateViewStyles)
     }
 }
