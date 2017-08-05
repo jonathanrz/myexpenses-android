@@ -57,10 +57,10 @@ internal class MonthTransactionsPresenter(ctx: Context, private val view: MonthT
             loadedBills = false
             doAsync {
                 adapter.addTransactions(billRepository.monthly(month))
-                loadedBills = true
 
                 uiThread {
                     adapter.notifyDataSetChanged()
+                    loadedBills = true
                     onDataLoaded()
                 }
             }
@@ -71,10 +71,10 @@ internal class MonthTransactionsPresenter(ctx: Context, private val view: MonthT
 
             doAsync {
                 adapter.addTransactions(expenseRepository.accountExpenses(account, month))
-                loadedExpenses = true
 
                 uiThread {
                     adapter.notifyDataSetChanged()
+                    loadedExpenses = true
                     onDataLoaded()
                 }
             }
@@ -85,10 +85,10 @@ internal class MonthTransactionsPresenter(ctx: Context, private val view: MonthT
 
             doAsync {
                 adapter.addTransactions(receiptRepository.monthly(month, account))
-                loadedReceipts = true
 
                 uiThread {
                     adapter.notifyDataSetChanged()
+                    loadedReceipts = true
                     onDataLoaded()
                 }
             }
