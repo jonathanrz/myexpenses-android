@@ -92,7 +92,7 @@ public class ShowAccountActivityTest {
 	}
 
 	@Test
-	public void show_credit_card_bill_in_account_show_activity() {
+	public void show_credit_card_bill_in_account_show_activity() throws InterruptedException {
 		Card card = new CardBuilder().account(account).build(repository);
 		assertTrue(cardRepository.save(card).isValid());
 		Expense expense = new ExpenseBuilder().chargeable(card).build();
@@ -103,6 +103,7 @@ public class ShowAccountActivityTest {
 		String billName = getTargetContext().getString(R.string.invoice) + " " + card.getName();
 		String value = CurrencyHelper.INSTANCE.format(expense.getAmount());
 
+		Thread.sleep(500);
 		onView(withId(R.id.act_show_account_name)).check(matches(withText(account.getName())));
 		onView(withId(R.id.name)).check(matches(withText(billName)));
 		onView(withId(R.id.value)).check(matches(withText(value)));
@@ -117,6 +118,7 @@ public class ShowAccountActivityTest {
 
 		int expectedBalance = ACCOUNT_BALANCE + RECEIPT_INCOME - EXPENSE_VALUE;
 		String expectedValue = CurrencyHelper.INSTANCE.format(expectedBalance);
+        Thread.sleep(500);
 		onView(allOf(
 				withId(R.id.balance),
 				isDescendantOfA(withId(R.id.thisMonth))))
@@ -124,6 +126,8 @@ public class ShowAccountActivityTest {
 
 		expectedBalance = expectedBalance + RECEIPT_INCOME - EXPENSE_VALUE;
 		expectedValue = CurrencyHelper.INSTANCE.format(expectedBalance);
+
+        Thread.sleep(500);
 		onView(allOf(
 				withId(R.id.balance),
 				isDescendantOfA(withId(R.id.nextMonth))))

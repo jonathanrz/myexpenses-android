@@ -2,6 +2,7 @@ package br.com.jonathanzanella.myexpenses.helpers;
 
 import android.support.annotation.IdRes;
 import android.support.annotation.StringRes;
+import android.support.test.espresso.Espresso;
 import android.support.test.espresso.PerformException;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.contrib.PickerActions;
@@ -102,6 +103,7 @@ public final class UIHelper {
 
 	public static void clickIntoView(@IdRes int view) {
 		try {
+			Espresso.closeSoftKeyboard();
 			onView(withId(view)).perform(scrollTo()).perform(click());
 		} catch (PerformException e) {
 			onView(withId(view)).perform(click());
