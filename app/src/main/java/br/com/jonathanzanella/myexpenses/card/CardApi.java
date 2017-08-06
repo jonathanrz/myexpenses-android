@@ -31,10 +31,10 @@ public class CardApi implements UnsyncModelApi<Card> {
 			if(response.isSuccessful()) {
 				return response.body();
 			} else {
-				Log.error(LOG_TAG, "Index request error: " + response.message());
+				Log.Companion.error(LOG_TAG, "Index request error: " + response.message());
 			}
 		} catch (IOException e) {
-			Log.error(LOG_TAG, "Index request error: " + e.getMessage());
+			Log.Companion.error(LOG_TAG, "Index request error: " + e.getMessage());
 			e.printStackTrace();
 		}
 
@@ -54,12 +54,12 @@ public class CardApi implements UnsyncModelApi<Card> {
 			Response<Card> response = caller.execute();
 			if(response.isSuccessful()) {
 				getCardRepository().syncAndSave(response.body());
-				Log.info(LOG_TAG, "Updated: " + card.getData());
+				Log.Companion.info(LOG_TAG, "Updated: " + card.getData());
 			} else {
-				Log.error(LOG_TAG, "Save request error: " + response.message() + " uuid: " + card.getUuid());
+				Log.Companion.error(LOG_TAG, "Save request error: " + response.message() + " uuid: " + card.getUuid());
 			}
 		} catch (IOException e) {
-			Log.error(LOG_TAG, "Save request error: " + e.getMessage() + " uuid: " + card.getUuid());
+			Log.Companion.error(LOG_TAG, "Save request error: " + e.getMessage() + " uuid: " + card.getUuid());
 			e.printStackTrace();
 		}
 	}
@@ -83,19 +83,19 @@ public class CardApi implements UnsyncModelApi<Card> {
 
 	private CardInterface getInterface() {
 		if(cardInterface == null)
-			cardInterface = new Server(MyApplication.getContext()).cardInterface();
+			cardInterface = new Server(MyApplication.Companion.getContext()).cardInterface();
 		return cardInterface;
 	}
 
 	private ExpenseRepository getExpenseRepository() {
 		if(expenseRepository == null)
-			expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(MyApplication.getContext()));
+			expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(MyApplication.Companion.getContext()));
 		return expenseRepository;
 	}
 
 	private CardRepository getCardRepository() {
 		if(cardRepository == null)
-			cardRepository = new CardRepository(new RepositoryImpl<Card>(MyApplication.getContext()), getExpenseRepository());
+			cardRepository = new CardRepository(new RepositoryImpl<Card>(MyApplication.Companion.getContext()), getExpenseRepository());
 		return cardRepository;
 	}
 }

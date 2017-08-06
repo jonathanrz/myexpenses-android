@@ -8,12 +8,15 @@ import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.util.AttributeSet
 import android.view.View
+import android.widget.FrameLayout
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
 import br.com.jonathanzanella.myexpenses.helpers.DateHelper
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapter
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapterBuilder
-import br.com.jonathanzanella.myexpenses.views.BaseView
+import br.com.jonathanzanella.myexpenses.views.FilterableView
+import br.com.jonathanzanella.myexpenses.views.ResultableView
+import br.com.jonathanzanella.myexpenses.views.TabableView
 import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
 import org.jetbrains.anko.*
 import org.jetbrains.anko.design.floatingActionButton
@@ -24,8 +27,9 @@ import java.util.*
 
 class ExpenseView@JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : BaseView(context, attrs, defStyleAttr), ViewPager.OnPageChangeListener {
+) : FrameLayout(context, attrs, defStyleAttr), ResultableView, TabableView, FilterableView, ViewPager.OnPageChangeListener {
 
+    override var filter = ""
     private val ui = ExpenseViewUI()
     internal var adapter: MonthlyPagerAdapter
     internal var expenseRepository: ExpenseRepository = ExpenseRepository(RepositoryImpl<Expense>(context))
@@ -33,25 +37,20 @@ class ExpenseView@JvmOverloads constructor(
     private val views = HashMap<DateTime, WeakReference<ExpenseMonthlyView>>()
 
     init {
-        adapter = MonthlyPagerAdapter(context, MonthlyPagerAdapterBuilder { ctx, date ->
-            val view = ExpenseMonthlyView(ctx, date)
-            views.put(date, WeakReference(view))
-            view.filter(filter)
-            view
-        })
-    }
-
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
         addView(ui.createView(AnkoContext.Companion.create(context, this)))
+
+        adapter = MonthlyPagerAdapter(context, object : MonthlyPagerAdapterBuilder {
+            override fun buildView(ctx: Context, date: DateTime): View {
+                val view = ExpenseMonthlyView(ctx, date)
+                views.put(date, WeakReference(view))
+                view.filter(filter)
+                return view
+            }
+        })
 
         ui.pager.adapter = adapter
         ui.pager.currentItem = MonthlyPagerAdapter.INIT_MONTH_VISIBLE
         ui.pager.addOnPageChangeListener(this)
-    }
-
-    override fun init() {
-        //TODO: remove when convert BaseView to interface
     }
 
     override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
@@ -78,8 +77,6 @@ class ExpenseView@JvmOverloads constructor(
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
         when (requestCode) {
             REQUEST_ADD_EXPENSE -> if (resultCode == Activity.RESULT_OK)
                 loadExpense(data!!.getStringExtra(EditExpenseActivity.KEY_EXPENSE_UUID))
@@ -89,14 +86,14 @@ class ExpenseView@JvmOverloads constructor(
     private fun loadExpense(uuid: String) {
         object : AsyncTask<Void, Void, Expense>() {
 
-            override fun doInBackground(vararg voids: Void): Expense {
+            override fun doInBackground(vararg voids: Void): Expense? {
                 return expenseRepository.find(uuid)
             }
 
             override fun onPostExecute(expense: Expense?) {
                 super.onPostExecute(expense)
                 if (expense != null) {
-                    val view = getMonthView(expense.date)
+                    val view = getMonthView(expense.getDate())
                     view?.refreshData()
                 }
             }

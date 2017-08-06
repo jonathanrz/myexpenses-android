@@ -12,6 +12,7 @@ import android.support.v7.widget.SearchView
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.view.ViewGroup
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.AccountView
@@ -27,7 +28,7 @@ import br.com.jonathanzanella.myexpenses.sync.SyncView
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, SearchView.OnQueryTextListener {
-    private var currentView: BaseView? = null
+    private lateinit var currentView: View
     private var filter = ""
     private var selectedItem = -1
 
@@ -50,6 +51,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         navigationView!!.setNavigationItemSelectedListener(this)
 
+        @Suppress("DEPRECATION")
         drawer!!.setDrawerListener(drawerToggle)
         drawerToggle.syncState()
 
@@ -70,11 +72,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        for (i in 0..content!!.childCount - 1) {
-            val v = content!!.getChildAt(i)
-            if (v is BaseView)
-                v.onActivityResult(requestCode, resultCode, data)
-        }
+        (0..content!!.childCount - 1)
+                .map { content!!.getChildAt(it) }
+                .forEach { (it as? ResultableView)?.onActivityResult(requestCode, resultCode, data) }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -95,27 +95,26 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onQueryTextChange(newText: String): Boolean {
         filter = newText
-        currentView!!.filter(newText)
+        (currentView as? FilterableView)!!.filter(newText)
         return false
     }
 
     override fun onResume() {
         super.onResume()
 
-        for (i in 0..content!!.childCount - 1) {
-            val v = content!!.getChildAt(i)
-            if (v is BaseView)
-                v.refreshData()
-        }
+        (0..content.childCount - 1)
+                .map { content.getChildAt(it) }
+                .filterIsInstance<RefreshableView>()
+                .forEach { it.refreshData() }
     }
 
-    private fun addViewToContent(child: BaseView) {
-        content!!.removeAllViews()
+    private fun addViewToContent(child: View) {
+        content.removeAllViews()
         child.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT)
         content!!.addView(child)
-        child.setTabs(tabs)
-        child.filter(filter)
+        (child as? TabableView)!!.setTabs(tabs)
+        (child as? FilterableView)?.filter(filter)
         currentView = child
     }
 
@@ -130,61 +129,61 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.menu_resume -> {
                 addViewToContent(ResumeView(this))
                 setTitle(R.string.app_name)
-                drawer!!.closeDrawers()
+                drawer.closeDrawers()
                 return true
             }
             R.id.menu_accounts -> {
                 addViewToContent(AccountView(this))
                 setTitle(R.string.accounts)
-                drawer!!.closeDrawers()
+                drawer.closeDrawers()
                 return true
             }
             R.id.menu_sources -> {
                 addViewToContent(SourceView(this))
                 setTitle(R.string.sources)
-                drawer!!.closeDrawers()
+                drawer.closeDrawers()
                 return true
             }
             R.id.menu_credit_card -> {
                 addViewToContent(CardView(this))
                 setTitle(R.string.credit_card)
-                drawer!!.closeDrawers()
+                drawer.closeDrawers()
                 return true
             }
             R.id.menu_receipts -> {
                 addViewToContent(ReceiptView(this))
                 setTitle(R.string.receipts)
-                drawer!!.closeDrawers()
+                drawer.closeDrawers()
                 return true
             }
             R.id.menu_expenses -> {
                 addViewToContent(ExpenseView(this))
                 setTitle(R.string.expenses)
-                drawer!!.closeDrawers()
+                drawer.closeDrawers()
                 return true
             }
             R.id.menu_bills -> {
                 addViewToContent(BillView(this))
                 setTitle(R.string.bills)
-                drawer!!.closeDrawers()
+                drawer.closeDrawers()
                 return true
             }
             R.id.menu_overview -> {
                 addViewToContent(OverviewExpensesView(this))
                 setTitle(R.string.overview)
-                drawer!!.closeDrawers()
+                drawer.closeDrawers()
                 return true
             }
             R.id.menu_sync -> {
                 addViewToContent(SyncView(this))
                 setTitle(R.string.sync)
-                drawer!!.closeDrawers()
+                drawer.closeDrawers()
                 return true
             }
             R.id.menu_log -> {
                 addViewToContent(LogsView(this))
                 setTitle(R.string.log)
-                drawer!!.closeDrawers()
+                drawer.closeDrawers()
                 return true
             }
         }

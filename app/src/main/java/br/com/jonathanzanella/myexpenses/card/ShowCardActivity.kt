@@ -1,7 +1,6 @@
 package br.com.jonathanzanella.myexpenses.card
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
@@ -24,7 +23,7 @@ import org.jetbrains.anko.*
 import org.joda.time.DateTime
 
 class ShowCardActivity : AppCompatActivity(), CardContract.View {
-
+    override val context = this
     private var presenter: CardPresenter
     private val ui = ShowCardActivityUi()
 
@@ -86,12 +85,8 @@ class ShowCardActivity : AppCompatActivity(), CardContract.View {
         presenter.detachView()
     }
 
-    override fun setTitle(string: String?) {
+    override fun setTitle(string: String) {
         ui.toolbar.title = string
-    }
-
-    override fun getContext(): Context {
-        return this
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -124,7 +119,7 @@ class ShowCardActivity : AppCompatActivity(), CardContract.View {
         object : AsyncTask<Void, Void, Account>() {
 
             override fun doInBackground(vararg voids: Void): Account {
-                return card.account
+                return card.account!!
             }
 
             override fun onPostExecute(account: Account) {
@@ -144,7 +139,7 @@ class ShowCardActivity : AppCompatActivity(), CardContract.View {
     @UiThread
     fun payCreditCardBill() {
         object : AsyncTask<Void, Void, Expense>() {
-            override fun doInBackground(vararg voids: Void): Expense {
+            override fun doInBackground(vararg voids: Void): Expense? {
                 return presenter.generateCreditCardBill(DateTime.now().minusMonths(1))
             }
 

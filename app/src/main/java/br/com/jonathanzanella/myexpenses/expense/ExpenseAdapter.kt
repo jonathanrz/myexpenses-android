@@ -16,6 +16,7 @@ import br.com.jonathanzanella.myexpenses.chargeable.Chargeable
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
 import br.com.jonathanzanella.myexpenses.helpers.AdapterColorHelper
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
+import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import kotlinx.android.synthetic.main.row_expense.view.*
 import org.joda.time.DateTime
 
@@ -41,21 +42,21 @@ internal open class ExpenseAdapter : RecyclerView.Adapter<ExpenseAdapter.ViewHol
             itemView.tag = expense.uuid
             itemView.setBackgroundColor(adapterColorHelper.getColorForGridWithTwoColumns(adapterPosition))
             itemView.name.text = expense.name
-            itemView.date.text = Expense.SIMPLE_DATE_FORMAT.format(expense.date.toDate())
+            itemView.date.text = Transaction.SIMPLE_DATE_FORMAT.format(expense.getDate().toDate())
             itemView.value.text = CurrencyHelper.format(expense.value)
             object : AsyncTask<Void, Void, Chargeable>() {
 
-                override fun doInBackground(vararg voids: Void): Chargeable {
+                override fun doInBackground(vararg voids: Void): Chargeable? {
                     return expense.chargeableFromCache
                 }
 
-                override fun onPostExecute(c: Chargeable) {
+                override fun onPostExecute(c: Chargeable?) {
                     super.onPostExecute(c)
-                    itemView.chargeable.setText(c.name)
+                    itemView.chargeable.text = c?.name
                 }
             }.execute()
 
-            itemView.chargeNextMonth.setVisibility(if (expense.isChargedNextMonth) View.VISIBLE else View.INVISIBLE)
+            itemView.chargeNextMonth.visibility = if (expense.isChargedNextMonth) View.VISIBLE else View.INVISIBLE
             object : AsyncTask<Void, Void, Bill>() {
 
                 override fun doInBackground(vararg voids: Void): Bill? {
@@ -85,7 +86,7 @@ internal open class ExpenseAdapter : RecyclerView.Adapter<ExpenseAdapter.ViewHol
     }
 
     init {
-        presenter = ExpenseAdapterPresenter(this, expenseRepository)
+        presenter = ExpenseAdapterPresenter(expenseRepository)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

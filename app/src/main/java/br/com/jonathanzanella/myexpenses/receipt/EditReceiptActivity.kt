@@ -1,7 +1,6 @@
 package br.com.jonathanzanella.myexpenses.receipt
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
@@ -24,6 +23,7 @@ import br.com.jonathanzanella.myexpenses.log.Log
 import br.com.jonathanzanella.myexpenses.source.ListSourceActivity
 import br.com.jonathanzanella.myexpenses.source.Source
 import br.com.jonathanzanella.myexpenses.source.SourceRepository
+import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.views.anko.*
 import org.apache.commons.lang3.StringUtils
@@ -31,7 +31,12 @@ import org.jetbrains.anko.*
 import org.joda.time.DateTime
 
 class EditReceiptActivity : AppCompatActivity(), ReceiptContract.EditView {
+    override val installment: Int
+        get() = Integer.parseInt(ui.editInstallment.text.toString())
+    override val repetition: Int
+        get() = Integer.parseInt(ui.editRepetition.text.toString())
 
+    override val context = this
     private val ui = EditReceiptActivityUi()
     private val presenter: ReceiptPresenter = ReceiptPresenter(ReceiptRepository(RepositoryImpl<Receipt>(this)),
             SourceRepository(RepositoryImpl<Source>(this)),
@@ -76,12 +81,8 @@ class EditReceiptActivity : AppCompatActivity(), ReceiptContract.EditView {
         presenter.detachView()
     }
 
-    override fun setTitle(string: String?) {
+    override fun setTitle(string: String) {
         ui.toolbar.title = string
-    }
-
-    override fun getContext(): Context {
-        return this
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -117,8 +118,8 @@ class EditReceiptActivity : AppCompatActivity(), ReceiptContract.EditView {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onDateChanged(date: DateTime) {
-        ui.editDate.setText(Receipt.SIMPLE_DATE_FORMAT.format(date.toDate()))
+    override fun onDateChanged(balanceDate: DateTime) {
+        ui.editDate.setText(Transaction.SIMPLE_DATE_FORMAT.format(balanceDate.toDate()))
     }
 
     override fun onSourceSelected(source: Source) {
@@ -127,14 +128,6 @@ class EditReceiptActivity : AppCompatActivity(), ReceiptContract.EditView {
 
     override fun onAccountSelected(account: Account) {
         ui.editAccount.setText(account.name)
-    }
-
-    override fun getInstallment(): Int {
-        return Integer.parseInt(ui.editInstallment.text.toString())
-    }
-
-    override fun getRepetition(): Int {
-        return Integer.parseInt(ui.editRepetition.text.toString())
     }
 
     internal fun onDate() {
@@ -191,13 +184,13 @@ class EditReceiptActivity : AppCompatActivity(), ReceiptContract.EditView {
 
         object : AsyncTask<Void, Void, Source>() {
 
-            override fun doInBackground(vararg voids: Void): Source {
+            override fun doInBackground(vararg voids: Void): Source? {
                 return receipt.source
             }
 
-            override fun onPostExecute(source: Source) {
+            override fun onPostExecute(source: Source?) {
                 super.onPostExecute(source)
-                ui.editSource.setText(source.name)
+                ui.editSource.setText(source?.name)
             }
         }.execute()
 

@@ -2,26 +2,25 @@ package br.com.jonathanzanella.myexpenses.sync
 
 import android.content.Context
 import android.content.Intent
+import android.util.AttributeSet
 import android.view.View
+import android.widget.FrameLayout
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.views.BaseView
+import br.com.jonathanzanella.myexpenses.views.TabableView
 import kotlinx.android.synthetic.main.view_sync.view.*
 import org.apache.commons.lang3.StringUtils
 
-class SyncView(context: Context) : BaseView(context) {
+class SyncView@JvmOverloads constructor(
+        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+) : FrameLayout(context, attrs, defStyleAttr), TabableView {
     private var serverData = ServerData(context)
 
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
+    init {
         View.inflate(context, R.layout.view_sync, this)
 
         serverUrlView.setText(serverData.serverUrl)
         serverTokenView.setText(serverData.serverToken)
         syncBtn.setOnClickListener { sync() }
-
-    }
-
-    override fun init() {
     }
 
     internal fun sync() {

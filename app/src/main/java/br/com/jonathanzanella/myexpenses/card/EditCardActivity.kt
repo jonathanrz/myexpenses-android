@@ -1,7 +1,6 @@
 package br.com.jonathanzanella.myexpenses.card
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
@@ -28,7 +27,7 @@ import br.com.jonathanzanella.myexpenses.views.anko.*
 import org.jetbrains.anko.*
 
 class EditCardActivity : AppCompatActivity(), CardContract.EditView {
-
+    override val context = this
     private val ui = EditCardActivityUi()
     private val presenter: CardPresenter
 
@@ -86,12 +85,8 @@ class EditCardActivity : AppCompatActivity(), CardContract.EditView {
         super.onStop()
     }
 
-    override fun setTitle(string: String?) {
+    override fun setTitle(string: String) {
         ui.toolbar.title = string
-    }
-
-    override fun getContext(): Context {
-        return this
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -113,7 +108,7 @@ class EditCardActivity : AppCompatActivity(), CardContract.EditView {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         presenter.attachView(this)
-        presenter.onActivityResult(requestCode, resultCode, data)
+        presenter.onActivityResult(requestCode, resultCode, data!!)
     }
 
     override fun onAccountSelected(account: Account) {

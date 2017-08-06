@@ -46,7 +46,7 @@ internal class ReceiptMonthlyResumeAdapter(private val receiptRepository: Receip
                 itemView.name.text = receipt.name
             if (itemView.date != null) {
                 synchronized(this) {
-                    itemView.date.text = SIMPLE_DATE_FORMAT.format(receipt.date.toDate())
+                    itemView.date.text = SIMPLE_DATE_FORMAT.format(receipt.getDate().toDate())
                 }
             }
             itemView.income.text = receipt.incomeFormatted
@@ -63,7 +63,7 @@ internal class ReceiptMonthlyResumeAdapter(private val receiptRepository: Receip
                 override fun onPostExecute(s: Source?) {
                     super.onPostExecute(s)
                     if (s != null)
-                        itemView.source.text = s.name
+                        itemView.source?.text = s.name
                 }
             }.execute()
         }
@@ -77,10 +77,12 @@ internal class ReceiptMonthlyResumeAdapter(private val receiptRepository: Receip
                 return
 
             val receipt = getReceipt(adapterPosition)
-            TransactionsHelper.showConfirmTransactionDialog(receipt, itemView.income.context) {
-                updateTotalValue()
-                notifyDataSetChanged()
-            }
+            TransactionsHelper.showConfirmTransactionDialog(receipt!!, itemView.income.context, object: TransactionsHelper.DialogCallback {
+                override fun onPositiveButton() {
+                    updateTotalValue()
+                    notifyDataSetChanged()
+                }
+            })
         }
 
         override fun onClick(v: View) {

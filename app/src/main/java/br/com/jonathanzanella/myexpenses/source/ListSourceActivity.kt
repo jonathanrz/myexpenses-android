@@ -32,7 +32,7 @@ class ListSourceActivity : AppCompatActivity(), SourceAdapterCallback {
 
         ui.sources.adapter = adapter
         ui.sources.setHasFixedSize(true)
-        ui.sources.layoutManager = GridLayoutManager(this, 2) as RecyclerView.LayoutManager?
+        ui.sources.layoutManager = GridLayoutManager(this, 2)
         ui.sources.itemAnimator = DefaultItemAnimator()
 
         ui.emptyListView.visibility = if (adapter.itemCount == 0) View.VISIBLE else View.GONE

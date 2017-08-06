@@ -1,7 +1,6 @@
 package br.com.jonathanzanella.myexpenses.bill
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
@@ -16,6 +15,7 @@ import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch
 import br.com.jonathanzanella.myexpenses.log.Log
+import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.views.anko.*
 import org.apache.commons.lang3.StringUtils
@@ -23,7 +23,7 @@ import org.jetbrains.anko.*
 import org.joda.time.DateTime
 
 class EditBillActivity : AppCompatActivity(), BillContract.EditView {
-
+    override val context = this
     private val presenter: BillPresenter
     private val ui = EditBillActivityUi()
 
@@ -84,12 +84,8 @@ class EditBillActivity : AppCompatActivity(), BillContract.EditView {
         presenter.detachView()
     }
 
-    override fun setTitle(string: String?) {
+    override fun setTitle(string: String) {
         ui.toolbar.title = string
-    }
-
-    override fun getContext(): Context {
-        return this
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -98,11 +94,11 @@ class EditBillActivity : AppCompatActivity(), BillContract.EditView {
     }
 
     override fun onInitDateChanged(date: DateTime) {
-        ui.editInitDate.setText(Bill.SIMPLE_DATE_FORMAT.format(date.toDate()))
+        ui.editInitDate.setText(Transaction.SIMPLE_DATE_FORMAT.format(date.toDate()))
     }
 
     override fun onEndDateChanged(date: DateTime) {
-        ui.editEndDate.setText(Bill.SIMPLE_DATE_FORMAT.format(date.toDate()))
+        ui.editEndDate.setText(Transaction.SIMPLE_DATE_FORMAT.format(date.toDate()))
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

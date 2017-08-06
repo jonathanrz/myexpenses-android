@@ -4,21 +4,23 @@ import android.content.Context
 import android.support.v7.widget.LinearLayoutManager
 import android.util.AttributeSet
 import android.view.View
+import android.widget.FrameLayout
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
-import br.com.jonathanzanella.myexpenses.views.BaseView
 import br.com.jonathanzanella.myexpenses.views.DateTimeView
+import br.com.jonathanzanella.myexpenses.views.FilterableView
+import br.com.jonathanzanella.myexpenses.views.TabableView
 import kotlinx.android.synthetic.main.view_logs.view.*
 import org.joda.time.DateTime
 
 class LogsView@JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : BaseView(context, attrs, defStyleAttr), DateTimeView.Listener {
-    private val adapter = LogAdapter(LogRepository(RepositoryImpl<Log>(context)))
-    private var filterText: String? = null
+) : FrameLayout(context, attrs, defStyleAttr), FilterableView, TabableView, DateTimeView.Listener {
 
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
+    override var filter = ""
+    private val adapter = LogAdapter(LogRepository(RepositoryImpl<Log>(context)))
+
+    init {
         View.inflate(context, R.layout.view_logs, this)
 
         logs.adapter = adapter
@@ -39,9 +41,6 @@ class LogsView@JvmOverloads constructor(
         refreshAdapter()
     }
 
-    override fun init() {
-    }
-
     override fun onDateTimeChanged(currentTime: DateTime) {
         refreshAdapter()
     }
@@ -51,7 +50,7 @@ class LogsView@JvmOverloads constructor(
     }
 
     private fun refreshAdapter() {
-        adapter.loadData(initTime.currentTime!!, endTime.currentTime!!, getLogLevel(), filterText!!)
+        adapter.loadData(initTime.currentTime!!, endTime.currentTime!!, getLogLevel(), filter)
         adapter.notifyDataSetChanged()
     }
 
@@ -69,7 +68,7 @@ class LogsView@JvmOverloads constructor(
 
     override fun filter(s: String) {
         super.filter(s)
-        filterText = s
+        this.filter = s
         refreshAdapter()
     }
 

@@ -19,12 +19,10 @@ import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
 import org.jetbrains.anko.*
 import org.joda.time.DateTime
 
-class AccountAdapter : RecyclerView.Adapter<AccountAdapter.ViewHolder>() {
-    private val presenter: AccountAdapterPresenter
-
+class AccountAdapter(val month : DateTime) : RecyclerView.Adapter<AccountAdapter.ViewHolder>() {
+    private val presenter = AccountAdapterPresenter(this, AccountRepository(RepositoryImpl<Account>(MyApplication.getContext())))
     private var format = NORMAL
     private var callback: AccountAdapterCallback? = null
-    private var month: DateTime? = null
 
     enum class Format {
         NORMAL,
@@ -59,17 +57,12 @@ class AccountAdapter : RecyclerView.Adapter<AccountAdapter.ViewHolder>() {
             if (callback == null) {
                 val i = Intent(itemView.context, ShowAccountActivity::class.java)
                 i.putExtra(ShowAccountActivity.KEY_ACCOUNT_UUID, acc.uuid)
-                if (month != null)
-                    i.putExtra(ShowAccountActivity.KEY_ACCOUNT_MONTH_TO_SHOW, month!!.millis)
+                i.putExtra(ShowAccountActivity.KEY_ACCOUNT_MONTH_TO_SHOW, month.millis)
                 itemView.context.startActivity(i)
             } else {
                 callback!!.onAccountSelected(acc)
             }
         }
-    }
-
-    init {
-        presenter = AccountAdapterPresenter(this, AccountRepository(RepositoryImpl<Account>(MyApplication.getContext())), format)
     }
 
     fun refreshData() {
@@ -105,10 +98,6 @@ class AccountAdapter : RecyclerView.Adapter<AccountAdapter.ViewHolder>() {
     fun setFormat(format: Format) {
         this.format = format
         refreshData()
-    }
-
-    fun setMonth(month: DateTime) {
-        this.month = month
     }
 }
 

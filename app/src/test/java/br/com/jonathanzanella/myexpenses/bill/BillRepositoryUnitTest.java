@@ -8,12 +8,11 @@ import org.mockito.Mock;
 
 import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
-import br.com.jonathanzanella.myexpenses.validations.ValidationResult;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
+import br.com.jonathanzanella.myexpenses.validations.ValidationResult;
 
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
-import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class BillRepositoryUnitTest {
@@ -21,8 +20,6 @@ public class BillRepositoryUnitTest {
 	private Repository<Bill> repository;
 	@Mock
 	private ExpenseRepository expenseRepository;
-	@Mock
-	private Bill bill;
 
 	private BillRepository billRepository;
 
@@ -34,7 +31,8 @@ public class BillRepositoryUnitTest {
 
 	@Test
 	public void return_with_error_when_tried_to_save_bill_without_name() throws Exception {
-		when(bill.getName()).thenReturn(null);
+		Bill bill = new Bill();
+		bill.setName(null);
 
 		ValidationResult result = billRepository.save(bill);
 
@@ -44,8 +42,9 @@ public class BillRepositoryUnitTest {
 
 	@Test
 	public void return_with_error_when_tried_to_save_bill_without_amount() throws Exception {
-		when(bill.getName()).thenReturn("a");
-		when(bill.getAmount()).thenReturn(0);
+		Bill bill = new Bill();
+		bill.setName("a");
+		bill.setAmount(0);
 
 		ValidationResult result = billRepository.save(bill);
 
@@ -55,7 +54,8 @@ public class BillRepositoryUnitTest {
 
 	@Test
 	public void return_with_error_when_tried_to_save_bill_without_due_date() throws Exception {
-		when(bill.getDueDate()).thenReturn(0);
+		Bill bill = new Bill();
+		bill.setDueDate(0);
 
 		ValidationResult result = billRepository.save(bill);
 
@@ -65,8 +65,9 @@ public class BillRepositoryUnitTest {
 
 	@Test
 	public void return_with_error_when_tried_to_save_bill_without_dates() throws Exception {
-		when(bill.getInitDate()).thenReturn(null);
-		when(bill.getEndDate()).thenReturn(null);
+		Bill bill = new Bill();
+		bill.setInitDate(null);
+		bill.setEndDate(null);
 
 		ValidationResult result = billRepository.save(bill);
 
@@ -77,8 +78,9 @@ public class BillRepositoryUnitTest {
 
 	@Test
 	public void return_with_error_when_tried_to_save_bill_with_init_date_greater_than_end_date() throws Exception {
-		when(bill.getInitDate()).thenReturn(new DateTime(2016, 10, 3, 0, 0, 0, DateTimeZone.UTC));
-		when(bill.getEndDate()).thenReturn(new DateTime(2016, 10, 2, 0, 0, 0, DateTimeZone.UTC));
+		Bill bill = new Bill();
+		bill.setInitDate(new DateTime(2016, 10, 3, 0, 0, 0, DateTimeZone.UTC));
+		bill.setEndDate(new DateTime(2016, 10, 2, 0, 0, 0, DateTimeZone.UTC));
 
 		ValidationResult result = billRepository.save(bill);
 

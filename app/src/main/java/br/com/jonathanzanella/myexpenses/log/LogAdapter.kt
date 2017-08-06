@@ -19,7 +19,7 @@ internal class LogAdapter(private val logRepository: LogRepository) : RecyclerVi
         fun setData(log: Log) {
             itemView.indicator.setBackgroundColor(ResourcesCompat.getColor(itemView.indicator.context.resources, log.logLevel.color, null))
             itemView.title.text = log.title
-            itemView.date.text = log.simpleDateFormat.format(log.date.toDate())
+            itemView.date.text = log.simpleDateFormat.format(log.date!!.toDate())
             itemView.description.text = log.description
         }
     }
@@ -38,7 +38,7 @@ internal class LogAdapter(private val logRepository: LogRepository) : RecyclerVi
     }
 
     fun loadData(initDate: DateTime, endDate: DateTime, logLevel: Log.LogLevel, filter: String) {
-        val logs = logRepository.filter(initDate, endDate, logLevel)
+        val logs = logRepository.filter(initDate, endDate, logLevel) as MutableList<Log>
 
         filteredLogs = ArrayList<Log>()
         if (StringUtils.isNotEmpty(filter)) {

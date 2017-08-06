@@ -1,11 +1,12 @@
 package br.com.jonathanzanella.myexpenses.card
 
-import android.os.AsyncTask
+import android.content.Context
 import android.os.Bundle
 import android.support.annotation.UiThread
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
+import android.view.View
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
 import br.com.jonathanzanella.myexpenses.expense.Expense
@@ -41,26 +42,24 @@ class CreditCardInvoiceActivity : AppCompatActivity() {
     fun storeBundle(extras: Bundle?) {
         if (extras == null)
             return
-        object : AsyncTask<Void, Void, Void>() {
 
-            override fun doInBackground(vararg voids: Void): Void? {
-                if (extras.containsKey(KEY_CREDIT_CARD_UUID))
-                    card = cardRepository.find(extras.getString(KEY_CREDIT_CARD_UUID))
-                if (extras.containsKey(KEY_INIT_DATE))
-                    initDate = extras.getSerializable(KEY_INIT_DATE) as DateTime
-                return null
-            }
+        doAsync {
+            if (extras.containsKey(KEY_CREDIT_CARD_UUID))
+                card = cardRepository.find(extras.getString(KEY_CREDIT_CARD_UUID))
+            if (extras.containsKey(KEY_INIT_DATE))
+                initDate = extras.getSerializable(KEY_INIT_DATE) as DateTime
 
-            override fun onPostExecute(aVoid: Void) {
-                super.onPostExecute(aVoid)
-
-                val adapter = MonthlyPagerAdapter(this@CreditCardInvoiceActivity,
-                        MonthlyPagerAdapterBuilder { ctx, date -> CreditCardInvoiceView(ctx, card!!, date) })
+            uiThread {
+                val adapter = MonthlyPagerAdapter(this@CreditCardInvoiceActivity, object : MonthlyPagerAdapterBuilder {
+                    override fun buildView(ctx: Context, date: DateTime): View {
+                        return CreditCardInvoiceView(ctx, card!!, date)
+                    }
+                })
                 ui.pager.adapter = adapter
-                ui.pager.currentItem = adapter.getDatePosition(initDate)
+                ui.pager.currentItem = adapter.getDatePosition(initDate!!)
                 ui.tabs.setupWithViewPager(ui.pager)
             }
-        }.execute()
+        }
     }
 
     companion object {

@@ -24,8 +24,8 @@ import static org.junit.Assert.assertThat;
 @RunWith(AndroidJUnit4.class)
 @SmallTest
 public class ExpensesInPeriodTest {
-	private final AccountRepository accountRepository = new AccountRepository(new RepositoryImpl<Account>(MyApplication.getContext()));
-	private final ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(MyApplication.getContext()));
+	private final AccountRepository accountRepository = new AccountRepository(new RepositoryImpl<Account>(MyApplication.Companion.getContext()));
+	private final ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(MyApplication.Companion.getContext()));
 	private final DateTime firstDayOfJune = new DateTime(2016, 6, 1, 0, 0, 0, 0);
 	private final DateTime lastDayOfJune = firstDayOfJune.dayOfMonth().withMaximumValue();
 	private final DateTime firstDayOfJuly = firstDayOfJune.plusMonths(1);
@@ -63,8 +63,8 @@ public class ExpensesInPeriodTest {
 		expenseRepository.save(firstOfJuly);
 
 		WeeklyPagerAdapter.Period period = new WeeklyPagerAdapter.Period();
-		period.init = firstDayOfJune;
-		period.end = lastDayOfJune;
+		period.setInit(firstDayOfJune);
+		period.setEnd(lastDayOfJune);
 
 		List<Expense> expenses = expenseRepository.expenses(period);
 		assertThat(expenses.size(), is(2));
@@ -90,8 +90,8 @@ public class ExpensesInPeriodTest {
 		expenseRepository.save(firstOfJuly);
 
 		WeeklyPagerAdapter.Period period = new WeeklyPagerAdapter.Period();
-		period.init = firstDayOfJune;
-		period.end = firstDayOfJune.plusDays(6);
+		period.setInit(firstDayOfJune);
+		period.setEnd(firstDayOfJune.plusDays(6));
 
 		List<Expense> expenses = expenseRepository.expenses(period);
 		assertThat(expenses.size(), is(2));

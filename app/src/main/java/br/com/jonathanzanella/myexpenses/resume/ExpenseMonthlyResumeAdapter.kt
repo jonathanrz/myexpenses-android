@@ -45,7 +45,7 @@ internal class ExpenseMonthlyResumeAdapter : RecyclerView.Adapter<ExpenseMonthly
                 itemView.name.text = expense.name
             if (itemView.date != null) {
                 synchronized(this) {
-                    itemView.date.text = SIMPLE_DATE_FORMAT.format(expense.date.toDate())
+                    itemView.date.text = SIMPLE_DATE_FORMAT.format(expense.getDate().toDate())
                 }
             }
             itemView.income.text = CurrencyHelper.format(expense.value)
@@ -54,7 +54,7 @@ internal class ExpenseMonthlyResumeAdapter : RecyclerView.Adapter<ExpenseMonthly
                 itemView.income!!.setTypeface(null, Typeface.BOLD)
 
             object : AsyncTask<Void, Void, Chargeable>() {
-                override fun doInBackground(vararg voids: Void): Chargeable {
+                override fun doInBackground(vararg voids: Void): Chargeable? {
                     return expense.chargeableFromCache
                 }
 
@@ -75,10 +75,12 @@ internal class ExpenseMonthlyResumeAdapter : RecyclerView.Adapter<ExpenseMonthly
                 return
 
             val expense = getExpense(adapterPosition)
-            TransactionsHelper.showConfirmTransactionDialog(expense, itemView.income.context) {
-                updateTotalValue()
-                notifyDataSetChanged()
-            }
+            TransactionsHelper.showConfirmTransactionDialog(expense!!, itemView.income.context, object: TransactionsHelper.DialogCallback {
+                override fun onPositiveButton() {
+                    updateTotalValue()
+                    notifyDataSetChanged()
+                }
+            })
         }
 
         override fun onClick(v: View) {
@@ -87,10 +89,11 @@ internal class ExpenseMonthlyResumeAdapter : RecyclerView.Adapter<ExpenseMonthly
 
             val expense = getExpense(adapterPosition)
             if (expense != null) {
-                if (expense.creditCard != null) {
+                val card = expense.creditCard
+                if (card != null) {
                     val i = Intent(itemView.context, CreditCardInvoiceActivity::class.java)
-                    i.putExtra(CreditCardInvoiceActivity.KEY_CREDIT_CARD_UUID, expense.creditCard.uuid)
-                    i.putExtra(CreditCardInvoiceActivity.KEY_INIT_DATE, expense.date)
+                    i.putExtra(CreditCardInvoiceActivity.KEY_CREDIT_CARD_UUID, card.uuid)
+                    i.putExtra(CreditCardInvoiceActivity.KEY_INIT_DATE, expense.getDate())
                     itemView.context.startActivity(i)
                 } else {
                     val i = Intent(itemView.context, ShowExpenseActivity::class.java)

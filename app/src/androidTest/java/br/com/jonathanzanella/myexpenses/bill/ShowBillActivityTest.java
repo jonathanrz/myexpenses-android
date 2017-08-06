@@ -64,7 +64,7 @@ public class ShowBillActivityTest {
 		final String editBillTitle = getTargetContext().getString(R.string.bill) + " " + bill.getName();
 		matchToolbarTitle(editBillTitle);
 
-		String balanceAsCurrency = CurrencyHelper.format(bill.getAmount());
+		String balanceAsCurrency = CurrencyHelper.INSTANCE.format(bill.getAmount());
 		onView(withId(R.id.act_show_bill_name)).check(matches(withText(bill.getName())));
 		onView(withId(R.id.act_show_bill_amount)).check(matches(withText(balanceAsCurrency)));
 	}

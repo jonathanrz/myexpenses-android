@@ -32,19 +32,19 @@ class ExpenseWeeklyOverviewAdapter : RecyclerView.Adapter<ExpenseWeeklyOverviewA
         fun setData(expense: Expense) {
             ui.name.text = expense.name
             synchronized(this) {
-                ui.date.text = SIMPLE_DATE_FORMAT.format(expense.date.toDate())
+                ui.date.text = SIMPLE_DATE_FORMAT.format(expense.getDate().toDate())
             }
             ui.income.text = CurrencyHelper.format(expense.valueToShowInOverview)
 
             object : AsyncTask<Void, Void, Chargeable>() {
 
-                override fun doInBackground(vararg voids: Void): Chargeable {
+                override fun doInBackground(vararg voids: Void): Chargeable? {
                     return expense.chargeableFromCache
                 }
 
-                override fun onPostExecute(chargeable: Chargeable) {
+                override fun onPostExecute(chargeable: Chargeable?) {
                     super.onPostExecute(chargeable)
-                    ui.source.text = chargeable.name
+                    ui.source.text = chargeable?.name
                 }
             }.execute()
         }
@@ -52,10 +52,11 @@ class ExpenseWeeklyOverviewAdapter : RecyclerView.Adapter<ExpenseWeeklyOverviewA
         override fun onClick(v: View) {
             val expense = getExpense(adapterPosition)
             if (expense != null) {
-                if (expense.creditCard != null) {
+                val card = expense.creditCard
+                if (card != null) {
                     val i = Intent(itemView.context, CreditCardInvoiceActivity::class.java)
-                    i.putExtra(CreditCardInvoiceActivity.KEY_CREDIT_CARD_UUID, expense.creditCard.uuid)
-                    i.putExtra(CreditCardInvoiceActivity.KEY_INIT_DATE, expense.date)
+                    i.putExtra(CreditCardInvoiceActivity.KEY_CREDIT_CARD_UUID, card.uuid)
+                    i.putExtra(CreditCardInvoiceActivity.KEY_INIT_DATE, expense.getDate())
                     itemView.context.startActivity(i)
                 } else {
                     val i = Intent(itemView.context, ShowExpenseActivity::class.java)

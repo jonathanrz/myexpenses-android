@@ -1,7 +1,6 @@
 package br.com.jonathanzanella.myexpenses.account
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -20,7 +19,7 @@ import org.apache.commons.lang3.StringUtils
 import org.jetbrains.anko.*
 
 class EditAccountActivity : AppCompatActivity(), AccountContract.EditView {
-
+    override val context = this
     private val ui = EditAccountActivityUi()
     private val presenter = AccountPresenter(AccountRepository(RepositoryImpl<Account>(this)))
 
@@ -62,12 +61,8 @@ class EditAccountActivity : AppCompatActivity(), AccountContract.EditView {
         super.onStop()
     }
 
-    override fun setTitle(string: String?) {
+    override fun setTitle(string: String) {
         ui.toolbar.title = string
-    }
-
-    override fun getContext(): Context {
-        return this
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -83,32 +78,40 @@ class EditAccountActivity : AppCompatActivity(), AccountContract.EditView {
     }
 
     override fun fillAccount(account: Account): Account {
-        account.name = ui.editName.text.toString()
-        val balanceText = ui.editBalance.text.toString().replace("[^\\d]".toRegex(), "")
-        val balance = if (StringUtils.isEmpty(balanceText)) 0 else Integer.parseInt(balanceText)
-        if (ui.checkAccountBalanceNegative.isChecked)
-            account.balance = balance * -1
-        else
-            account.balance = balance
-        account.isAccountToPayCreditCard = ui.checkToPayCreditCard.isChecked
-        account.isAccountToPayBills = ui.checkToPayBill.isChecked
-        account.setShowInResume(ui.checkShowInResume.isChecked)
+        account.apply {
+            name = ui.editName.text.toString()
+            balance = getBalanceValue()
+            isAccountToPayCreditCard = ui.checkToPayCreditCard.isChecked
+            isAccountToPayBills = ui.checkToPayBill.isChecked
+            showInResume = ui.checkShowInResume.isChecked
+        }
+
         return account
     }
 
+    fun getBalanceValue() : Int {
+        val balanceText = ui.editBalance.text.toString().replace("[^\\d]".toRegex(), "")
+        val balanceValue = if (StringUtils.isEmpty(balanceText)) 0 else Integer.parseInt(balanceText)
+        if (ui.checkAccountBalanceNegative.isChecked)
+            return balanceValue * -1
+        return balanceValue
+    }
+
     override fun showAccount(account: Account) {
-        ui.editName.setText(account.name)
-        val balance = account.balance
-        if (balance > 0) {
-            ui.editBalance.setText(CurrencyHelper.format(balance))
-            ui.checkAccountBalanceNegative.isChecked = false
-        } else {
-            ui.editBalance.setText(CurrencyHelper.format(balance * -1))
-            ui.checkAccountBalanceNegative.isChecked = true
+        ui.apply {
+            editName.setText(account.name)
+            val balance = account.balance
+            if (balance > 0) {
+                editBalance.setText(CurrencyHelper.format(balance))
+                checkAccountBalanceNegative.isChecked = false
+            } else {
+                editBalance.setText(CurrencyHelper.format(balance * -1))
+                checkAccountBalanceNegative.isChecked = true
+            }
+            checkToPayCreditCard.isChecked = account.isAccountToPayCreditCard
+            checkToPayBill.isChecked = account.isAccountToPayBills
+            checkShowInResume.isChecked = account.showInResume
         }
-        ui.checkToPayCreditCard.isChecked = account.isAccountToPayCreditCard
-        ui.checkToPayBill.isChecked = account.isAccountToPayBills
-        ui.checkShowInResume.isChecked = account.showInResume()
     }
 
     override fun showError(error: ValidationError) {

@@ -13,6 +13,7 @@ import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
 import br.com.jonathanzanella.myexpenses.views.anko.recyclerView
 import br.com.jonathanzanella.myexpenses.views.anko.toolbarTemplate
 import org.jetbrains.anko.*
+import org.joda.time.DateTime
 
 class ListAccountActivity : AppCompatActivity(), AccountAdapterCallback {
     private val ui = ListAccountActivityUi()
@@ -29,7 +30,7 @@ class ListAccountActivity : AppCompatActivity(), AccountAdapterCallback {
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
 
-        val adapter = AccountAdapter()
+        val adapter = AccountAdapter(DateTime.now())
         adapter.setCallback(this)
         adapter.setFormat(AccountAdapter.Format.LIST)
 

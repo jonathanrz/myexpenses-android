@@ -1,7 +1,6 @@
 package br.com.jonathanzanella.myexpenses.receipt
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
@@ -17,11 +16,12 @@ import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
 import br.com.jonathanzanella.myexpenses.source.Source
 import br.com.jonathanzanella.myexpenses.source.SourceRepository
+import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import br.com.jonathanzanella.myexpenses.views.anko.*
 import org.jetbrains.anko.*
 
 class ShowReceiptActivity : AppCompatActivity(), ReceiptContract.View {
-
+    override val context = this
     private val ui = ShowReceiptActivityUi()
 
     private val presenter = ReceiptPresenter(ReceiptRepository(RepositoryImpl<Receipt>(this)),
@@ -68,12 +68,8 @@ class ShowReceiptActivity : AppCompatActivity(), ReceiptContract.View {
         presenter.detachView()
     }
 
-    override fun setTitle(string: String?) {
+    override fun setTitle(string: String) {
         ui.toolbar.title = string
-    }
-
-    override fun getContext(): Context {
-        return this
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -105,30 +101,30 @@ class ShowReceiptActivity : AppCompatActivity(), ReceiptContract.View {
     @UiThread
     override fun showReceipt(receipt: Receipt) {
         ui.receiptName.text = receipt.name
-        ui.receiptDate.text = Receipt.SIMPLE_DATE_FORMAT.format(receipt.date.toDate())
+        ui.receiptDate.text = Transaction.SIMPLE_DATE_FORMAT.format(receipt.getDate().toDate())
         ui.receiptIncome.text = CurrencyHelper.format(receipt.income)
 
         object : AsyncTask<Void, Void, Source>() {
 
-            override fun doInBackground(vararg voids: Void): Source {
+            override fun doInBackground(vararg voids: Void): Source? {
                 return receipt.source
             }
 
-            override fun onPostExecute(source: Source) {
+            override fun onPostExecute(source: Source?) {
                 super.onPostExecute(source)
-                ui.receiptSource.text = source.name
+                ui.receiptSource.text = source?.name
             }
         }.execute()
 
         object : AsyncTask<Void, Void, Account>() {
 
-            override fun doInBackground(vararg voids: Void): Account {
+            override fun doInBackground(vararg voids: Void): Account? {
                 return receipt.accountFromCache
             }
 
-            override fun onPostExecute(account: Account) {
+            override fun onPostExecute(account: Account?) {
                 super.onPostExecute(account)
-                ui.receiptAccount.text = account.name
+                ui.receiptAccount.text = account?.name
             }
         }.execute()
 

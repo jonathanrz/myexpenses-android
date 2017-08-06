@@ -3,6 +3,7 @@ package br.com.jonathanzanella.myexpenses.expense;
 import android.content.Context;
 import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.Espresso;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -26,6 +27,7 @@ import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.BillBuilder;
+import br.com.jonathanzanella.myexpenses.transaction.Transaction;
 import br.com.jonathanzanella.myexpenses.views.MainActivity;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
@@ -94,7 +96,8 @@ public class AddExpenseTest {
 		setTimeInDatePicker(time.getYear(), time.getMonthOfYear(), time.getDayOfMonth());
 		selectChargeable();
 
-		onView(withId(R.id.act_edit_expense_date)).check(matches(withText(Expense.SIMPLE_DATE_FORMAT.format(time.toDate()))));
+		onView(withId(R.id.act_edit_expense_date))
+				.check(matches(withText(Transaction.Companion.getSIMPLE_DATE_FORMAT().format(time.toDate()))));
 
 		clickIntoView(R.id.action_save);
 
@@ -102,7 +105,7 @@ public class AddExpenseTest {
 
 		onView(withId(R.id.name)).check(matches(withText(expenseName)));
 		onView(withId(R.id.billLayout)).check(matches(not(isDisplayed())));
-		onView(withId(R.id.date)).check(matches(withText(Expense.SIMPLE_DATE_FORMAT.format(time.toDate()))));
+		onView(withId(R.id.date)).check(matches(withText(Transaction.Companion.getSIMPLE_DATE_FORMAT().format(time.toDate()))));
 	}
 
 	@Test
@@ -200,7 +203,7 @@ public class AddExpenseTest {
 		matchToolbarTitle(expensesTitle);
 
 		onView(withId(R.id.name)).check(matches(withText(expenseName)));
-		String expectedValue = CurrencyHelper.format(value * -1);
+		String expectedValue = CurrencyHelper.INSTANCE.format(value * -1);
 		onView(withId(R.id.value)).check(matches(withText(expectedValue)));
 	}
 

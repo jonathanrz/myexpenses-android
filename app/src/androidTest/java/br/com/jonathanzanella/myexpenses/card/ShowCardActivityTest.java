@@ -1,7 +1,6 @@
 package br.com.jonathanzanella.myexpenses.card;
 
 import android.content.Intent;
-import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.MediumTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -13,7 +12,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
@@ -43,16 +41,16 @@ public class ShowCardActivityTest {
 	@Rule
 	public ActivityTestRule<ShowCardActivity> activityTestRule = new ActivityTestRule<>(ShowCardActivity.class, true, false);
 
-	private final ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(MyApplication.getContext()));
-	private final CardRepository repository = new CardRepository(new RepositoryImpl<Card>(MyApplication.getContext()), expenseRepository);
-	private final AccountRepository accountRepository = new AccountRepository(new RepositoryImpl<Account>(MyApplication.getContext()));
+	private final ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(getTargetContext()));
+	private final CardRepository repository = new CardRepository(new RepositoryImpl<Card>(getTargetContext()), expenseRepository);
+	private final AccountRepository accountRepository = new AccountRepository(new RepositoryImpl<Account>(getTargetContext()));
 
 	private Card card;
 	private Account account;
 
 	@Before
 	public void setUp() throws Exception {
-		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
+		new DatabaseHelper(getTargetContext()).recreateTables();
 
 		account = new AccountBuilder().build();
 		accountRepository.save(account);
@@ -100,7 +98,7 @@ public class ShowCardActivityTest {
 
 		String cardBillName = getTargetContext().getString(R.string.invoice) + " " + card.getName();
 		onView(withId(R.id.act_edit_expense_name)).check(matches(withText(cardBillName)));
-		String cardBillValue = CurrencyHelper.format(expense1.getValue() + expense2.getValue());
+		String cardBillValue = CurrencyHelper.INSTANCE.format(expense1.getValue() + expense2.getValue());
 		onView(withId(R.id.act_edit_expense_value)).check(matches(withText(cardBillValue)));
 		onView(withId(R.id.act_edit_expense_chargeable)).check(matches(withText(card.getAccount().getName())));
 

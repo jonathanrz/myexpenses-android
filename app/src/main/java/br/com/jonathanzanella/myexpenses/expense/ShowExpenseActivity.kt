@@ -1,6 +1,5 @@
 package br.com.jonathanzanella.myexpenses.expense
 
-import android.content.Context
 import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
@@ -17,12 +16,12 @@ import br.com.jonathanzanella.myexpenses.bill.BillRepository
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
-import br.com.jonathanzanella.myexpenses.receipt.Receipt
+import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import br.com.jonathanzanella.myexpenses.views.anko.*
 import org.jetbrains.anko.*
 
 class ShowExpenseActivity : AppCompatActivity(), ExpenseContract.View {
-
+    override val context = this
     private val ui = ShowExpenseActivityUi()
     private var presenter: ExpensePresenter
 
@@ -72,12 +71,8 @@ class ShowExpenseActivity : AppCompatActivity(), ExpenseContract.View {
         presenter.detachView()
     }
 
-    override fun setTitle(string: String?) {
+    override fun setTitle(string: String) {
         ui.toolbar.title = string
-    }
-
-    override fun getContext(): Context {
-        return this
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -100,18 +95,18 @@ class ShowExpenseActivity : AppCompatActivity(), ExpenseContract.View {
     @UiThread
     override fun showExpense(expense: Expense) {
         ui.name.text = expense.name
-        ui.date.text = Receipt.SIMPLE_DATE_FORMAT.format(expense.date.toDate())
+        ui.date.text = Transaction.SIMPLE_DATE_FORMAT.format(expense.getDate().toDate())
         ui.value.text = CurrencyHelper.format(expense.value)
         ui.showInOverview.text = CurrencyHelper.format(expense.valueToShowInOverview)
         object : AsyncTask<Void, Void, Chargeable>() {
 
-            override fun doInBackground(vararg voids: Void): Chargeable {
+            override fun doInBackground(vararg voids: Void): Chargeable? {
                 return expense.chargeableFromCache
             }
 
-            override fun onPostExecute(chargeable: Chargeable) {
+            override fun onPostExecute(chargeable: Chargeable?) {
                 super.onPostExecute(chargeable)
-                ui.chargeable.text = chargeable.name
+                ui.chargeable.text = chargeable?.name
             }
         }.execute()
         ui.chargeNextMonth.visibility = if (expense.isChargedNextMonth) View.VISIBLE else View.GONE

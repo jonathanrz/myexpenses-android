@@ -1,6 +1,5 @@
 package br.com.jonathanzanella.myexpenses.bill
 
-import android.content.Context
 import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
@@ -13,11 +12,12 @@ import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
 import br.com.jonathanzanella.myexpenses.expense.Expense
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
+import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import br.com.jonathanzanella.myexpenses.views.anko.*
 import org.jetbrains.anko.*
 
 class ShowBillActivity : AppCompatActivity(), BillContract.View {
-
+    override val context = this
     private val presenter: BillPresenter
     private val ui = ShowBillActivityUi()
 
@@ -73,12 +73,8 @@ class ShowBillActivity : AppCompatActivity(), BillContract.View {
         presenter.detachView()
     }
 
-    override fun setTitle(string: String?) {
+    override fun setTitle(string: String) {
         ui.toolbar.title = string
-    }
-
-    override fun getContext(): Context {
-        return this
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -98,11 +94,13 @@ class ShowBillActivity : AppCompatActivity(), BillContract.View {
     }
 
     override fun showBill(bill: Bill) {
-        ui.billName.text = bill.name
-        ui.billAmount.text = CurrencyHelper.format(bill.amount)
-        ui.billDueDate.text = bill.dueDate.toString()
-        ui.billInitDate.text = Bill.SIMPLE_DATE_FORMAT.format(bill.initDate.toDate())
-        ui.billEndDate.text = Bill.SIMPLE_DATE_FORMAT.format(bill.endDate.toDate())
+        ui.apply {
+            billName.text = bill.name
+            billAmount.text = CurrencyHelper.format(bill.amount)
+            billDueDate.text = bill.dueDate.toString()
+            billInitDate.text = Transaction.SIMPLE_DATE_FORMAT.format(bill.initDate?.toDate())
+            billEndDate.text = Transaction.SIMPLE_DATE_FORMAT.format(bill.endDate?.toDate())
+        }
     }
 
     companion object {

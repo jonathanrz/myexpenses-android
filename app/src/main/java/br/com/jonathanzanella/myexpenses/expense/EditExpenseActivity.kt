@@ -1,7 +1,6 @@
 package br.com.jonathanzanella.myexpenses.expense
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
@@ -25,6 +24,7 @@ import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch
 import br.com.jonathanzanella.myexpenses.log.Log
+import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.views.anko.*
 import org.apache.commons.lang3.StringUtils
@@ -32,7 +32,7 @@ import org.jetbrains.anko.*
 import org.joda.time.DateTime
 
 class EditExpenseActivity : AppCompatActivity(), ExpenseContract.EditView {
-
+    override val context = this
     private val ui = EditExpenseActivityUi()
     private val presenter: ExpensePresenter
 
@@ -90,12 +90,8 @@ class EditExpenseActivity : AppCompatActivity(), ExpenseContract.EditView {
         presenter.detachView()
     }
 
-    override fun setTitle(string: String?) {
+    override fun setTitle(string: String) {
         ui.toolbar.title = string
-    }
-
-    override fun getContext(): Context {
-        return this
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -134,7 +130,7 @@ class EditExpenseActivity : AppCompatActivity(), ExpenseContract.EditView {
     }
 
     override fun onDateChanged(date: DateTime) {
-        ui.date.setText(Expense.SIMPLE_DATE_FORMAT.format(date.toDate()))
+        ui.date.setText(Transaction.SIMPLE_DATE_FORMAT.format(date.toDate()))
     }
 
     override fun onChargeableSelected(chargeable: Chargeable) {

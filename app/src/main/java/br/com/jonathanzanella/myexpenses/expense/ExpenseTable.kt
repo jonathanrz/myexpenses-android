@@ -4,7 +4,10 @@ import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType
-import br.com.jonathanzanella.myexpenses.database.CursorHelper.*
+import br.com.jonathanzanella.myexpenses.database.CursorHelper.getDate
+import br.com.jonathanzanella.myexpenses.database.CursorHelper.getInt
+import br.com.jonathanzanella.myexpenses.database.CursorHelper.getLong
+import br.com.jonathanzanella.myexpenses.database.CursorHelper.getString
 import br.com.jonathanzanella.myexpenses.database.Fields
 import br.com.jonathanzanella.myexpenses.database.SqlTypes
 import br.com.jonathanzanella.myexpenses.database.Table
@@ -54,11 +57,11 @@ class ExpenseTable : Table<Expense> {
         val values = ContentValues()
         values.put(Fields.UUID.toString(), data.uuid)
         values.put(Fields.NAME.toString(), data.name)
-        values.put(Fields.DATE.toString(), data.date.millis)
+        values.put(Fields.DATE.toString(), data.getDate().millis)
         values.put(Fields.VALUE.toString(), data.value)
         values.put(Fields.VALUE_TO_SHOW_IN_OVERVIEW.toString(), data.valueToShowInOverview)
-        values.put(Fields.CHARGEABLE_UUID.toString(), data.chargeableFromCache.uuid)
-        values.put(Fields.CHARGEABLE_TYPE.toString(), data.chargeableFromCache.chargeableType.toString())
+        values.put(Fields.CHARGEABLE_UUID.toString(), data.chargeableFromCache?.uuid)
+        values.put(Fields.CHARGEABLE_TYPE.toString(), data.chargeableFromCache?.chargeableType.toString())
         values.put(Fields.BILL_UUID.toString(), data.billUuid)
         values.put(Fields.CHARGED.toString(), if (data.isCharged) 1 else 0)
         values.put(Fields.CHARGE_NEXT_MONTH.toString(), if (data.isChargedNextMonth) 1 else 0)
@@ -68,7 +71,7 @@ class ExpenseTable : Table<Expense> {
         values.put(Fields.CREATED_AT.toString(), data.createdAt)
         values.put(Fields.UPDATED_AT.toString(), data.updatedAt)
         values.put(Fields.REMOVED.toString(), if (data.isRemoved) 1 else 0)
-        values.put(Fields.SYNC.toString(), if (data.isSync) 1 else 0)
+        values.put(Fields.SYNC.toString(), if (data.sync) 1 else 0)
         return values
     }
 
@@ -77,11 +80,11 @@ class ExpenseTable : Table<Expense> {
         expense.id = getLong(c, Fields.ID)
         expense.uuid = getString(c, Fields.UUID)
         expense.name = getString(c, Fields.NAME)
-        expense.date = getDate(c, Fields.DATE)
+        expense.setDate(getDate(c, Fields.DATE))
         expense.value = getInt(c, Fields.VALUE)
         expense.valueToShowInOverview = getInt(c, Fields.VALUE_TO_SHOW_IN_OVERVIEW)
-        expense.setChargeable(getString(c, Fields.CHARGEABLE_UUID),
-                ChargeableType.getType(getString(c, Fields.CHARGEABLE_TYPE)))
+        expense.setChargeable(getString(c, Fields.CHARGEABLE_UUID)!!,
+                ChargeableType.getType(getString(c, Fields.CHARGEABLE_TYPE)!!))
         expense.billUuid = getString(c, Fields.BILL_UUID)
         expense.isCharged = getInt(c, Fields.CHARGED) != 0
         expense.isChargedNextMonth = getInt(c, Fields.CHARGE_NEXT_MONTH) != 0
@@ -91,7 +94,7 @@ class ExpenseTable : Table<Expense> {
         expense.createdAt = getLong(c, Fields.CREATED_AT)
         expense.updatedAt = getLong(c, Fields.UPDATED_AT)
         expense.isRemoved = getInt(c, Fields.REMOVED) != 0
-        expense.isSync = getLong(c, Fields.SYNC) != 0L
+        expense.sync = getLong(c, Fields.SYNC) != 0L
         return expense
     }
 
