@@ -40,3 +40,5 @@ proguard/
 
 # Android Studio captures folder
 captures/
+
+app/schemas/

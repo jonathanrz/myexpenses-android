@@ -9,13 +9,12 @@ import br.com.jonathanzanella.myexpenses.card.CardTable
 import br.com.jonathanzanella.myexpenses.expense.ExpenseTable
 import br.com.jonathanzanella.myexpenses.log.LogTable
 import br.com.jonathanzanella.myexpenses.receipt.ReceiptTable
-import br.com.jonathanzanella.myexpenses.source.SourceTable
 
 private const val DB_NAME = "MyExpenses"
 private const val DB_VERSION = 6
 
 class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
-    private val tables = arrayOf(AccountTable(), BillTable(), CardTable(), SourceTable(),
+    private val tables = arrayOf(AccountTable(), BillTable(), CardTable(),
             ReceiptTable(), ExpenseTable(), LogTable())
 
     override fun onCreate(db: SQLiteDatabase) {

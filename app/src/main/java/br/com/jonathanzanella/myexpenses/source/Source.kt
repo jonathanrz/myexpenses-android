@@ -1,11 +1,14 @@
 package br.com.jonathanzanella.myexpenses.source
 
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.PrimaryKey
+import br.com.jonathanzanella.myexpenses.sync.UnsyncModel
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-import br.com.jonathanzanella.myexpenses.sync.UnsyncModel
-
+@Entity
 class Source : UnsyncModel {
+    @PrimaryKey(autoGenerate = true)
     override var id: Long = 0
     @Expose
     var name: String? = null
