@@ -18,6 +18,7 @@ android {
         versionCode rootProject.ext.gitCommitCount()
         versionName "1.1.1." + rootProject.ext.getVersionName()
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
+        multiDexEnabled true
 
         javaCompileOptions {
             annotationProcessorOptions {
