@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'jacoco-android'
 apply plugin: 'checkstyle'
 apply plugin: 'findbugs'
@@ -90,7 +91,7 @@ dependencies {
     // Room
     compile "android.arch.persistence.room:runtime:$roomVersion"
     compile "android.arch.persistence.room:rxjava2:$roomVersion"
-    annotationProcessor "android.arch.persistence.room:compiler:$roomVersion"
+    kapt "android.arch.persistence.room:compiler:$roomVersion"
 
     // RXJava
     compile "io.reactivex.rxjava2:rxjava:$rxJavaVersion"

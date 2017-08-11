@@ -11,10 +11,10 @@ interface SourceDao {
     @Query("SELECT * FROM Source order by name")
     fun all(): Flowable<List<Source>>
 
-//    @Query("SELECT * FROM Source order by name")
-//    fun unsync(): Flowable<List<Source>>
+    @Query("SELECT * FROM Source where sync = 0 order by name")
+    fun unsync(): Flowable<List<Source>>
 
-    @Query("SELECT * FROM Source where uuid = :p0")
+    @Query("SELECT * FROM Source where uuid = :uuid")
     fun find(uuid: String): Flowable<Source>
 
     @Query("SELECT * FROM Source order by updatedAt DESC limit 1")

@@ -28,7 +28,7 @@ open class SourceRepository(private val repository: Repository<Source>) : ModelR
 
     @WorkerThread
     fun unsync(): List<Source> {
-        return MyApplication.database!!.sourceDao().all().blockingFirst()
+        return MyApplication.database!!.sourceDao().unsync().blockingFirst()
     }
 
     @WorkerThread
