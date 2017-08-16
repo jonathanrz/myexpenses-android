@@ -4,6 +4,8 @@ import android.os.AsyncTask
 import android.support.annotation.UiThread
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 
 class SourcePresenter(private val repository: SourceRepository) {
     private var view: SourceContract.View? = null
@@ -58,16 +60,21 @@ class SourcePresenter(private val repository: SourceRepository) {
         }.execute()
     }
 
+    @UiThread
     fun save() {
         val v = editView ?: throw InvalidMethodCallException("save", javaClass.toString(), "View should be a Edit View")
         source = v.fillSource(source ?: Source())
-        val result = repository.save(source!!)
+        doAsync {
+            val result = repository.save(source!!)
 
-        if (result.isValid) {
-            v.finishView()
-        } else {
-            for (validationError in result.errors)
-                v.showError(validationError)
+            uiThread {
+                if (result.isValid) {
+                    v.finishView()
+                } else {
+                    for (validationError in result.errors)
+                        v.showError(validationError)
+                }
+            }
         }
     }
 
