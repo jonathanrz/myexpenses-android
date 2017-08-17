@@ -3,6 +3,7 @@ package br.com.jonathanzanella.myexpenses.database
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import br.com.jonathanzanella.myexpenses.MyApplication
 import br.com.jonathanzanella.myexpenses.account.AccountTable
 import br.com.jonathanzanella.myexpenses.bill.BillTable
 import br.com.jonathanzanella.myexpenses.card.CardTable
@@ -38,5 +39,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
             table.onCreate(db)
         }
         db.close()
+
+        MyApplication.resetDatabase()
     }
 }

@@ -13,22 +13,22 @@ import java.util.*
 open class SourceRepository(private val repository: Repository<Source>) : ModelRepository<Source> {
     @WorkerThread
     fun find(uuid: String): Source? {
-        return MyApplication.database!!.sourceDao().find(uuid).blockingFirst()
+        return MyApplication.database.sourceDao().find(uuid).blockingFirst()
     }
 
     @WorkerThread
     fun greaterUpdatedAt(): Long {
-        return MyApplication.database!!.sourceDao().greaterUpdatedAt().blockingFirst().updatedAt
+        return MyApplication.database.sourceDao().greaterUpdatedAt().blockingFirst().updatedAt
     }
 
     @WorkerThread
     fun all(): List<Source> {
-        return MyApplication.database!!.sourceDao().all().blockingFirst()
+        return MyApplication.database.sourceDao().all().blockingFirst()
     }
 
     @WorkerThread
     fun unsync(): List<Source> {
-        return MyApplication.database!!.sourceDao().unsync().blockingFirst()
+        return MyApplication.database.sourceDao().unsync().blockingFirst()
     }
 
     @WorkerThread
@@ -38,7 +38,7 @@ open class SourceRepository(private val repository: Repository<Source>) : ModelR
             if (source.id == 0L && source.uuid == null)
                 source.uuid = UUID.randomUUID().toString()
             source.sync = false
-            MyApplication.database!!.sourceDao().saveAtDatabase(source)
+            MyApplication.database.sourceDao().saveAtDatabase(source)
         }
         return result
     }
@@ -66,7 +66,7 @@ open class SourceRepository(private val repository: Repository<Source>) : ModelR
         }
 
         unsync.sync = true
-        MyApplication.database!!.sourceDao().saveAtDatabase(unsync)
+        MyApplication.database.sourceDao().saveAtDatabase(unsync)
 
         return result
     }

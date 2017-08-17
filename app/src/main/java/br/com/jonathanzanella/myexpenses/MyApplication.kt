@@ -24,10 +24,14 @@ class MyApplication : Application() {
     companion object {
         @SuppressLint("StaticFieldLeak")
         private var context: WeakReference<Context>? = null
-        var database: MyDatabase? = null
+        lateinit var database: MyDatabase
 
         fun getContext(): Context {
             return context!!.get()!!
+        }
+
+        fun resetDatabase() {
+            database.sourceDao().deleteAll()
         }
     }
 }

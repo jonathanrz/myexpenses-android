@@ -20,6 +20,9 @@ interface SourceDao {
     @Query("SELECT * FROM Source order by updatedAt DESC limit 1")
     fun greaterUpdatedAt(): Flowable<Source>
 
+    @Query("DELETE FROM Source")
+    fun deleteAll()
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveAtDatabase(source: Source): Long
 }
