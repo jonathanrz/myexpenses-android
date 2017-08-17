@@ -15,35 +15,35 @@ class SourceApi : UnsyncModelApi<Source> {
         Server(MyApplication.getContext()).sourceInterface()
     }
     private val sourceRepository: SourceRepository by lazy {
-        SourceRepository(RepositoryImpl<Source>(MyApplication.getContext()))
+        SourceRepository()
     }
 
     override fun index(): List<Source> {
-        val lastUpdatedAt = SourceRepository(RepositoryImpl<Source>(MyApplication.getContext())).greaterUpdatedAt()
+        val lastUpdatedAt = SourceRepository().greaterUpdatedAt()
         val caller = sourceInterface.index(lastUpdatedAt)
 
-        try {
+        return try {
             val response = caller.execute()
             if (response.isSuccessful) {
-                return response.body()
+                response.body()
             } else {
                 Log.error(LOG_TAG, "Index request error: " + response.message())
-                return ArrayList()
+                ArrayList()
             }
         } catch (e: IOException) {
             Log.error(LOG_TAG, "Index request error: " + e.message)
             e.printStackTrace()
-            return ArrayList()
+            ArrayList()
         }
     }
 
     override fun save(model: UnsyncModel) {
         val source = model as Source
         val caller: Call<Source>
-        if (StringUtils.isNotEmpty(source.serverId))
-            caller = sourceInterface.update(source.serverId!!, source)
+        caller = if (StringUtils.isNotEmpty(source.serverId))
+            sourceInterface.update(source.serverId!!, source)
         else
-            caller = sourceInterface.create(source)
+            sourceInterface.create(source)
 
         try {
             val response = caller.execute()
@@ -57,7 +57,6 @@ class SourceApi : UnsyncModelApi<Source> {
             Log.error(LOG_TAG, "Save request error: " + e.message + " uuid: " + source.uuid)
             e.printStackTrace()
         }
-
     }
 
     override fun syncAndSave(unsync: UnsyncModel) {
@@ -67,11 +66,11 @@ class SourceApi : UnsyncModelApi<Source> {
     }
 
     override fun unsyncModels(): List<Source> {
-        return SourceRepository(RepositoryImpl<Source>(MyApplication.getContext())).unsync()
+        return SourceRepository().unsync()
     }
 
     override fun greaterUpdatedAt(): Long {
-        return SourceRepository(RepositoryImpl<Source>(MyApplication.getContext())).greaterUpdatedAt()
+        return SourceRepository().greaterUpdatedAt()
     }
 
     companion object {

@@ -58,13 +58,13 @@ public class ReceiptsViewTest {
 	public void setUp() throws Exception {
 		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
 
-		ReceiptRepository repository = new ReceiptRepository(new RepositoryImpl<Receipt>(getTargetContext()));
+		ReceiptRepository repository = new ReceiptRepository(new RepositoryImpl<>(getTargetContext()));
 
 		Source s = new SourceBuilder().build();
-		assertTrue(new SourceRepository(new RepositoryImpl<Source>(getTargetContext())).save(s).isValid());
+		assertTrue(new SourceRepository().save(s).isValid());
 
 		Account a = new AccountBuilder().build();
-		assertTrue(new AccountRepository(new RepositoryImpl<Account>(getTargetContext())).save(a).isValid());
+		assertTrue(new AccountRepository(new RepositoryImpl<>(getTargetContext())).save(a).isValid());
 
 		receipt = new ReceiptBuilder().name("receipt1").source(s).account(a).build();
 		assertTrue(repository.save(receipt).isValid());
@@ -122,7 +122,7 @@ public class ReceiptsViewTest {
 		return onView(allOf(
 				withId(R.id.row_receipt_name),
 				allOf(
-					isDescendantOfA(withTagValue(is((Object)receipt.getUuid())))),
+					isDescendantOfA(withTagValue(is(receipt.getUuid())))),
 					withText(receipt.getName())));
 	}
 }

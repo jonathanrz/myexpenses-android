@@ -32,9 +32,9 @@ public class ReceiptsInPeriodTest {
 	private final Account account = new Account();
 	private final Source source = new Source();
 
-	private final SourceRepository sourceRepository = new SourceRepository(new RepositoryImpl<Source>(getContext()));
-	private final AccountRepository accountRepository = new AccountRepository(new RepositoryImpl<Account>(getContext()));
-	private final ReceiptRepository receiptRepository = new ReceiptRepository(new RepositoryImpl<Receipt>(getContext()));
+	private final SourceRepository sourceRepository = new SourceRepository();
+	private final AccountRepository accountRepository = new AccountRepository(new RepositoryImpl<>(getContext()));
+	private final ReceiptRepository receiptRepository = new ReceiptRepository(new RepositoryImpl<>(getContext()));
 
 	@Before
 	public void setUp() throws Exception {

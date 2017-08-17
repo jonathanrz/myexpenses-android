@@ -10,7 +10,7 @@ import br.com.jonathanzanella.myexpenses.validations.ValidationResult
 import org.apache.commons.lang3.StringUtils
 import java.util.*
 
-open class SourceRepository(private val repository: Repository<Source>) : ModelRepository<Source> {
+open class SourceRepository : ModelRepository<Source> {
     @WorkerThread
     fun find(uuid: String): Source? {
         return MyApplication.database.sourceDao().find(uuid).blockingFirst()

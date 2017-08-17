@@ -30,7 +30,7 @@ public class SourceRepositoryTest {
 	public void setUp() throws Exception {
 		new DatabaseHelper(getTargetContext()).recreateTables();
 
-		repository = new SourceRepository(new RepositoryImpl<Source>(getTargetContext()));
+		repository = new SourceRepository();
 	}
 
 	@After

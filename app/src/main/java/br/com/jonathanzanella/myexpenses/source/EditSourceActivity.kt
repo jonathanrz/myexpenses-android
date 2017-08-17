@@ -16,7 +16,7 @@ import org.jetbrains.anko.*
 
 class EditSourceActivity : AppCompatActivity(), SourceContract.EditView {
     override val context = this
-    private val presenter: SourcePresenter = SourcePresenter(SourceRepository(RepositoryImpl<Source>(this)))
+    private val presenter: SourcePresenter = SourcePresenter(SourceRepository())
     private val ui = EditSourceActivityUi()
 
     override fun onCreate(savedInstanceState: Bundle?) {

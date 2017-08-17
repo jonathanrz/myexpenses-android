@@ -7,13 +7,12 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
 import br.com.jonathanzanella.myexpenses.views.anko.*
 import org.jetbrains.anko.*
 
 class ShowSourceActivity : AppCompatActivity(), SourceContract.View {
     override val context = this
-    private val presenter = SourcePresenter(SourceRepository(RepositoryImpl<Source>(this)))
+    private val presenter = SourcePresenter(SourceRepository())
     private val ui = ShowSourceActivityUi()
 
     override fun onCreate(savedInstanceState: Bundle?) {

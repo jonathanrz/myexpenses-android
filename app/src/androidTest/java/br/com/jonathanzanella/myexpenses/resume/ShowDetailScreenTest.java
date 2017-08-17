@@ -51,7 +51,7 @@ public class ShowDetailScreenTest {
 	public void setUp() throws Exception {
 		new DatabaseHelper(getTargetContext()).recreateTables();
 
-		AccountRepository accountRepository = new AccountRepository(new RepositoryImpl<Account>(getTargetContext()));
+		AccountRepository accountRepository = new AccountRepository(new RepositoryImpl<>(getTargetContext()));
 
 		account = new AccountBuilder().build();
 		assertTrue(accountRepository.save(account).isValid());
@@ -65,14 +65,14 @@ public class ShowDetailScreenTest {
 	@Test
 	public void open_receipt_screen_when_selecting_receipt() {
 		Source source = new SourceBuilder().build();
-		assertTrue(new SourceRepository(new RepositoryImpl<Source>(getTargetContext())).save(source).isValid());
+		assertTrue(new SourceRepository().save(source).isValid());
 		Receipt receipt = new ReceiptBuilder().account(account).source(source).build();
-		assertTrue(new ReceiptRepository(new RepositoryImpl<Receipt>(getTargetContext())).save(receipt).isValid());
+		assertTrue(new ReceiptRepository(new RepositoryImpl<>(getTargetContext())).save(receipt).isValid());
 
 		mainActivityTestRule.launchActivity(new Intent());
 
 		onView(allOf(withId(R.id.name),
-					isDescendantOfA(withTagValue(is((Object)receipt.getUuid())))))
+					isDescendantOfA(withTagValue(is(receipt.getUuid())))))
 				.perform(scrollTo()).perform(click());
 
 		final String showReceiptTitle = getTargetContext().getString(R.string.receipt) + " " + receipt.getName();
@@ -85,12 +85,12 @@ public class ShowDetailScreenTest {
 	@Test
 	public void open_expense_screen_when_selecting_expense() {
 		Expense expense = new ExpenseBuilder().chargeable(account).build();
-		assertTrue(new ExpenseRepository(new RepositoryImpl<Expense>(getTargetContext())).save(expense).isValid());
+		assertTrue(new ExpenseRepository(new RepositoryImpl<>(getTargetContext())).save(expense).isValid());
 
 		mainActivityTestRule.launchActivity(new Intent());
 
 		onView(allOf(withId(R.id.name),
-					isDescendantOfA(withTagValue(is((Object)expense.getUuid())))))
+					isDescendantOfA(withTagValue(is(expense.getUuid())))))
 				.perform(scrollTo()).perform(click());
 
 		final String showExpenseTitle = getTargetContext().getString(R.string.expense) + " " + expense.getName();

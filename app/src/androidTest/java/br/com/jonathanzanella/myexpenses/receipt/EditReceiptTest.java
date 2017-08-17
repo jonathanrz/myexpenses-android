@@ -51,17 +51,17 @@ public class EditReceiptTest {
 		new DatabaseHelper(getTargetContext()).recreateTables();
 
 		Account a = new AccountBuilder().build();
-		assertTrue(new AccountRepository(new RepositoryImpl<Account>(getTargetContext())).save(a).isValid());
+		assertTrue(new AccountRepository(new RepositoryImpl<>(getTargetContext())).save(a).isValid());
 
 		Source s = new SourceBuilder().build();
-		assertTrue(new SourceRepository(new RepositoryImpl<Source>(getTargetContext())).save(s).isValid());
+		assertTrue(new SourceRepository().save(s).isValid());
 
 		receipt = new ReceiptBuilder()
 				.date(DateTime.now().minusDays(1))
 				.account(a)
 				.source(s)
 				.build();
-		repository = new ReceiptRepository(new RepositoryImpl<Receipt>(getTargetContext()));
+		repository = new ReceiptRepository(new RepositoryImpl<>(getTargetContext()));
 		assertTrue(repository.save(receipt).isValid());
 	}
 

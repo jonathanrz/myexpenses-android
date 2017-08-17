@@ -59,7 +59,7 @@ class Receipt : Transaction, UnsyncModel {
         get() {
             val uuid = sourceUuid
             if (field == null && uuid != null)
-                field = SourceRepository(RepositoryImpl<Source>(MyApplication.getContext())).find(uuid)
+                field = SourceRepository().find(uuid)
             return field
         }
         set(s) {

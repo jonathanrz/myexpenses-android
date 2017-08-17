@@ -44,13 +44,13 @@ public class ShowReceiptActivityTest {
 	public void setUp() throws Exception {
 		new DatabaseHelper(getTargetContext()).recreateTables();
 
-		ReceiptRepository repository = new ReceiptRepository(new RepositoryImpl<Receipt>(getTargetContext()));
+		ReceiptRepository repository = new ReceiptRepository(new RepositoryImpl<>(getTargetContext()));
 
 		Source s = new SourceBuilder().build();
-		new SourceRepository(new RepositoryImpl<Source>(getTargetContext())).save(s);
+		new SourceRepository().save(s);
 
 		Account a = new AccountBuilder().build();
-		new AccountRepository(new RepositoryImpl<Account>(getTargetContext())).save(a);
+		new AccountRepository(new RepositoryImpl<>(getTargetContext())).save(a);
 
 		receipt = new ReceiptBuilder().source(s).account(a).build();
 		repository.save(receipt);

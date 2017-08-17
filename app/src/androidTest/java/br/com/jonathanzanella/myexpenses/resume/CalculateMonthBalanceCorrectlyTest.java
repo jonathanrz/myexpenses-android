@@ -64,10 +64,10 @@ public class CalculateMonthBalanceCorrectlyTest {
 		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
 
 		Account a = new AccountBuilder().build();
-		assertTrue(new AccountRepository(new RepositoryImpl<Account>(getTargetContext())).save(a).isValid());
+		assertTrue(new AccountRepository(new RepositoryImpl<>(getTargetContext())).save(a).isValid());
 
 		Source s = new SourceBuilder().build();
-		assertTrue(new SourceRepository(new RepositoryImpl<Source>(getTargetContext())).save(s).isValid());
+		assertTrue(new SourceRepository().save(s).isValid());
 
 		DateTime now = DateTime.now().withDayOfMonth(1);
 		Bill b = new BillBuilder()
@@ -75,8 +75,8 @@ public class CalculateMonthBalanceCorrectlyTest {
 				.endDate(now.plusMonths(12))
 				.amount(BILL_AMOUNT)
 				.build();
-		assertTrue(new BillRepository(new RepositoryImpl<Bill>(getTargetContext()),
-				new ExpenseRepository(new RepositoryImpl<Expense>(getTargetContext()))).save(b).isValid());
+		assertTrue(new BillRepository(new RepositoryImpl<>(getTargetContext()),
+				new ExpenseRepository(new RepositoryImpl<>(getTargetContext()))).save(b).isValid());
 
 		generateThreeMonthlyReceipts(a, s);
 		generateThreeMonthlyExpenses(a);
@@ -89,7 +89,7 @@ public class CalculateMonthBalanceCorrectlyTest {
 
 	private void generateThreeMonthlyReceipts(Account a, Source s) {
 		DateTime dateTime = DateTime.now();
-		ReceiptRepository receiptRepository = new ReceiptRepository(new RepositoryImpl<Receipt>(getTargetContext()));
+		ReceiptRepository receiptRepository = new ReceiptRepository(new RepositoryImpl<>(getTargetContext()));
 		Receipt r = new ReceiptBuilder()
 				.account(a)
 				.source(s)
@@ -117,7 +117,7 @@ public class CalculateMonthBalanceCorrectlyTest {
 
 	private void generateThreeMonthlyExpenses(Account a) {
 		DateTime dateTime = DateTime.now();
-		ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(getTargetContext()));
+		ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<>(getTargetContext()));
 		Expense r = new ExpenseBuilder()
 				.chargeable(a)
 				.date(dateTime)

@@ -48,7 +48,7 @@ public class AddReceiptTest {
 	@Rule
 	public ActivityTestRule<EditReceiptActivity> editReceiptActivityTestRule = new ActivityTestRule<>(EditReceiptActivity.class);
 
-	private final SourceRepository sourceRepository = new SourceRepository(new RepositoryImpl<Source>(getTargetContext()));
+	private final SourceRepository sourceRepository = new SourceRepository();
 	private Account account;
 	private Source source;
 
@@ -61,7 +61,7 @@ public class AddReceiptTest {
 			uiDevice.wakeUp();
 
 		account = new AccountBuilder().build();
-		new AccountRepository(new RepositoryImpl<Account>(getTargetContext())).save(account);
+		new AccountRepository(new RepositoryImpl<>(getTargetContext())).save(account);
 
 		source = new SourceBuilder().build();
 		sourceRepository.save(source);

@@ -30,7 +30,7 @@ public class ListSourceActivityTest {
 	@Rule
 	public ActivityTestRule<ListSourceActivity> activityTestRule = new ActivityTestRule<>(ListSourceActivity.class, true, false);
 
-	private final SourceRepository repository = new SourceRepository(new RepositoryImpl<Source>(getTargetContext()));
+	private final SourceRepository repository = new SourceRepository();
 
 	@Before
 	public void setUp() throws Exception {

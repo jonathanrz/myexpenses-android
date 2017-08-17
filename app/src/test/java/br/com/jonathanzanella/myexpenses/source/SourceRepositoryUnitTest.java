@@ -15,10 +15,7 @@ import static junit.framework.Assert.assertTrue;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class SourceRepositoryUnitTest {
-	@Mock
-	private Repository<Source> repository;
-
-	private SourceRepository sourceRepository = new SourceRepository(repository);
+	private SourceRepository sourceRepository = new SourceRepository();
 
 	@Before
 	public void setUp() throws Exception {
@@ -26,7 +23,6 @@ public class SourceRepositoryUnitTest {
 	}
 
 	@Test
-	@Ignore("fix when convert  to kotlin")
 	public void return_with_error_when_tried_to_save_source_without_name() throws Exception {
 		Source source = new SourceBuilder().name(null).build();
 

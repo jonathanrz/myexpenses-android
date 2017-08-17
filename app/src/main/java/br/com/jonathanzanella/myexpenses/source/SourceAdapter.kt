@@ -1,6 +1,5 @@
 package br.com.jonathanzanella.myexpenses.source
 
-import android.content.Context
 import android.content.Intent
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
@@ -8,12 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
 import br.com.jonathanzanella.myexpenses.helpers.AdapterColorHelper
 import org.jetbrains.anko.*
 
-internal class SourceAdapter(ctx: Context) : RecyclerView.Adapter<SourceAdapter.ViewHolder>() {
-    private val presenter = SourceAdapterPresenter(SourceRepository(RepositoryImpl<Source>(ctx)))
+internal class SourceAdapter() : RecyclerView.Adapter<SourceAdapter.ViewHolder>() {
+    private val presenter = SourceAdapterPresenter(SourceRepository())
     private var sources = presenter.getSources(false)
     private var callback: SourceAdapterCallback? = null
 

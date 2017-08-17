@@ -5,7 +5,7 @@ import org.joda.time.DateTime
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-internal class MonthlyPagerAdapterHelper {
+class MonthlyPagerAdapterHelper {
 
     fun formatMonthForView(month: DateTime): String {
         synchronized(this) {
