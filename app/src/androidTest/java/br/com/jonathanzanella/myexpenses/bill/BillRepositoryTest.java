@@ -36,8 +36,8 @@ import static org.hamcrest.Matchers.not;
 @SmallTest
 public class BillRepositoryTest {
 	private final DateTime firstDayOfJune = new DateTime(2016, 6, 1, 0, 0, 0, 0);
-	private final ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(getTargetContext()));
-	private final BillRepository billRepository = new BillRepository(new RepositoryImpl<Bill>(getTargetContext()), expenseRepository);
+	private final ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<>(getTargetContext()));
+	private final BillRepository billRepository = new BillRepository(expenseRepository);
 
 	@Before
 	public void setUp() throws Exception {
@@ -72,11 +72,11 @@ public class BillRepositoryTest {
 		billRepository.save(bill);
 
 		Account account = new AccountBuilder().build();
-		AccountRepository accountRepository = new AccountRepository(new RepositoryImpl<Account>(MyApplication.Companion.getContext()));
+		AccountRepository accountRepository = new AccountRepository(new RepositoryImpl<>(MyApplication.Companion.getContext()));
 		accountRepository.save(account);
 
 		Card card = new CardBuilder().account(account).build(accountRepository);
-		new CardRepository(new RepositoryImpl<Card>(MyApplication.Companion.getContext()), expenseRepository).save(card);
+		new CardRepository(new RepositoryImpl<>(MyApplication.Companion.getContext()), expenseRepository).save(card);
 
 		Expense expense = new ExpenseBuilder()
 				.date(firstDayOfJune)

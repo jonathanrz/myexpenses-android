@@ -3,7 +3,6 @@ package br.com.jonathanzanella.myexpenses.expense;
 import android.content.Context;
 import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
-import android.support.test.espresso.Espresso;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -150,8 +149,8 @@ public class AddExpenseTest {
 	@Test
 	public void add_new_expense_with_bill() throws Exception {
 		Bill bill = new BillBuilder().build();
-		ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(getTargetContext()));
-		new BillRepository(new RepositoryImpl<Bill>(getTargetContext()), expenseRepository).save(bill);
+		ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<>(getTargetContext()));
+		new BillRepository(expenseRepository).save(bill);
 
 		mainActivityTestRule.launchActivity(new Intent());
 

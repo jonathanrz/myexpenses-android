@@ -121,7 +121,7 @@ class Expense : Transaction, UnsyncModel {
         @WorkerThread
         get() {
             return billUuid?.let {
-                BillRepository(RepositoryImpl<Bill>(MyApplication.getContext()), expenseRepository!!).find(it)
+                BillRepository(expenseRepository!!).find(it)
             }
         }
         set(bill) {

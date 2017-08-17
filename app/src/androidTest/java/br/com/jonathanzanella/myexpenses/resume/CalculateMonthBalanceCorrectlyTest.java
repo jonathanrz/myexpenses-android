@@ -75,8 +75,7 @@ public class CalculateMonthBalanceCorrectlyTest {
 				.endDate(now.plusMonths(12))
 				.amount(BILL_AMOUNT)
 				.build();
-		assertTrue(new BillRepository(new RepositoryImpl<>(getTargetContext()),
-				new ExpenseRepository(new RepositoryImpl<>(getTargetContext()))).save(b).isValid());
+		assertTrue(new BillRepository(new ExpenseRepository(new RepositoryImpl<>(getTargetContext()))).save(b).isValid());
 
 		generateThreeMonthlyReceipts(a, s);
 		generateThreeMonthlyExpenses(a);

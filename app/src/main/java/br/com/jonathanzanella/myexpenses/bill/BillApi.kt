@@ -23,7 +23,7 @@ class BillApi : UnsyncModelApi<Bill> {
 
     init {
         val expenseRepository = ExpenseRepository(RepositoryImpl<Expense>(MyApplication.getContext()))
-        billRepository = BillRepository(RepositoryImpl<Bill>(MyApplication.getContext()), expenseRepository)
+        billRepository = BillRepository(expenseRepository)
     }
 
     override fun index(): List<Bill> {

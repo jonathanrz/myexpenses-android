@@ -3,7 +3,6 @@ package br.com.jonathanzanella.myexpenses.bill
 import android.support.annotation.WorkerThread
 import br.com.jonathanzanella.myexpenses.MyApplication
 import br.com.jonathanzanella.myexpenses.database.ModelRepository
-import br.com.jonathanzanella.myexpenses.database.Repository
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.log.Log
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
@@ -12,7 +11,7 @@ import org.apache.commons.lang3.StringUtils
 import org.joda.time.DateTime
 import java.util.*
 
-open class BillRepository(private val repository: Repository<Bill>, private val expenseRepository: ExpenseRepository) : ModelRepository<Bill> {
+open class BillRepository(private val expenseRepository: ExpenseRepository) : ModelRepository<Bill> {
     @WorkerThread
     fun find(uuid: String): Bill? {
         return MyApplication.database.billDao().find(uuid).blockingFirst()

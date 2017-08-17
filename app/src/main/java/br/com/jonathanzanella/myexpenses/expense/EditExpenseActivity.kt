@@ -38,7 +38,7 @@ class EditExpenseActivity : AppCompatActivity(), ExpenseContract.EditView {
 
     init {
         val expenseRepository = ExpenseRepository(RepositoryImpl<Expense>(this))
-        presenter = ExpensePresenter(expenseRepository, BillRepository(RepositoryImpl<Bill>(this), expenseRepository))
+        presenter = ExpensePresenter(expenseRepository, BillRepository(expenseRepository))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -2,7 +2,6 @@ package br.com.jonathanzanella.myexpenses.account.transactions
 
 import android.content.Context
 import br.com.jonathanzanella.myexpenses.account.Account
-import br.com.jonathanzanella.myexpenses.bill.Bill
 import br.com.jonathanzanella.myexpenses.bill.BillRepository
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
 import br.com.jonathanzanella.myexpenses.expense.Expense
@@ -18,7 +17,7 @@ internal class MonthTransactionsPresenter(ctx: Context, private val view: MonthT
     val adapter = TransactionAdapter()
     private val receiptRepository = ReceiptRepository(RepositoryImpl<Receipt>(ctx))
     private val expenseRepository = ExpenseRepository(RepositoryImpl<Expense>(ctx))
-    private val billRepository = BillRepository(RepositoryImpl<Bill>(ctx), expenseRepository)
+    private val billRepository = BillRepository(expenseRepository)
     private var currentBalance: Int = 0
 
     fun showBalance(account: Account, month: DateTime, balance: Int) {

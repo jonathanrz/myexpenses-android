@@ -11,7 +11,6 @@ import android.view.View
 import android.widget.TableRow
 import android.widget.TextView
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.bill.Bill
 import br.com.jonathanzanella.myexpenses.bill.BillRepository
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
@@ -27,7 +26,7 @@ class ShowExpenseActivity : AppCompatActivity(), ExpenseContract.View {
 
     init {
         val expenseRepository = ExpenseRepository(RepositoryImpl<Expense>(this))
-        val billRepository = BillRepository(RepositoryImpl<Bill>(this), expenseRepository)
+        val billRepository = BillRepository(expenseRepository)
         presenter = ExpensePresenter(expenseRepository, billRepository)
     }
 
