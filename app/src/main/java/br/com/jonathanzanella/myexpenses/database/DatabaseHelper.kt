@@ -5,7 +5,6 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import br.com.jonathanzanella.myexpenses.MyApplication
 import br.com.jonathanzanella.myexpenses.account.AccountTable
-import br.com.jonathanzanella.myexpenses.bill.BillTable
 import br.com.jonathanzanella.myexpenses.card.CardTable
 import br.com.jonathanzanella.myexpenses.expense.ExpenseTable
 import br.com.jonathanzanella.myexpenses.log.LogTable
@@ -15,7 +14,7 @@ private const val DB_NAME = "MyExpenses"
 private const val DB_VERSION = 6
 
 class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
-    private val tables = arrayOf(AccountTable(), BillTable(), CardTable(),
+    private val tables = arrayOf(AccountTable(), CardTable(),
             ReceiptTable(), ExpenseTable(), LogTable())
 
     override fun onCreate(db: SQLiteDatabase) {
