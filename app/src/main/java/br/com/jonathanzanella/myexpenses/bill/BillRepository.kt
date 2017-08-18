@@ -62,7 +62,7 @@ open class BillRepository(private val expenseRepository: ExpenseRepository) : Mo
             if (bill.id == 0L && bill.uuid == null)
                 bill.uuid = UUID.randomUUID().toString()
             bill.sync = false
-            MyApplication.database.billDao().saveAtDatabase(bill)
+            bill.id = MyApplication.database.billDao().saveAtDatabase(bill)
         }
         return result
     }

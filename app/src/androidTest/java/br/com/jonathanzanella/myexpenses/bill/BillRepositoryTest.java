@@ -45,7 +45,7 @@ public class BillRepositoryTest {
 	}
 
 	@Test
-	public void can_save_account() throws Exception {
+	public void can_save_bill() throws Exception {
 		Bill bill = new BillBuilder().build();
 		billRepository.save(bill);
 
@@ -54,7 +54,7 @@ public class BillRepositoryTest {
 	}
 
 	@Test
-	public void can_load_saved_account() throws Exception {
+	public void can_load_saved_bill() throws Exception {
 		Bill savedBill = new BillBuilder().build();
 		billRepository.save(savedBill);
 

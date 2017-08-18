@@ -3,7 +3,6 @@ package br.com.jonathanzanella.myexpenses.source
 import android.support.annotation.WorkerThread
 import br.com.jonathanzanella.myexpenses.MyApplication
 import br.com.jonathanzanella.myexpenses.database.ModelRepository
-import br.com.jonathanzanella.myexpenses.database.Repository
 import br.com.jonathanzanella.myexpenses.log.Log
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult
@@ -38,7 +37,7 @@ open class SourceRepository : ModelRepository<Source> {
             if (source.id == 0L && source.uuid == null)
                 source.uuid = UUID.randomUUID().toString()
             source.sync = false
-            MyApplication.database.sourceDao().saveAtDatabase(source)
+            source.id = MyApplication.database.sourceDao().saveAtDatabase(source)
         }
         return result
     }
