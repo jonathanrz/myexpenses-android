@@ -35,11 +35,12 @@ open class BillRepository(private val expenseRepository: ExpenseRepository) : Mo
     @WorkerThread
     fun monthly(month: DateTime): List<Bill> {
         val expenses = expenseRepository.monthly(month)
-        val bills = MyApplication.database.billDao().monthly(month.millis, month.millis).blockingFirst() as MutableList<Bill>
+        val bills = MyApplication.database.billDao().monthly(month.millis).blockingFirst() as MutableList<Bill>
         var i = 0
         while (i < bills.size) {
             val bill = bills[i]
             val billAlreadyPaid = expenses
+                    .filter { it.billUuid != null }
                     .map { find(it.billUuid!!) }
                     .any { it != null && it.uuid == bill.uuid }
             if (billAlreadyPaid) {
