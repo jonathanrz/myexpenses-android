@@ -16,7 +16,7 @@ import org.joda.time.DateTime
 
 class Receipt : Transaction, UnsyncModel {
     private val accountRepository by lazy {
-        AccountRepository(RepositoryImpl<Account>(MyApplication.getContext()))
+        AccountRepository()
     }
     private val receiptRepository by lazy {
         ReceiptRepository(RepositoryImpl<Receipt>(MyApplication.getContext()))

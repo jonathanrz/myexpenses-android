@@ -51,7 +51,7 @@ public class EditReceiptTest {
 		new DatabaseHelper(getTargetContext()).recreateTables();
 
 		Account a = new AccountBuilder().build();
-		assertTrue(new AccountRepository(new RepositoryImpl<>(getTargetContext())).save(a).isValid());
+		assertTrue(new AccountRepository().save(a).isValid());
 
 		Source s = new SourceBuilder().build();
 		assertTrue(new SourceRepository().save(s).isValid());

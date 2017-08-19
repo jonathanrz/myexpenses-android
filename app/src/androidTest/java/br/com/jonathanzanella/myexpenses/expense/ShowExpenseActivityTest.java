@@ -39,7 +39,7 @@ public class ShowExpenseActivityTest {
 	@Rule
 	public ActivityTestRule<ShowExpenseActivity> activityTestRule = new ActivityTestRule<>(ShowExpenseActivity.class, true, false);
 
-	private final ExpenseRepository repository = new ExpenseRepository(new RepositoryImpl<Expense>(getTargetContext()));
+	private final ExpenseRepository repository = new ExpenseRepository(new RepositoryImpl<>(getTargetContext()));
 	private Expense expense;
 
 	@Before
@@ -47,7 +47,7 @@ public class ShowExpenseActivityTest {
 		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
 
 		Account a = new AccountBuilder().build();
-		new AccountRepository(new RepositoryImpl<Account>(getTargetContext())).save(a);
+		new AccountRepository().save(a);
 
 		expense = new ExpenseBuilder().chargeable(a).build();
 		assertTrue(repository.save(expense).isValid());

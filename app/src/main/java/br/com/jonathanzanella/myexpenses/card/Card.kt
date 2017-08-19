@@ -17,7 +17,7 @@ class Card : Chargeable, UnsyncModel {
         @WorkerThread
         get() {
             if (field == null)
-                this.accountRepository = AccountRepository(RepositoryImpl<Account>(MyApplication.getContext()))
+                this.accountRepository = AccountRepository()
             return field
         }
         set

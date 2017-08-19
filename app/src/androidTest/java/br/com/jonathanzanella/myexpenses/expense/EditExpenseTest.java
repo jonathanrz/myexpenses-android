@@ -49,13 +49,13 @@ public class EditExpenseTest {
 		new DatabaseHelper(getTargetContext()).recreateTables();
 
 		Account a = new AccountBuilder().build();
-		new AccountRepository(new RepositoryImpl<Account>(getTargetContext())).save(a);
+		new AccountRepository().save(a);
 
 		expense = new ExpenseBuilder()
 				.date(DateTime.now().minusDays(1))
 				.chargeable(a)
 				.build();
-		repository = new ExpenseRepository(new RepositoryImpl<Expense>(getTargetContext()));
+		repository = new ExpenseRepository(new RepositoryImpl<>(getTargetContext()));
 		assertTrue(repository.save(expense).isValid());
 	}
 

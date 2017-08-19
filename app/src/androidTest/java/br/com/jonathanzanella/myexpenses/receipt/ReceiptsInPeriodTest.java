@@ -33,7 +33,7 @@ public class ReceiptsInPeriodTest {
 	private final Source source = new Source();
 
 	private final SourceRepository sourceRepository = new SourceRepository();
-	private final AccountRepository accountRepository = new AccountRepository(new RepositoryImpl<>(getContext()));
+	private final AccountRepository accountRepository = new AccountRepository();
 	private final ReceiptRepository receiptRepository = new ReceiptRepository(new RepositoryImpl<>(getContext()));
 
 	@Before

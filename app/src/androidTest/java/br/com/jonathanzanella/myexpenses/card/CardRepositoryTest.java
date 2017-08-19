@@ -11,7 +11,6 @@ import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
-import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.CardBuilder;
@@ -34,10 +33,10 @@ public class CardRepositoryTest {
 		new DatabaseHelper(getTargetContext()).recreateTables();
 
 		account = new AccountBuilder().build();
-		accountRepository = new AccountRepository(new RepositoryImpl<Account>(getTargetContext()));
+		accountRepository = new AccountRepository();
 		accountRepository.save(account);
-		ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(getTargetContext()));
-		subject = new CardRepository(new RepositoryImpl<Card>(getTargetContext()), expenseRepository);
+		ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<>(getTargetContext()));
+		subject = new CardRepository(new RepositoryImpl<>(getTargetContext()), expenseRepository);
 	}
 
 	@Test

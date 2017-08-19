@@ -47,12 +47,12 @@ public class ExpenseRepositoryTest {
 				.accountToPayBills(true)
 				.accountToPayCreditCard(true)
 				.build();
-		AccountRepository accountRepository = new AccountRepository(new RepositoryImpl<Account>(getTargetContext()));
+		AccountRepository accountRepository = new AccountRepository();
 		assertTrue(accountRepository.save(account).isValid());
 		creditCard = new CardBuilder().name("CreditCard").account(account).type(CardType.CREDIT).build(accountRepository);
 		debitCard = new CardBuilder().name("DebitCard").account(account).type(CardType.DEBIT).build(accountRepository);
-		repository = new ExpenseRepository(new RepositoryImpl<Expense>(getTargetContext()));
-		CardRepository cardRepository = new CardRepository(new RepositoryImpl<Card>(getTargetContext()), repository);
+		repository = new ExpenseRepository(new RepositoryImpl<>(getTargetContext()));
+		CardRepository cardRepository = new CardRepository(new RepositoryImpl<>(getTargetContext()), repository);
 		assertTrue(cardRepository.save(debitCard).isValid());
 		assertTrue(cardRepository.save(creditCard).isValid());
 	}

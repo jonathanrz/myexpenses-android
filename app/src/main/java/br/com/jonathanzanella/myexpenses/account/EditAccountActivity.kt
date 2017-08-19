@@ -21,7 +21,7 @@ import org.jetbrains.anko.*
 class EditAccountActivity : AppCompatActivity(), AccountContract.EditView {
     override val context = this
     private val ui = EditAccountActivityUi()
-    private val presenter = AccountPresenter(AccountRepository(RepositoryImpl<Account>(this)))
+    private val presenter = AccountPresenter(AccountRepository())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

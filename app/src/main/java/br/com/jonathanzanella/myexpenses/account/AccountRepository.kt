@@ -1,42 +1,38 @@
 package br.com.jonathanzanella.myexpenses.account
 
 import android.support.annotation.WorkerThread
-import br.com.jonathanzanella.myexpenses.database.Fields
+import br.com.jonathanzanella.myexpenses.MyApplication
 import br.com.jonathanzanella.myexpenses.database.ModelRepository
-import br.com.jonathanzanella.myexpenses.database.Repository
-import br.com.jonathanzanella.myexpenses.database.Where
 import br.com.jonathanzanella.myexpenses.log.Log
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult
 import org.apache.commons.lang3.StringUtils
 import java.util.*
 
-open class AccountRepository(private val repository: Repository<Account>) : ModelRepository<Account> {
-    private val accountTable = AccountTable()
-
+open class AccountRepository : ModelRepository<Account> {
     @WorkerThread
     fun find(uuid: String): Account? {
-        return repository.find(accountTable, uuid)
+        return MyApplication.database.accountDao().find(uuid).blockingFirst()
     }
 
     @WorkerThread
     fun all(): List<Account> {
-        return repository.query(accountTable, Where(null).orderBy(Fields.NAME))
+        return MyApplication.database.accountDao().all().blockingFirst()
     }
 
     @WorkerThread
     internal fun forResumeScreen(): List<Account> {
-        return repository.query(accountTable, Where(Fields.SHOW_IN_RESUME).eq(true).orderBy(Fields.NAME))
+        return MyApplication.database.accountDao().showInResume().blockingFirst()
     }
 
     @WorkerThread
     fun greaterUpdatedAt(): Long {
-        return repository.greaterUpdatedAt(accountTable)
+        return MyApplication.database.accountDao().greaterUpdatedAt().blockingFirst().updatedAt
     }
 
     @WorkerThread
     fun unsync(): List<Account> {
-        return repository.unsync(accountTable)
+        return MyApplication.database.accountDao().unsync().blockingFirst()
     }
 
     @WorkerThread
@@ -46,7 +42,7 @@ open class AccountRepository(private val repository: Repository<Account>) : Mode
             if (account.id == 0L && account.uuid == null)
                 account.uuid = UUID.randomUUID().toString()
             account.sync = false
-            repository.saveAtDatabase(accountTable, account)
+            account.id = MyApplication.database.accountDao().saveAtDatabase(account)
         }
         return result
     }
@@ -75,7 +71,7 @@ open class AccountRepository(private val repository: Repository<Account>) : Mode
         }
 
         unsync.sync = true
-        repository.saveAtDatabase(accountTable, unsync)
+        unsync.id = MyApplication.database.accountDao().saveAtDatabase(unsync)
 
         return result
     }

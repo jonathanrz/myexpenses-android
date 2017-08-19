@@ -41,7 +41,7 @@ public class ReceiptRepositoryTest {
 		new DatabaseHelper(getTargetContext()).recreateTables();
 
 		account = new AccountBuilder().build();
-		new AccountRepository(new RepositoryImpl<>(getTargetContext())).save(account);
+		new AccountRepository().save(account);
 		source = new SourceBuilder().build();
 		new SourceRepository().save(source);
 		repository = new ReceiptRepository(new RepositoryImpl<>(getTargetContext()));

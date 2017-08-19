@@ -101,7 +101,7 @@ open class BillRepository(private val expenseRepository: ExpenseRepository) : Mo
         }
 
         unsync.sync = true
-        MyApplication.database.billDao().saveAtDatabase(unsync)
+        unsync.id = MyApplication.database.billDao().saveAtDatabase(unsync)
 
         return result
     }

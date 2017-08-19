@@ -13,7 +13,6 @@ import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.views.MainActivity;
@@ -48,7 +47,7 @@ public class ShowAccountInResumeTest {
 
 	@Test
 	public void show_only_account_marked_to_show() {
-		AccountRepository accountRepository = new AccountRepository(new RepositoryImpl<Account>(getTargetContext()));
+		AccountRepository accountRepository = new AccountRepository();
 
 		Account accountToShow = new AccountBuilder().name("accountToShow").showInResume(true).build();
 		assertTrue(accountRepository.save(accountToShow).isValid());

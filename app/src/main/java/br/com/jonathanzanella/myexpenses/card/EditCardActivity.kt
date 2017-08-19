@@ -34,7 +34,7 @@ class EditCardActivity : AppCompatActivity(), CardContract.EditView {
     init {
         val expenseRepository = ExpenseRepository(RepositoryImpl<Expense>(this))
         presenter = CardPresenter(CardRepository(RepositoryImpl<Card>(this), expenseRepository),
-                AccountRepository(RepositoryImpl<Account>(this)), expenseRepository, ResourcesHelper(this))
+                AccountRepository(), expenseRepository, ResourcesHelper(this))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

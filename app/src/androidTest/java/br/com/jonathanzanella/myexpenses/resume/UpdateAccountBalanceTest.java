@@ -48,7 +48,7 @@ public class UpdateAccountBalanceTest {
 	public void setUp() throws Exception {
 		new DatabaseHelper(getTargetContext()).recreateTables();
 
-		accountRepository = new AccountRepository(new RepositoryImpl<Account>(getTargetContext()));
+		accountRepository = new AccountRepository();
 
 		account = new AccountBuilder().build();
 		assertTrue(accountRepository.save(account).isValid());

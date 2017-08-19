@@ -21,7 +21,7 @@ class ShowAccountActivity : AppCompatActivity(), AccountContract.View {
     override val context = this
     private var monthToShow: DateTime? = null
     private val ui = ShowAccountActivityUi()
-    private val presenter = AccountPresenter(AccountRepository(RepositoryImpl<Account>(this)))
+    private val presenter = AccountPresenter(AccountRepository())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

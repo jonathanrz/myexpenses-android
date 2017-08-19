@@ -49,9 +49,9 @@ public class ExpensesViewTest {
 		new DatabaseHelper(getTargetContext()).recreateTables();
 
 		Account account = new AccountBuilder().build();
-		new AccountRepository(new RepositoryImpl<Account>(getTargetContext())).save(account);
+		new AccountRepository().save(account);
 
-		ExpenseRepository repository = new ExpenseRepository(new RepositoryImpl<Expense>(getTargetContext()));
+		ExpenseRepository repository = new ExpenseRepository(new RepositoryImpl<>(getTargetContext()));
 		expense1 = new ExpenseBuilder().chargeable(account).name("Expense1").build();
 		assertTrue(repository.save(expense1).isValid());
 		expense2 = new ExpenseBuilder().chargeable(account).name("Expense2").build();

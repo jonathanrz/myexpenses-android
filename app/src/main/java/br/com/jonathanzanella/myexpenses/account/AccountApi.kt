@@ -17,7 +17,7 @@ class AccountApi : UnsyncModelApi<Account> {
         Server(MyApplication.getContext()).accountInterface()
     }
     val repository: AccountRepository by lazy {
-        AccountRepository(RepositoryImpl<Account>(MyApplication.getContext()))
+        AccountRepository()
     }
 
     override fun index(): List<Account> {

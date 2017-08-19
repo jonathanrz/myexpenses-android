@@ -72,7 +72,7 @@ public class BillRepositoryTest {
 		billRepository.save(bill);
 
 		Account account = new AccountBuilder().build();
-		AccountRepository accountRepository = new AccountRepository(new RepositoryImpl<>(MyApplication.Companion.getContext()));
+		AccountRepository accountRepository = new AccountRepository();
 		accountRepository.save(account);
 
 		Card card = new CardBuilder().account(account).build(accountRepository);

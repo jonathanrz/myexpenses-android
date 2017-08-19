@@ -13,7 +13,6 @@ import org.junit.runner.RunWith;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 
@@ -45,7 +44,7 @@ public class EditAccountTest {
 		new DatabaseHelper(getTargetContext()).recreateTables();
 
 		account = new AccountBuilder().build();
-		repository = new AccountRepository(new RepositoryImpl<Account>(getTargetContext()));
+		repository = new AccountRepository();
 		assertTrue(repository.save(account).isValid());
 	}
 

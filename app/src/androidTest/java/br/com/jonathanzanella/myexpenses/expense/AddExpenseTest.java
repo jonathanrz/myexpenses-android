@@ -64,7 +64,7 @@ public class AddExpenseTest {
 			uiDevice.wakeUp();
 
 		account = new AccountBuilder().build();
-		new AccountRepository(new RepositoryImpl<Account>(getTargetContext())).save(account);
+		new AccountRepository().save(account);
 	}
 
 	@After

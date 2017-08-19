@@ -14,7 +14,6 @@ import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
-import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
@@ -46,12 +45,12 @@ public class EditCardTest {
 		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
 
 		Account a = new AccountBuilder().build();
-		AccountRepository accountRepository = new AccountRepository(new RepositoryImpl<Account>(getTargetContext()));
-		ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(getTargetContext()));
+		AccountRepository accountRepository = new AccountRepository();
+		ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<>(getTargetContext()));
 		accountRepository.save(a);
 
 		card = new CardBuilder().account(a).build(accountRepository);
-		repository = new CardRepository(new RepositoryImpl<Card>(getTargetContext()), expenseRepository);
+		repository = new CardRepository(new RepositoryImpl<>(getTargetContext()), expenseRepository);
 		assertTrue(repository.save(card).isValid());
 	}
 

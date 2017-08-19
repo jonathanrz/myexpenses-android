@@ -206,7 +206,7 @@ class Expense : Transaction, UnsyncModel {
         private var accountRepository: AccountRepository? = null
             get() {
                 if (field == null)
-                    this.accountRepository = AccountRepository(RepositoryImpl<Account>(MyApplication.getContext()))
+                    this.accountRepository = AccountRepository()
                 return field
             }
             set

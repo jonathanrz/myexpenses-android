@@ -51,7 +51,7 @@ public class ShowDetailScreenTest {
 	public void setUp() throws Exception {
 		new DatabaseHelper(getTargetContext()).recreateTables();
 
-		AccountRepository accountRepository = new AccountRepository(new RepositoryImpl<>(getTargetContext()));
+		AccountRepository accountRepository = new AccountRepository();
 
 		account = new AccountBuilder().build();
 		assertTrue(accountRepository.save(account).isValid());

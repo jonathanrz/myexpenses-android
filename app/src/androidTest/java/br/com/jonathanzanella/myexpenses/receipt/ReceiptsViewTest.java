@@ -64,7 +64,7 @@ public class ReceiptsViewTest {
 		assertTrue(new SourceRepository().save(s).isValid());
 
 		Account a = new AccountBuilder().build();
-		assertTrue(new AccountRepository(new RepositoryImpl<>(getTargetContext())).save(a).isValid());
+		assertTrue(new AccountRepository().save(a).isValid());
 
 		receipt = new ReceiptBuilder().name("receipt1").source(s).account(a).build();
 		assertTrue(repository.save(receipt).isValid());

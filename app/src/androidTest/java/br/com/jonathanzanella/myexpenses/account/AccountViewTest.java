@@ -11,7 +11,6 @@ import org.junit.Test;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.views.MainActivity;
@@ -43,7 +42,7 @@ public class AccountViewTest {
 		accountToShowInResume = new AccountBuilder().name("accountToShowInResume").showInResume(true).build();
 		accountToHideInResume = new AccountBuilder().name("accountToHideInResume").showInResume(false).build();
 
-		AccountRepository repository = new AccountRepository(new RepositoryImpl<Account>(getTargetContext()));
+		AccountRepository repository = new AccountRepository();
 		assertTrue(repository.save(accountToShowInResume).isValid());
 		assertTrue(repository.save(accountToHideInResume).isValid());
 	}

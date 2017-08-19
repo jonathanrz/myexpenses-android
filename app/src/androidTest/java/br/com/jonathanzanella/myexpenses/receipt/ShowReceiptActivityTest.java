@@ -50,7 +50,7 @@ public class ShowReceiptActivityTest {
 		new SourceRepository().save(s);
 
 		Account a = new AccountBuilder().build();
-		new AccountRepository(new RepositoryImpl<>(getTargetContext())).save(a);
+		new AccountRepository().save(a);
 
 		receipt = new ReceiptBuilder().source(s).account(a).build();
 		repository.save(receipt);
