@@ -80,7 +80,7 @@ class CardAdapter : RecyclerView.Adapter<CardAdapter.ViewHolder>() {
     }
 
     init {
-        cardRepository = CardRepository(RepositoryImpl<Card>(MyApplication.getContext()), expenseRepository)
+        cardRepository = CardRepository(expenseRepository)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

@@ -64,7 +64,7 @@ public class ShowAccountActivityTest {
 		repository = new AccountRepository();
 		receiptRepository = new ReceiptRepository(new RepositoryImpl<>(getTargetContext()));
 		expenseRepository = new ExpenseRepository(new RepositoryImpl<>(getTargetContext()));
-		cardRepository = new CardRepository(new RepositoryImpl<>(getTargetContext()), expenseRepository);
+		cardRepository = new CardRepository(expenseRepository);
 		sourceRepository = new SourceRepository();
 
 		account = new Account();

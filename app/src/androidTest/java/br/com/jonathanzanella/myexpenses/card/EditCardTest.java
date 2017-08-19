@@ -50,7 +50,7 @@ public class EditCardTest {
 		accountRepository.save(a);
 
 		card = new CardBuilder().account(a).build(accountRepository);
-		repository = new CardRepository(new RepositoryImpl<>(getTargetContext()), expenseRepository);
+		repository = new CardRepository(expenseRepository);
 		assertTrue(repository.save(card).isValid());
 	}
 

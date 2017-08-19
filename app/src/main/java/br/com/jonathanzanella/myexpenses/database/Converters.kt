@@ -1,35 +1,28 @@
 package br.com.jonathanzanella.myexpenses.database
 
 import android.arch.persistence.room.TypeConverter
-import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType
+import br.com.jonathanzanella.myexpenses.card.CardType
 import org.joda.time.DateTime
 
 class Converters {
     @TypeConverter
-    fun fromTimestamp(value: Long?): DateTime? {
-        return value?.let { DateTime(it) }
-    }
+    fun fromTimestamp(value: Long?) = value?.let { DateTime(it) }
 
     @TypeConverter
-    fun dateToTimestamp(date: DateTime?): Long? {
-        return date?.millis
-    }
+    fun dateToTimestamp(date: DateTime?) = date?.millis
 
     @TypeConverter
-    fun toChargeableType(type: String): ChargeableType {
-        return when (type) {
-            "ACCOUNT" -> ChargeableType.ACCOUNT
-            "DEBIT_CARD" -> ChargeableType.DEBIT_CARD
-            "CREDIT_CARD" -> ChargeableType.CREDIT_CARD
-            else -> throw IllegalArgumentException("Could not recognize chargeable type")
+    fun toCardType(type: String) =
+        when (type) {
+            CardType.CREDIT.value -> CardType.CREDIT
+            CardType.DEBIT.value -> CardType.DEBIT
+            else -> throw IllegalArgumentException("Could not recognize card type")
         }
-    }
 
     @TypeConverter
-    fun fromChargeableType(type: ChargeableType) =
+    fun fromCardType(type: CardType) =
         when(type) {
-            ChargeableType.ACCOUNT -> "ACCOUNT"
-            ChargeableType.DEBIT_CARD -> "DEBIT_CARD"
-            ChargeableType.CREDIT_CARD -> "CREDIT_CARD"
+            CardType.CREDIT -> CardType.CREDIT.value
+            CardType.DEBIT -> CardType.DEBIT.value
         }
 }

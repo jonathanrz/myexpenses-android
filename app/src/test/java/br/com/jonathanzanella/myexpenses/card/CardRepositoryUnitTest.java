@@ -29,7 +29,7 @@ public class CardRepositoryUnitTest {
 	@Before
 	public void setUp() throws Exception {
 		initMocks(this);
-		subject = new CardRepository(repository, expenseRepository);
+		subject = new CardRepository(expenseRepository);
 	}
 
 	@Test

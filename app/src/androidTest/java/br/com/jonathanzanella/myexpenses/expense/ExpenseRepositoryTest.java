@@ -52,7 +52,7 @@ public class ExpenseRepositoryTest {
 		creditCard = new CardBuilder().name("CreditCard").account(account).type(CardType.CREDIT).build(accountRepository);
 		debitCard = new CardBuilder().name("DebitCard").account(account).type(CardType.DEBIT).build(accountRepository);
 		repository = new ExpenseRepository(new RepositoryImpl<>(getTargetContext()));
-		CardRepository cardRepository = new CardRepository(new RepositoryImpl<>(getTargetContext()), repository);
+		CardRepository cardRepository = new CardRepository(repository);
 		assertTrue(cardRepository.save(debitCard).isValid());
 		assertTrue(cardRepository.save(creditCard).isValid());
 	}

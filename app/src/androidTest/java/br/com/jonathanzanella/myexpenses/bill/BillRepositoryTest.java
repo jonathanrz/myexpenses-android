@@ -12,7 +12,6 @@ import org.junit.runner.RunWith;
 
 import java.util.List;
 
-import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.card.Card;
@@ -76,7 +75,7 @@ public class BillRepositoryTest {
 		accountRepository.save(account);
 
 		Card card = new CardBuilder().account(account).build(accountRepository);
-		new CardRepository(new RepositoryImpl<>(MyApplication.Companion.getContext()), expenseRepository).save(card);
+		new CardRepository(expenseRepository).save(card);
 
 		Expense expense = new ExpenseBuilder()
 				.date(firstDayOfJune)

@@ -22,7 +22,7 @@ import java.util.*
 
 class CreditCardMonthlyAdapter(context: Context) : RecyclerView.Adapter<CreditCardMonthlyAdapter.ViewHolder>() {
     private var expenses: List<Expense> = ArrayList()
-    private val cardRepository: CardRepository = CardRepository(RepositoryImpl<Card>(context),
+    private val cardRepository: CardRepository = CardRepository(
             ExpenseRepository(RepositoryImpl<Expense>(context)))
     private var totalValue: Int = 0
 

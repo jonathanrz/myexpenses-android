@@ -36,7 +36,7 @@ public class CardRepositoryTest {
 		accountRepository = new AccountRepository();
 		accountRepository.save(account);
 		ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<>(getTargetContext()));
-		subject = new CardRepository(new RepositoryImpl<>(getTargetContext()), expenseRepository);
+		subject = new CardRepository(expenseRepository);
 	}
 
 	@Test

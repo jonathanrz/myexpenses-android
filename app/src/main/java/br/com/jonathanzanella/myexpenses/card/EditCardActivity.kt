@@ -33,7 +33,7 @@ class EditCardActivity : AppCompatActivity(), CardContract.EditView {
 
     init {
         val expenseRepository = ExpenseRepository(RepositoryImpl<Expense>(this))
-        presenter = CardPresenter(CardRepository(RepositoryImpl<Card>(this), expenseRepository),
+        presenter = CardPresenter(CardRepository(expenseRepository),
                 AccountRepository(), expenseRepository, ResourcesHelper(this))
     }
 

@@ -33,6 +33,7 @@ class MyApplication : Application() {
         fun resetDatabase() {
             database.accountDao().deleteAll()
             database.billDao().deleteAll()
+            database.cardDao().deleteAll()
             database.sourceDao().deleteAll()
         }
     }

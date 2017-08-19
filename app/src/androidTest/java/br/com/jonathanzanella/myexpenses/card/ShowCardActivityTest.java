@@ -42,7 +42,7 @@ public class ShowCardActivityTest {
 	public ActivityTestRule<ShowCardActivity> activityTestRule = new ActivityTestRule<>(ShowCardActivity.class, true, false);
 
 	private final ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<>(getTargetContext()));
-	private final CardRepository repository = new CardRepository(new RepositoryImpl<>(getTargetContext()), expenseRepository);
+	private final CardRepository repository = new CardRepository(expenseRepository);
 	private final AccountRepository accountRepository = new AccountRepository();
 
 	private Card card;

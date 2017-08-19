@@ -24,7 +24,7 @@ import java.util.*
 open class ExpenseRepository(private val repository: Repository<Expense>) : ModelRepository<Expense> {
     private val table = ExpenseTable()
     private val cardRepository: CardRepository by lazy {
-        CardRepository(RepositoryImpl<Card>(MyApplication.getContext()), this)
+        CardRepository(this)
     }
 
     @WorkerThread
