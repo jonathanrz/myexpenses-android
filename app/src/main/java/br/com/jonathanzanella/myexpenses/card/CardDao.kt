@@ -18,7 +18,7 @@ interface CardDao {
     fun cards(cardType: String): Flowable<List<Card>>
 
     @Query("SELECT * FROM Card WHERE type = :cardType AND accountUuid = :accountUuid ORDER BY name LIMIT 1")
-    fun accountCard(cardType: String, accountUuid: String): Flowable<Card>
+    fun accountCard(cardType: String, accountUuid: String): Flowable<List<Card>>
 
     @Query("SELECT * FROM Card WHERE uuid = :uuid")
     fun find(uuid: String): Flowable<Card>

@@ -36,7 +36,7 @@ open class CardRepository(private val expenseRepository: ExpenseRepository) : Mo
 
     @WorkerThread
     fun accountDebitCard(account: Account): Card? {
-        return MyApplication.database.cardDao().accountCard(CardType.DEBIT.value, account.uuid!!).blockingFirst()
+        return MyApplication.database.cardDao().accountCard(CardType.DEBIT.value, account.uuid!!).blockingFirst().firstOrNull()
     }
 
     @WorkerThread
