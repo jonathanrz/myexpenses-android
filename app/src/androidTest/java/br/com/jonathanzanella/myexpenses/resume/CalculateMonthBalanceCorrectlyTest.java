@@ -145,7 +145,7 @@ public class CalculateMonthBalanceCorrectlyTest {
 		String expectedBalance = CurrencyHelper.INSTANCE.format(balance);
 		String twoMonthsExpectedBalance = CurrencyHelper.INSTANCE.format(twoMonthsBalance);
 
-		Thread.sleep(1000);
+		Thread.sleep(2000);
 		validateExpectedBalance(expectedBalance);
 
 		scrollToMonth(DateTime.now().plusMonths(2));
