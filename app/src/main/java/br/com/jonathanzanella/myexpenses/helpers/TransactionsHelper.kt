@@ -48,8 +48,11 @@ object TransactionsHelper {
         AlertDialog.Builder(ctx)
                 .setMessage(message)
                 .setPositiveButton(android.R.string.yes) { _, _ ->
-                    expense.debit()
-                    dialogCallback.onPositiveButton()
+                    doAsync {
+                        expense.debit()
+
+                        uiThread { dialogCallback.onPositiveButton() }
+                    }
                 }
                 .setNegativeButton(android.R.string.no) { dialogInterface, _ -> dialogInterface.dismiss() }
                 .show()

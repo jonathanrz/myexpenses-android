@@ -85,7 +85,7 @@ public class UpdateAccountBalanceTest {
 
 		onView(allOf(
 				withId(R.id.income),
-				isDescendantOfA(withTagValue(is((Object)expense.getUuid())))))
+				isDescendantOfA(withTagValue(is(expense.getUuid())))))
 				.perform(scrollTo()).perform(click());
 		clickIntoView(getTargetContext().getString(android.R.string.yes));
 
@@ -96,22 +96,22 @@ public class UpdateAccountBalanceTest {
 	@Test
 	public void confirm_expense_and_receipt_should_update_account_balance() {
 		Expense expense = new ExpenseBuilder().chargeable(account).value(100).build();
-		assertTrue(new ExpenseRepository(new RepositoryImpl<Expense>(getTargetContext())).save(expense).isValid());
+		assertTrue(new ExpenseRepository(new RepositoryImpl<>(getTargetContext())).save(expense).isValid());
 
 		Receipt receipt = new ReceiptBuilder().account(account).income(1000).build();
-		assertTrue(new ReceiptRepository(new RepositoryImpl<Receipt>(getTargetContext())).save(receipt).isValid());
+		assertTrue(new ReceiptRepository(new RepositoryImpl<>(getTargetContext())).save(receipt).isValid());
 
 		mainActivityTestRule.launchActivity(new Intent());
 
 		onView(allOf(
 				withId(R.id.income),
-				isDescendantOfA(withTagValue(is((Object)receipt.getUuid())))))
+				isDescendantOfA(withTagValue(is(receipt.getUuid())))))
 				.perform(scrollTo()).perform(click());
 		clickIntoView(getTargetContext().getString(android.R.string.yes));
 
 		onView(allOf(
 				withId(R.id.income),
-				isDescendantOfA(withTagValue(is((Object)expense.getUuid())))))
+				isDescendantOfA(withTagValue(is(expense.getUuid())))))
 				.perform(scrollTo()).perform(click());
 		clickIntoView(getTargetContext().getString(android.R.string.yes));
 

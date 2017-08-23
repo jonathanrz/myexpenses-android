@@ -96,6 +96,7 @@ class Expense : Transaction, UnsyncModel {
         return chargeable
     }
 
+    @WorkerThread
     fun uncharge() {
         if (isCharged) {
             val c = chargeableFromCache!!
@@ -171,6 +172,7 @@ class Expense : Transaction, UnsyncModel {
                 "\nremoved=" + isRemoved
     }
 
+    @WorkerThread
     fun debit() {
         val c = loadChargeable()!!
         c.debit(value)
