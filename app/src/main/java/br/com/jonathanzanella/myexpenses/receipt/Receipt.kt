@@ -1,5 +1,6 @@
 package br.com.jonathanzanella.myexpenses.receipt
 
+import android.support.annotation.WorkerThread
 import br.com.jonathanzanella.myexpenses.Environment
 import br.com.jonathanzanella.myexpenses.MyApplication
 import br.com.jonathanzanella.myexpenses.account.Account
@@ -140,6 +141,7 @@ class Receipt : Transaction, UnsyncModel {
                 "\nincome=" + income
     }
 
+    @WorkerThread
     fun credit() {
         val acc = loadAccount()!!
         acc.credit(income)
