@@ -1,5 +1,6 @@
 package br.com.jonathanzanella.myexpenses.resume;
 
+import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.SmallTest;
 import android.support.test.rule.ActivityTestRule;
@@ -140,12 +141,13 @@ public class CalculateMonthBalanceCorrectlyTest {
 
 	@Test
 	public void verify_month_balance() throws Exception {
+		activityTestRule.launchActivity(new Intent());
+
 		int balance = RECEIPT_INCOME - EXPENSE_VALUE - BILL_AMOUNT;
 		int twoMonthsBalance = RECEIPT_INCOME * 3 - EXPENSE_VALUE * 3 - BILL_AMOUNT;
 		String expectedBalance = CurrencyHelper.INSTANCE.format(balance);
 		String twoMonthsExpectedBalance = CurrencyHelper.INSTANCE.format(twoMonthsBalance);
 
-		Thread.sleep(5000);
 		validateExpectedBalance(expectedBalance);
 
 		scrollToMonth(DateTime.now().plusMonths(2));
