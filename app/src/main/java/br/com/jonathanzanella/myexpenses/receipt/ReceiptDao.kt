@@ -8,19 +8,19 @@ import io.reactivex.Flowable
 
 @Dao
 interface ReceiptDao {
-    @Query("SELECT * FROM Receipt ORDER BY name")
+    @Query("SELECT * FROM Receipt ORDER BY date")
     fun all(): Flowable<List<Receipt>>
 
-    @Query("SELECT * FROM Receipt WHERE date >= :initDate AND date <= :endDate AND isRemoved = 0 ORDER BY name")
+    @Query("SELECT * FROM Receipt WHERE date >= :initDate AND date <= :endDate AND isRemoved = 0 ORDER BY date")
     fun monthly(initDate: Long, endDate: Long): Flowable<List<Receipt>>
 
-    @Query("SELECT * FROM Receipt WHERE date >= :initDate AND date <= :endDate AND accountUuid = :accountUuid AND isRemoved = 0 ORDER BY name")
+    @Query("SELECT * FROM Receipt WHERE date >= :initDate AND date <= :endDate AND accountUuid = :accountUuid AND isRemoved = 0 ORDER BY date")
     fun monthly(initDate: Long, endDate: Long, accountUuid: String): Flowable<List<Receipt>>
 
-    @Query("SELECT * FROM Receipt WHERE date >= :initDate AND date <= :endDate AND isRemoved = 0 AND isIgnoreInResume = 0 ORDER BY name")
+    @Query("SELECT * FROM Receipt WHERE date >= :initDate AND date <= :endDate AND isRemoved = 0 AND isIgnoreInResume = 0 ORDER BY date")
     fun resume(initDate: Long, endDate: Long): Flowable<List<Receipt>>
 
-    @Query("SELECT * FROM Receipt WHERE sync = 0 ORDER BY name")
+    @Query("SELECT * FROM Receipt WHERE sync = 0 ORDER BY date")
     fun unsync(): Flowable<List<Receipt>>
 
     @Query("SELECT * FROM Receipt WHERE uuid = :uuid")
