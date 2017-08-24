@@ -38,7 +38,7 @@ class ReceiptView@JvmOverloads constructor(
     init {
         addView(ui.createView(AnkoContext.Companion.create(context, this)))
 
-        repository = ReceiptRepository(RepositoryImpl<Receipt>(context))
+        repository = ReceiptRepository()
         adapter = MonthlyPagerAdapter(context, object : MonthlyPagerAdapterBuilder {
             override fun buildView(ctx: Context, date: DateTime): View {
                 val view = ReceiptMonthlyView(ctx, date)

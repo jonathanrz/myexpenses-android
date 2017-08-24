@@ -24,7 +24,7 @@ class ShowReceiptActivity : AppCompatActivity(), ReceiptContract.View {
     override val context = this
     private val ui = ShowReceiptActivityUi()
 
-    private val presenter = ReceiptPresenter(ReceiptRepository(RepositoryImpl(this)),
+    private val presenter = ReceiptPresenter(ReceiptRepository(),
             SourceRepository(), AccountRepository())
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -24,6 +24,7 @@ import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder;
 import br.com.jonathanzanella.myexpenses.source.Source;
 import br.com.jonathanzanella.myexpenses.source.SourceRepository;
+import br.com.jonathanzanella.myexpenses.transaction.Transaction;
 import br.com.jonathanzanella.myexpenses.views.MainActivity;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
@@ -96,14 +97,14 @@ public class AddReceiptTest {
 		selectSource();
 		matchToolbarTitle(newReceiptTitle);
 
-		onView(withId(R.id.act_edit_receipt_date)).check(matches(withText(Receipt.Companion.getSIMPLE_DATE_FORMAT().format(time.toDate()))));
+		onView(withId(R.id.act_edit_receipt_date)).check(matches(withText(Transaction.Companion.getSIMPLE_DATE_FORMAT().format(time.toDate()))));
 
 		clickIntoView(R.id.action_save);
 
 		matchToolbarTitle(receiptsTitle);
 
 		onView(withId(R.id.row_receipt_name)).check(matches(withText(receiptName)));
-		onView(withId(R.id.row_receipt_date)).check(matches(withText(Receipt.Companion.getSIMPLE_DATE_FORMAT().format(time.toDate()))));
+		onView(withId(R.id.row_receipt_date)).check(matches(withText(Transaction.Companion.getSIMPLE_DATE_FORMAT().format(time.toDate()))));
 	}
 
 	@Test

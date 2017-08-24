@@ -23,7 +23,7 @@ import org.joda.time.DateTime
 
 open class ReceiptAdapter(context: Context) : RecyclerView.Adapter<ReceiptAdapter.ViewHolder>() {
     private var receipts: List<Receipt> = ArrayList()
-    private val presenter: ReceiptAdapterPresenter = ReceiptAdapterPresenter(ReceiptRepository(RepositoryImpl<Receipt>(context)))
+    private val presenter: ReceiptAdapterPresenter = ReceiptAdapterPresenter(ReceiptRepository())
     private var date: DateTime? = null
 
     inner class ViewHolder internal constructor(itemView: View, private val ui: ViewUI) : RecyclerView.ViewHolder(itemView), View.OnClickListener {

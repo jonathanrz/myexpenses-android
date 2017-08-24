@@ -9,7 +9,6 @@ import org.mockito.Mock;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
-import br.com.jonathanzanella.myexpenses.helper.MockRepository;
 import br.com.jonathanzanella.myexpenses.helper.builder.ReceiptBuilder;
 import br.com.jonathanzanella.myexpenses.source.SourceRepository;
 
@@ -33,7 +32,7 @@ public class ReceiptPresenterComponentTest {
 	@Before
 	public void setUp() throws Exception {
 		initMocks(this);
-		repository = new ReceiptRepository(new MockRepository<Receipt>());
+		repository = new ReceiptRepository();
 		presenter = new ReceiptPresenter(repository, sourceRepository, accountRepository);
 		presenter.attachView(view);
 	}

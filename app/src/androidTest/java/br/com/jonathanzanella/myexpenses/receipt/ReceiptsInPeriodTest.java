@@ -14,7 +14,6 @@ import java.util.List;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.source.Source;
 import br.com.jonathanzanella.myexpenses.source.SourceRepository;
 
@@ -34,7 +33,7 @@ public class ReceiptsInPeriodTest {
 
 	private final SourceRepository sourceRepository = new SourceRepository();
 	private final AccountRepository accountRepository = new AccountRepository();
-	private final ReceiptRepository receiptRepository = new ReceiptRepository(new RepositoryImpl<>(getContext()));
+	private final ReceiptRepository receiptRepository = new ReceiptRepository();
 
 	@Before
 	public void setUp() throws Exception {

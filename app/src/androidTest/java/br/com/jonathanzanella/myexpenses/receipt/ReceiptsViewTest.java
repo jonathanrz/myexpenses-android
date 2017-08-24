@@ -17,7 +17,6 @@ import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
@@ -58,7 +57,7 @@ public class ReceiptsViewTest {
 	public void setUp() throws Exception {
 		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
 
-		ReceiptRepository repository = new ReceiptRepository(new RepositoryImpl<>(getTargetContext()));
+		ReceiptRepository repository = new ReceiptRepository();
 
 		Source s = new SourceBuilder().build();
 		assertTrue(new SourceRepository().save(s).isValid());

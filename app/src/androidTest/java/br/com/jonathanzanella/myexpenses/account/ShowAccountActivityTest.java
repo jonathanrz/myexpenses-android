@@ -62,7 +62,7 @@ public class ShowAccountActivityTest {
 		new DatabaseHelper(getTargetContext()).recreateTables();
 
 		repository = new AccountRepository();
-		receiptRepository = new ReceiptRepository(new RepositoryImpl<>(getTargetContext()));
+		receiptRepository = new ReceiptRepository();
 		expenseRepository = new ExpenseRepository(new RepositoryImpl<>(getTargetContext()));
 		cardRepository = new CardRepository(expenseRepository);
 		sourceRepository = new SourceRepository();

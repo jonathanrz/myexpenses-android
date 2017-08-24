@@ -67,7 +67,7 @@ public class ShowDetailScreenTest {
 		Source source = new SourceBuilder().build();
 		assertTrue(new SourceRepository().save(source).isValid());
 		Receipt receipt = new ReceiptBuilder().account(account).source(source).build();
-		assertTrue(new ReceiptRepository(new RepositoryImpl<>(getTargetContext())).save(receipt).isValid());
+		assertTrue(new ReceiptRepository().save(receipt).isValid());
 
 		mainActivityTestRule.launchActivity(new Intent());
 

@@ -38,7 +38,7 @@ class EditReceiptActivity : AppCompatActivity(), ReceiptContract.EditView {
 
     override val context = this
     private val ui = EditReceiptActivityUi()
-    private val presenter: ReceiptPresenter = ReceiptPresenter(ReceiptRepository(RepositoryImpl<Receipt>(this)),
+    private val presenter: ReceiptPresenter = ReceiptPresenter(ReceiptRepository(),
             SourceRepository(), AccountRepository())
 
     override fun onCreate(savedInstanceState: Bundle?) {

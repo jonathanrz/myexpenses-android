@@ -1,11 +1,9 @@
 package br.com.jonathanzanella.myexpenses.receipt
 
 import android.support.annotation.WorkerThread
+import br.com.jonathanzanella.myexpenses.MyApplication
 import br.com.jonathanzanella.myexpenses.account.Account
-import br.com.jonathanzanella.myexpenses.database.Fields
 import br.com.jonathanzanella.myexpenses.database.ModelRepository
-import br.com.jonathanzanella.myexpenses.database.Repository
-import br.com.jonathanzanella.myexpenses.database.Where
 import br.com.jonathanzanella.myexpenses.helpers.DateHelper
 import br.com.jonathanzanella.myexpenses.log.Log
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
@@ -14,58 +12,44 @@ import org.apache.commons.lang3.StringUtils
 import org.joda.time.DateTime
 import java.util.*
 
-open class ReceiptRepository(private val repository: Repository<Receipt>) : ModelRepository<Receipt> {
-    private val table = ReceiptTable()
+open class ReceiptRepository : ModelRepository<Receipt> {
 
     @WorkerThread
     fun find(uuid: String): Receipt? {
-        return repository.find(table, uuid)
+        return MyApplication.database.receiptDao().find(uuid).blockingFirst()
     }
 
     @WorkerThread
     fun all(): List<Receipt> {
-        return repository.query(table, Where(null).orderBy(Fields.DATE))
+        return MyApplication.database.receiptDao().all().blockingFirst()
     }
 
     @WorkerThread
     fun monthly(month: DateTime): List<Receipt> {
-        return repository.query(table, monthlyQuery(month, null))
+        return MyApplication.database.receiptDao().monthly(DateHelper.firstDayOfMonth(month).millis,
+                DateHelper.lastDayOfMonth(month).millis).blockingFirst()
     }
 
     @WorkerThread
     fun monthly(month: DateTime, account: Account): List<Receipt> {
-        return repository.query(table, monthlyQuery(month, account))
-    }
-
-    @WorkerThread
-    private fun monthlyQuery(month: DateTime, account: Account?): Where {
-        var where = Where(Fields.DATE).greaterThanOrEq(DateHelper.firstDayOfMonth(month).millis)
-                .and(Fields.DATE).lessThanOrEq(DateHelper.lastDayOfMonth(month).millis)
-                .and(Fields.REMOVED).eq(false)
-                .orderBy(Fields.DATE)
-        if (account != null)
-            where = where.and(Fields.ACCOUNT_UUID).eq(account.uuid!!)
-
-        return where
+        return MyApplication.database.receiptDao().monthly(DateHelper.firstDayOfMonth(month).millis,
+                DateHelper.lastDayOfMonth(month).millis, account.uuid!!).blockingFirst()
     }
 
     @WorkerThread
     fun resume(month: DateTime): List<Receipt> {
-        return repository.query(table, Where(Fields.DATE).greaterThanOrEq(month.millis)
-                .and(Fields.DATE).lessThanOrEq(month.plusMonths(1).millis)
-                .and(Fields.IGNORE_IN_RESUME).eq(false)
-                .and(Fields.REMOVED).eq(false)
-                .orderBy(Fields.DATE))
+        return MyApplication.database.receiptDao().resume(DateHelper.firstDayOfMonth(month).millis,
+                DateHelper.lastDayOfMonth(month).millis).blockingFirst()
     }
 
     @WorkerThread
     fun greaterUpdatedAt(): Long {
-        return repository.greaterUpdatedAt(table)
+        return MyApplication.database.receiptDao().greaterUpdatedAt().blockingFirst().updatedAt
     }
 
     @WorkerThread
     fun unsync(): List<Receipt> {
-        return repository.unsync(table)
+        return MyApplication.database.receiptDao().unsync().blockingFirst()
     }
 
     @WorkerThread
@@ -75,7 +59,7 @@ open class ReceiptRepository(private val repository: Repository<Receipt>) : Mode
             if (receipt.id == 0L && receipt.uuid == null)
                 receipt.uuid = UUID.randomUUID().toString()
             receipt.sync = false
-            repository.saveAtDatabase(table, receipt)
+            receipt.id = MyApplication.database.receiptDao().saveAtDatabase(receipt)
         }
         return result
     }
@@ -111,7 +95,7 @@ open class ReceiptRepository(private val repository: Repository<Receipt>) : Mode
         }
 
         unsync.sync = true
-        repository.saveAtDatabase(table, unsync)
+        unsync.id = MyApplication.database.receiptDao().saveAtDatabase(unsync)
 
         return result
     }

@@ -62,7 +62,7 @@ public class UpdateAccountBalanceTest {
 	@Test
 	public void confirm_receipt_should_increase_account_balance() {
 		Receipt receipt = new ReceiptBuilder().account(account).income(1000).build();
-		assertTrue(new ReceiptRepository(new RepositoryImpl<>(getTargetContext())).save(receipt).isValid());
+		assertTrue(new ReceiptRepository().save(receipt).isValid());
 
 		mainActivityTestRule.launchActivity(new Intent());
 
@@ -99,7 +99,7 @@ public class UpdateAccountBalanceTest {
 		assertTrue(new ExpenseRepository(new RepositoryImpl<>(getTargetContext())).save(expense).isValid());
 
 		Receipt receipt = new ReceiptBuilder().account(account).income(1000).build();
-		assertTrue(new ReceiptRepository(new RepositoryImpl<>(getTargetContext())).save(receipt).isValid());
+		assertTrue(new ReceiptRepository().save(receipt).isValid());
 
 		mainActivityTestRule.launchActivity(new Intent());
 

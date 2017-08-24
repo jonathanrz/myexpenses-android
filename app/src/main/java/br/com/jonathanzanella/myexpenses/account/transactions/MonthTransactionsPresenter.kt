@@ -15,7 +15,7 @@ import org.joda.time.DateTime
 
 internal class MonthTransactionsPresenter(ctx: Context, private val view: MonthTransactionsContractView) {
     val adapter = TransactionAdapter()
-    private val receiptRepository = ReceiptRepository(RepositoryImpl<Receipt>(ctx))
+    private val receiptRepository = ReceiptRepository()
     private val expenseRepository = ExpenseRepository(RepositoryImpl<Expense>(ctx))
     private val billRepository = BillRepository(expenseRepository)
     private var currentBalance: Int = 0

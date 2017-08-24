@@ -14,7 +14,6 @@ import java.util.List;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.ReceiptBuilder;
@@ -44,7 +43,7 @@ public class ReceiptRepositoryTest {
 		new AccountRepository().save(account);
 		source = new SourceBuilder().build();
 		new SourceRepository().save(source);
-		repository = new ReceiptRepository(new RepositoryImpl<>(getTargetContext()));
+		repository = new ReceiptRepository();
 	}
 
 	@After

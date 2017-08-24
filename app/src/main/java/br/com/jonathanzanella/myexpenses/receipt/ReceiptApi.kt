@@ -17,7 +17,7 @@ class ReceiptApi : UnsyncModelApi<Receipt> {
         Server(MyApplication.getContext()).receiptInterface()
     }
     private val receiptRepository: ReceiptRepository by lazy {
-        ReceiptRepository(RepositoryImpl<Receipt>(MyApplication.getContext()))
+        ReceiptRepository()
     }
 
     override fun index(): List<Receipt> {

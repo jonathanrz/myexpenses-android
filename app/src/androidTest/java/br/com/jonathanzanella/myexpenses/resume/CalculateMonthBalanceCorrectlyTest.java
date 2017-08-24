@@ -88,7 +88,7 @@ public class CalculateMonthBalanceCorrectlyTest {
 
 	private void generateThreeMonthlyReceipts(Account a, Source s) {
 		DateTime dateTime = DateTime.now();
-		ReceiptRepository receiptRepository = new ReceiptRepository(new RepositoryImpl<>(getTargetContext()));
+		ReceiptRepository receiptRepository = new ReceiptRepository();
 		Receipt r = new ReceiptBuilder()
 				.account(a)
 				.source(s)

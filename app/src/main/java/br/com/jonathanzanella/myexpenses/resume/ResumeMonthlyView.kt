@@ -28,7 +28,7 @@ internal class ResumeMonthlyView(context: Context, private val month: DateTime) 
     override var filter = ""
     var singleRowHeight: Int = 0
 
-    private var receiptRepository = ReceiptRepository(RepositoryImpl<Receipt>(context))
+    private var receiptRepository = ReceiptRepository()
     private var expenseRepository = ExpenseRepository(RepositoryImpl<Expense>(context))
 
     private var accountAdapter = AccountAdapter(month)

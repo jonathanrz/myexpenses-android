@@ -21,7 +21,7 @@ public class ReceiptRepositoryUnitTest {
 
 	@Before
 	public void setUp() throws Exception {
-		subject = new ReceiptRepository(repository);
+		subject = new ReceiptRepository();
 	}
 
 	@Test

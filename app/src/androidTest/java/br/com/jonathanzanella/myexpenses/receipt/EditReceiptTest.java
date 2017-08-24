@@ -16,13 +16,13 @@ import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.ReceiptBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder;
 import br.com.jonathanzanella.myexpenses.source.Source;
 import br.com.jonathanzanella.myexpenses.source.SourceRepository;
+import br.com.jonathanzanella.myexpenses.transaction.Transaction;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.InstrumentationRegistry.getTargetContext;
@@ -61,7 +61,7 @@ public class EditReceiptTest {
 				.account(a)
 				.source(s)
 				.build();
-		repository = new ReceiptRepository(new RepositoryImpl<>(getTargetContext()));
+		repository = new ReceiptRepository();
 		assertTrue(repository.save(receipt).isValid());
 	}
 
@@ -84,7 +84,7 @@ public class EditReceiptTest {
 		final String editReceiptTitle = getTargetContext().getString(R.string.edit_receipt_title);
 		matchToolbarTitle(editReceiptTitle);
 		onView(withId(R.id.act_edit_receipt_name)).check(matches(withText(receipt.getName())));
-		String expectedDate = Receipt.Companion.getSIMPLE_DATE_FORMAT().format(receipt.getDate().toDate());
+		String expectedDate = Transaction.Companion.getSIMPLE_DATE_FORMAT().format(receipt.getDate().toDate());
 		onView(withId(R.id.act_edit_receipt_date)).check(matches(withText(expectedDate)));
 		onView(withId(R.id.act_edit_receipt_account)).check(matches(withText(receipt.getAccountFromCache().getName())));
 		clearAndTypeTextIntoView(R.id.act_edit_receipt_name, receipt.getName() + " changed");

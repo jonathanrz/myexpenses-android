@@ -6,13 +6,12 @@ import android.database.sqlite.SQLiteOpenHelper
 import br.com.jonathanzanella.myexpenses.MyApplication
 import br.com.jonathanzanella.myexpenses.expense.ExpenseTable
 import br.com.jonathanzanella.myexpenses.log.LogTable
-import br.com.jonathanzanella.myexpenses.receipt.ReceiptTable
 
 private const val DB_NAME = "MyExpenses"
 private const val DB_VERSION = 6
 
 class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
-    private val tables = arrayOf(ReceiptTable(), ExpenseTable(), LogTable())
+    private val tables = arrayOf(ExpenseTable(), LogTable())
 
     override fun onCreate(db: SQLiteDatabase) {
         for (table in tables)
