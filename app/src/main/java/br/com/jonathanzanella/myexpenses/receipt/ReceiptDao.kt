@@ -24,10 +24,10 @@ interface ReceiptDao {
     fun unsync(): Flowable<List<Receipt>>
 
     @Query("SELECT * FROM Receipt WHERE uuid = :uuid")
-    fun find(uuid: String): Flowable<Receipt>
+    fun find(uuid: String): Flowable<List<Receipt>>
 
     @Query("SELECT * FROM Receipt ORDER BY updatedAt DESC LIMIT 1")
-    fun greaterUpdatedAt(): Flowable<Receipt>
+    fun greaterUpdatedAt(): Flowable<List<Receipt>>
 
     @Query("DELETE FROM Receipt")
     fun deleteAll()

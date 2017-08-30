@@ -16,7 +16,7 @@ open class ReceiptRepository : ModelRepository<Receipt> {
 
     @WorkerThread
     fun find(uuid: String): Receipt? {
-        return MyApplication.database.receiptDao().find(uuid).blockingFirst()
+        return MyApplication.database.receiptDao().find(uuid).blockingFirst().firstOrNull()
     }
 
     @WorkerThread
@@ -44,7 +44,7 @@ open class ReceiptRepository : ModelRepository<Receipt> {
 
     @WorkerThread
     fun greaterUpdatedAt(): Long {
-        return MyApplication.database.receiptDao().greaterUpdatedAt().blockingFirst().updatedAt
+        return MyApplication.database.receiptDao().greaterUpdatedAt().blockingFirst().firstOrNull()?.updatedAt ?: 0L
     }
 
     @WorkerThread
