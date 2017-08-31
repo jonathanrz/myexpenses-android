@@ -1,6 +1,5 @@
 package br.com.jonathanzanella.myexpenses.receipt
 
-import android.content.Context
 import android.content.Intent
 import android.os.AsyncTask
 import android.support.annotation.UiThread
@@ -12,7 +11,6 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.Account
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
 import br.com.jonathanzanella.myexpenses.helpers.AdapterColorHelper
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
 import br.com.jonathanzanella.myexpenses.source.Source
@@ -21,7 +19,7 @@ import br.com.jonathanzanella.myexpenses.views.anko.*
 import org.jetbrains.anko.*
 import org.joda.time.DateTime
 
-open class ReceiptAdapter(context: Context) : RecyclerView.Adapter<ReceiptAdapter.ViewHolder>() {
+open class ReceiptAdapter() : RecyclerView.Adapter<ReceiptAdapter.ViewHolder>() {
     private var receipts: List<Receipt> = ArrayList()
     private val presenter: ReceiptAdapterPresenter = ReceiptAdapterPresenter(ReceiptRepository())
     private var date: DateTime? = null

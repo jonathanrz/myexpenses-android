@@ -21,7 +21,7 @@ import org.joda.time.DateTime
 internal class ReceiptMonthlyView(context: Context, private val dateTime: DateTime) : FrameLayout(context), RefreshableView, FilterableView {
     override var filter = ""
     private val ui = ReceiptMonthlyViewUI()
-    private var adapter = ReceiptAdapter(context)
+    private var adapter = ReceiptAdapter()
 
     init {
         addView(ui.createView(AnkoContext.Companion.create(context, this)))
