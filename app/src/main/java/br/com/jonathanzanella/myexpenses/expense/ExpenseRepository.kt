@@ -85,7 +85,7 @@ open class ExpenseRepository() {
         val lastMonth = month.minusMonths(1)
 
         expenses.addAll(MyApplication.database.expenseDao().unchargedNextMonth(firstDayOfMonth(lastMonth).millis, lastDayOfMonth(lastMonth).millis, card.uuid!!).blockingFirst())
-        expenses.addAll(MyApplication.database.expenseDao().unchargedCurrentMonth(firstDayOfMonth(lastMonth).millis, lastDayOfMonth(lastMonth).millis, card.uuid!!).blockingFirst())
+        expenses.addAll(MyApplication.database.expenseDao().unchargedCurrentMonth(firstDayOfMonth(month).millis, lastDayOfMonth(month).millis, card.uuid!!).blockingFirst())
 
         return expenses
     }
