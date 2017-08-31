@@ -1,7 +1,6 @@
 package br.com.jonathanzanella.myexpenses.card;
 
 import android.content.Intent;
-import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 
 import org.junit.After;
@@ -9,10 +8,10 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
-import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
@@ -41,7 +40,7 @@ public class EditCardTest {
 
 	@Before
 	public void setUp() throws Exception {
-		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
+		MyApplication.Companion.resetDatabase();
 
 		Account a = new AccountBuilder().build();
 		AccountRepository accountRepository = new AccountRepository();

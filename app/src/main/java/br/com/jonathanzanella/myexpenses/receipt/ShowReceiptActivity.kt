@@ -12,7 +12,6 @@ import android.widget.TextView
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.account.AccountRepository
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
 import br.com.jonathanzanella.myexpenses.source.Source
 import br.com.jonathanzanella.myexpenses.source.SourceRepository

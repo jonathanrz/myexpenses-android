@@ -18,8 +18,6 @@ import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.account.AccountRepository
 import br.com.jonathanzanella.myexpenses.card.CardType.CREDIT
 import br.com.jonathanzanella.myexpenses.card.CardType.DEBIT
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
-import br.com.jonathanzanella.myexpenses.expense.Expense
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.helpers.ResourcesHelper
 import br.com.jonathanzanella.myexpenses.validations.ValidationError

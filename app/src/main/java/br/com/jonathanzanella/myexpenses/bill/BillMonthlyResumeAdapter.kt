@@ -8,10 +8,7 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import br.com.jonathanzanella.myexpenses.MyApplication
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
-import br.com.jonathanzanella.myexpenses.expense.Expense
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
 import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles

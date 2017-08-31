@@ -15,12 +15,12 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.bill.Bill;
 import br.com.jonathanzanella.myexpenses.bill.BillRepository;
-import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
@@ -55,7 +55,7 @@ public class AddExpenseTest {
 
 	@Before
 	public void setUp() throws Exception {
-		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
+		MyApplication.Companion.resetDatabase();
 
 		UiDevice uiDevice = UiDevice.getInstance(getInstrumentation());
 		if (!uiDevice.isScreenOn())

@@ -12,11 +12,9 @@ import android.widget.FrameLayout
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.AccountAdapter
 import br.com.jonathanzanella.myexpenses.bill.BillMonthlyResumeAdapter
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
 import br.com.jonathanzanella.myexpenses.expense.Expense
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
-import br.com.jonathanzanella.myexpenses.receipt.Receipt
 import br.com.jonathanzanella.myexpenses.receipt.ReceiptRepository
 import br.com.jonathanzanella.myexpenses.views.FilterableView
 import br.com.jonathanzanella.myexpenses.views.RefreshableView

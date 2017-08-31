@@ -3,7 +3,6 @@ package br.com.jonathanzanella.myexpenses.bill
 import android.support.annotation.WorkerThread
 import android.util.Log
 import br.com.jonathanzanella.myexpenses.MyApplication
-import br.com.jonathanzanella.myexpenses.database.ModelRepository
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult
@@ -11,7 +10,7 @@ import org.apache.commons.lang3.StringUtils
 import org.joda.time.DateTime
 import java.util.*
 
-open class BillRepository(private val expenseRepository: ExpenseRepository) : ModelRepository<Bill> {
+open class BillRepository(private val expenseRepository: ExpenseRepository) {
     @WorkerThread
     fun find(uuid: String): Bill? {
         return MyApplication.database.billDao().find(uuid).blockingFirst()
@@ -86,7 +85,7 @@ open class BillRepository(private val expenseRepository: ExpenseRepository) : Mo
     }
 
     @WorkerThread
-    override fun syncAndSave(unsync: Bill): ValidationResult {
+    fun syncAndSave(unsync: Bill): ValidationResult {
         val result = validate(unsync)
         if (!result.isValid) {
             Log.w("Bill sync validation failed", unsync.getData() + "\nerrors: " + result.errorsAsString)

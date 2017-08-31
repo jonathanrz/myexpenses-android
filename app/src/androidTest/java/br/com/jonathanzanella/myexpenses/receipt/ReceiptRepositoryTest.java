@@ -11,9 +11,9 @@ import org.junit.runner.RunWith;
 
 import java.util.List;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
-import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.ReceiptBuilder;
@@ -22,7 +22,6 @@ import br.com.jonathanzanella.myexpenses.source.Source;
 import br.com.jonathanzanella.myexpenses.source.SourceRepository;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
-import static android.support.test.InstrumentationRegistry.getTargetContext;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -37,7 +36,7 @@ public class ReceiptRepositoryTest {
 
 	@Before
 	public void setUp() throws Exception {
-		new DatabaseHelper(getTargetContext()).recreateTables();
+		MyApplication.Companion.resetDatabase();
 
 		account = new AccountBuilder().build();
 		new AccountRepository().save(account);

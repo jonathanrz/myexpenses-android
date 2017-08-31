@@ -10,7 +10,6 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
 import br.com.jonathanzanella.myexpenses.helpers.DateHelper
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapter
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapterBuilder

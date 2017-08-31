@@ -1,6 +1,5 @@
 package br.com.jonathanzanella.myexpenses.bill;
 
-import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.SmallTest;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -12,11 +11,11 @@ import org.junit.runner.RunWith;
 
 import java.util.List;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.card.Card;
 import br.com.jonathanzanella.myexpenses.card.CardRepository;
-import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
@@ -38,7 +37,7 @@ public class BillRepositoryTest {
 
 	@Before
 	public void setUp() throws Exception {
-		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
+		MyApplication.Companion.resetDatabase();
 	}
 
 	@Test

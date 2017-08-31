@@ -12,10 +12,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.card.Card;
 import br.com.jonathanzanella.myexpenses.card.CardRepository;
-import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
@@ -58,7 +58,7 @@ public class ShowAccountActivityTest {
 
 	@Before
 	public void setUp() throws Exception {
-		new DatabaseHelper(getTargetContext()).recreateTables();
+		MyApplication.Companion.resetDatabase();
 
 		repository = new AccountRepository();
 		receiptRepository = new ReceiptRepository();

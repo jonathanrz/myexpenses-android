@@ -9,16 +9,15 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
-import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.views.MainActivity;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
-import static android.support.test.InstrumentationRegistry.getTargetContext;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -37,7 +36,7 @@ public class ShowAccountInResumeTest {
 
 	@Before
 	public void setUp() throws Exception {
-		new DatabaseHelper(getTargetContext()).recreateTables();
+		MyApplication.Companion.resetDatabase();
 	}
 
 	@After

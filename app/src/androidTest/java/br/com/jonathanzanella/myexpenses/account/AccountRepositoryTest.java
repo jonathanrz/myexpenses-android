@@ -1,6 +1,5 @@
 package br.com.jonathanzanella.myexpenses.account;
 
-import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.SmallTest;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -8,7 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
+import br.com.jonathanzanella.myexpenses.MyApplication;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -21,7 +20,7 @@ public class AccountRepositoryTest {
 
 	@Before
 	public void setUp() throws Exception {
-		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
+		MyApplication.Companion.resetDatabase();
 	}
 
 	@Test

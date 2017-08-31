@@ -2,9 +2,7 @@ package br.com.jonathanzanella.myexpenses.expense;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
 
-import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.helper.builder.ExpenseBuilder;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult;
@@ -15,9 +13,6 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class ExpenseRepositoryUnitTest {
 	private ExpenseRepository subject;
-
-	@Mock
-	private Repository<Expense> repository;
 
 	@Before
 	public void setUp() throws Exception {

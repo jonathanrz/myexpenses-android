@@ -6,8 +6,6 @@ import android.support.v7.widget.GridLayoutManager
 import android.view.View
 import android.widget.FrameLayout
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
-import br.com.jonathanzanella.myexpenses.expense.Expense
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.expense.ExpenseWeeklyOverviewAdapter
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper

@@ -4,7 +4,6 @@ import android.support.annotation.WorkerThread
 import android.util.Log
 import br.com.jonathanzanella.myexpenses.MyApplication
 import br.com.jonathanzanella.myexpenses.account.Account
-import br.com.jonathanzanella.myexpenses.database.ModelRepository
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult
@@ -12,7 +11,7 @@ import org.apache.commons.lang3.StringUtils
 import org.joda.time.DateTime
 import java.util.*
 
-open class CardRepository(private val expenseRepository: ExpenseRepository) : ModelRepository<Card> {
+open class CardRepository(private val expenseRepository: ExpenseRepository) {
 
     @WorkerThread
     fun find(uuid: String): Card? {
@@ -68,7 +67,7 @@ open class CardRepository(private val expenseRepository: ExpenseRepository) : Mo
     }
 
     @WorkerThread
-    override fun syncAndSave(unsync: Card): ValidationResult {
+    fun syncAndSave(unsync: Card): ValidationResult {
         val result = validate(unsync)
         if (!result.isValid) {
             Log.w("Card sync validation failed", unsync.getData() + "\nerrors: " + result.errorsAsString)

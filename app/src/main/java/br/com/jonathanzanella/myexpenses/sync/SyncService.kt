@@ -4,12 +4,9 @@ import android.app.Service
 import android.content.Intent
 import android.util.Log
 import br.com.jonathanzanella.myexpenses.Environment
-import br.com.jonathanzanella.myexpenses.MyApplication
 import br.com.jonathanzanella.myexpenses.account.AccountApi
 import br.com.jonathanzanella.myexpenses.bill.BillApi
 import br.com.jonathanzanella.myexpenses.card.CardApi
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
-import br.com.jonathanzanella.myexpenses.expense.Expense
 import br.com.jonathanzanella.myexpenses.expense.ExpenseApi
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.receipt.ReceiptApi

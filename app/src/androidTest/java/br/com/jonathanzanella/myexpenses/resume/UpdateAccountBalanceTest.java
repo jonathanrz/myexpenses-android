@@ -8,10 +8,10 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
-import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
@@ -45,7 +45,7 @@ public class UpdateAccountBalanceTest {
 
 	@Before
 	public void setUp() throws Exception {
-		new DatabaseHelper(getTargetContext()).recreateTables();
+		MyApplication.Companion.resetDatabase();
 
 		accountRepository = new AccountRepository();
 

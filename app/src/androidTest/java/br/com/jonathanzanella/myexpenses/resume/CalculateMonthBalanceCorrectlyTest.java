@@ -1,7 +1,6 @@
 package br.com.jonathanzanella.myexpenses.resume;
 
 import android.content.Intent;
-import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.SmallTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -13,12 +12,12 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.bill.Bill;
 import br.com.jonathanzanella.myexpenses.bill.BillRepository;
-import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
@@ -59,7 +58,7 @@ public class CalculateMonthBalanceCorrectlyTest {
 
 	@Before
 	public void setUp() throws Exception {
-		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
+		MyApplication.Companion.resetDatabase();
 
 		Account a = new AccountBuilder().build();
 		assertTrue(new AccountRepository().save(a).isValid());

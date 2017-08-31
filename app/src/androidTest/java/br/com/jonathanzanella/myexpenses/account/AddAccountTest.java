@@ -13,8 +13,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.views.MainActivity;
@@ -40,7 +40,7 @@ public class AddAccountTest {
 
 	@Before
 	public void setUp() throws Exception {
-		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
+		MyApplication.Companion.resetDatabase();
 	}
 
 	@After

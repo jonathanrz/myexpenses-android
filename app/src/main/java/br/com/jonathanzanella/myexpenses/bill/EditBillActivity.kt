@@ -10,8 +10,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
-import br.com.jonathanzanella.myexpenses.expense.Expense
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch

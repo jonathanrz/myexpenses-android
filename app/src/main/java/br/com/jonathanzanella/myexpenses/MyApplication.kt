@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.Application
 import android.arch.persistence.room.Room
 import android.content.Context
-import br.com.jonathanzanella.myexpenses.database.DatabaseHelper
 import br.com.jonathanzanella.myexpenses.database.MyDatabase
 import com.facebook.stetho.Stetho
 import net.danlew.android.joda.JodaTimeAndroid
@@ -18,7 +17,6 @@ class MyApplication : Application() {
 
         JodaTimeAndroid.init(this)
         Stetho.initializeWithDefaults(this)
-        DatabaseHelper(this).runMigrations()
     }
 
     companion object {

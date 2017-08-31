@@ -10,9 +10,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder;
 
 import static android.support.test.InstrumentationRegistry.getTargetContext;
@@ -34,7 +33,7 @@ public class ListSourceActivityTest {
 
 	@Before
 	public void setUp() throws Exception {
-		new DatabaseHelper(getTargetContext()).recreateTables();
+		MyApplication.Companion.resetDatabase();
 	}
 
 	@Test

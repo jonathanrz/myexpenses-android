@@ -1,6 +1,5 @@
 package br.com.jonathanzanella.myexpenses.expense;
 
-import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.SmallTest;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -11,9 +10,9 @@ import org.junit.runner.RunWith;
 
 import java.util.List;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
-import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.overview.WeeklyPagerAdapter;
 
 import static org.hamcrest.core.Is.is;
@@ -32,7 +31,7 @@ public class ExpensesInPeriodTest {
 
 	@Before
 	public void setUp() throws Exception {
-		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
+		MyApplication.Companion.resetDatabase();
 
 		account.setName("Account");
 		accountRepository.save(account);

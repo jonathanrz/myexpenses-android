@@ -3,13 +3,12 @@ package br.com.jonathanzanella.myexpenses.source
 import android.support.annotation.WorkerThread
 import android.util.Log
 import br.com.jonathanzanella.myexpenses.MyApplication
-import br.com.jonathanzanella.myexpenses.database.ModelRepository
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult
 import org.apache.commons.lang3.StringUtils
 import java.util.*
 
-open class SourceRepository : ModelRepository<Source> {
+open class SourceRepository {
     @WorkerThread
     fun find(uuid: String): Source? {
         return MyApplication.database.sourceDao().find(uuid).blockingFirst()
@@ -50,7 +49,7 @@ open class SourceRepository : ModelRepository<Source> {
     }
 
     @WorkerThread
-    override fun syncAndSave(unsync: Source): ValidationResult {
+    fun syncAndSave(unsync: Source): ValidationResult {
         val result = validate(unsync)
         if (!result.isValid) {
             Log.w("Source sync validation failed", unsync.getData() + "\nerrors: " + result.errorsAsString)

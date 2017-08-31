@@ -9,10 +9,10 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
-import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.ExpenseBuilder;
@@ -45,7 +45,7 @@ public class ExpensesViewTest {
 
 	@Before
 	public void setUp() throws Exception {
-		new DatabaseHelper(getTargetContext()).recreateTables();
+		MyApplication.Companion.resetDatabase();
 
 		Account account = new AccountBuilder().build();
 		new AccountRepository().save(account);

@@ -2,7 +2,6 @@ package br.com.jonathanzanella.myexpenses.card
 
 import android.util.Log
 import br.com.jonathanzanella.myexpenses.MyApplication
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.server.Server
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel

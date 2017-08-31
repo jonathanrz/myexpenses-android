@@ -4,8 +4,6 @@ import android.support.annotation.WorkerThread
 import android.util.Log
 import br.com.jonathanzanella.myexpenses.MyApplication
 import br.com.jonathanzanella.myexpenses.account.AccountApi
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
-import br.com.jonathanzanella.myexpenses.expense.Expense
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.server.Server
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel

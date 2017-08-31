@@ -4,7 +4,6 @@ import android.support.annotation.WorkerThread
 import android.util.Log
 import br.com.jonathanzanella.myexpenses.MyApplication
 import br.com.jonathanzanella.myexpenses.account.Account
-import br.com.jonathanzanella.myexpenses.database.ModelRepository
 import br.com.jonathanzanella.myexpenses.helpers.DateHelper
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult
@@ -12,7 +11,7 @@ import org.apache.commons.lang3.StringUtils
 import org.joda.time.DateTime
 import java.util.*
 
-open class ReceiptRepository : ModelRepository<Receipt> {
+open class ReceiptRepository {
 
     @WorkerThread
     fun find(uuid: String): Receipt? {
@@ -80,7 +79,7 @@ open class ReceiptRepository : ModelRepository<Receipt> {
     }
 
     @WorkerThread
-    override fun syncAndSave(unsync: Receipt): ValidationResult {
+    fun syncAndSave(unsync: Receipt): ValidationResult {
         val result = validate(unsync)
         if (!result.isValid) {
             Log.w("Receipt sync validation failed", unsync.getData() + "\nerrors: " + result.errorsAsString)

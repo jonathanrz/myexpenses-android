@@ -8,7 +8,6 @@ import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.card.Card
 import br.com.jonathanzanella.myexpenses.card.CardRepository
 import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType
-import br.com.jonathanzanella.myexpenses.database.ModelRepository
 import br.com.jonathanzanella.myexpenses.helpers.DateHelper
 import br.com.jonathanzanella.myexpenses.helpers.DateHelper.firstDayOfMonth
 import br.com.jonathanzanella.myexpenses.helpers.DateHelper.lastDayOfMonth
@@ -19,7 +18,7 @@ import org.apache.commons.lang3.StringUtils
 import org.joda.time.DateTime
 import java.util.*
 
-open class ExpenseRepository() : ModelRepository<Expense> {
+open class ExpenseRepository() {
     private val cardRepository: CardRepository by lazy {
         CardRepository(this)
     }
@@ -207,7 +206,7 @@ open class ExpenseRepository() : ModelRepository<Expense> {
     }
 
     @WorkerThread
-    override fun syncAndSave(unsync: Expense): ValidationResult {
+    fun syncAndSave(unsync: Expense): ValidationResult {
         val result = validate(unsync)
         if (!result.isValid) {
             Log.w("Expense validation fail", unsync.getData() + "\nerrors: " + result.errorsAsString)

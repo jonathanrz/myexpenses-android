@@ -1,11 +1,8 @@
 package br.com.jonathanzanella.myexpenses.source;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.mockito.Mock;
 
-import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.helper.builder.SourceBuilder;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult;

@@ -3,13 +3,12 @@ package br.com.jonathanzanella.myexpenses.account
 import android.support.annotation.WorkerThread
 import android.util.Log
 import br.com.jonathanzanella.myexpenses.MyApplication
-import br.com.jonathanzanella.myexpenses.database.ModelRepository
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult
 import org.apache.commons.lang3.StringUtils
 import java.util.*
 
-open class AccountRepository : ModelRepository<Account> {
+open class AccountRepository {
     @WorkerThread
     fun find(uuid: String): Account? {
         return MyApplication.database.accountDao().find(uuid).blockingFirst()
@@ -55,7 +54,7 @@ open class AccountRepository : ModelRepository<Account> {
     }
 
     @WorkerThread
-    override fun syncAndSave(unsync: Account): ValidationResult {
+    fun syncAndSave(unsync: Account): ValidationResult {
         val result = validate(unsync)
         if (!result.isValid) {
             Log.w("Account validation fail", unsync.getData() + "\nerrors: " + result.errorsAsString)

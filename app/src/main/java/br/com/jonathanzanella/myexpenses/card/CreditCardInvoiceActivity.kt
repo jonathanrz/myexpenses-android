@@ -8,8 +8,6 @@ import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
-import br.com.jonathanzanella.myexpenses.expense.Expense
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapter
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapterBuilder
