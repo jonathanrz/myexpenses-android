@@ -1,9 +1,9 @@
 package br.com.jonathanzanella.myexpenses.source
 
 import android.support.annotation.WorkerThread
+import android.util.Log
 import br.com.jonathanzanella.myexpenses.MyApplication
 import br.com.jonathanzanella.myexpenses.database.ModelRepository
-import br.com.jonathanzanella.myexpenses.log.Log
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult
 import org.apache.commons.lang3.StringUtils
@@ -53,14 +53,14 @@ open class SourceRepository : ModelRepository<Source> {
     override fun syncAndSave(unsync: Source): ValidationResult {
         val result = validate(unsync)
         if (!result.isValid) {
-            Log.warning("Source sync validation failed", unsync.getData() + "\nerrors: " + result.errorsAsString)
+            Log.w("Source sync validation failed", unsync.getData() + "\nerrors: " + result.errorsAsString)
             return result
         }
 
         val source = find(unsync.uuid!!)
         if (source != null && source.id != unsync.id) {
             if (source.updatedAt != unsync.updatedAt)
-                Log.warning("Source overwritten", unsync.getData())
+                Log.w("Source overwritten", unsync.getData())
             unsync.id = source.id
         }
 

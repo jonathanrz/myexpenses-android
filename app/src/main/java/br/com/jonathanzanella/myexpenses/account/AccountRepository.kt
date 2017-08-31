@@ -1,9 +1,9 @@
 package br.com.jonathanzanella.myexpenses.account
 
 import android.support.annotation.WorkerThread
+import android.util.Log
 import br.com.jonathanzanella.myexpenses.MyApplication
 import br.com.jonathanzanella.myexpenses.database.ModelRepository
-import br.com.jonathanzanella.myexpenses.log.Log
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult
 import org.apache.commons.lang3.StringUtils
@@ -58,7 +58,7 @@ open class AccountRepository : ModelRepository<Account> {
     override fun syncAndSave(unsync: Account): ValidationResult {
         val result = validate(unsync)
         if (!result.isValid) {
-            Log.warning("Account sync validation failed", unsync.getData() + "\nerrors: " + result.errorsAsString)
+            Log.w("Account validation fail", unsync.getData() + "\nerrors: " + result.errorsAsString)
             return result
         }
 
@@ -66,7 +66,7 @@ open class AccountRepository : ModelRepository<Account> {
 
         if (account != null && account.id != unsync.id) {
             if (account.updatedAt != unsync.updatedAt)
-                Log.warning("Account overwritten", unsync.getData())
+                Log.w("Account overwritten", unsync.getData())
             unsync.id = account.id
         }
 

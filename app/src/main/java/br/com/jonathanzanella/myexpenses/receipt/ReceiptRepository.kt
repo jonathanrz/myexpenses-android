@@ -1,11 +1,11 @@
 package br.com.jonathanzanella.myexpenses.receipt
 
 import android.support.annotation.WorkerThread
+import android.util.Log
 import br.com.jonathanzanella.myexpenses.MyApplication
 import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.database.ModelRepository
 import br.com.jonathanzanella.myexpenses.helpers.DateHelper
-import br.com.jonathanzanella.myexpenses.log.Log
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult
 import org.apache.commons.lang3.StringUtils
@@ -83,14 +83,14 @@ open class ReceiptRepository : ModelRepository<Receipt> {
     override fun syncAndSave(unsync: Receipt): ValidationResult {
         val result = validate(unsync)
         if (!result.isValid) {
-            Log.warning("Receipt sync validation failed", unsync.getData() + "\nerrors: " + result.errorsAsString)
+            Log.w("Receipt sync validation failed", unsync.getData() + "\nerrors: " + result.errorsAsString)
             return result
         }
 
         val receipt = find(unsync.uuid!!)
         if (receipt != null && receipt.id != unsync.id) {
             if (receipt.updatedAt != unsync.updatedAt)
-                Log.warning("Receipt overwritten", unsync.getData())
+                Log.w("Receipt overwritten", unsync.getData())
             unsync.id = receipt.id
         }
 

@@ -1,10 +1,10 @@
 package br.com.jonathanzanella.myexpenses.bill
 
 import android.support.annotation.WorkerThread
+import android.util.Log
 import br.com.jonathanzanella.myexpenses.MyApplication
 import br.com.jonathanzanella.myexpenses.database.ModelRepository
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
-import br.com.jonathanzanella.myexpenses.log.Log
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult
 import org.apache.commons.lang3.StringUtils
@@ -89,14 +89,14 @@ open class BillRepository(private val expenseRepository: ExpenseRepository) : Mo
     override fun syncAndSave(unsync: Bill): ValidationResult {
         val result = validate(unsync)
         if (!result.isValid) {
-            Log.warning("Bill sync validation failed", unsync.getData() + "\nerrors: " + result.errorsAsString)
+            Log.w("Bill sync validation failed", unsync.getData() + "\nerrors: " + result.errorsAsString)
             return result
         }
 
         val bill = find(unsync.uuid!!)
         if (bill != null && bill.id != unsync.id) {
             if (bill.updatedAt != unsync.updatedAt)
-                Log.warning("Bill overwritten", unsync.getData())
+                Log.w("Bill overwritten", unsync.getData())
             unsync.id = bill.id
         }
 

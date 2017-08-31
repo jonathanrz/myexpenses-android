@@ -1,7 +1,7 @@
 package br.com.jonathanzanella.myexpenses.expense
 
+import android.util.Log
 import br.com.jonathanzanella.myexpenses.MyApplication
-import br.com.jonathanzanella.myexpenses.log.Log
 import br.com.jonathanzanella.myexpenses.server.Server
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi
@@ -22,11 +22,11 @@ class ExpenseApi(private val expenseRepository: ExpenseRepository) : UnsyncModel
             if (response.isSuccessful) {
                 return response.body()
             } else {
-                Log.error(LOG_TAG, "Index request error: " + response.message())
+                Log.e(LOG_TAG, "Index request error: " + response.message())
                 return ArrayList()
             }
         } catch (e: IOException) {
-            Log.error(LOG_TAG, "Index request error: " + e.message)
+            Log.e(LOG_TAG, "Index request error: " + e.message)
             e.printStackTrace()
             return ArrayList()
         }
@@ -44,15 +44,14 @@ class ExpenseApi(private val expenseRepository: ExpenseRepository) : UnsyncModel
             val response = caller.execute()
             if (response.isSuccessful) {
                 expenseRepository.syncAndSave(response.body())
-                Log.info(LOG_TAG, "Updated: " + expense.getData())
+                Log.i(LOG_TAG, "Updated: " + expense.getData())
             } else {
-                Log.error(LOG_TAG, "Save request error: " + response.message() + " uuid: " + expense.uuid)
+                Log.e(LOG_TAG, "Save request error: " + response.message() + " uuid: " + expense.uuid)
             }
         } catch (e: IOException) {
-            Log.error(LOG_TAG, "Save request error: " + e.message + " uuid: " + expense.uuid)
+            Log.e(LOG_TAG, "Save request error: " + e.message + " uuid: " + expense.uuid)
             e.printStackTrace()
         }
-
     }
 
     override fun syncAndSave(unsync: UnsyncModel) {

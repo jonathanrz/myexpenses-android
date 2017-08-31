@@ -1,12 +1,12 @@
 package br.com.jonathanzanella.myexpenses.bill
 
 import android.support.annotation.WorkerThread
+import android.util.Log
 import br.com.jonathanzanella.myexpenses.MyApplication
 import br.com.jonathanzanella.myexpenses.account.AccountApi
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
 import br.com.jonathanzanella.myexpenses.expense.Expense
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
-import br.com.jonathanzanella.myexpenses.log.Log
 import br.com.jonathanzanella.myexpenses.server.Server
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi
@@ -34,11 +34,11 @@ class BillApi : UnsyncModelApi<Bill> {
             if (response.isSuccessful) {
                 return response.body()
             } else {
-                Log.error(LOG_TAG, "Index request error: " + response.message())
+                Log.e(LOG_TAG, "Index request error: " + response.message())
                 return ArrayList()
             }
         } catch (e: IOException) {
-            Log.error(LOG_TAG, "Index request error: " + e.message)
+            Log.e(LOG_TAG, "Index request error: " + e.message)
             e.printStackTrace()
             return ArrayList()
         }
@@ -56,12 +56,12 @@ class BillApi : UnsyncModelApi<Bill> {
             val response = caller.execute()
             if (response.isSuccessful) {
                 billRepository.syncAndSave(response.body())
-                Log.info(LOG_TAG, "Updated: " + bill.getData())
+                Log.i(LOG_TAG, "Updated: " + bill.getData())
             } else {
-                Log.error(LOG_TAG, "Save request error: " + response.message() + " uuid: " + bill.uuid)
+                Log.e(LOG_TAG, "Save request error: " + response.message() + " uuid: " + bill.uuid)
             }
         } catch (e: IOException) {
-            Log.error(LOG_TAG, "Save request error: " + e.message + " uuid: " + bill.uuid)
+            Log.e(LOG_TAG, "Save request error: " + e.message + " uuid: " + bill.uuid)
             e.printStackTrace()
         }
 

@@ -1,6 +1,7 @@
 package br.com.jonathanzanella.myexpenses.expense
 
 import android.support.annotation.WorkerThread
+import android.util.Log
 import br.com.jonathanzanella.myexpenses.MyApplication
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.Account
@@ -9,11 +10,13 @@ import br.com.jonathanzanella.myexpenses.card.CardRepository
 import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType
 import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType.ACCOUNT
 import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType.DEBIT_CARD
-import br.com.jonathanzanella.myexpenses.database.*
+import br.com.jonathanzanella.myexpenses.database.Fields
+import br.com.jonathanzanella.myexpenses.database.ModelRepository
+import br.com.jonathanzanella.myexpenses.database.Repository
+import br.com.jonathanzanella.myexpenses.database.Where
 import br.com.jonathanzanella.myexpenses.helpers.DateHelper
 import br.com.jonathanzanella.myexpenses.helpers.DateHelper.firstDayOfMonth
 import br.com.jonathanzanella.myexpenses.helpers.DateHelper.lastDayOfMonth
-import br.com.jonathanzanella.myexpenses.log.Log
 import br.com.jonathanzanella.myexpenses.overview.WeeklyPagerAdapter
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult
@@ -273,14 +276,14 @@ open class ExpenseRepository(private val repository: Repository<Expense>) : Mode
     override fun syncAndSave(unsync: Expense): ValidationResult {
         val result = validate(unsync)
         if (!result.isValid) {
-            Log.warning("Expense sync validation failed", unsync.getData() + "\nerrors: " + result.errorsAsString)
+            Log.w("Expense sync validation failed", unsync.getData() + "\nerrors: " + result.errorsAsString)
             return result
         }
 
         val expense = find(unsync.uuid!!)
         if (expense != null && expense.id != unsync.id) {
             if (expense.updatedAt != unsync.updatedAt)
-                Log.warning("Expense overwritten", unsync.getData())
+                Log.w("Expense overwritten", unsync.getData())
             unsync.id = expense.id
         }
 

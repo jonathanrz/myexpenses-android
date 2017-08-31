@@ -1,8 +1,7 @@
 package br.com.jonathanzanella.myexpenses.source
 
+import android.util.Log
 import br.com.jonathanzanella.myexpenses.MyApplication
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
-import br.com.jonathanzanella.myexpenses.log.Log
 import br.com.jonathanzanella.myexpenses.server.Server
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi
@@ -27,11 +26,11 @@ class SourceApi : UnsyncModelApi<Source> {
             if (response.isSuccessful) {
                 response.body()
             } else {
-                Log.error(LOG_TAG, "Index request error: " + response.message())
+                Log.e(LOG_TAG, "Index request error: " + response.message())
                 ArrayList()
             }
         } catch (e: IOException) {
-            Log.error(LOG_TAG, "Index request error: " + e.message)
+            Log.e(LOG_TAG, "Index request error: " + e.message)
             e.printStackTrace()
             ArrayList()
         }
@@ -49,12 +48,12 @@ class SourceApi : UnsyncModelApi<Source> {
             val response = caller.execute()
             if (response.isSuccessful) {
                 sourceRepository.syncAndSave(response.body())
-                Log.info(LOG_TAG, "Updated: " + source.getData())
+                Log.i(LOG_TAG, "Updated: " + source.getData())
             } else {
-                Log.error(LOG_TAG, "Save request error: " + response.message() + " uuid: " + source.uuid)
+                Log.e(LOG_TAG, "Save request error: " + response.message() + " uuid: " + source.uuid)
             }
         } catch (e: IOException) {
-            Log.error(LOG_TAG, "Save request error: " + e.message + " uuid: " + source.uuid)
+            Log.e(LOG_TAG, "Save request error: " + e.message + " uuid: " + source.uuid)
             e.printStackTrace()
         }
     }

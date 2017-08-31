@@ -1,11 +1,11 @@
 package br.com.jonathanzanella.myexpenses.card
 
 import android.support.annotation.WorkerThread
+import android.util.Log
 import br.com.jonathanzanella.myexpenses.MyApplication
 import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.database.ModelRepository
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
-import br.com.jonathanzanella.myexpenses.log.Log
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult
 import org.apache.commons.lang3.StringUtils
@@ -71,14 +71,14 @@ open class CardRepository(private val expenseRepository: ExpenseRepository) : Mo
     override fun syncAndSave(unsync: Card): ValidationResult {
         val result = validate(unsync)
         if (!result.isValid) {
-            Log.warning("Card sync validation failed", unsync.getData() + "\nerrors: " + result.errorsAsString)
+            Log.w("Card sync validation failed", unsync.getData() + "\nerrors: " + result.errorsAsString)
             return result
         }
 
         val card = find(unsync.uuid!!)
         if (card != null && card.id != unsync.id) {
             if (card.updatedAt != unsync.updatedAt)
-                Log.warning("Card overwritten", unsync.getData())
+                Log.w("Card overwritten", unsync.getData())
             unsync.id = card.id
         }
 

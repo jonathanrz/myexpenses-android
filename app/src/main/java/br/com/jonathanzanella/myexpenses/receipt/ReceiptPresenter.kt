@@ -10,11 +10,11 @@ import android.os.Bundle
 import android.support.annotation.UiThread
 import android.support.annotation.WorkerThread
 import android.support.v7.app.AlertDialog
+import android.util.Log
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.account.AccountRepository
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException
-import br.com.jonathanzanella.myexpenses.log.Log
 import br.com.jonathanzanella.myexpenses.source.Source
 import br.com.jonathanzanella.myexpenses.source.SourceRepository
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult
@@ -167,7 +167,7 @@ class ReceiptPresenter(private val repository: ReceiptRepository, private val so
                     receipt = r
                     val repetitionResult = repository.save(r)
                     if (!repetitionResult.isValid)
-                        Log.error("ExpensePresenter", "Error saving repetition of receipt " + r.getData() +
+                        Log.e("ExpensePresenter", "Error saving repetition of receipt " + r.getData() +
                                 " error=" + repetitionResult.errors.toString())
                 }
             }

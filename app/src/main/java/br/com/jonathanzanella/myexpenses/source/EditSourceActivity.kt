@@ -5,11 +5,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.AppCompatEditText
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
-import br.com.jonathanzanella.myexpenses.log.Log
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.views.anko.*
 import org.jetbrains.anko.*
@@ -72,7 +71,7 @@ class EditSourceActivity : AppCompatActivity(), SourceContract.EditView {
     override fun showError(error: ValidationError) {
         when (error) {
             ValidationError.NAME -> ui.editName.error = getString(error.message)
-            else -> Log.error(this.javaClass.name, "Validation unrecognized, field:" + error)
+            else -> Log.e(this.javaClass.name, "Validation unrecognized, field:" + error)
         }
     }
 

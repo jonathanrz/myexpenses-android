@@ -8,6 +8,7 @@ import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.AppCompatEditText
 import android.text.InputType
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -23,7 +24,6 @@ import br.com.jonathanzanella.myexpenses.chargeable.ListChargeableActivity
 import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch
-import br.com.jonathanzanella.myexpenses.log.Log
 import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.views.anko.*
@@ -212,7 +212,7 @@ class EditExpenseActivity : AppCompatActivity(), ExpenseContract.EditView {
             ValidationError.NAME -> ui.name.error = getString(error.message)
             ValidationError.AMOUNT -> ui.value.error = getString(error.message)
             ValidationError.CHARGEABLE -> ui.chargeable.error = getString(error.message)
-            else -> Log.error(this.javaClass.name, "Validation unrecognized, field:" + error)
+            else -> Log.e(this.javaClass.name, "Validation unrecognized, field:" + error)
         }
     }
 
