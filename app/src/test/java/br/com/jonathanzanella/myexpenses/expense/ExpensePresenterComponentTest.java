@@ -3,6 +3,7 @@ package br.com.jonathanzanella.myexpenses.expense;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -17,6 +18,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
+@Ignore
 public class ExpensePresenterComponentTest {
 	private ExpenseRepository repository;
 	private ExpensePresenter presenter;
