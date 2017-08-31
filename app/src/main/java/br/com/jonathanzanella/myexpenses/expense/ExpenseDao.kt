@@ -26,8 +26,8 @@ interface ExpenseDao {
     @Query("SELECT * FROM Expense WHERE date >= :initDate AND date <= :endDate AND isRemoved = 0 AND chargedNextMonth = 0 AND ignoreInOverview <> 0 AND chargeableUuid = :chargeableUuid ORDER BY date")
     fun overviewCurrentMonth(initDate: Long, endDate: Long, chargeableUuid: String): Flowable<MutableList<Expense>>
 
-    @Query("SELECT * FROM Expense WHERE date >= :initDate AND date <= :endDate AND isRemoved = 0 AND chargedNextMonth = 0 AND ignoreInResume = 0 AND chargeableType = :chargeableType ORDER BY date")
-    fun resumeCurrentMonth(initDate: Long, endDate: Long, chargeableType: String): Flowable<MutableList<Expense>>
+    @Query("SELECT * FROM Expense WHERE date >= :initDate AND date <= :endDate AND isRemoved = 0 AND chargedNextMonth = 0 AND ignoreInResume = 0 AND chargeableType <> :chargeableToIgnore ORDER BY date")
+    fun resumeCurrentMonth(initDate: Long, endDate: Long, chargeableToIgnore: String): Flowable<MutableList<Expense>>
 
     @Query("SELECT * FROM Expense WHERE date >= :initDate AND date <= :endDate AND isRemoved = 0 AND chargedNextMonth = 0 AND charged = 0 AND chargeableUuid = :chargeableUuid ORDER BY date")
     fun unchargedCurrentMonth(initDate: Long, endDate: Long, chargeableUuid: String): Flowable<MutableList<Expense>>
@@ -44,8 +44,8 @@ interface ExpenseDao {
     @Query("SELECT * FROM Expense WHERE date >= :initDate AND date <= :endDate AND isRemoved = 0 AND chargedNextMonth <> 0 AND ignoreInOverview <> 0 AND chargeableUuid = :chargeableUuid ORDER BY date")
     fun overviewNextMonth(initDate: Long, endDate: Long, chargeableUuid: String): Flowable<MutableList<Expense>>
 
-    @Query("SELECT * FROM Expense WHERE date >= :initDate AND date <= :endDate AND isRemoved = 0 AND chargedNextMonth <> 0 AND ignoreInResume = 0 AND chargeableType = :chargeableType ORDER BY date")
-    fun resumeNextMonth(initDate: Long, endDate: Long, chargeableType: String): Flowable<MutableList<Expense>>
+    @Query("SELECT * FROM Expense WHERE date >= :initDate AND date <= :endDate AND isRemoved = 0 AND chargedNextMonth <> 0 AND ignoreInResume = 0 AND chargeableType <> :chargeableToIgnore ORDER BY date")
+    fun resumeNextMonth(initDate: Long, endDate: Long, chargeableToIgnore: String): Flowable<MutableList<Expense>>
 
     @Query("SELECT * FROM Expense WHERE date >= :initDate AND date <= :endDate AND isRemoved = 0 AND chargedNextMonth <> 0 AND charged = 0 AND chargeableUuid = :chargeableUuid ORDER BY date")
     fun unchargedNextMonth(initDate: Long, endDate: Long, chargeableUuid: String): Flowable<MutableList<Expense>>
