@@ -1,6 +1,5 @@
 package br.com.jonathanzanella.myexpenses.expense
 
-import android.content.Context
 import android.graphics.Typeface
 import android.support.annotation.WorkerThread
 import android.support.v7.widget.RecyclerView
@@ -11,7 +10,6 @@ import android.widget.TextView
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.card.Card
 import br.com.jonathanzanella.myexpenses.card.CardRepository
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
 import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
 import br.com.jonathanzanella.myexpenses.views.anko.resumeRowCell
@@ -20,10 +18,10 @@ import org.joda.time.DateTime
 import java.text.SimpleDateFormat
 import java.util.*
 
-class CreditCardMonthlyAdapter(context: Context) : RecyclerView.Adapter<CreditCardMonthlyAdapter.ViewHolder>() {
+class CreditCardMonthlyAdapter() : RecyclerView.Adapter<CreditCardMonthlyAdapter.ViewHolder>() {
     private var expenses: List<Expense> = ArrayList()
     private val cardRepository: CardRepository = CardRepository(
-            ExpenseRepository(RepositoryImpl<Expense>(context)))
+            ExpenseRepository())
     private var totalValue: Int = 0
 
     private enum class ViewType {

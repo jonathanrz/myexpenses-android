@@ -22,7 +22,7 @@ class ShowBillActivity : AppCompatActivity(), BillContract.View {
     private val ui = ShowBillActivityUi()
 
     init {
-        val expenseRepository = ExpenseRepository(RepositoryImpl<Expense>(this))
+        val expenseRepository = ExpenseRepository()
         presenter = BillPresenter(BillRepository(expenseRepository))
     }
 

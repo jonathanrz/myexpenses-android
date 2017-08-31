@@ -12,7 +12,6 @@ import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
@@ -85,7 +84,7 @@ public class ShowDetailScreenTest {
 	@Test
 	public void open_expense_screen_when_selecting_expense() {
 		Expense expense = new ExpenseBuilder().chargeable(account).build();
-		assertTrue(new ExpenseRepository(new RepositoryImpl<>(getTargetContext())).save(expense).isValid());
+		assertTrue(new ExpenseRepository().save(expense).isValid());
 
 		mainActivityTestRule.launchActivity(new Intent());
 

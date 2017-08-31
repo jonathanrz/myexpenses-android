@@ -18,7 +18,7 @@ class CardApi : UnsyncModelApi<Card> {
         CardRepository(expenseRepository)
     }
     private val expenseRepository: ExpenseRepository by lazy {
-        ExpenseRepository(RepositoryImpl(MyApplication.getContext()))
+        ExpenseRepository()
     }
 
     override fun index(): List<Card> {

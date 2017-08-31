@@ -13,7 +13,6 @@ import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.ExpenseBuilder;
@@ -51,7 +50,7 @@ public class ExpensesViewTest {
 		Account account = new AccountBuilder().build();
 		new AccountRepository().save(account);
 
-		ExpenseRepository repository = new ExpenseRepository(new RepositoryImpl<>(getTargetContext()));
+		ExpenseRepository repository = new ExpenseRepository();
 		expense1 = new ExpenseBuilder().chargeable(account).name("Expense1").build();
 		assertTrue(repository.save(expense1).isValid());
 		expense2 = new ExpenseBuilder().chargeable(account).name("Expense2").build();

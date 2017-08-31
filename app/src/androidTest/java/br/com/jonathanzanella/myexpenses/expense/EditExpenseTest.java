@@ -16,7 +16,6 @@ import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.ExpenseBuilder;
@@ -55,7 +54,7 @@ public class EditExpenseTest {
 				.date(DateTime.now().minusDays(1))
 				.chargeable(a)
 				.build();
-		repository = new ExpenseRepository(new RepositoryImpl<>(getTargetContext()));
+		repository = new ExpenseRepository();
 		assertTrue(repository.save(expense).isValid());
 	}
 

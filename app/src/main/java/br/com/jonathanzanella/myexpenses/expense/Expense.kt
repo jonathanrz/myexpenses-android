@@ -1,8 +1,10 @@
 package br.com.jonathanzanella.myexpenses.expense
 
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.Ignore
+import android.arch.persistence.room.PrimaryKey
 import android.support.annotation.WorkerThread
 import br.com.jonathanzanella.myexpenses.Environment
-import br.com.jonathanzanella.myexpenses.MyApplication
 import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.account.AccountRepository
 import br.com.jonathanzanella.myexpenses.bill.Bill
@@ -11,7 +13,6 @@ import br.com.jonathanzanella.myexpenses.card.Card
 import br.com.jonathanzanella.myexpenses.card.CardRepository
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable
 import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel
 import br.com.jonathanzanella.myexpenses.transaction.Transaction
@@ -19,8 +20,9 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import org.joda.time.DateTime
 
+@Entity
 class Expense : Transaction, UnsyncModel {
-
+    @PrimaryKey(autoGenerate = true)
     override var id: Long = 0
 
     @Expose override var uuid: String? = null
@@ -28,56 +30,51 @@ class Expense : Transaction, UnsyncModel {
     @Expose private var date: DateTime? = null
     @Expose var value: Int = 0
     @Expose var valueToShowInOverview: Int = 0
-    @Expose private var chargeableUuid: String? = null
-    @Expose private var chargeableType: ChargeableType? = null
+    @Expose var chargeableUuid: String? = null
+    @Expose var chargeableType: ChargeableType? = null
     @Expose var isRemoved: Boolean = false
     @Expose var billUuid: String? = null
-        internal set
-
-    @Expose var isCharged: Boolean = false
-    @Expose internal var isChargedNextMonth: Boolean = false
-    @Expose var isIgnoreInOverview: Boolean = false
-    @Expose internal var isIgnoreInResume: Boolean = false
+    @Expose var charged: Boolean = false
+    @Expose var chargedNextMonth: Boolean = false
+    @Expose var ignoreInOverview: Boolean = false
+    @Expose var ignoreInResume: Boolean = false
 
     @Expose @SerializedName("_id") override var serverId: String? = null
     @Expose @SerializedName("created_at") override var createdAt: Long = 0
     @Expose @SerializedName("updated_at") override var updatedAt: Long = 0
 
     override var sync: Boolean = false
+    @Ignore
     var creditCard: Card? = null
     var repetition = 1
         get() {
             return Math.max(field, installments)
         }
     var installments = 1
+    @Ignore
     private var chargeable: Chargeable? = null
 
     override val amount: Int
         get() = value
 
     internal val isShowInOverview: Boolean
-        get() = !isIgnoreInOverview
+        get() = !ignoreInOverview
 
     internal val isShowInResume: Boolean
-        get() = !isIgnoreInResume
+        get() = !ignoreInResume
 
     override fun credited(): Boolean {
         return true
     }
 
     override fun debited(): Boolean {
-        return isCharged
+        return charged
     }
 
     fun setChargeable(chargeable: Chargeable) {
         this.chargeable = chargeable
         chargeableType = chargeable.chargeableType
         chargeableUuid = chargeable.uuid
-    }
-
-    internal fun setChargeable(uuid: String, type: ChargeableType) {
-        chargeableType = type
-        chargeableUuid = uuid
     }
 
     val chargeableFromCache: Chargeable?
@@ -98,7 +95,7 @@ class Expense : Transaction, UnsyncModel {
 
     @WorkerThread
     fun uncharge() {
-        if (isCharged) {
+        if (charged) {
             val c = chargeableFromCache!!
             c.credit(value)
             when (c.chargeableType) {
@@ -114,7 +111,7 @@ class Expense : Transaction, UnsyncModel {
                 else
                     throw UnsupportedOperationException("Chargeable should be a card")
             }
-            isCharged = false
+            charged = false
         }
     }
 
@@ -141,9 +138,9 @@ class Expense : Transaction, UnsyncModel {
         expense.chargeableUuid = chargeableUuid
         expense.chargeableType = chargeableType
         expense.billUuid = billUuid
-        expense.isChargedNextMonth = isChargedNextMonth
-        expense.isIgnoreInOverview = isIgnoreInOverview
-        expense.isIgnoreInResume = isIgnoreInResume
+        expense.chargedNextMonth = chargedNextMonth
+        expense.ignoreInOverview = ignoreInOverview
+        expense.ignoreInResume = ignoreInResume
         expense.creditCard = creditCard
         expense.repetition = repetition
         expense.installments = installments
@@ -156,11 +153,11 @@ class Expense : Transaction, UnsyncModel {
     }
 
     internal fun showInOverview(b: Boolean) {
-        isIgnoreInOverview = !b
+        ignoreInOverview = !b
     }
 
     internal fun showInResume(b: Boolean) {
-        isIgnoreInResume = !b
+        ignoreInResume = !b
     }
 
     override fun getData(): String {
@@ -180,7 +177,7 @@ class Expense : Transaction, UnsyncModel {
             ChargeableType.ACCOUNT -> accountRepository!!.save(c as Account)
             ChargeableType.DEBIT_CARD, ChargeableType.CREDIT_CARD -> cardRepository!!.save(c as Card)
         }
-        isCharged = true
+        charged = true
         expenseRepository!!.save(this)
 
     }
@@ -221,7 +218,7 @@ class Expense : Transaction, UnsyncModel {
         private var expenseRepository: ExpenseRepository? = null
             get() {
                 if (field == null)
-                    field = ExpenseRepository(RepositoryImpl<Expense>(MyApplication.getContext()))
+                    field = ExpenseRepository()
                 return field
             }
             set(repo) {

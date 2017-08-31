@@ -44,7 +44,7 @@ class BillMonthlyResumeAdapter : RecyclerView.Adapter<BillMonthlyResumeAdapter.V
     }
 
     init {
-        val expenseRepository = ExpenseRepository(RepositoryImpl<Expense>(MyApplication.getContext()))
+        val expenseRepository = ExpenseRepository()
         billRepository = BillRepository(expenseRepository)
     }
 

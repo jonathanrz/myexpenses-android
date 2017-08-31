@@ -29,7 +29,7 @@ internal class ResumeMonthlyView(context: Context, private val month: DateTime) 
     var singleRowHeight: Int = 0
 
     private var receiptRepository = ReceiptRepository()
-    private var expenseRepository = ExpenseRepository(RepositoryImpl<Expense>(context))
+    private var expenseRepository = ExpenseRepository()
 
     private var accountAdapter = AccountAdapter(month)
     private var receiptAdapter = ReceiptMonthlyResumeAdapter(receiptRepository)

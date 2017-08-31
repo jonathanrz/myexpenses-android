@@ -13,7 +13,6 @@ import android.widget.TextView
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.bill.BillRepository
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
 import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import br.com.jonathanzanella.myexpenses.views.anko.*
@@ -25,7 +24,7 @@ class ShowExpenseActivity : AppCompatActivity(), ExpenseContract.View {
     private var presenter: ExpensePresenter
 
     init {
-        val expenseRepository = ExpenseRepository(RepositoryImpl<Expense>(this))
+        val expenseRepository = ExpenseRepository()
         val billRepository = BillRepository(expenseRepository)
         presenter = ExpensePresenter(expenseRepository, billRepository)
     }
@@ -108,7 +107,7 @@ class ShowExpenseActivity : AppCompatActivity(), ExpenseContract.View {
                 ui.chargeable.text = chargeable?.name
             }
         }.execute()
-        ui.chargeNextMonth.visibility = if (expense.isChargedNextMonth) View.VISIBLE else View.GONE
+        ui.chargeNextMonth.visibility = if (expense.chargedNextMonth) View.VISIBLE else View.GONE
     }
 
     @UiThread

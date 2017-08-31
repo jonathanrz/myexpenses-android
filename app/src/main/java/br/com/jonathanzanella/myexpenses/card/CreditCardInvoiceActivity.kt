@@ -25,7 +25,7 @@ import org.joda.time.DateTime
 class CreditCardInvoiceActivity : AppCompatActivity() {
     private var card: Card? = null
     private var initDate: DateTime? = null
-    private var cardRepository: CardRepository = CardRepository(ExpenseRepository(RepositoryImpl<Expense>(this)))
+    private var cardRepository: CardRepository = CardRepository(ExpenseRepository())
     private val ui = CreditCardInvoiceActivityUi()
 
     override fun onCreate(savedInstanceState: Bundle?) {

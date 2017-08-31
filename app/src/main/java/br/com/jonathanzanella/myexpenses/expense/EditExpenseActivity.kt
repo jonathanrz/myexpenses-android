@@ -21,7 +21,6 @@ import br.com.jonathanzanella.myexpenses.bill.ListBillActivity
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable
 import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType
 import br.com.jonathanzanella.myexpenses.chargeable.ListChargeableActivity
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch
 import br.com.jonathanzanella.myexpenses.transaction.Transaction
@@ -37,7 +36,7 @@ class EditExpenseActivity : AppCompatActivity(), ExpenseContract.EditView {
     private val presenter: ExpensePresenter
 
     init {
-        val expenseRepository = ExpenseRepository(RepositoryImpl<Expense>(this))
+        val expenseRepository = ExpenseRepository()
         presenter = ExpensePresenter(expenseRepository, BillRepository(expenseRepository))
     }
 
@@ -192,7 +191,7 @@ class EditExpenseActivity : AppCompatActivity(), ExpenseContract.EditView {
         }
         expense.value = value
         expense.valueToShowInOverview = valueToShowInOverview
-        expense.isChargedNextMonth = ui.payNextMonth.isChecked
+        expense.chargedNextMonth = ui.payNextMonth.isChecked
         expense.showInOverview(ui.showInOverview.isChecked)
         expense.showInResume(ui.showInResume.isChecked)
         expense.installments = installment
@@ -226,14 +225,14 @@ class EditExpenseActivity : AppCompatActivity(), ExpenseContract.EditView {
         ui.name.setText(expense.name)
         ui.value.setText(CurrencyHelper.format(Math.abs(expense.value)))
         ui.valueToShowInOverview.setText(CurrencyHelper.format(Math.abs(expense.valueToShowInOverview)))
-        if (expense.isCharged) {
+        if (expense.charged) {
             ui.value.setTextColor(ResourcesCompat.getColor(resources, R.color.value_unpaid, null))
             ui.repayment.isEnabled = false
         }
         if (expense.value < 0)
             ui.repayment.isChecked = true
 
-        ui.payNextMonth.isChecked = expense.isChargedNextMonth
+        ui.payNextMonth.isChecked = expense.chargedNextMonth
         ui.showInOverview.isChecked = expense.isShowInOverview
         ui.showInResume.isChecked = expense.isShowInResume
     }

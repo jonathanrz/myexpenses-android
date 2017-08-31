@@ -34,6 +34,7 @@ class MyApplication : Application() {
             database.accountDao().deleteAll()
             database.billDao().deleteAll()
             database.cardDao().deleteAll()
+            database.expenseDao().deleteAll()
             database.receiptDao().deleteAll()
             database.sourceDao().deleteAll()
         }

@@ -12,7 +12,6 @@ import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
@@ -79,7 +78,7 @@ public class UpdateAccountBalanceTest {
 	@Test
 	public void confirm_expense_should_decrease_account_balance() {
 		Expense expense = new ExpenseBuilder().chargeable(account).value(1000).build();
-		assertTrue(new ExpenseRepository(new RepositoryImpl<>(getTargetContext())).save(expense).isValid());
+		assertTrue(new ExpenseRepository().save(expense).isValid());
 
 		mainActivityTestRule.launchActivity(new Intent());
 
@@ -96,7 +95,7 @@ public class UpdateAccountBalanceTest {
 	@Test
 	public void confirm_expense_and_receipt_should_update_account_balance() {
 		Expense expense = new ExpenseBuilder().chargeable(account).value(100).build();
-		assertTrue(new ExpenseRepository(new RepositoryImpl<>(getTargetContext())).save(expense).isValid());
+		assertTrue(new ExpenseRepository().save(expense).isValid());
 
 		Receipt receipt = new ReceiptBuilder().account(account).income(1000).build();
 		assertTrue(new ReceiptRepository().save(receipt).isValid());

@@ -18,7 +18,7 @@ internal class OverviewExpensesMonthlyView(context: Context, month: DateTime) : 
     init {
         View.inflate(context, R.layout.view_overview_expenses_monthly, this)
 
-        val expenseRepository = ExpenseRepository(RepositoryImpl<Expense>(context))
+        val expenseRepository = ExpenseRepository()
 
         val adapter = WeeklyPagerAdapter(getContext(), month, object : WeeklyPagerAdapterBuilder {
             override fun buildView(ctx: Context, period: WeeklyPagerAdapter.Period): View {

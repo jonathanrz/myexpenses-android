@@ -11,11 +11,9 @@ import org.junit.runner.RunWith;
 
 import java.util.List;
 
-import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.overview.WeeklyPagerAdapter;
 
 import static org.hamcrest.core.Is.is;
@@ -25,7 +23,7 @@ import static org.junit.Assert.assertThat;
 @SmallTest
 public class ExpensesInPeriodTest {
 	private final AccountRepository accountRepository = new AccountRepository();
-	private final ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<>(MyApplication.Companion.getContext()));
+	private final ExpenseRepository expenseRepository = new ExpenseRepository();
 	private final DateTime firstDayOfJune = new DateTime(2016, 6, 1, 0, 0, 0, 0);
 	private final DateTime lastDayOfJune = firstDayOfJune.dayOfMonth().withMaximumValue();
 	private final DateTime firstDayOfJuly = firstDayOfJune.plusMonths(1);

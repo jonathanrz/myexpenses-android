@@ -1,22 +1,18 @@
 package br.com.jonathanzanella.myexpenses.account.transactions
 
-import android.content.Context
 import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.bill.BillRepository
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
-import br.com.jonathanzanella.myexpenses.expense.Expense
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
-import br.com.jonathanzanella.myexpenses.receipt.Receipt
 import br.com.jonathanzanella.myexpenses.receipt.ReceiptRepository
 import br.com.jonathanzanella.myexpenses.transaction.TransactionAdapter
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import org.joda.time.DateTime
 
-internal class MonthTransactionsPresenter(ctx: Context, private val view: MonthTransactionsContractView) {
+internal class MonthTransactionsPresenter(private val view: MonthTransactionsContractView) {
     val adapter = TransactionAdapter()
     private val receiptRepository = ReceiptRepository()
-    private val expenseRepository = ExpenseRepository(RepositoryImpl<Expense>(ctx))
+    private val expenseRepository = ExpenseRepository()
     private val billRepository = BillRepository(expenseRepository)
     private var currentBalance: Int = 0
 

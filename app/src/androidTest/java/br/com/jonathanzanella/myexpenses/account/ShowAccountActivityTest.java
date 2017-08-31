@@ -16,7 +16,6 @@ import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.card.Card;
 import br.com.jonathanzanella.myexpenses.card.CardRepository;
 import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
@@ -63,7 +62,7 @@ public class ShowAccountActivityTest {
 
 		repository = new AccountRepository();
 		receiptRepository = new ReceiptRepository();
-		expenseRepository = new ExpenseRepository(new RepositoryImpl<>(getTargetContext()));
+		expenseRepository = new ExpenseRepository();
 		cardRepository = new CardRepository(expenseRepository);
 		sourceRepository = new SourceRepository();
 

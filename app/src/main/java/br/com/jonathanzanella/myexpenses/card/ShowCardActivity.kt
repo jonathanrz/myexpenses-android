@@ -28,7 +28,7 @@ class ShowCardActivity : AppCompatActivity(), CardContract.View {
     private val ui = ShowCardActivityUi()
 
     init {
-        val expenseRepository = ExpenseRepository(RepositoryImpl<Expense>(this))
+        val expenseRepository = ExpenseRepository()
         val accountRepository = AccountRepository()
         val cardRepository = CardRepository(expenseRepository)
         presenter = CardPresenter(cardRepository, accountRepository, expenseRepository, ResourcesHelper(this))

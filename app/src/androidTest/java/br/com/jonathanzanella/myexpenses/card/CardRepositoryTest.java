@@ -10,7 +10,6 @@ import org.junit.runner.RunWith;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.CardBuilder;
@@ -35,7 +34,7 @@ public class CardRepositoryTest {
 		account = new AccountBuilder().build();
 		accountRepository = new AccountRepository();
 		accountRepository.save(account);
-		ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<>(getTargetContext()));
+		ExpenseRepository expenseRepository = new ExpenseRepository();
 		subject = new CardRepository(expenseRepository);
 	}
 

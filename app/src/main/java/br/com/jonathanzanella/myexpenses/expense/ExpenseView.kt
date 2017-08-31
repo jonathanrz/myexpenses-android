@@ -32,7 +32,7 @@ class ExpenseView@JvmOverloads constructor(
     override var filter = ""
     private val ui = ExpenseViewUI()
     internal var adapter: MonthlyPagerAdapter
-    internal var expenseRepository: ExpenseRepository = ExpenseRepository(RepositoryImpl<Expense>(context))
+    internal var expenseRepository: ExpenseRepository = ExpenseRepository()
 
     private val views = HashMap<DateTime, WeakReference<ExpenseMonthlyView>>()
 

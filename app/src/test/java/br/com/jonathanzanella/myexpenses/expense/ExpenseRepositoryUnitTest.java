@@ -22,7 +22,7 @@ public class ExpenseRepositoryUnitTest {
 	@Before
 	public void setUp() throws Exception {
 		initMocks(this);
-		subject = new ExpenseRepository(repository);
+		subject = new ExpenseRepository();
 	}
 
 	@Test

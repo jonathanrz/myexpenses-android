@@ -50,7 +50,7 @@ internal class ExpenseMonthlyResumeAdapter : RecyclerView.Adapter<ExpenseMonthly
             }
             itemView.income.text = CurrencyHelper.format(expense.value)
             itemView.income.setTypeface(null, Typeface.NORMAL)
-            if (!expense.isCharged)
+            if (!expense.charged)
                 itemView.income!!.setTypeface(null, Typeface.BOLD)
 
             object : AsyncTask<Void, Void, Chargeable>() {
@@ -158,7 +158,7 @@ internal class ExpenseMonthlyResumeAdapter : RecyclerView.Adapter<ExpenseMonthly
 
         for (expense in expenses) {
             totalValue += expense.value
-            if (!expense.isCharged)
+            if (!expense.charged)
                 totalUnpaidValue += expense.value
         }
     }

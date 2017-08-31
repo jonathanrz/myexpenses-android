@@ -17,7 +17,6 @@ import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.card.Card;
 import br.com.jonathanzanella.myexpenses.card.CardRepository;
 import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
@@ -25,7 +24,6 @@ import br.com.jonathanzanella.myexpenses.helpers.builder.BillBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.CardBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.ExpenseBuilder;
 
-import static android.support.test.InstrumentationRegistry.getTargetContext;
 import static br.com.jonathanzanella.myexpenses.helpers.TestUtils.waitForIdling;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -35,7 +33,7 @@ import static org.hamcrest.Matchers.not;
 @SmallTest
 public class BillRepositoryTest {
 	private final DateTime firstDayOfJune = new DateTime(2016, 6, 1, 0, 0, 0, 0);
-	private final ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<>(getTargetContext()));
+	private final ExpenseRepository expenseRepository = new ExpenseRepository();
 	private final BillRepository billRepository = new BillRepository(expenseRepository);
 
 	@Before

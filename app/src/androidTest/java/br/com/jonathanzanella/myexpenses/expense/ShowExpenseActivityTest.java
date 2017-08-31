@@ -17,7 +17,6 @@ import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable;
 import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
@@ -39,7 +38,7 @@ public class ShowExpenseActivityTest {
 	@Rule
 	public ActivityTestRule<ShowExpenseActivity> activityTestRule = new ActivityTestRule<>(ShowExpenseActivity.class, true, false);
 
-	private final ExpenseRepository repository = new ExpenseRepository(new RepositoryImpl<>(getTargetContext()));
+	private final ExpenseRepository repository = new ExpenseRepository();
 	private Expense expense;
 
 	@Before

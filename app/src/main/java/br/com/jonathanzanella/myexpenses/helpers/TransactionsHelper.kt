@@ -41,7 +41,7 @@ object TransactionsHelper {
     }
 
     private fun showConfirmExpenseDialog(expense: Expense, ctx: Context, dialogCallback: DialogCallback) {
-        if (expense.isCharged)
+        if (expense.charged)
             return
         var message = ctx.getString(R.string.message_confirm_expense)
         message += (" " + expense.name + " - " + expense.incomeFormatted + "?")

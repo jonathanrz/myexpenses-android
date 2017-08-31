@@ -28,7 +28,7 @@ class EditBillActivity : AppCompatActivity(), BillContract.EditView {
     private val ui = EditBillActivityUi()
 
     init {
-        val expenseRepository = ExpenseRepository(RepositoryImpl<Expense>(this))
+        val expenseRepository = ExpenseRepository()
         presenter = BillPresenter(BillRepository(expenseRepository))
     }
 

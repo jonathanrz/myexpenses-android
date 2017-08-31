@@ -27,7 +27,7 @@ class CardAdapter : RecyclerView.Adapter<CardAdapter.ViewHolder>() {
     private var callback: CardAdapterCallback? = null
 
     private val cardRepository: CardRepository
-    private val expenseRepository = ExpenseRepository(RepositoryImpl<Expense>(MyApplication.getContext()))
+    private val expenseRepository = ExpenseRepository()
 
     inner class ViewHolder(itemView: View, val ui: CardAdapterViewUI) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         private val adapterColorHelper: AdapterColorHelper

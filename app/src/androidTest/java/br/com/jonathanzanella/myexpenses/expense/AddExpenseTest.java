@@ -21,7 +21,6 @@ import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.bill.Bill;
 import br.com.jonathanzanella.myexpenses.bill.BillRepository;
 import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
@@ -30,7 +29,6 @@ import br.com.jonathanzanella.myexpenses.transaction.Transaction;
 import br.com.jonathanzanella.myexpenses.views.MainActivity;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
-import static android.support.test.InstrumentationRegistry.getTargetContext;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -149,7 +147,7 @@ public class AddExpenseTest {
 	@Test
 	public void add_new_expense_with_bill() throws Exception {
 		Bill bill = new BillBuilder().build();
-		ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<>(getTargetContext()));
+		ExpenseRepository expenseRepository = new ExpenseRepository();
 		new BillRepository(expenseRepository).save(bill);
 
 		mainActivityTestRule.launchActivity(new Intent());

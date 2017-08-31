@@ -13,7 +13,6 @@ import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
@@ -46,7 +45,7 @@ public class EditCardTest {
 
 		Account a = new AccountBuilder().build();
 		AccountRepository accountRepository = new AccountRepository();
-		ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<>(getTargetContext()));
+		ExpenseRepository expenseRepository = new ExpenseRepository();
 		accountRepository.save(a);
 
 		card = new CardBuilder().account(a).build(accountRepository);

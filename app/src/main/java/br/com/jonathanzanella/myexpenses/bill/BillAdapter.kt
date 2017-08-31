@@ -58,7 +58,7 @@ open class BillAdapter : RecyclerView.Adapter<BillAdapter.ViewHolder>() {
     }
 
     init {
-        val expenseRepository = ExpenseRepository(RepositoryImpl<Expense>(MyApplication.getContext()))
+        val expenseRepository = ExpenseRepository()
         val repository = BillRepository(expenseRepository)
         this.presenter = BillAdapterPresenter(repository)
         refreshData()

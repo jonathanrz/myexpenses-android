@@ -34,7 +34,7 @@ class SyncService : GcmTaskService() {
         apis.add(BillApi())
         apis.add(CardApi())
         apis.add(SourceApi())
-        apis.add(ExpenseApi(ExpenseRepository(RepositoryImpl<Expense>(MyApplication.getContext()))))
+        apis.add(ExpenseApi(ExpenseRepository()))
         apis.add(ReceiptApi())
     }
 

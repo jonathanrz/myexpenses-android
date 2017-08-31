@@ -14,7 +14,6 @@ import org.junit.runner.RunWith;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
@@ -36,7 +35,7 @@ public class ShowBillActivityTest {
 	public ActivityTestRule<ShowBillActivity> activityTestRule = new ActivityTestRule<>(ShowBillActivity.class, true, false);
 
 	private Bill bill;
-	private final ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<>(getTargetContext()));
+	private final ExpenseRepository expenseRepository = new ExpenseRepository();
 	private final BillRepository repository = new BillRepository(expenseRepository);
 
 	@Before
