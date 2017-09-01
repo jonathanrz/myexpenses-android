@@ -78,6 +78,7 @@ dependencies {
     implementation "org.apache.commons:commons-lang3:$rootProject.commonsLangVersion"
     implementation "com.timehop.stickyheadersrecyclerview:library:$rootProject.stickyHeadersVersion"
     implementation "com.android.support.test.espresso:espresso-idling-resource:$rootProject.ext.espressoVersion"
+    implementation "com.jakewharton.timber:timber:$rootProject.timberVersion"
 
     //Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
