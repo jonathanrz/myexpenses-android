@@ -1,10 +1,10 @@
 package br.com.jonathanzanella.myexpenses.account
 
-import android.os.AsyncTask
 import android.support.annotation.UiThread
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException
-import br.com.jonathanzanella.myexpenses.validations.ValidationResult
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 
 class AccountPresenter(private val repository: AccountRepository) {
 
@@ -58,19 +58,11 @@ class AccountPresenter(private val repository: AccountRepository) {
 
     @UiThread
     fun loadAccount(uuid: String) {
-        object : AsyncTask<Void, Void, Account>() {
+        doAsync {
+            account = repository.find(uuid)
 
-            override fun doInBackground(vararg voids: Void): Account? {
-                account = repository.find(uuid)
-                return account
-            }
-
-            override fun onPostExecute(account: Account?) {
-                super.onPostExecute(account)
-                if (account != null)
-                    updateView()
-            }
-        }.execute()
+            uiThread { account?.let { updateView() } }
+        }
     }
 
     @UiThread
@@ -81,14 +73,11 @@ class AccountPresenter(private val repository: AccountRepository) {
             account = Account()
 
         account = v.fillAccount(account!!)
-        object : AsyncTask<Void, Void, ValidationResult>() {
 
-            override fun doInBackground(vararg voids: Void): ValidationResult {
-                return repository.save(account!!)
-            }
+        doAsync {
+            val result = repository.save(account!!)
 
-            override fun onPostExecute(result: ValidationResult) {
-                super.onPostExecute(result)
+            uiThread {
                 if (result.isValid) {
                     v.finishView()
                 } else {
@@ -96,7 +85,7 @@ class AccountPresenter(private val repository: AccountRepository) {
                         v.showError(validationError)
                 }
             }
-        }.execute()
+        }
     }
 
     val uuid: String?

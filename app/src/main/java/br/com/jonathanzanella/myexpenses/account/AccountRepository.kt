@@ -8,30 +8,30 @@ import br.com.jonathanzanella.myexpenses.validations.ValidationResult
 import org.apache.commons.lang3.StringUtils
 import java.util.*
 
-open class AccountRepository {
+open class AccountRepository(private val dao: AccountDao = MyApplication.database.accountDao()) {
     @WorkerThread
     fun find(uuid: String): Account? {
-        return MyApplication.database.accountDao().find(uuid).blockingFirst()
+        return dao.find(uuid).blockingFirst()
     }
 
     @WorkerThread
     fun all(): List<Account> {
-        return MyApplication.database.accountDao().all().blockingFirst()
+        return dao.all().blockingFirst()
     }
 
     @WorkerThread
     internal fun forResumeScreen(): List<Account> {
-        return MyApplication.database.accountDao().showInResume().blockingFirst()
+        return dao.showInResume().blockingFirst()
     }
 
     @WorkerThread
     fun greaterUpdatedAt(): Long {
-        return MyApplication.database.accountDao().greaterUpdatedAt().blockingFirst().updatedAt
+        return dao.greaterUpdatedAt().blockingFirst().updatedAt
     }
 
     @WorkerThread
     fun unsync(): List<Account> {
-        return MyApplication.database.accountDao().unsync().blockingFirst()
+        return dao.unsync().blockingFirst()
     }
 
     @WorkerThread
@@ -41,7 +41,7 @@ open class AccountRepository {
             if (account.id == 0L && account.uuid == null)
                 account.uuid = UUID.randomUUID().toString()
             account.sync = false
-            account.id = MyApplication.database.accountDao().saveAtDatabase(account)
+            account.id = dao.saveAtDatabase(account)
         }
         return result
     }
@@ -70,7 +70,7 @@ open class AccountRepository {
         }
 
         unsync.sync = true
-        unsync.id = MyApplication.database.accountDao().saveAtDatabase(unsync)
+        unsync.id = dao.saveAtDatabase(unsync)
 
         return result
     }
