@@ -20,8 +20,8 @@ open class Account : Chargeable, UnsyncModel {
     @Expose override var uuid: String? = null
     @Expose override var name: String? = null
     @Expose var balance: Int = 0
-    @Expose var isAccountToPayCreditCard: Boolean = false
-    @Expose var isAccountToPayBills: Boolean = false
+    @Expose var accountToPayCreditCard: Boolean = false
+    @Expose var accountToPayBills: Boolean = false
     @Expose var showInResume = true
     @Expose @SerializedName("_id") override var serverId: String? = null
     @Expose @SerializedName("created_at") override var createdAt: Long = 0
@@ -42,6 +42,6 @@ open class Account : Chargeable, UnsyncModel {
                 "\nuuid=$uuid" +
                 "\nserverId=$serverId" +
                 "\nbalance=$balance" +
-                "\naccountToPayCreditCard=$isAccountToPayCreditCard"
+                "\naccountToPayCreditCard=$accountToPayCreditCard"
     }
 }

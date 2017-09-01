@@ -20,7 +20,7 @@ internal class MonthTransactionsPresenter(private val view: MonthTransactionsCon
         currentBalance = balance
 
         doAsync {
-            if (account.isAccountToPayBills)
+            if (account.accountToPayBills)
                 adapter.addTransactions(billRepository.monthly(month))
             adapter.addTransactions(expenseRepository.accountExpenses(account, month))
             adapter.addTransactions(receiptRepository.monthly(month, account))

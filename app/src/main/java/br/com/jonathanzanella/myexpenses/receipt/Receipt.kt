@@ -44,7 +44,7 @@ class Receipt : Transaction, UnsyncModel {
     @Expose
     var credited: Boolean = false
     @Expose
-    var isIgnoreInResume: Boolean = false
+    var ignoreInResume: Boolean = false
     @Expose
     @SerializedName("_id")
     override var serverId: String? = null
@@ -56,7 +56,7 @@ class Receipt : Transaction, UnsyncModel {
     override var updatedAt: Long = 0
     override var sync: Boolean = false
     @Expose
-    var isRemoved: Boolean = false
+    var removed: Boolean = false
     var repetition = 1
         get() = Math.max(field, installments)
     var installments = 1
@@ -109,9 +109,9 @@ class Receipt : Transaction, UnsyncModel {
     }
 
     internal var isShowInResume: Boolean
-        get() = !isIgnoreInResume
+        get() = !ignoreInResume
         set(b) {
-            isIgnoreInResume = !b
+            ignoreInResume = !b
         }
 
     val incomeFormatted: String
@@ -127,7 +127,7 @@ class Receipt : Transaction, UnsyncModel {
         receipt.income = income
         receipt.sourceUuid = sourceUuid
         receipt.accountUuid = accountUuid
-        receipt.isIgnoreInResume = isIgnoreInResume
+        receipt.ignoreInResume = ignoreInResume
         receipt.serverId = serverId
         receipt.repetition = repetition
         receipt.installments = installments
@@ -159,7 +159,7 @@ class Receipt : Transaction, UnsyncModel {
     }
 
     fun delete() {
-        isRemoved = true
+        removed = true
         sync = false
         receiptRepository.save(this)
     }

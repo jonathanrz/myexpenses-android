@@ -32,7 +32,7 @@ class Expense : Transaction, UnsyncModel {
     @Expose var valueToShowInOverview: Int = 0
     @Expose var chargeableUuid: String? = null
     @Expose var chargeableType: ChargeableType? = null
-    @Expose var isRemoved: Boolean = false
+    @Expose var removed: Boolean = false
     @Expose var billUuid: String? = null
     @Expose var charged: Boolean = false
     @Expose var chargedNextMonth: Boolean = false
@@ -166,7 +166,7 @@ class Expense : Transaction, UnsyncModel {
                 "\nserverId=" + serverId +
                 "\ndate=" + Transaction.Companion.SIMPLE_DATE_FORMAT.format(date!!.toDate()) +
                 "\nvalue=" + value +
-                "\nremoved=" + isRemoved
+                "\nremoved=" + removed
     }
 
     @WorkerThread
@@ -186,7 +186,7 @@ class Expense : Transaction, UnsyncModel {
         get() = CurrencyHelper.format(value)
 
     fun delete() {
-        isRemoved = true
+        removed = true
         sync = false
         expenseRepository!!.save(this)
     }

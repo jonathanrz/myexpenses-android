@@ -47,7 +47,7 @@ class AccountAdapter(val month : DateTime) : RecyclerView.Adapter<AccountAdapter
             name.text = acc.name
             balance.text = CurrencyHelper.format(acc.balance)
             if (accountToPayCreditCard != null)
-                accountToPayCreditCard.visibility = if (acc.isAccountToPayCreditCard) View.VISIBLE else View.GONE
+                accountToPayCreditCard.visibility = if (acc.accountToPayCreditCard) View.VISIBLE else View.GONE
         }
 
         override fun onClick(v: View) {

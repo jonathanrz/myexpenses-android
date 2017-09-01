@@ -83,8 +83,8 @@ class ShowAccountActivity : AppCompatActivity(), AccountContract.View {
     override fun showAccount(account: Account) {
         ui.accountName.text = account.name
         ui.accountBalance.text = CurrencyHelper.format(account.balance)
-        ui.accountToPayCreditCard.setText(if (account.isAccountToPayCreditCard) R.string.yes else R.string.no)
-        ui.accountToPayBills.setText(if (account.isAccountToPayBills) R.string.yes else R.string.no)
+        ui.accountToPayCreditCard.setText(if (account.accountToPayCreditCard) R.string.yes else R.string.no)
+        ui.accountToPayBills.setText(if (account.accountToPayBills) R.string.yes else R.string.no)
 
         ui.transactionsView.showTransactions(account, monthToShow!!)
     }

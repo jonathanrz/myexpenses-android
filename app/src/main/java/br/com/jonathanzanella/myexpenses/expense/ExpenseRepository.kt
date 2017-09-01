@@ -143,7 +143,7 @@ open class ExpenseRepository() {
         if (card != null)
             expenses.addAll(MyApplication.database.expenseDao().currentMonth(initOfMonth.millis, endOfMonth.millis, card.uuid!!).blockingFirst())
 
-        if (account.isAccountToPayCreditCard) {
+        if (account.accountToPayCreditCard) {
             val creditCardMonth = month.minusMonths(1)
             val cards = cardRepository.creditCards()
             for (creditCard in cards) {

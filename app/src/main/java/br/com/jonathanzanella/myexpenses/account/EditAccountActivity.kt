@@ -80,8 +80,8 @@ class EditAccountActivity : AppCompatActivity(), AccountContract.EditView {
         account.apply {
             name = ui.editName.text.toString()
             balance = getBalanceValue()
-            isAccountToPayCreditCard = ui.checkToPayCreditCard.isChecked
-            isAccountToPayBills = ui.checkToPayBill.isChecked
+            accountToPayCreditCard = ui.checkToPayCreditCard.isChecked
+            accountToPayBills = ui.checkToPayBill.isChecked
             showInResume = ui.checkShowInResume.isChecked
         }
 
@@ -107,8 +107,8 @@ class EditAccountActivity : AppCompatActivity(), AccountContract.EditView {
                 editBalance.setText(CurrencyHelper.format(balance * -1))
                 checkAccountBalanceNegative.isChecked = true
             }
-            checkToPayCreditCard.isChecked = account.isAccountToPayCreditCard
-            checkToPayBill.isChecked = account.isAccountToPayBills
+            checkToPayCreditCard.isChecked = account.accountToPayCreditCard
+            checkToPayBill.isChecked = account.accountToPayBills
             checkShowInResume.isChecked = account.showInResume
         }
     }
