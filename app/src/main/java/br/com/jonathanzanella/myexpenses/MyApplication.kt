@@ -8,7 +8,11 @@ import br.com.jonathanzanella.myexpenses.database.DB_NAME
 import br.com.jonathanzanella.myexpenses.database.MyDatabase
 import com.facebook.stetho.Stetho
 import net.danlew.android.joda.JodaTimeAndroid
+import timber.log.Timber
+import timber.log.Timber.DebugTree
 import java.lang.ref.WeakReference
+
+
 
 class MyApplication : Application() {
     override fun onCreate() {
@@ -18,6 +22,10 @@ class MyApplication : Application() {
 
         JodaTimeAndroid.init(this)
         Stetho.initializeWithDefaults(this)
+
+        if (BuildConfig.DEBUG) {
+            Timber.plant(DebugTree())
+        }
     }
 
     companion object {
