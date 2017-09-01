@@ -15,10 +15,10 @@ interface SourceDao {
     fun unsync(): Flowable<List<Source>>
 
     @Query("SELECT * FROM Source where uuid = :uuid")
-    fun find(uuid: String): Flowable<Source>
+    fun find(uuid: String): Flowable<List<Source>>
 
     @Query("SELECT * FROM Source order by updatedAt DESC limit 1")
-    fun greaterUpdatedAt(): Flowable<Source>
+    fun greaterUpdatedAt(): Flowable<List<Source>>
 
     @Query("DELETE FROM Source")
     fun deleteAll()

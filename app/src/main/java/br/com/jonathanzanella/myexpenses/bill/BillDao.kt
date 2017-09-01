@@ -15,10 +15,10 @@ interface BillDao {
     fun unsync(): Flowable<List<Bill>>
 
     @Query("SELECT * FROM Bill WHERE uuid = :uuid")
-    fun find(uuid: String): Flowable<Bill>
+    fun find(uuid: String): Flowable<List<Bill>>
 
     @Query("SELECT * FROM Bill ORDER BY updatedAt DESC LIMIT 1")
-    fun greaterUpdatedAt(): Flowable<Bill>
+    fun greaterUpdatedAt(): Flowable<List<Bill>>
 
     @Query("SELECT * FROM Bill WHERE initDate <= :date AND endDate >= :date")
     fun monthly(date: Long): Flowable<List<Bill>>

@@ -177,7 +177,7 @@ class EditReceiptActivity : AppCompatActivity(), ReceiptContract.EditView {
     override fun showReceipt(receipt: Receipt) {
         ui.editName.setText(receipt.name)
         ui.editIncome.setText(CurrencyHelper.format(receipt.income))
-        if (receipt.isCredited)
+        if (receipt.credited)
             ui.editIncome.setTextColor(ResourcesCompat.getColor(resources, R.color.value_unpaid, null))
 
         object : AsyncTask<Void, Void, Source>() {

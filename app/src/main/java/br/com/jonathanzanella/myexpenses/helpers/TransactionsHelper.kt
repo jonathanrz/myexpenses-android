@@ -23,7 +23,7 @@ object TransactionsHelper {
     }
 
     private fun showConfirmReceiptDialog(receipt: Receipt, ctx: Context, dialogCallback: DialogCallback) {
-        if (receipt.isCredited)
+        if (receipt.credited)
             return
         var message = ctx.getString(R.string.message_confirm_receipt)
         message += (" " + receipt.name + " - " + receipt.incomeFormatted + "?")

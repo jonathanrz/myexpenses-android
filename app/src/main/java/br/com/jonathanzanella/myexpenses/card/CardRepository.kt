@@ -15,7 +15,7 @@ open class CardRepository(private val expenseRepository: ExpenseRepository) {
 
     @WorkerThread
     fun find(uuid: String): Card? {
-        return MyApplication.database.cardDao().find(uuid).blockingFirst()
+        return MyApplication.database.cardDao().find(uuid).blockingFirst().firstOrNull()
     }
 
     @WorkerThread
@@ -40,7 +40,7 @@ open class CardRepository(private val expenseRepository: ExpenseRepository) {
 
     @WorkerThread
     fun greaterUpdatedAt(): Long {
-        return MyApplication.database.cardDao().greaterUpdatedAt().blockingFirst().updatedAt
+        return MyApplication.database.cardDao().greaterUpdatedAt().blockingFirst().firstOrNull()?.updatedAt ?: 0L
     }
 
     @WorkerThread
@@ -70,7 +70,7 @@ open class CardRepository(private val expenseRepository: ExpenseRepository) {
     fun syncAndSave(unsync: Card): ValidationResult {
         val result = validate(unsync)
         if (!result.isValid) {
-            Log.w("Card sync validation failed", unsync.getData() + "\nerrors: " + result.errorsAsString)
+            Log.w("Card sync valida failed", unsync.getData() + "\nerrors: " + result.errorsAsString)
             return result
         }
 

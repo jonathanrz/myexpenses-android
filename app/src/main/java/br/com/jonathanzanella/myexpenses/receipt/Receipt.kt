@@ -42,7 +42,7 @@ class Receipt : Transaction, UnsyncModel {
     @Expose
     var accountUuid: String? = null
     @Expose
-    var isCredited: Boolean = false
+    var credited: Boolean = false
     @Expose
     var isIgnoreInResume: Boolean = false
     @Expose
@@ -80,7 +80,7 @@ class Receipt : Transaction, UnsyncModel {
 
     @Ignore
     override fun credited(): Boolean {
-        return isCredited
+        return credited
     }
 
     override fun debited(): Boolean {
@@ -154,7 +154,7 @@ class Receipt : Transaction, UnsyncModel {
         val acc = loadAccount()!!
         acc.credit(income)
         accountRepository.save(acc)
-        isCredited = true
+        credited = true
         receiptRepository.save(this)
     }
 

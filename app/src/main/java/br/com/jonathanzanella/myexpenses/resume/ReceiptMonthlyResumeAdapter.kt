@@ -16,6 +16,8 @@ import br.com.jonathanzanella.myexpenses.receipt.ReceiptRepository
 import br.com.jonathanzanella.myexpenses.receipt.ShowReceiptActivity
 import br.com.jonathanzanella.myexpenses.source.Source
 import kotlinx.android.synthetic.main.row_monthly_resume_receipt.view.*
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 import org.joda.time.DateTime
 import java.text.SimpleDateFormat
 import java.util.*
@@ -51,7 +53,7 @@ internal class ReceiptMonthlyResumeAdapter(private val receiptRepository: Receip
             }
             itemView.income.text = receipt.incomeFormatted
             itemView.income.setTypeface(null, Typeface.NORMAL)
-            if (!receipt.isCredited)
+            if (!receipt.credited)
                 itemView.income!!.setTypeface(null, Typeface.BOLD)
 
             object : AsyncTask<Void, Void, Source>() {
@@ -142,20 +144,15 @@ internal class ReceiptMonthlyResumeAdapter(private val receiptRepository: Receip
     }
 
     fun loadDataAsync(month: DateTime, runnable: Runnable?) {
-        object : AsyncTask<Void, Void, Void>() {
+        doAsync {
+            receipts = receiptRepository.resume(month)
+            updateTotalValue()
 
-            override fun doInBackground(vararg voids: Void): Void? {
-                receipts = receiptRepository.resume(month)
-                updateTotalValue()
-                return null
-            }
-
-            override fun onPostExecute(aVoid: Void?) {
-                super.onPostExecute(aVoid)
+            uiThread {
                 notifyDataSetChanged()
                 runnable?.run()
             }
-        }.execute()
+        }
     }
 
     private fun getReceipt(position: Int): Receipt? {
@@ -167,7 +164,7 @@ internal class ReceiptMonthlyResumeAdapter(private val receiptRepository: Receip
         totalUnreceivedValue = 0
         for (receipt in receipts) {
             totalValue += receipt.income
-            if (!receipt.isCredited)
+            if (!receipt.credited)
                 totalUnreceivedValue += receipt.income
         }
     }

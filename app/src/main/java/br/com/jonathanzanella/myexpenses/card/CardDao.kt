@@ -21,10 +21,10 @@ interface CardDao {
     fun accountCard(cardType: String, accountUuid: String): Flowable<List<Card>>
 
     @Query("SELECT * FROM Card WHERE uuid = :uuid")
-    fun find(uuid: String): Flowable<Card>
+    fun find(uuid: String): Flowable<List<Card>>
 
     @Query("SELECT * FROM Card ORDER BY updatedAt DESC LIMIT 1")
-    fun greaterUpdatedAt(): Flowable<Card>
+    fun greaterUpdatedAt(): Flowable<List<Card>>
 
     @Query("DELETE FROM Card")
     fun deleteAll()

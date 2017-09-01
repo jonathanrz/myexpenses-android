@@ -11,7 +11,7 @@ import java.util.*
 open class AccountRepository(private val dao: AccountDao = MyApplication.database.accountDao()) {
     @WorkerThread
     fun find(uuid: String): Account? {
-        return dao.find(uuid).blockingFirst()
+        return dao.find(uuid).blockingFirst().firstOrNull()
     }
 
     @WorkerThread
@@ -26,7 +26,7 @@ open class AccountRepository(private val dao: AccountDao = MyApplication.databas
 
     @WorkerThread
     fun greaterUpdatedAt(): Long {
-        return dao.greaterUpdatedAt().blockingFirst().updatedAt
+        return dao.greaterUpdatedAt().blockingFirst().firstOrNull()?.updatedAt ?:0
     }
 
     @WorkerThread

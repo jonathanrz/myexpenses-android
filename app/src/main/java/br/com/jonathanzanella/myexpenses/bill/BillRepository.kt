@@ -13,7 +13,7 @@ import java.util.*
 open class BillRepository(private val expenseRepository: ExpenseRepository) {
     @WorkerThread
     fun find(uuid: String): Bill? {
-        return MyApplication.database.billDao().find(uuid).blockingFirst()
+        return MyApplication.database.billDao().find(uuid).blockingFirst().firstOrNull()
     }
 
     @WorkerThread
@@ -23,7 +23,7 @@ open class BillRepository(private val expenseRepository: ExpenseRepository) {
 
     @WorkerThread
     fun greaterUpdatedAt(): Long {
-        return MyApplication.database.billDao().greaterUpdatedAt().blockingFirst().updatedAt
+        return MyApplication.database.billDao().greaterUpdatedAt().blockingFirst().firstOrNull()?.updatedAt ?: 0L
     }
 
     @WorkerThread
@@ -88,7 +88,7 @@ open class BillRepository(private val expenseRepository: ExpenseRepository) {
     fun syncAndSave(unsync: Bill): ValidationResult {
         val result = validate(unsync)
         if (!result.isValid) {
-            Log.w("Bill sync validation failed", unsync.getData() + "\nerrors: " + result.errorsAsString)
+            Log.w("Bill sync valid failed", unsync.getData() + "\nerrors: " + result.errorsAsString)
             return result
         }
 

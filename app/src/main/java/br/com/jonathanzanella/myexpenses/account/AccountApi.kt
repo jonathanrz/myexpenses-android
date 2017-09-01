@@ -20,7 +20,8 @@ class AccountApi : UnsyncModelApi<Account> {
     }
 
     override fun index(): List<Account> {
-        val caller = accountInterface.index(repository.greaterUpdatedAt())
+        val lastUpdatedAt = repository.greaterUpdatedAt()
+        val caller = accountInterface.index(lastUpdatedAt)
 
         try {
             val response = caller.execute()

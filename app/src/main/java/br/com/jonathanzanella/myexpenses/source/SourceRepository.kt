@@ -11,12 +11,12 @@ import java.util.*
 open class SourceRepository {
     @WorkerThread
     fun find(uuid: String): Source? {
-        return MyApplication.database.sourceDao().find(uuid).blockingFirst()
+        return MyApplication.database.sourceDao().find(uuid).blockingFirst().firstOrNull()
     }
 
     @WorkerThread
     fun greaterUpdatedAt(): Long {
-        return MyApplication.database.sourceDao().greaterUpdatedAt().blockingFirst().updatedAt
+        return MyApplication.database.sourceDao().greaterUpdatedAt().blockingFirst().firstOrNull()?.updatedAt ?: 0L
     }
 
     @WorkerThread
@@ -52,7 +52,7 @@ open class SourceRepository {
     fun syncAndSave(unsync: Source): ValidationResult {
         val result = validate(unsync)
         if (!result.isValid) {
-            Log.w("Source sync validation failed", unsync.getData() + "\nerrors: " + result.errorsAsString)
+            Log.w("Source sync vali failed", unsync.getData() + "\nerrors: " + result.errorsAsString)
             return result
         }
 

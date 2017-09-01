@@ -18,10 +18,10 @@ interface AccountDao {
     fun showInResume(): Flowable<List<Account>>
 
     @Query("SELECT * FROM Account WHERE uuid = :uuid")
-    fun find(uuid: String): Flowable<Account>
+    fun find(uuid: String): Flowable<List<Account>>
 
     @Query("SELECT * FROM Account ORDER BY updatedAt DESC LIMIT 1")
-    fun greaterUpdatedAt(): Flowable<Account>
+    fun greaterUpdatedAt(): Flowable<List<Account>>
 
     @Query("DELETE FROM Account")
     fun deleteAll()
