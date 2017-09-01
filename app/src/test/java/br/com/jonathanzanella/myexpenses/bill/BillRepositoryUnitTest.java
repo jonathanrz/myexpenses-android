@@ -6,7 +6,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult;
@@ -17,8 +16,6 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class BillRepositoryUnitTest {
 	@Mock
-	private Repository<Bill> repository;
-	@Mock
 	private ExpenseRepository expenseRepository;
 
 	private BillRepository billRepository;
@@ -26,7 +23,7 @@ public class BillRepositoryUnitTest {
 	@Before
 	public void setUp() throws Exception {
 		initMocks(this);
-		billRepository = new BillRepository(repository, expenseRepository);
+		billRepository = new BillRepository(expenseRepository);
 	}
 
 	@Test

@@ -1,7 +1,6 @@
 package br.com.jonathanzanella.myexpenses.receipt;
 
 import android.content.Intent;
-import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.filters.MediumTest;
 import android.support.test.rule.ActivityTestRule;
@@ -13,11 +12,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
-import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
@@ -56,15 +54,15 @@ public class ReceiptsViewTest {
 
 	@Before
 	public void setUp() throws Exception {
-		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
+		MyApplication.Companion.resetDatabase();
 
-		ReceiptRepository repository = new ReceiptRepository(new RepositoryImpl<Receipt>(getTargetContext()));
+		ReceiptRepository repository = new ReceiptRepository();
 
 		Source s = new SourceBuilder().build();
-		assertTrue(new SourceRepository(new RepositoryImpl<Source>(getTargetContext())).save(s).isValid());
+		assertTrue(new SourceRepository().save(s).isValid());
 
 		Account a = new AccountBuilder().build();
-		assertTrue(new AccountRepository(new RepositoryImpl<Account>(getTargetContext())).save(a).isValid());
+		assertTrue(new AccountRepository().save(a).isValid());
 
 		receipt = new ReceiptBuilder().name("receipt1").source(s).account(a).build();
 		assertTrue(repository.save(receipt).isValid());
@@ -122,7 +120,7 @@ public class ReceiptsViewTest {
 		return onView(allOf(
 				withId(R.id.row_receipt_name),
 				allOf(
-					isDescendantOfA(withTagValue(is((Object)receipt.getUuid())))),
+					isDescendantOfA(withTagValue(is(receipt.getUuid())))),
 					withText(receipt.getName())));
 	}
 }

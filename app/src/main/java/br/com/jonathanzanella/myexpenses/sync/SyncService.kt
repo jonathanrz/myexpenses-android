@@ -2,16 +2,13 @@ package br.com.jonathanzanella.myexpenses.sync
 
 import android.app.Service
 import android.content.Intent
+import android.util.Log
 import br.com.jonathanzanella.myexpenses.Environment
-import br.com.jonathanzanella.myexpenses.MyApplication
 import br.com.jonathanzanella.myexpenses.account.AccountApi
 import br.com.jonathanzanella.myexpenses.bill.BillApi
 import br.com.jonathanzanella.myexpenses.card.CardApi
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
-import br.com.jonathanzanella.myexpenses.expense.Expense
 import br.com.jonathanzanella.myexpenses.expense.ExpenseApi
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
-import br.com.jonathanzanella.myexpenses.log.Log
 import br.com.jonathanzanella.myexpenses.receipt.ReceiptApi
 import br.com.jonathanzanella.myexpenses.server.ServerApi
 import br.com.jonathanzanella.myexpenses.source.SourceApi
@@ -34,7 +31,7 @@ class SyncService : GcmTaskService() {
         apis.add(BillApi())
         apis.add(CardApi())
         apis.add(SourceApi())
-        apis.add(ExpenseApi(ExpenseRepository(RepositoryImpl<Expense>(MyApplication.getContext()))))
+        apis.add(ExpenseApi(ExpenseRepository()))
         apis.add(ReceiptApi())
     }
 
@@ -63,11 +60,11 @@ class SyncService : GcmTaskService() {
 
     override fun onRunTask(taskParams: TaskParams?): Int {
         if (StringUtils.isEmpty(ServerData(baseContext).serverUrl) || StringUtils.isEmpty(ServerData(baseContext).serverToken)) {
-            Log.debug(LOG_TAG, "Did not executed SyncService because server url and token are not informed")
+            Log.d(LOG_TAG, "Did not executed SyncService because server url and token are not informed")
             return GcmNetworkManager.RESULT_SUCCESS
         }
 
-        Log.debug(LOG_TAG, "init SyncService, task: " + if (taskParams != null) taskParams.tag else "without task")
+        Log.d(LOG_TAG, "init SyncService, task: " + if (taskParams != null) taskParams.tag else "without task")
         totalSaved = 0
         totalUpdated = 0
 
@@ -80,39 +77,39 @@ class SyncService : GcmTaskService() {
                 notification.incrementProgress()
             }
         } else {
-            Log.debug(LOG_TAG, "error in health check")
+            Log.d(LOG_TAG, "error in health check")
             return GcmNetworkManager.RESULT_FAILURE
         }
 
         notification.showFinishedJobNotification(this, totalSaved, totalUpdated)
 
-        Log.debug(LOG_TAG, "end SyncService")
+        Log.d(LOG_TAG, "end SyncService")
         selfSchedule()
         return GcmNetworkManager.RESULT_SUCCESS
     }
 
     private fun syncApi(api: UnsyncModelApi<UnsyncModel>) {
         val logTag = LOG_TAG + "-" + api.javaClass.simpleName
-        Log.debug(logTag, "init sync")
+        Log.d(logTag, "init sync")
         val unsyncModels = api.index()
         for (unsyncModel in unsyncModels) {
             api.syncAndSave(unsyncModel)
             totalSaved++
-            Log.info(logTag, "Saved: " + unsyncModel.getData())
+            Log.i(logTag, "Saved: " + unsyncModel.getData())
         }
 
         syncLocalData(api)
-        Log.debug(logTag, "finished sync")
+        Log.d(logTag, "finished sync")
     }
 
     private fun syncLocalData(api: UnsyncModelApi<UnsyncModel>) {
         val logTag = LOG_TAG + "-" + api.javaClass.simpleName
-        Log.debug(logTag, "init of syncLocalData")
+        Log.d(logTag, "init of syncLocalData")
         for (unsyncModel in api.unsyncModels()) {
             api.save(unsyncModel)
             totalUpdated++
         }
-        Log.debug(logTag, "end of syncLocalData")
+        Log.d(logTag, "end of syncLocalData")
     }
 
     companion object {

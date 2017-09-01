@@ -3,7 +3,6 @@ package br.com.jonathanzanella.myexpenses.expense;
 import android.content.Context;
 import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
-import android.support.test.espresso.Espresso;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -16,13 +15,12 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.bill.Bill;
 import br.com.jonathanzanella.myexpenses.bill.BillRepository;
-import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
@@ -31,7 +29,6 @@ import br.com.jonathanzanella.myexpenses.transaction.Transaction;
 import br.com.jonathanzanella.myexpenses.views.MainActivity;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
-import static android.support.test.InstrumentationRegistry.getTargetContext;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -58,14 +55,14 @@ public class AddExpenseTest {
 
 	@Before
 	public void setUp() throws Exception {
-		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
+		MyApplication.Companion.resetDatabase();
 
 		UiDevice uiDevice = UiDevice.getInstance(getInstrumentation());
 		if (!uiDevice.isScreenOn())
 			uiDevice.wakeUp();
 
 		account = new AccountBuilder().build();
-		new AccountRepository(new RepositoryImpl<Account>(getTargetContext())).save(account);
+		new AccountRepository().save(account);
 	}
 
 	@After
@@ -150,8 +147,8 @@ public class AddExpenseTest {
 	@Test
 	public void add_new_expense_with_bill() throws Exception {
 		Bill bill = new BillBuilder().build();
-		ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(getTargetContext()));
-		new BillRepository(new RepositoryImpl<Bill>(getTargetContext()), expenseRepository).save(bill);
+		ExpenseRepository expenseRepository = new ExpenseRepository();
+		new BillRepository(expenseRepository).save(bill);
 
 		mainActivityTestRule.launchActivity(new Intent());
 

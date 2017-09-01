@@ -13,7 +13,6 @@ import android.widget.Toast
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.account.AccountRepository
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
 import br.com.jonathanzanella.myexpenses.expense.EditExpenseActivity
 import br.com.jonathanzanella.myexpenses.expense.Expense
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
@@ -28,9 +27,9 @@ class ShowCardActivity : AppCompatActivity(), CardContract.View {
     private val ui = ShowCardActivityUi()
 
     init {
-        val expenseRepository = ExpenseRepository(RepositoryImpl<Expense>(this))
-        val accountRepository = AccountRepository(RepositoryImpl<Account>(this))
-        val cardRepository = CardRepository(RepositoryImpl<Card>(this), expenseRepository)
+        val expenseRepository = ExpenseRepository()
+        val accountRepository = AccountRepository()
+        val cardRepository = CardRepository(expenseRepository)
         presenter = CardPresenter(cardRepository, accountRepository, expenseRepository, ResourcesHelper(this))
     }
 

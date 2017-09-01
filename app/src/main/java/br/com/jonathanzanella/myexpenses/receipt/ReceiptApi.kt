@@ -1,9 +1,8 @@
 package br.com.jonathanzanella.myexpenses.receipt
 
 import android.support.annotation.WorkerThread
+import android.util.Log
 import br.com.jonathanzanella.myexpenses.MyApplication
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
-import br.com.jonathanzanella.myexpenses.log.Log
 import br.com.jonathanzanella.myexpenses.server.Server
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi
@@ -17,7 +16,7 @@ class ReceiptApi : UnsyncModelApi<Receipt> {
         Server(MyApplication.getContext()).receiptInterface()
     }
     private val receiptRepository: ReceiptRepository by lazy {
-        ReceiptRepository(RepositoryImpl<Receipt>(MyApplication.getContext()))
+        ReceiptRepository()
     }
 
     override fun index(): List<Receipt> {
@@ -28,11 +27,11 @@ class ReceiptApi : UnsyncModelApi<Receipt> {
             if (response.isSuccessful) {
                 return response.body()
             } else {
-                Log.error(LOG_TAG, "Index request error: " + response.message())
+                Log.e(LOG_TAG, "Index request error: " + response.message())
                 return ArrayList()
             }
         } catch (e: IOException) {
-            Log.error(LOG_TAG, "Index request error: " + e.message)
+            Log.e(LOG_TAG, "Index request error: " + e.message)
             e.printStackTrace()
             return ArrayList()
         }
@@ -50,12 +49,12 @@ class ReceiptApi : UnsyncModelApi<Receipt> {
             val response = caller.execute()
             if (response.isSuccessful) {
                 receiptRepository.syncAndSave(response.body())
-                Log.info(LOG_TAG, "Updated: " + receipt.getData())
+                Log.i(LOG_TAG, "Updated: " + receipt.getData())
             } else {
-                Log.error(LOG_TAG, "Save request error: " + response.message() + " uuid: " + receipt.uuid)
+                Log.e(LOG_TAG, "Save request error: " + response.message() + " uuid: " + receipt.uuid)
             }
         } catch (e: IOException) {
-            Log.error(LOG_TAG, "Save request error: " + e.message + " uuid: " + receipt.uuid)
+            Log.e(LOG_TAG, "Save request error: " + e.message + " uuid: " + receipt.uuid)
             e.printStackTrace()
         }
 

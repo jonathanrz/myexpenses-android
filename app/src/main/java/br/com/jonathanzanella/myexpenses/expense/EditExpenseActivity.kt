@@ -8,6 +8,7 @@ import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.AppCompatEditText
 import android.text.InputType
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -20,10 +21,8 @@ import br.com.jonathanzanella.myexpenses.bill.ListBillActivity
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable
 import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType
 import br.com.jonathanzanella.myexpenses.chargeable.ListChargeableActivity
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch
-import br.com.jonathanzanella.myexpenses.log.Log
 import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.views.anko.*
@@ -37,8 +36,8 @@ class EditExpenseActivity : AppCompatActivity(), ExpenseContract.EditView {
     private val presenter: ExpensePresenter
 
     init {
-        val expenseRepository = ExpenseRepository(RepositoryImpl<Expense>(this))
-        presenter = ExpensePresenter(expenseRepository, BillRepository(RepositoryImpl<Bill>(this), expenseRepository))
+        val expenseRepository = ExpenseRepository()
+        presenter = ExpensePresenter(expenseRepository, BillRepository(expenseRepository))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -192,7 +191,7 @@ class EditExpenseActivity : AppCompatActivity(), ExpenseContract.EditView {
         }
         expense.value = value
         expense.valueToShowInOverview = valueToShowInOverview
-        expense.isChargedNextMonth = ui.payNextMonth.isChecked
+        expense.chargedNextMonth = ui.payNextMonth.isChecked
         expense.showInOverview(ui.showInOverview.isChecked)
         expense.showInResume(ui.showInResume.isChecked)
         expense.installments = installment
@@ -212,7 +211,7 @@ class EditExpenseActivity : AppCompatActivity(), ExpenseContract.EditView {
             ValidationError.NAME -> ui.name.error = getString(error.message)
             ValidationError.AMOUNT -> ui.value.error = getString(error.message)
             ValidationError.CHARGEABLE -> ui.chargeable.error = getString(error.message)
-            else -> Log.error(this.javaClass.name, "Validation unrecognized, field:" + error)
+            else -> Log.e(this.javaClass.name, "Validation unrecognized, field:" + error)
         }
     }
 
@@ -226,14 +225,14 @@ class EditExpenseActivity : AppCompatActivity(), ExpenseContract.EditView {
         ui.name.setText(expense.name)
         ui.value.setText(CurrencyHelper.format(Math.abs(expense.value)))
         ui.valueToShowInOverview.setText(CurrencyHelper.format(Math.abs(expense.valueToShowInOverview)))
-        if (expense.isCharged) {
+        if (expense.charged) {
             ui.value.setTextColor(ResourcesCompat.getColor(resources, R.color.value_unpaid, null))
             ui.repayment.isEnabled = false
         }
         if (expense.value < 0)
             ui.repayment.isChecked = true
 
-        ui.payNextMonth.isChecked = expense.isChargedNextMonth
+        ui.payNextMonth.isChecked = expense.chargedNextMonth
         ui.showInOverview.isChecked = expense.isShowInOverview
         ui.showInResume.isChecked = expense.isShowInResume
     }

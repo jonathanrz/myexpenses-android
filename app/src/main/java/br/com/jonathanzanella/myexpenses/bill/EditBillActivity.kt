@@ -5,16 +5,14 @@ import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
-import br.com.jonathanzanella.myexpenses.expense.Expense
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch
-import br.com.jonathanzanella.myexpenses.log.Log
 import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.views.anko.*
@@ -28,8 +26,8 @@ class EditBillActivity : AppCompatActivity(), BillContract.EditView {
     private val ui = EditBillActivityUi()
 
     init {
-        val expenseRepository = ExpenseRepository(RepositoryImpl<Expense>(this))
-        presenter = BillPresenter(BillRepository(RepositoryImpl<Bill>(this), expenseRepository))
+        val expenseRepository = ExpenseRepository()
+        presenter = BillPresenter(BillRepository(expenseRepository))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -139,7 +137,7 @@ class EditBillActivity : AppCompatActivity(), BillContract.EditView {
             ValidationError.DUE_DATE -> ui.editDueDate.error = getString(error.message)
             ValidationError.INIT_DATE, ValidationError.INIT_DATE_GREATER_THAN_END_DATE -> ui.editInitDate.error = getString(error.message)
             ValidationError.END_DATE -> ui.editEndDate.error = getString(error.message)
-            else -> Log.error(this.javaClass.name, "Validation unrecognized, field:" + error)
+            else -> Log.e(this.javaClass.name, "Validation unrecognized, field:" + error)
         }
     }
 

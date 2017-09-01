@@ -12,7 +12,6 @@ import android.widget.TextView
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.account.AccountRepository
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
 import br.com.jonathanzanella.myexpenses.source.Source
 import br.com.jonathanzanella.myexpenses.source.SourceRepository
@@ -24,9 +23,8 @@ class ShowReceiptActivity : AppCompatActivity(), ReceiptContract.View {
     override val context = this
     private val ui = ShowReceiptActivityUi()
 
-    private val presenter = ReceiptPresenter(ReceiptRepository(RepositoryImpl<Receipt>(this)),
-            SourceRepository(RepositoryImpl<Source>(this)),
-            AccountRepository(RepositoryImpl<Account>(this)))
+    private val presenter = ReceiptPresenter(ReceiptRepository(),
+            SourceRepository(), AccountRepository())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

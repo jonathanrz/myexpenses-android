@@ -1,10 +1,12 @@
 package br.com.jonathanzanella.myexpenses.receipt
 
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.Ignore
+import android.arch.persistence.room.PrimaryKey
+import android.support.annotation.WorkerThread
 import br.com.jonathanzanella.myexpenses.Environment
-import br.com.jonathanzanella.myexpenses.MyApplication
 import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.account.AccountRepository
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
 import br.com.jonathanzanella.myexpenses.source.Source
 import br.com.jonathanzanella.myexpenses.source.SourceRepository
@@ -14,14 +16,18 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import org.joda.time.DateTime
 
+@Entity
 class Receipt : Transaction, UnsyncModel {
-    private val accountRepository by lazy {
-        AccountRepository(RepositoryImpl<Account>(MyApplication.getContext()))
-    }
-    private val receiptRepository by lazy {
-        ReceiptRepository(RepositoryImpl<Receipt>(MyApplication.getContext()))
+    companion object {
+        private val accountRepository by lazy {
+            AccountRepository()
+        }
+        private val receiptRepository by lazy {
+            ReceiptRepository()
+        }
     }
 
+    @PrimaryKey(autoGenerate = true)
     override var id: Long = 0
     @Expose
     override var uuid: String? = null
@@ -54,12 +60,14 @@ class Receipt : Transaction, UnsyncModel {
     var repetition = 1
         get() = Math.max(field, installments)
     var installments = 1
+    @Ignore
     private var account: Account? = null
+    @Ignore
     var source: Source? = null
         get() {
             val uuid = sourceUuid
             if (field == null && uuid != null)
-                field = SourceRepository(RepositoryImpl<Source>(MyApplication.getContext())).find(uuid)
+                field = SourceRepository().find(uuid)
             return field
         }
         set(s) {
@@ -70,6 +78,7 @@ class Receipt : Transaction, UnsyncModel {
     override val amount: Int
         get() = income
 
+    @Ignore
     override fun credited(): Boolean {
         return isCredited
     }
@@ -140,6 +149,7 @@ class Receipt : Transaction, UnsyncModel {
                 "\nincome=" + income
     }
 
+    @WorkerThread
     fun credit() {
         val acc = loadAccount()!!
         acc.credit(income)

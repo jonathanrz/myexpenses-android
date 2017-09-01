@@ -10,16 +10,14 @@ import android.os.Bundle
 import android.support.annotation.UiThread
 import android.support.annotation.WorkerThread
 import android.support.v7.app.AlertDialog
-import br.com.jonathanzanella.myexpenses.MyApplication
+import android.util.Log
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.bill.Bill
 import br.com.jonathanzanella.myexpenses.bill.BillRepository
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable
 import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType
 import br.com.jonathanzanella.myexpenses.chargeable.ListChargeableActivity
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException
-import br.com.jonathanzanella.myexpenses.log.Log
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult
 import org.joda.time.DateTime
 
@@ -201,7 +199,7 @@ class ExpensePresenter(private val repository: ExpenseRepository, private val bi
                     e = e.repeat(originalName!!, i + 1)
                     val repetitionResult = repository.save(e)
                     if (!repetitionResult.isValid)
-                        Log.error("ExpensePresenter", "Error saving repetition of expense " + e.getData() +
+                        Log.e("ExpensePresenter", "Error saving repetition of expense " + e.getData() +
                                 " error=" + repetitionResult.errors.toString())
                 }
             }
@@ -268,7 +266,7 @@ class ExpensePresenter(private val repository: ExpenseRepository, private val bi
         object : AsyncTask<Void, Void, Void>() {
 
             override fun doInBackground(vararg voids: Void): Void? {
-                bill = BillRepository(RepositoryImpl<Bill>(MyApplication.getContext()), repository).find(uuid)
+                bill = BillRepository(repository).find(uuid)
                 return null
             }
 

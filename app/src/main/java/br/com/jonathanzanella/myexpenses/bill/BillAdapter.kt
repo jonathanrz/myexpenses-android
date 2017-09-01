@@ -6,10 +6,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import br.com.jonathanzanella.myexpenses.MyApplication
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
-import br.com.jonathanzanella.myexpenses.expense.Expense
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.helpers.AdapterColorHelper
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
@@ -58,8 +55,8 @@ open class BillAdapter : RecyclerView.Adapter<BillAdapter.ViewHolder>() {
     }
 
     init {
-        val expenseRepository = ExpenseRepository(RepositoryImpl<Expense>(MyApplication.getContext()))
-        val repository = BillRepository(RepositoryImpl<Bill>(MyApplication.getContext()), expenseRepository)
+        val expenseRepository = ExpenseRepository()
+        val repository = BillRepository(expenseRepository)
         this.presenter = BillAdapterPresenter(repository)
         refreshData()
     }

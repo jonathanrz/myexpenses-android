@@ -1,5 +1,7 @@
 package br.com.jonathanzanella.myexpenses.bill
 
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.PrimaryKey
 import br.com.jonathanzanella.myexpenses.helpers.DateHelper
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel
 import br.com.jonathanzanella.myexpenses.transaction.Transaction
@@ -7,7 +9,9 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import org.joda.time.DateTime
 
+@Entity
 class Bill : Transaction, UnsyncModel {
+    @PrimaryKey(autoGenerate = true)
     override var id: Long = 0
 
     @Expose override var uuid: String? = null

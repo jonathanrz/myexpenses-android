@@ -23,7 +23,7 @@ class SourceView@JvmOverloads constructor(
 ) : FrameLayout(context, attrs, defStyleAttr), RefreshableView, ResultableView, FilterableView, TabableView {
 	override var filter = ""
 	private val ui = SourceViewUI()
-    private val adapter = SourceAdapter(context)
+    private val adapter = SourceAdapter()
 
 	init {
 		addView(ui.createView(AnkoContext.Companion.create(context, this)))

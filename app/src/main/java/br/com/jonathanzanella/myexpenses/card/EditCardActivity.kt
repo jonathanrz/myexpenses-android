@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -17,11 +18,8 @@ import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.account.AccountRepository
 import br.com.jonathanzanella.myexpenses.card.CardType.CREDIT
 import br.com.jonathanzanella.myexpenses.card.CardType.DEBIT
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
-import br.com.jonathanzanella.myexpenses.expense.Expense
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.helpers.ResourcesHelper
-import br.com.jonathanzanella.myexpenses.log.Log
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.views.anko.*
 import org.jetbrains.anko.*
@@ -32,9 +30,9 @@ class EditCardActivity : AppCompatActivity(), CardContract.EditView {
     private val presenter: CardPresenter
 
     init {
-        val expenseRepository = ExpenseRepository(RepositoryImpl<Expense>(this))
-        presenter = CardPresenter(CardRepository(RepositoryImpl<Card>(this), expenseRepository),
-                AccountRepository(RepositoryImpl<Account>(this)), expenseRepository, ResourcesHelper(this))
+        val expenseRepository = ExpenseRepository()
+        presenter = CardPresenter(CardRepository(expenseRepository),
+                AccountRepository(), expenseRepository, ResourcesHelper(this))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -148,7 +146,7 @@ class EditCardActivity : AppCompatActivity(), CardContract.EditView {
             ValidationError.NAME -> ui.editName.error = getString(error.message)
             ValidationError.CARD_TYPE -> Snackbar.make(contentView!!, getString(error.message), Snackbar.LENGTH_SHORT).show()
             ValidationError.ACCOUNT -> ui.editAccount.error = getString(error.message)
-            else -> Log.error(this.javaClass.name, "Validation unrecognized, field:" + error)
+            else -> Log.e(this.javaClass.name, "Validation unrecognized, field:" + error)
         }
     }
 

@@ -5,8 +5,6 @@ import android.content.Context
 import android.view.View
 import android.widget.FrameLayout
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
-import br.com.jonathanzanella.myexpenses.expense.Expense
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapter
@@ -18,7 +16,7 @@ internal class OverviewExpensesMonthlyView(context: Context, month: DateTime) : 
     init {
         View.inflate(context, R.layout.view_overview_expenses_monthly, this)
 
-        val expenseRepository = ExpenseRepository(RepositoryImpl<Expense>(context))
+        val expenseRepository = ExpenseRepository()
 
         val adapter = WeeklyPagerAdapter(getContext(), month, object : WeeklyPagerAdapterBuilder {
             override fun buildView(ctx: Context, period: WeeklyPagerAdapter.Period): View {

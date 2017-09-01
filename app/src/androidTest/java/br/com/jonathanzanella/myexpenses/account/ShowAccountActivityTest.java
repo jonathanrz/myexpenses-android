@@ -12,11 +12,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.card.Card;
 import br.com.jonathanzanella.myexpenses.card.CardRepository;
-import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
@@ -59,13 +58,13 @@ public class ShowAccountActivityTest {
 
 	@Before
 	public void setUp() throws Exception {
-		new DatabaseHelper(getTargetContext()).recreateTables();
+		MyApplication.Companion.resetDatabase();
 
-		repository = new AccountRepository(new RepositoryImpl<Account>(getTargetContext()));
-		receiptRepository = new ReceiptRepository(new RepositoryImpl<Receipt>(getTargetContext()));
-		expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(getTargetContext()));
-		cardRepository = new CardRepository(new RepositoryImpl<Card>(getTargetContext()), expenseRepository);
-		sourceRepository = new SourceRepository(new RepositoryImpl<Source>(getTargetContext()));
+		repository = new AccountRepository();
+		receiptRepository = new ReceiptRepository();
+		expenseRepository = new ExpenseRepository();
+		cardRepository = new CardRepository(expenseRepository);
+		sourceRepository = new SourceRepository();
 
 		account = new Account();
 		account.setName("test");

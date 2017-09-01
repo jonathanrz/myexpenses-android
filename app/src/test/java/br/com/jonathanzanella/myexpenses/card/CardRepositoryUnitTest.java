@@ -6,7 +6,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
-import br.com.jonathanzanella.myexpenses.database.Repository;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helper.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helper.builder.CardBuilder;
@@ -23,13 +22,11 @@ public class CardRepositoryUnitTest {
 	private AccountRepository accountRepository;
 	@Mock
 	private ExpenseRepository expenseRepository;
-	@Mock
-	private Repository<Card> repository;
 
 	@Before
 	public void setUp() throws Exception {
 		initMocks(this);
-		subject = new CardRepository(repository, expenseRepository);
+		subject = new CardRepository(expenseRepository);
 	}
 
 	@Test

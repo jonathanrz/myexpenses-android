@@ -180,7 +180,7 @@ class CardPresenter(private val repository: CardRepository, private val accountR
         var totalExpense = 0
         for (expense in expenses) {
             totalExpense += expense.value
-            expense.isCharged = true
+            expense.charged = true
             expenseRepository.save(expense)
         }
 

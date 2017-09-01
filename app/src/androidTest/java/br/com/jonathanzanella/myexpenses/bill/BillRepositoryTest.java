@@ -1,6 +1,5 @@
 package br.com.jonathanzanella.myexpenses.bill;
 
-import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.SmallTest;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -17,8 +16,6 @@ import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.card.Card;
 import br.com.jonathanzanella.myexpenses.card.CardRepository;
-import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
@@ -26,7 +23,6 @@ import br.com.jonathanzanella.myexpenses.helpers.builder.BillBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.CardBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.ExpenseBuilder;
 
-import static android.support.test.InstrumentationRegistry.getTargetContext;
 import static br.com.jonathanzanella.myexpenses.helpers.TestUtils.waitForIdling;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -36,16 +32,16 @@ import static org.hamcrest.Matchers.not;
 @SmallTest
 public class BillRepositoryTest {
 	private final DateTime firstDayOfJune = new DateTime(2016, 6, 1, 0, 0, 0, 0);
-	private final ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(getTargetContext()));
-	private final BillRepository billRepository = new BillRepository(new RepositoryImpl<Bill>(getTargetContext()), expenseRepository);
+	private final ExpenseRepository expenseRepository = new ExpenseRepository();
+	private final BillRepository billRepository = new BillRepository(expenseRepository);
 
 	@Before
 	public void setUp() throws Exception {
-		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
+		MyApplication.Companion.resetDatabase();
 	}
 
 	@Test
-	public void can_save_account() throws Exception {
+	public void can_save_bill() throws Exception {
 		Bill bill = new BillBuilder().build();
 		billRepository.save(bill);
 
@@ -54,7 +50,7 @@ public class BillRepositoryTest {
 	}
 
 	@Test
-	public void can_load_saved_account() throws Exception {
+	public void can_load_saved_bill() throws Exception {
 		Bill savedBill = new BillBuilder().build();
 		billRepository.save(savedBill);
 
@@ -72,11 +68,11 @@ public class BillRepositoryTest {
 		billRepository.save(bill);
 
 		Account account = new AccountBuilder().build();
-		AccountRepository accountRepository = new AccountRepository(new RepositoryImpl<Account>(MyApplication.Companion.getContext()));
+		AccountRepository accountRepository = new AccountRepository();
 		accountRepository.save(account);
 
 		Card card = new CardBuilder().account(account).build(accountRepository);
-		new CardRepository(new RepositoryImpl<Card>(MyApplication.Companion.getContext()), expenseRepository).save(card);
+		new CardRepository(expenseRepository).save(card);
 
 		Expense expense = new ExpenseBuilder()
 				.date(firstDayOfJune)

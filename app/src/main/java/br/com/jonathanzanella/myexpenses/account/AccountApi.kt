@@ -1,9 +1,8 @@
 package br.com.jonathanzanella.myexpenses.account
 
 import android.support.annotation.WorkerThread
+import android.util.Log
 import br.com.jonathanzanella.myexpenses.MyApplication
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
-import br.com.jonathanzanella.myexpenses.log.Log
 import br.com.jonathanzanella.myexpenses.server.Server
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi
@@ -17,7 +16,7 @@ class AccountApi : UnsyncModelApi<Account> {
         Server(MyApplication.getContext()).accountInterface()
     }
     val repository: AccountRepository by lazy {
-        AccountRepository(RepositoryImpl<Account>(MyApplication.getContext()))
+        AccountRepository()
     }
 
     override fun index(): List<Account> {
@@ -28,11 +27,11 @@ class AccountApi : UnsyncModelApi<Account> {
             if (response.isSuccessful) {
                 return response.body()
             } else {
-                Log.error(LOG_TAG, "Index request error: " + response.message())
+                Log.e(LOG_TAG, "Index request error: " + response.message())
                 return ArrayList()
             }
         } catch (e: IOException) {
-            Log.error(LOG_TAG, "Index request error: " + e.message)
+            Log.e(LOG_TAG, "Index request error: " + e.message)
             e.printStackTrace()
             return ArrayList()
         }
@@ -50,12 +49,12 @@ class AccountApi : UnsyncModelApi<Account> {
             val response = caller.execute()
             if (response.isSuccessful) {
                 repository.syncAndSave(response.body())
-                Log.info(LOG_TAG, "Updated: " + account.getData())
+                Log.i(LOG_TAG, "Updated: " + account.getData())
             } else {
-                Log.error(LOG_TAG, "Save request error: " + response.message() + " uuid: " + account.uuid)
+                Log.e(LOG_TAG, "Save request error: " + response.message() + " uuid: " + account.uuid)
             }
         } catch (e: IOException) {
-            Log.error(LOG_TAG, "Save request error: " + e.message + " uuid: " + account.uuid)
+            Log.e(LOG_TAG, "Save request error: " + e.message + " uuid: " + account.uuid)
             e.printStackTrace()
         }
 

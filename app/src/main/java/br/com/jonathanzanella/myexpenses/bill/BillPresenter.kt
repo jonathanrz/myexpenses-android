@@ -7,6 +7,8 @@ import android.support.annotation.UiThread
 import android.support.annotation.WorkerThread
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 import org.joda.time.DateTime
 
 class BillPresenter(private val repository: BillRepository) {
@@ -112,6 +114,7 @@ class BillPresenter(private val repository: BillRepository) {
             throw InvalidMethodCallException("save", javaClass.toString(), "View should be a Edit View")
     }
 
+    @UiThread
     fun save() {
         checkEditViewSet()
 
@@ -122,13 +125,18 @@ class BillPresenter(private val repository: BillRepository) {
         }
         b.initDate = initDate
         b.endDate = endDate
-        val result = repository.save(b)
 
-        if (result.isValid) {
-            v.finishView()
-        } else {
-            for (validationError in result.errors)
-                v.showError(validationError)
+        doAsync {
+            val result = repository.save(b)
+
+            uiThread {
+                if (result.isValid) {
+                    v.finishView()
+                } else {
+                    for (validationError in result.errors)
+                        v.showError(validationError)
+                }
+            }
         }
     }
 

@@ -1,6 +1,5 @@
 package br.com.jonathanzanella.myexpenses.expense;
 
-import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.SmallTest;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -14,8 +13,6 @@ import java.util.List;
 import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
-import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.overview.WeeklyPagerAdapter;
 
 import static org.hamcrest.core.Is.is;
@@ -24,8 +21,8 @@ import static org.junit.Assert.assertThat;
 @RunWith(AndroidJUnit4.class)
 @SmallTest
 public class ExpensesInPeriodTest {
-	private final AccountRepository accountRepository = new AccountRepository(new RepositoryImpl<Account>(MyApplication.Companion.getContext()));
-	private final ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(MyApplication.Companion.getContext()));
+	private final AccountRepository accountRepository = new AccountRepository();
+	private final ExpenseRepository expenseRepository = new ExpenseRepository();
 	private final DateTime firstDayOfJune = new DateTime(2016, 6, 1, 0, 0, 0, 0);
 	private final DateTime lastDayOfJune = firstDayOfJune.dayOfMonth().withMaximumValue();
 	private final DateTime firstDayOfJuly = firstDayOfJune.plusMonths(1);
@@ -34,7 +31,7 @@ public class ExpensesInPeriodTest {
 
 	@Before
 	public void setUp() throws Exception {
-		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
+		MyApplication.Companion.resetDatabase();
 
 		account.setName("Account");
 		accountRepository.save(account);

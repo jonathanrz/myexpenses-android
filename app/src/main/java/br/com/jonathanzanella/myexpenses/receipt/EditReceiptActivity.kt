@@ -9,6 +9,7 @@ import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.AppCompatEditText
 import android.text.InputType
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.CheckBox
@@ -16,10 +17,8 @@ import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.account.AccountRepository
 import br.com.jonathanzanella.myexpenses.account.ListAccountActivity
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch
-import br.com.jonathanzanella.myexpenses.log.Log
 import br.com.jonathanzanella.myexpenses.source.ListSourceActivity
 import br.com.jonathanzanella.myexpenses.source.Source
 import br.com.jonathanzanella.myexpenses.source.SourceRepository
@@ -38,9 +37,8 @@ class EditReceiptActivity : AppCompatActivity(), ReceiptContract.EditView {
 
     override val context = this
     private val ui = EditReceiptActivityUi()
-    private val presenter: ReceiptPresenter = ReceiptPresenter(ReceiptRepository(RepositoryImpl<Receipt>(this)),
-            SourceRepository(RepositoryImpl<Source>(this)),
-            AccountRepository(RepositoryImpl<Account>(this)))
+    private val presenter: ReceiptPresenter = ReceiptPresenter(ReceiptRepository(),
+            SourceRepository(), AccountRepository())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -171,7 +169,7 @@ class EditReceiptActivity : AppCompatActivity(), ReceiptContract.EditView {
             ValidationError.AMOUNT -> ui.editIncome.error = getString(error.message)
             ValidationError.SOURCE -> ui.editSource.error = getString(error.message)
             ValidationError.ACCOUNT -> ui.editAccount.error = getString(error.message)
-            else -> Log.error(this.javaClass.name, "Validation unrecognized, field:" + error)
+            else -> Log.e(this.javaClass.name, "Validation unrecognized, field:" + error)
         }
     }
 

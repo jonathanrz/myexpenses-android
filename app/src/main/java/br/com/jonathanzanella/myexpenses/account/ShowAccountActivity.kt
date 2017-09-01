@@ -10,7 +10,6 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.transactions.TransactionsView
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
 import br.com.jonathanzanella.myexpenses.helpers.DateHelper
 import br.com.jonathanzanella.myexpenses.views.anko.*
@@ -21,7 +20,7 @@ class ShowAccountActivity : AppCompatActivity(), AccountContract.View {
     override val context = this
     private var monthToShow: DateTime? = null
     private val ui = ShowAccountActivityUi()
-    private val presenter = AccountPresenter(AccountRepository(RepositoryImpl<Account>(this)))
+    private val presenter = AccountPresenter(AccountRepository())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

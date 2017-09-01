@@ -15,16 +15,16 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
-import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder;
 import br.com.jonathanzanella.myexpenses.source.Source;
 import br.com.jonathanzanella.myexpenses.source.SourceRepository;
+import br.com.jonathanzanella.myexpenses.transaction.Transaction;
 import br.com.jonathanzanella.myexpenses.views.MainActivity;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
@@ -48,20 +48,20 @@ public class AddReceiptTest {
 	@Rule
 	public ActivityTestRule<EditReceiptActivity> editReceiptActivityTestRule = new ActivityTestRule<>(EditReceiptActivity.class);
 
-	private final SourceRepository sourceRepository = new SourceRepository(new RepositoryImpl<Source>(getTargetContext()));
+	private final SourceRepository sourceRepository = new SourceRepository();
 	private Account account;
 	private Source source;
 
 	@Before
 	public void setUp() throws Exception {
-		new DatabaseHelper(getTargetContext()).recreateTables();
+		MyApplication.Companion.resetDatabase();
 
 		UiDevice uiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
 		if (!uiDevice.isScreenOn())
 			uiDevice.wakeUp();
 
 		account = new AccountBuilder().build();
-		new AccountRepository(new RepositoryImpl<Account>(getTargetContext())).save(account);
+		new AccountRepository().save(account);
 
 		source = new SourceBuilder().build();
 		sourceRepository.save(source);
@@ -97,14 +97,15 @@ public class AddReceiptTest {
 		selectSource();
 		matchToolbarTitle(newReceiptTitle);
 
-		onView(withId(R.id.act_edit_receipt_date)).check(matches(withText(Receipt.Companion.getSIMPLE_DATE_FORMAT().format(time.toDate()))));
+		String formattedDate = Transaction.Companion.getSIMPLE_DATE_FORMAT().format(time.toDate());
+		onView(withId(R.id.act_edit_receipt_date)).check(matches(withText(formattedDate)));
 
 		clickIntoView(R.id.action_save);
 
 		matchToolbarTitle(receiptsTitle);
 
 		onView(withId(R.id.row_receipt_name)).check(matches(withText(receiptName)));
-		onView(withId(R.id.row_receipt_date)).check(matches(withText(Receipt.Companion.getSIMPLE_DATE_FORMAT().format(time.toDate()))));
+		onView(withId(R.id.row_receipt_date)).check(matches(withText(formattedDate)));
 	}
 
 	@Test

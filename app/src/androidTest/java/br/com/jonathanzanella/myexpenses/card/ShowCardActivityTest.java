@@ -12,11 +12,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
-import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
@@ -41,16 +40,16 @@ public class ShowCardActivityTest {
 	@Rule
 	public ActivityTestRule<ShowCardActivity> activityTestRule = new ActivityTestRule<>(ShowCardActivity.class, true, false);
 
-	private final ExpenseRepository expenseRepository = new ExpenseRepository(new RepositoryImpl<Expense>(getTargetContext()));
-	private final CardRepository repository = new CardRepository(new RepositoryImpl<Card>(getTargetContext()), expenseRepository);
-	private final AccountRepository accountRepository = new AccountRepository(new RepositoryImpl<Account>(getTargetContext()));
+	private final ExpenseRepository expenseRepository = new ExpenseRepository();
+	private final CardRepository repository = new CardRepository(expenseRepository);
+	private final AccountRepository accountRepository = new AccountRepository();
 
 	private Card card;
 	private Account account;
 
 	@Before
 	public void setUp() throws Exception {
-		new DatabaseHelper(getTargetContext()).recreateTables();
+		MyApplication.Companion.resetDatabase();
 
 		account = new AccountBuilder().build();
 		accountRepository.save(account);
@@ -103,8 +102,8 @@ public class ShowCardActivityTest {
 		onView(withId(R.id.act_edit_expense_chargeable)).check(matches(withText(card.getAccount().getName())));
 
 		expense1 = expenseRepository.find(expense1.getUuid());
-		assertTrue(expense1.isCharged());
+		assertTrue(expense1.getCharged());
 		expense2 = expenseRepository.find(expense1.getUuid());
-		assertTrue(expense2.isCharged());
+		assertTrue(expense2.getCharged());
 	}
 }

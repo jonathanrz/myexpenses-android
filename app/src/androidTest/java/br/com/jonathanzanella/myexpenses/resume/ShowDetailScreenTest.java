@@ -8,11 +8,10 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
-import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
@@ -49,9 +48,9 @@ public class ShowDetailScreenTest {
 
 	@Before
 	public void setUp() throws Exception {
-		new DatabaseHelper(getTargetContext()).recreateTables();
+		MyApplication.Companion.resetDatabase();
 
-		AccountRepository accountRepository = new AccountRepository(new RepositoryImpl<Account>(getTargetContext()));
+		AccountRepository accountRepository = new AccountRepository();
 
 		account = new AccountBuilder().build();
 		assertTrue(accountRepository.save(account).isValid());
@@ -65,14 +64,14 @@ public class ShowDetailScreenTest {
 	@Test
 	public void open_receipt_screen_when_selecting_receipt() {
 		Source source = new SourceBuilder().build();
-		assertTrue(new SourceRepository(new RepositoryImpl<Source>(getTargetContext())).save(source).isValid());
+		assertTrue(new SourceRepository().save(source).isValid());
 		Receipt receipt = new ReceiptBuilder().account(account).source(source).build();
-		assertTrue(new ReceiptRepository(new RepositoryImpl<Receipt>(getTargetContext())).save(receipt).isValid());
+		assertTrue(new ReceiptRepository().save(receipt).isValid());
 
 		mainActivityTestRule.launchActivity(new Intent());
 
 		onView(allOf(withId(R.id.name),
-					isDescendantOfA(withTagValue(is((Object)receipt.getUuid())))))
+					isDescendantOfA(withTagValue(is(receipt.getUuid())))))
 				.perform(scrollTo()).perform(click());
 
 		final String showReceiptTitle = getTargetContext().getString(R.string.receipt) + " " + receipt.getName();
@@ -85,12 +84,12 @@ public class ShowDetailScreenTest {
 	@Test
 	public void open_expense_screen_when_selecting_expense() {
 		Expense expense = new ExpenseBuilder().chargeable(account).build();
-		assertTrue(new ExpenseRepository(new RepositoryImpl<Expense>(getTargetContext())).save(expense).isValid());
+		assertTrue(new ExpenseRepository().save(expense).isValid());
 
 		mainActivityTestRule.launchActivity(new Intent());
 
 		onView(allOf(withId(R.id.name),
-					isDescendantOfA(withTagValue(is((Object)expense.getUuid())))))
+					isDescendantOfA(withTagValue(is(expense.getUuid())))))
 				.perform(scrollTo()).perform(click());
 
 		final String showExpenseTitle = getTargetContext().getString(R.string.expense) + " " + expense.getName();

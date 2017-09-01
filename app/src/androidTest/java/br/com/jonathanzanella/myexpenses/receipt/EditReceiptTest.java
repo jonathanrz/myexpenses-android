@@ -12,17 +12,17 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
-import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.ReceiptBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder;
 import br.com.jonathanzanella.myexpenses.source.Source;
 import br.com.jonathanzanella.myexpenses.source.SourceRepository;
+import br.com.jonathanzanella.myexpenses.transaction.Transaction;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.InstrumentationRegistry.getTargetContext;
@@ -48,20 +48,20 @@ public class EditReceiptTest {
 
 	@Before
 	public void setUp() throws Exception {
-		new DatabaseHelper(getTargetContext()).recreateTables();
+		MyApplication.Companion.resetDatabase();
 
 		Account a = new AccountBuilder().build();
-		assertTrue(new AccountRepository(new RepositoryImpl<Account>(getTargetContext())).save(a).isValid());
+		assertTrue(new AccountRepository().save(a).isValid());
 
 		Source s = new SourceBuilder().build();
-		assertTrue(new SourceRepository(new RepositoryImpl<Source>(getTargetContext())).save(s).isValid());
+		assertTrue(new SourceRepository().save(s).isValid());
 
 		receipt = new ReceiptBuilder()
 				.date(DateTime.now().minusDays(1))
 				.account(a)
 				.source(s)
 				.build();
-		repository = new ReceiptRepository(new RepositoryImpl<Receipt>(getTargetContext()));
+		repository = new ReceiptRepository();
 		assertTrue(repository.save(receipt).isValid());
 	}
 
@@ -84,7 +84,7 @@ public class EditReceiptTest {
 		final String editReceiptTitle = getTargetContext().getString(R.string.edit_receipt_title);
 		matchToolbarTitle(editReceiptTitle);
 		onView(withId(R.id.act_edit_receipt_name)).check(matches(withText(receipt.getName())));
-		String expectedDate = Receipt.Companion.getSIMPLE_DATE_FORMAT().format(receipt.getDate().toDate());
+		String expectedDate = Transaction.Companion.getSIMPLE_DATE_FORMAT().format(receipt.getDate().toDate());
 		onView(withId(R.id.act_edit_receipt_date)).check(matches(withText(expectedDate)));
 		onView(withId(R.id.act_edit_receipt_account)).check(matches(withText(receipt.getAccountFromCache().getName())));
 		clearAndTypeTextIntoView(R.id.act_edit_receipt_name, receipt.getName() + " changed");

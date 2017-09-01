@@ -1,27 +1,31 @@
 package br.com.jonathanzanella.myexpenses.card
 
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.Ignore
+import android.arch.persistence.room.PrimaryKey
 import android.support.annotation.WorkerThread
 import android.util.Log
-import br.com.jonathanzanella.myexpenses.MyApplication
 import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.account.AccountRepository
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable
 import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
+@Entity
 class Card : Chargeable, UnsyncModel {
+    @Ignore
     private var accountRepository: AccountRepository? = null
         @WorkerThread
         get() {
             if (field == null)
-                this.accountRepository = AccountRepository(RepositoryImpl<Account>(MyApplication.getContext()))
+                this.accountRepository = AccountRepository()
             return field
         }
         set
 
+    @PrimaryKey(autoGenerate = true)
     override var id: Long = 0
 
     @Expose override var uuid: String? = null

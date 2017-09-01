@@ -1,55 +1,46 @@
 package br.com.jonathanzanella.myexpenses.card
 
 import android.support.annotation.WorkerThread
+import android.util.Log
+import br.com.jonathanzanella.myexpenses.MyApplication
 import br.com.jonathanzanella.myexpenses.account.Account
-import br.com.jonathanzanella.myexpenses.database.Fields
-import br.com.jonathanzanella.myexpenses.database.ModelRepository
-import br.com.jonathanzanella.myexpenses.database.Repository
-import br.com.jonathanzanella.myexpenses.database.Where
-import br.com.jonathanzanella.myexpenses.expense.Expense
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
-import br.com.jonathanzanella.myexpenses.log.Log
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult
 import org.apache.commons.lang3.StringUtils
 import org.joda.time.DateTime
 import java.util.*
 
-open class CardRepository(private val repository: Repository<Card>, private val expenseRepository: ExpenseRepository) : ModelRepository<Card> {
-    private val table = CardTable()
+open class CardRepository(private val expenseRepository: ExpenseRepository) {
 
     @WorkerThread
     fun find(uuid: String): Card? {
-        return repository.find(table, uuid)
+        return MyApplication.database.cardDao().find(uuid).blockingFirst()
     }
 
     @WorkerThread
     fun all(): List<Card> {
-        return repository.query(table, Where(null).orderBy(Fields.NAME))
-    }
-
-    @WorkerThread
-    fun creditCards(): List<Card> {
-        return repository.query(table, Where(Fields.TYPE).eq(CardType.CREDIT.value))
-    }
-
-    @WorkerThread
-    fun accountDebitCard(account: Account): Card? {
-        return repository.querySingle(table,
-                Where(Fields.TYPE)
-                        .eq(CardType.DEBIT.value)
-                        .and(Fields.ACCOUNT_UUID)
-                        .eq(account.uuid!!))
+        return MyApplication.database.cardDao().all().blockingFirst()
     }
 
     @WorkerThread
     fun unsync(): List<Card> {
-        return repository.unsync(table)
+        return MyApplication.database.cardDao().unsync().blockingFirst()
+    }
+
+    @WorkerThread
+    fun creditCards(): List<Card> {
+        return MyApplication.database.cardDao().cards(CardType.CREDIT.value).blockingFirst()
+    }
+
+    @WorkerThread
+    fun accountDebitCard(account: Account): Card? {
+        return MyApplication.database.cardDao().accountCard(CardType.DEBIT.value, account.uuid!!).blockingFirst().firstOrNull()
     }
 
     @WorkerThread
     fun greaterUpdatedAt(): Long {
-        return repository.greaterUpdatedAt(table)
+        return MyApplication.database.cardDao().greaterUpdatedAt().blockingFirst().updatedAt
     }
 
     @WorkerThread
@@ -59,7 +50,7 @@ open class CardRepository(private val repository: Repository<Card>, private val 
             if (card.id == 0L && card.uuid == null)
                 card.uuid = UUID.randomUUID().toString()
             card.sync = false
-            repository.saveAtDatabase(table, card)
+            card.id = MyApplication.database.cardDao().saveAtDatabase(card)
         }
         return result
     }
@@ -76,37 +67,31 @@ open class CardRepository(private val repository: Repository<Card>, private val 
     }
 
     @WorkerThread
-    override fun syncAndSave(unsync: Card): ValidationResult {
+    fun syncAndSave(unsync: Card): ValidationResult {
         val result = validate(unsync)
         if (!result.isValid) {
-            Log.warning("Card sync validation failed", unsync.getData() + "\nerrors: " + result.errorsAsString)
+            Log.w("Card sync validation failed", unsync.getData() + "\nerrors: " + result.errorsAsString)
             return result
         }
 
         val card = find(unsync.uuid!!)
         if (card != null && card.id != unsync.id) {
             if (card.updatedAt != unsync.updatedAt)
-                Log.warning("Card overwritten", unsync.getData())
+                Log.w("Card overwritten", unsync.getData())
             unsync.id = card.id
         }
 
         unsync.sync = true
-        repository.saveAtDatabase(table, unsync)
+        unsync.id = MyApplication.database.cardDao().saveAtDatabase(unsync)
 
         return result
     }
 
     @WorkerThread
-    fun creditCardBills(card: Card, month: DateTime): List<Expense> {
-        return expenseRepository.unpaidCardExpenses(month, card)
-    }
+    fun creditCardBills(card: Card, month: DateTime) =
+        expenseRepository.unpaidCardExpenses(month, card)
 
     @WorkerThread
-    fun getInvoiceValue(card: Card, month: DateTime): Int {
-        var total = 0
-        for (expense in creditCardBills(card, month))
-            total += expense.value
-
-        return total
-    }
+    fun getInvoiceValue(card: Card, month: DateTime) =
+        creditCardBills(card, month).sumBy { it.value }
 }

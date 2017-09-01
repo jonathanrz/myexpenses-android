@@ -8,8 +8,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
-import br.com.jonathanzanella.myexpenses.expense.Expense
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
 import br.com.jonathanzanella.myexpenses.transaction.Transaction
@@ -22,8 +20,8 @@ class ShowBillActivity : AppCompatActivity(), BillContract.View {
     private val ui = ShowBillActivityUi()
 
     init {
-        val expenseRepository = ExpenseRepository(RepositoryImpl<Expense>(this))
-        presenter = BillPresenter(BillRepository(RepositoryImpl<Bill>(this), expenseRepository))
+        val expenseRepository = ExpenseRepository()
+        presenter = BillPresenter(BillRepository(expenseRepository))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

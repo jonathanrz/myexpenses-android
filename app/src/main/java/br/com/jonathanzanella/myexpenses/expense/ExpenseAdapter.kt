@@ -9,11 +9,9 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import br.com.jonathanzanella.myexpenses.MyApplication
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.bill.Bill
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
 import br.com.jonathanzanella.myexpenses.helpers.AdapterColorHelper
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
 import br.com.jonathanzanella.myexpenses.transaction.Transaction
@@ -21,7 +19,7 @@ import kotlinx.android.synthetic.main.row_expense.view.*
 import org.joda.time.DateTime
 
 internal open class ExpenseAdapter : RecyclerView.Adapter<ExpenseAdapter.ViewHolder>() {
-    private val expenseRepository = ExpenseRepository(RepositoryImpl<Expense>(MyApplication.getContext()))
+    private val expenseRepository = ExpenseRepository()
     private val presenter: ExpenseAdapterPresenter
     private var expenses: List<Expense> = ArrayList()
     private var date: DateTime? = null
@@ -56,7 +54,7 @@ internal open class ExpenseAdapter : RecyclerView.Adapter<ExpenseAdapter.ViewHol
                 }
             }.execute()
 
-            itemView.chargeNextMonth.visibility = if (expense.isChargedNextMonth) View.VISIBLE else View.INVISIBLE
+            itemView.chargeNextMonth.visibility = if (expense.chargedNextMonth) View.VISIBLE else View.INVISIBLE
             object : AsyncTask<Void, Void, Bill>() {
 
                 override fun doInBackground(vararg voids: Void): Bill? {

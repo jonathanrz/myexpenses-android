@@ -9,15 +9,13 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.R;
-import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.views.MainActivity;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
-import static android.support.test.InstrumentationRegistry.getTargetContext;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
@@ -38,12 +36,12 @@ public class AccountViewTest {
 
 	@Before
 	public void setUp() throws Exception {
-		new DatabaseHelper(getTargetContext()).recreateTables();
+		MyApplication.Companion.resetDatabase();
 
 		accountToShowInResume = new AccountBuilder().name("accountToShowInResume").showInResume(true).build();
 		accountToHideInResume = new AccountBuilder().name("accountToHideInResume").showInResume(false).build();
 
-		AccountRepository repository = new AccountRepository(new RepositoryImpl<Account>(getTargetContext()));
+		AccountRepository repository = new AccountRepository();
 		assertTrue(repository.save(accountToShowInResume).isValid());
 		assertTrue(repository.save(accountToHideInResume).isValid());
 	}

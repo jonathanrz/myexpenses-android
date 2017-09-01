@@ -1,37 +1,32 @@
 package br.com.jonathanzanella.myexpenses.source
 
 import android.support.annotation.WorkerThread
-import br.com.jonathanzanella.myexpenses.database.Fields
-import br.com.jonathanzanella.myexpenses.database.ModelRepository
-import br.com.jonathanzanella.myexpenses.database.Repository
-import br.com.jonathanzanella.myexpenses.database.Where
-import br.com.jonathanzanella.myexpenses.log.Log
+import android.util.Log
+import br.com.jonathanzanella.myexpenses.MyApplication
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult
 import org.apache.commons.lang3.StringUtils
 import java.util.*
 
-open class SourceRepository(private val repository: Repository<Source>) : ModelRepository<Source> {
-    private val sourceTable = SourceTable()
-
+open class SourceRepository {
     @WorkerThread
     fun find(uuid: String): Source? {
-        return repository.find(sourceTable, uuid)
+        return MyApplication.database.sourceDao().find(uuid).blockingFirst()
     }
 
     @WorkerThread
     fun greaterUpdatedAt(): Long {
-        return repository.greaterUpdatedAt(sourceTable)
+        return MyApplication.database.sourceDao().greaterUpdatedAt().blockingFirst().updatedAt
     }
 
     @WorkerThread
     fun all(): List<Source> {
-        return repository.query(sourceTable, Where(null).orderBy(Fields.NAME))
+        return MyApplication.database.sourceDao().all().blockingFirst()
     }
 
     @WorkerThread
     fun unsync(): List<Source> {
-        return repository.unsync(sourceTable)
+        return MyApplication.database.sourceDao().unsync().blockingFirst()
     }
 
     @WorkerThread
@@ -41,7 +36,7 @@ open class SourceRepository(private val repository: Repository<Source>) : ModelR
             if (source.id == 0L && source.uuid == null)
                 source.uuid = UUID.randomUUID().toString()
             source.sync = false
-            repository.saveAtDatabase(sourceTable, source)
+            source.id = MyApplication.database.sourceDao().saveAtDatabase(source)
         }
         return result
     }
@@ -54,22 +49,22 @@ open class SourceRepository(private val repository: Repository<Source>) : ModelR
     }
 
     @WorkerThread
-    override fun syncAndSave(unsync: Source): ValidationResult {
+    fun syncAndSave(unsync: Source): ValidationResult {
         val result = validate(unsync)
         if (!result.isValid) {
-            Log.warning("Source sync validation failed", unsync.getData() + "\nerrors: " + result.errorsAsString)
+            Log.w("Source sync validation failed", unsync.getData() + "\nerrors: " + result.errorsAsString)
             return result
         }
 
         val source = find(unsync.uuid!!)
         if (source != null && source.id != unsync.id) {
             if (source.updatedAt != unsync.updatedAt)
-                Log.warning("Source overwritten", unsync.getData())
+                Log.w("Source overwritten", unsync.getData())
             unsync.id = source.id
         }
 
         unsync.sync = true
-        repository.saveAtDatabase(sourceTable, unsync)
+        MyApplication.database.sourceDao().saveAtDatabase(unsync)
 
         return result
     }

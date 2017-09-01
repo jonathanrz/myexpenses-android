@@ -8,8 +8,6 @@ import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
-import br.com.jonathanzanella.myexpenses.expense.Expense
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapter
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapterBuilder
@@ -25,7 +23,7 @@ import org.joda.time.DateTime
 class CreditCardInvoiceActivity : AppCompatActivity() {
     private var card: Card? = null
     private var initDate: DateTime? = null
-    private var cardRepository: CardRepository = CardRepository(RepositoryImpl<Card>(this), ExpenseRepository(RepositoryImpl<Expense>(this)))
+    private var cardRepository: CardRepository = CardRepository(ExpenseRepository())
     private val ui = CreditCardInvoiceActivityUi()
 
     override fun onCreate(savedInstanceState: Bundle?) {

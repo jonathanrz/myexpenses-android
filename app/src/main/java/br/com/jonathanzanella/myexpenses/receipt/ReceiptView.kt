@@ -10,7 +10,6 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
 import br.com.jonathanzanella.myexpenses.helpers.DateHelper
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapter
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapterBuilder
@@ -38,7 +37,7 @@ class ReceiptView@JvmOverloads constructor(
     init {
         addView(ui.createView(AnkoContext.Companion.create(context, this)))
 
-        repository = ReceiptRepository(RepositoryImpl<Receipt>(context))
+        repository = ReceiptRepository()
         adapter = MonthlyPagerAdapter(context, object : MonthlyPagerAdapterBuilder {
             override fun buildView(ctx: Context, date: DateTime): View {
                 val view = ReceiptMonthlyView(ctx, date)

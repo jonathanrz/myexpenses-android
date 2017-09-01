@@ -10,11 +10,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TableLayout
 import android.widget.TextView
-import br.com.jonathanzanella.myexpenses.MyApplication
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.Account
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
-import br.com.jonathanzanella.myexpenses.expense.Expense
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.helpers.AdapterColorHelper
 import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
@@ -27,7 +24,7 @@ class CardAdapter : RecyclerView.Adapter<CardAdapter.ViewHolder>() {
     private var callback: CardAdapterCallback? = null
 
     private val cardRepository: CardRepository
-    private val expenseRepository = ExpenseRepository(RepositoryImpl<Expense>(MyApplication.getContext()))
+    private val expenseRepository = ExpenseRepository()
 
     inner class ViewHolder(itemView: View, val ui: CardAdapterViewUI) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         private val adapterColorHelper: AdapterColorHelper
@@ -80,7 +77,7 @@ class CardAdapter : RecyclerView.Adapter<CardAdapter.ViewHolder>() {
     }
 
     init {
-        cardRepository = CardRepository(RepositoryImpl<Card>(MyApplication.getContext()), expenseRepository)
+        cardRepository = CardRepository(expenseRepository)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

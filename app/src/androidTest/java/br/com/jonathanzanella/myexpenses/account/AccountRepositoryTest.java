@@ -1,6 +1,5 @@
 package br.com.jonathanzanella.myexpenses.account;
 
-import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.SmallTest;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -9,8 +8,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import br.com.jonathanzanella.myexpenses.MyApplication;
-import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -19,11 +16,11 @@ import static org.hamcrest.Matchers.not;
 @RunWith(AndroidJUnit4.class)
 @SmallTest
 public class AccountRepositoryTest {
-	private final AccountRepository repository = new AccountRepository(new RepositoryImpl<Account>(MyApplication.Companion.getContext()));
+	private final AccountRepository repository = new AccountRepository();
 
 	@Before
 	public void setUp() throws Exception {
-		new DatabaseHelper(InstrumentationRegistry.getTargetContext()).recreateTables();
+		MyApplication.Companion.resetDatabase();
 	}
 
 	@Test

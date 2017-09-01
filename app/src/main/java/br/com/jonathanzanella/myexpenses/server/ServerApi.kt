@@ -1,7 +1,7 @@
 package br.com.jonathanzanella.myexpenses.server
 
+import android.util.Log
 import br.com.jonathanzanella.myexpenses.MyApplication
-import br.com.jonathanzanella.myexpenses.log.Log
 import java.io.IOException
 
 class ServerApi {
@@ -16,11 +16,11 @@ class ServerApi {
             if (response.isSuccessful) {
                 return true
             } else {
-                Log.error(LOG_TAG, "Error in health-check: " + response.code() + " " + response.message())
+                Log.e(LOG_TAG, "Error in health-check: " + response.code() + " " + response.message())
                 return false
             }
         } catch (e: IOException) {
-            Log.error(LOG_TAG, "Error in health-check:" + e.message)
+            Log.e(LOG_TAG, "Error in health-check:" + e.message)
             e.printStackTrace()
             return false
         }

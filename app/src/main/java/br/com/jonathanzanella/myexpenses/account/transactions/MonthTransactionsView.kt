@@ -21,7 +21,7 @@ class MonthTransactionsView@JvmOverloads constructor(
     val simpleDateFormat = SimpleDateFormat("MMMM/yy", Locale.getDefault())
     private var singleRowHeight = context.resources.getDimensionPixelSize(R.dimen.single_row_height)
     private val monthTransactionsTemplate = resources.getString(R.string.month_transactions)
-    private val presenter = MonthTransactionsPresenter(context, this)
+    private val presenter = MonthTransactionsPresenter(this)
     private var loadTransactionsCallback: LoadTransactionsCallback? = null
 
     init {

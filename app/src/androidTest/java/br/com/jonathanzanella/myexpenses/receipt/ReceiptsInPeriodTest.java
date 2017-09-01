@@ -11,10 +11,9 @@ import org.junit.runner.RunWith;
 
 import java.util.List;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
-import br.com.jonathanzanella.myexpenses.database.DatabaseHelper;
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl;
 import br.com.jonathanzanella.myexpenses.source.Source;
 import br.com.jonathanzanella.myexpenses.source.SourceRepository;
 
@@ -32,13 +31,13 @@ public class ReceiptsInPeriodTest {
 	private final Account account = new Account();
 	private final Source source = new Source();
 
-	private final SourceRepository sourceRepository = new SourceRepository(new RepositoryImpl<Source>(getContext()));
-	private final AccountRepository accountRepository = new AccountRepository(new RepositoryImpl<Account>(getContext()));
-	private final ReceiptRepository receiptRepository = new ReceiptRepository(new RepositoryImpl<Receipt>(getContext()));
+	private final SourceRepository sourceRepository = new SourceRepository();
+	private final AccountRepository accountRepository = new AccountRepository();
+	private final ReceiptRepository receiptRepository = new ReceiptRepository();
 
 	@Before
 	public void setUp() throws Exception {
-		new DatabaseHelper(getTargetContext()).recreateTables();
+		MyApplication.Companion.resetDatabase();
 
 		account.setName("Account");
 		accountRepository.save(account);

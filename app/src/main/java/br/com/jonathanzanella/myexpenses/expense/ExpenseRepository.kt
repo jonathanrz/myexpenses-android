@@ -1,19 +1,16 @@
 package br.com.jonathanzanella.myexpenses.expense
 
 import android.support.annotation.WorkerThread
+import android.util.Log
 import br.com.jonathanzanella.myexpenses.MyApplication
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.card.Card
 import br.com.jonathanzanella.myexpenses.card.CardRepository
 import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType
-import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType.ACCOUNT
-import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType.DEBIT_CARD
-import br.com.jonathanzanella.myexpenses.database.*
 import br.com.jonathanzanella.myexpenses.helpers.DateHelper
 import br.com.jonathanzanella.myexpenses.helpers.DateHelper.firstDayOfMonth
 import br.com.jonathanzanella.myexpenses.helpers.DateHelper.lastDayOfMonth
-import br.com.jonathanzanella.myexpenses.log.Log
 import br.com.jonathanzanella.myexpenses.overview.WeeklyPagerAdapter
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult
@@ -21,20 +18,19 @@ import org.apache.commons.lang3.StringUtils
 import org.joda.time.DateTime
 import java.util.*
 
-open class ExpenseRepository(private val repository: Repository<Expense>) : ModelRepository<Expense> {
-    private val table = ExpenseTable()
+open class ExpenseRepository() {
     private val cardRepository: CardRepository by lazy {
-        CardRepository(RepositoryImpl<Card>(MyApplication.getContext()), this)
+        CardRepository(this)
     }
 
     @WorkerThread
     fun find(uuid: String): Expense? {
-        return repository.find(table, uuid)
+        return MyApplication.database.expenseDao().find(uuid).blockingFirst().firstOrNull()
     }
 
     @WorkerThread
     fun all(): List<Expense> {
-        return repository.query(table, Where(null).orderBy(Fields.DATE))
+        return MyApplication.database.expenseDao().all().blockingFirst()
     }
 
     @WorkerThread
@@ -43,17 +39,12 @@ open class ExpenseRepository(private val repository: Repository<Expense>) : Mode
         var initOfMonth = firstDayOfMonth(lastMonth)
         var endOfMonth = lastDayOfMonth(lastMonth)
 
-        val expenses = repository.query(table, queryBetweenUserDataAndNotRemoved(initOfMonth, endOfMonth)
-                .and(Fields.CHARGE_NEXT_MONTH).eq(true)
-                .orderBy(Fields.DATE)) as MutableList<Expense>
+        val expenses = MyApplication.database.expenseDao().nextMonth(initOfMonth.millis, endOfMonth.millis).blockingFirst()
 
         initOfMonth = firstDayOfMonth(month)
         endOfMonth = lastDayOfMonth(month)
 
-        expenses.addAll(repository.query(table, queryBetween(initOfMonth, endOfMonth)
-                .and(Fields.REMOVED).eq(false)
-                .and(Fields.CHARGE_NEXT_MONTH).eq(false)
-                .orderBy(Fields.DATE)))
+        expenses.addAll(MyApplication.database.expenseDao().currentMonth(initOfMonth.millis, endOfMonth.millis).blockingFirst())
 
         return expenses
     }
@@ -71,25 +62,19 @@ open class ExpenseRepository(private val repository: Repository<Expense>) : Mode
             val initOfMonth = date.minusMonths(1)
             val endOfMonth = DateHelper.lastDayOfMonth(initOfMonth)
 
-            var where = queryBetweenUserDataAndNotRemoved(initOfMonth, endOfMonth)
-                    .and(Fields.CHARGE_NEXT_MONTH).eq(true)
-                    .and(Fields.IGNORE_IN_OVERVIEW).eq(false)
-                    .orderBy(Fields.DATE)
             if (card != null)
-                where = where.and(Fields.CHARGEABLE_UUID).eq(card.uuid!!)
-            expenses.addAll(repository.query(table, where))
+                expenses.addAll(MyApplication.database.expenseDao().overviewNextMonth(initOfMonth.millis, endOfMonth.millis, card.uuid!!).blockingFirst())
+            else
+                expenses.addAll(MyApplication.database.expenseDao().overviewNextMonth(initOfMonth.millis, endOfMonth.millis).blockingFirst())
         }
 
         val init = DateHelper.firstMillisOfDay(period.init!!)
         val end = DateHelper.lastMillisOfDay(period.end!!)
 
-        var where = queryBetweenUserDataAndNotRemoved(init, end)
-                .and(Fields.CHARGE_NEXT_MONTH).eq(false)
-                .and(Fields.IGNORE_IN_OVERVIEW).eq(false)
-                .orderBy(Fields.DATE)
         if (card != null)
-            where = where.and(Fields.CHARGEABLE_UUID).eq(card.uuid!!)
-        expenses.addAll(repository.query(table, where))
+            expenses.addAll(MyApplication.database.expenseDao().overviewCurrentMonth(init.millis, end.millis, card.uuid!!).blockingFirst())
+        else
+            expenses.addAll(MyApplication.database.expenseDao().overviewCurrentMonth(init.millis, end.millis).blockingFirst())
 
         return expenses
     }
@@ -99,21 +84,8 @@ open class ExpenseRepository(private val repository: Repository<Expense>) : Mode
         val expenses = ArrayList<Expense>()
         val lastMonth = month.minusMonths(1)
 
-        var where = queryBetweenUserDataAndNotRemoved(firstDayOfMonth(lastMonth), lastDayOfMonth(lastMonth))
-                .and(Fields.CHARGEABLE_TYPE).eq(card.chargeableType.name)
-                .and(Fields.CHARGEABLE_UUID).eq(card.uuid!!)
-                .and(Fields.CHARGE_NEXT_MONTH).eq(true)
-                .and(Fields.CHARGED).eq(false)
-                .orderBy(Fields.DATE)
-        expenses.addAll(repository.query(table, where))
-
-        where = queryBetweenUserDataAndNotRemoved(firstDayOfMonth(month), lastDayOfMonth(month))
-                .and(Fields.CHARGEABLE_TYPE).eq(card.chargeableType.name)
-                .and(Fields.CHARGEABLE_UUID).eq(card.uuid!!)
-                .and(Fields.CHARGE_NEXT_MONTH).eq(false)
-                .and(Fields.CHARGED).eq(false)
-                .orderBy(Fields.DATE)
-        expenses.addAll(repository.query(table, where))
+        expenses.addAll(MyApplication.database.expenseDao().unchargedNextMonth(firstDayOfMonth(lastMonth).millis, lastDayOfMonth(lastMonth).millis, card.uuid!!).blockingFirst())
+        expenses.addAll(MyApplication.database.expenseDao().unchargedCurrentMonth(firstDayOfMonth(month).millis, lastDayOfMonth(month).millis, card.uuid!!).blockingFirst())
 
         return expenses
     }
@@ -124,20 +96,12 @@ open class ExpenseRepository(private val repository: Repository<Expense>) : Mode
         var initOfMonth = DateHelper.firstDayOfMonth(lastMonth)
         var endOfMonth = DateHelper.lastDayOfMonth(lastMonth)
 
-        val expenses = repository.query(table, queryBetweenUserDataAndNotRemoved(initOfMonth, endOfMonth)
-                .and(Fields.CHARGEABLE_TYPE).notEq(ChargeableType.CREDIT_CARD.name)
-                .and(Fields.CHARGE_NEXT_MONTH).eq(true)
-                .and(Fields.IGNORE_IN_RESUME).eq(false)
-                .orderBy(Fields.DATE)) as MutableList<Expense>
+        val expenses = MyApplication.database.expenseDao().resumeNextMonth(initOfMonth.millis, endOfMonth.millis, ChargeableType.CREDIT_CARD.name).blockingFirst()
 
         initOfMonth = DateHelper.firstDayOfMonth(date)
         endOfMonth = DateHelper.lastDayOfMonth(date)
 
-        expenses.addAll(repository.query(table, queryBetweenUserDataAndNotRemoved(initOfMonth, endOfMonth)
-                .and(Fields.CHARGEABLE_TYPE).notEq(ChargeableType.CREDIT_CARD.name)
-                .and(Fields.CHARGE_NEXT_MONTH).eq(false)
-                .and(Fields.IGNORE_IN_RESUME).eq(false)
-                .orderBy(Fields.DATE)))
+        expenses.addAll(MyApplication.database.expenseDao().resumeCurrentMonth(initOfMonth.millis, endOfMonth.millis, ChargeableType.CREDIT_CARD.name).blockingFirst())
 
         val creditCardMonth = date.minusMonths(1)
         val cards = cardRepository.creditCards()
@@ -166,36 +130,18 @@ open class ExpenseRepository(private val repository: Repository<Expense>) : Mode
 
         val card = cardRepository.accountDebitCard(account)
 
-        val expenses = repository.query(table, queryBetweenUserDataAndNotRemoved(initOfMonth, endOfMonth)
-                .and(Fields.CHARGEABLE_TYPE).eq(ACCOUNT.name)
-                .and(Fields.CHARGEABLE_UUID).eq(account.uuid!!)
-                .and(Fields.CHARGE_NEXT_MONTH).eq(true)
-                .orderBy(Fields.DATE)) as MutableList<Expense>
+        val expenses = MyApplication.database.expenseDao().nextMonth(initOfMonth.millis, endOfMonth.millis, account.uuid!!).blockingFirst()
 
-        if (card != null) {
-            expenses.addAll(repository.query(table, queryBetweenUserDataAndNotRemoved(initOfMonth, endOfMonth)
-                    .and(Fields.CHARGEABLE_TYPE).eq(DEBIT_CARD.name)
-                    .and(Fields.CHARGEABLE_UUID).eq(card.uuid!!)
-                    .and(Fields.CHARGE_NEXT_MONTH).eq(true)
-                    .orderBy(Fields.DATE)))
-        }
+        if (card != null)
+            expenses.addAll(MyApplication.database.expenseDao().nextMonth(initOfMonth.millis, endOfMonth.millis, card.uuid!!).blockingFirst())
 
         initOfMonth = firstDayOfMonth(month)
         endOfMonth = lastDayOfMonth(month)
 
-        expenses.addAll(repository.query(table, queryBetweenUserDataAndNotRemoved(initOfMonth, endOfMonth)
-                .and(Fields.CHARGEABLE_TYPE).eq(ACCOUNT.name)
-                .and(Fields.CHARGEABLE_UUID).eq(account.uuid!!)
-                .and(Fields.CHARGE_NEXT_MONTH).eq(false)
-                .orderBy(Fields.DATE)))
+        expenses.addAll(MyApplication.database.expenseDao().currentMonth(initOfMonth.millis, endOfMonth.millis, account.uuid!!).blockingFirst())
 
-        if (card != null) {
-            expenses.addAll(repository.query(table, queryBetweenUserDataAndNotRemoved(initOfMonth, endOfMonth)
-                    .and(Fields.CHARGEABLE_TYPE).eq(DEBIT_CARD.name)
-                    .and(Fields.CHARGEABLE_UUID).eq(card.uuid!!)
-                    .and(Fields.CHARGE_NEXT_MONTH).eq(false)
-                    .orderBy(Fields.DATE)))
-        }
+        if (card != null)
+            expenses.addAll(MyApplication.database.expenseDao().currentMonth(initOfMonth.millis, endOfMonth.millis, card.uuid!!).blockingFirst())
 
         if (account.isAccountToPayCreditCard) {
             val creditCardMonth = month.minusMonths(1)
@@ -226,22 +172,12 @@ open class ExpenseRepository(private val repository: Repository<Expense>) : Mode
 
     @WorkerThread
     fun greaterUpdatedAt(): Long {
-        return repository.greaterUpdatedAt(table)
+        return MyApplication.database.expenseDao().greaterUpdatedAt().blockingFirst().firstOrNull()?.updatedAt ?: 0L
     }
 
     @WorkerThread
     fun unsync(): List<Expense> {
-        return repository.unsync(table)
-    }
-
-    private fun queryBetween(init: DateTime, end: DateTime): Where {
-        return Where(Fields.DATE).greaterThanOrEq(init.millis)
-                .and(Fields.DATE).lessThanOrEq(end.millis)
-    }
-
-    private fun queryBetweenUserDataAndNotRemoved(init: DateTime, end: DateTime): Where {
-        return queryBetween(init, end)
-                .and(Fields.REMOVED).eq(false)
+        return MyApplication.database.expenseDao().unsync().blockingFirst()
     }
 
     @WorkerThread
@@ -251,7 +187,7 @@ open class ExpenseRepository(private val repository: Repository<Expense>) : Mode
             if (expense.id == 0L && expense.uuid == null)
                 expense.uuid = UUID.randomUUID().toString()
             expense.sync = false
-            repository.saveAtDatabase(table, expense)
+            expense.id = MyApplication.database.expenseDao().saveAtDatabase(expense)
         }
         return result
     }
@@ -270,22 +206,22 @@ open class ExpenseRepository(private val repository: Repository<Expense>) : Mode
     }
 
     @WorkerThread
-    override fun syncAndSave(unsync: Expense): ValidationResult {
+    fun syncAndSave(unsync: Expense): ValidationResult {
         val result = validate(unsync)
         if (!result.isValid) {
-            Log.warning("Expense sync validation failed", unsync.getData() + "\nerrors: " + result.errorsAsString)
+            Log.w("Expense validation fail", unsync.getData() + "\nerrors: " + result.errorsAsString)
             return result
         }
 
         val expense = find(unsync.uuid!!)
         if (expense != null && expense.id != unsync.id) {
             if (expense.updatedAt != unsync.updatedAt)
-                Log.warning("Expense overwritten", unsync.getData())
+                Log.w("Expense overwritten", unsync.getData())
             unsync.id = expense.id
         }
 
         unsync.sync = true
-        repository.saveAtDatabase(table, unsync)
+        unsync.id = MyApplication.database.expenseDao().saveAtDatabase(unsync)
 
         return result
     }

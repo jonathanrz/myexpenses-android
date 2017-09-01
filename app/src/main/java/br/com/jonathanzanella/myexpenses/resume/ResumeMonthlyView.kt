@@ -12,11 +12,9 @@ import android.widget.FrameLayout
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.AccountAdapter
 import br.com.jonathanzanella.myexpenses.bill.BillMonthlyResumeAdapter
-import br.com.jonathanzanella.myexpenses.database.RepositoryImpl
 import br.com.jonathanzanella.myexpenses.expense.Expense
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
-import br.com.jonathanzanella.myexpenses.receipt.Receipt
 import br.com.jonathanzanella.myexpenses.receipt.ReceiptRepository
 import br.com.jonathanzanella.myexpenses.views.FilterableView
 import br.com.jonathanzanella.myexpenses.views.RefreshableView
@@ -28,8 +26,8 @@ internal class ResumeMonthlyView(context: Context, private val month: DateTime) 
     override var filter = ""
     var singleRowHeight: Int = 0
 
-    private var receiptRepository = ReceiptRepository(RepositoryImpl<Receipt>(context))
-    private var expenseRepository = ExpenseRepository(RepositoryImpl<Expense>(context))
+    private var receiptRepository = ReceiptRepository()
+    private var expenseRepository = ExpenseRepository()
 
     private var accountAdapter = AccountAdapter(month)
     private var receiptAdapter = ReceiptMonthlyResumeAdapter(receiptRepository)

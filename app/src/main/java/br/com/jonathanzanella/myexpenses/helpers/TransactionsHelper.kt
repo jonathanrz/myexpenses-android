@@ -6,6 +6,8 @@ import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.expense.Expense
 import br.com.jonathanzanella.myexpenses.receipt.Receipt
 import br.com.jonathanzanella.myexpenses.transaction.Transaction
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 
 object TransactionsHelper {
 
@@ -28,23 +30,29 @@ object TransactionsHelper {
         AlertDialog.Builder(ctx)
                 .setMessage(message)
                 .setPositiveButton(android.R.string.yes) { _, _ ->
-                    receipt.credit()
-                    dialogCallback.onPositiveButton()
+                    doAsync {
+                        receipt.credit()
+
+                        uiThread { dialogCallback.onPositiveButton() }
+                    }
                 }
                 .setNegativeButton(android.R.string.no) { dialogInterface, _ -> dialogInterface.dismiss() }
                 .show()
     }
 
     private fun showConfirmExpenseDialog(expense: Expense, ctx: Context, dialogCallback: DialogCallback) {
-        if (expense.isCharged)
+        if (expense.charged)
             return
         var message = ctx.getString(R.string.message_confirm_expense)
         message += (" " + expense.name + " - " + expense.incomeFormatted + "?")
         AlertDialog.Builder(ctx)
                 .setMessage(message)
                 .setPositiveButton(android.R.string.yes) { _, _ ->
-                    expense.debit()
-                    dialogCallback.onPositiveButton()
+                    doAsync {
+                        expense.debit()
+
+                        uiThread { dialogCallback.onPositiveButton() }
+                    }
                 }
                 .setNegativeButton(android.R.string.no) { dialogInterface, _ -> dialogInterface.dismiss() }
                 .show()
