@@ -16,7 +16,10 @@ import br.com.jonathanzanella.myexpenses.receipt.ReceiptDao
 import br.com.jonathanzanella.myexpenses.source.Source
 import br.com.jonathanzanella.myexpenses.source.SourceDao
 
-@Database(entities = arrayOf(Account::class, Bill::class, Card::class, Expense::class, Receipt::class, Source::class), version = 1)
+const val DB_NAME = "data.db"
+const val DB_VERSION = 1
+
+@Database(entities = arrayOf(Account::class, Bill::class, Card::class, Expense::class, Receipt::class, Source::class), version = DB_VERSION)
 @TypeConverters(Converters::class)
 abstract class MyDatabase : RoomDatabase() {
     abstract fun accountDao(): AccountDao

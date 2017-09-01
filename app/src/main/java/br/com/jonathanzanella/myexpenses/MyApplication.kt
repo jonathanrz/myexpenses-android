@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Application
 import android.arch.persistence.room.Room
 import android.content.Context
+import br.com.jonathanzanella.myexpenses.database.DB_NAME
 import br.com.jonathanzanella.myexpenses.database.MyDatabase
 import com.facebook.stetho.Stetho
 import net.danlew.android.joda.JodaTimeAndroid
@@ -13,7 +14,7 @@ class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         MyApplication.context = WeakReference(applicationContext)
-        MyApplication.database = Room.databaseBuilder(this, MyDatabase::class.java, "Expenses.db").build()
+        MyApplication.database = Room.databaseBuilder(this, MyDatabase::class.java, DB_NAME).build()
 
         JodaTimeAndroid.init(this)
         Stetho.initializeWithDefaults(this)
