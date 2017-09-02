@@ -3,14 +3,14 @@ package br.com.jonathanzanella.myexpenses.receipt
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.os.AsyncTask
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.helpers.DateHelper
+import br.com.jonathanzanella.myexpenses.helpers.firstDayOfMonth
+import br.com.jonathanzanella.myexpenses.helpers.lastDayOfMonth
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapter
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapterBuilder
 import br.com.jonathanzanella.myexpenses.views.FilterableView
@@ -72,20 +72,11 @@ class ReceiptView@JvmOverloads constructor(
     }
 
     private fun loadExpense(uuid: String) {
-        object : AsyncTask<Void, Void, Receipt>() {
+        doAsync {
+            val receipt = repository!!.find(uuid)
 
-            override fun doInBackground(vararg voids: Void): Receipt? {
-                return repository!!.find(uuid)
-            }
-
-            override fun onPostExecute(receipt: Receipt?) {
-                super.onPostExecute(receipt)
-                if (receipt != null) {
-                    val view = getMonthView(receipt.getDate())
-                    view?.refreshData()
-                }
-            }
-        }.execute()
+            uiThread { receipt?.let { getMonthView(it.getDate())?.refreshData() }}
+        }
     }
 
     override fun filter(s: String) {
@@ -97,8 +88,8 @@ class ReceiptView@JvmOverloads constructor(
 
     private fun getMonthView(date: DateTime): ReceiptMonthlyView? {
         for ((key, value) in views) {
-            val viewDateFirstDay = DateHelper.firstDayOfMonth(key)
-            val viewDateLastDay = DateHelper.lastDayOfMonth(key)
+            val viewDateFirstDay = key.firstDayOfMonth()
+            val viewDateLastDay = key.lastDayOfMonth()
             if (date.isEqual(viewDateFirstDay) || date.isEqual(viewDateLastDay) ||
                     date.isAfter(viewDateFirstDay) && date.isBefore(viewDateLastDay))
                 return value.get()

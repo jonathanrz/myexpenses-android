@@ -9,7 +9,8 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.helpers.DateHelper
+import br.com.jonathanzanella.myexpenses.helpers.firstDayOfMonth
+import br.com.jonathanzanella.myexpenses.helpers.lastDayOfMonth
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapter
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapterBuilder
 import br.com.jonathanzanella.myexpenses.views.FilterableView
@@ -103,8 +104,8 @@ class ExpenseView@JvmOverloads constructor(
 
     private fun getMonthView(date: DateTime): ExpenseMonthlyView? {
         for ((key, value) in views) {
-            val viewDateFirstDay = DateHelper.firstDayOfMonth(key)
-            val viewDateLastDay = DateHelper.lastDayOfMonth(key)
+            val viewDateFirstDay = key.firstDayOfMonth()
+            val viewDateLastDay = key.lastDayOfMonth()
             if (date.isEqual(viewDateFirstDay) || date.isEqual(viewDateLastDay) ||
                     date.isAfter(viewDateFirstDay) && date.isBefore(viewDateLastDay))
                 return value.get()

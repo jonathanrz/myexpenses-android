@@ -7,9 +7,10 @@ import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.card.Card
 import br.com.jonathanzanella.myexpenses.card.CardRepository
 import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType
-import br.com.jonathanzanella.myexpenses.helpers.DateHelper
-import br.com.jonathanzanella.myexpenses.helpers.DateHelper.firstDayOfMonth
-import br.com.jonathanzanella.myexpenses.helpers.DateHelper.lastDayOfMonth
+import br.com.jonathanzanella.myexpenses.helpers.firstDayOfMonth
+import br.com.jonathanzanella.myexpenses.helpers.firstMillisOfDay
+import br.com.jonathanzanella.myexpenses.helpers.lastDayOfMonth
+import br.com.jonathanzanella.myexpenses.helpers.lastMillisOfDay
 import br.com.jonathanzanella.myexpenses.overview.WeeklyPagerAdapter
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult
@@ -36,13 +37,13 @@ open class ExpenseRepository(private val dao: ExpenseDao = MyApplication.databas
     @WorkerThread
     fun monthly(month: DateTime): List<Expense> {
         val lastMonth = month.minusMonths(1)
-        var initOfMonth = firstDayOfMonth(lastMonth)
-        var endOfMonth = lastDayOfMonth(lastMonth)
+        var initOfMonth = lastMonth.firstDayOfMonth()
+        var endOfMonth = lastMonth.lastDayOfMonth()
 
         val expenses = dao.nextMonth(initOfMonth.millis, endOfMonth.millis).blockingFirst()
 
-        initOfMonth = firstDayOfMonth(month)
-        endOfMonth = lastDayOfMonth(month)
+        initOfMonth = month.firstDayOfMonth()
+        endOfMonth = month.lastDayOfMonth()
 
         expenses.addAll(dao.currentMonth(initOfMonth.millis, endOfMonth.millis).blockingFirst())
 
@@ -58,9 +59,9 @@ open class ExpenseRepository(private val dao: ExpenseDao = MyApplication.databas
         val expenses = ArrayList<Expense>()
 
         if (period.init?.dayOfMonth == 1) {
-            val date = DateHelper.firstDayOfMonth(period.init!!)
+            val date = period.init!!.firstDayOfMonth()
             val initOfMonth = date.minusMonths(1)
-            val endOfMonth = DateHelper.lastDayOfMonth(initOfMonth)
+            val endOfMonth = initOfMonth.lastDayOfMonth()
 
             if (card != null)
                 expenses.addAll(dao.overviewNextMonth(initOfMonth.millis, endOfMonth.millis, card.uuid!!).blockingFirst())
@@ -68,8 +69,8 @@ open class ExpenseRepository(private val dao: ExpenseDao = MyApplication.databas
                 expenses.addAll(dao.overviewNextMonth(initOfMonth.millis, endOfMonth.millis).blockingFirst())
         }
 
-        val init = DateHelper.firstMillisOfDay(period.init!!)
-        val end = DateHelper.lastMillisOfDay(period.end!!)
+        val init = period.init!!.firstMillisOfDay()
+        val end = period.end!!.lastMillisOfDay()
 
         if (card != null)
             expenses.addAll(dao.overviewCurrentMonth(init.millis, end.millis, card.uuid!!).blockingFirst())
@@ -84,8 +85,8 @@ open class ExpenseRepository(private val dao: ExpenseDao = MyApplication.databas
         val expenses = ArrayList<Expense>()
         val lastMonth = month.minusMonths(1)
 
-        expenses.addAll(dao.unchargedNextMonth(firstDayOfMonth(lastMonth).millis, lastDayOfMonth(lastMonth).millis, card.uuid!!).blockingFirst())
-        expenses.addAll(dao.unchargedCurrentMonth(firstDayOfMonth(month).millis, lastDayOfMonth(month).millis, card.uuid!!).blockingFirst())
+        expenses.addAll(dao.unchargedNextMonth(lastMonth.firstDayOfMonth().millis, lastMonth.lastDayOfMonth().millis, card.uuid!!).blockingFirst())
+        expenses.addAll(dao.unchargedCurrentMonth(month.firstDayOfMonth().millis, month.lastDayOfMonth().millis, card.uuid!!).blockingFirst())
 
         return expenses
     }
@@ -93,13 +94,13 @@ open class ExpenseRepository(private val dao: ExpenseDao = MyApplication.databas
     @WorkerThread
     fun expensesForResumeScreen(date: DateTime): List<Expense> {
         val lastMonth = date.minusMonths(1)
-        var initOfMonth = DateHelper.firstDayOfMonth(lastMonth)
-        var endOfMonth = DateHelper.lastDayOfMonth(lastMonth)
+        var initOfMonth = lastMonth.firstDayOfMonth()
+        var endOfMonth = lastMonth.lastDayOfMonth()
 
         val expenses = dao.resumeNextMonth(initOfMonth.millis, endOfMonth.millis, ChargeableType.CREDIT_CARD.name).blockingFirst()
 
-        initOfMonth = DateHelper.firstDayOfMonth(date)
-        endOfMonth = DateHelper.lastDayOfMonth(date)
+        initOfMonth = date.firstDayOfMonth()
+        endOfMonth = date.lastDayOfMonth()
 
         expenses.addAll(dao.resumeCurrentMonth(initOfMonth.millis, endOfMonth.millis, ChargeableType.CREDIT_CARD.name).blockingFirst())
 
@@ -125,8 +126,8 @@ open class ExpenseRepository(private val dao: ExpenseDao = MyApplication.databas
     @WorkerThread
     fun accountExpenses(account: Account, month: DateTime): List<Expense> {
         val lastMonth = month.minusMonths(1)
-        var initOfMonth = DateHelper.firstDayOfMonth(lastMonth)
-        var endOfMonth = DateHelper.lastDayOfMonth(lastMonth)
+        var initOfMonth = lastMonth.firstDayOfMonth()
+        var endOfMonth = lastMonth.lastDayOfMonth()
 
         val card = cardRepository.accountDebitCard(account)
 
@@ -135,8 +136,8 @@ open class ExpenseRepository(private val dao: ExpenseDao = MyApplication.databas
         if (card != null)
             expenses.addAll(dao.nextMonth(initOfMonth.millis, endOfMonth.millis, card.uuid!!).blockingFirst())
 
-        initOfMonth = firstDayOfMonth(month)
-        endOfMonth = lastDayOfMonth(month)
+        initOfMonth = month.firstDayOfMonth()
+        endOfMonth = month.lastDayOfMonth()
 
         expenses.addAll(dao.currentMonth(initOfMonth.millis, endOfMonth.millis, account.uuid!!).blockingFirst())
 

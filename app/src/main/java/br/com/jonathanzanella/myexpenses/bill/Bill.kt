@@ -2,7 +2,7 @@ package br.com.jonathanzanella.myexpenses.bill
 
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
-import br.com.jonathanzanella.myexpenses.helpers.DateHelper
+import br.com.jonathanzanella.myexpenses.helpers.lastDayOfMonth
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel
 import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import com.google.gson.annotations.Expose
@@ -35,7 +35,7 @@ class Bill : Transaction, UnsyncModel {
         if (month == null)
             month = DateTime.now()
         val month = this.month!!
-        val lastDayOfMonth = DateHelper.lastDayOfMonth(month).dayOfMonth
+        val lastDayOfMonth = month.lastDayOfMonth().dayOfMonth
         if (dueDate > lastDayOfMonth)
             return month.withDayOfMonth(lastDayOfMonth)
         return month.withDayOfMonth(dueDate)

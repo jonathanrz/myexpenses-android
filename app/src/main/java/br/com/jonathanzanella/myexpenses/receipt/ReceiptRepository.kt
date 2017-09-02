@@ -1,14 +1,15 @@
 package br.com.jonathanzanella.myexpenses.receipt
 
 import android.support.annotation.WorkerThread
-import android.util.Log
 import br.com.jonathanzanella.myexpenses.MyApplication
 import br.com.jonathanzanella.myexpenses.account.Account
-import br.com.jonathanzanella.myexpenses.helpers.DateHelper
+import br.com.jonathanzanella.myexpenses.helpers.firstDayOfMonth
+import br.com.jonathanzanella.myexpenses.helpers.lastDayOfMonth
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult
 import org.apache.commons.lang3.StringUtils
 import org.joda.time.DateTime
+import timber.log.Timber
 import java.util.*
 
 open class ReceiptRepository {
@@ -25,20 +26,20 @@ open class ReceiptRepository {
 
     @WorkerThread
     fun monthly(month: DateTime): List<Receipt> {
-        return MyApplication.database.receiptDao().monthly(DateHelper.firstDayOfMonth(month).millis,
-                DateHelper.lastDayOfMonth(month).millis).blockingFirst()
+        return MyApplication.database.receiptDao().monthly(month.firstDayOfMonth().millis,
+                month.lastDayOfMonth().millis).blockingFirst()
     }
 
     @WorkerThread
     fun monthly(month: DateTime, account: Account): List<Receipt> {
-        return MyApplication.database.receiptDao().monthly(DateHelper.firstDayOfMonth(month).millis,
-                DateHelper.lastDayOfMonth(month).millis, account.uuid!!).blockingFirst()
+        return MyApplication.database.receiptDao().monthly(month.firstDayOfMonth().millis,
+                month.lastDayOfMonth().millis, account.uuid!!).blockingFirst()
     }
 
     @WorkerThread
     fun resume(month: DateTime): List<Receipt> {
-        return MyApplication.database.receiptDao().resume(DateHelper.firstDayOfMonth(month).millis,
-                DateHelper.lastDayOfMonth(month).millis).blockingFirst()
+        return MyApplication.database.receiptDao().resume(month.firstDayOfMonth().millis,
+                month.lastDayOfMonth().millis).blockingFirst()
     }
 
     @WorkerThread
@@ -82,14 +83,14 @@ open class ReceiptRepository {
     fun syncAndSave(unsync: Receipt): ValidationResult {
         val result = validate(unsync)
         if (!result.isValid) {
-            Log.w("Receipt sync validation failed", unsync.getData() + "\nerrors: " + result.errorsAsString)
+            Timber.tag("Receipt sync validation failed").w(unsync.getData() + "\nerrors: " + result.errorsAsString)
             return result
         }
 
         val receipt = find(unsync.uuid!!)
         if (receipt != null && receipt.id != unsync.id) {
             if (receipt.updatedAt != unsync.updatedAt)
-                Log.w("Receipt overwritten", unsync.getData())
+                Timber.tag("Receipt overwritten").w(unsync.getData())
             unsync.id = receipt.id
         }
 

@@ -5,7 +5,8 @@ import android.support.v4.view.PagerAdapter
 import android.view.View
 import android.view.ViewGroup
 import br.com.jonathanzanella.myexpenses.Environment
-import br.com.jonathanzanella.myexpenses.helpers.DateHelper
+import br.com.jonathanzanella.myexpenses.helpers.firstMillisOfDay
+import br.com.jonathanzanella.myexpenses.helpers.lastMillisOfDay
 import br.com.jonathanzanella.myexpenses.views.RefreshableView
 import org.joda.time.DateTime
 import java.util.*
@@ -24,7 +25,7 @@ class WeeklyPagerAdapter internal constructor(private val context: Context, mont
 
     init {
 
-        var init = DateHelper.firstMillisOfDay(month.withDayOfMonth(1))
+        var init = month.withDayOfMonth(1).firstMillisOfDay()
 
         while (init.monthOfYear == month.monthOfYear) {
             val period = Period()
@@ -32,7 +33,7 @@ class WeeklyPagerAdapter internal constructor(private val context: Context, mont
             period.end = init.plusDays(LAST_DAY_OF_WEEK)
             if (period.end!!.monthOfYear > month.monthOfYear) {
                 period.end!!.minusMonths(1)
-                period.end = DateHelper.lastMillisOfDay(init.dayOfMonth().withMaximumValue())
+                period.end = init.dayOfMonth().withMaximumValue().lastMillisOfDay()
             }
             init = init.plusDays(TOTAL_DAYS_OF_WEEK)
             periods.add(period)
