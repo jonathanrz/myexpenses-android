@@ -1,7 +1,6 @@
 package br.com.jonathanzanella.myexpenses.card
 
 import android.support.annotation.WorkerThread
-import android.util.Log
 import br.com.jonathanzanella.myexpenses.MyApplication
 import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
@@ -9,6 +8,7 @@ import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult
 import org.apache.commons.lang3.StringUtils
 import org.joda.time.DateTime
+import timber.log.Timber
 import java.util.*
 
 open class CardRepository(private val expenseRepository: ExpenseRepository) {
@@ -70,14 +70,15 @@ open class CardRepository(private val expenseRepository: ExpenseRepository) {
     fun syncAndSave(unsync: Card): ValidationResult {
         val result = validate(unsync)
         if (!result.isValid) {
-            Log.w("Card sync valida failed", unsync.getData() + "\nerrors: " + result.errorsAsString)
+            Timber.tag("Card sync valida failed")
+                    .w(unsync.getData() + "\nerrors: " + result.errorsAsString)
             return result
         }
 
         val card = find(unsync.uuid!!)
         if (card != null && card.id != unsync.id) {
             if (card.updatedAt != unsync.updatedAt)
-                Log.w("Card overwritten", unsync.getData())
+                Timber.tag("Card overwritten").w(unsync.getData())
             unsync.id = card.id
         }
 

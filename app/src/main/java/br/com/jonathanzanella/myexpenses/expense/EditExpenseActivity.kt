@@ -7,7 +7,6 @@ import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.AppCompatEditText
 import android.text.InputType
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -28,6 +27,7 @@ import br.com.jonathanzanella.myexpenses.views.anko.*
 import org.apache.commons.lang3.StringUtils
 import org.jetbrains.anko.*
 import org.joda.time.DateTime
+import timber.log.Timber
 
 class EditExpenseActivity : AppCompatActivity(), ExpenseContract.EditView {
     override val context = this
@@ -206,7 +206,7 @@ class EditExpenseActivity : AppCompatActivity(), ExpenseContract.EditView {
             ValidationError.NAME -> ui.name.error = getString(error.message)
             ValidationError.AMOUNT -> ui.value.error = getString(error.message)
             ValidationError.CHARGEABLE -> ui.chargeable.error = getString(error.message)
-            else -> Log.e(this.javaClass.name, "Validation unrecognized, field:" + error)
+            else -> Timber.e("Validation unrecognized, field:" + error)
         }
     }
 
