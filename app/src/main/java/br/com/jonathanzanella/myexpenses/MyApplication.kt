@@ -6,7 +6,10 @@ import android.arch.persistence.room.Room
 import android.content.Context
 import br.com.jonathanzanella.myexpenses.database.DB_NAME
 import br.com.jonathanzanella.myexpenses.database.MyDatabase
+import br.com.jonathanzanella.myexpenses.helpers.CrashlyticsReportingTree
+import com.crashlytics.android.Crashlytics
 import com.facebook.stetho.Stetho
+import io.fabric.sdk.android.Fabric
 import net.danlew.android.joda.JodaTimeAndroid
 import timber.log.Timber
 import timber.log.Timber.DebugTree
@@ -23,6 +26,9 @@ class MyApplication : Application() {
 
         if (BuildConfig.DEBUG) {
             Timber.plant(DebugTree())
+        } else {
+            Fabric.with(this, Crashlytics())
+            Timber.plant(CrashlyticsReportingTree())
         }
     }
 
