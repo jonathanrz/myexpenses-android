@@ -29,7 +29,7 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 @MediumTest
 class ShowReceiptActivityTest {
-    @Rule
+    @Rule @JvmField
     var activityTestRule = ActivityTestRule(ShowReceiptActivity::class.java, true, false)
 
     private var receipt: Receipt? = null
