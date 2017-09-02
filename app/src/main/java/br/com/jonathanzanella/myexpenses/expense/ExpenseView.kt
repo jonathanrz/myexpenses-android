@@ -3,7 +3,6 @@ package br.com.jonathanzanella.myexpenses.expense
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.os.AsyncTask
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.util.AttributeSet
@@ -83,20 +82,16 @@ class ExpenseView@JvmOverloads constructor(
     }
 
     private fun loadExpense(uuid: String) {
-        object : AsyncTask<Void, Void, Expense>() {
+        doAsync {
+            val expense = expenseRepository.find(uuid)
 
-            override fun doInBackground(vararg voids: Void): Expense? {
-                return expenseRepository.find(uuid)
-            }
-
-            override fun onPostExecute(expense: Expense?) {
-                super.onPostExecute(expense)
-                if (expense != null) {
-                    val view = getMonthView(expense.getDate())
+            uiThread {
+                expense?.let {
+                    val view = getMonthView(it.getDate())
                     view?.refreshData()
                 }
             }
-        }.execute()
+        }
     }
 
     override fun filter(s: String) {

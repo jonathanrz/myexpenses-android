@@ -1,7 +1,6 @@
 package br.com.jonathanzanella.myexpenses.expense
 
 import android.support.annotation.WorkerThread
-import android.util.Log
 import br.com.jonathanzanella.myexpenses.MyApplication
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.Account
@@ -16,21 +15,22 @@ import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult
 import org.apache.commons.lang3.StringUtils
 import org.joda.time.DateTime
+import timber.log.Timber
 import java.util.*
 
-open class ExpenseRepository() {
+open class ExpenseRepository(private val dao: ExpenseDao = MyApplication.database.expenseDao()) {
     private val cardRepository: CardRepository by lazy {
         CardRepository(this)
     }
 
     @WorkerThread
     fun find(uuid: String): Expense? {
-        return MyApplication.database.expenseDao().find(uuid).blockingFirst().firstOrNull()
+        return dao.find(uuid).blockingFirst().firstOrNull()
     }
 
     @WorkerThread
     fun all(): List<Expense> {
-        return MyApplication.database.expenseDao().all().blockingFirst()
+        return dao.all().blockingFirst()
     }
 
     @WorkerThread
@@ -39,12 +39,12 @@ open class ExpenseRepository() {
         var initOfMonth = firstDayOfMonth(lastMonth)
         var endOfMonth = lastDayOfMonth(lastMonth)
 
-        val expenses = MyApplication.database.expenseDao().nextMonth(initOfMonth.millis, endOfMonth.millis).blockingFirst()
+        val expenses = dao.nextMonth(initOfMonth.millis, endOfMonth.millis).blockingFirst()
 
         initOfMonth = firstDayOfMonth(month)
         endOfMonth = lastDayOfMonth(month)
 
-        expenses.addAll(MyApplication.database.expenseDao().currentMonth(initOfMonth.millis, endOfMonth.millis).blockingFirst())
+        expenses.addAll(dao.currentMonth(initOfMonth.millis, endOfMonth.millis).blockingFirst())
 
         return expenses
     }
@@ -63,18 +63,18 @@ open class ExpenseRepository() {
             val endOfMonth = DateHelper.lastDayOfMonth(initOfMonth)
 
             if (card != null)
-                expenses.addAll(MyApplication.database.expenseDao().overviewNextMonth(initOfMonth.millis, endOfMonth.millis, card.uuid!!).blockingFirst())
+                expenses.addAll(dao.overviewNextMonth(initOfMonth.millis, endOfMonth.millis, card.uuid!!).blockingFirst())
             else
-                expenses.addAll(MyApplication.database.expenseDao().overviewNextMonth(initOfMonth.millis, endOfMonth.millis).blockingFirst())
+                expenses.addAll(dao.overviewNextMonth(initOfMonth.millis, endOfMonth.millis).blockingFirst())
         }
 
         val init = DateHelper.firstMillisOfDay(period.init!!)
         val end = DateHelper.lastMillisOfDay(period.end!!)
 
         if (card != null)
-            expenses.addAll(MyApplication.database.expenseDao().overviewCurrentMonth(init.millis, end.millis, card.uuid!!).blockingFirst())
+            expenses.addAll(dao.overviewCurrentMonth(init.millis, end.millis, card.uuid!!).blockingFirst())
         else
-            expenses.addAll(MyApplication.database.expenseDao().overviewCurrentMonth(init.millis, end.millis).blockingFirst())
+            expenses.addAll(dao.overviewCurrentMonth(init.millis, end.millis).blockingFirst())
 
         return expenses
     }
@@ -84,8 +84,8 @@ open class ExpenseRepository() {
         val expenses = ArrayList<Expense>()
         val lastMonth = month.minusMonths(1)
 
-        expenses.addAll(MyApplication.database.expenseDao().unchargedNextMonth(firstDayOfMonth(lastMonth).millis, lastDayOfMonth(lastMonth).millis, card.uuid!!).blockingFirst())
-        expenses.addAll(MyApplication.database.expenseDao().unchargedCurrentMonth(firstDayOfMonth(month).millis, lastDayOfMonth(month).millis, card.uuid!!).blockingFirst())
+        expenses.addAll(dao.unchargedNextMonth(firstDayOfMonth(lastMonth).millis, lastDayOfMonth(lastMonth).millis, card.uuid!!).blockingFirst())
+        expenses.addAll(dao.unchargedCurrentMonth(firstDayOfMonth(month).millis, lastDayOfMonth(month).millis, card.uuid!!).blockingFirst())
 
         return expenses
     }
@@ -96,12 +96,12 @@ open class ExpenseRepository() {
         var initOfMonth = DateHelper.firstDayOfMonth(lastMonth)
         var endOfMonth = DateHelper.lastDayOfMonth(lastMonth)
 
-        val expenses = MyApplication.database.expenseDao().resumeNextMonth(initOfMonth.millis, endOfMonth.millis, ChargeableType.CREDIT_CARD.name).blockingFirst()
+        val expenses = dao.resumeNextMonth(initOfMonth.millis, endOfMonth.millis, ChargeableType.CREDIT_CARD.name).blockingFirst()
 
         initOfMonth = DateHelper.firstDayOfMonth(date)
         endOfMonth = DateHelper.lastDayOfMonth(date)
 
-        expenses.addAll(MyApplication.database.expenseDao().resumeCurrentMonth(initOfMonth.millis, endOfMonth.millis, ChargeableType.CREDIT_CARD.name).blockingFirst())
+        expenses.addAll(dao.resumeCurrentMonth(initOfMonth.millis, endOfMonth.millis, ChargeableType.CREDIT_CARD.name).blockingFirst())
 
         val creditCardMonth = date.minusMonths(1)
         val cards = cardRepository.creditCards()
@@ -130,18 +130,18 @@ open class ExpenseRepository() {
 
         val card = cardRepository.accountDebitCard(account)
 
-        val expenses = MyApplication.database.expenseDao().nextMonth(initOfMonth.millis, endOfMonth.millis, account.uuid!!).blockingFirst()
+        val expenses = dao.nextMonth(initOfMonth.millis, endOfMonth.millis, account.uuid!!).blockingFirst()
 
         if (card != null)
-            expenses.addAll(MyApplication.database.expenseDao().nextMonth(initOfMonth.millis, endOfMonth.millis, card.uuid!!).blockingFirst())
+            expenses.addAll(dao.nextMonth(initOfMonth.millis, endOfMonth.millis, card.uuid!!).blockingFirst())
 
         initOfMonth = firstDayOfMonth(month)
         endOfMonth = lastDayOfMonth(month)
 
-        expenses.addAll(MyApplication.database.expenseDao().currentMonth(initOfMonth.millis, endOfMonth.millis, account.uuid!!).blockingFirst())
+        expenses.addAll(dao.currentMonth(initOfMonth.millis, endOfMonth.millis, account.uuid!!).blockingFirst())
 
         if (card != null)
-            expenses.addAll(MyApplication.database.expenseDao().currentMonth(initOfMonth.millis, endOfMonth.millis, card.uuid!!).blockingFirst())
+            expenses.addAll(dao.currentMonth(initOfMonth.millis, endOfMonth.millis, card.uuid!!).blockingFirst())
 
         if (account.accountToPayCreditCard) {
             val creditCardMonth = month.minusMonths(1)
@@ -172,12 +172,12 @@ open class ExpenseRepository() {
 
     @WorkerThread
     fun greaterUpdatedAt(): Long {
-        return MyApplication.database.expenseDao().greaterUpdatedAt().blockingFirst().firstOrNull()?.updatedAt ?: 0L
+        return dao.greaterUpdatedAt().blockingFirst().firstOrNull()?.updatedAt ?: 0L
     }
 
     @WorkerThread
     fun unsync(): List<Expense> {
-        return MyApplication.database.expenseDao().unsync().blockingFirst()
+        return dao.unsync().blockingFirst()
     }
 
     @WorkerThread
@@ -187,7 +187,7 @@ open class ExpenseRepository() {
             if (expense.id == 0L && expense.uuid == null)
                 expense.uuid = UUID.randomUUID().toString()
             expense.sync = false
-            expense.id = MyApplication.database.expenseDao().saveAtDatabase(expense)
+            expense.id = dao.saveAtDatabase(expense)
         }
         return result
     }
@@ -209,19 +209,21 @@ open class ExpenseRepository() {
     fun syncAndSave(unsync: Expense): ValidationResult {
         val result = validate(unsync)
         if (!result.isValid) {
-            Log.w("Expense validation fail", unsync.getData() + "\nerrors: " + result.errorsAsString)
+            Timber.tag("Expense validation fail")
+                    .w( unsync.getData() + "\nerrors: " + result.errorsAsString)
             return result
         }
 
         val expense = find(unsync.uuid!!)
         if (expense != null && expense.id != unsync.id) {
             if (expense.updatedAt != unsync.updatedAt)
-                Log.w("Expense overwritten", unsync.getData())
+                Timber.tag("Expense overwritten")
+                        .w(unsync.getData())
             unsync.id = expense.id
         }
 
         unsync.sync = true
-        unsync.id = MyApplication.database.expenseDao().saveAtDatabase(unsync)
+        unsync.id = dao.saveAtDatabase(unsync)
 
         return result
     }

@@ -2,7 +2,6 @@ package br.com.jonathanzanella.myexpenses.expense
 
 import android.app.Activity
 import android.content.Intent
-import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.app.AppCompatActivity
@@ -138,20 +137,16 @@ class EditExpenseActivity : AppCompatActivity(), ExpenseContract.EditView {
     }
 
     internal fun onChargeable() {
-        object : AsyncTask<Void, Void, Boolean>() {
+        doAsync {
+            val hasChargeable = presenter.hasChargeable()
 
-            override fun doInBackground(vararg voids: Void): Boolean {
-                return presenter.hasChargeable()
-            }
-
-            override fun onPostExecute(hasChargeable: Boolean) {
-                super.onPostExecute(hasChargeable)
+            uiThread {
                 if (!hasChargeable) {
                     val intent = Intent(this@EditExpenseActivity, ListChargeableActivity::class.java)
                     startActivityForResult(intent, REQUEST_SELECT_CHARGEABLE)
                 }
             }
-        }.execute()
+        }
     }
 
     override fun onBillSelected(bill: Bill?) {
@@ -215,7 +210,7 @@ class EditExpenseActivity : AppCompatActivity(), ExpenseContract.EditView {
         }
     }
 
-    val installment: Int
+    private val installment: Int
         get() = Integer.parseInt(ui.installment.text.toString())
 
     val repetition: Int

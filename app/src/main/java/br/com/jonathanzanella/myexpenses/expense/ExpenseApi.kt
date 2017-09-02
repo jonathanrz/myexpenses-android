@@ -1,12 +1,11 @@
 package br.com.jonathanzanella.myexpenses.expense
 
-import android.util.Log
 import br.com.jonathanzanella.myexpenses.MyApplication
 import br.com.jonathanzanella.myexpenses.server.Server
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi
 import org.apache.commons.lang3.StringUtils
-import retrofit2.Call
+import timber.log.Timber
 import java.io.IOException
 
 class ExpenseApi(private val expenseRepository: ExpenseRepository) : UnsyncModelApi<Expense> {
@@ -15,41 +14,42 @@ class ExpenseApi(private val expenseRepository: ExpenseRepository) : UnsyncModel
     }
 
     override fun index(): List<Expense> {
-        val caller = expenseInterface.index(greaterUpdatedAt())
+        val lastUpdatedAt = greaterUpdatedAt()
+        Timber.tag("AccountApi.index with lastUpdatedAt: $lastUpdatedAt")
+        val caller = expenseInterface.index(lastUpdatedAt)
 
-        try {
+        return try {
             val response = caller.execute()
             if (response.isSuccessful) {
-                return response.body()
+                response.body()
             } else {
-                Log.e(LOG_TAG, "Index request error: " + response.message())
-                return ArrayList()
+                Timber.e("Index request error: " + response.message())
+                ArrayList()
             }
         } catch (e: IOException) {
-            Log.e(LOG_TAG, "Index request error: " + e.message)
+            Timber.e("Index request error: " + e.message)
             e.printStackTrace()
-            return ArrayList()
+            ArrayList()
         }
     }
 
     override fun save(model: UnsyncModel) {
         val expense = model as Expense
-        val caller: Call<Expense>
-        if (StringUtils.isNotEmpty(expense.serverId))
-            caller = expenseInterface.update(expense.serverId!!, expense)
+        val caller = if (StringUtils.isNotEmpty(expense.serverId))
+            expenseInterface.update(expense.serverId!!, expense)
         else
-            caller = expenseInterface.create(expense)
+            expenseInterface.create(expense)
 
         try {
             val response = caller.execute()
             if (response.isSuccessful) {
                 expenseRepository.syncAndSave(response.body())
-                Log.i(LOG_TAG, "Updated: " + expense.getData())
+                Timber.i("Updated: " + expense.getData())
             } else {
-                Log.e(LOG_TAG, "Save request error: " + response.message() + " uuid: " + expense.uuid)
+                Timber.e("Save request error: " + response.message() + " uuid: " + expense.uuid)
             }
         } catch (e: IOException) {
-            Log.e(LOG_TAG, "Save request error: " + e.message + " uuid: " + expense.uuid)
+            Timber.e("Save request error: " + e.message + " uuid: " + expense.uuid)
             e.printStackTrace()
         }
     }
@@ -66,9 +66,5 @@ class ExpenseApi(private val expenseRepository: ExpenseRepository) : UnsyncModel
 
     override fun greaterUpdatedAt(): Long {
         return expenseRepository.greaterUpdatedAt()
-    }
-
-    companion object {
-        private val LOG_TAG = ExpenseApi::class.java.simpleName
     }
 }

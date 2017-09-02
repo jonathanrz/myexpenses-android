@@ -229,9 +229,9 @@ class Expense : Transaction, UnsyncModel {
             if (type == null || uuid == null)
                 return null
 
-            when (type) {
-                ChargeableType.ACCOUNT -> return accountRepository!!.find(uuid)
-                ChargeableType.DEBIT_CARD, ChargeableType.CREDIT_CARD -> return cardRepository!!.find(uuid)
+            return when (type) {
+                ChargeableType.ACCOUNT -> accountRepository!!.find(uuid)
+                ChargeableType.DEBIT_CARD, ChargeableType.CREDIT_CARD -> cardRepository!!.find(uuid)
             }
         }
     }

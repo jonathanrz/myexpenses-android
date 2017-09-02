@@ -5,12 +5,10 @@ import android.app.Activity.RESULT_OK
 import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
-import android.os.AsyncTask
 import android.os.Bundle
 import android.support.annotation.UiThread
 import android.support.annotation.WorkerThread
 import android.support.v7.app.AlertDialog
-import android.util.Log
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.bill.Bill
 import br.com.jonathanzanella.myexpenses.bill.BillRepository
@@ -18,8 +16,10 @@ import br.com.jonathanzanella.myexpenses.chargeable.Chargeable
 import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType
 import br.com.jonathanzanella.myexpenses.chargeable.ListChargeableActivity
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException
-import br.com.jonathanzanella.myexpenses.validations.ValidationResult
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 import org.joda.time.DateTime
+import timber.log.Timber
 
 class ExpensePresenter(private val repository: ExpenseRepository, private val billRepository: BillRepository) {
     private var view: ExpenseContract.View? = null
@@ -55,18 +55,11 @@ class ExpensePresenter(private val repository: ExpenseRepository, private val bi
         val e = expense
         if (e != null) {
             if (invalidateCache) {
-                object : AsyncTask<Void, Void, Void>() {
+                doAsync {
+                    expense = repository.find(e.uuid!!)
 
-                    override fun doInBackground(vararg voids: Void): Void? {
-                        expense = repository.find(e.uuid!!)
-                        return null
-                    }
-
-                    override fun onPostExecute(aVoid: Void?) {
-                        super.onPostExecute(aVoid)
-                        updateView()
-                    }
-                }.execute()
+                    uiThread { updateView() }
+                }
             } else {
                 updateView()
             }
@@ -105,54 +98,30 @@ class ExpensePresenter(private val repository: ExpenseRepository, private val bi
     }
 
     private fun loadChargeable() {
-        object : AsyncTask<Void, Void, Chargeable>() {
+        doAsync {
+            chargeable = expense!!.chargeableFromCache
 
-            override fun doInBackground(vararg voids: Void): Chargeable? {
-                chargeable = expense!!.chargeableFromCache
-                return chargeable
-            }
-
-            override fun onPostExecute(chargeable: Chargeable?) {
-                super.onPostExecute(chargeable)
-                if (chargeable != null)
-                    editView?.onChargeableSelected(chargeable)
-            }
-        }.execute()
+            uiThread { chargeable?.let { editView?.onChargeableSelected(it) } }
+        }
     }
 
     private fun loadBill() {
-        object : AsyncTask<Void, Void, Void>() {
+        doAsync {
+            bill = expense!!.bill
 
-            override fun doInBackground(vararg voids: Void): Void? {
-                bill = expense!!.bill
-                return null
-            }
-
-            override fun onPostExecute(aVoid: Void?) {
-                super.onPostExecute(aVoid)
-                val b = bill
-                if (b != null)
-                    editView?.onBillSelected(b)
-            }
-        }.execute()
+            uiThread { bill?.let { editView?.onBillSelected(it) } }
+        }
     }
 
     @UiThread
     fun refreshExpense() {
         val e = expense
         if (e != null) {
-            object : AsyncTask<Void, Void, Void>() {
+            doAsync {
+                loadExpense(e.uuid!!)
 
-                override fun doInBackground(vararg voids: Void): Void? {
-                    loadExpense(e.uuid!!)
-                    return null
-                }
-
-                override fun onPostExecute(aVoid: Void?) {
-                    super.onPostExecute(aVoid)
-                    updateView()
-                }
-            }.execute()
+                uiThread { updateView() }
+            }
         }
     }
 
@@ -185,27 +154,19 @@ class ExpensePresenter(private val repository: ExpenseRepository, private val bi
             e.valueToShowInOverview = e.valueToShowInOverview / e.installments
         }
 
-        object : AsyncTask<Void, Void, ValidationResult>() {
-            override fun doInBackground(vararg voids: Void): ValidationResult {
-                val result = repository.save(e)
-                if (result.isValid)
-                    generateExpensesRepetition()
-
-                return result
-            }
-
-            private fun generateExpensesRepetition() {
-                for (i in 1..e.repetition - 1) {
+        doAsync {
+            val result = repository.save(e)
+            if (result.isValid) {
+                for (i in 1 until e.repetition) {
                     e = e.repeat(originalName!!, i + 1)
                     val repetitionResult = repository.save(e)
                     if (!repetitionResult.isValid)
-                        Log.e("ExpensePresenter", "Error saving repetition of expense " + e.getData() +
+                        Timber.e("Error saving repetition of expense " + e.getData() +
                                 " error=" + repetitionResult.errors.toString())
                 }
             }
 
-            override fun onPostExecute(result: ValidationResult) {
-                super.onPostExecute(result)
+            uiThread {
                 if (result.isValid) {
                     v.finishView()
                 } else {
@@ -213,7 +174,7 @@ class ExpensePresenter(private val repository: ExpenseRepository, private val bi
                         v.showError(validationError)
                 }
             }
-        }.execute()
+        }
     }
 
     @UiThread
@@ -246,37 +207,20 @@ class ExpensePresenter(private val repository: ExpenseRepository, private val bi
 
     @UiThread
     fun onChargeableSelected(type: ChargeableType, uuid: String) {
-        object : AsyncTask<Void, Void, Chargeable>() {
+        doAsync {
+            chargeable = Expense.findChargeable(type, uuid)
 
-            override fun doInBackground(vararg voids: Void): Chargeable? {
-                chargeable = Expense.findChargeable(type, uuid)
-                return chargeable
-            }
-
-            override fun onPostExecute(chargeable: Chargeable?) {
-                super.onPostExecute(chargeable)
-                if (chargeable != null)
-                    editView!!.onChargeableSelected(chargeable)
-            }
-        }.execute()
+            uiThread { chargeable?.let { editView!!.onChargeableSelected(it) } }
+        }
     }
 
     @UiThread
     fun onBillSelected(uuid: String) {
-        object : AsyncTask<Void, Void, Void>() {
+        doAsync {
+            bill = BillRepository(repository).find(uuid)
 
-            override fun doInBackground(vararg voids: Void): Void? {
-                bill = BillRepository(repository).find(uuid)
-                return null
-            }
-
-            override fun onPostExecute(aVoid: Void?) {
-                super.onPostExecute(aVoid)
-                val b = bill
-                if (b != null)
-                    editView!!.onBillSelected(b)
-            }
-        }.execute()
+            uiThread { bill?.let { editView!!.onBillSelected(it) } }
+        }
     }
 
     val uuid: String?
@@ -284,28 +228,21 @@ class ExpensePresenter(private val repository: ExpenseRepository, private val bi
 
     @UiThread
     fun storeBundle(extras: Bundle) {
-        object : AsyncTask<Void, Void, Void>() {
-
-            override fun doInBackground(vararg voids: Void): Void? {
-                if (extras.containsKey(KEY_EXPENSE_UUID))
-                    loadExpense(extras.getString(KEY_EXPENSE_UUID))
-                if (extras.containsKey(KEY_BILL_UUID))
-                    bill = billRepository.find(extras.getString(KEY_BILL_UUID)!!)
-                if (extras.containsKey(KEY_DATE))
-                    date = DateTime(extras.getLong(KEY_DATE))
-                val key = ListChargeableActivity.KEY_CHARGEABLE_SELECTED_TYPE
-                if (extras.containsKey(key)) {
-                    val selectedUuid = extras.getString(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_UUID)
-                    chargeable = Expense.findChargeable(extras.getSerializable(key) as ChargeableType, selectedUuid)
-                }
-                return null
+        doAsync {
+            if (extras.containsKey(KEY_EXPENSE_UUID))
+                loadExpense(extras.getString(KEY_EXPENSE_UUID))
+            if (extras.containsKey(KEY_BILL_UUID))
+                bill = billRepository.find(extras.getString(KEY_BILL_UUID)!!)
+            if (extras.containsKey(KEY_DATE))
+                date = DateTime(extras.getLong(KEY_DATE))
+            val key = ListChargeableActivity.KEY_CHARGEABLE_SELECTED_TYPE
+            if (extras.containsKey(key)) {
+                val selectedUuid = extras.getString(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_UUID)
+                chargeable = Expense.findChargeable(extras.getSerializable(key) as ChargeableType, selectedUuid)
             }
 
-            override fun onPostExecute(aVoid: Void?) {
-                super.onPostExecute(aVoid)
-                updateView()
-            }
-        }.execute()
+            uiThread { updateView() }
+        }
     }
 
     fun onSaveInstanceState(outState: Bundle) {
