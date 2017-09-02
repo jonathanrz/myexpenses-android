@@ -12,7 +12,7 @@ import android.widget.TextView
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.AccountAdapter.Format.NORMAL
 import br.com.jonathanzanella.myexpenses.helpers.AdapterColorHelper
-import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
+import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
 import org.jetbrains.anko.*
 import org.joda.time.DateTime
@@ -45,7 +45,7 @@ class AccountAdapter(val month : DateTime) : RecyclerView.Adapter<AccountAdapter
                 itemView.setBackgroundColor(adapterColorHelper.getColorForGridWithTwoColumns(adapterPosition))
 
             name.text = acc.name
-            balance.text = CurrencyHelper.format(acc.balance)
+            balance.text = acc.balance.toCurrencyFormatted()
             if (accountToPayCreditCard != null)
                 accountToPayCreditCard.visibility = if (acc.accountToPayCreditCard) View.VISIBLE else View.GONE
         }

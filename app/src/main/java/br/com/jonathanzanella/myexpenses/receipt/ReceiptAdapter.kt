@@ -1,7 +1,6 @@
 package br.com.jonathanzanella.myexpenses.receipt
 
 import android.content.Intent
-import android.os.AsyncTask
 import android.support.annotation.UiThread
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.RecyclerView
@@ -10,16 +9,14 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.helpers.AdapterColorHelper
-import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
-import br.com.jonathanzanella.myexpenses.source.Source
+import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import br.com.jonathanzanella.myexpenses.views.anko.*
 import org.jetbrains.anko.*
 import org.joda.time.DateTime
 
-open class ReceiptAdapter() : RecyclerView.Adapter<ReceiptAdapter.ViewHolder>() {
+open class ReceiptAdapter : RecyclerView.Adapter<ReceiptAdapter.ViewHolder>() {
     private var receipts: List<Receipt> = ArrayList()
     private val presenter: ReceiptAdapterPresenter = ReceiptAdapterPresenter(ReceiptRepository())
     private var date: DateTime? = null
@@ -41,31 +38,17 @@ open class ReceiptAdapter() : RecyclerView.Adapter<ReceiptAdapter.ViewHolder>() 
             itemView.setBackgroundColor(adapterColorHelper.getColorForGridWithTwoColumns(adapterPosition))
             ui.name.text = receipt.name
             ui.date.text = Transaction.SIMPLE_DATE_FORMAT.format(receipt.getDate().toDate())
-            ui.income.text = CurrencyHelper.format(receipt.income)
+            ui.income.text = receipt.income.toCurrencyFormatted()
 
-            object : AsyncTask<Void, Void, Source>() {
+            doAsync {
+                val s = receipt.source
+                val a = receipt.accountFromCache
 
-                override fun doInBackground(vararg voids: Void): Source? {
-                    return receipt.source
-                }
-
-                override fun onPostExecute(s: Source?) {
-                    super.onPostExecute(s)
+                uiThread {
                     ui.source.text = s?.name
-                }
-            }.execute()
-
-            object : AsyncTask<Void, Void, Account>() {
-
-                override fun doInBackground(vararg voids: Void): Account? {
-                    return receipt.accountFromCache
-                }
-
-                override fun onPostExecute(a: Account?) {
-                    super.onPostExecute(a)
                     ui.account.text = a?.name
                 }
-            }.execute()
+            }
 
             ui.showInResume.visibility = if (receipt.isShowInResume) View.VISIBLE else View.INVISIBLE
         }

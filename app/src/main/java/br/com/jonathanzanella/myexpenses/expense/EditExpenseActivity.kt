@@ -20,8 +20,8 @@ import br.com.jonathanzanella.myexpenses.bill.ListBillActivity
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable
 import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType
 import br.com.jonathanzanella.myexpenses.chargeable.ListChargeableActivity
-import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch
+import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.views.anko.*
@@ -156,7 +156,7 @@ class EditExpenseActivity : AppCompatActivity(), ExpenseContract.EditView {
             if (ui.name.text.toString().isEmpty())
                 ui.name.setText(bill.name)
             if (ui.value.text.toString().isEmpty())
-                ui.value.setText(CurrencyHelper.format(bill.amount))
+                ui.value.setText(bill.amount.toCurrencyFormatted())
             ui.showInOverview.isChecked = false
             ui.showInResume.isChecked = true
         } else {
@@ -218,8 +218,8 @@ class EditExpenseActivity : AppCompatActivity(), ExpenseContract.EditView {
 
     override fun showExpense(expense: Expense) {
         ui.name.setText(expense.name)
-        ui.value.setText(CurrencyHelper.format(Math.abs(expense.value)))
-        ui.valueToShowInOverview.setText(CurrencyHelper.format(Math.abs(expense.valueToShowInOverview)))
+        ui.value.setText(Math.abs(expense.value).toCurrencyFormatted())
+        ui.valueToShowInOverview.setText(Math.abs(expense.valueToShowInOverview).toCurrencyFormatted())
         if (expense.charged) {
             ui.value.setTextColor(ResourcesCompat.getColor(resources, R.color.value_unpaid, null))
             ui.repayment.isEnabled = false

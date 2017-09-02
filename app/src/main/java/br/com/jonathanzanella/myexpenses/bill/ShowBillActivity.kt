@@ -8,7 +8,7 @@ import android.view.MenuItem
 import android.widget.TextView
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
-import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
+import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import br.com.jonathanzanella.myexpenses.views.anko.*
 import org.jetbrains.anko.*
@@ -86,7 +86,7 @@ class ShowBillActivity : AppCompatActivity(), BillContract.View {
     override fun showBill(bill: Bill) {
         ui.apply {
             billName.text = bill.name
-            billAmount.text = CurrencyHelper.format(bill.amount)
+            billAmount.text = bill.amount.toCurrencyFormatted()
             billDueDate.text = bill.dueDate.toString()
             billInitDate.text = Transaction.SIMPLE_DATE_FORMAT.format(bill.initDate?.toDate())
             billEndDate.text = Transaction.SIMPLE_DATE_FORMAT.format(bill.endDate?.toDate())

@@ -11,7 +11,7 @@ import android.widget.TableRow
 import android.widget.TextView
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.bill.BillRepository
-import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
+import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import br.com.jonathanzanella.myexpenses.views.anko.*
 import org.jetbrains.anko.*
@@ -93,8 +93,8 @@ class ShowExpenseActivity : AppCompatActivity(), ExpenseContract.View {
         ui.apply {
             name.text = expense.name
             date.text = Transaction.SIMPLE_DATE_FORMAT.format(expense.getDate().toDate())
-            value.text = CurrencyHelper.format(expense.value)
-            showInOverview.text = CurrencyHelper.format(expense.valueToShowInOverview)
+            value.text = expense.value.toCurrencyFormatted()
+            showInOverview.text = expense.valueToShowInOverview.toCurrencyFormatted()
             chargeNextMonth.visibility = if (expense.chargedNextMonth) View.VISIBLE else View.GONE
         }
 

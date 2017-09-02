@@ -10,7 +10,7 @@ import android.widget.TextView
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.card.Card
 import br.com.jonathanzanella.myexpenses.card.CardRepository
-import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
+import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
 import br.com.jonathanzanella.myexpenses.views.anko.resumeRowCell
 import org.jetbrains.anko.*
@@ -38,13 +38,13 @@ class CreditCardMonthlyAdapter : RecyclerView.Adapter<CreditCardMonthlyAdapter.V
                     date.text = SIMPLE_DATE_FORMAT.format(expense.getDate().toDate())
                 }
             }
-            income.text = CurrencyHelper.format(expense.value)
+            income.text = expense.value.toCurrencyFormatted()
             if (source != null)
                 source.visibility = View.GONE
         }
 
         fun setTotal(totalValue: Int) {
-            income.text = CurrencyHelper.format(totalValue)
+            income.text = totalValue.toCurrencyFormatted()
         }
     }
 

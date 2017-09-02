@@ -8,7 +8,7 @@ import android.widget.FrameLayout
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.expense.ExpenseWeeklyOverviewAdapter
-import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
+import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.views.FilterableView
 import br.com.jonathanzanella.myexpenses.views.RefreshableView
 import kotlinx.android.synthetic.main.view_overview_expenses_weekly.view.*
@@ -33,6 +33,6 @@ internal class OverviewExpensesWeeklyView(context: Context, private val period: 
         adapter.setExpenses(expenseRepository.expenses(period))
         adapter.notifyDataSetChanged()
 
-        total.text = CurrencyHelper.format(adapter.totalValue)
+        total.text = adapter.totalValue.toCurrencyFormatted()
     }
 }

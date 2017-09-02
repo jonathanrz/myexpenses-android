@@ -6,7 +6,7 @@ import android.view.View
 import android.widget.FrameLayout
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
-import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
+import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapter
 import kotlinx.android.synthetic.main.view_overview_expenses_monthly.view.*
 import org.joda.time.DateTime
@@ -35,6 +35,6 @@ internal class OverviewExpensesMonthlyView(context: Context, month: DateTime) : 
         val period = WeeklyPagerAdapter.Period()
         period.init = month.dayOfMonth().withMinimumValue()
         period.end = month.dayOfMonth().withMaximumValue()
-        total.text = CurrencyHelper.format(expenseRepository.expenses(period).sumBy { it.valueToShowInOverview })
+        total.text = expenseRepository.expenses(period).sumBy { it.valueToShowInOverview }.toCurrencyFormatted()
     }
 }

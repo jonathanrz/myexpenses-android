@@ -2,7 +2,6 @@ package br.com.jonathanzanella.myexpenses.receipt
 
 import android.app.Activity
 import android.content.Intent
-import android.os.AsyncTask
 import android.os.Bundle
 import android.support.annotation.UiThread
 import android.support.v4.content.res.ResourcesCompat
@@ -17,8 +16,8 @@ import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.account.AccountRepository
 import br.com.jonathanzanella.myexpenses.account.ListAccountActivity
-import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch
+import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.source.ListSourceActivity
 import br.com.jonathanzanella.myexpenses.source.Source
 import br.com.jonathanzanella.myexpenses.source.SourceRepository
@@ -176,21 +175,15 @@ class EditReceiptActivity : AppCompatActivity(), ReceiptContract.EditView {
     @UiThread
     override fun showReceipt(receipt: Receipt) {
         ui.editName.setText(receipt.name)
-        ui.editIncome.setText(CurrencyHelper.format(receipt.income))
+        ui.editIncome.setText(receipt.income.toCurrencyFormatted())
         if (receipt.credited)
             ui.editIncome.setTextColor(ResourcesCompat.getColor(resources, R.color.value_unpaid, null))
 
-        object : AsyncTask<Void, Void, Source>() {
+        doAsync {
+            val source = receipt.source
 
-            override fun doInBackground(vararg voids: Void): Source? {
-                return receipt.source
-            }
-
-            override fun onPostExecute(source: Source?) {
-                super.onPostExecute(source)
-                ui.editSource.setText(source?.name)
-            }
-        }.execute()
+            uiThread { ui.editSource.setText(source?.name) }
+        }
 
         ui.checkShowInResume.isChecked = receipt.isShowInResume
     }

@@ -1,7 +1,6 @@
 package br.com.jonathanzanella.myexpenses.expense
 
 import android.content.Intent
-import android.os.AsyncTask
 import android.support.annotation.UiThread
 import android.support.v7.widget.RecyclerView
 import android.view.View
@@ -9,8 +8,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.card.CreditCardInvoiceActivity
-import br.com.jonathanzanella.myexpenses.chargeable.Chargeable
-import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
+import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
 import br.com.jonathanzanella.myexpenses.views.anko.singleRowCell
 import org.jetbrains.anko.*
@@ -34,19 +32,13 @@ class ExpenseWeeklyOverviewAdapter : RecyclerView.Adapter<ExpenseWeeklyOverviewA
             synchronized(this) {
                 ui.date.text = SIMPLE_DATE_FORMAT.format(expense.getDate().toDate())
             }
-            ui.income.text = CurrencyHelper.format(expense.valueToShowInOverview)
+            ui.income.text = expense.valueToShowInOverview.toCurrencyFormatted()
 
-            object : AsyncTask<Void, Void, Chargeable>() {
+            doAsync {
+                val chargeable = expense.chargeableFromCache
 
-                override fun doInBackground(vararg voids: Void): Chargeable? {
-                    return expense.chargeableFromCache
-                }
-
-                override fun onPostExecute(chargeable: Chargeable?) {
-                    super.onPostExecute(chargeable)
-                    ui.source.text = chargeable?.name
-                }
-            }.execute()
+                uiThread { ui.source.text = chargeable?.name }
+            }
         }
 
         override fun onClick(v: View) {

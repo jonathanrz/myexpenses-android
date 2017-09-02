@@ -18,7 +18,7 @@ class CurrencyTextWatch(private val edit: EditText) : TextWatcher {
             var formatted = ""
             if (!cleanString.isEmpty()) {
                 val parsed = java.lang.Double.parseDouble(cleanString)
-                formatted = CurrencyHelper.format(parsed.toInt())
+                formatted = parsed.toInt().toCurrencyFormatted()
             }
 
             current = formatted

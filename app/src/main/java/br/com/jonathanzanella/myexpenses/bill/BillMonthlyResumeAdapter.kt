@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
-import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
+import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
 import br.com.jonathanzanella.myexpenses.views.anko.resumeRowCell
 import br.com.jonathanzanella.myexpenses.views.anko.singleRowCell
@@ -31,12 +31,12 @@ class BillMonthlyResumeAdapter : RecyclerView.Adapter<BillMonthlyResumeAdapter.V
     inner class ViewHolder(itemView: View, val name: TextView, val amount: TextView, private val day: TextView?) : RecyclerView.ViewHolder(itemView) {
         fun setData(bill: Bill) {
             name.text = bill.name
-            amount.text = CurrencyHelper.format(bill.amount)
+            amount.text = bill.amount.toCurrencyFormatted()
             day?.text = bill.dueDate.toString()
         }
 
         fun setTotal(totalValue: Int) {
-            amount.text = CurrencyHelper.format(totalValue)
+            amount.text = totalValue.toCurrencyFormatted()
         }
     }
 

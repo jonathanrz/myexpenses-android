@@ -9,8 +9,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.CheckBox
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch
+import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.views.anko.*
 import org.apache.commons.lang3.StringUtils
@@ -101,10 +101,10 @@ class EditAccountActivity : AppCompatActivity(), AccountContract.EditView {
             editName.setText(account.name)
             val balance = account.balance
             if (balance > 0) {
-                editBalance.setText(CurrencyHelper.format(balance))
+                editBalance.setText(balance.toCurrencyFormatted())
                 checkAccountBalanceNegative.isChecked = false
             } else {
-                editBalance.setText(CurrencyHelper.format(balance * -1))
+                editBalance.setText((balance * -1).toCurrencyFormatted())
                 checkAccountBalanceNegative.isChecked = true
             }
             checkToPayCreditCard.isChecked = account.accountToPayCreditCard

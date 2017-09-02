@@ -9,8 +9,8 @@ import android.view.MenuItem
 import android.widget.EditText
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
-import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch
+import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.views.anko.*
@@ -100,7 +100,7 @@ class EditBillActivity : AppCompatActivity(), BillContract.EditView {
 
     override fun showBill(bill: Bill) {
         ui.editName.setText(bill.name)
-        ui.editAmount.setText(CurrencyHelper.format(bill.amount))
+        ui.editAmount.setText(bill.amount.toCurrencyFormatted())
         ui.editDueDate.setText(bill.dueDate.toString())
     }
 

@@ -10,7 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.helpers.AdapterColorHelper
-import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
+import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import kotlinx.android.synthetic.main.row_expense.view.*
 import org.jetbrains.anko.doAsync
@@ -41,7 +41,7 @@ internal open class ExpenseAdapter : RecyclerView.Adapter<ExpenseAdapter.ViewHol
                 setBackgroundColor(adapterColorHelper.getColorForGridWithTwoColumns(adapterPosition))
                 name.text = expense.name
                 date.text = Transaction.SIMPLE_DATE_FORMAT.format(expense.getDate().toDate())
-                value.text = CurrencyHelper.format(expense.value)
+                value.text = expense.value.toCurrencyFormatted()
                 chargeNextMonth.visibility = if (expense.chargedNextMonth) View.VISIBLE else View.INVISIBLE
             }
 
