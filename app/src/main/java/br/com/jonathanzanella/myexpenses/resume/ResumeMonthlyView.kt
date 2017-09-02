@@ -2,7 +2,6 @@ package br.com.jonathanzanella.myexpenses.resume
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.os.AsyncTask
 import android.support.annotation.UiThread
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.GridLayoutManager
@@ -25,7 +24,7 @@ import org.joda.time.DateTime
 @SuppressLint("ViewConstructor")
 internal class ResumeMonthlyView(context: Context, private val month: DateTime) : FrameLayout(context), RefreshableView, FilterableView {
     override var filter = ""
-    var singleRowHeight: Int = 0
+    private var singleRowHeight: Int = 0
 
     private var receiptRepository = ReceiptRepository()
     private var expenseRepository = ExpenseRepository()
@@ -88,21 +87,16 @@ internal class ResumeMonthlyView(context: Context, private val month: DateTime) 
 
     @UiThread
     private fun loadBills() {
-        object : AsyncTask<Void, Void, Void>() {
+        doAsync {
+            billsAdapter.loadData(month)
 
-            override fun doInBackground(vararg voids: Void): Void? {
-                billsAdapter.loadData(month)
-                return null
-            }
-
-            override fun onPostExecute(aVoid: Void?) {
-                super.onPostExecute(aVoid)
+            uiThread {
                 billsAdapter.notifyDataSetChanged()
                 bills.layoutParams.height = singleRowHeight * billsAdapter.itemCount
 
                 updateTotalExpenses()
             }
-        }.execute()
+        }
     }
 
     @UiThread
