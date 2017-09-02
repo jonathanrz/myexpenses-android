@@ -8,7 +8,6 @@ import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.AppCompatEditText
 import android.text.InputType
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.CheckBox
@@ -27,6 +26,7 @@ import br.com.jonathanzanella.myexpenses.views.anko.*
 import org.apache.commons.lang3.StringUtils
 import org.jetbrains.anko.*
 import org.joda.time.DateTime
+import timber.log.Timber
 
 class EditReceiptActivity : AppCompatActivity(), ReceiptContract.EditView {
     override val installment: Int
@@ -168,7 +168,7 @@ class EditReceiptActivity : AppCompatActivity(), ReceiptContract.EditView {
             ValidationError.AMOUNT -> ui.editIncome.error = getString(error.message)
             ValidationError.SOURCE -> ui.editSource.error = getString(error.message)
             ValidationError.ACCOUNT -> ui.editAccount.error = getString(error.message)
-            else -> Log.e(this.javaClass.name, "Validation unrecognized, field:" + error)
+            else -> Timber.e("Validation unrecognized, field:" + error)
         }
     }
 

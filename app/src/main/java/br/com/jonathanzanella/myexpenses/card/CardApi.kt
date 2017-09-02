@@ -22,7 +22,7 @@ class CardApi : UnsyncModelApi<Card> {
 
     override fun index(): List<Card> {
         val lastUpdatedAt = greaterUpdatedAt()
-        Timber.tag("AccountApi.index with lastUpdatedAt: $lastUpdatedAt")
+        Timber.tag("CardApi.index with lastUpdatedAt: $lastUpdatedAt")
         val caller = cardInterface.index(lastUpdatedAt)
 
         try {
