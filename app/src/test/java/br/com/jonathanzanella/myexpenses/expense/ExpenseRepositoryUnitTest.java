@@ -2,6 +2,7 @@ package br.com.jonathanzanella.myexpenses.expense;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import br.com.jonathanzanella.myexpenses.helper.builder.ExpenseBuilder;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
@@ -14,10 +15,13 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class ExpenseRepositoryUnitTest {
 	private ExpenseRepository subject;
 
+	@Mock
+	private ExpenseDao dao;
+
 	@Before
 	public void setUp() throws Exception {
 		initMocks(this);
-		subject = new ExpenseRepository();
+		subject = new ExpenseRepository(dao);
 	}
 
 	@Test
