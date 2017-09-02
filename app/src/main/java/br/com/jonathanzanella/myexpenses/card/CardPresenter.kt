@@ -3,7 +3,6 @@ package br.com.jonathanzanella.myexpenses.card
 import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.content.Intent
-import android.os.AsyncTask
 import android.support.annotation.UiThread
 import android.support.annotation.WorkerThread
 import br.com.jonathanzanella.myexpenses.R
@@ -15,7 +14,8 @@ import br.com.jonathanzanella.myexpenses.exceptions.ValidationException
 import br.com.jonathanzanella.myexpenses.expense.Expense
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.helpers.ResourcesHelper
-import br.com.jonathanzanella.myexpenses.validations.ValidationResult
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 import org.joda.time.DateTime
 
 class CardPresenter(private val repository: CardRepository, private val accountRepository: AccountRepository,
@@ -44,18 +44,11 @@ class CardPresenter(private val repository: CardRepository, private val accountR
     fun viewUpdated(invalidateCache: Boolean) {
         if (card != null) {
             if (invalidateCache) {
-                object : AsyncTask<Void, Void, Void>() {
+                doAsync {
+                    card = repository.find(card!!.uuid!!)
 
-                    override fun doInBackground(vararg voids: Void): Void? {
-                        card = repository.find(card!!.uuid!!)
-                        return null
-                    }
-
-                    override fun onPostExecute(aVoid: Void?) {
-                        super.onPostExecute(aVoid)
-                        updateView()
-                    }
-                }.execute()
+                    uiThread { updateView() }
+                }
             } else {
                 updateView()
             }
@@ -90,18 +83,11 @@ class CardPresenter(private val repository: CardRepository, private val accountR
 
     @UiThread
     fun reloadCard() {
-        object : AsyncTask<Void, Void, Void>() {
+        doAsync {
+            loadCard(card!!.uuid!!)
 
-            override fun doInBackground(vararg voids: Void): Void? {
-                loadCard(card!!.uuid!!)
-                return null
-            }
-
-            override fun onPostExecute(aVoid: Void?) {
-                super.onPostExecute(aVoid)
-                updateView()
-            }
-        }.execute()
+            uiThread { updateView() }
+        }
     }
 
     @WorkerThread
@@ -120,23 +106,16 @@ class CardPresenter(private val repository: CardRepository, private val accountR
         if (account != null)
             card!!.account = account
 
-        object : AsyncTask<Void, Void, ValidationResult>() {
+        doAsync {
+            val result = repository.save(card!!)
 
-            override fun doInBackground(vararg voids: Void): ValidationResult {
-                return repository.save(card!!)
+            if (result.isValid) {
+                v.finishView()
+            } else {
+                for (validationError in result.errors)
+                    v.showError(validationError)
             }
-
-            override fun onPostExecute(result: ValidationResult) {
-                super.onPostExecute(result)
-
-                if (result.isValid) {
-                    v.finishView()
-                } else {
-                    for (validationError in result.errors)
-                        v.showError(validationError)
-                }
-            }
-        }.execute()
+        }
     }
 
     val uuid: String?
@@ -158,20 +137,11 @@ class CardPresenter(private val repository: CardRepository, private val accountR
 
     @UiThread
     private fun loadAccount(uuid: String) {
-        object : AsyncTask<Void, Void, Account>() {
+        doAsync {
+            account = accountRepository.find(uuid)
 
-            override fun doInBackground(vararg voids: Void): Account? {
-                return accountRepository.find(uuid)
-            }
-
-            override fun onPostExecute(account: Account?) {
-                super.onPostExecute(account)
-                this@CardPresenter.account = account
-                if (account != null) {
-                    editView?.onAccountSelected(account)
-                }
-            }
-        }.execute()
+            uiThread { account?.let { editView?.onAccountSelected(it) }}
+        }
     }
 
     fun generateCreditCardBill(month: DateTime): Expense? {

@@ -33,7 +33,7 @@ import static org.hamcrest.Matchers.not;
 public class BillRepositoryTest {
 	private final DateTime firstDayOfJune = new DateTime(2016, 6, 1, 0, 0, 0, 0);
 	private final ExpenseRepository expenseRepository = new ExpenseRepository();
-	private final BillRepository billRepository = new BillRepository(expenseRepository);
+	private final BillRepository billRepository = new BillRepository(expenseRepository, MyApplication.database.billDao());
 
 	@Before
 	public void setUp() throws Exception {

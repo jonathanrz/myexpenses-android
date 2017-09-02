@@ -2,12 +2,10 @@ package br.com.jonathanzanella.myexpenses.card
 
 import android.app.Activity
 import android.content.Intent
-import android.os.AsyncTask
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -23,6 +21,7 @@ import br.com.jonathanzanella.myexpenses.helpers.ResourcesHelper
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.views.anko.*
 import org.jetbrains.anko.*
+import timber.log.Timber
 
 class EditCardActivity : AppCompatActivity(), CardContract.EditView {
     override val context = this
@@ -51,19 +50,12 @@ class EditCardActivity : AppCompatActivity(), CardContract.EditView {
     }
 
     fun storeBundle(extras: Bundle?) {
-        object : AsyncTask<Void, Void, Void>() {
+        doAsync {
+            if (extras?.containsKey(KEY_CARD_UUID) == true)
+                presenter.loadCard(extras.getString(KEY_CARD_UUID))
 
-            override fun doInBackground(vararg voids: Void): Void? {
-                if (extras?.containsKey(KEY_CARD_UUID) ?: false)
-                    presenter.loadCard(extras!!.getString(KEY_CARD_UUID))
-                return null
-            }
-
-            override fun onPostExecute(aVoid: Void?) {
-                super.onPostExecute(aVoid)
-                presenter.updateView()
-            }
-        }.execute()
+            uiThread { presenter.updateView() }
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -146,7 +138,7 @@ class EditCardActivity : AppCompatActivity(), CardContract.EditView {
             ValidationError.NAME -> ui.editName.error = getString(error.message)
             ValidationError.CARD_TYPE -> Snackbar.make(contentView!!, getString(error.message), Snackbar.LENGTH_SHORT).show()
             ValidationError.ACCOUNT -> ui.editAccount.error = getString(error.message)
-            else -> Log.e(this.javaClass.name, "Validation unrecognized, field:" + error)
+            else -> Timber.e("Validation unrecognized, field:" + error)
         }
     }
 
@@ -156,7 +148,7 @@ class EditCardActivity : AppCompatActivity(), CardContract.EditView {
 }
 
 class EditCardActivityUi : AnkoComponent<EditCardActivity> {
-    lateinit var contentView: View
+    private lateinit var contentView: View
     lateinit var toolbar : TemplateToolbar
     lateinit var editName: EditText
     lateinit var editAccount: EditText
