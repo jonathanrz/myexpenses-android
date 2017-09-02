@@ -2,7 +2,6 @@ package br.com.jonathanzanella.myexpenses.sync
 
 import android.app.Service
 import android.content.Intent
-import android.util.Log
 import br.com.jonathanzanella.myexpenses.Environment
 import br.com.jonathanzanella.myexpenses.account.AccountApi
 import br.com.jonathanzanella.myexpenses.bill.BillApi
@@ -17,6 +16,7 @@ import com.google.android.gms.gcm.GcmTaskService
 import com.google.android.gms.gcm.PeriodicTask
 import com.google.android.gms.gcm.TaskParams
 import org.apache.commons.lang3.StringUtils
+import timber.log.Timber
 import java.util.*
 
 class SyncService : GcmTaskService() {
@@ -49,22 +49,21 @@ class SyncService : GcmTaskService() {
                         .build())
     }
 
-    override fun onStartCommand(intent: Intent?, i: Int, i1: Int): Int {
+    override fun onStartCommand(intent: Intent?, i: Int, i1: Int) =
         if (intent!!.extras != null && intent.extras.containsKey(KEY_EXECUTE_SYNC)) {
             Thread(Runnable { onRunTask(null) }).start()
-            return Service.START_NOT_STICKY
+            Service.START_NOT_STICKY
         } else {
-            return super.onStartCommand(intent, i, i1)
+            super.onStartCommand(intent, i, i1)
         }
-    }
 
     override fun onRunTask(taskParams: TaskParams?): Int {
         if (StringUtils.isEmpty(ServerData(baseContext).serverUrl) || StringUtils.isEmpty(ServerData(baseContext).serverToken)) {
-            Log.d(LOG_TAG, "Did not executed SyncService because server url and token are not informed")
+            Timber.d("Did not executed SyncService because server url and token are not informed")
             return GcmNetworkManager.RESULT_SUCCESS
         }
 
-        Log.d(LOG_TAG, "init SyncService, task: " + if (taskParams != null) taskParams.tag else "without task")
+        Timber.d("init SyncService, task: " + if (taskParams != null) taskParams.tag else "without task")
         totalSaved = 0
         totalUpdated = 0
 
@@ -77,44 +76,43 @@ class SyncService : GcmTaskService() {
                 notification.incrementProgress()
             }
         } else {
-            Log.d(LOG_TAG, "error in health check")
+            Timber.d("error in health check")
             return GcmNetworkManager.RESULT_FAILURE
         }
 
         notification.showFinishedJobNotification(this, totalSaved, totalUpdated)
 
-        Log.d(LOG_TAG, "end SyncService")
+        Timber.d("end SyncService")
         selfSchedule()
         return GcmNetworkManager.RESULT_SUCCESS
     }
 
     private fun syncApi(api: UnsyncModelApi<UnsyncModel>) {
-        val logTag = LOG_TAG + "-" + api.javaClass.simpleName
-        Log.d(logTag, "init sync")
+        val log = Timber.tag(api.javaClass.simpleName)
+        log.d("init sync")
         val unsyncModels = api.index()
         for (unsyncModel in unsyncModels) {
             api.syncAndSave(unsyncModel)
             totalSaved++
-            Log.i(logTag, "Saved: " + unsyncModel.getData())
+            log.i("Saved: " + unsyncModel.getData())
         }
 
         syncLocalData(api)
-        Log.d(logTag, "finished sync")
+        log.d("finished sync")
     }
 
     private fun syncLocalData(api: UnsyncModelApi<UnsyncModel>) {
-        val logTag = LOG_TAG + "-" + api.javaClass.simpleName
-        Log.d(logTag, "init of syncLocalData")
+        val log = Timber.tag(api.javaClass.simpleName)
+        log.d("init of syncLocalData")
         for (unsyncModel in api.unsyncModels()) {
             api.save(unsyncModel)
             totalUpdated++
         }
-        Log.d(logTag, "end of syncLocalData")
+        log.d("end of syncLocalData")
     }
 
     companion object {
         val KEY_EXECUTE_SYNC = "KeyExecuteSync"
         private var notificationId = 1
-        private val LOG_TAG = SyncService::class.java.simpleName
     }
 }
