@@ -148,7 +148,7 @@ public class AddExpenseTest {
 	public void add_new_expense_with_bill() throws Exception {
 		Bill bill = new BillBuilder().build();
 		ExpenseRepository expenseRepository = new ExpenseRepository();
-		new BillRepository(expenseRepository).save(bill);
+		new BillRepository(expenseRepository, MyApplication.database.billDao()).save(bill);
 
 		mainActivityTestRule.launchActivity(new Intent());
 

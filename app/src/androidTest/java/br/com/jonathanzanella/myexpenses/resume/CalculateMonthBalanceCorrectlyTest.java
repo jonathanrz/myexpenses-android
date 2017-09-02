@@ -72,7 +72,7 @@ public class CalculateMonthBalanceCorrectlyTest {
 				.endDate(now.plusMonths(12))
 				.amount(BILL_AMOUNT)
 				.build();
-		assertTrue(new BillRepository(new ExpenseRepository()).save(b).isValid());
+		assertTrue(new BillRepository(new ExpenseRepository(), MyApplication.database.billDao()).save(b).isValid());
 
 		generateThreeMonthlyReceipts(a, s);
 		generateThreeMonthlyExpenses(a);

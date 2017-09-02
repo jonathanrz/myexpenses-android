@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import br.com.jonathanzanella.myexpenses.MyApplication;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult;
@@ -23,7 +24,7 @@ public class BillRepositoryUnitTest {
 	@Before
 	public void setUp() throws Exception {
 		initMocks(this);
-		billRepository = new BillRepository(expenseRepository);
+		billRepository = new BillRepository(expenseRepository, MyApplication.database.billDao());
 	}
 
 	@Test

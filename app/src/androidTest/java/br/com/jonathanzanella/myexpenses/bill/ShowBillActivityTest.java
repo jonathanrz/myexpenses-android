@@ -35,7 +35,7 @@ public class ShowBillActivityTest {
 
 	private Bill bill;
 	private final ExpenseRepository expenseRepository = new ExpenseRepository();
-	private final BillRepository repository = new BillRepository(expenseRepository);
+	private final BillRepository repository = new BillRepository(expenseRepository, MyApplication.database.billDao());
 
 	@Before
 	public void setUp() throws Exception {
