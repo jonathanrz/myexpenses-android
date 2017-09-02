@@ -12,10 +12,6 @@ class ValidationResult {
         errors.add(error)
     }
 
-    fun getErrors(): List<ValidationError> {
-        return errors
-    }
-
     val errorsAsString: String
         get() {
             val builder = StringBuilder()

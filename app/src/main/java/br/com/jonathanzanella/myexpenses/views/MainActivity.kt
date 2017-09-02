@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        (0..content!!.childCount - 1)
+        (0 until content!!.childCount)
                 .map { content!!.getChildAt(it) }
                 .forEach { (it as? ResultableView)?.onActivityResult(requestCode, resultCode, data) }
     }
@@ -101,7 +101,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onResume() {
         super.onResume()
 
-        (0..content.childCount - 1)
+        (0 until content.childCount)
                 .map { content.getChildAt(it) }
                 .filterIsInstance<RefreshableView>()
                 .forEach { it.refreshData() }
