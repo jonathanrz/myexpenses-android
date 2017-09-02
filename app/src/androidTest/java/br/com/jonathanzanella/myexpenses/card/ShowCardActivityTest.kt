@@ -34,7 +34,7 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 @MediumTest
 class ShowCardActivityTest {
-    @Rule
+    @Rule @JvmField
     var activityTestRule = ActivityTestRule(ShowCardActivity::class.java, true, false)
 
     private val expenseRepository = ExpenseRepository()

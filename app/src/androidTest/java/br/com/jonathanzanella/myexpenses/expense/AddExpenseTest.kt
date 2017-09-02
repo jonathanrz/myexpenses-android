@@ -36,9 +36,9 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 @LargeTest
 class AddExpenseTest {
-    @Rule
+    @Rule @JvmField
     var mainActivityTestRule = ActivityTestRule(MainActivity::class.java)
-    @Rule
+    @Rule @JvmField
     var editExpenseActivityTestRule = ActivityTestRule(EditExpenseActivity::class.java)
 
     private var account: Account? = null

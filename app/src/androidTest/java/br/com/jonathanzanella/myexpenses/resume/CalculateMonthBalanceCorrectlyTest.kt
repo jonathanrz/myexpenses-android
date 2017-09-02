@@ -36,7 +36,7 @@ import org.junit.runner.RunWith
 @SmallTest
 class CalculateMonthBalanceCorrectlyTest {
 
-    @Rule
+    @Rule @JvmField
     var activityTestRule = ActivityTestRule(MainActivity::class.java)
 
     private val monthlyPagerAdapterHelper = MonthlyPagerAdapterHelper()

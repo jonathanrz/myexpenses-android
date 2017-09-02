@@ -35,7 +35,7 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 @MediumTest
 class ShowAccountActivityTest {
-    @Rule
+    @Rule @JvmField
     var activityTestRule = ActivityTestRule(ShowAccountActivity::class.java, true, false)
 
     private var account: Account? = null

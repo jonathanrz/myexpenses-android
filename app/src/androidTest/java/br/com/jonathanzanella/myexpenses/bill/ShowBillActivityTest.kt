@@ -27,7 +27,7 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 @MediumTest
 class ShowBillActivityTest {
-    @Rule
+    @Rule @JvmField
     var activityTestRule = ActivityTestRule(ShowBillActivity::class.java, true, false)
 
     private var bill: Bill? = null

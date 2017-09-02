@@ -26,13 +26,12 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 @MediumTest
 class AddAccountTest {
-    @Rule
-    var activityTestRule = ActivityTestRule(MainActivity::class.java)
-    @Rule
-    var editAccountActivityTestRule = ActivityTestRule(EditAccountActivity::class.java)
+    @Rule @JvmField
+    val activityTestRule = ActivityTestRule(MainActivity::class.java)
+    @Rule @JvmField
+    val editAccountActivityTestRule = ActivityTestRule(EditAccountActivity::class.java)
 
     @Before
-    @Throws(Exception::class)
     fun setUp() {
         MyApplication.resetDatabase()
     }
