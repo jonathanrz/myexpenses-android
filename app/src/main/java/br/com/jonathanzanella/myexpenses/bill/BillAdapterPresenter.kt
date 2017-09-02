@@ -35,7 +35,7 @@ class BillAdapterPresenter(private val repository: BillRepository) {
             return
         }
 
-        billsFiltered = ArrayList<Bill>()
+        billsFiltered = ArrayList()
         bills!!
                 .filter { StringUtils.containsIgnoreCase(it.name, filter) }
                 .forEach { billsFiltered!!.add(it) }

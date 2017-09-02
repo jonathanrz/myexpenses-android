@@ -1,7 +1,6 @@
 package br.com.jonathanzanella.myexpenses.bill
 
 import android.content.Intent
-import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
@@ -40,19 +39,12 @@ class ShowBillActivity : AppCompatActivity(), BillContract.View {
     }
 
     fun storeBundle(extras: Bundle?) {
-        if (extras?.containsKey(KEY_BILL_UUID) ?: false) {
-            object : AsyncTask<Void, Void, Void>() {
+        if (extras?.containsKey(KEY_BILL_UUID) == true) {
+            doAsync {
+                presenter.loadBill(extras.getString(KEY_BILL_UUID))
 
-                override fun doInBackground(vararg voids: Void): Void? {
-                    presenter.loadBill(extras!!.getString(KEY_BILL_UUID))
-                    return null
-                }
-
-                override fun onPostExecute(aVoid: Void?) {
-                    super.onPostExecute(aVoid)
-                    presenter.updateView()
-                }
-            }.execute()
+                uiThread { presenter.updateView() }
+            }
         }
     }
 

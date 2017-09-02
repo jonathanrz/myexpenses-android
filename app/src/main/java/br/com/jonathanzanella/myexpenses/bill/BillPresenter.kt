@@ -2,7 +2,6 @@ package br.com.jonathanzanella.myexpenses.bill
 
 import android.app.DatePickerDialog
 import android.content.Context
-import android.os.AsyncTask
 import android.support.annotation.UiThread
 import android.support.annotation.WorkerThread
 import br.com.jonathanzanella.myexpenses.R
@@ -36,18 +35,11 @@ class BillPresenter(private val repository: BillRepository) {
     fun onViewUpdated(invalidateCache: Boolean) {
         if (bill != null) {
             if (invalidateCache) {
-                object : AsyncTask<Void, Void, Void>() {
+                doAsync {
+                    loadBill(bill!!.uuid!!)
 
-                    override fun doInBackground(vararg voids: Void): Void? {
-                        loadBill(bill!!.uuid!!)
-                        return null
-                    }
-
-                    override fun onPostExecute(aVoid: Void?) {
-                        super.onPostExecute(aVoid)
-                        updateView()
-                    }
-                }.execute()
+                    uiThread { updateView() }
+                }
             } else {
                 updateView()
             }

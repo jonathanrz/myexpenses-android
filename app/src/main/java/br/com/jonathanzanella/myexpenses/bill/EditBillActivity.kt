@@ -2,10 +2,8 @@ package br.com.jonathanzanella.myexpenses.bill
 
 import android.app.Activity
 import android.content.Intent
-import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
@@ -19,6 +17,7 @@ import br.com.jonathanzanella.myexpenses.views.anko.*
 import org.apache.commons.lang3.StringUtils
 import org.jetbrains.anko.*
 import org.joda.time.DateTime
+import timber.log.Timber
 
 class EditBillActivity : AppCompatActivity(), BillContract.EditView {
     override val context = this
@@ -49,19 +48,12 @@ class EditBillActivity : AppCompatActivity(), BillContract.EditView {
     }
 
     fun storeBundle(extras: Bundle?) {
-        if (extras?.containsKey(KEY_BILL_UUID) ?: false) {
-            object : AsyncTask<Void, Void, Void>() {
+        if (extras?.containsKey(KEY_BILL_UUID) == true) {
+            doAsync {
+                presenter.loadBill(extras.getString(KEY_BILL_UUID))
 
-                override fun doInBackground(vararg voids: Void): Void? {
-                    presenter.loadBill(extras!!.getString(KEY_BILL_UUID))
-                    return null
-                }
-
-                override fun onPostExecute(aVoid: Void?) {
-                    super.onPostExecute(aVoid)
-                    presenter.onViewUpdated(false)
-                }
-            }.execute()
+                uiThread { presenter.onViewUpdated(false) }
+            }
         }
     }
 
@@ -137,7 +129,7 @@ class EditBillActivity : AppCompatActivity(), BillContract.EditView {
             ValidationError.DUE_DATE -> ui.editDueDate.error = getString(error.message)
             ValidationError.INIT_DATE, ValidationError.INIT_DATE_GREATER_THAN_END_DATE -> ui.editInitDate.error = getString(error.message)
             ValidationError.END_DATE -> ui.editEndDate.error = getString(error.message)
-            else -> Log.e(this.javaClass.name, "Validation unrecognized, field:" + error)
+            else -> Timber.e("Validation unrecognized, field:" + error)
         }
     }
 
