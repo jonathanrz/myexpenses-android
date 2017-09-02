@@ -1,11 +1,11 @@
 package br.com.jonathanzanella.myexpenses.account
 
 import android.support.annotation.WorkerThread
-import android.util.Log
 import br.com.jonathanzanella.myexpenses.MyApplication
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult
 import org.apache.commons.lang3.StringUtils
+import timber.log.Timber
 import java.util.*
 
 open class AccountRepository(private val dao: AccountDao = MyApplication.database.accountDao()) {
@@ -57,7 +57,8 @@ open class AccountRepository(private val dao: AccountDao = MyApplication.databas
     fun syncAndSave(unsync: Account): ValidationResult {
         val result = validate(unsync)
         if (!result.isValid) {
-            Log.w("Account validation fail", unsync.getData() + "\nerrors: " + result.errorsAsString)
+            Timber.tag("Account validation fail")
+                    .w(unsync.getData() + "\nerrors: " + result.errorsAsString)
             return result
         }
 
@@ -65,7 +66,8 @@ open class AccountRepository(private val dao: AccountDao = MyApplication.databas
 
         if (account != null && account.id != unsync.id) {
             if (account.updatedAt != unsync.updatedAt)
-                Log.w("Account overwritten", unsync.getData())
+                Timber.tag("Account overwritten")
+                        .w(unsync.getData())
             unsync.id = account.id
         }
 

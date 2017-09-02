@@ -1,28 +1,21 @@
 package br.com.jonathanzanella.myexpenses.account
 
-import android.os.AsyncTask
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 
 internal class AccountAdapterPresenter(private val adapter: AccountAdapter, private val repository: AccountRepository) {
 
     private var accounts: List<Account>? = null
 
     fun loadAccountsAsync(format: AccountAdapter.Format) {
-        object : AsyncTask<Void, Void, Void>() {
-
-            override fun doInBackground(vararg voids: Void): Void? {
-                if (format === AccountAdapter.Format.RESUME) {
-                    accounts = repository.forResumeScreen()
-                } else {
-                    accounts = repository.all()
-                }
-                return null
+        doAsync {
+            accounts = when {
+                format === AccountAdapter.Format.RESUME -> repository.forResumeScreen()
+                else -> repository.all()
             }
 
-            override fun onPostExecute(aVoid: Void?) {
-                super.onPostExecute(aVoid)
-                adapter.notifyDataSetChanged()
-            }
-        }.execute()
+            uiThread { adapter.notifyDataSetChanged() }
+        }
     }
 
     fun getAccount(position: Int): Account {

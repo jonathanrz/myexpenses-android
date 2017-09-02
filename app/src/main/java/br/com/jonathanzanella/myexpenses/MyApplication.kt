@@ -12,8 +12,6 @@ import timber.log.Timber
 import timber.log.Timber.DebugTree
 import java.lang.ref.WeakReference
 
-
-
 class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()

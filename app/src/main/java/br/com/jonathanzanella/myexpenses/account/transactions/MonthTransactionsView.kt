@@ -18,7 +18,7 @@ class MonthTransactionsView@JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr), MonthTransactionsContractView {
 
-    val simpleDateFormat = SimpleDateFormat("MMMM/yy", Locale.getDefault())
+    private val simpleDateFormat = SimpleDateFormat("MMMM/yy", Locale.getDefault())
     private var singleRowHeight = context.resources.getDimensionPixelSize(R.dimen.single_row_height)
     private val monthTransactionsTemplate = resources.getString(R.string.month_transactions)
     private val presenter = MonthTransactionsPresenter(this)

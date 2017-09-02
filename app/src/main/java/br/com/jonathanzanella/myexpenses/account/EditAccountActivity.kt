@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.AppCompatEditText
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.CheckBox
@@ -16,6 +15,7 @@ import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.views.anko.*
 import org.apache.commons.lang3.StringUtils
 import org.jetbrains.anko.*
+import timber.log.Timber
 
 class EditAccountActivity : AppCompatActivity(), AccountContract.EditView {
     override val context = this
@@ -88,7 +88,7 @@ class EditAccountActivity : AppCompatActivity(), AccountContract.EditView {
         return account
     }
 
-    fun getBalanceValue() : Int {
+    private fun getBalanceValue() : Int {
         val balanceText = ui.editBalance.text.toString().replace("[^\\d]".toRegex(), "")
         val balanceValue = if (StringUtils.isEmpty(balanceText)) 0 else Integer.parseInt(balanceText)
         if (ui.checkAccountBalanceNegative.isChecked)
@@ -116,7 +116,7 @@ class EditAccountActivity : AppCompatActivity(), AccountContract.EditView {
     override fun showError(error: ValidationError) {
         when (error) {
             ValidationError.NAME -> ui.editName.error = getString(error.message)
-            else -> Log.e(this.javaClass.name, "Validation unrecognized, field:" + error)
+            else -> Timber.e("Validation unrecognized, field:" + error)
         }
     }
 

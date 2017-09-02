@@ -68,12 +68,15 @@ class AccountAdapter(val month : DateTime) : RecyclerView.Adapter<AccountAdapter
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        if(format == NORMAL) {
-            val ui = NormalViewUI()
-            return ViewHolder(ui.createView(AnkoContext.create(parent.context, parent)), ui.accountName, ui.accountBalance, ui.accountToPayCreditCard)
-        } else {
-            val ui = SimplifiedViewUI(format)
-            return ViewHolder(ui.createView(AnkoContext.create(parent.context, parent)), ui.accountName, ui.accountBalance, null)
+        return when (format) {
+            NORMAL -> {
+                val ui = NormalViewUI()
+                ViewHolder(ui.createView(AnkoContext.create(parent.context, parent)), ui.accountName, ui.accountBalance, ui.accountToPayCreditCard)
+            }
+            else -> {
+                val ui = SimplifiedViewUI(format)
+                ViewHolder(ui.createView(AnkoContext.create(parent.context, parent)), ui.accountName, ui.accountBalance, null)
+            }
         }
     }
 
