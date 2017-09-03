@@ -13,7 +13,7 @@ import org.jetbrains.anko.*
 import org.joda.time.DateTime
 
 @SuppressLint("ViewConstructor")
-class CreditCardInvoiceView(context: Context, val creditCard: Card, val month: DateTime) : FrameLayout(context) {
+class CreditCardInvoiceView(context: Context, private val creditCard: Card, val month: DateTime) : FrameLayout(context) {
     private val ui = CreditCardInvoiceViewUI()
     private var adapter = CreditCardMonthlyAdapter()
 

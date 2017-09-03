@@ -10,8 +10,8 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.transactions.TransactionsView
-import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
-import br.com.jonathanzanella.myexpenses.helpers.DateHelper
+import br.com.jonathanzanella.myexpenses.helpers.firstDayOfMonth
+import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.views.anko.*
 import org.jetbrains.anko.*
 import org.joda.time.DateTime
@@ -30,7 +30,7 @@ class ShowAccountActivity : AppCompatActivity(), AccountContract.View {
         storeBundle(intent.extras)
 
         if (monthToShow == null)
-            monthToShow = DateHelper.firstDayOfMonth(DateTime.now())
+            monthToShow = DateTime.now().firstDayOfMonth()
 
         ui.toolbar.setup(this)
     }
@@ -40,7 +40,7 @@ class ShowAccountActivity : AppCompatActivity(), AccountContract.View {
             return
         presenter.loadAccount(extras.getString(KEY_ACCOUNT_UUID))
         if (extras.containsKey(KEY_ACCOUNT_MONTH_TO_SHOW))
-            monthToShow = DateHelper.firstDayOfMonth(DateTime(extras.getLong(KEY_ACCOUNT_MONTH_TO_SHOW)))
+            monthToShow = DateTime(extras.getLong(KEY_ACCOUNT_MONTH_TO_SHOW)).firstDayOfMonth()
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -82,7 +82,7 @@ class ShowAccountActivity : AppCompatActivity(), AccountContract.View {
 
     override fun showAccount(account: Account) {
         ui.accountName.text = account.name
-        ui.accountBalance.text = CurrencyHelper.format(account.balance)
+        ui.accountBalance.text = account.balance.toCurrencyFormatted()
         ui.accountToPayCreditCard.setText(if (account.accountToPayCreditCard) R.string.yes else R.string.no)
         ui.accountToPayBills.setText(if (account.accountToPayBills) R.string.yes else R.string.no)
 

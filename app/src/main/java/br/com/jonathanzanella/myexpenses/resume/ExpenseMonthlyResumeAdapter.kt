@@ -2,7 +2,6 @@ package br.com.jonathanzanella.myexpenses.resume
 
 import android.content.Intent
 import android.graphics.Typeface
-import android.os.AsyncTask
 import android.support.annotation.UiThread
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -10,12 +9,13 @@ import android.view.View
 import android.view.ViewGroup
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.card.CreditCardInvoiceActivity
-import br.com.jonathanzanella.myexpenses.chargeable.Chargeable
 import br.com.jonathanzanella.myexpenses.expense.Expense
 import br.com.jonathanzanella.myexpenses.expense.ShowExpenseActivity
-import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
 import br.com.jonathanzanella.myexpenses.helpers.TransactionsHelper
+import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import kotlinx.android.synthetic.main.row_monthly_resume_expense.view.*
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -48,29 +48,26 @@ internal class ExpenseMonthlyResumeAdapter : RecyclerView.Adapter<ExpenseMonthly
                     itemView.date.text = SIMPLE_DATE_FORMAT.format(expense.getDate().toDate())
                 }
             }
-            itemView.income.text = CurrencyHelper.format(expense.value)
+            itemView.income.text = expense.value.toCurrencyFormatted()
             itemView.income.setTypeface(null, Typeface.NORMAL)
             if (!expense.charged)
                 itemView.income!!.setTypeface(null, Typeface.BOLD)
 
-            object : AsyncTask<Void, Void, Chargeable>() {
-                override fun doInBackground(vararg voids: Void): Chargeable? {
-                    return expense.chargeableFromCache
-                }
+            doAsync {
+                val chargeable = expense.chargeableFromCache
 
-                override fun onPostExecute(chargeable: Chargeable?) {
-                    super.onPostExecute(chargeable)
+                uiThread {
                     if (itemView.source != null && chargeable != null)
                         itemView.source.text = chargeable.name
                 }
-            }.execute()
+            }
         }
 
         fun setTotal(totalValue: Int) {
-            itemView.income.text = CurrencyHelper.format(totalValue)
+            itemView.income.text = totalValue.toCurrencyFormatted()
         }
 
-        fun onIncome() {
+        private fun onIncome() {
             if (itemViewType != ViewType.TYPE_NORMAL.ordinal)
                 return
 
@@ -104,36 +101,29 @@ internal class ExpenseMonthlyResumeAdapter : RecyclerView.Adapter<ExpenseMonthly
         }
     }
 
-    override fun getItemViewType(position: Int): Int {
-        if (isTotalView(position)) {
-            return ViewType.TYPE_TOTAL.ordinal
-        } else if (isTotalToPayView(position)) {
-            return ViewType.TYPE_TOTAL_TO_PAY.ordinal
-        } else {
-            return ViewType.TYPE_NORMAL.ordinal
+    override fun getItemViewType(position: Int) =
+        when {
+            isTotalView(position) -> ViewType.TYPE_TOTAL.ordinal
+            isTotalToPayView(position) -> ViewType.TYPE_TOTAL_TO_PAY.ordinal
+            else -> ViewType.TYPE_NORMAL.ordinal
         }
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val v: View
-        if (viewType == ViewType.TYPE_TOTAL.ordinal)
-            v = LayoutInflater.from(parent.context).inflate(R.layout.row_monthly_resume_expense_total, parent, false)
-        else if (viewType == ViewType.TYPE_TOTAL_TO_PAY.ordinal)
-            v = LayoutInflater.from(parent.context).inflate(R.layout.row_monthly_resume_expense_total_to_pay, parent, false)
-        else
-            v = LayoutInflater.from(parent.context).inflate(R.layout.row_monthly_resume_expense, parent, false)
+        val v = when (viewType) {
+            ViewType.TYPE_TOTAL.ordinal -> LayoutInflater.from(parent.context).inflate(R.layout.row_monthly_resume_expense_total, parent, false)
+            ViewType.TYPE_TOTAL_TO_PAY.ordinal -> LayoutInflater.from(parent.context).inflate(R.layout.row_monthly_resume_expense_total_to_pay, parent, false)
+            else -> LayoutInflater.from(parent.context).inflate(R.layout.row_monthly_resume_expense, parent, false)
+        }
 
         return ViewHolder(v)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        if (isTotalView(position))
-            holder.setTotal(totalValue)
-        else if (isTotalToPayView(position))
-            holder.setTotal(totalUnpaidValue)
-        else
-            holder.setData(expenses[position])
-    }
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) =
+        when {
+            isTotalView(position) -> holder.setTotal(totalValue)
+            isTotalToPayView(position) -> holder.setTotal(totalUnpaidValue)
+            else -> holder.setData(expenses[position])
+        }
 
     private fun isTotalView(position: Int): Boolean {
         return position == expenses.size + 1

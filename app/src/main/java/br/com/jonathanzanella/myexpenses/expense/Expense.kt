@@ -13,7 +13,7 @@ import br.com.jonathanzanella.myexpenses.card.Card
 import br.com.jonathanzanella.myexpenses.card.CardRepository
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable
 import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType
-import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
+import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel
 import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import com.google.gson.annotations.Expose
@@ -183,7 +183,7 @@ class Expense : Transaction, UnsyncModel {
     }
 
     val incomeFormatted: String
-        get() = CurrencyHelper.format(value)
+        get() = value.toCurrencyFormatted()
 
     fun delete() {
         removed = true
@@ -229,9 +229,9 @@ class Expense : Transaction, UnsyncModel {
             if (type == null || uuid == null)
                 return null
 
-            when (type) {
-                ChargeableType.ACCOUNT -> return accountRepository!!.find(uuid)
-                ChargeableType.DEBIT_CARD, ChargeableType.CREDIT_CARD -> return cardRepository!!.find(uuid)
+            return when (type) {
+                ChargeableType.ACCOUNT -> accountRepository!!.find(uuid)
+                ChargeableType.DEBIT_CARD, ChargeableType.CREDIT_CARD -> cardRepository!!.find(uuid)
             }
         }
     }

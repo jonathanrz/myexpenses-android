@@ -1,7 +1,6 @@
 package br.com.jonathanzanella.myexpenses.card
 
 import android.content.Intent
-import android.os.AsyncTask
 import android.support.annotation.UiThread
 import android.support.annotation.WorkerThread
 import android.support.v4.content.ContextCompat
@@ -11,7 +10,6 @@ import android.view.ViewGroup
 import android.widget.TableLayout
 import android.widget.TextView
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.helpers.AdapterColorHelper
 import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
@@ -42,17 +40,11 @@ class CardAdapter : RecyclerView.Adapter<CardAdapter.ViewHolder>() {
         @UiThread
         fun setData(card: Card) {
             itemView.setBackgroundColor(adapterColorHelper.getColorForLinearLayout(adapterPosition))
-            object : AsyncTask<Void, Void, Account>() {
+            doAsync {
+                val a = card.account!!
 
-                override fun doInBackground(vararg voids: Void): Account {
-                    return card.account!!
-                }
-
-                override fun onPostExecute(a: Account) {
-                    super.onPostExecute(a)
-                    ui.cardAccount.text = a.name
-                }
-            }.execute()
+                uiThread { ui.cardAccount.text = a.name }
+            }
 
             var cardName = card.name + " - "
 

@@ -1,6 +1,5 @@
 package br.com.jonathanzanella.myexpenses.source
 
-import android.os.AsyncTask
 import android.support.annotation.UiThread
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException
@@ -46,18 +45,11 @@ class SourcePresenter(private val repository: SourceRepository) {
 
     @UiThread
     fun loadSource(uuid: String) {
-        object : AsyncTask<Void, Void, Void>() {
+        doAsync {
+            source = repository.find(uuid)
 
-            override fun doInBackground(vararg voids: Void): Void? {
-                source = repository.find(uuid)
-                return null
-            }
-
-            override fun onPostExecute(aVoid: Void?) {
-                super.onPostExecute(aVoid)
-                viewUpdated()
-            }
-        }.execute()
+            uiThread { viewUpdated() }
+        }
     }
 
     @UiThread

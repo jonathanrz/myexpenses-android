@@ -4,7 +4,6 @@ import android.arch.persistence.room.Entity
 import android.arch.persistence.room.Ignore
 import android.arch.persistence.room.PrimaryKey
 import android.support.annotation.WorkerThread
-import android.util.Log
 import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.account.AccountRepository
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable
@@ -12,6 +11,7 @@ import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import timber.log.Timber
 
 @Entity
 class Card : Chargeable, UnsyncModel {
@@ -56,48 +56,44 @@ class Card : Chargeable, UnsyncModel {
             accountUuid = account!!.uuid
         }
 
-        override val chargeableType: ChargeableType
-        get() {
-            when (type) {
-                CardType.CREDIT -> return ChargeableType.CREDIT_CARD
-                CardType.DEBIT -> return ChargeableType.DEBIT_CARD
-            }
-
-            Log.e(LOG_TAG, "new card type?")
-            return ChargeableType.DEBIT_CARD
+    override val chargeableType: ChargeableType
+    get() {
+        when (type) {
+            CardType.CREDIT -> return ChargeableType.CREDIT_CARD
+            CardType.DEBIT -> return ChargeableType.DEBIT_CARD
         }
 
-        override fun canBePaidNextMonth(): Boolean {
-            return type == CardType.CREDIT
-        }
+        Timber.e("new card type?")
+        return ChargeableType.DEBIT_CARD
+    }
 
-        @WorkerThread
-        override fun debit(value: Int) {
-            if (type == CardType.DEBIT) {
-                val account = account
-                account!!.debit(value)
-                accountRepository!!.save(account)
-            }
-        }
+    override fun canBePaidNextMonth(): Boolean {
+        return type == CardType.CREDIT
+    }
 
-        @WorkerThread
-        override fun credit(value: Int) {
-            if (type == CardType.DEBIT) {
-                val account = account
-                account!!.credit(value)
-                accountRepository!!.save(account)
-            }
+    @WorkerThread
+    override fun debit(value: Int) {
+        if (type == CardType.DEBIT) {
+            val account = account
+            account!!.debit(value)
+            accountRepository!!.save(account)
         }
+    }
 
-        override fun getData(): String {
-            return "name=" + name +
-                    "\nuuid=" + uuid +
-                    "\nserverId=" + serverId +
-                    "\ntype=" + type +
-                    "\naccount=" + accountUuid
+    @WorkerThread
+    override fun credit(value: Int) {
+        if (type == CardType.DEBIT) {
+            val account = account
+            account!!.credit(value)
+            accountRepository!!.save(account)
         }
+    }
 
-        companion object {
-        private val LOG_TAG = "Card"
+    override fun getData(): String {
+        return "name=" + name +
+                "\nuuid=" + uuid +
+                "\nserverId=" + serverId +
+                "\ntype=" + type +
+                "\naccount=" + accountUuid
     }
 }

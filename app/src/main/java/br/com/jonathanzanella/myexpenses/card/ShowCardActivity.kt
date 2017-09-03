@@ -2,7 +2,6 @@ package br.com.jonathanzanella.myexpenses.card
 
 import android.app.Activity
 import android.content.Intent
-import android.os.AsyncTask
 import android.os.Bundle
 import android.support.annotation.UiThread
 import android.support.v7.app.AppCompatActivity
@@ -11,10 +10,8 @@ import android.view.MenuItem
 import android.widget.TextView
 import android.widget.Toast
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.account.AccountRepository
 import br.com.jonathanzanella.myexpenses.expense.EditExpenseActivity
-import br.com.jonathanzanella.myexpenses.expense.Expense
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.helpers.ResourcesHelper
 import br.com.jonathanzanella.myexpenses.views.anko.*
@@ -52,19 +49,12 @@ class ShowCardActivity : AppCompatActivity(), CardContract.View {
 
     @UiThread
     fun storeBundle(extras: Bundle?) {
-        object : AsyncTask<Void, Void, Void>() {
+        doAsync {
+            if (extras?.containsKey(KEY_CREDIT_CARD_UUID) == true)
+                presenter.loadCard(extras.getString(KEY_CREDIT_CARD_UUID))
 
-            override fun doInBackground(vararg voids: Void): Void? {
-                if (extras?.containsKey(KEY_CREDIT_CARD_UUID) ?: false)
-                    presenter.loadCard(extras!!.getString(KEY_CREDIT_CARD_UUID))
-                return null
-            }
-
-            override fun onPostExecute(aVoid: Void?) {
-                super.onPostExecute(aVoid)
-                presenter.updateView()
-            }
-        }.execute()
+            uiThread { presenter.updateView() }
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -115,17 +105,11 @@ class ShowCardActivity : AppCompatActivity(), CardContract.View {
 
     @UiThread
     override fun showCard(card: Card) {
-        object : AsyncTask<Void, Void, Account>() {
+        doAsync {
+            val account = card.account!!
 
-            override fun doInBackground(vararg voids: Void): Account {
-                return card.account!!
-            }
-
-            override fun onPostExecute(account: Account) {
-                super.onPostExecute(account)
-                ui.cardAccount.text = account.name
-            }
-        }.execute()
+            uiThread { ui.cardAccount.text = account.name }
+        }
 
         ui.cardName.text = card.name
 
@@ -137,24 +121,20 @@ class ShowCardActivity : AppCompatActivity(), CardContract.View {
 
     @UiThread
     fun payCreditCardBill() {
-        object : AsyncTask<Void, Void, Expense>() {
-            override fun doInBackground(vararg voids: Void): Expense? {
-                return presenter.generateCreditCardBill(DateTime.now().minusMonths(1))
-            }
+        doAsync {
+            val expense = presenter.generateCreditCardBill(DateTime.now().minusMonths(1))
+            val ctx = this@ShowCardActivity
 
-            override fun onPostExecute(expense: Expense?) {
-                super.onPostExecute(expense)
+            uiThread {
                 if (expense != null) {
-                    val i = Intent(this@ShowCardActivity, EditExpenseActivity::class.java)
+                    val i = Intent(ctx, EditExpenseActivity::class.java)
                     i.putExtra(EditExpenseActivity.KEY_EXPENSE_UUID, expense.uuid)
                     startActivity(i)
                 } else {
-                    val ctx = this@ShowCardActivity
                     Toast.makeText(ctx, ctx.getString(R.string.empty_invoice), Toast.LENGTH_SHORT).show()
                 }
             }
-        }.execute()
-
+        }
     }
 
     companion object {

@@ -1,7 +1,6 @@
 package br.com.jonathanzanella.myexpenses.expense
 
 import android.content.Intent
-import android.os.AsyncTask
 import android.support.annotation.UiThread
 import android.support.annotation.WorkerThread
 import android.support.v4.content.res.ResourcesCompat
@@ -10,12 +9,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.bill.Bill
-import br.com.jonathanzanella.myexpenses.chargeable.Chargeable
 import br.com.jonathanzanella.myexpenses.helpers.AdapterColorHelper
-import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
+import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import kotlinx.android.synthetic.main.row_expense.view.*
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 import org.joda.time.DateTime
 
 internal open class ExpenseAdapter : RecyclerView.Adapter<ExpenseAdapter.ViewHolder>() {
@@ -37,32 +36,25 @@ internal open class ExpenseAdapter : RecyclerView.Adapter<ExpenseAdapter.ViewHol
 
         @UiThread
         fun setData(expense: Expense) {
-            itemView.tag = expense.uuid
-            itemView.setBackgroundColor(adapterColorHelper.getColorForGridWithTwoColumns(adapterPosition))
-            itemView.name.text = expense.name
-            itemView.date.text = Transaction.SIMPLE_DATE_FORMAT.format(expense.getDate().toDate())
-            itemView.value.text = CurrencyHelper.format(expense.value)
-            object : AsyncTask<Void, Void, Chargeable>() {
+            itemView.apply {
+                tag = expense.uuid
+                setBackgroundColor(adapterColorHelper.getColorForGridWithTwoColumns(adapterPosition))
+                name.text = expense.name
+                date.text = Transaction.SIMPLE_DATE_FORMAT.format(expense.getDate().toDate())
+                value.text = expense.value.toCurrencyFormatted()
+                chargeNextMonth.visibility = if (expense.chargedNextMonth) View.VISIBLE else View.INVISIBLE
+            }
 
-                override fun doInBackground(vararg voids: Void): Chargeable? {
-                    return expense.chargeableFromCache
-                }
+            doAsync {
+                val chargeable = expense.chargeableFromCache
 
-                override fun onPostExecute(c: Chargeable?) {
-                    super.onPostExecute(c)
-                    itemView.chargeable.text = c?.name
-                }
-            }.execute()
+                uiThread { itemView.chargeable.text = chargeable?.name }
+            }
 
-            itemView.chargeNextMonth.visibility = if (expense.chargedNextMonth) View.VISIBLE else View.INVISIBLE
-            object : AsyncTask<Void, Void, Bill>() {
+            doAsync {
+                val bill = expense.bill
 
-                override fun doInBackground(vararg voids: Void): Bill? {
-                    return expense.bill
-                }
-
-                override fun onPostExecute(bill: Bill?) {
-                    super.onPostExecute(bill)
+                uiThread {
                     if (bill == null) {
                         itemView.billStt.visibility = View.INVISIBLE
                         itemView.bill.visibility = View.INVISIBLE
@@ -72,7 +64,7 @@ internal open class ExpenseAdapter : RecyclerView.Adapter<ExpenseAdapter.ViewHol
                         itemView.bill.text = bill.name
                     }
                 }
-            }.execute()
+            }
         }
 
         override fun onClick(v: View) {

@@ -17,13 +17,15 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class BillRepositoryUnitTest {
 	@Mock
 	private ExpenseRepository expenseRepository;
+	@Mock
+	private BillDao dao;
 
 	private BillRepository billRepository;
 
 	@Before
 	public void setUp() throws Exception {
 		initMocks(this);
-		billRepository = new BillRepository(expenseRepository);
+		billRepository = new BillRepository(expenseRepository, dao);
 	}
 
 	@Test

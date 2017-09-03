@@ -1,15 +1,14 @@
 package br.com.jonathanzanella.myexpenses.bill
 
 import android.support.annotation.WorkerThread
-import android.util.Log
 import br.com.jonathanzanella.myexpenses.MyApplication
-import br.com.jonathanzanella.myexpenses.account.AccountApi
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.server.Server
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi
 import org.apache.commons.lang3.StringUtils
 import retrofit2.Call
+import timber.log.Timber
 import java.io.IOException
 
 @WorkerThread
@@ -25,41 +24,44 @@ class BillApi : UnsyncModelApi<Bill> {
     }
 
     override fun index(): List<Bill> {
-        val caller = billInterface.index(billRepository.greaterUpdatedAt())
+        val lastUpdatedAt = billRepository.greaterUpdatedAt()
+        Timber.tag("BillApi.index with lastUpdatedAt: $lastUpdatedAt")
 
-        try {
+        val caller = billInterface.index(lastUpdatedAt)
+
+        return try {
             val response = caller.execute()
             if (response.isSuccessful) {
-                return response.body()
+                response.body()
             } else {
-                Log.e(LOG_TAG, "Index request error: " + response.message())
-                return ArrayList()
+                Timber.e("Index request error: " + response.message())
+                ArrayList()
             }
         } catch (e: IOException) {
-            Log.e(LOG_TAG, "Index request error: " + e.message)
+            Timber.e("Index request error: " + e.message)
             e.printStackTrace()
-            return ArrayList()
+            ArrayList()
         }
     }
 
     override fun save(model: UnsyncModel) {
         val bill = model as Bill
         val caller: Call<Bill>
-        if (StringUtils.isNotEmpty(bill.serverId))
-            caller = billInterface.update(bill.serverId!!, bill)
+        caller = if (StringUtils.isNotEmpty(bill.serverId))
+            billInterface.update(bill.serverId!!, bill)
         else
-            caller = billInterface.create(bill)
+            billInterface.create(bill)
 
         try {
             val response = caller.execute()
             if (response.isSuccessful) {
                 billRepository.syncAndSave(response.body())
-                Log.i(LOG_TAG, "Updated: " + bill.getData())
+                Timber.i("Updated: " + bill.getData())
             } else {
-                Log.e(LOG_TAG, "Save request error: " + response.message() + " uuid: " + bill.uuid)
+                Timber.e("Save request error: " + response.message() + " uuid: " + bill.uuid)
             }
         } catch (e: IOException) {
-            Log.e(LOG_TAG, "Save request error: " + e.message + " uuid: " + bill.uuid)
+            Timber.e("Save request error: " + e.message + " uuid: " + bill.uuid)
             e.printStackTrace()
         }
 
@@ -77,9 +79,5 @@ class BillApi : UnsyncModelApi<Bill> {
 
     override fun greaterUpdatedAt(): Long {
         return billRepository.greaterUpdatedAt()
-    }
-
-    companion object {
-        private val LOG_TAG = AccountApi::class.java.simpleName
     }
 }

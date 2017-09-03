@@ -17,7 +17,7 @@ class MonthlyPagerAdapter(private val context: Context, private val builder: Mon
 
         val initTime = DateTime.now().minusMonths(INIT_MONTH_VISIBLE).withTime(0, 0, 0, 0).withDayOfMonth(1)
 
-        (0..TOTAL_MONTHS_VISIBLE - 1).mapTo(months) { initTime.plusMonths(it) }
+        (0 until TOTAL_MONTHS_VISIBLE).mapTo(months) { initTime.plusMonths(it) }
     }
 
     override fun instantiateItem(collection: ViewGroup, position: Int): Any {

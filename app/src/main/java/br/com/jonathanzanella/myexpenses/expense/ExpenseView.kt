@@ -3,14 +3,14 @@ package br.com.jonathanzanella.myexpenses.expense
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.os.AsyncTask
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.helpers.DateHelper
+import br.com.jonathanzanella.myexpenses.helpers.firstDayOfMonth
+import br.com.jonathanzanella.myexpenses.helpers.lastDayOfMonth
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapter
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapterBuilder
 import br.com.jonathanzanella.myexpenses.views.FilterableView
@@ -83,20 +83,16 @@ class ExpenseView@JvmOverloads constructor(
     }
 
     private fun loadExpense(uuid: String) {
-        object : AsyncTask<Void, Void, Expense>() {
+        doAsync {
+            val expense = expenseRepository.find(uuid)
 
-            override fun doInBackground(vararg voids: Void): Expense? {
-                return expenseRepository.find(uuid)
-            }
-
-            override fun onPostExecute(expense: Expense?) {
-                super.onPostExecute(expense)
-                if (expense != null) {
-                    val view = getMonthView(expense.getDate())
+            uiThread {
+                expense?.let {
+                    val view = getMonthView(it.getDate())
                     view?.refreshData()
                 }
             }
-        }.execute()
+        }
     }
 
     override fun filter(s: String) {
@@ -108,8 +104,8 @@ class ExpenseView@JvmOverloads constructor(
 
     private fun getMonthView(date: DateTime): ExpenseMonthlyView? {
         for ((key, value) in views) {
-            val viewDateFirstDay = DateHelper.firstDayOfMonth(key)
-            val viewDateLastDay = DateHelper.lastDayOfMonth(key)
+            val viewDateFirstDay = key.firstDayOfMonth()
+            val viewDateLastDay = key.lastDayOfMonth()
             if (date.isEqual(viewDateFirstDay) || date.isEqual(viewDateLastDay) ||
                     date.isAfter(viewDateFirstDay) && date.isBefore(viewDateLastDay))
                 return value.get()

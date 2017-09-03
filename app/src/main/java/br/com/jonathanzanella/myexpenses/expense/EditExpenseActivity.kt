@@ -2,13 +2,11 @@ package br.com.jonathanzanella.myexpenses.expense
 
 import android.app.Activity
 import android.content.Intent
-import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.AppCompatEditText
 import android.text.InputType
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -21,14 +19,15 @@ import br.com.jonathanzanella.myexpenses.bill.ListBillActivity
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable
 import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType
 import br.com.jonathanzanella.myexpenses.chargeable.ListChargeableActivity
-import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch
+import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.views.anko.*
 import org.apache.commons.lang3.StringUtils
 import org.jetbrains.anko.*
 import org.joda.time.DateTime
+import timber.log.Timber
 
 class EditExpenseActivity : AppCompatActivity(), ExpenseContract.EditView {
     override val context = this
@@ -138,20 +137,16 @@ class EditExpenseActivity : AppCompatActivity(), ExpenseContract.EditView {
     }
 
     internal fun onChargeable() {
-        object : AsyncTask<Void, Void, Boolean>() {
+        doAsync {
+            val hasChargeable = presenter.hasChargeable()
 
-            override fun doInBackground(vararg voids: Void): Boolean {
-                return presenter.hasChargeable()
-            }
-
-            override fun onPostExecute(hasChargeable: Boolean) {
-                super.onPostExecute(hasChargeable)
+            uiThread {
                 if (!hasChargeable) {
                     val intent = Intent(this@EditExpenseActivity, ListChargeableActivity::class.java)
                     startActivityForResult(intent, REQUEST_SELECT_CHARGEABLE)
                 }
             }
-        }.execute()
+        }
     }
 
     override fun onBillSelected(bill: Bill?) {
@@ -161,7 +156,7 @@ class EditExpenseActivity : AppCompatActivity(), ExpenseContract.EditView {
             if (ui.name.text.toString().isEmpty())
                 ui.name.setText(bill.name)
             if (ui.value.text.toString().isEmpty())
-                ui.value.setText(CurrencyHelper.format(bill.amount))
+                ui.value.setText(bill.amount.toCurrencyFormatted())
             ui.showInOverview.isChecked = false
             ui.showInResume.isChecked = true
         } else {
@@ -211,11 +206,11 @@ class EditExpenseActivity : AppCompatActivity(), ExpenseContract.EditView {
             ValidationError.NAME -> ui.name.error = getString(error.message)
             ValidationError.AMOUNT -> ui.value.error = getString(error.message)
             ValidationError.CHARGEABLE -> ui.chargeable.error = getString(error.message)
-            else -> Log.e(this.javaClass.name, "Validation unrecognized, field:" + error)
+            else -> Timber.e("Validation unrecognized, field:" + error)
         }
     }
 
-    val installment: Int
+    private val installment: Int
         get() = Integer.parseInt(ui.installment.text.toString())
 
     val repetition: Int
@@ -223,8 +218,8 @@ class EditExpenseActivity : AppCompatActivity(), ExpenseContract.EditView {
 
     override fun showExpense(expense: Expense) {
         ui.name.setText(expense.name)
-        ui.value.setText(CurrencyHelper.format(Math.abs(expense.value)))
-        ui.valueToShowInOverview.setText(CurrencyHelper.format(Math.abs(expense.valueToShowInOverview)))
+        ui.value.setText(Math.abs(expense.value).toCurrencyFormatted())
+        ui.valueToShowInOverview.setText(Math.abs(expense.valueToShowInOverview).toCurrencyFormatted())
         if (expense.charged) {
             ui.value.setTextColor(ResourcesCompat.getColor(resources, R.color.value_unpaid, null))
             ui.repayment.isEnabled = false

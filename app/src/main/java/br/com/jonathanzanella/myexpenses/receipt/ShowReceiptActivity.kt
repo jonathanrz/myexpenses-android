@@ -2,7 +2,6 @@ package br.com.jonathanzanella.myexpenses.receipt
 
 import android.app.Activity
 import android.content.Intent
-import android.os.AsyncTask
 import android.os.Bundle
 import android.support.annotation.UiThread
 import android.support.v7.app.AppCompatActivity
@@ -10,10 +9,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.account.AccountRepository
-import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
-import br.com.jonathanzanella.myexpenses.source.Source
+import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.source.SourceRepository
 import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import br.com.jonathanzanella.myexpenses.views.anko.*
@@ -100,31 +97,17 @@ class ShowReceiptActivity : AppCompatActivity(), ReceiptContract.View {
     override fun showReceipt(receipt: Receipt) {
         ui.receiptName.text = receipt.name
         ui.receiptDate.text = Transaction.SIMPLE_DATE_FORMAT.format(receipt.getDate().toDate())
-        ui.receiptIncome.text = CurrencyHelper.format(receipt.income)
+        ui.receiptIncome.text = receipt.income.toCurrencyFormatted()
 
-        object : AsyncTask<Void, Void, Source>() {
+        doAsync {
+            val source = receipt.source
+            val account = receipt.accountFromCache
 
-            override fun doInBackground(vararg voids: Void): Source? {
-                return receipt.source
-            }
-
-            override fun onPostExecute(source: Source?) {
-                super.onPostExecute(source)
+            uiThread {
                 ui.receiptSource.text = source?.name
-            }
-        }.execute()
-
-        object : AsyncTask<Void, Void, Account>() {
-
-            override fun doInBackground(vararg voids: Void): Account? {
-                return receipt.accountFromCache
-            }
-
-            override fun onPostExecute(account: Account?) {
-                super.onPostExecute(account)
                 ui.receiptAccount.text = account?.name
             }
-        }.execute()
+        }
 
         ui.receiptShowInResume.setText(if (receipt.isShowInResume) R.string.yes else R.string.no)
     }

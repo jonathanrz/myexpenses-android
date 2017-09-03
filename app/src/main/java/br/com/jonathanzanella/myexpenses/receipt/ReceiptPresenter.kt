@@ -5,20 +5,20 @@ import android.app.Activity.RESULT_OK
 import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
-import android.os.AsyncTask
 import android.os.Bundle
 import android.support.annotation.UiThread
 import android.support.annotation.WorkerThread
 import android.support.v7.app.AlertDialog
-import android.util.Log
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.account.AccountRepository
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException
 import br.com.jonathanzanella.myexpenses.source.Source
 import br.com.jonathanzanella.myexpenses.source.SourceRepository
-import br.com.jonathanzanella.myexpenses.validations.ValidationResult
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 import org.joda.time.DateTime
+import timber.log.Timber
 
 class ReceiptPresenter(private val repository: ReceiptRepository, private val sourceRepository: SourceRepository, private val accountRepository: AccountRepository) {
     private var view: ReceiptContract.View? = null
@@ -52,18 +52,11 @@ class ReceiptPresenter(private val repository: ReceiptRepository, private val so
     @UiThread
     fun viewUpdated(invalidateCache: Boolean) {
         if (receipt != null || invalidateCache) {
-            object : AsyncTask<Void, Void, Void>() {
+            doAsync {
+                loadReceipt(receipt!!.uuid!!)
 
-                override fun doInBackground(vararg voids: Void): Void? {
-                    loadReceipt(receipt!!.uuid!!)
-                    return null
-                }
-
-                override fun onPostExecute(aVoid: Void?) {
-                    super.onPostExecute(aVoid)
-                    updateView()
-                }
-            }.execute()
+                uiThread { updateView() }
+            }
         } else {
             updateView()
         }
@@ -100,21 +93,14 @@ class ReceiptPresenter(private val repository: ReceiptRepository, private val so
 
     @UiThread
     fun refreshReceipt() {
-        object : AsyncTask<Void, Void, Receipt>() {
+        doAsync {
+            val uuid = receipt!!.uuid
+            receipt = repository.find(uuid!!)
+            if (receipt == null)
+                throw ReceiptNotFoundException(uuid)
 
-            override fun doInBackground(vararg voids: Void): Receipt? {
-                val uuid = receipt!!.uuid
-                receipt = repository.find(uuid!!)
-                if (receipt == null)
-                    throw ReceiptNotFoundException(uuid)
-                return receipt
-            }
-
-            override fun onPostExecute(receipt: Receipt?) {
-                super.onPostExecute(receipt)
-                updateView()
-            }
-        }.execute()
+            uiThread { updateView() }
+        }
     }
 
     @WorkerThread
@@ -151,30 +137,19 @@ class ReceiptPresenter(private val repository: ReceiptRepository, private val so
             r.income = r.income / r.installments
         }
 
-        object : AsyncTask<Void, Void, ValidationResult>() {
-
-            override fun doInBackground(vararg voids: Void): ValidationResult {
-                val result = repository.save(receipt!!)
-                if (result.isValid)
-                    generateReceiptsRepetition()
-
-                return result
-            }
-
-            private fun generateReceiptsRepetition() {
-                for (i in 1..r.repetition - 1) {
+        doAsync {
+            val result = repository.save(receipt!!)
+            if (result.isValid) {
+                for (i in 1 until r.repetition) {
                     r = r.repeat(originalName!!, i + 1)
                     receipt = r
                     val repetitionResult = repository.save(r)
                     if (!repetitionResult.isValid)
-                        Log.e("ExpensePresenter", "Error saving repetition of receipt " + r.getData() +
-                                " error=" + repetitionResult.errors.toString())
+                        Timber.e("Error saving repetition of receipt ${r.getData()} error=${repetitionResult.errors}")
                 }
             }
 
-            override fun onPostExecute(result: ValidationResult) {
-                super.onPostExecute(result)
-
+            uiThread {
                 if (result.isValid) {
                     editView!!.finishView()
                 } else {
@@ -182,7 +157,7 @@ class ReceiptPresenter(private val repository: ReceiptRepository, private val so
                         editView!!.showError(validationError)
                 }
             }
-        }.execute()
+        }
     }
 
     @UiThread
@@ -193,29 +168,21 @@ class ReceiptPresenter(private val repository: ReceiptRepository, private val so
                 .setPositiveButton(android.R.string.yes) { dialog, _ ->
                     dialog.dismiss()
 
-                    object : AsyncTask<Void, Void, Void>() {
+                    doAsync {
+                        receipt!!.let {
+                            val acc = it.accountFromCache
+                            acc!!.credit(it.income * -1)
+                            accountRepository.save(acc)
 
-                        //TODO: add loading
-
-                        override fun doInBackground(vararg voids: Void): Void? {
-                            receipt!!.let {
-                                val acc = it.accountFromCache
-                                acc!!.credit(it.income * -1)
-                                accountRepository.save(acc)
-
-                                it.delete()
-                            }
-
-                            return null
+                            it.delete()
                         }
 
-                        override fun onPostExecute(aVoid: Void?) {
-                            super.onPostExecute(aVoid)
+                        uiThread {
                             val i = Intent()
                             act.setResult(RESULT_OK, i)
                             act.finish()
                         }
-                    }.execute()
+                    }
                 }
                 .setNegativeButton(android.R.string.no) { dialog, _ -> dialog.dismiss() }
                 .show()
@@ -226,27 +193,21 @@ class ReceiptPresenter(private val repository: ReceiptRepository, private val so
 
     @UiThread
     fun storeBundle(extras: Bundle) {
-        object : AsyncTask<Void, Void, Void>() {
-            override fun doInBackground(vararg voids: Void): Void? {
-                if (extras.containsKey(KEY_RECEIPT_UUID))
-                    loadReceipt(extras.getString(KEY_RECEIPT_UUID))
+        doAsync {
+            if (extras.containsKey(KEY_RECEIPT_UUID))
+                loadReceipt(extras.getString(KEY_RECEIPT_UUID))
 
-                if (extras.containsKey(KEY_SOURCE_UUID))
-                    source = sourceRepository.find(extras.getString(KEY_SOURCE_UUID))
+            if (extras.containsKey(KEY_SOURCE_UUID))
+                source = sourceRepository.find(extras.getString(KEY_SOURCE_UUID))
 
-                if (extras.containsKey(KEY_ACCOUNT_UUID))
-                    account = accountRepository.find(extras.getString(KEY_ACCOUNT_UUID)!!)
+            if (extras.containsKey(KEY_ACCOUNT_UUID))
+                account = accountRepository.find(extras.getString(KEY_ACCOUNT_UUID)!!)
 
-                if (extras.containsKey(KEY_DATE))
-                    date = DateTime(extras.getLong(KEY_DATE))
-                return null
-            }
+            if (extras.containsKey(KEY_DATE))
+                date = DateTime(extras.getLong(KEY_DATE))
 
-            override fun onPostExecute(aVoid: Void?) {
-                super.onPostExecute(aVoid)
-                updateView()
-            }
-        }.execute()
+            uiThread { updateView() }
+        }
     }
 
     fun onSaveInstanceState(outState: Bundle) {
@@ -257,34 +218,20 @@ class ReceiptPresenter(private val repository: ReceiptRepository, private val so
     }
 
     fun onSourceSelected(sourceUuid: String) {
-        object : AsyncTask<Void, Void, Void>() {
+        doAsync {
+            source = sourceRepository.find(sourceUuid)
 
-            override fun doInBackground(vararg voids: Void): Void? {
-                source = sourceRepository.find(sourceUuid)
-                return null
-            }
-
-            override fun onPostExecute(aVoid: Void?) {
-                super.onPostExecute(aVoid)
-                editView?.onSourceSelected(source!!)
-            }
-        }.execute()
+            uiThread { editView?.onSourceSelected(source!!) }
+        }
     }
 
     @UiThread
     fun onAccountSelected(accountUuid: String) {
-        object : AsyncTask<Void, Void, Account>() {
+        doAsync {
+            account = accountRepository.find(accountUuid)
 
-            override fun doInBackground(vararg voids: Void): Account {
-                account = accountRepository.find(accountUuid)
-                return account!!
-            }
-
-            override fun onPostExecute(account: Account) {
-                super.onPostExecute(account)
-                editView?.onAccountSelected(account)
-            }
-        }.execute()
+            uiThread { editView?.onAccountSelected(account!!) }
+        }
     }
 
     fun hasReceipt(): Boolean {

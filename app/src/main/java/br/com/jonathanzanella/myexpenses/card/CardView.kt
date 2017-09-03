@@ -3,7 +3,6 @@ package br.com.jonathanzanella.myexpenses.card
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.os.AsyncTask
 import android.support.annotation.UiThread
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.GridLayoutManager
@@ -41,34 +40,20 @@ class CardView@JvmOverloads constructor(
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             REQUEST_ADD_CARD -> if (resultCode == Activity.RESULT_OK)
-                object : AsyncTask<Void, Void, Void>() {
+                doAsync {
+                    adapter.loadData()
 
-                    override fun doInBackground(vararg voids: Void): Void? {
-                        adapter.loadData()
-                        return null
-                    }
-
-                    override fun onPostExecute(aVoid: Void?) {
-                        super.onPostExecute(aVoid)
-                        adapter.notifyDataSetChanged()
-                    }
-                }.execute()
+                    uiThread { adapter.notifyDataSetChanged() }
+                }
         }
     }
 
     override fun refreshData() {
-        object : AsyncTask<Void, Void, Void>() {
+        doAsync {
+            adapter.loadData()
 
-            override fun doInBackground(vararg voids: Void): Void? {
-                adapter.loadData()
-                return null
-            }
-
-            override fun onPostExecute(aVoid: Void?) {
-                super.onPostExecute(aVoid)
-                adapter.notifyDataSetChanged()
-            }
-        }.execute()
+            uiThread { adapter.notifyDataSetChanged() }
+        }
     }
 
     companion object {

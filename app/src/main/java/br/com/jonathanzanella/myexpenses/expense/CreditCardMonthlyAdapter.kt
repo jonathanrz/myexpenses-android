@@ -10,7 +10,7 @@ import android.widget.TextView
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.card.Card
 import br.com.jonathanzanella.myexpenses.card.CardRepository
-import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
+import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
 import br.com.jonathanzanella.myexpenses.views.anko.resumeRowCell
 import org.jetbrains.anko.*
@@ -18,7 +18,7 @@ import org.joda.time.DateTime
 import java.text.SimpleDateFormat
 import java.util.*
 
-class CreditCardMonthlyAdapter() : RecyclerView.Adapter<CreditCardMonthlyAdapter.ViewHolder>() {
+class CreditCardMonthlyAdapter : RecyclerView.Adapter<CreditCardMonthlyAdapter.ViewHolder>() {
     private var expenses: List<Expense> = ArrayList()
     private val cardRepository: CardRepository = CardRepository(
             ExpenseRepository())
@@ -38,33 +38,33 @@ class CreditCardMonthlyAdapter() : RecyclerView.Adapter<CreditCardMonthlyAdapter
                     date.text = SIMPLE_DATE_FORMAT.format(expense.getDate().toDate())
                 }
             }
-            income.text = CurrencyHelper.format(expense.value)
+            income.text = expense.value.toCurrencyFormatted()
             if (source != null)
                 source.visibility = View.GONE
         }
 
         fun setTotal(totalValue: Int) {
-            income.text = CurrencyHelper.format(totalValue)
+            income.text = totalValue.toCurrencyFormatted()
         }
     }
 
-    override fun getItemViewType(position: Int): Int {
-        if (position == expenses.size) {
-            return ViewType.TYPE_TOTAL.ordinal
-        } else {
-            return ViewType.TYPE_NORMAL.ordinal
+    override fun getItemViewType(position: Int) =
+        when (position) {
+            expenses.size -> ViewType.TYPE_TOTAL.ordinal
+            else -> ViewType.TYPE_NORMAL.ordinal
         }
-    }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        if (viewType == ViewType.TYPE_TOTAL.ordinal) {
-            val ui = CreditCardMonthlyTotalViewUI()
-            return ViewHolder(ui.createView(AnkoContext.create(parent.context, parent)), ui.income)
-        } else {
-            val ui = CreditCardMonthlyViewUI()
-            return ViewHolder(ui.createView(AnkoContext.create(parent.context, parent)), ui.income, ui.name, ui.date, ui.source)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
+        when (viewType) {
+            ViewType.TYPE_TOTAL.ordinal -> {
+                val ui = CreditCardMonthlyTotalViewUI()
+                ViewHolder(ui.createView(AnkoContext.create(parent.context, parent)), ui.income)
+            }
+            else -> {
+                val ui = CreditCardMonthlyViewUI()
+                ViewHolder(ui.createView(AnkoContext.create(parent.context, parent)), ui.income, ui.name, ui.date, ui.source)
+            }
         }
-    }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         if (position == expenses.size)

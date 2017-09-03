@@ -1,13 +1,13 @@
 package br.com.jonathanzanella.myexpenses.account
 
 import android.support.annotation.WorkerThread
-import android.util.Log
 import br.com.jonathanzanella.myexpenses.MyApplication
 import br.com.jonathanzanella.myexpenses.server.Server
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi
 import org.apache.commons.lang3.StringUtils
 import retrofit2.Call
+import timber.log.Timber
 import java.io.IOException
 
 @WorkerThread
@@ -23,39 +23,41 @@ class AccountApi : UnsyncModelApi<Account> {
         val lastUpdatedAt = repository.greaterUpdatedAt()
         val caller = accountInterface.index(lastUpdatedAt)
 
-        try {
+        Timber.tag("AccountApi.index with lastUpdatedAt: $lastUpdatedAt")
+
+        return try {
             val response = caller.execute()
             if (response.isSuccessful) {
-                return response.body()
+                response.body()
             } else {
-                Log.e(LOG_TAG, "Index request error: " + response.message())
-                return ArrayList()
+                Timber.e("Index request error: " + response.message())
+                ArrayList()
             }
         } catch (e: IOException) {
-            Log.e(LOG_TAG, "Index request error: " + e.message)
+            Timber.e("Index request error: " + e.message)
             e.printStackTrace()
-            return ArrayList()
+            ArrayList()
         }
     }
 
     override fun save(model: UnsyncModel) {
         val account = model as Account
         val caller: Call<Account>
-        if (StringUtils.isEmpty(account.serverId))
-            caller = accountInterface.create(account)
-        else
-            caller = accountInterface.update(account.serverId!!, account)
+        caller = when {
+            StringUtils.isEmpty(account.serverId) -> accountInterface.create(account)
+            else -> accountInterface.update(account.serverId!!, account)
+        }
 
         try {
             val response = caller.execute()
             if (response.isSuccessful) {
                 repository.syncAndSave(response.body())
-                Log.i(LOG_TAG, "Updated: " + account.getData())
+                Timber.i("Updated: " + account.getData())
             } else {
-                Log.e(LOG_TAG, "Save request error: " + response.message() + " uuid: " + account.uuid)
+                Timber.e("Save request error: " + response.message() + " uuid: " + account.uuid)
             }
         } catch (e: IOException) {
-            Log.e(LOG_TAG, "Save request error: " + e.message + " uuid: " + account.uuid)
+            Timber.e("Save request error: " + e.message + " uuid: " + account.uuid)
             e.printStackTrace()
         }
 
@@ -73,9 +75,5 @@ class AccountApi : UnsyncModelApi<Account> {
 
     override fun greaterUpdatedAt(): Long {
         return repository.greaterUpdatedAt()
-    }
-
-    companion object {
-        private val LOG_TAG = AccountApi::class.java.simpleName
     }
 }

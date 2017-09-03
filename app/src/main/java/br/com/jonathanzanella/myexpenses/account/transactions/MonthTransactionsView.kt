@@ -8,7 +8,7 @@ import android.view.View
 import android.widget.FrameLayout
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.Account
-import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
+import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import kotlinx.android.synthetic.main.view_account_month_transactions.view.*
 import org.joda.time.DateTime
 import java.text.SimpleDateFormat
@@ -18,7 +18,7 @@ class MonthTransactionsView@JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr), MonthTransactionsContractView {
 
-    val simpleDateFormat = SimpleDateFormat("MMMM/yy", Locale.getDefault())
+    private val simpleDateFormat = SimpleDateFormat("MMMM/yy", Locale.getDefault())
     private var singleRowHeight = context.resources.getDimensionPixelSize(R.dimen.single_row_height)
     private val monthTransactionsTemplate = resources.getString(R.string.month_transactions)
     private val presenter = MonthTransactionsPresenter(this)
@@ -40,7 +40,7 @@ class MonthTransactionsView@JvmOverloads constructor(
     }
 
     override fun onBalanceUpdated(balance: Int) {
-        this.balance.text = CurrencyHelper.format(balance)
+        this.balance.text = balance.toCurrencyFormatted()
         this.balance.setTextColor(ResourcesCompat.getColor(resources, (if (balance >= 0) R.color.value_unreceived else R.color.value_unpaid), null))
 
         loadTransactionsCallback?.onTransactionsLoaded(balance)

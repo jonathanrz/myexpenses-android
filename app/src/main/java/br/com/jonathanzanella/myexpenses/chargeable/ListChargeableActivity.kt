@@ -2,7 +2,6 @@ package br.com.jonathanzanella.myexpenses.chargeable
 
 import android.app.Activity
 import android.content.Intent
-import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DefaultItemAnimator
@@ -49,23 +48,21 @@ class ListChargeableActivity : AppCompatActivity(), AccountAdapterCallback, Card
     }
 
     private fun initCreditCards() {
-        val adapter = CardAdapter()
-        adapter.setCallback(this)
-        object : AsyncTask<Void, Void, Void>() {
+        val cardAdapter = CardAdapter()
+        cardAdapter.setCallback(this)
 
-            override fun doInBackground(vararg voids: Void): Void? {
-                adapter.loadData()
-                return null
-            }
+        doAsync {
+            cardAdapter.loadData()
 
-            override fun onPostExecute(aVoid: Void?) {
-                super.onPostExecute(aVoid)
-                ui.cards.adapter = adapter
-                ui.cards.setHasFixedSize(true)
-                ui.cards.layoutManager = GridLayoutManager(this@ListChargeableActivity, 2)
-                ui.cards.itemAnimator = DefaultItemAnimator()
+            uiThread {
+                ui.cards.apply {
+                    adapter = cardAdapter
+                    setHasFixedSize(true)
+                    layoutManager = GridLayoutManager(this@ListChargeableActivity, 2)
+                    itemAnimator = DefaultItemAnimator()
+                }
             }
-        }.execute()
+        }
     }
 
     override fun onAccountSelected(account: Account) {

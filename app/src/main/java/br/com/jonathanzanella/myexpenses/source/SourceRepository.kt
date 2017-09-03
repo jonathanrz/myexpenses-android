@@ -1,32 +1,32 @@
 package br.com.jonathanzanella.myexpenses.source
 
 import android.support.annotation.WorkerThread
-import android.util.Log
 import br.com.jonathanzanella.myexpenses.MyApplication
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult
 import org.apache.commons.lang3.StringUtils
+import timber.log.Timber
 import java.util.*
 
-open class SourceRepository {
+open class SourceRepository(val dao: SourceDao = MyApplication.database.sourceDao()) {
     @WorkerThread
     fun find(uuid: String): Source? {
-        return MyApplication.database.sourceDao().find(uuid).blockingFirst().firstOrNull()
+        return dao.find(uuid).blockingFirst().firstOrNull()
     }
 
     @WorkerThread
     fun greaterUpdatedAt(): Long {
-        return MyApplication.database.sourceDao().greaterUpdatedAt().blockingFirst().firstOrNull()?.updatedAt ?: 0L
+        return dao.greaterUpdatedAt().blockingFirst().firstOrNull()?.updatedAt ?: 0L
     }
 
     @WorkerThread
     fun all(): List<Source> {
-        return MyApplication.database.sourceDao().all().blockingFirst()
+        return dao.all().blockingFirst()
     }
 
     @WorkerThread
     fun unsync(): List<Source> {
-        return MyApplication.database.sourceDao().unsync().blockingFirst()
+        return dao.unsync().blockingFirst()
     }
 
     @WorkerThread
@@ -36,7 +36,7 @@ open class SourceRepository {
             if (source.id == 0L && source.uuid == null)
                 source.uuid = UUID.randomUUID().toString()
             source.sync = false
-            source.id = MyApplication.database.sourceDao().saveAtDatabase(source)
+            source.id = dao.saveAtDatabase(source)
         }
         return result
     }
@@ -52,19 +52,19 @@ open class SourceRepository {
     fun syncAndSave(unsync: Source): ValidationResult {
         val result = validate(unsync)
         if (!result.isValid) {
-            Log.w("Source sync vali failed", unsync.getData() + "\nerrors: " + result.errorsAsString)
+            Timber.tag("Source sync vali failed").w(unsync.getData() + "\nerrors: " + result.errorsAsString)
             return result
         }
 
         val source = find(unsync.uuid!!)
         if (source != null && source.id != unsync.id) {
             if (source.updatedAt != unsync.updatedAt)
-                Log.w("Source overwritten", unsync.getData())
+                Timber.tag("Source overwritten").w(unsync.getData())
             unsync.id = source.id
         }
 
         unsync.sync = true
-        MyApplication.database.sourceDao().saveAtDatabase(unsync)
+        dao.saveAtDatabase(unsync)
 
         return result
     }

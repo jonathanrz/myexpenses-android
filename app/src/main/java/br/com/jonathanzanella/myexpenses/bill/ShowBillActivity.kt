@@ -1,7 +1,6 @@
 package br.com.jonathanzanella.myexpenses.bill
 
 import android.content.Intent
-import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
@@ -9,7 +8,7 @@ import android.view.MenuItem
 import android.widget.TextView
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
-import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
+import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import br.com.jonathanzanella.myexpenses.views.anko.*
 import org.jetbrains.anko.*
@@ -40,19 +39,12 @@ class ShowBillActivity : AppCompatActivity(), BillContract.View {
     }
 
     fun storeBundle(extras: Bundle?) {
-        if (extras?.containsKey(KEY_BILL_UUID) ?: false) {
-            object : AsyncTask<Void, Void, Void>() {
+        if (extras?.containsKey(KEY_BILL_UUID) == true) {
+            doAsync {
+                presenter.loadBill(extras.getString(KEY_BILL_UUID))
 
-                override fun doInBackground(vararg voids: Void): Void? {
-                    presenter.loadBill(extras!!.getString(KEY_BILL_UUID))
-                    return null
-                }
-
-                override fun onPostExecute(aVoid: Void?) {
-                    super.onPostExecute(aVoid)
-                    presenter.updateView()
-                }
-            }.execute()
+                uiThread { presenter.updateView() }
+            }
         }
     }
 
@@ -94,7 +86,7 @@ class ShowBillActivity : AppCompatActivity(), BillContract.View {
     override fun showBill(bill: Bill) {
         ui.apply {
             billName.text = bill.name
-            billAmount.text = CurrencyHelper.format(bill.amount)
+            billAmount.text = bill.amount.toCurrencyFormatted()
             billDueDate.text = bill.dueDate.toString()
             billInitDate.text = Transaction.SIMPLE_DATE_FORMAT.format(bill.initDate?.toDate())
             billEndDate.text = Transaction.SIMPLE_DATE_FORMAT.format(bill.endDate?.toDate())

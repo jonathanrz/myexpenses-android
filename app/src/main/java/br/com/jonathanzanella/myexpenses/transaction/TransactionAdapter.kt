@@ -10,8 +10,8 @@ import android.view.ViewGroup
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.bill.Bill
 import br.com.jonathanzanella.myexpenses.expense.Expense
-import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
 import br.com.jonathanzanella.myexpenses.helpers.TransactionsHelper
+import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.receipt.Receipt
 import kotlinx.android.synthetic.main.row_transaction.view.*
 import java.util.*
@@ -27,7 +27,7 @@ class TransactionAdapter : RecyclerView.Adapter<TransactionAdapter.ViewHolder>()
         fun setData(transaction: Transaction) {
             itemView.date.text = Transaction.SIMPLE_DATE_FORMAT.format(transaction.getDate().toDate())
             itemView.name.text = transaction.name
-            itemView.value.text = CurrencyHelper.format(transaction.amount)
+            itemView.value.text = transaction.amount.toCurrencyFormatted()
             itemView.value.setTypeface(null, Typeface.NORMAL)
             if (transaction is Receipt) {
                 itemView.value.setTextColor(getColor(R.color.receipt))
@@ -40,7 +40,7 @@ class TransactionAdapter : RecyclerView.Adapter<TransactionAdapter.ViewHolder>()
             }
         }
 
-        fun onValue() {
+        private fun onValue() {
             val adapterPosition = adapterPosition
             val transaction = transactions[adapterPosition]
             TransactionsHelper.showConfirmTransactionDialog(transaction, itemView.date.context, object: TransactionsHelper.DialogCallback {

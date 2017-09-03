@@ -2,6 +2,7 @@ package br.com.jonathanzanella.myexpenses.source;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import br.com.jonathanzanella.myexpenses.helper.builder.SourceBuilder;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
@@ -12,11 +13,14 @@ import static junit.framework.Assert.assertTrue;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class SourceRepositoryUnitTest {
-	private SourceRepository sourceRepository = new SourceRepository();
+	@Mock
+	private SourceDao dao;
+	private SourceRepository sourceRepository;
 
 	@Before
 	public void setUp() throws Exception {
 		initMocks(this);
+		sourceRepository = new SourceRepository(dao);
 	}
 
 	@Test

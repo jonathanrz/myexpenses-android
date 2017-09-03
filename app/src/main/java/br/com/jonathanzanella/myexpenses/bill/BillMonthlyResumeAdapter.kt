@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
-import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
+import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
 import br.com.jonathanzanella.myexpenses.views.anko.resumeRowCell
 import br.com.jonathanzanella.myexpenses.views.anko.singleRowCell
@@ -28,15 +28,15 @@ class BillMonthlyResumeAdapter : RecyclerView.Adapter<BillMonthlyResumeAdapter.V
         TYPE_TOTAL
     }
 
-    inner class ViewHolder(itemView: View, val name: TextView, val amount: TextView, val day: TextView?) : RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder(itemView: View, val name: TextView, val amount: TextView, private val day: TextView?) : RecyclerView.ViewHolder(itemView) {
         fun setData(bill: Bill) {
             name.text = bill.name
-            amount.text = CurrencyHelper.format(bill.amount)
+            amount.text = bill.amount.toCurrencyFormatted()
             day?.text = bill.dueDate.toString()
         }
 
         fun setTotal(totalValue: Int) {
-            amount.text = CurrencyHelper.format(totalValue)
+            amount.text = totalValue.toCurrencyFormatted()
         }
     }
 
@@ -46,20 +46,22 @@ class BillMonthlyResumeAdapter : RecyclerView.Adapter<BillMonthlyResumeAdapter.V
     }
 
     override fun getItemViewType(position: Int): Int {
-        if (position == bills.size) {
-            return ViewType.TYPE_TOTAL.ordinal
-        } else {
-            return ViewType.TYPE_NORMAL.ordinal
+        return when (position) {
+            bills.size -> ViewType.TYPE_TOTAL.ordinal
+            else -> ViewType.TYPE_NORMAL.ordinal
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        if (viewType == ViewType.TYPE_TOTAL.ordinal) {
-            val ui = TotalViewUI()
-            return ViewHolder(ui.createView(AnkoContext.create(parent.context, parent)), ui.name, ui.amount, null)
-        } else {
-            val ui = NormalViewUI()
-            return ViewHolder(ui.createView(AnkoContext.create(parent.context, parent)), ui.name, ui.amount, ui.day)
+        return when (viewType) {
+            ViewType.TYPE_TOTAL.ordinal -> {
+                val ui = TotalViewUI()
+                ViewHolder(ui.createView(AnkoContext.create(parent.context, parent)), ui.name, ui.amount, null)
+            }
+            else -> {
+                val ui = NormalViewUI()
+                ViewHolder(ui.createView(AnkoContext.create(parent.context, parent)), ui.name, ui.amount, ui.day)
+            }
         }
     }
 

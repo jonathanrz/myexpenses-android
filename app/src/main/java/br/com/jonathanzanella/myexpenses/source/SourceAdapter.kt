@@ -10,7 +10,7 @@ import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.helpers.AdapterColorHelper
 import org.jetbrains.anko.*
 
-internal class SourceAdapter() : RecyclerView.Adapter<SourceAdapter.ViewHolder>() {
+internal class SourceAdapter : RecyclerView.Adapter<SourceAdapter.ViewHolder>() {
     private val presenter = SourceAdapterPresenter(SourceRepository())
     private var sources = presenter.getSources(false)
     private var callback: SourceAdapterCallback? = null

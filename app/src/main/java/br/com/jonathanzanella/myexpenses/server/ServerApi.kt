@@ -1,7 +1,7 @@
 package br.com.jonathanzanella.myexpenses.server
 
-import android.util.Log
 import br.com.jonathanzanella.myexpenses.MyApplication
+import timber.log.Timber
 import java.io.IOException
 
 class ServerApi {
@@ -11,23 +11,18 @@ class ServerApi {
 
     fun healthCheck(): Boolean {
         val caller = serverInterface.healthCheck()
-        try {
+        return try {
             val response = caller.execute()
             if (response.isSuccessful) {
-                return true
+                true
             } else {
-                Log.e(LOG_TAG, "Error in health-check: " + response.code() + " " + response.message())
-                return false
+                Timber.e("Error in health-check: " + response.code() + " " + response.message())
+                false
             }
         } catch (e: IOException) {
-            Log.e(LOG_TAG, "Error in health-check:" + e.message)
+            Timber.e("Error in health-check:" + e.message)
             e.printStackTrace()
-            return false
+            false
         }
-
-    }
-
-    companion object {
-        private val LOG_TAG = ServerApi::class.java.simpleName
     }
 }

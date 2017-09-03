@@ -1,7 +1,6 @@
 package br.com.jonathanzanella.myexpenses.expense
 
 import android.content.Intent
-import android.os.AsyncTask
 import android.os.Bundle
 import android.support.annotation.UiThread
 import android.support.v7.app.AppCompatActivity
@@ -12,8 +11,7 @@ import android.widget.TableRow
 import android.widget.TextView
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.bill.BillRepository
-import br.com.jonathanzanella.myexpenses.chargeable.Chargeable
-import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
+import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import br.com.jonathanzanella.myexpenses.views.anko.*
 import org.jetbrains.anko.*
@@ -92,22 +90,19 @@ class ShowExpenseActivity : AppCompatActivity(), ExpenseContract.View {
 
     @UiThread
     override fun showExpense(expense: Expense) {
-        ui.name.text = expense.name
-        ui.date.text = Transaction.SIMPLE_DATE_FORMAT.format(expense.getDate().toDate())
-        ui.value.text = CurrencyHelper.format(expense.value)
-        ui.showInOverview.text = CurrencyHelper.format(expense.valueToShowInOverview)
-        object : AsyncTask<Void, Void, Chargeable>() {
+        ui.apply {
+            name.text = expense.name
+            date.text = Transaction.SIMPLE_DATE_FORMAT.format(expense.getDate().toDate())
+            value.text = expense.value.toCurrencyFormatted()
+            showInOverview.text = expense.valueToShowInOverview.toCurrencyFormatted()
+            chargeNextMonth.visibility = if (expense.chargedNextMonth) View.VISIBLE else View.GONE
+        }
 
-            override fun doInBackground(vararg voids: Void): Chargeable? {
-                return expense.chargeableFromCache
-            }
+        doAsync {
+            val chargeable = expense.chargeableFromCache
 
-            override fun onPostExecute(chargeable: Chargeable?) {
-                super.onPostExecute(chargeable)
-                ui.chargeable.text = chargeable?.name
-            }
-        }.execute()
-        ui.chargeNextMonth.visibility = if (expense.chargedNextMonth) View.VISIBLE else View.GONE
+            uiThread { ui.chargeable.text = chargeable?.name }
+        }
     }
 
     @UiThread

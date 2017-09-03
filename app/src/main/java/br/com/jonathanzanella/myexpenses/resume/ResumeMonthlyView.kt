@@ -2,7 +2,6 @@ package br.com.jonathanzanella.myexpenses.resume
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.os.AsyncTask
 import android.support.annotation.UiThread
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.GridLayoutManager
@@ -12,19 +11,20 @@ import android.widget.FrameLayout
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.AccountAdapter
 import br.com.jonathanzanella.myexpenses.bill.BillMonthlyResumeAdapter
-import br.com.jonathanzanella.myexpenses.expense.Expense
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
-import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
+import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.receipt.ReceiptRepository
 import br.com.jonathanzanella.myexpenses.views.FilterableView
 import br.com.jonathanzanella.myexpenses.views.RefreshableView
 import kotlinx.android.synthetic.main.view_monthly_resume.view.*
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 import org.joda.time.DateTime
 
 @SuppressLint("ViewConstructor")
 internal class ResumeMonthlyView(context: Context, private val month: DateTime) : FrameLayout(context), RefreshableView, FilterableView {
     override var filter = ""
-    var singleRowHeight: Int = 0
+    private var singleRowHeight: Int = 0
 
     private var receiptRepository = ReceiptRepository()
     private var expenseRepository = ExpenseRepository()
@@ -87,47 +87,38 @@ internal class ResumeMonthlyView(context: Context, private val month: DateTime) 
 
     @UiThread
     private fun loadBills() {
-        object : AsyncTask<Void, Void, Void>() {
+        doAsync {
+            billsAdapter.loadData(month)
 
-            override fun doInBackground(vararg voids: Void): Void? {
-                billsAdapter.loadData(month)
-                return null
-            }
-
-            override fun onPostExecute(aVoid: Void?) {
-                super.onPostExecute(aVoid)
+            uiThread {
                 billsAdapter.notifyDataSetChanged()
                 bills.layoutParams.height = singleRowHeight * billsAdapter.itemCount
 
                 updateTotalExpenses()
             }
-        }.execute()
+        }
     }
 
     @UiThread
     private fun loadExpenses() {
-        object : AsyncTask<Void, Void, List<Expense>>() {
+        doAsync {
+            val expensesList = expenseRepository.expensesForResumeScreen(month)
 
-            override fun doInBackground(vararg voids: Void): List<Expense> {
-                return expenseRepository.expensesForResumeScreen(month)
-            }
-
-            override fun onPostExecute(expensesList: List<Expense>) {
-                super.onPostExecute(expensesList)
+            uiThread {
                 expensesAdapter.setExpenses(expensesList)
                 expensesAdapter.notifyDataSetChanged()
                 expenses.layoutParams.height = singleRowHeight * expensesAdapter.itemCount
 
                 updateTotalExpenses()
             }
-        }.execute()
+        }
     }
 
     @UiThread
     private fun updateTotalExpenses() {
         var totalExpensesValue = expensesAdapter.totalValue
         totalExpensesValue += billsAdapter.totalValue
-        totalExpenses.text = CurrencyHelper.format(totalExpensesValue)
+        totalExpenses.text = totalExpensesValue.toCurrencyFormatted()
 
         updateBalance()
     }
@@ -137,7 +128,7 @@ internal class ResumeMonthlyView(context: Context, private val month: DateTime) 
         receiptAdapter.loadDataAsync(month, Runnable {
             receipts.layoutParams.height = singleRowHeight * receiptAdapter.itemCount
             val totalReceiptsValue = receiptAdapter.totalValue
-            totalReceipts.text = CurrencyHelper.format(totalReceiptsValue)
+            totalReceipts.text = totalReceiptsValue.toCurrencyFormatted()
 
             updateBalance()
         })
@@ -149,7 +140,7 @@ internal class ResumeMonthlyView(context: Context, private val month: DateTime) 
         totalExpensesValue += billsAdapter.totalValue
 
         val balanceValue = receiptAdapter.totalValue - totalExpensesValue
-        balance.text = CurrencyHelper.format(balanceValue)
+        balance.text = balanceValue.toCurrencyFormatted()
         if (balanceValue >= 0) {
             balance.setTextColor(ResourcesCompat.getColor(resources, R.color.value_unreceived, null))
         } else {

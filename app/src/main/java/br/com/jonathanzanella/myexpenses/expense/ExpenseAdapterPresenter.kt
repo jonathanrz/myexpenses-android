@@ -25,7 +25,7 @@ class ExpenseAdapterPresenter(private val repository: ExpenseRepository) {
             return
         }
 
-        receiptsFiltered = ArrayList<Expense>()
+        receiptsFiltered = ArrayList()
         receipts!!
                 .filter { StringUtils.containsIgnoreCase(it.name, filter) }
                 .forEach { receiptsFiltered!!.add(it) }

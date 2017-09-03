@@ -1,54 +1,55 @@
 package br.com.jonathanzanella.myexpenses.receipt
 
 import android.support.annotation.WorkerThread
-import android.util.Log
 import br.com.jonathanzanella.myexpenses.MyApplication
 import br.com.jonathanzanella.myexpenses.account.Account
-import br.com.jonathanzanella.myexpenses.helpers.DateHelper
+import br.com.jonathanzanella.myexpenses.helpers.firstDayOfMonth
+import br.com.jonathanzanella.myexpenses.helpers.lastDayOfMonth
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult
 import org.apache.commons.lang3.StringUtils
 import org.joda.time.DateTime
+import timber.log.Timber
 import java.util.*
 
-open class ReceiptRepository {
+open class ReceiptRepository(private val dao: ReceiptDao = MyApplication.database.receiptDao()) {
 
     @WorkerThread
     fun find(uuid: String): Receipt? {
-        return MyApplication.database.receiptDao().find(uuid).blockingFirst().firstOrNull()
+        return dao.find(uuid).blockingFirst().firstOrNull()
     }
 
     @WorkerThread
     fun all(): List<Receipt> {
-        return MyApplication.database.receiptDao().all().blockingFirst()
+        return dao.all().blockingFirst()
     }
 
     @WorkerThread
     fun monthly(month: DateTime): List<Receipt> {
-        return MyApplication.database.receiptDao().monthly(DateHelper.firstDayOfMonth(month).millis,
-                DateHelper.lastDayOfMonth(month).millis).blockingFirst()
+        return dao.monthly(month.firstDayOfMonth().millis,
+                month.lastDayOfMonth().millis).blockingFirst()
     }
 
     @WorkerThread
     fun monthly(month: DateTime, account: Account): List<Receipt> {
-        return MyApplication.database.receiptDao().monthly(DateHelper.firstDayOfMonth(month).millis,
-                DateHelper.lastDayOfMonth(month).millis, account.uuid!!).blockingFirst()
+        return dao.monthly(month.firstDayOfMonth().millis,
+                month.lastDayOfMonth().millis, account.uuid!!).blockingFirst()
     }
 
     @WorkerThread
     fun resume(month: DateTime): List<Receipt> {
-        return MyApplication.database.receiptDao().resume(DateHelper.firstDayOfMonth(month).millis,
-                DateHelper.lastDayOfMonth(month).millis).blockingFirst()
+        return dao.resume(month.firstDayOfMonth().millis,
+                month.lastDayOfMonth().millis).blockingFirst()
     }
 
     @WorkerThread
     fun greaterUpdatedAt(): Long {
-        return MyApplication.database.receiptDao().greaterUpdatedAt().blockingFirst().firstOrNull()?.updatedAt ?: 0L
+        return dao.greaterUpdatedAt().blockingFirst().firstOrNull()?.updatedAt ?: 0L
     }
 
     @WorkerThread
     fun unsync(): List<Receipt> {
-        return MyApplication.database.receiptDao().unsync().blockingFirst()
+        return dao.unsync().blockingFirst()
     }
 
     @WorkerThread
@@ -58,7 +59,7 @@ open class ReceiptRepository {
             if (receipt.id == 0L && receipt.uuid == null)
                 receipt.uuid = UUID.randomUUID().toString()
             receipt.sync = false
-            receipt.id = MyApplication.database.receiptDao().saveAtDatabase(receipt)
+            receipt.id = dao.saveAtDatabase(receipt)
         }
         return result
     }
@@ -82,19 +83,19 @@ open class ReceiptRepository {
     fun syncAndSave(unsync: Receipt): ValidationResult {
         val result = validate(unsync)
         if (!result.isValid) {
-            Log.w("Receipt sync validation failed", unsync.getData() + "\nerrors: " + result.errorsAsString)
+            Timber.tag("Receipt sync validation failed").w(unsync.getData() + "\nerrors: " + result.errorsAsString)
             return result
         }
 
         val receipt = find(unsync.uuid!!)
         if (receipt != null && receipt.id != unsync.id) {
             if (receipt.updatedAt != unsync.updatedAt)
-                Log.w("Receipt overwritten", unsync.getData())
+                Timber.tag("Receipt overwritten").w(unsync.getData())
             unsync.id = receipt.id
         }
 
         unsync.sync = true
-        unsync.id = MyApplication.database.receiptDao().saveAtDatabase(unsync)
+        unsync.id = dao.saveAtDatabase(unsync)
 
         return result
     }

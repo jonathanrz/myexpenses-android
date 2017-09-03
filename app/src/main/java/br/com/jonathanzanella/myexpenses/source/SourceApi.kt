@@ -1,12 +1,12 @@
 package br.com.jonathanzanella.myexpenses.source
 
-import android.util.Log
 import br.com.jonathanzanella.myexpenses.MyApplication
 import br.com.jonathanzanella.myexpenses.server.Server
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi
 import org.apache.commons.lang3.StringUtils
 import retrofit2.Call
+import timber.log.Timber
 import java.io.IOException
 
 class SourceApi : UnsyncModelApi<Source> {
@@ -19,6 +19,7 @@ class SourceApi : UnsyncModelApi<Source> {
 
     override fun index(): List<Source> {
         val lastUpdatedAt = SourceRepository().greaterUpdatedAt()
+        Timber.tag("SourceApi.index with lastUpdatedAt: $lastUpdatedAt")
         val caller = sourceInterface.index(lastUpdatedAt)
 
         return try {
@@ -26,11 +27,11 @@ class SourceApi : UnsyncModelApi<Source> {
             if (response.isSuccessful) {
                 response.body()
             } else {
-                Log.e(LOG_TAG, "Index request error: " + response.message())
+                Timber.e("Index request error: " + response.message())
                 ArrayList()
             }
         } catch (e: IOException) {
-            Log.e(LOG_TAG, "Index request error: " + e.message)
+            Timber.e("Index request error: " + e.message)
             e.printStackTrace()
             ArrayList()
         }
@@ -48,12 +49,12 @@ class SourceApi : UnsyncModelApi<Source> {
             val response = caller.execute()
             if (response.isSuccessful) {
                 sourceRepository.syncAndSave(response.body())
-                Log.i(LOG_TAG, "Updated: " + source.getData())
+                Timber.i("Updated: " + source.getData())
             } else {
-                Log.e(LOG_TAG, "Save request error: " + response.message() + " uuid: " + source.uuid)
+                Timber.e("Save request error: " + response.message() + " uuid: " + source.uuid)
             }
         } catch (e: IOException) {
-            Log.e(LOG_TAG, "Save request error: " + e.message + " uuid: " + source.uuid)
+            Timber.e("Save request error: " + e.message + " uuid: " + source.uuid)
             e.printStackTrace()
         }
     }
@@ -70,9 +71,5 @@ class SourceApi : UnsyncModelApi<Source> {
 
     override fun greaterUpdatedAt(): Long {
         return SourceRepository().greaterUpdatedAt()
-    }
-
-    companion object {
-        private val LOG_TAG = SourceApi::class.java.simpleName
     }
 }

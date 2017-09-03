@@ -5,17 +5,17 @@ import android.support.v4.content.ContextCompat
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.RecyclerView
 import android.text.TextUtils
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.AccountAdapter.Format.NORMAL
 import br.com.jonathanzanella.myexpenses.helpers.AdapterColorHelper
-import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
+import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
 import org.jetbrains.anko.*
 import org.joda.time.DateTime
+import timber.log.Timber
 
 class AccountAdapter(val month : DateTime) : RecyclerView.Adapter<AccountAdapter.ViewHolder>() {
     private val presenter = AccountAdapterPresenter(this, AccountRepository())
@@ -45,7 +45,7 @@ class AccountAdapter(val month : DateTime) : RecyclerView.Adapter<AccountAdapter
                 itemView.setBackgroundColor(adapterColorHelper.getColorForGridWithTwoColumns(adapterPosition))
 
             name.text = acc.name
-            balance.text = CurrencyHelper.format(acc.balance)
+            balance.text = acc.balance.toCurrencyFormatted()
             if (accountToPayCreditCard != null)
                 accountToPayCreditCard.visibility = if (acc.accountToPayCreditCard) View.VISIBLE else View.GONE
         }
@@ -68,12 +68,15 @@ class AccountAdapter(val month : DateTime) : RecyclerView.Adapter<AccountAdapter
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        if(format == NORMAL) {
-            val ui = NormalViewUI()
-            return ViewHolder(ui.createView(AnkoContext.create(parent.context, parent)), ui.accountName, ui.accountBalance, ui.accountToPayCreditCard)
-        } else {
-            val ui = SimplifiedViewUI(format)
-            return ViewHolder(ui.createView(AnkoContext.create(parent.context, parent)), ui.accountName, ui.accountBalance, null)
+        return when (format) {
+            NORMAL -> {
+                val ui = NormalViewUI()
+                ViewHolder(ui.createView(AnkoContext.create(parent.context, parent)), ui.accountName, ui.accountBalance, ui.accountToPayCreditCard)
+            }
+            else -> {
+                val ui = SimplifiedViewUI(format)
+                ViewHolder(ui.createView(AnkoContext.create(parent.context, parent)), ui.accountName, ui.accountBalance, null)
+            }
         }
     }
 
@@ -108,7 +111,7 @@ private class SimplifiedViewUI(val format: AccountAdapter.Format): AnkoComponent
         when(format) {
             AccountAdapter.Format.RESUME -> height = resources.getDimensionPixelSize(R.dimen.single_row_height)
             AccountAdapter.Format.LIST -> height = resources.getDimensionPixelSize(R.dimen.resume_row_height)
-            else -> Log.e(javaClass.name, "unmapped format: $format")
+            else -> Timber.e("unmapped format: $format")
         }
 
         verticalLayout {
@@ -119,7 +122,7 @@ private class SimplifiedViewUI(val format: AccountAdapter.Format): AnkoComponent
                         rightPadding = resources.getDimensionPixelSize(R.dimen.min_spacing)
                     }
                     AccountAdapter.Format.LIST -> padding = resources.getDimensionPixelSize(R.dimen.row_spacing)
-                    else -> Log.e(javaClass.name, "unmapped format: $format")
+                    else -> Timber.e("unmapped format: $format")
                 }
 
                 accountName = textView {

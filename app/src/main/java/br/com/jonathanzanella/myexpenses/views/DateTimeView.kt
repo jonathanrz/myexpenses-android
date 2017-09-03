@@ -15,13 +15,10 @@ import java.util.*
 class DateTimeView@JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
-    val dateFormat = SimpleDateFormat("dd/MM/yy", Locale.getDefault())
-    val hourFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
-
+    private val dateFormat = SimpleDateFormat("dd/MM/yy", Locale.getDefault())
+    private val hourFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
     private var listener: Listener? = null
-
-    var currentTime: DateTime? = null
-        private set
+    private var currentTime: DateTime? = null
 
     interface Listener {
         fun onDateTimeChanged(currentTime: DateTime)
@@ -45,7 +42,7 @@ class DateTimeView@JvmOverloads constructor(
         listener?.onDateTimeChanged(time)
     }
 
-    internal fun onDate() {
+    private fun onDate() {
         val time = currentTime!!
         DatePickerDialog(context, DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
             currentTime = currentTime?.withYear(year)?.withMonthOfYear(monthOfYear + 1)?.withDayOfMonth(dayOfMonth)
@@ -53,15 +50,11 @@ class DateTimeView@JvmOverloads constructor(
         }, time.year, time.monthOfYear - 1, time.dayOfMonth).show()
     }
 
-    internal fun onHour() {
+    private fun onHour() {
         val time = currentTime!!
         TimePickerDialog(context, TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
             currentTime = currentTime?.withHourOfDay(hourOfDay)?.withMinuteOfHour(minute)
             onDateChanged()
         }, time.hourOfDay, time.minuteOfHour, true).show()
-    }
-
-    fun setListener(listener: Listener) {
-        this.listener = listener
     }
 }

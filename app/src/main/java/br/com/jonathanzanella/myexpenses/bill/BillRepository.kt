@@ -1,40 +1,40 @@
 package br.com.jonathanzanella.myexpenses.bill
 
 import android.support.annotation.WorkerThread
-import android.util.Log
 import br.com.jonathanzanella.myexpenses.MyApplication
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult
 import org.apache.commons.lang3.StringUtils
 import org.joda.time.DateTime
+import timber.log.Timber
 import java.util.*
 
-open class BillRepository(private val expenseRepository: ExpenseRepository) {
+open class BillRepository(private val expenseRepository: ExpenseRepository, private val dao: BillDao = MyApplication.database.billDao()) {
     @WorkerThread
     fun find(uuid: String): Bill? {
-        return MyApplication.database.billDao().find(uuid).blockingFirst().firstOrNull()
+        return dao.find(uuid).blockingFirst().firstOrNull()
     }
 
     @WorkerThread
     fun all(): List<Bill> {
-        return MyApplication.database.billDao().all().blockingFirst()
+        return dao.all().blockingFirst()
     }
 
     @WorkerThread
     fun greaterUpdatedAt(): Long {
-        return MyApplication.database.billDao().greaterUpdatedAt().blockingFirst().firstOrNull()?.updatedAt ?: 0L
+        return dao.greaterUpdatedAt().blockingFirst().firstOrNull()?.updatedAt ?: 0L
     }
 
     @WorkerThread
     fun unsync(): List<Bill> {
-        return MyApplication.database.billDao().unsync().blockingFirst()
+        return dao.unsync().blockingFirst()
     }
 
     @WorkerThread
     fun monthly(month: DateTime): List<Bill> {
         val expenses = expenseRepository.monthly(month)
-        val bills = MyApplication.database.billDao().monthly(month.millis).blockingFirst() as MutableList<Bill>
+        val bills = dao.monthly(month.millis).blockingFirst() as MutableList<Bill>
         var i = 0
         while (i < bills.size) {
             val bill = bills[i]
@@ -62,7 +62,7 @@ open class BillRepository(private val expenseRepository: ExpenseRepository) {
             if (bill.id == 0L && bill.uuid == null)
                 bill.uuid = UUID.randomUUID().toString()
             bill.sync = false
-            bill.id = MyApplication.database.billDao().saveAtDatabase(bill)
+            bill.id = dao.saveAtDatabase(bill)
         }
         return result
     }
@@ -88,19 +88,21 @@ open class BillRepository(private val expenseRepository: ExpenseRepository) {
     fun syncAndSave(unsync: Bill): ValidationResult {
         val result = validate(unsync)
         if (!result.isValid) {
-            Log.w("Bill sync valid failed", unsync.getData() + "\nerrors: " + result.errorsAsString)
+            Timber.tag("Bill sync valid failed")
+                    .w(unsync.getData() + "\nerrors: " + result.errorsAsString)
             return result
         }
 
         val bill = find(unsync.uuid!!)
         if (bill != null && bill.id != unsync.id) {
             if (bill.updatedAt != unsync.updatedAt)
-                Log.w("Bill overwritten", unsync.getData())
+                Timber.tag("Bill overwritten")
+                        .w( unsync.getData())
             unsync.id = bill.id
         }
 
         unsync.sync = true
-        unsync.id = MyApplication.database.billDao().saveAtDatabase(unsync)
+        unsync.id = dao.saveAtDatabase(unsync)
 
         return result
     }

@@ -2,19 +2,17 @@ package br.com.jonathanzanella.myexpenses.resume
 
 import android.content.Intent
 import android.graphics.Typeface
-import android.os.AsyncTask
 import android.support.annotation.UiThread
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
 import br.com.jonathanzanella.myexpenses.helpers.TransactionsHelper
+import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.receipt.Receipt
 import br.com.jonathanzanella.myexpenses.receipt.ReceiptRepository
 import br.com.jonathanzanella.myexpenses.receipt.ShowReceiptActivity
-import br.com.jonathanzanella.myexpenses.source.Source
 import kotlinx.android.synthetic.main.row_monthly_resume_receipt.view.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
@@ -56,25 +54,18 @@ internal class ReceiptMonthlyResumeAdapter(private val receiptRepository: Receip
             if (!receipt.credited)
                 itemView.income!!.setTypeface(null, Typeface.BOLD)
 
-            object : AsyncTask<Void, Void, Source>() {
+            doAsync {
+                val s = receipt.source
 
-                override fun doInBackground(vararg voids: Void): Source? {
-                    return receipt.source
-                }
-
-                override fun onPostExecute(s: Source?) {
-                    super.onPostExecute(s)
-                    if (s != null)
-                        itemView.source?.text = s.name
-                }
-            }.execute()
+                uiThread { s?.let { itemView.source?.text = it.name } }
+            }
         }
 
         fun setTotal(totalValue: Int) {
-            itemView.income.text = CurrencyHelper.format(totalValue)
+            itemView.income.text = totalValue.toCurrencyFormatted()
         }
 
-        fun onIncome() {
+        private fun onIncome() {
             if (itemViewType != ViewType.TYPE_NORMAL.ordinal)
                 return
 
@@ -100,35 +91,29 @@ internal class ReceiptMonthlyResumeAdapter(private val receiptRepository: Receip
         }
     }
 
-    override fun getItemViewType(position: Int): Int {
-        if (isTotalView(position)) {
-            return ViewType.TYPE_TOTAL.ordinal
-        } else if (isTotalToPayView(position)) {
-            return ViewType.TYPE_TOTAL_TO_PAY.ordinal
-        } else {
-            return ViewType.TYPE_NORMAL.ordinal
+    override fun getItemViewType(position: Int) =
+        when {
+            isTotalView(position) -> ViewType.TYPE_TOTAL.ordinal
+            isTotalToPayView(position) -> ViewType.TYPE_TOTAL_TO_PAY.ordinal
+            else -> ViewType.TYPE_NORMAL.ordinal
         }
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val v: View
-        if (viewType == ViewType.TYPE_TOTAL.ordinal)
-            v = LayoutInflater.from(parent.context).inflate(R.layout.row_monthly_resume_receipt_total, parent, false)
-        else if (viewType == ViewType.TYPE_TOTAL_TO_PAY.ordinal)
-            v = LayoutInflater.from(parent.context).inflate(R.layout.row_monthly_resume_receipt_total_to_receive, parent, false)
-        else
-            v = LayoutInflater.from(parent.context).inflate(R.layout.row_monthly_resume_receipt, parent, false)
+        val v = when (viewType) {
+            ViewType.TYPE_TOTAL.ordinal -> LayoutInflater.from(parent.context).inflate(R.layout.row_monthly_resume_receipt_total, parent, false)
+            ViewType.TYPE_TOTAL_TO_PAY.ordinal -> LayoutInflater.from(parent.context).inflate(R.layout.row_monthly_resume_receipt_total_to_receive, parent, false)
+            else -> LayoutInflater.from(parent.context).inflate(R.layout.row_monthly_resume_receipt, parent, false)
+        }
 
         return ViewHolder(v)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        if (isTotalView(position))
-            holder.setTotal(totalValue)
-        else if (isTotalToPayView(position))
-            holder.setTotal(totalUnreceivedValue)
-        else
-            holder.setData(receipts[position])
+        when {
+            isTotalView(position) -> holder.setTotal(totalValue)
+            isTotalToPayView(position) -> holder.setTotal(totalUnreceivedValue)
+            else -> holder.setData(receipts[position])
+        }
     }
 
     private fun isTotalView(position: Int): Boolean {

@@ -7,7 +7,7 @@ import android.support.annotation.WorkerThread
 import br.com.jonathanzanella.myexpenses.Environment
 import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.account.AccountRepository
-import br.com.jonathanzanella.myexpenses.helpers.CurrencyHelper
+import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.source.Source
 import br.com.jonathanzanella.myexpenses.source.SourceRepository
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel
@@ -115,7 +115,7 @@ class Receipt : Transaction, UnsyncModel {
         }
 
     val incomeFormatted: String
-        get() = CurrencyHelper.format(income)
+        get() = income.toCurrencyFormatted()
 
     fun repeat(originalName: String, index: Int): Receipt {
         val receipt = Receipt()

@@ -6,6 +6,7 @@ apply plugin: 'jacoco-android'
 apply plugin: 'checkstyle'
 apply plugin: 'findbugs'
 apply plugin: 'pmd'
+apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -78,6 +79,7 @@ dependencies {
     implementation "org.apache.commons:commons-lang3:$rootProject.commonsLangVersion"
     implementation "com.timehop.stickyheadersrecyclerview:library:$rootProject.stickyHeadersVersion"
     implementation "com.android.support.test.espresso:espresso-idling-resource:$rootProject.ext.espressoVersion"
+    implementation "com.jakewharton.timber:timber:$rootProject.timberVersion"
 
     //Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
@@ -96,6 +98,11 @@ dependencies {
     // RXJava
     implementation "io.reactivex.rxjava2:rxjava:$rxJavaVersion"
     implementation "io.reactivex.rxjava2:rxandroid:$rxAndroidVersion"
+
+    //Fabric
+    implementation("com.crashlytics.sdk.android:crashlytics:$crashlyticsVersion@aar") {
+        transitive = true
+    }
 
     // Dependencies for local unit tests
     testCompile "junit:junit:$rootProject.junitVersion"
