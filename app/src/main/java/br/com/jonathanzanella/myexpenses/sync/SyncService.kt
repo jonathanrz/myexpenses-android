@@ -26,7 +26,7 @@ class SyncService : GcmTaskService() {
     private var totalUpdated: Int = 0
 
     init {
-        apis = ArrayList<UnsyncModelApi<UnsyncModel>>()
+        apis = ArrayList()
         apis.add(AccountApi())
         apis.add(BillApi())
         apis.add(CardApi())
@@ -58,12 +58,13 @@ class SyncService : GcmTaskService() {
         }
 
     override fun onRunTask(taskParams: TaskParams?): Int {
+        val log = Timber.tag("init SyncService")
         if (StringUtils.isEmpty(ServerData(baseContext).serverUrl) || StringUtils.isEmpty(ServerData(baseContext).serverToken)) {
-            Timber.d("Did not executed SyncService because server url and token are not informed")
+            log.d("Did not executed SyncService because server url and token are not informed")
             return GcmNetworkManager.RESULT_SUCCESS
         }
 
-        Timber.d("init SyncService, task: " + if (taskParams != null) taskParams.tag else "without task")
+        log .d("task: ${if (taskParams != null) taskParams.tag else "without task"}")
         totalSaved = 0
         totalUpdated = 0
 
@@ -76,13 +77,13 @@ class SyncService : GcmTaskService() {
                 notification.incrementProgress()
             }
         } else {
-            Timber.d("error in health check")
+            log.d("error in health check")
             return GcmNetworkManager.RESULT_FAILURE
         }
 
         notification.showFinishedJobNotification(this, totalSaved, totalUpdated)
 
-        Timber.d("end SyncService")
+        log.d("end SyncService")
         selfSchedule()
         return GcmNetworkManager.RESULT_SUCCESS
     }
