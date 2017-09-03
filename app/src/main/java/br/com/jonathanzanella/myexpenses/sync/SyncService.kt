@@ -90,7 +90,7 @@ class SyncService : GcmTaskService() {
 
     private fun syncApi(api: UnsyncModelApi<UnsyncModel>) {
         val log = Timber.tag("SyncService.syncApi")
-        Timber.d("init sync")
+        log.d("init sync")
         val unsyncModels = api.index()
         for (unsyncModel in unsyncModels) {
             api.syncAndSave(unsyncModel)
