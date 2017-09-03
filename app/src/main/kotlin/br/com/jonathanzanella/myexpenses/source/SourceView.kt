@@ -23,25 +23,25 @@ class SourceView@JvmOverloads constructor(
 ) : FrameLayout(context, attrs, defStyleAttr), RefreshableView, ResultableView, FilterableView, TabableView {
 	override var filter = ""
 	private val ui = SourceViewUI()
-    private val adapter = SourceAdapter()
+	private val adapter = SourceAdapter()
 
 	init {
 		addView(ui.createView(AnkoContext.Companion.create(context, this)))
 
-        ui.sources.adapter = adapter
-        ui.sources.layoutManager = GridLayoutManager(context, 2)
-        ui.sources.itemAnimator = DefaultItemAnimator()
+		ui.sources.adapter = adapter
+		ui.sources.layoutManager = GridLayoutManager(context, 2)
+		ui.sources.itemAnimator = DefaultItemAnimator()
 	}
 
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 		when (requestCode) {
 			REQUEST_ADD_SOURCE -> if (resultCode == Activity.RESULT_OK)
-                refreshData()
+				refreshData()
 		}
 	}
 
 	override fun refreshData() {
-        adapter.refreshData()
+		adapter.refreshData()
 		adapter.notifyDataSetChanged()
 	}
 
@@ -61,7 +61,7 @@ class SourceViewUI: AnkoComponent<SourceView> {
 				onClick {
 					val i = Intent(context, EditSourceActivity::class.java)
 					if (ctx is Activity) {
-                        (ctx as Activity).startActivityForResult(i, SourceView.REQUEST_ADD_SOURCE)
+						(ctx as Activity).startActivityForResult(i, SourceView.REQUEST_ADD_SOURCE)
 					} else {
 						ctx.startActivity(i)
 					}
