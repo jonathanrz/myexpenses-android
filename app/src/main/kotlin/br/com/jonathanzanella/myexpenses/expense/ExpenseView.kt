@@ -106,8 +106,8 @@ class ExpenseView@JvmOverloads constructor(
         for ((key, value) in views) {
             val viewDateFirstDay = key.firstDayOfMonth()
             val viewDateLastDay = key.lastDayOfMonth()
-            if (date.isEqual(viewDateFirstDay) || date.isEqual(viewDateLastDay) ||
-                    date.isAfter(viewDateFirstDay) && date.isBefore(viewDateLastDay))
+            val afterOrEqualToFirstDay = date.isEqual(viewDateFirstDay) || date.isAfter(viewDateFirstDay)
+            if (afterOrEqualToFirstDay || date.isEqual(viewDateLastDay) && date.isBefore(viewDateLastDay))
                 return value.get()
         }
 
