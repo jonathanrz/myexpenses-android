@@ -121,6 +121,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return selectMenuItem(item.itemId)
     }
 
+    @Suppress("ReturnCount")
     private fun selectMenuItem(@IdRes itemId: Int): Boolean {
         selectedItem = itemId
         navigationView!!.setCheckedItem(selectedItem)
