@@ -82,7 +82,7 @@ public class ExpensesViewTest {
 		return onView(allOf(
 				withId(R.id.name),
 				allOf(
-					isDescendantOfA(withTagValue(is((Object)expense.getUuid())))),
+					isDescendantOfA(withTagValue(is(expense.getUuid())))),
 					withText(expense.getName())));
 	}
 }

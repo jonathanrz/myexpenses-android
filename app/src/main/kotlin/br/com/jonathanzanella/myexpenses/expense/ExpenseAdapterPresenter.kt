@@ -3,30 +3,31 @@ package br.com.jonathanzanella.myexpenses.expense
 import org.apache.commons.lang3.StringUtils
 import org.joda.time.DateTime
 import java.util.*
+import kotlin.collections.ArrayList
 
 class ExpenseAdapterPresenter(private val repository: ExpenseRepository) {
-    private var receipts: MutableList<Expense>? = null
-    private var receiptsFiltered: MutableList<Expense>? = null
+    private var expenses: List<Expense> = ArrayList<Expense>()
+    private var expensesFiltered: MutableList<Expense> = ArrayList<Expense>()
 
     private fun loadExpenses(date: DateTime) {
-        receipts = repository.monthly(date) as MutableList<Expense>
-        receiptsFiltered = receipts
+        expenses = repository.monthly(date)
+        expensesFiltered = expenses as MutableList<Expense>
     }
 
     fun getExpenses(invalidateCache: Boolean, date: DateTime?): List<Expense> {
         if (invalidateCache)
             loadExpenses(date!!)
-        return Collections.unmodifiableList(receiptsFiltered ?: ArrayList())
+        return Collections.unmodifiableList(expensesFiltered)
     }
 
     fun filter(filter: String) {
         if (filter.compareTo("") == 0) {
-            receiptsFiltered = receipts
+            expensesFiltered = expenses as MutableList<Expense>
             return
         }
 
-        receiptsFiltered = ArrayList()
-        receipts?.filter { StringUtils.containsIgnoreCase(it.name, filter) }
-                ?.forEach { receiptsFiltered!!.add(it) }
+        expensesFiltered = ArrayList()
+        expenses.filter { StringUtils.containsIgnoreCase(it.name, filter) }
+                .forEach { expensesFiltered.add(it) }
     }
 }
