@@ -45,7 +45,7 @@ ext {
     jodaVersion = '2.9.9'
     junitVersion = '4.12'
     mockitoKotlinVersion = '1.5.0'
-    playServicesVersion = '10.2.1'
+    playServicesVersion = '11.2.0'
     retrofitVersion = '2.2.0'
     roomVersion = '1.0.0-alpha5'
     rxAndroidVersion = '2.0.1'
