@@ -1,3 +1,7 @@
+plugins {
+    id "io.gitlab.arturbosch.detekt" version "1.0.0.RC4"
+}
+
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
@@ -198,5 +202,14 @@ task pmd(type: Pmd) {
 android {
     lintOptions {
         disable 'InvalidPackage','Overdraw',"UnusedResources","UselessParent","GoogleAppIndexingWarning","RelativeOverlap"
+    }
+}
+
+detekt {
+    version = "1.0.0.RC4"
+    profile("main") {
+        input = "$projectDir/src/main/kotlin"
+        config = "$projectDir/detekt-config.yml"
+        filters = ".*test.*,.*/resources/.*,.*/tmp/.*"
     }
 }
