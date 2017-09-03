@@ -54,7 +54,7 @@ ext {
     runnerVersion = '0.5'
     stethoVersion = '1.4.2'
     stickyHeadersVersion = '0.4.3@aar'
-    supportLibraryVersion = '25.3.1'
+    supportLibraryVersion = '26.0.2'
     timberVersion = '4.5.1'
     uiAutomatorVersion = '2.1.1'
 }
