@@ -94,7 +94,6 @@ internal open class ExpenseAdapter : RecyclerView.Adapter<ExpenseAdapter.ViewHol
 
     @WorkerThread
     fun loadData(date: DateTime) {
-        expenses = expenseRepository.monthly(date) as ArrayList<Expense>
         expenses = presenter.getExpenses(true, date)
         this.date = date
     }
