@@ -45,15 +45,18 @@ class ClickableView(context: Context) : AppCompatEditText(context)
 class ResumeRowCell(context: Context) : LinearLayout(context)
 class SingleRowCell(context: Context) : LinearLayout(context)
 
-inline fun ViewManager.toolbarTemplate(theme: Int = R.style.ThemeOverlay_AppCompat_Dark, init: TemplateToolbar.() -> Unit) = ankoView(::TemplateToolbar, theme, init)
+inline fun ViewManager.toolbarTemplate(theme: Int = R.style.ThemeOverlay_AppCompat_Dark, init: TemplateToolbar.() -> Unit) =
+        ankoView(::TemplateToolbar, theme, init)
 inline fun ViewManager.tableViewFrame(theme: Int = 0, init: TableViewFrame.() -> Unit) = ankoView(::TableViewFrame, theme, init)
 inline fun ViewManager.linearViewFrame(theme: Int = 0, init: LinearViewFrame.() -> Unit) = ankoView(::LinearViewFrame, theme, init)
 inline fun ViewManager.static(theme: Int = 0, init: Static.() -> Unit) = ankoView(::Static, theme, init)
 inline fun ViewManager.staticWithData(theme: Int = 0, init: StaticWithData.() -> Unit) = ankoView(::StaticWithData, theme, init)
 inline fun ViewManager.headerTitle(theme: Int = 0, init: HeaderTitle.() -> Unit) = ankoView(::HeaderTitle, theme, init)
 inline fun ViewManager.emptyListMessageView(theme: Int = 0, init: EmptyListMessageView.() -> Unit) = ankoView(::EmptyListMessageView, theme, init)
-inline fun ViewManager.rowPrincipalInformation(theme: Int = 0, init: RowPrincipalInformation.() -> Unit) = ankoView(::RowPrincipalInformation, theme, init)
-inline fun ViewManager.rowSecondaryInformation(theme: Int = 0, init: RowSecondaryInformation.() -> Unit) = ankoView(::RowSecondaryInformation, theme, init)
+inline fun ViewManager.rowPrincipalInformation(theme: Int = 0, init: RowPrincipalInformation.() -> Unit) =
+        ankoView(::RowPrincipalInformation, theme, init)
+inline fun ViewManager.rowSecondaryInformation(theme: Int = 0, init: RowSecondaryInformation.() -> Unit) =
+        ankoView(::RowSecondaryInformation, theme, init)
 inline fun ViewManager.rowDetailInformation(theme: Int = 0, init: RowDetailInformation.() -> Unit) = ankoView(::RowDetailInformation, theme, init)
 inline fun ViewManager.rowStaticInformation(theme: Int = 0, init: RowStaticInformation.() -> Unit) = ankoView(::RowStaticInformation, theme, init)
 inline fun ViewManager.clickableView(theme: Int = 0, init: ClickableView.() -> Unit) = ankoView(::ClickableView, theme, init)

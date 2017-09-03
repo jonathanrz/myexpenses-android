@@ -21,7 +21,8 @@ class ExpenseWeeklyOverviewAdapter : RecyclerView.Adapter<ExpenseWeeklyOverviewA
     var totalValue: Int = 0
         private set
 
-    inner class ViewHolder internal constructor(itemView: View, val ui : ExpenseWeeklyOverviewUI) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+    inner class ViewHolder internal constructor(itemView: View, val ui : ExpenseWeeklyOverviewUI) :
+            RecyclerView.ViewHolder(itemView), View.OnClickListener {
         init {
             itemView.setOnClickListener(this)
         }

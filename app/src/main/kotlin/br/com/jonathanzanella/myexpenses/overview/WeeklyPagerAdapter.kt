@@ -11,7 +11,8 @@ import br.com.jonathanzanella.myexpenses.views.RefreshableView
 import org.joda.time.DateTime
 import java.util.*
 
-class WeeklyPagerAdapter internal constructor(private val context: Context, month: DateTime, private val builder: WeeklyPagerAdapterBuilder) : PagerAdapter() {
+class WeeklyPagerAdapter internal constructor(private val context: Context, month: DateTime, private val builder: WeeklyPagerAdapterBuilder) :
+        PagerAdapter() {
     private val periods = ArrayList<Period>()
 
     class Period {

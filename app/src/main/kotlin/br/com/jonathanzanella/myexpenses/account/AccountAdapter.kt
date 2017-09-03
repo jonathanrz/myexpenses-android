@@ -28,7 +28,8 @@ class AccountAdapter(val month : DateTime) : RecyclerView.Adapter<AccountAdapter
         LIST
     }
 
-    inner class ViewHolder(itemView: View, val name: TextView, val balance: TextView, val accountToPayCreditCard: TextView?) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+    inner class ViewHolder(itemView: View, val name: TextView, val balance: TextView, val accountToPayCreditCard: TextView?) :
+            RecyclerView.ViewHolder(itemView), View.OnClickListener {
         private val adapterColorHelper: AdapterColorHelper
 
         init {

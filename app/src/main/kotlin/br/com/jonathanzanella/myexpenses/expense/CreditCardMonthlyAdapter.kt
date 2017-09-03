@@ -28,7 +28,8 @@ class CreditCardMonthlyAdapter : RecyclerView.Adapter<CreditCardMonthlyAdapter.V
         TYPE_TOTAL
     }
 
-    class ViewHolder(itemView: View, val income: TextView, val name: TextView? = null, val date: TextView? = null, val source: TextView? = null) : RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(itemView: View, val income: TextView, val name: TextView? = null, val date: TextView? = null, val source: TextView? = null) :
+            RecyclerView.ViewHolder(itemView) {
         fun setData(expense: Expense) {
             if (name != null)
                 name.text = expense.name

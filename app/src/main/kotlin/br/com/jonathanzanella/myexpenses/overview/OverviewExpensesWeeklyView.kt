@@ -14,7 +14,8 @@ import br.com.jonathanzanella.myexpenses.views.RefreshableView
 import kotlinx.android.synthetic.main.view_overview_expenses_weekly.view.*
 
 @SuppressLint("ViewConstructor")
-internal class OverviewExpensesWeeklyView(context: Context, private val period: WeeklyPagerAdapter.Period) : FrameLayout(context), FilterableView, RefreshableView {
+internal class OverviewExpensesWeeklyView(context: Context, private val period: WeeklyPagerAdapter.Period) :
+        FrameLayout(context), FilterableView, RefreshableView {
     override var filter = ""
     private val expenseRepository: ExpenseRepository = ExpenseRepository()
     private var adapter = ExpenseWeeklyOverviewAdapter()

@@ -99,7 +99,8 @@ private class ListChargeableActivityUi : AnkoComponent<ListChargeableActivity> {
             headerTitle { text = resources.getString(R.string.accounts) }
             accounts = recyclerView { id = R.id.act_chargeable_list_accounts }.lparams(height = 0, weight = 1f)
 
-            headerTitle { text = resources.getString(R.string.cards) }.lparams { topMargin = resources.getDimensionPixelSize(R.dimen.default_spacing) }
+            headerTitle { text = resources.getString(R.string.cards) }
+                    .lparams { topMargin = resources.getDimensionPixelSize(R.dimen.default_spacing) }
             cards = recyclerView { id = R.id.act_chargeable_list_cards }.lparams(height = 0, weight = 1f)
         }
     }.applyRecursively(::applyTemplateViewStyles)

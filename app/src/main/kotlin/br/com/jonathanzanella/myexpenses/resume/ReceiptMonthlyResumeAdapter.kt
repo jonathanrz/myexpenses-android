@@ -21,7 +21,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-internal class ReceiptMonthlyResumeAdapter(private val receiptRepository: ReceiptRepository) : RecyclerView.Adapter<ReceiptMonthlyResumeAdapter.ViewHolder>() {
+internal class ReceiptMonthlyResumeAdapter(private val receiptRepository: ReceiptRepository) :
+        RecyclerView.Adapter<ReceiptMonthlyResumeAdapter.ViewHolder>() {
     private var receipts: List<Receipt> = ArrayList()
     var totalValue: Int = 0
         private set
@@ -100,9 +101,12 @@ internal class ReceiptMonthlyResumeAdapter(private val receiptRepository: Receip
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v = when (viewType) {
-            ViewType.TYPE_TOTAL.ordinal -> LayoutInflater.from(parent.context).inflate(R.layout.row_monthly_resume_receipt_total, parent, false)
-            ViewType.TYPE_TOTAL_TO_PAY.ordinal -> LayoutInflater.from(parent.context).inflate(R.layout.row_monthly_resume_receipt_total_to_receive, parent, false)
-            else -> LayoutInflater.from(parent.context).inflate(R.layout.row_monthly_resume_receipt, parent, false)
+            ViewType.TYPE_TOTAL.ordinal ->
+                LayoutInflater.from(parent.context).inflate(R.layout.row_monthly_resume_receipt_total, parent, false)
+            ViewType.TYPE_TOTAL_TO_PAY.ordinal ->
+                LayoutInflater.from(parent.context).inflate(R.layout.row_monthly_resume_receipt_total_to_receive, parent, false)
+            else ->
+                LayoutInflater.from(parent.context).inflate(R.layout.row_monthly_resume_receipt, parent, false)
         }
 
         return ViewHolder(v)

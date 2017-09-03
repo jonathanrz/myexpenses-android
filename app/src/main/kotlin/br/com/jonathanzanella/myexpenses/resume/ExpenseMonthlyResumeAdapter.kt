@@ -110,9 +110,12 @@ internal class ExpenseMonthlyResumeAdapter : RecyclerView.Adapter<ExpenseMonthly
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v = when (viewType) {
-            ViewType.TYPE_TOTAL.ordinal -> LayoutInflater.from(parent.context).inflate(R.layout.row_monthly_resume_expense_total, parent, false)
-            ViewType.TYPE_TOTAL_TO_PAY.ordinal -> LayoutInflater.from(parent.context).inflate(R.layout.row_monthly_resume_expense_total_to_pay, parent, false)
-            else -> LayoutInflater.from(parent.context).inflate(R.layout.row_monthly_resume_expense, parent, false)
+            ViewType.TYPE_TOTAL.ordinal ->
+                LayoutInflater.from(parent.context).inflate(R.layout.row_monthly_resume_expense_total, parent, false)
+            ViewType.TYPE_TOTAL_TO_PAY.ordinal ->
+                LayoutInflater.from(parent.context).inflate(R.layout.row_monthly_resume_expense_total_to_pay, parent, false)
+            else ->
+                LayoutInflater.from(parent.context).inflate(R.layout.row_monthly_resume_expense, parent, false)
         }
 
         return ViewHolder(v)
