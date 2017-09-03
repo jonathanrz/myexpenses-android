@@ -192,14 +192,18 @@ class ExpensePresenter(private val repository: ExpenseRepository, private val bi
                 .setPositiveButton(android.R.string.yes) { dialog, _ ->
                     dialog.dismiss()
 
-                    expense!!.apply {
-                        uncharge()
-                        delete()
-                    }
+                    doAsync {
+                        expense!!.apply {
+                            uncharge()
+                            delete()
+                        }
 
-                    val i = Intent()
-                    act.setResult(RESULT_OK, i)
-                    act.finish()
+                        uiThread {
+                            val i = Intent()
+                            act.setResult(RESULT_OK, i)
+                            act.finish()
+                        }
+                    }
                 }
                 .setNegativeButton(android.R.string.no) { dialog, _ -> dialog.dismiss() }
                 .show()
