@@ -20,6 +20,7 @@ import org.jetbrains.anko.uiThread
 import org.joda.time.DateTime
 import timber.log.Timber
 
+@Suppress("LargeClass")
 class ReceiptPresenter(private val repository: ReceiptRepository, private val sourceRepository: SourceRepository,
                        private val accountRepository: AccountRepository) {
     private var view: ReceiptContract.View? = null

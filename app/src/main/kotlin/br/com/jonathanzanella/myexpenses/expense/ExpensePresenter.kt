@@ -21,6 +21,7 @@ import org.jetbrains.anko.uiThread
 import org.joda.time.DateTime
 import timber.log.Timber
 
+@Suppress("LargeClass")
 class ExpensePresenter(private val repository: ExpenseRepository, private val billRepository: BillRepository) {
     private var view: ExpenseContract.View? = null
     private var editView: ExpenseContract.EditView? = null
