@@ -33,17 +33,15 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    if (project.hasProperty('devBuild')){
-        splits.abi.enable = false
-        splits.density.enable = false
-        aaptOptions.cruncherEnabled = false
-    }
-
     buildTypes {
         debug {
             applicationIdSuffix '.debug'
             versionNameSuffix '-DEBUG'
             testCoverageEnabled true
+
+            splits.abi.enable = false
+            splits.density.enable = false
+            aaptOptions.cruncherEnabled = false
         }
         release {
             minifyEnabled false
