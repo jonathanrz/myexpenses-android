@@ -10,7 +10,7 @@ import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.views.MainActivity
 
 internal class SyncServiceNotification(ctx: Context, private val notificationId: Int, private val totalProgress: Int) {
-    private val CHANNEL_ID = "MyExpenses"
+    private val channelId = "MyExpenses"
     private val notifyMgr: NotificationManager
     private val notification: NotificationCompat.Builder
     private var currentProgress: Int = 0
@@ -20,7 +20,7 @@ internal class SyncServiceNotification(ctx: Context, private val notificationId:
 
         notifyMgr = ctx.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        notification = NotificationCompat.Builder(ctx, CHANNEL_ID)
+        notification = NotificationCompat.Builder(ctx, channelId)
                 .setContentTitle(CONTENT_TITLE)
                 .setContentText(CONTENT_TEXT_SYNCING)
                 .setSmallIcon(R.drawable.ic_server_synced_black_24dp)
