@@ -12,7 +12,6 @@ import br.com.jonathanzanella.myexpenses.card.Card
 import br.com.jonathanzanella.myexpenses.card.CardRepository
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
-import br.com.jonathanzanella.myexpenses.views.anko.resumeRowCell
 import org.jetbrains.anko.*
 import org.joda.time.DateTime
 import java.text.SimpleDateFormat
@@ -95,22 +94,22 @@ private class CreditCardMonthlyViewUI: AnkoComponent<ViewGroup> {
     lateinit var income : TextView
 
     override fun createView(ui: AnkoContext<ViewGroup>) = with(ui) {
-        verticalLayout {
-            resumeRowCell {
-                orientation = LinearLayout.HORIZONTAL
+        linearLayout {
+            orientation = LinearLayout.HORIZONTAL
+            layoutParams = ViewGroup.LayoutParams(matchParent, wrapContent)
+            padding = resources.getDimensionPixelOffset(R.dimen.min_spacing)
 
-                date = textView { id = R.id.row_credit_card_monthly_date }
-                        .lparams { marginEnd = resources.getDimensionPixelSize(R.dimen.min_spacing) }
-                source = textView { id = R.id.row_credit_card_monthly_source }
-                        .lparams(width = resources.getDimensionPixelSize(R.dimen.resume_source_width)) {
-                            marginEnd = resources.getDimensionPixelSize(R.dimen.min_spacing)
-                        }
-                name = textView { id = R.id.row_credit_card_monthly_name }
-                        .lparams(width = 0, weight = 1f) {
-                            marginEnd = resources.getDimensionPixelSize(R.dimen.min_spacing)
-                        }
-                income = textView { id = R.id.row_credit_card_monthly_income }
-            }.lparams { margin = resources.getDimensionPixelSize(R.dimen.min_spacing) }
+            date = textView { id = R.id.row_credit_card_monthly_date }
+                    .lparams { marginEnd = resources.getDimensionPixelSize(R.dimen.min_spacing) }
+            source = textView { id = R.id.row_credit_card_monthly_source }
+                    .lparams(width = resources.getDimensionPixelSize(R.dimen.resume_source_width)) {
+                        marginEnd = resources.getDimensionPixelSize(R.dimen.min_spacing)
+                    }
+            name = textView { id = R.id.row_credit_card_monthly_name }
+                    .lparams(width = 0, weight = 1f) {
+                        marginEnd = resources.getDimensionPixelSize(R.dimen.min_spacing)
+                    }
+            income = textView { id = R.id.row_credit_card_monthly_income }
         }.applyRecursively(::applyTemplateViewStyles)
     }
 }
@@ -119,20 +118,20 @@ private class CreditCardMonthlyTotalViewUI: AnkoComponent<ViewGroup> {
     lateinit var income : TextView
 
     override fun createView(ui: AnkoContext<ViewGroup>) = with(ui) {
-        verticalLayout {
-            resumeRowCell {
-                orientation = LinearLayout.HORIZONTAL
+        linearLayout {
+            orientation = LinearLayout.HORIZONTAL
+            layoutParams = ViewGroup.LayoutParams(matchParent, wrapContent)
+            padding = resources.getDimensionPixelOffset(R.dimen.min_spacing)
 
-                textView {
-                    text = resources.getString(R.string.total)
-                    typeface = Typeface.defaultFromStyle(Typeface.BOLD)
-                }.lparams(width = 0, height = wrapContent, weight = 1f) {
-                    marginEnd = resources.getDimensionPixelSize(R.dimen.min_spacing)
-                }
-                income = textView {
-                    id = R.id.row_credit_card_monthly_income
-                    typeface = Typeface.defaultFromStyle(Typeface.BOLD)
-                }
+            textView {
+                text = resources.getString(R.string.total)
+                typeface = Typeface.defaultFromStyle(Typeface.BOLD)
+            }.lparams(width = 0, height = wrapContent, weight = 1f) {
+                marginEnd = resources.getDimensionPixelSize(R.dimen.min_spacing)
+            }
+            income = textView {
+                id = R.id.row_credit_card_monthly_income
+                typeface = Typeface.defaultFromStyle(Typeface.BOLD)
             }
         }.applyRecursively(::applyTemplateViewStyles)
     }

@@ -73,7 +73,7 @@ class CreditCardInvoiceActivityUi : AnkoComponent<CreditCardInvoiceActivity> {
 
     override fun createView(ui: AnkoContext<CreditCardInvoiceActivity>) = with(ui) {
         verticalLayout {
-            appBarLayout {
+            appBarLayout(android.R.style.ThemeOverlay_Material_Dark_ActionBar) {
                 toolbar = toolbarTemplate {}
                 tabs = tabLayout {
                     id = R.id.tabs
