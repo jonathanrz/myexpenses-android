@@ -224,7 +224,7 @@ style:
     ignorePropertyDeclaration: false
     ignoreAnnotation: false
   WildcardImport:
-    active: true
+    active: false
   SafeCast:
     active: true
   MaxLineLength:
