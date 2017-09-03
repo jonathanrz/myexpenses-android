@@ -218,7 +218,7 @@ style:
   ModifierOrder:
     active: true
   MagicNumber:
-    active: true
+    active: false
     ignoreNumbers: '-1,0,1,2'
     ignoreHashCodeFunction: false
     ignorePropertyDeclaration: false
