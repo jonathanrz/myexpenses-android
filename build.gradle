@@ -73,6 +73,9 @@ ext.getCurrentBranch = {
 }
 
 ext.gitCommitCount = {
+    if(project.hasProperty('devBuild'))
+        return 1
+
     def stdout = new ByteArrayOutputStream()
     exec {
         commandLine 'git', 'rev-list', '--count', 'HEAD'
@@ -83,6 +86,9 @@ ext.gitCommitCount = {
 }
 
 ext.getVersionName = {
+    if(project.hasProperty('devBuild'))
+        return "dev"
+
     def branch = getCurrentBranch()
 
     def hasBranch = branch?.trim()
