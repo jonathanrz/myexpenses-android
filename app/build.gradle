@@ -1,5 +1,6 @@
 plugins {
     id "io.gitlab.arturbosch.detekt" version "1.0.0.RC4"
+    id 'org.jmailen.kotlinter' version '1.3.1'
 }
 
 apply plugin: 'com.android.application'
@@ -212,4 +213,10 @@ detekt {
         config = "$projectDir/detekt-config.yml"
         filters = ".*test.*,.*/resources/.*,.*/tmp/.*"
     }
+}
+
+kotlinter {
+    ignoreFailures = false
+    indentSize = 4
+    reporter = 'checkstyle'
 }

@@ -4,7 +4,7 @@ import android.content.Intent
 import android.support.test.InstrumentationRegistry.getInstrumentation
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.assertion.ViewAssertions.matches
-import android.support.test.espresso.matcher.ViewMatchers.*
+import android.support.test.espresso.matcher.ViewMatchers
 import android.support.test.filters.SmallTest
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
@@ -17,7 +17,10 @@ import br.com.jonathanzanella.myexpenses.bill.BillRepository
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper
 import br.com.jonathanzanella.myexpenses.helpers.UIHelper.clickIntoView
-import br.com.jonathanzanella.myexpenses.helpers.builder.*
+import br.com.jonathanzanella.myexpenses.helpers.builder.BillBuilder
+import br.com.jonathanzanella.myexpenses.helpers.builder.ExpenseBuilder
+import br.com.jonathanzanella.myexpenses.helpers.builder.ReceiptBuilder
+import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.receipt.ReceiptRepository
 import br.com.jonathanzanella.myexpenses.source.Source
@@ -46,7 +49,7 @@ class CalculateMonthBalanceCorrectlyTest {
     fun setUp() {
         MyApplication.resetDatabase()
 
-        val a = AccountBuilder().build()
+        val a = br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder().build()
         assertTrue(AccountRepository().save(a).isValid)
 
         val s = SourceBuilder().build()
@@ -144,11 +147,11 @@ class CalculateMonthBalanceCorrectlyTest {
 
     private fun validateExpectedBalance(expectedBalance: String) {
         onView(allOf<View>(
-                withId(R.id.balance),
-                isDescendantOfA(allOf<View>(
-                        withId(R.id.view_monthly_resume),
-                        isDisplayed()))))
-                .check(matches(withText(expectedBalance)))
+                ViewMatchers.withId(R.id.balance),
+                ViewMatchers.isDescendantOfA(allOf<View>(
+                        ViewMatchers.withId(R.id.view_monthly_resume),
+                        ViewMatchers.isDisplayed()))))
+                .check(matches(ViewMatchers.withText(expectedBalance)))
     }
 
     private fun scrollToMonth(dateTime: DateTime) {

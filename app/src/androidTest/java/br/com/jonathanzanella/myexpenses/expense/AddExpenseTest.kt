@@ -6,7 +6,7 @@ import android.support.test.InstrumentationRegistry
 import android.support.test.InstrumentationRegistry.getInstrumentation
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.assertion.ViewAssertions.matches
-import android.support.test.espresso.matcher.ViewMatchers.*
+import android.support.test.espresso.matcher.ViewMatchers
 import android.support.test.filters.LargeTest
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
@@ -19,7 +19,7 @@ import br.com.jonathanzanella.myexpenses.account.AccountRepository
 import br.com.jonathanzanella.myexpenses.bill.Bill
 import br.com.jonathanzanella.myexpenses.bill.BillRepository
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper
-import br.com.jonathanzanella.myexpenses.helpers.UIHelper.*
+import br.com.jonathanzanella.myexpenses.helpers.UIHelper
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder
 import br.com.jonathanzanella.myexpenses.helpers.builder.BillBuilder
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
@@ -67,35 +67,35 @@ class AddExpenseTest {
     fun add_new_expense() {
         mainActivityTestRule.launchActivity(Intent())
 
-        openMenuAndClickItem(R.string.expenses)
+        UIHelper.openMenuAndClickItem(R.string.expenses)
 
         val expensesTitle = context.getString(R.string.expenses)
-        matchToolbarTitle(expensesTitle)
+        UIHelper.matchToolbarTitle(expensesTitle)
 
-        clickIntoView(R.id.view_expenses_fab)
+        UIHelper.clickIntoView(R.id.view_expenses_fab)
 
         val newExpenseTitle = context.getString(R.string.new_expense_title)
-        matchToolbarTitle(newExpenseTitle)
+        UIHelper.matchToolbarTitle(newExpenseTitle)
 
         val expenseName = "Test"
-        typeTextIntoView(R.id.act_edit_expense_name, expenseName)
-        typeTextIntoView(R.id.act_edit_expense_value, "100")
-        clickIntoView(R.id.act_edit_expense_value_to_show_in_overview)
-        clickIntoView(R.id.act_edit_expense_date)
+        UIHelper.typeTextIntoView(R.id.act_edit_expense_name, expenseName)
+        UIHelper.typeTextIntoView(R.id.act_edit_expense_value, "100")
+        UIHelper.clickIntoView(R.id.act_edit_expense_value_to_show_in_overview)
+        UIHelper.clickIntoView(R.id.act_edit_expense_date)
         val time = DateTime.now().plusMonths(1)
-        setTimeInDatePicker(time.year, time.monthOfYear, time.dayOfMonth)
+        UIHelper.setTimeInDatePicker(time.year, time.monthOfYear, time.dayOfMonth)
         selectChargeable()
 
-        onView(withId(R.id.act_edit_expense_date))
-                .check(matches(withText(Transaction.SIMPLE_DATE_FORMAT.format(time.toDate()))))
+        onView(ViewMatchers.withId(R.id.act_edit_expense_date))
+                .check(matches(ViewMatchers.withText(Transaction.SIMPLE_DATE_FORMAT.format(time.toDate()))))
 
-        clickIntoView(R.id.action_save)
+        UIHelper.clickIntoView(R.id.action_save)
 
-        matchToolbarTitle(expensesTitle)
+        UIHelper.matchToolbarTitle(expensesTitle)
 
-        onView(withId(R.id.name)).check(matches(withText(expenseName)))
-        onView(withId(R.id.billLayout)).check(matches(not<View>(isDisplayed())))
-        onView(withId(R.id.date)).check(matches(withText(Transaction.SIMPLE_DATE_FORMAT.format(time.toDate()))))
+        onView(ViewMatchers.withId(R.id.name)).check(matches(ViewMatchers.withText(expenseName)))
+        onView(ViewMatchers.withId(R.id.billLayout)).check(matches(not<View>(ViewMatchers.isDisplayed())))
+        onView(ViewMatchers.withId(R.id.date)).check(matches(ViewMatchers.withText(Transaction.SIMPLE_DATE_FORMAT.format(time.toDate()))))
     }
 
     @Test
@@ -103,12 +103,12 @@ class AddExpenseTest {
         editExpenseActivityTestRule.launchActivity(Intent())
 
         val newExpenseTitle = context.getString(R.string.new_expense_title)
-        matchToolbarTitle(newExpenseTitle)
+        UIHelper.matchToolbarTitle(newExpenseTitle)
 
-        clickIntoView(R.id.action_save)
+        UIHelper.clickIntoView(R.id.action_save)
 
         val errorMessage = context.getString(R.string.error_message_name_not_informed)
-        matchErrorMessage(R.id.act_edit_expense_name, errorMessage)
+        UIHelper.matchErrorMessage(R.id.act_edit_expense_name, errorMessage)
     }
 
     @Test
@@ -116,12 +116,12 @@ class AddExpenseTest {
         editExpenseActivityTestRule.launchActivity(Intent())
 
         val newExpenseTitle = context.getString(R.string.new_expense_title)
-        matchToolbarTitle(newExpenseTitle)
+        UIHelper.matchToolbarTitle(newExpenseTitle)
 
-        clickIntoView(R.id.action_save)
+        UIHelper.clickIntoView(R.id.action_save)
 
         val errorMessage = context.getString(R.string.error_message_amount_zero)
-        matchErrorMessage(R.id.act_edit_expense_value, errorMessage)
+        UIHelper.matchErrorMessage(R.id.act_edit_expense_value, errorMessage)
     }
 
     @Test
@@ -129,12 +129,12 @@ class AddExpenseTest {
         editExpenseActivityTestRule.launchActivity(Intent())
 
         val newExpenseTitle = context.getString(R.string.new_expense_title)
-        matchToolbarTitle(newExpenseTitle)
+        UIHelper.matchToolbarTitle(newExpenseTitle)
 
-        clickIntoView(R.id.action_save)
+        UIHelper.clickIntoView(R.id.action_save)
 
         val errorMessage = context.getString(R.string.error_message_chargeable_not_informed)
-        matchErrorMessage(R.id.act_edit_expense_chargeable, errorMessage)
+        UIHelper.matchErrorMessage(R.id.act_edit_expense_chargeable, errorMessage)
     }
 
     @Test
@@ -146,26 +146,26 @@ class AddExpenseTest {
 
         mainActivityTestRule.launchActivity(Intent())
 
-        openMenuAndClickItem(R.string.expenses)
+        UIHelper.openMenuAndClickItem(R.string.expenses)
 
         val expensesTitle = context.getString(R.string.expenses)
-        matchToolbarTitle(expensesTitle)
+        UIHelper.matchToolbarTitle(expensesTitle)
 
-        clickIntoView(R.id.view_expenses_fab)
+        UIHelper.clickIntoView(R.id.view_expenses_fab)
 
         val newExpenseTitle = context.getString(R.string.new_expense_title)
-        matchToolbarTitle(newExpenseTitle)
+        UIHelper.matchToolbarTitle(newExpenseTitle)
 
         selectBill(bill)
         selectChargeable()
 
-        clickIntoView(R.id.action_save)
+        UIHelper.clickIntoView(R.id.action_save)
 
-        matchToolbarTitle(expensesTitle)
+        UIHelper.matchToolbarTitle(expensesTitle)
 
-        onView(withId(R.id.name)).check(matches(withText(bill.name)))
-        onView(withId(R.id.billLayout)).check(matches(isDisplayed()))
-        onView(withId(R.id.bill)).check(matches(withText(bill.name)))
+        onView(ViewMatchers.withId(R.id.name)).check(matches(ViewMatchers.withText(bill.name)))
+        onView(ViewMatchers.withId(R.id.billLayout)).check(matches(ViewMatchers.isDisplayed()))
+        onView(ViewMatchers.withId(R.id.bill)).check(matches(ViewMatchers.withText(bill.name)))
     }
 
     @Test
@@ -173,44 +173,44 @@ class AddExpenseTest {
     fun add_new_expense_with_reimburse() {
         mainActivityTestRule.launchActivity(Intent())
 
-        openMenuAndClickItem(R.string.expenses)
+        UIHelper.openMenuAndClickItem(R.string.expenses)
 
         val expensesTitle = context.getString(R.string.expenses)
-        matchToolbarTitle(expensesTitle)
+        UIHelper.matchToolbarTitle(expensesTitle)
 
-        clickIntoView(R.id.view_expenses_fab)
+        UIHelper.clickIntoView(R.id.view_expenses_fab)
 
         val newExpenseTitle = context.getString(R.string.new_expense_title)
-        matchToolbarTitle(newExpenseTitle)
+        UIHelper.matchToolbarTitle(newExpenseTitle)
 
         val expenseName = "Test"
         val value = 100
-        clearAndTypeTextIntoView(R.id.act_edit_expense_name, expenseName)
-        clearAndTypeTextIntoView(R.id.act_edit_expense_value, value.toString())
-        clickIntoView(R.id.act_edit_expense_repayment)
+        UIHelper.clearAndTypeTextIntoView(R.id.act_edit_expense_name, expenseName)
+        UIHelper.clearAndTypeTextIntoView(R.id.act_edit_expense_value, value.toString())
+        UIHelper.clickIntoView(R.id.act_edit_expense_repayment)
         selectChargeable()
 
-        clickIntoView(R.id.action_save)
+        UIHelper.clickIntoView(R.id.action_save)
 
-        matchToolbarTitle(expensesTitle)
+        UIHelper.matchToolbarTitle(expensesTitle)
 
-        onView(withId(R.id.name)).check(matches(withText(expenseName)))
+        onView(ViewMatchers.withId(R.id.name)).check(matches(ViewMatchers.withText(expenseName)))
         val expectedValue = (value * -1).toCurrencyFormatted()
-        onView(withId(R.id.value)).check(matches(withText(expectedValue)))
+        onView(ViewMatchers.withId(R.id.value)).check(matches(ViewMatchers.withText(expectedValue)))
     }
 
     private fun selectChargeable() {
         val selectChargeableTitle = context.getString(R.string.select_chargeable_title)
-        clickIntoView(R.id.act_edit_expense_chargeable)
-        matchToolbarTitle(selectChargeableTitle)
-        clickIntoView(account!!.name)
+        UIHelper.clickIntoView(R.id.act_edit_expense_chargeable)
+        UIHelper.matchToolbarTitle(selectChargeableTitle)
+        UIHelper.clickIntoView(account!!.name)
     }
 
     private fun selectBill(bill: Bill) {
         val title = context.getString(R.string.select_bill_title)
-        clickIntoView(R.id.act_edit_expense_bill)
-        matchToolbarTitle(title)
-        clickIntoView(bill.name)
+        UIHelper.clickIntoView(R.id.act_edit_expense_bill)
+        UIHelper.matchToolbarTitle(title)
+        UIHelper.clickIntoView(bill.name)
     }
 
     private val context: Context

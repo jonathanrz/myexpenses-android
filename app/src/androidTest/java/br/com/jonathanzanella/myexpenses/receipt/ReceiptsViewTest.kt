@@ -7,7 +7,7 @@ import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.ViewInteraction
 import android.support.test.espresso.assertion.ViewAssertions.doesNotExist
 import android.support.test.espresso.assertion.ViewAssertions.matches
-import android.support.test.espresso.matcher.ViewMatchers.*
+import android.support.test.espresso.matcher.ViewMatchers
 import android.support.test.filters.MediumTest
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
@@ -16,7 +16,7 @@ import br.com.jonathanzanella.myexpenses.MyApplication
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.AccountRepository
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper
-import br.com.jonathanzanella.myexpenses.helpers.UIHelper.*
+import br.com.jonathanzanella.myexpenses.helpers.UIHelper
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder
 import br.com.jonathanzanella.myexpenses.helpers.builder.ReceiptBuilder
 import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder
@@ -72,24 +72,24 @@ class ReceiptsViewTest {
     fun shows_receipt_correctly() {
         activityTestRule.launchActivity(Intent())
 
-        openMenuAndClickItem(R.string.receipts)
+        UIHelper.openMenuAndClickItem(R.string.receipts)
 
         val receiptsTitle = getTargetContext().getString(R.string.receipts)
-        matchToolbarTitle(receiptsTitle)
+        UIHelper.matchToolbarTitle(receiptsTitle)
 
-        clickIntoView(receipt!!.name, R.id.row_receipt_name)
+        UIHelper.clickIntoView(receipt!!.name, R.id.row_receipt_name)
 
         val editReceiptTitle = getTargetContext().getString(R.string.receipt) + " " + receipt!!.name
-        matchToolbarTitle(editReceiptTitle)
+        UIHelper.matchToolbarTitle(editReceiptTitle)
 
         val incomeAsCurrency = receipt!!.income.toCurrencyFormatted()
-        onView(withId(R.id.act_show_receipt_name)).check(matches(withText(receipt!!.name)))
-        onView(withId(R.id.act_show_receipt_income)).check(matches(withText(incomeAsCurrency)))
+        onView(ViewMatchers.withId(R.id.act_show_receipt_name)).check(matches(ViewMatchers.withText(receipt!!.name)))
+        onView(ViewMatchers.withId(R.id.act_show_receipt_income)).check(matches(ViewMatchers.withText(incomeAsCurrency)))
         val account = receipt!!.accountFromCache
-        onView(withId(R.id.act_show_receipt_account)).check(matches(withText(account!!.name)))
+        onView(ViewMatchers.withId(R.id.act_show_receipt_account)).check(matches(ViewMatchers.withText(account!!.name)))
 
         val source = receipt!!.source
-        onView(withId(R.id.act_show_receipt_source)).check(matches(withText(source!!.name)))
+        onView(ViewMatchers.withId(R.id.act_show_receipt_source)).check(matches(ViewMatchers.withText(source!!.name)))
     }
 
     @Test
@@ -97,23 +97,23 @@ class ReceiptsViewTest {
     fun filter_do_not_show_receipt2() {
         activityTestRule.launchActivity(Intent())
 
-        openMenuAndClickItem(R.string.receipts)
+        UIHelper.openMenuAndClickItem(R.string.receipts)
 
         val title = getTargetContext().getString(R.string.receipts)
-        matchToolbarTitle(title)
+        UIHelper.matchToolbarTitle(title)
 
-        clickIntoView(R.id.search)
-        typeTextIntoView(R.id.search_src_text, receipt!!.name)
+        UIHelper.clickIntoView(R.id.search)
+        UIHelper.typeTextIntoView(R.id.search_src_text, receipt!!.name)
 
-        onViewReceiptName(receipt).check(matches(isDisplayed()))
+        onViewReceiptName(receipt).check(matches(ViewMatchers.isDisplayed()))
         onViewReceiptName(receipt2).check(doesNotExist())
     }
 
     private fun onViewReceiptName(receipt: Receipt?): ViewInteraction {
         return onView(allOf<View>(
-                withId(R.id.row_receipt_name),
+                ViewMatchers.withId(R.id.row_receipt_name),
                 allOf<View>(
-                        isDescendantOfA(withTagValue(`is`(receipt!!.uuid)))),
-                withText(receipt.name)))
+                        ViewMatchers.isDescendantOfA(ViewMatchers.withTagValue(`is`(receipt!!.uuid)))),
+                ViewMatchers.withText(receipt.name)))
     }
 }

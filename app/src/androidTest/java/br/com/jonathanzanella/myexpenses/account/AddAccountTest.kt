@@ -14,7 +14,7 @@ import android.support.test.runner.AndroidJUnit4
 import br.com.jonathanzanella.myexpenses.MyApplication
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper
-import br.com.jonathanzanella.myexpenses.helpers.UIHelper.*
+import br.com.jonathanzanella.myexpenses.helpers.UIHelper
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.views.MainActivity
 import org.junit.After
@@ -46,21 +46,21 @@ class AddAccountTest {
     fun add_new_account() {
         activityTestRule.launchActivity(Intent())
 
-        openMenuAndClickItem(R.string.accounts)
+        UIHelper.openMenuAndClickItem(R.string.accounts)
 
         val accountsTitle = context.getString(R.string.accounts)
-        matchToolbarTitle(accountsTitle)
+        UIHelper.matchToolbarTitle(accountsTitle)
 
-        clickIntoView(R.id.view_accounts_fab)
+        UIHelper.clickIntoView(R.id.view_accounts_fab)
 
         val newAccountTitle = context.getString(R.string.new_account_title)
-        matchToolbarTitle(newAccountTitle)
+        UIHelper.matchToolbarTitle(newAccountTitle)
 
         val accountTitle = "Test"
-        typeTextIntoView(R.id.act_edit_account_name, accountTitle)
-        clickIntoView(R.id.action_save)
+        UIHelper.typeTextIntoView(R.id.act_edit_account_name, accountTitle)
+        UIHelper.clickIntoView(R.id.action_save)
 
-        matchToolbarTitle(accountsTitle)
+        UIHelper.matchToolbarTitle(accountsTitle)
 
         onView(withId(R.id.row_account_name)).check(matches(withText(accountTitle)))
         val balance = 0.toCurrencyFormatted()
@@ -72,12 +72,12 @@ class AddAccountTest {
         editAccountActivityTestRule.launchActivity(Intent())
 
         val newAccountTitle = context.getString(R.string.new_account_title)
-        matchToolbarTitle(newAccountTitle)
+        UIHelper.matchToolbarTitle(newAccountTitle)
 
-        clickIntoView(R.id.action_save)
+        UIHelper.clickIntoView(R.id.action_save)
 
         val errorMessage = context.getString(R.string.error_message_name_not_informed)
-        matchErrorMessage(R.id.act_edit_account_name, errorMessage)
+        UIHelper.matchErrorMessage(R.id.act_edit_account_name, errorMessage)
     }
 
     private val context: Context

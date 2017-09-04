@@ -5,7 +5,7 @@ import android.support.test.InstrumentationRegistry.getInstrumentation
 import android.support.test.InstrumentationRegistry.getTargetContext
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.assertion.ViewAssertions.matches
-import android.support.test.espresso.matcher.ViewMatchers.*
+import android.support.test.espresso.matcher.ViewMatchers
 import android.support.test.filters.MediumTest
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
@@ -78,8 +78,8 @@ class ShowAccountActivityTest {
         matchToolbarTitle(editAccountTitle)
 
         val balanceAsCurrency = account!!.balance.toCurrencyFormatted()
-        onView(withId(R.id.act_show_account_name)).check(matches(withText(account!!.name)))
-        onView(withId(R.id.act_show_account_balance)).check(matches(withText(balanceAsCurrency)))
+        onView(ViewMatchers.withId(R.id.act_show_account_name)).check(matches(ViewMatchers.withText(account!!.name)))
+        onView(ViewMatchers.withId(R.id.act_show_account_balance)).check(matches(ViewMatchers.withText(balanceAsCurrency)))
     }
 
     @Test
@@ -96,9 +96,9 @@ class ShowAccountActivityTest {
         val value = expense.amount.toCurrencyFormatted()
 
         Thread.sleep(500)
-        onView(withId(R.id.act_show_account_name)).check(matches(withText(account!!.name)))
-        onView(withId(R.id.name)).check(matches(withText(billName)))
-        onView(withId(R.id.value)).check(matches(withText(value)))
+        onView(ViewMatchers.withId(R.id.act_show_account_name)).check(matches(ViewMatchers.withText(account!!.name)))
+        onView(ViewMatchers.withId(R.id.name)).check(matches(ViewMatchers.withText(billName)))
+        onView(ViewMatchers.withId(R.id.value)).check(matches(ViewMatchers.withText(value)))
     }
 
     @Test
@@ -113,18 +113,18 @@ class ShowAccountActivityTest {
         var expectedValue = expectedBalance.toCurrencyFormatted()
         Thread.sleep(500)
         onView(allOf<View>(
-                withId(R.id.balance),
-                isDescendantOfA(withId(R.id.thisMonth))))
-                .check(matches(withText(expectedValue)))
+                ViewMatchers.withId(R.id.balance),
+                ViewMatchers.isDescendantOfA(ViewMatchers.withId(R.id.thisMonth))))
+                .check(matches(ViewMatchers.withText(expectedValue)))
 
         expectedBalance = expectedBalance + RECEIPT_INCOME - EXPENSE_VALUE
         expectedValue = expectedBalance.toCurrencyFormatted()
 
         Thread.sleep(500)
         onView(allOf<View>(
-                withId(R.id.balance),
-                isDescendantOfA(withId(R.id.nextMonth))))
-                .check(matches(withText(expectedValue)))
+                ViewMatchers.withId(R.id.balance),
+                ViewMatchers.isDescendantOfA(ViewMatchers.withId(R.id.nextMonth))))
+                .check(matches(ViewMatchers.withText(expectedValue)))
     }
 
     private fun launchActivity() {
