@@ -214,3 +214,9 @@ detekt {
         filters = ".*test.*,.*/resources/.*,.*/tmp/.*"
     }
 }
+
+kotlinter {
+    ignoreFailures = false
+    indentSize = 4
+    reporter = 'checkstyle'
+}
