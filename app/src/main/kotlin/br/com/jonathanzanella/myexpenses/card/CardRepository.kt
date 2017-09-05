@@ -1,7 +1,6 @@
 package br.com.jonathanzanella.myexpenses.card
 
 import android.support.annotation.WorkerThread
-import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
@@ -10,37 +9,38 @@ import org.apache.commons.lang3.StringUtils
 import org.joda.time.DateTime
 import timber.log.Timber
 import java.util.*
+import javax.inject.Inject
 
-open class CardRepository(private val expenseRepository: ExpenseRepository) {
+open class CardRepository @Inject constructor(private val expenseRepository: ExpenseRepository, val dao: CardDao) {
 
     @WorkerThread
     fun find(uuid: String): Card? {
-        return App.database.cardDao().find(uuid).blockingFirst().firstOrNull()
+        return dao.find(uuid).blockingFirst().firstOrNull()
     }
 
     @WorkerThread
     fun all(): List<Card> {
-        return App.database.cardDao().all().blockingFirst()
+        return dao.all().blockingFirst()
     }
 
     @WorkerThread
     fun unsync(): List<Card> {
-        return App.database.cardDao().unsync().blockingFirst()
+        return dao.unsync().blockingFirst()
     }
 
     @WorkerThread
     fun creditCards(): List<Card> {
-        return App.database.cardDao().cards(CardType.CREDIT.value).blockingFirst()
+        return dao.cards(CardType.CREDIT.value).blockingFirst()
     }
 
     @WorkerThread
     fun accountDebitCard(account: Account): Card? {
-        return App.database.cardDao().accountCard(CardType.DEBIT.value, account.uuid!!).blockingFirst().firstOrNull()
+        return dao.accountCard(CardType.DEBIT.value, account.uuid!!).blockingFirst().firstOrNull()
     }
 
     @WorkerThread
     fun greaterUpdatedAt(): Long {
-        return App.database.cardDao().greaterUpdatedAt().blockingFirst().firstOrNull()?.updatedAt ?: 0L
+        return dao.greaterUpdatedAt().blockingFirst().firstOrNull()?.updatedAt ?: 0L
     }
 
     @WorkerThread
@@ -50,7 +50,7 @@ open class CardRepository(private val expenseRepository: ExpenseRepository) {
             if (card.id == 0L && card.uuid == null)
                 card.uuid = UUID.randomUUID().toString()
             card.sync = false
-            card.id = App.database.cardDao().saveAtDatabase(card)
+            card.id = dao.saveAtDatabase(card)
         }
         return result
     }
@@ -83,7 +83,7 @@ open class CardRepository(private val expenseRepository: ExpenseRepository) {
         }
 
         unsync.sync = true
-        unsync.id = App.database.cardDao().saveAtDatabase(unsync)
+        unsync.id = dao.saveAtDatabase(unsync)
 
         return result
     }

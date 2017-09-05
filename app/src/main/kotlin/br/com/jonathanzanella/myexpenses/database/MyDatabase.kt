@@ -15,6 +15,7 @@ import br.com.jonathanzanella.myexpenses.receipt.Receipt
 import br.com.jonathanzanella.myexpenses.receipt.ReceiptDao
 import br.com.jonathanzanella.myexpenses.source.Source
 import br.com.jonathanzanella.myexpenses.source.SourceDao
+import javax.inject.Inject
 
 const val DB_NAME = "data.db"
 const val DB_VERSION = 1
@@ -28,4 +29,22 @@ abstract class MyDatabase : RoomDatabase() {
     abstract fun expenseDao(): ExpenseDao
     abstract fun receiptDao(): ReceiptDao
     abstract fun sourceDao(): SourceDao
+}
+
+class DatabaseHelper {
+    @Inject lateinit var accountDao: AccountDao
+    @Inject lateinit var billDao: BillDao
+    @Inject lateinit var cardDao: CardDao
+    @Inject lateinit var expenseDao: ExpenseDao
+    @Inject lateinit var receiptDao: ReceiptDao
+    @Inject lateinit var sourceDao: SourceDao
+
+    fun resetDatabase() {
+        accountDao.deleteAll()
+        billDao.deleteAll()
+        cardDao.deleteAll()
+        expenseDao.deleteAll()
+        receiptDao.deleteAll()
+        sourceDao.deleteAll()
+    }
 }

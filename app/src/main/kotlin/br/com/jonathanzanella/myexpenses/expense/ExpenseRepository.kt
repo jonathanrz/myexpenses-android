@@ -18,8 +18,9 @@ import org.apache.commons.lang3.StringUtils
 import org.joda.time.DateTime
 import timber.log.Timber
 import java.util.*
+import javax.inject.Inject
 
-open class ExpenseRepository(private val dao: ExpenseDao = App.database.expenseDao()) {
+open class ExpenseRepository @Inject constructor(private val dao: ExpenseDao) {
     private val cardRepository: CardRepository by lazy {
         CardRepository(this)
     }

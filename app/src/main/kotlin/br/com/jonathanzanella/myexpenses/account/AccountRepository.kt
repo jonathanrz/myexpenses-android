@@ -1,14 +1,14 @@
 package br.com.jonathanzanella.myexpenses.account
 
 import android.support.annotation.WorkerThread
-import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult
 import org.apache.commons.lang3.StringUtils
 import timber.log.Timber
 import java.util.*
+import javax.inject.Inject
 
-open class AccountRepository(private val dao: AccountDao = App.database.accountDao()) {
+open class AccountRepository @Inject constructor(private val dao: AccountDao) {
     @WorkerThread
     fun find(uuid: String): Account? {
         return dao.find(uuid).blockingFirst().firstOrNull()

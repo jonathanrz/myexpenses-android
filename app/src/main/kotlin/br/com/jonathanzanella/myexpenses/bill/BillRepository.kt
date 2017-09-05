@@ -1,7 +1,6 @@
 package br.com.jonathanzanella.myexpenses.bill
 
 import android.support.annotation.WorkerThread
-import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult
@@ -9,8 +8,9 @@ import org.apache.commons.lang3.StringUtils
 import org.joda.time.DateTime
 import timber.log.Timber
 import java.util.*
+import javax.inject.Inject
 
-open class BillRepository(private val expenseRepository: ExpenseRepository, private val dao: BillDao = App.database.billDao()) {
+open class BillRepository @Inject constructor(private val expenseRepository: ExpenseRepository, private val dao: BillDao) {
     @WorkerThread
     fun find(uuid: String): Bill? {
         return dao.find(uuid).blockingFirst().firstOrNull()
