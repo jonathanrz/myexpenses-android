@@ -2,16 +2,14 @@ package br.com.jonathanzanella.myexpenses.card
 
 import android.support.annotation.WorkerThread
 import br.com.jonathanzanella.myexpenses.account.Account
-import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult
 import org.apache.commons.lang3.StringUtils
-import org.joda.time.DateTime
 import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 
-open class CardRepository @Inject constructor(private val expenseRepository: ExpenseRepository, val dao: CardDao) {
+open class CardRepository @Inject constructor(val dao: CardDao) {
 
     @WorkerThread
     fun find(uuid: String): Card? {
@@ -87,12 +85,4 @@ open class CardRepository @Inject constructor(private val expenseRepository: Exp
 
         return result
     }
-
-    @WorkerThread
-    fun creditCardBills(card: Card, month: DateTime) =
-        expenseRepository.unpaidCardExpenses(month, card)
-
-    @WorkerThread
-    fun getInvoiceValue(card: Card, month: DateTime) =
-        creditCardBills(card, month).sumBy { it.value }
 }

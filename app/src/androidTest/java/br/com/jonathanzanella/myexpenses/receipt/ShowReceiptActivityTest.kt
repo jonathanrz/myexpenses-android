@@ -25,6 +25,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import javax.inject.Inject
 
 @RunWith(AndroidJUnit4::class)
 @MediumTest
@@ -34,18 +35,24 @@ class ShowReceiptActivityTest {
 
     private var receipt: Receipt? = null
 
+    @Inject
+    lateinit var repository: ReceiptRepository
+    @Inject
+    lateinit var sourceRepository: SourceRepository
+    @Inject
+    lateinit var accountRepository: AccountRepository
+
     @Before
     @Throws(Exception::class)
     fun setUp() {
+//        DaggerTestComponent.builder().build().inject(this)
         App.resetDatabase()
 
-        val repository = ReceiptRepository()
-
         val s = SourceBuilder().build()
-        SourceRepository().save(s)
+        sourceRepository.save(s)
 
         val a = AccountBuilder().build()
-        AccountRepository().save(a)
+        accountRepository.save(a)
 
         receipt = ReceiptBuilder().source(s).account(a).build()
         repository.save(receipt!!)

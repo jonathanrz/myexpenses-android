@@ -14,12 +14,15 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import javax.inject.Inject;
+
 import br.com.jonathanzanella.myexpenses.App;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
+import br.com.jonathanzanella.myexpenses.injection.DaggerTestComponent;
 import br.com.jonathanzanella.myexpenses.views.MainActivity;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
@@ -43,10 +46,14 @@ public class AddCardTest {
 	@Rule
 	public ActivityTestRule<EditCardActivity> editCardActivityTestRule = new ActivityTestRule<>(EditCardActivity.class);
 
+	@Inject
+	AccountRepository accountRepository;
+
 	private Account account;
 
 	@Before
 	public void setUp() throws Exception {
+		DaggerTestComponent.builder().build().inject(this);
 		App.Companion.resetDatabase();
 
 		UiDevice uiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
@@ -54,7 +61,7 @@ public class AddCardTest {
 			uiDevice.wakeUp();
 
 		account = new AccountBuilder().build();
-		new AccountRepository().save(account);
+		accountRepository.save(account);
 	}
 
 	@After

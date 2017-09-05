@@ -23,6 +23,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import javax.inject.Inject
 
 @RunWith(AndroidJUnit4::class)
 @MediumTest
@@ -31,12 +32,15 @@ class ShowBillActivityTest {
     var activityTestRule = ActivityTestRule(ShowBillActivity::class.java, true, false)
 
     private var bill: Bill? = null
-    private val expenseRepository = ExpenseRepository()
-    private val repository = BillRepository(expenseRepository, App.database.billDao())
+    @Inject
+    lateinit var expenseRepository: ExpenseRepository
+    @Inject
+    lateinit var repository: BillRepository
 
     @Before
     @Throws(Exception::class)
     fun setUp() {
+//        DaggerTestComponent.builder().build().inject(this)
         App.resetDatabase()
 
         bill = BillBuilder().build()

@@ -7,12 +7,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import javax.inject.Inject;
+
 import br.com.jonathanzanella.myexpenses.App;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
-import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.CardBuilder;
+import br.com.jonathanzanella.myexpenses.injection.DaggerTestComponent;
 
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -22,19 +24,19 @@ import static org.hamcrest.Matchers.not;
 @RunWith(AndroidJUnit4.class)
 @SmallTest
 public class CardRepositoryTest {
-	private CardRepository subject;
+	@Inject
+	CardRepository subject;
+	@Inject
+	AccountRepository accountRepository;
 	private Account account;
-	private AccountRepository accountRepository;
 
 	@Before
 	public void setUp() throws Exception {
+		DaggerTestComponent.builder().build().inject(this);
 		App.Companion.resetDatabase();
 
 		account = new AccountBuilder().build();
-		accountRepository = new AccountRepository();
 		accountRepository.save(account);
-		ExpenseRepository expenseRepository = new ExpenseRepository();
-		subject = new CardRepository(expenseRepository);
 	}
 
 	@Test

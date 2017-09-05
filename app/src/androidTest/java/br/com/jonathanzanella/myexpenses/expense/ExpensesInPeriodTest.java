@@ -10,9 +10,12 @@ import org.junit.runner.RunWith;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import br.com.jonathanzanella.myexpenses.App;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
+import br.com.jonathanzanella.myexpenses.injection.DaggerTestComponent;
 import br.com.jonathanzanella.myexpenses.overview.WeeklyPagerAdapter;
 
 import static org.hamcrest.core.Is.is;
@@ -21,8 +24,10 @@ import static org.junit.Assert.assertThat;
 @RunWith(AndroidJUnit4.class)
 @SmallTest
 public class ExpensesInPeriodTest {
-	private final AccountRepository accountRepository = new AccountRepository();
-	private final ExpenseRepository expenseRepository = new ExpenseRepository();
+	@Inject
+	AccountRepository accountRepository;
+	@Inject
+	ExpenseRepository expenseRepository;
 	private final DateTime firstDayOfJune = new DateTime(2016, 6, 1, 0, 0, 0, 0);
 	private final DateTime lastDayOfJune = firstDayOfJune.dayOfMonth().withMaximumValue();
 	private final DateTime firstDayOfJuly = firstDayOfJune.plusMonths(1);
@@ -31,6 +36,7 @@ public class ExpensesInPeriodTest {
 
 	@Before
 	public void setUp() throws Exception {
+		DaggerTestComponent.builder().build().inject(this);
 		App.Companion.resetDatabase();
 
 		account.setName("Account");

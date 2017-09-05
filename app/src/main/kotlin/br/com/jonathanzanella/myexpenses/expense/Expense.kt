@@ -4,6 +4,7 @@ import android.arch.persistence.room.Entity
 import android.arch.persistence.room.Ignore
 import android.arch.persistence.room.PrimaryKey
 import android.support.annotation.WorkerThread
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.Environment
 import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.account.AccountRepository
@@ -19,9 +20,19 @@ import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import org.joda.time.DateTime
+import javax.inject.Inject
 
 @Entity
 class Expense : Transaction, UnsyncModel {
+    @Ignore @Inject
+    lateinit var accountRepository: AccountRepository
+    @Ignore @Inject
+    lateinit var billRepository: BillRepository
+    @Ignore @Inject
+    lateinit var cardRepository: CardRepository
+    @Ignore @Inject
+    lateinit var expenseRepository: ExpenseRepository
+
     @PrimaryKey(autoGenerate = true)
     override var id: Long = 0
 
@@ -63,6 +74,10 @@ class Expense : Transaction, UnsyncModel {
     internal val isShowInResume: Boolean
         get() = !ignoreInResume
 
+    init {
+        App.getAppComponent().inject(this)
+    }
+
     override fun credited(): Boolean {
         return true
     }
@@ -89,7 +104,7 @@ class Expense : Transaction, UnsyncModel {
     @WorkerThread
     private fun getChargeable(ignoreCache: Boolean): Chargeable? {
         if (chargeable == null || ignoreCache)
-            chargeable = Expense.findChargeable(chargeableType, chargeableUuid)
+            chargeable = findChargeable(chargeableType, chargeableUuid)
         return chargeable
     }
 
@@ -100,14 +115,14 @@ class Expense : Transaction, UnsyncModel {
             c.credit(value)
             when (c.chargeableType) {
                 ChargeableType.ACCOUNT -> {
-                    accountRepository!!.save(c as Account)
+                    accountRepository.save(c as Account)
                     if (c is Card)
-                        cardRepository!!.save(c as Card)
+                        cardRepository.save(c as Card)
                     else
                         throw UnsupportedOperationException("Chargeable should be a card")
                 }
                 ChargeableType.CREDIT_CARD, ChargeableType.DEBIT_CARD -> if (c is Card)
-                    cardRepository!!.save(c)
+                    cardRepository.save(c)
                 else
                     throw UnsupportedOperationException("Chargeable should be a card")
             }
@@ -118,9 +133,7 @@ class Expense : Transaction, UnsyncModel {
     var bill: Bill?
         @WorkerThread
         get() {
-            return billUuid?.let {
-                BillRepository(expenseRepository!!).find(it)
-            }
+            return billUuid?.let { billRepository.find(it) }
         }
         set(bill) {
             billUuid = bill?.uuid
@@ -174,11 +187,11 @@ class Expense : Transaction, UnsyncModel {
         val c = loadChargeable()!!
         c.debit(value)
         when (c.chargeableType) {
-            ChargeableType.ACCOUNT -> accountRepository!!.save(c as Account)
-            ChargeableType.DEBIT_CARD, ChargeableType.CREDIT_CARD -> cardRepository!!.save(c as Card)
+            ChargeableType.ACCOUNT -> accountRepository.save(c as Account)
+            ChargeableType.DEBIT_CARD, ChargeableType.CREDIT_CARD -> cardRepository.save(c as Card)
         }
         charged = true
-        expenseRepository!!.save(this)
+        expenseRepository.save(this)
 
     }
 
@@ -188,7 +201,7 @@ class Expense : Transaction, UnsyncModel {
     fun delete() {
         removed = true
         sync = false
-        expenseRepository!!.save(this)
+        expenseRepository.save(this)
     }
 
     fun dateIsPresent() = date != null
@@ -201,38 +214,13 @@ class Expense : Transaction, UnsyncModel {
         this.date = date
     }
 
-    companion object {
-        private var accountRepository: AccountRepository? = null
-            get() {
-                if (field == null)
-                    this.accountRepository = AccountRepository()
-                return field
-            }
-            set
-        private var cardRepository: CardRepository? = null
-            get() {
-                if (field == null)
-                    field = CardRepository(expenseRepository!!)
-                return field
-            }
-        private var expenseRepository: ExpenseRepository? = null
-            get() {
-                if (field == null)
-                    field = ExpenseRepository()
-                return field
-            }
-            set(repo) {
-                field = repo
-            }
+    fun findChargeable(type: ChargeableType?, uuid: String?): Chargeable? {
+        if (type == null || uuid == null)
+            return null
 
-        @JvmStatic fun findChargeable(type: ChargeableType?, uuid: String?): Chargeable? {
-            if (type == null || uuid == null)
-                return null
-
-            return when (type) {
-                ChargeableType.ACCOUNT -> accountRepository!!.find(uuid)
-                ChargeableType.DEBIT_CARD, ChargeableType.CREDIT_CARD -> cardRepository!!.find(uuid)
-            }
+        return when (type) {
+            ChargeableType.ACCOUNT -> accountRepository.find(uuid)
+            ChargeableType.DEBIT_CARD, ChargeableType.CREDIT_CARD -> cardRepository.find(uuid)
         }
     }
 }

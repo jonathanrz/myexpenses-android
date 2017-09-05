@@ -30,6 +30,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import javax.inject.Inject
 
 @RunWith(AndroidJUnit4::class)
 @MediumTest
@@ -37,9 +38,12 @@ class ShowCardActivityTest {
     @Rule @JvmField
     var activityTestRule = ActivityTestRule(ShowCardActivity::class.java, true, false)
 
-    private val expenseRepository = ExpenseRepository()
-    private val repository = CardRepository(expenseRepository)
-    private val accountRepository = AccountRepository()
+    @Inject
+    lateinit var expenseRepository: ExpenseRepository
+    @Inject
+    lateinit var repository: CardRepository
+    @Inject
+    lateinit var accountRepository: AccountRepository
 
     private var card: Card? = null
     private var account: Account? = null
@@ -47,6 +51,7 @@ class ShowCardActivityTest {
     @Before
     @Throws(Exception::class)
     fun setUp() {
+//        DaggerTestComponent.builder().build().inject(this)
         App.resetDatabase()
 
         account = AccountBuilder().build()

@@ -8,17 +8,21 @@ import org.apache.commons.lang3.StringUtils
 import retrofit2.Call
 import timber.log.Timber
 import java.io.IOException
+import javax.inject.Inject
 
 class SourceApi : UnsyncModelApi<Source> {
     private val sourceInterface: SourceInterface by lazy {
         Server(App.getContext()).sourceInterface()
     }
-    private val sourceRepository: SourceRepository by lazy {
-        SourceRepository()
+    @Inject
+    lateinit var sourceRepository: SourceRepository
+
+    init {
+        App.getAppComponent().inject(this)
     }
 
     override fun index(): List<Source> {
-        val lastUpdatedAt = SourceRepository().greaterUpdatedAt()
+        val lastUpdatedAt = sourceRepository.greaterUpdatedAt()
         Timber.tag("SourceApi.index with lastUpdatedAt: $lastUpdatedAt")
         val caller = sourceInterface.index(lastUpdatedAt)
 
@@ -66,10 +70,10 @@ class SourceApi : UnsyncModelApi<Source> {
     }
 
     override fun unsyncModels(): List<Source> {
-        return SourceRepository().unsync()
+        return sourceRepository.unsync()
     }
 
     override fun greaterUpdatedAt(): Long {
-        return SourceRepository().greaterUpdatedAt()
+        return sourceRepository.greaterUpdatedAt()
     }
 }

@@ -4,6 +4,7 @@ import android.arch.persistence.room.Entity
 import android.arch.persistence.room.Ignore
 import android.arch.persistence.room.PrimaryKey
 import android.support.annotation.WorkerThread
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.account.AccountRepository
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable
@@ -12,17 +13,13 @@ import br.com.jonathanzanella.myexpenses.sync.UnsyncModel
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import timber.log.Timber
+import javax.inject.Inject
 
 @Entity
 class Card : Chargeable, UnsyncModel {
     @Ignore
-    private var accountRepository: AccountRepository? = null
-        @WorkerThread
-        get() {
-            if (field == null)
-                this.accountRepository = AccountRepository()
-            return field
-        }
+    @Inject
+    lateinit var accountRepository: AccountRepository
         set
 
     @PrimaryKey(autoGenerate = true)
@@ -39,7 +36,9 @@ class Card : Chargeable, UnsyncModel {
 
     override var sync: Boolean = false
 
-    internal constructor()
+    internal constructor() {
+        App.getAppComponent().inject(this)
+    }
 
     constructor(accountRepository: AccountRepository) {
         this.accountRepository = accountRepository
@@ -76,7 +75,7 @@ class Card : Chargeable, UnsyncModel {
         if (type == CardType.DEBIT) {
             val account = account
             account!!.debit(value)
-            accountRepository!!.save(account)
+            accountRepository.save(account)
         }
     }
 
@@ -85,7 +84,7 @@ class Card : Chargeable, UnsyncModel {
         if (type == CardType.DEBIT) {
             val account = account
             account!!.credit(value)
-            accountRepository!!.save(account)
+            accountRepository.save(account)
         }
     }
 

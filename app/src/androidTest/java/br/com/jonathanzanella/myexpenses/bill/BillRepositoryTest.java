@@ -11,6 +11,8 @@ import org.junit.runner.RunWith;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import br.com.jonathanzanella.myexpenses.App;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
@@ -22,6 +24,7 @@ import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.BillBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.CardBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.ExpenseBuilder;
+import br.com.jonathanzanella.myexpenses.injection.DaggerTestComponent;
 
 import static br.com.jonathanzanella.myexpenses.helpers.TestUtils.waitForIdling;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -32,11 +35,18 @@ import static org.hamcrest.Matchers.not;
 @SmallTest
 public class BillRepositoryTest {
 	private final DateTime firstDayOfJune = new DateTime(2016, 6, 1, 0, 0, 0, 0);
-	private final ExpenseRepository expenseRepository = new ExpenseRepository();
-	private final BillRepository billRepository = new BillRepository(expenseRepository, App.database.billDao());
+	@Inject
+	AccountRepository accountRepository;
+	@Inject
+	CardRepository cardRepository;
+	@Inject
+	ExpenseRepository expenseRepository;
+	@Inject
+	BillRepository billRepository;
 
 	@Before
 	public void setUp() throws Exception {
+		DaggerTestComponent.builder().build().inject(this);
 		App.Companion.resetDatabase();
 	}
 
@@ -68,11 +78,10 @@ public class BillRepositoryTest {
 		billRepository.save(bill);
 
 		Account account = new AccountBuilder().build();
-		AccountRepository accountRepository = new AccountRepository();
 		accountRepository.save(account);
 
 		Card card = new CardBuilder().account(account).build(accountRepository);
-		new CardRepository(expenseRepository).save(card);
+		cardRepository.save(card);
 
 		Expense expense = new ExpenseBuilder()
 				.date(firstDayOfJune)

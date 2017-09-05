@@ -7,8 +7,8 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.transaction.Transaction
@@ -18,15 +18,18 @@ import org.apache.commons.lang3.StringUtils
 import org.jetbrains.anko.*
 import org.joda.time.DateTime
 import timber.log.Timber
+import javax.inject.Inject
 
 class EditBillActivity : AppCompatActivity(), BillContract.EditView {
+    @Inject
+    lateinit var billRepository: BillRepository
     override val context = this
     private val presenter: BillPresenter
     private val ui = EditBillActivityUi()
 
     init {
-        val expenseRepository = ExpenseRepository()
-        presenter = BillPresenter(BillRepository(expenseRepository))
+        App.getAppComponent().inject(this)
+        presenter = BillPresenter(billRepository)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

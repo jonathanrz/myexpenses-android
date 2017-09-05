@@ -5,6 +5,7 @@ import android.content.Context
 import android.support.v7.widget.GridLayoutManager
 import android.view.View
 import android.widget.FrameLayout
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.expense.ExpenseWeeklyOverviewAdapter
@@ -12,13 +13,19 @@ import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.views.FilterableView
 import br.com.jonathanzanella.myexpenses.views.RefreshableView
 import kotlinx.android.synthetic.main.view_overview_expenses_weekly.view.*
+import javax.inject.Inject
 
 @SuppressLint("ViewConstructor")
-internal class OverviewExpensesWeeklyView(context: Context, private val period: WeeklyPagerAdapter.Period) :
+class OverviewExpensesWeeklyView(context: Context, private val period: WeeklyPagerAdapter.Period) :
         FrameLayout(context), FilterableView, RefreshableView {
     override var filter = ""
-    private val expenseRepository: ExpenseRepository = ExpenseRepository()
+    @Inject
+    lateinit var expenseRepository: ExpenseRepository
     private var adapter = ExpenseWeeklyOverviewAdapter()
+
+    init {
+        App.getAppComponent().inject(this)
+    }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()

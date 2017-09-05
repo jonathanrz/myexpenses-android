@@ -15,9 +15,9 @@ import timber.log.Timber
 import timber.log.Timber.DebugTree
 import java.lang.ref.WeakReference
 
-class App : Application() {
-    lateinit var appComponent: AppComponent
-    lateinit var databaseHelper: DatabaseHelper
+open class App : Application() {
+    private lateinit var appComponent: AppComponent
+    private lateinit var databaseHelper: DatabaseHelper
 
     override fun onCreate() {
         super.onCreate()
@@ -47,12 +47,20 @@ class App : Application() {
     companion object {
         private var app: WeakReference<App>? = null
 
+        fun getApp(): App {
+            return app!!.get()!!
+        }
+
         fun getContext(): Context {
             return app!!.get()!!
         }
 
+        fun getAppComponent(): AppComponent {
+            return app!!.get()!!.appComponent
+        }
+
         fun resetDatabase() {
-            app!!.get()!!.databaseHelper.resetDatabase()
+            getApp().databaseHelper.resetDatabase()
         }
     }
 }

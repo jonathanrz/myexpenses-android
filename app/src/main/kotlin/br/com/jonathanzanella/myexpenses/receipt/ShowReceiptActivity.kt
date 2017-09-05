@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.AccountRepository
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
@@ -15,13 +16,25 @@ import br.com.jonathanzanella.myexpenses.source.SourceRepository
 import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import br.com.jonathanzanella.myexpenses.views.anko.*
 import org.jetbrains.anko.*
+import javax.inject.Inject
 
 class ShowReceiptActivity : AppCompatActivity(), ReceiptContract.View {
     override val context = this
     private val ui = ShowReceiptActivityUi()
 
-    private val presenter = ReceiptPresenter(ReceiptRepository(),
-            SourceRepository(), AccountRepository())
+    @Inject
+    lateinit var accountRepository: AccountRepository
+    @Inject
+    lateinit var receiptRepository: ReceiptRepository
+    @Inject
+    lateinit var sourceRepository: SourceRepository
+
+    private val presenter: ReceiptPresenter
+
+    init {
+        App.getAppComponent().inject(this)
+        presenter = ReceiptPresenter(receiptRepository, sourceRepository, accountRepository)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

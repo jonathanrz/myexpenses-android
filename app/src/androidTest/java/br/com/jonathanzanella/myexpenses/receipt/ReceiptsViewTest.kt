@@ -31,6 +31,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import javax.inject.Inject
 
 @RunWith(AndroidJUnit4::class)
 @MediumTest
@@ -38,21 +39,27 @@ class ReceiptsViewTest {
     @Rule @JvmField
     var activityTestRule = ActivityTestRule(MainActivity::class.java, true, false)
 
+    @Inject
+    lateinit var repository: ReceiptRepository
+    @Inject
+    lateinit var sourceRepository: SourceRepository
+    @Inject
+    lateinit var accountRepository: AccountRepository
+
     private var receipt: Receipt? = null
     private var receipt2: Receipt? = null
 
     @Before
     @Throws(Exception::class)
     fun setUp() {
+//        DaggerTestComponent.builder().build().inject(this)
         App.resetDatabase()
 
-        val repository = ReceiptRepository()
-
         val s = SourceBuilder().build()
-        assertTrue(SourceRepository().save(s).isValid)
+        assertTrue(sourceRepository.save(s).isValid)
 
         val a = AccountBuilder().build()
-        assertTrue(AccountRepository().save(a).isValid)
+        assertTrue(accountRepository.save(a).isValid)
 
         receipt = ReceiptBuilder().name("receipt1").source(s).account(a).build()
         assertTrue(repository.save(receipt!!).isValid)

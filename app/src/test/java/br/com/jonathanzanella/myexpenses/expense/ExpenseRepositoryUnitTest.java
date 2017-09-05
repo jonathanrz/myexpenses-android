@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import br.com.jonathanzanella.myexpenses.card.CardRepository;
 import br.com.jonathanzanella.myexpenses.helper.builder.ExpenseBuilder;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult;
@@ -17,11 +18,13 @@ public class ExpenseRepositoryUnitTest {
 
 	@Mock
 	private ExpenseDao dao;
+	@Mock
+	private CardRepository cardRepository;
 
 	@Before
 	public void setUp() throws Exception {
 		initMocks(this);
-		subject = new ExpenseRepository(dao);
+		subject = new ExpenseRepository(dao, cardRepository);
 	}
 
 	@Test

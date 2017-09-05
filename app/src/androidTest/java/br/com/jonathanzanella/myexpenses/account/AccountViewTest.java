@@ -9,10 +9,13 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import javax.inject.Inject;
+
 import br.com.jonathanzanella.myexpenses.App;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
+import br.com.jonathanzanella.myexpenses.injection.DaggerTestComponent;
 import br.com.jonathanzanella.myexpenses.views.MainActivity;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
@@ -30,18 +33,20 @@ import static org.hamcrest.Matchers.is;
 public class AccountViewTest {
 	@Rule
 	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
+	@Inject
+	AccountRepository repository;
 
 	private Account accountToShowInResume;
 	private Account accountToHideInResume;
 
 	@Before
 	public void setUp() throws Exception {
+		DaggerTestComponent.builder().build().inject(this);
 		App.Companion.resetDatabase();
 
 		accountToShowInResume = new AccountBuilder().name("accountToShowInResume").showInResume(true).build();
 		accountToHideInResume = new AccountBuilder().name("accountToHideInResume").showInResume(false).build();
 
-		AccountRepository repository = new AccountRepository();
 		assertTrue(repository.save(accountToShowInResume).isValid());
 		assertTrue(repository.save(accountToHideInResume).isValid());
 	}

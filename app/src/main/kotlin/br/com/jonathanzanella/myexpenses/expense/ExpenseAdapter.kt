@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.helpers.AdapterColorHelper
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
@@ -16,12 +17,18 @@ import kotlinx.android.synthetic.main.row_expense.view.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import org.joda.time.DateTime
+import javax.inject.Inject
 
-internal open class ExpenseAdapter : RecyclerView.Adapter<ExpenseAdapter.ViewHolder>() {
-    private val expenseRepository = ExpenseRepository()
+open class ExpenseAdapter : RecyclerView.Adapter<ExpenseAdapter.ViewHolder>() {
+    @Inject
+    lateinit var expenseRepository: ExpenseRepository
     private val presenter: ExpenseAdapterPresenter
     private var expenses: List<Expense> = ArrayList()
     private var date: DateTime? = null
+
+    init {
+        App.getAppComponent().inject(this)
+    }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         private val adapterColorHelper: AdapterColorHelper

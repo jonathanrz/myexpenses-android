@@ -8,6 +8,7 @@ import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import android.widget.FrameLayout
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.AccountAdapter
 import br.com.jonathanzanella.myexpenses.bill.BillMonthlyResumeAdapter
@@ -20,14 +21,17 @@ import kotlinx.android.synthetic.main.view_monthly_resume.view.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import org.joda.time.DateTime
+import javax.inject.Inject
 
 @SuppressLint("ViewConstructor")
-internal class ResumeMonthlyView(context: Context, private val month: DateTime) : FrameLayout(context), RefreshableView, FilterableView {
+class ResumeMonthlyView(context: Context, private val month: DateTime) : FrameLayout(context), RefreshableView, FilterableView {
     override var filter = ""
     private var singleRowHeight: Int = 0
 
-    private var receiptRepository = ReceiptRepository()
-    private var expenseRepository = ExpenseRepository()
+    @Inject
+    lateinit var receiptRepository: ReceiptRepository
+    @Inject
+    lateinit var expenseRepository: ExpenseRepository
 
     private var accountAdapter = AccountAdapter(month)
     private var receiptAdapter = ReceiptMonthlyResumeAdapter(receiptRepository)
@@ -35,6 +39,7 @@ internal class ResumeMonthlyView(context: Context, private val month: DateTime) 
     private var billsAdapter = BillMonthlyResumeAdapter()
 
     init {
+        App.getAppComponent().inject(this)
         singleRowHeight = resources.getDimensionPixelSize(R.dimen.single_row_height)
 
         View.inflate(context, R.layout.view_monthly_resume, this)

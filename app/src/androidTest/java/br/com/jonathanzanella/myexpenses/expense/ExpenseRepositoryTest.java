@@ -11,6 +11,8 @@ import org.junit.runner.RunWith;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import br.com.jonathanzanella.myexpenses.App;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
@@ -21,6 +23,7 @@ import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.CardBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.ExpenseBuilder;
+import br.com.jonathanzanella.myexpenses.injection.DaggerTestComponent;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static junit.framework.Assert.assertTrue;
@@ -31,7 +34,12 @@ import static org.hamcrest.Matchers.not;
 @RunWith(AndroidJUnit4.class)
 @SmallTest
 public class ExpenseRepositoryTest {
-	private ExpenseRepository repository;
+	@Inject
+	CardRepository cardRepository;
+	@Inject
+	AccountRepository accountRepository;
+	@Inject
+	ExpenseRepository repository;
 
 	private Account account;
 	private Card debitCard;
@@ -39,18 +47,16 @@ public class ExpenseRepositoryTest {
 
 	@Before
 	public void setUp() throws Exception {
+		DaggerTestComponent.builder().build().inject(this);
 		App.Companion.resetDatabase();
 
 		account = new AccountBuilder()
 				.accountToPayBills(true)
 				.accountToPayCreditCard(true)
 				.build();
-		AccountRepository accountRepository = new AccountRepository();
 		assertTrue(accountRepository.save(account).isValid());
 		creditCard = new CardBuilder().name("CreditCard").account(account).type(CardType.CREDIT).build(accountRepository);
 		debitCard = new CardBuilder().name("DebitCard").account(account).type(CardType.DEBIT).build(accountRepository);
-		repository = new ExpenseRepository();
-		CardRepository cardRepository = new CardRepository(repository);
 		assertTrue(cardRepository.save(debitCard).isValid());
 		assertTrue(cardRepository.save(creditCard).isValid());
 	}

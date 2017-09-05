@@ -1,23 +1,23 @@
 package br.com.jonathanzanella.myexpenses.card
 
 import br.com.jonathanzanella.myexpenses.App
-import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.server.Server
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi
 import org.apache.commons.lang3.StringUtils
 import timber.log.Timber
 import java.io.IOException
+import javax.inject.Inject
 
 class CardApi : UnsyncModelApi<Card> {
     private val cardInterface: CardInterface by lazy {
         Server(App.getContext()).cardInterface()
     }
-    private val cardRepository: CardRepository by lazy {
-        CardRepository(expenseRepository)
-    }
-    private val expenseRepository: ExpenseRepository by lazy {
-        ExpenseRepository()
+    @Inject
+    lateinit var cardRepository: CardRepository
+
+    init {
+        App.getAppComponent().inject(this)
     }
 
     override fun index(): List<Card> {

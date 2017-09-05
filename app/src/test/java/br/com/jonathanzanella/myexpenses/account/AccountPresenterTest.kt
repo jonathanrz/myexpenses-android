@@ -22,7 +22,7 @@ class AccountPresenterTest {
 
         val view = mock<AccountContract.EditView>()
 
-        val presenter = AccountPresenter(repository)
+        val presenter = AccountPresenter()
         presenter.attachView(view)
 
         presenter.loadAccount(account.uuid!!)

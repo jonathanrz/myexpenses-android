@@ -111,6 +111,7 @@ dependencies {
     // Dagger
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
     implementation "com.google.dagger:dagger:$daggerVersion"
+    kaptAndroidTest "com.google.dagger:dagger-compiler:$daggerVersion"
 
     //Fabric
     implementation("com.crashlytics.sdk.android:crashlytics:$crashlyticsVersion@aar") {

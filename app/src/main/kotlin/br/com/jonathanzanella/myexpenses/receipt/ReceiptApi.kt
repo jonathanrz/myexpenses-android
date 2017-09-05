@@ -8,14 +8,18 @@ import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi
 import org.apache.commons.lang3.StringUtils
 import timber.log.Timber
 import java.io.IOException
+import javax.inject.Inject
 
 @WorkerThread
 class ReceiptApi : UnsyncModelApi<Receipt> {
     private val receiptInterface: ReceiptInterface by lazy {
         Server(App.getContext()).receiptInterface()
     }
-    private val receiptRepository: ReceiptRepository by lazy {
-        ReceiptRepository()
+    @Inject
+    lateinit var receiptRepository: ReceiptRepository
+
+    init {
+        App.getAppComponent().inject(this)
     }
 
     override fun index(): List<Receipt> {

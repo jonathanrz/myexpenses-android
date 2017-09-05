@@ -23,6 +23,7 @@ import br.com.jonathanzanella.myexpenses.helpers.UIHelper
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder
 import br.com.jonathanzanella.myexpenses.helpers.builder.BillBuilder
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
+import br.com.jonathanzanella.myexpenses.injection.DaggerTestComponent
 import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import br.com.jonathanzanella.myexpenses.views.MainActivity
 import org.hamcrest.core.IsNot.not
@@ -32,6 +33,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import javax.inject.Inject
 
 @RunWith(AndroidJUnit4::class)
 @LargeTest
@@ -41,11 +43,16 @@ class AddExpenseTest {
     @Rule @JvmField
     var editExpenseActivityTestRule = ActivityTestRule(EditExpenseActivity::class.java)
 
+    @Inject
+    lateinit var accountRepository: AccountRepository
+    @Inject
+    lateinit var billRepository: BillRepository
     private var account: Account? = null
 
     @Before
     @Throws(Exception::class)
     fun setUp() {
+        DaggerTestComponent.builder().build().inject(this)
         App.resetDatabase()
 
         val uiDevice = UiDevice.getInstance(getInstrumentation())
@@ -53,7 +60,7 @@ class AddExpenseTest {
             uiDevice.wakeUp()
 
         account = AccountBuilder().build()
-        AccountRepository().save(account!!)
+        accountRepository.save(account!!)
     }
 
     @After
@@ -141,8 +148,7 @@ class AddExpenseTest {
     @Throws(Exception::class)
     fun add_new_expense_with_bill() {
         val bill = BillBuilder().build()
-        val expenseRepository = ExpenseRepository()
-        BillRepository(expenseRepository, App.database.billDao()).save(bill)
+        billRepository.save(bill)
 
         mainActivityTestRule.launchActivity(Intent())
 

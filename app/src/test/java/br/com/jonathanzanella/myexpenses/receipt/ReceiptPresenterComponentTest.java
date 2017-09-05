@@ -30,11 +30,13 @@ public class ReceiptPresenterComponentTest {
 	private AccountRepository accountRepository;
 	@Mock
 	private SourceRepository sourceRepository;
+	@Mock
+	private ReceiptDao dao;
 
 	@Before
 	public void setUp() throws Exception {
 		initMocks(this);
-		repository = new ReceiptRepository();
+		repository = new ReceiptRepository(dao);
 		presenter = new ReceiptPresenter(repository, sourceRepository, accountRepository);
 		presenter.attachView(view);
 	}

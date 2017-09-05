@@ -17,13 +17,15 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class AccountRepositoryUnitTest {
 	@Mock
 	private Account account;
+	@Mock
+	private AccountDao accountDao;
 
 	private AccountRepository accountRepository;
 
 	@Before
 	public void setUp() throws Exception {
 		initMocks(this);
-		accountRepository = new AccountRepository();
+		accountRepository = new AccountRepository(accountDao);
 	}
 
 	@Test

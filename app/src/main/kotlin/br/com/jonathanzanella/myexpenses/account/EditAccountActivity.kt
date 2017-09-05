@@ -20,7 +20,7 @@ import timber.log.Timber
 class EditAccountActivity : AppCompatActivity(), AccountContract.EditView {
     override val context = this
     private val ui = EditAccountActivityUi()
-    private val presenter = AccountPresenter(AccountRepository())
+    private val presenter = AccountPresenter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

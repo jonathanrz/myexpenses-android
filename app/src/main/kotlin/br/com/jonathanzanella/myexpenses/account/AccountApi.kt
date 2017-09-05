@@ -9,14 +9,18 @@ import org.apache.commons.lang3.StringUtils
 import retrofit2.Call
 import timber.log.Timber
 import java.io.IOException
+import javax.inject.Inject
 
 @WorkerThread
 class AccountApi : UnsyncModelApi<Account> {
     private val accountInterface: AccountInterface by lazy {
         Server(App.getContext()).accountInterface()
     }
-    val repository: AccountRepository by lazy {
-        AccountRepository()
+    @Inject
+    lateinit var repository: AccountRepository
+
+    init {
+        App.getAppComponent().inject(this)
     }
 
     override fun index(): List<Account> {

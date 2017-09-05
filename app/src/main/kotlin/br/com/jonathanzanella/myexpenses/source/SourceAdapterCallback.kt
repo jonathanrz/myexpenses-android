@@ -1,5 +1,5 @@
 package br.com.jonathanzanella.myexpenses.source
 
-internal interface SourceAdapterCallback {
+interface SourceAdapterCallback {
     fun onSourceSelected(source: Source)
 }

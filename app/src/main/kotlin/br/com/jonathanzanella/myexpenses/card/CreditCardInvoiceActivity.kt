@@ -7,8 +7,8 @@ import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.view.View
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapter
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapterBuilder
 import br.com.jonathanzanella.myexpenses.views.anko.TemplateToolbar
@@ -19,15 +19,18 @@ import org.jetbrains.anko.design.appBarLayout
 import org.jetbrains.anko.design.tabLayout
 import org.jetbrains.anko.support.v4.viewPager
 import org.joda.time.DateTime
+import javax.inject.Inject
 
 class CreditCardInvoiceActivity : AppCompatActivity() {
     private var card: Card? = null
     private var initDate: DateTime? = null
-    private var cardRepository: CardRepository = CardRepository(ExpenseRepository())
+    @Inject
+    lateinit var cardRepository: CardRepository
     private val ui = CreditCardInvoiceActivityUi()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        App.getAppComponent().inject(this)
         ui.setContentView(this)
 
         storeBundle(savedInstanceState)

@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.bill.BillRepository;
+import br.com.jonathanzanella.myexpenses.card.CardRepository;
 import br.com.jonathanzanella.myexpenses.helper.builder.ExpenseBuilder;
 
 import static org.hamcrest.core.Is.is;
@@ -27,11 +28,15 @@ public class ExpensePresenterComponentTest {
 	private ExpenseContract.EditView view;
 	@Mock
 	private BillRepository billRepository;
+	@Mock
+	private CardRepository cardRepository;
+	@Mock
+	private ExpenseDao dao;
 
 	@Before
 	public void setUp() throws Exception {
 		initMocks(this);
-		repository = new ExpenseRepository();
+		repository = new ExpenseRepository(dao, cardRepository);
 		presenter = new ExpensePresenter(repository, billRepository);
 		presenter.attachView(view);
 	}

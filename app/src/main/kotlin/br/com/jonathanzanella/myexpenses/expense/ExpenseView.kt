@@ -8,6 +8,7 @@ import android.support.v4.view.ViewPager
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.helpers.firstDayOfMonth
 import br.com.jonathanzanella.myexpenses.helpers.lastDayOfMonth
@@ -23,6 +24,7 @@ import org.jetbrains.anko.support.v4.viewPager
 import org.joda.time.DateTime
 import java.lang.ref.WeakReference
 import java.util.*
+import javax.inject.Inject
 
 class ExpenseView@JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -31,7 +33,12 @@ class ExpenseView@JvmOverloads constructor(
     override var filter = ""
     private val ui = ExpenseViewUI()
     internal var adapter: MonthlyPagerAdapter
-    internal var expenseRepository: ExpenseRepository = ExpenseRepository()
+    @Inject
+    lateinit var expenseRepository: ExpenseRepository
+
+    init {
+        App.getAppComponent().inject(this)
+    }
 
     private val views = HashMap<DateTime, WeakReference<ExpenseMonthlyView>>()
 

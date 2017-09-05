@@ -18,7 +18,7 @@ import org.joda.time.DateTime
 import timber.log.Timber
 
 class AccountAdapter(val month : DateTime) : RecyclerView.Adapter<AccountAdapter.ViewHolder>() {
-    private val presenter = AccountAdapterPresenter(this, AccountRepository())
+    private val presenter = AccountAdapterPresenter(this)
     private var format = NORMAL
     private var callback: AccountAdapterCallback? = null
 

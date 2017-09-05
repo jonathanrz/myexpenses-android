@@ -146,7 +146,7 @@ class CardPresenter(private val repository: CardRepository, private val accountR
 
     fun generateCreditCardBill(month: DateTime): Expense? {
         val c = card!!
-        val expenses = repository.creditCardBills(c, month)
+        val expenses = expenseRepository.creditCardBills(c, month)
         var totalExpense = 0
         for (expense in expenses) {
             totalExpense += expense.value

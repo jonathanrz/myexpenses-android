@@ -34,6 +34,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import javax.inject.Inject
 
 @RunWith(AndroidJUnit4::class)
 @SmallTest
@@ -42,18 +43,30 @@ class CalculateMonthBalanceCorrectlyTest {
     @Rule @JvmField
     var activityTestRule = ActivityTestRule(MainActivity::class.java)
 
+    @Inject
+    lateinit var billRepository: BillRepository
+    @Inject
+    lateinit var sourceRepository: SourceRepository
+    @Inject
+    lateinit var accountRepository: AccountRepository
+    @Inject
+    lateinit var receiptRepository: ReceiptRepository
+    @Inject
+    lateinit var expenseRepository: ExpenseRepository
+
     private val monthlyPagerAdapterHelper = MonthlyPagerAdapterHelper()
 
     @Before
     @Throws(Exception::class)
     fun setUp() {
+//        DaggerTestComponent.builder().build().inject(this)
         App.resetDatabase()
 
         val a = br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder().build()
-        assertTrue(AccountRepository().save(a).isValid)
+        assertTrue(accountRepository.save(a).isValid)
 
         val s = SourceBuilder().build()
-        assertTrue(SourceRepository().save(s).isValid)
+        assertTrue(sourceRepository.save(s).isValid)
 
         val now = DateTime.now().withDayOfMonth(1)
         val b = BillBuilder()
@@ -61,7 +74,7 @@ class CalculateMonthBalanceCorrectlyTest {
                 .endDate(now.plusMonths(12))
                 .amount(BILL_AMOUNT)
                 .build()
-        assertTrue(BillRepository(ExpenseRepository(), App.database.billDao()).save(b).isValid)
+        assertTrue(billRepository.save(b).isValid)
 
         generateThreeMonthlyReceipts(a, s)
         generateThreeMonthlyExpenses(a)
@@ -75,7 +88,6 @@ class CalculateMonthBalanceCorrectlyTest {
 
     private fun generateThreeMonthlyReceipts(a: Account, s: Source) {
         var dateTime = DateTime.now()
-        val receiptRepository = ReceiptRepository()
         var r = ReceiptBuilder()
                 .account(a)
                 .source(s)
@@ -103,7 +115,6 @@ class CalculateMonthBalanceCorrectlyTest {
 
     private fun generateThreeMonthlyExpenses(a: Account) {
         var dateTime = DateTime.now()
-        val expenseRepository = ExpenseRepository()
         var r = ExpenseBuilder()
                 .chargeable(a)
                 .date(dateTime)

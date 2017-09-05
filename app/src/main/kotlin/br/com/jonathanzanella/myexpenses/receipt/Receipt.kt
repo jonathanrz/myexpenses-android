@@ -4,6 +4,7 @@ import android.arch.persistence.room.Entity
 import android.arch.persistence.room.Ignore
 import android.arch.persistence.room.PrimaryKey
 import android.support.annotation.WorkerThread
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.Environment
 import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.account.AccountRepository
@@ -15,17 +16,16 @@ import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import org.joda.time.DateTime
+import javax.inject.Inject
 
 @Entity
 class Receipt : Transaction, UnsyncModel {
-    companion object {
-        private val accountRepository by lazy {
-            AccountRepository()
-        }
-        private val receiptRepository by lazy {
-            ReceiptRepository()
-        }
-    }
+    @Ignore @Inject
+    lateinit var accountRepository: AccountRepository
+    @Ignore @Inject
+    lateinit var receiptRepository: ReceiptRepository
+    @Ignore @Inject
+    lateinit var sourceRepository: SourceRepository
 
     @PrimaryKey(autoGenerate = true)
     override var id: Long = 0
@@ -67,7 +67,7 @@ class Receipt : Transaction, UnsyncModel {
         get() {
             val uuid = sourceUuid
             if (field == null && uuid != null)
-                field = SourceRepository().find(uuid)
+                field = sourceRepository.find(uuid)
             return field
         }
         set(s) {
@@ -77,6 +77,10 @@ class Receipt : Transaction, UnsyncModel {
 
     override val amount: Int
         get() = income
+
+    init {
+        App.getAppComponent().inject(this)
+    }
 
     @Ignore
     override fun credited(): Boolean {

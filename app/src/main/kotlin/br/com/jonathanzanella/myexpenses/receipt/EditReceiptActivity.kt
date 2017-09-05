@@ -11,6 +11,7 @@ import android.text.InputType
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.CheckBox
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.account.AccountRepository
@@ -27,6 +28,7 @@ import org.apache.commons.lang3.StringUtils
 import org.jetbrains.anko.*
 import org.joda.time.DateTime
 import timber.log.Timber
+import javax.inject.Inject
 
 class EditReceiptActivity : AppCompatActivity(), ReceiptContract.EditView {
     override val installment: Int
@@ -34,10 +36,21 @@ class EditReceiptActivity : AppCompatActivity(), ReceiptContract.EditView {
     override val repetition: Int
         get() = Integer.parseInt(ui.editRepetition.text.toString())
 
+    @Inject
+    lateinit var accountRepository: AccountRepository
+    @Inject
+    lateinit var receiptRepository: ReceiptRepository
+    @Inject
+    lateinit var sourceRepository: SourceRepository
+
     override val context = this
     private val ui = EditReceiptActivityUi()
-    private val presenter: ReceiptPresenter = ReceiptPresenter(ReceiptRepository(),
-            SourceRepository(), AccountRepository())
+    private val presenter: ReceiptPresenter = ReceiptPresenter(receiptRepository,
+            sourceRepository, accountRepository)
+
+    init {
+        App.getAppComponent().inject(this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

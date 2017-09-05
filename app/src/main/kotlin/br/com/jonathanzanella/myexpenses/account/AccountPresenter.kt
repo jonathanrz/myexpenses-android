@@ -1,16 +1,24 @@
 package br.com.jonathanzanella.myexpenses.account
 
 import android.support.annotation.UiThread
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
+import javax.inject.Inject
 
-class AccountPresenter(private val repository: AccountRepository) {
+class AccountPresenter {
 
+    @Inject
+    lateinit var repository: AccountRepository
     private var view: AccountContract.View? = null
     private var editView: AccountContract.EditView? = null
     private var account: Account? = null
+
+    init {
+        App.getAppComponent().inject(this)
+    }
 
     fun attachView(view: AccountContract.View) {
         this.view = view

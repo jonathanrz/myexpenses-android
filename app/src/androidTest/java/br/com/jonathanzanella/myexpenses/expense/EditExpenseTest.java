@@ -12,6 +12,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import javax.inject.Inject;
+
 import br.com.jonathanzanella.myexpenses.App;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
@@ -19,6 +21,7 @@ import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.ExpenseBuilder;
+import br.com.jonathanzanella.myexpenses.injection.DaggerTestComponent;
 import br.com.jonathanzanella.myexpenses.transaction.Transaction;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
@@ -41,20 +44,23 @@ public class EditExpenseTest {
 	public ActivityTestRule<ShowExpenseActivity> activityTestRule = new ActivityTestRule<>(ShowExpenseActivity.class, true, false);
 
 	private Expense expense;
-	private ExpenseRepository repository;
+	@Inject
+	ExpenseRepository repository;
+	@Inject
+	AccountRepository accountRepository;
 
 	@Before
 	public void setUp() throws Exception {
+		DaggerTestComponent.builder().build().inject(this);
 		App.Companion.resetDatabase();
 
 		Account a = new AccountBuilder().build();
-		new AccountRepository().save(a);
+		accountRepository.save(a);
 
 		expense = new ExpenseBuilder()
 				.date(DateTime.now().minusDays(1))
 				.chargeable(a)
 				.build();
-		repository = new ExpenseRepository();
 		assertTrue(repository.save(expense).isValid());
 	}
 

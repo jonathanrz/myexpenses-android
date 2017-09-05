@@ -104,7 +104,7 @@ public class CardPresenterTest {
 		List<Expense> expenseList = new ArrayList<>();
 		expenseList.add(new ExpenseBuilder().value(value).build());
 		expenseList.add(new ExpenseBuilder().value(value).build());
-		when(repository.creditCardBills(any(Card.class), any(DateTime.class))).thenReturn(expenseList);
+		when(expenseRepository.creditCardBills(any(Card.class), any(DateTime.class))).thenReturn(expenseList);
 
 		String invoice = "Fatura";
 		when(resourcesHelper.getString(R.string.invoice)).thenReturn(invoice);
@@ -127,7 +127,7 @@ public class CardPresenterTest {
 		Card card = new CardBuilder().account(account).build(accountRepository);
 		when(repository.find(uuid)).thenReturn(card);
 		List<Expense> expenseList = new ArrayList<>();
-		when(repository.creditCardBills(any(Card.class), any(DateTime.class))).thenReturn(expenseList);
+		when(expenseRepository.creditCardBills(any(Card.class), any(DateTime.class))).thenReturn(expenseList);
 
 		String invoice = "Fatura";
 		when(resourcesHelper.getString(R.string.invoice)).thenReturn(invoice);

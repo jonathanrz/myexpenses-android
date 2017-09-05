@@ -8,7 +8,7 @@ import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 
-open class AccountRepository @Inject constructor(private val dao: AccountDao) {
+open class AccountRepository @Inject constructor(val dao: AccountDao) {
     @WorkerThread
     fun find(uuid: String): Account? {
         return dao.find(uuid).blockingFirst().firstOrNull()

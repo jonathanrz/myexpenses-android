@@ -3,6 +3,7 @@ package br.com.jonathanzanella.myexpenses.receipt;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import br.com.jonathanzanella.myexpenses.helper.builder.ReceiptBuilder;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
@@ -13,10 +14,12 @@ import static junit.framework.Assert.assertTrue;
 
 public class ReceiptRepositoryUnitTest {
 	private ReceiptRepository subject;
+	@Mock
+	private ReceiptDao dao;
 
 	@Before
 	public void setUp() throws Exception {
-		subject = new ReceiptRepository();
+		subject = new ReceiptRepository(dao);
 	}
 
 	@Test

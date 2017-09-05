@@ -25,7 +25,7 @@ public class BillRepositoryUnitTest {
 	@Before
 	public void setUp() throws Exception {
 		initMocks(this);
-		billRepository = new BillRepository(expenseRepository, dao);
+		billRepository = new BillRepository(dao, expenseRepository);
 	}
 
 	@Test

@@ -8,6 +8,7 @@ import android.support.v4.view.ViewPager
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.helpers.firstDayOfMonth
 import br.com.jonathanzanella.myexpenses.helpers.lastDayOfMonth
@@ -23,6 +24,7 @@ import org.jetbrains.anko.support.v4.viewPager
 import org.joda.time.DateTime
 import java.lang.ref.WeakReference
 import java.util.*
+import javax.inject.Inject
 
 class ReceiptView@JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -32,12 +34,13 @@ class ReceiptView@JvmOverloads constructor(
 
     private val ui = ReceiptViewUI()
     private var adapter: MonthlyPagerAdapter? = null
-    private var repository: ReceiptRepository? = null
+    @Inject
+    lateinit var repository: ReceiptRepository
 
     init {
+        App.getAppComponent().inject(this)
         addView(ui.createView(AnkoContext.Companion.create(context, this)))
 
-        repository = ReceiptRepository()
         adapter = MonthlyPagerAdapter(context, object : MonthlyPagerAdapterBuilder {
             override fun buildView(ctx: Context, date: DateTime): View {
                 val view = ReceiptMonthlyView(ctx, date)
@@ -73,7 +76,7 @@ class ReceiptView@JvmOverloads constructor(
 
     private fun loadExpense(uuid: String) {
         doAsync {
-            val receipt = repository!!.find(uuid)
+            val receipt = repository.find(uuid)
 
             uiThread { receipt?.let { getMonthView(it.getDate())?.refreshData() }}
         }

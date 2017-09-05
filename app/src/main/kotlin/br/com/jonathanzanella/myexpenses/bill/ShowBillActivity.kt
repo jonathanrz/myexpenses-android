@@ -6,21 +6,25 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import br.com.jonathanzanella.myexpenses.views.anko.*
 import org.jetbrains.anko.*
+import javax.inject.Inject
 
 class ShowBillActivity : AppCompatActivity(), BillContract.View {
+
+    @Inject
+    lateinit var billRepository: BillRepository
     override val context = this
     private val presenter: BillPresenter
     private val ui = ShowBillActivityUi()
 
     init {
-        val expenseRepository = ExpenseRepository()
-        presenter = BillPresenter(BillRepository(expenseRepository))
+        App.getAppComponent().inject(this)
+        presenter = BillPresenter(billRepository)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

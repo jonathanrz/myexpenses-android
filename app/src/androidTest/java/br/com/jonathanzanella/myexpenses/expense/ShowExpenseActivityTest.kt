@@ -19,12 +19,14 @@ import br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder
 import br.com.jonathanzanella.myexpenses.helpers.builder.ExpenseBuilder
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
+import br.com.jonathanzanella.myexpenses.injection.DaggerTestComponent
 import junit.framework.Assert.assertTrue
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import javax.inject.Inject
 
 @RunWith(AndroidJUnit4::class)
 @MediumTest
@@ -32,16 +34,20 @@ class ShowExpenseActivityTest {
     @Rule @JvmField
     var activityTestRule = ActivityTestRule(ShowExpenseActivity::class.java, true, false)
 
-    private val repository = ExpenseRepository()
+    @Inject
+    lateinit var repository: ExpenseRepository
+    @Inject
+    lateinit var accountRepository: AccountRepository
     private var expense: Expense? = null
 
     @Before
     @Throws(Exception::class)
     fun setUp() {
+        DaggerTestComponent.builder().build().inject(this)
         App.resetDatabase()
 
         val a = AccountBuilder().build()
-        AccountRepository().save(a)
+        accountRepository.save(a)
 
         expense = ExpenseBuilder().chargeable(a).build()
         assertTrue(repository.save(expense!!).isValid)

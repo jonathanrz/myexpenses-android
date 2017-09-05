@@ -20,9 +20,10 @@ import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import org.joda.time.DateTime
 import timber.log.Timber
+import javax.inject.Inject
 
 @Suppress("LargeClass")
-class ExpensePresenter(private val repository: ExpenseRepository, private val billRepository: BillRepository) {
+class ExpensePresenter @Inject constructor(val repository: ExpenseRepository, val billRepository: BillRepository) {
     private var view: ExpenseContract.View? = null
     private var editView: ExpenseContract.EditView? = null
     private var expense: Expense? = null
@@ -213,7 +214,7 @@ class ExpensePresenter(private val repository: ExpenseRepository, private val bi
     @UiThread
     fun onChargeableSelected(type: ChargeableType, uuid: String) {
         doAsync {
-            chargeable = Expense.findChargeable(type, uuid)
+            chargeable = Expense().findChargeable(type, uuid)
 
             uiThread { chargeable?.let { editView!!.onChargeableSelected(it) } }
         }
@@ -222,7 +223,7 @@ class ExpensePresenter(private val repository: ExpenseRepository, private val bi
     @UiThread
     fun onBillSelected(uuid: String) {
         doAsync {
-            bill = BillRepository(repository).find(uuid)
+            bill = billRepository.find(uuid)
 
             uiThread { bill?.let { editView!!.onBillSelected(it) } }
         }
@@ -243,7 +244,7 @@ class ExpensePresenter(private val repository: ExpenseRepository, private val bi
             val key = ListChargeableActivity.KEY_CHARGEABLE_SELECTED_TYPE
             if (extras.containsKey(key)) {
                 val selectedUuid = extras.getString(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_UUID)
-                chargeable = Expense.findChargeable(extras.getSerializable(key) as ChargeableType, selectedUuid)
+                chargeable = Expense().findChargeable(extras.getSerializable(key) as ChargeableType, selectedUuid)
             }
 
             uiThread { updateView() }

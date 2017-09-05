@@ -11,10 +11,13 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import javax.inject.Inject;
+
 import br.com.jonathanzanella.myexpenses.App;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
+import br.com.jonathanzanella.myexpenses.injection.DaggerTestComponent;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.InstrumentationRegistry.getTargetContext;
@@ -36,15 +39,17 @@ public class EditAccountTest {
 	@Rule
 	public ActivityTestRule<ShowAccountActivity> activityTestRule = new ActivityTestRule<>(ShowAccountActivity.class, true, false);
 
+	@Inject
+	AccountRepository repository;
+
 	private Account account;
-	private AccountRepository repository;
 
 	@Before
 	public void setUp() throws Exception {
+		DaggerTestComponent.builder().build().inject(this);
 		App.Companion.resetDatabase();
 
 		account = new AccountBuilder().build();
-		repository = new AccountRepository();
 		assertTrue(repository.save(account).isValid());
 	}
 

@@ -20,11 +20,7 @@ import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 
-open class ExpenseRepository @Inject constructor(private val dao: ExpenseDao) {
-    private val cardRepository: CardRepository by lazy {
-        CardRepository(this)
-    }
-
+open class ExpenseRepository @Inject constructor(private val dao: ExpenseDao, val cardRepository: CardRepository) {
     @WorkerThread
     fun find(uuid: String): Expense? {
         return dao.find(uuid).blockingFirst().firstOrNull()
@@ -108,7 +104,7 @@ open class ExpenseRepository @Inject constructor(private val dao: ExpenseDao) {
         val creditCardMonth = date.minusMonths(1)
         val cards = cardRepository.creditCards()
         for (card in cards) {
-            val total = cardRepository.getInvoiceValue(card, creditCardMonth)
+            val total = getInvoiceValue(card, creditCardMonth)
             if (total == 0)
                 continue
 
@@ -149,7 +145,7 @@ open class ExpenseRepository @Inject constructor(private val dao: ExpenseDao) {
             val creditCardMonth = month.minusMonths(1)
             val cards = cardRepository.creditCards()
             for (creditCard in cards) {
-                val total = cardRepository.getInvoiceValue(creditCard, creditCardMonth)
+                val total = getInvoiceValue(creditCard, creditCardMonth)
                 if (total == 0)
                     continue
 
@@ -229,4 +225,10 @@ open class ExpenseRepository @Inject constructor(private val dao: ExpenseDao) {
 
         return result
     }
+
+    @WorkerThread
+    fun creditCardBills(card: Card, month: DateTime) = unpaidCardExpenses(month, card)
+
+    @WorkerThread
+    fun getInvoiceValue(card: Card, month: DateTime) = creditCardBills(card, month).sumBy { it.value }
 }

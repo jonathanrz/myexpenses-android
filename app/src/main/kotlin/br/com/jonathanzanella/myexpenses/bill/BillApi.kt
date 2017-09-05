@@ -2,7 +2,6 @@ package br.com.jonathanzanella.myexpenses.bill
 
 import android.support.annotation.WorkerThread
 import br.com.jonathanzanella.myexpenses.App
-import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.server.Server
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi
@@ -10,17 +9,18 @@ import org.apache.commons.lang3.StringUtils
 import retrofit2.Call
 import timber.log.Timber
 import java.io.IOException
+import javax.inject.Inject
 
 @WorkerThread
 class BillApi : UnsyncModelApi<Bill> {
-    private val billRepository: BillRepository
+    @Inject
+    lateinit var billRepository: BillRepository
     private val billInterface: BillInterface by lazy {
         Server(App.getContext()).billInterface()
     }
 
     init {
-        val expenseRepository = ExpenseRepository()
-        billRepository = BillRepository(expenseRepository)
+        App.getAppComponent().inject(this)
     }
 
     override fun index(): List<Bill> {

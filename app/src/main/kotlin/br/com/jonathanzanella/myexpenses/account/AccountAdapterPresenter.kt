@@ -1,11 +1,20 @@
 package br.com.jonathanzanella.myexpenses.account
 
+import br.com.jonathanzanella.myexpenses.App
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
+import javax.inject.Inject
 
-internal class AccountAdapterPresenter(private val adapter: AccountAdapter, private val repository: AccountRepository) {
+class AccountAdapterPresenter(private val adapter: AccountAdapter) {
 
     private var accounts: List<Account>? = null
+
+    @Inject
+    lateinit var repository: AccountRepository
+
+    init {
+        App.getAppComponent().inject(this@AccountAdapterPresenter)
+    }
 
     fun loadAccountsAsync(format: AccountAdapter.Format) {
         doAsync {

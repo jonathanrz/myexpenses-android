@@ -6,8 +6,8 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.helpers.AdapterColorHelper
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.transaction.Transaction
@@ -16,8 +16,11 @@ import br.com.jonathanzanella.myexpenses.views.anko.rowPrincipalInformation
 import br.com.jonathanzanella.myexpenses.views.anko.rowSecondaryInformation
 import br.com.jonathanzanella.myexpenses.views.anko.rowStaticInformation
 import org.jetbrains.anko.*
+import javax.inject.Inject
 
 open class BillAdapter : RecyclerView.Adapter<BillAdapter.ViewHolder>() {
+    @Inject
+    lateinit var repository: BillRepository
     private var callback: BillAdapterCallback? = null
     private val presenter: BillAdapterPresenter
 
@@ -55,8 +58,7 @@ open class BillAdapter : RecyclerView.Adapter<BillAdapter.ViewHolder>() {
     }
 
     init {
-        val expenseRepository = ExpenseRepository()
-        val repository = BillRepository(expenseRepository)
+        App.getAppComponent().inject(this)
         this.presenter = BillAdapterPresenter(repository)
         refreshData()
     }

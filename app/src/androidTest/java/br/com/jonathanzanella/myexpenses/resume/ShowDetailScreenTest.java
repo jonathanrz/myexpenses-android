@@ -8,6 +8,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import javax.inject.Inject;
+
 import br.com.jonathanzanella.myexpenses.App;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
@@ -19,6 +21,7 @@ import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.ExpenseBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.ReceiptBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder;
+import br.com.jonathanzanella.myexpenses.injection.DaggerTestComponent;
 import br.com.jonathanzanella.myexpenses.receipt.Receipt;
 import br.com.jonathanzanella.myexpenses.receipt.ReceiptRepository;
 import br.com.jonathanzanella.myexpenses.source.Source;
@@ -43,14 +46,21 @@ import static org.hamcrest.core.Is.is;
 public class ShowDetailScreenTest {
 	@Rule
 	public ActivityTestRule<MainActivity> mainActivityTestRule = new ActivityTestRule<>(MainActivity.class);
+	@Inject
+	AccountRepository accountRepository;
+	@Inject
+	ReceiptRepository receiptRepository;
+	@Inject
+	SourceRepository sourceRepository;
+	@Inject
+	ExpenseRepository expenseRepository;
 
 	private Account account;
 
 	@Before
 	public void setUp() throws Exception {
+		DaggerTestComponent.builder().build().inject(this);
 		App.Companion.resetDatabase();
-
-		AccountRepository accountRepository = new AccountRepository();
 
 		account = new AccountBuilder().build();
 		assertTrue(accountRepository.save(account).isValid());
@@ -64,9 +74,9 @@ public class ShowDetailScreenTest {
 	@Test
 	public void open_receipt_screen_when_selecting_receipt() {
 		Source source = new SourceBuilder().build();
-		assertTrue(new SourceRepository().save(source).isValid());
+		assertTrue(sourceRepository.save(source).isValid());
 		Receipt receipt = new ReceiptBuilder().account(account).source(source).build();
-		assertTrue(new ReceiptRepository().save(receipt).isValid());
+		assertTrue(receiptRepository.save(receipt).isValid());
 
 		mainActivityTestRule.launchActivity(new Intent());
 
@@ -84,7 +94,7 @@ public class ShowDetailScreenTest {
 	@Test
 	public void open_expense_screen_when_selecting_expense() {
 		Expense expense = new ExpenseBuilder().chargeable(account).build();
-		assertTrue(new ExpenseRepository().save(expense).isValid());
+		assertTrue(expenseRepository.save(expense).isValid());
 
 		mainActivityTestRule.launchActivity(new Intent());
 
@@ -99,3 +109,4 @@ public class ShowDetailScreenTest {
 		onView(withId(R.id.act_show_expense_chargeable)).check(matches(withText(account.getName())));
 	}
 }
+

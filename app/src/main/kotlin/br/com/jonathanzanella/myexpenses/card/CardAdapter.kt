@@ -9,20 +9,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TableLayout
 import android.widget.TextView
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.helpers.AdapterColorHelper
 import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
 import br.com.jonathanzanella.myexpenses.views.anko.static
 import br.com.jonathanzanella.myexpenses.views.anko.staticWithData
 import org.jetbrains.anko.*
+import javax.inject.Inject
 
 class CardAdapter : RecyclerView.Adapter<CardAdapter.ViewHolder>() {
     private var cards: List<Card> = ArrayList()
     private var callback: CardAdapterCallback? = null
 
-    private val cardRepository: CardRepository
-    private val expenseRepository = ExpenseRepository()
+    @Inject
+    lateinit var cardRepository: CardRepository
 
     inner class ViewHolder(itemView: View, val ui: CardAdapterViewUI) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         private val adapterColorHelper: AdapterColorHelper
@@ -69,7 +70,7 @@ class CardAdapter : RecyclerView.Adapter<CardAdapter.ViewHolder>() {
     }
 
     init {
-        cardRepository = CardRepository(expenseRepository)
+        App.getAppComponent().inject(this)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

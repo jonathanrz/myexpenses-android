@@ -4,19 +4,23 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.view.View
 import android.widget.FrameLayout
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapter
 import kotlinx.android.synthetic.main.view_overview_expenses_monthly.view.*
 import org.joda.time.DateTime
+import javax.inject.Inject
 
 @SuppressLint("ViewConstructor")
-internal class OverviewExpensesMonthlyView(context: Context, month: DateTime) : FrameLayout(context) {
-    init {
-        View.inflate(context, R.layout.view_overview_expenses_monthly, this)
+class OverviewExpensesMonthlyView(context: Context, month: DateTime) : FrameLayout(context) {
+    @Inject
+    lateinit var expenseRepository: ExpenseRepository
 
-        val expenseRepository = ExpenseRepository()
+    init {
+        App.getAppComponent().inject(this)
+        View.inflate(context, R.layout.view_overview_expenses_monthly, this)
 
         val adapter = WeeklyPagerAdapter(getContext(), month, object : WeeklyPagerAdapterBuilder {
             override fun buildView(ctx: Context, period: WeeklyPagerAdapter.Period): View {

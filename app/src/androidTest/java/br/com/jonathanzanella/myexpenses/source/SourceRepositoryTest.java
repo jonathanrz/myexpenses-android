@@ -10,9 +10,12 @@ import org.junit.runner.RunWith;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import br.com.jonathanzanella.myexpenses.App;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder;
+import br.com.jonathanzanella.myexpenses.injection.DaggerTestComponent;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -22,13 +25,13 @@ import static org.hamcrest.Matchers.not;
 @RunWith(AndroidJUnit4.class)
 @SmallTest
 public class SourceRepositoryTest {
-	private SourceRepository repository;
+	@Inject
+	SourceRepository repository;
 
 	@Before
 	public void setUp() throws Exception {
+		DaggerTestComponent.builder().build().inject(this);
 		App.Companion.resetDatabase();
-
-		repository = new SourceRepository();
 	}
 
 	@After

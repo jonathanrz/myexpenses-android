@@ -1,5 +1,6 @@
 package br.com.jonathanzanella.myexpenses.account.transactions
 
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.bill.BillRepository
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
@@ -8,13 +9,21 @@ import br.com.jonathanzanella.myexpenses.transaction.TransactionAdapter
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import org.joda.time.DateTime
+import javax.inject.Inject
 
-internal class MonthTransactionsPresenter(private val view: MonthTransactionsContractView) {
+class MonthTransactionsPresenter(private val view: MonthTransactionsContractView) {
     val adapter = TransactionAdapter()
-    private val receiptRepository = ReceiptRepository()
-    private val expenseRepository = ExpenseRepository()
-    private val billRepository = BillRepository(expenseRepository)
+    @Inject
+    lateinit var receiptRepository: ReceiptRepository
+    @Inject
+    lateinit var expenseRepository: ExpenseRepository
+    @Inject
+    lateinit var billRepository: BillRepository
     private var currentBalance: Int = 0
+
+    init {
+        App.getAppComponent().inject(this)
+    }
 
     fun showBalance(account: Account, month: DateTime, balance: Int) {
         currentBalance = balance

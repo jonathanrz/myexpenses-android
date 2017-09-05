@@ -10,7 +10,7 @@ import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 
-open class BillRepository @Inject constructor(private val expenseRepository: ExpenseRepository, private val dao: BillDao) {
+open class BillRepository @Inject constructor(val dao: BillDao, private val expenseRepository: ExpenseRepository) {
     @WorkerThread
     fun find(uuid: String): Bill? {
         return dao.find(uuid).blockingFirst().firstOrNull()

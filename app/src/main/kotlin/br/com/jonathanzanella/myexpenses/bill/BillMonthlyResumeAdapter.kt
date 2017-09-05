@@ -8,18 +8,20 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
 import br.com.jonathanzanella.myexpenses.views.anko.resumeRowCell
 import br.com.jonathanzanella.myexpenses.views.anko.singleRowCell
 import org.jetbrains.anko.*
 import org.joda.time.DateTime
+import javax.inject.Inject
 
 class BillMonthlyResumeAdapter : RecyclerView.Adapter<BillMonthlyResumeAdapter.ViewHolder>() {
+    @Inject
+    lateinit var billRepository: BillRepository
     private var bills: List<Bill> = ArrayList()
-    private val billRepository: BillRepository
     var totalValue: Int = 0
         private set
 
@@ -41,8 +43,7 @@ class BillMonthlyResumeAdapter : RecyclerView.Adapter<BillMonthlyResumeAdapter.V
     }
 
     init {
-        val expenseRepository = ExpenseRepository()
-        billRepository = BillRepository(expenseRepository)
+        App.getAppComponent().inject(this)
     }
 
     override fun getItemViewType(position: Int): Int {

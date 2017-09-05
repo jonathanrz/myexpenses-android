@@ -11,9 +11,12 @@ import org.junit.runner.RunWith;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import br.com.jonathanzanella.myexpenses.App;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
+import br.com.jonathanzanella.myexpenses.injection.DaggerTestComponent;
 import br.com.jonathanzanella.myexpenses.source.Source;
 import br.com.jonathanzanella.myexpenses.source.SourceRepository;
 
@@ -31,12 +34,16 @@ public class ReceiptsInPeriodTest {
 	private final Account account = new Account();
 	private final Source source = new Source();
 
-	private final SourceRepository sourceRepository = new SourceRepository();
-	private final AccountRepository accountRepository = new AccountRepository();
-	private final ReceiptRepository receiptRepository = new ReceiptRepository();
+	@Inject
+	SourceRepository sourceRepository;
+	@Inject
+	AccountRepository accountRepository;
+	@Inject
+	ReceiptRepository receiptRepository;
 
 	@Before
 	public void setUp() throws Exception {
+		DaggerTestComponent.builder().build().inject(this);
 		App.Companion.resetDatabase();
 
 		account.setName("Account");

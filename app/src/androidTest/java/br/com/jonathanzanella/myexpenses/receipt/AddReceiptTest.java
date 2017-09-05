@@ -15,6 +15,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import javax.inject.Inject;
+
 import br.com.jonathanzanella.myexpenses.App;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
@@ -22,6 +24,7 @@ import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder;
+import br.com.jonathanzanella.myexpenses.injection.DaggerTestComponent;
 import br.com.jonathanzanella.myexpenses.source.Source;
 import br.com.jonathanzanella.myexpenses.source.SourceRepository;
 import br.com.jonathanzanella.myexpenses.transaction.Transaction;
@@ -48,12 +51,16 @@ public class AddReceiptTest {
 	@Rule
 	public ActivityTestRule<EditReceiptActivity> editReceiptActivityTestRule = new ActivityTestRule<>(EditReceiptActivity.class);
 
-	private final SourceRepository sourceRepository = new SourceRepository();
+	@Inject
+	SourceRepository sourceRepository;
+	@Inject
+	AccountRepository accountRepository;
 	private Account account;
 	private Source source;
 
 	@Before
 	public void setUp() throws Exception {
+		DaggerTestComponent.builder().build().inject(this);
 		App.Companion.resetDatabase();
 
 		UiDevice uiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
@@ -61,7 +68,7 @@ public class AddReceiptTest {
 			uiDevice.wakeUp();
 
 		account = new AccountBuilder().build();
-		new AccountRepository().save(account);
+		accountRepository.save(account);
 
 		source = new SourceBuilder().build();
 		sourceRepository.save(source);

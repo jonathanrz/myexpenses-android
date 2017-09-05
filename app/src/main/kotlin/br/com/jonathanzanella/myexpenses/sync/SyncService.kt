@@ -2,6 +2,7 @@ package br.com.jonathanzanella.myexpenses.sync
 
 import android.app.Service
 import android.content.Intent
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.Environment
 import br.com.jonathanzanella.myexpenses.account.AccountApi
 import br.com.jonathanzanella.myexpenses.bill.BillApi
@@ -18,20 +19,25 @@ import com.google.android.gms.gcm.TaskParams
 import org.apache.commons.lang3.StringUtils
 import timber.log.Timber
 import java.util.*
+import javax.inject.Inject
 
 class SyncService : GcmTaskService() {
+    @Inject
+    lateinit var expenseRepository: ExpenseRepository
     private val apis: MutableList<UnsyncModelApi<UnsyncModel>>
 
     private var totalSaved: Int = 0
     private var totalUpdated: Int = 0
 
     init {
+        App.getAppComponent().inject(this)
+
         apis = ArrayList()
         apis.add(AccountApi())
         apis.add(BillApi())
         apis.add(CardApi())
         apis.add(SourceApi())
-        apis.add(ExpenseApi(ExpenseRepository()))
+        apis.add(ExpenseApi(expenseRepository))
         apis.add(ReceiptApi())
     }
 
