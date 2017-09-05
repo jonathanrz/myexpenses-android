@@ -40,6 +40,7 @@ ext {
     ankoVersion = '0.9.1'
     commonsLangVersion = '3.5'
     crashlyticsVersion = '2.6.8'
+    daggerVersion = '2.11'
     espressoVersion = '2.2.2'
     hamcrestVersion = '1.3'
     jodaVersion = '2.9.9'
