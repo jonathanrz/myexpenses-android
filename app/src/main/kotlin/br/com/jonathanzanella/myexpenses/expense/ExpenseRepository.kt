@@ -1,7 +1,7 @@
 package br.com.jonathanzanella.myexpenses.expense
 
 import android.support.annotation.WorkerThread
-import br.com.jonathanzanella.myexpenses.MyApplication
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.card.Card
@@ -19,7 +19,7 @@ import org.joda.time.DateTime
 import timber.log.Timber
 import java.util.*
 
-open class ExpenseRepository(private val dao: ExpenseDao = MyApplication.database.expenseDao()) {
+open class ExpenseRepository(private val dao: ExpenseDao = App.database.expenseDao()) {
     private val cardRepository: CardRepository by lazy {
         CardRepository(this)
     }
@@ -113,7 +113,7 @@ open class ExpenseRepository(private val dao: ExpenseDao = MyApplication.databas
 
             val expense = Expense()
             expense.setChargeable(card)
-            expense.name = MyApplication.getContext().getString(R.string.invoice)
+            expense.name = App.getContext().getString(R.string.invoice)
             expense.setDate(creditCardMonth)
             expense.value = total
             expense.creditCard = card
@@ -154,7 +154,7 @@ open class ExpenseRepository(private val dao: ExpenseDao = MyApplication.databas
 
                 val expense = Expense()
                 expense.setChargeable(creditCard)
-                expense.name = MyApplication.getContext().getString(R.string.invoice) + " " + creditCard.name
+                expense.name = App.getContext().getString(R.string.invoice) + " " + creditCard.name
                 expense.setDate(creditCardMonth.plusMonths(1))
                 expense.value = total
                 expense.creditCard = creditCard

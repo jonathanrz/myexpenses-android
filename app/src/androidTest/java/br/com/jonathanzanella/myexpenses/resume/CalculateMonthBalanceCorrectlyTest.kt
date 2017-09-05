@@ -9,7 +9,7 @@ import android.support.test.filters.SmallTest
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import android.view.View
-import br.com.jonathanzanella.myexpenses.MyApplication
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.account.AccountRepository
@@ -47,7 +47,7 @@ class CalculateMonthBalanceCorrectlyTest {
     @Before
     @Throws(Exception::class)
     fun setUp() {
-        MyApplication.resetDatabase()
+        App.resetDatabase()
 
         val a = br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder().build()
         assertTrue(AccountRepository().save(a).isValid)
@@ -61,7 +61,7 @@ class CalculateMonthBalanceCorrectlyTest {
                 .endDate(now.plusMonths(12))
                 .amount(BILL_AMOUNT)
                 .build()
-        assertTrue(BillRepository(ExpenseRepository(), MyApplication.database.billDao()).save(b).isValid)
+        assertTrue(BillRepository(ExpenseRepository(), App.database.billDao()).save(b).isValid)
 
         generateThreeMonthlyReceipts(a, s)
         generateThreeMonthlyExpenses(a)

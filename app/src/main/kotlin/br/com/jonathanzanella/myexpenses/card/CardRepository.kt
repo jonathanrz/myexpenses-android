@@ -1,7 +1,7 @@
 package br.com.jonathanzanella.myexpenses.card
 
 import android.support.annotation.WorkerThread
-import br.com.jonathanzanella.myexpenses.MyApplication
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
@@ -15,32 +15,32 @@ open class CardRepository(private val expenseRepository: ExpenseRepository) {
 
     @WorkerThread
     fun find(uuid: String): Card? {
-        return MyApplication.database.cardDao().find(uuid).blockingFirst().firstOrNull()
+        return App.database.cardDao().find(uuid).blockingFirst().firstOrNull()
     }
 
     @WorkerThread
     fun all(): List<Card> {
-        return MyApplication.database.cardDao().all().blockingFirst()
+        return App.database.cardDao().all().blockingFirst()
     }
 
     @WorkerThread
     fun unsync(): List<Card> {
-        return MyApplication.database.cardDao().unsync().blockingFirst()
+        return App.database.cardDao().unsync().blockingFirst()
     }
 
     @WorkerThread
     fun creditCards(): List<Card> {
-        return MyApplication.database.cardDao().cards(CardType.CREDIT.value).blockingFirst()
+        return App.database.cardDao().cards(CardType.CREDIT.value).blockingFirst()
     }
 
     @WorkerThread
     fun accountDebitCard(account: Account): Card? {
-        return MyApplication.database.cardDao().accountCard(CardType.DEBIT.value, account.uuid!!).blockingFirst().firstOrNull()
+        return App.database.cardDao().accountCard(CardType.DEBIT.value, account.uuid!!).blockingFirst().firstOrNull()
     }
 
     @WorkerThread
     fun greaterUpdatedAt(): Long {
-        return MyApplication.database.cardDao().greaterUpdatedAt().blockingFirst().firstOrNull()?.updatedAt ?: 0L
+        return App.database.cardDao().greaterUpdatedAt().blockingFirst().firstOrNull()?.updatedAt ?: 0L
     }
 
     @WorkerThread
@@ -50,7 +50,7 @@ open class CardRepository(private val expenseRepository: ExpenseRepository) {
             if (card.id == 0L && card.uuid == null)
                 card.uuid = UUID.randomUUID().toString()
             card.sync = false
-            card.id = MyApplication.database.cardDao().saveAtDatabase(card)
+            card.id = App.database.cardDao().saveAtDatabase(card)
         }
         return result
     }
@@ -83,7 +83,7 @@ open class CardRepository(private val expenseRepository: ExpenseRepository) {
         }
 
         unsync.sync = true
-        unsync.id = MyApplication.database.cardDao().saveAtDatabase(unsync)
+        unsync.id = App.database.cardDao().saveAtDatabase(unsync)
 
         return result
     }

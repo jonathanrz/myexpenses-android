@@ -11,7 +11,7 @@ import org.junit.runner.RunWith;
 
 import java.util.List;
 
-import br.com.jonathanzanella.myexpenses.MyApplication;
+import br.com.jonathanzanella.myexpenses.App;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.card.Card;
@@ -33,11 +33,11 @@ import static org.hamcrest.Matchers.not;
 public class BillRepositoryTest {
 	private final DateTime firstDayOfJune = new DateTime(2016, 6, 1, 0, 0, 0, 0);
 	private final ExpenseRepository expenseRepository = new ExpenseRepository();
-	private final BillRepository billRepository = new BillRepository(expenseRepository, MyApplication.database.billDao());
+	private final BillRepository billRepository = new BillRepository(expenseRepository, App.database.billDao());
 
 	@Before
 	public void setUp() throws Exception {
-		MyApplication.Companion.resetDatabase();
+		App.Companion.resetDatabase();
 	}
 
 	@Test

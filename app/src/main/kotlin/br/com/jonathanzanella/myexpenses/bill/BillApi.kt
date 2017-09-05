@@ -1,7 +1,7 @@
 package br.com.jonathanzanella.myexpenses.bill
 
 import android.support.annotation.WorkerThread
-import br.com.jonathanzanella.myexpenses.MyApplication
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.server.Server
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel
@@ -15,7 +15,7 @@ import java.io.IOException
 class BillApi : UnsyncModelApi<Bill> {
     private val billRepository: BillRepository
     private val billInterface: BillInterface by lazy {
-        Server(MyApplication.getContext()).billInterface()
+        Server(App.getContext()).billInterface()
     }
 
     init {

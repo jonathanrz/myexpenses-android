@@ -10,7 +10,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import br.com.jonathanzanella.myexpenses.MyApplication;
+import br.com.jonathanzanella.myexpenses.App;
 import br.com.jonathanzanella.myexpenses.R;
 
 import static android.support.test.InstrumentationRegistry.getTargetContext;
@@ -31,7 +31,7 @@ public class ShowSourceActivityTest {
 
 	@Before
 	public void setUp() throws Exception {
-		MyApplication.Companion.resetDatabase();
+		App.Companion.resetDatabase();
 
 		source = new Source();
 		source.setName("test");

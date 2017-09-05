@@ -10,7 +10,7 @@ import org.junit.runner.RunWith;
 
 import java.util.List;
 
-import br.com.jonathanzanella.myexpenses.MyApplication;
+import br.com.jonathanzanella.myexpenses.App;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder;
 
@@ -26,7 +26,7 @@ public class SourceRepositoryTest {
 
 	@Before
 	public void setUp() throws Exception {
-		MyApplication.Companion.resetDatabase();
+		App.Companion.resetDatabase();
 
 		repository = new SourceRepository();
 	}

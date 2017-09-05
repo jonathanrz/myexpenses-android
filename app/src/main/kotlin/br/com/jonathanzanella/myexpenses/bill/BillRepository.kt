@@ -1,7 +1,7 @@
 package br.com.jonathanzanella.myexpenses.bill
 
 import android.support.annotation.WorkerThread
-import br.com.jonathanzanella.myexpenses.MyApplication
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult
@@ -10,7 +10,7 @@ import org.joda.time.DateTime
 import timber.log.Timber
 import java.util.*
 
-open class BillRepository(private val expenseRepository: ExpenseRepository, private val dao: BillDao = MyApplication.database.billDao()) {
+open class BillRepository(private val expenseRepository: ExpenseRepository, private val dao: BillDao = App.database.billDao()) {
     @WorkerThread
     fun find(uuid: String): Bill? {
         return dao.find(uuid).blockingFirst().firstOrNull()

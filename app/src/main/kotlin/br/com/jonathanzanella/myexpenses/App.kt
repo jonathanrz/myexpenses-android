@@ -15,11 +15,11 @@ import timber.log.Timber
 import timber.log.Timber.DebugTree
 import java.lang.ref.WeakReference
 
-class MyApplication : Application() {
+class App : Application() {
     override fun onCreate() {
         super.onCreate()
-        MyApplication.context = WeakReference(applicationContext)
-        MyApplication.database = Room.databaseBuilder(this, MyDatabase::class.java, DB_NAME).build()
+        App.context = WeakReference(applicationContext)
+        App.database = Room.databaseBuilder(this, MyDatabase::class.java, DB_NAME).build()
 
         JodaTimeAndroid.init(this)
         Stetho.initializeWithDefaults(this)

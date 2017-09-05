@@ -1,6 +1,6 @@
 package br.com.jonathanzanella.myexpenses.card
 
-import br.com.jonathanzanella.myexpenses.MyApplication
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.server.Server
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel
@@ -11,7 +11,7 @@ import java.io.IOException
 
 class CardApi : UnsyncModelApi<Card> {
     private val cardInterface: CardInterface by lazy {
-        Server(MyApplication.getContext()).cardInterface()
+        Server(App.getContext()).cardInterface()
     }
     private val cardRepository: CardRepository by lazy {
         CardRepository(expenseRepository)

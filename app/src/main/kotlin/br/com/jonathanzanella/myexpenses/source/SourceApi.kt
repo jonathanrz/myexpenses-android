@@ -1,6 +1,6 @@
 package br.com.jonathanzanella.myexpenses.source
 
-import br.com.jonathanzanella.myexpenses.MyApplication
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.server.Server
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi
@@ -11,7 +11,7 @@ import java.io.IOException
 
 class SourceApi : UnsyncModelApi<Source> {
     private val sourceInterface: SourceInterface by lazy {
-        Server(MyApplication.getContext()).sourceInterface()
+        Server(App.getContext()).sourceInterface()
     }
     private val sourceRepository: SourceRepository by lazy {
         SourceRepository()

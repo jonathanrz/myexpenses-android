@@ -12,7 +12,7 @@ import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import android.support.test.uiautomator.UiDevice
 import android.view.View
-import br.com.jonathanzanella.myexpenses.MyApplication
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.account.AccountRepository
@@ -46,7 +46,7 @@ class AddExpenseTest {
     @Before
     @Throws(Exception::class)
     fun setUp() {
-        MyApplication.resetDatabase()
+        App.resetDatabase()
 
         val uiDevice = UiDevice.getInstance(getInstrumentation())
         if (!uiDevice.isScreenOn)
@@ -142,7 +142,7 @@ class AddExpenseTest {
     fun add_new_expense_with_bill() {
         val bill = BillBuilder().build()
         val expenseRepository = ExpenseRepository()
-        BillRepository(expenseRepository, MyApplication.database.billDao()).save(bill)
+        BillRepository(expenseRepository, App.database.billDao()).save(bill)
 
         mainActivityTestRule.launchActivity(Intent())
 

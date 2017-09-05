@@ -1,7 +1,7 @@
 package br.com.jonathanzanella.myexpenses.receipt
 
 import android.support.annotation.WorkerThread
-import br.com.jonathanzanella.myexpenses.MyApplication
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.server.Server
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi
@@ -12,7 +12,7 @@ import java.io.IOException
 @WorkerThread
 class ReceiptApi : UnsyncModelApi<Receipt> {
     private val receiptInterface: ReceiptInterface by lazy {
-        Server(MyApplication.getContext()).receiptInterface()
+        Server(App.getContext()).receiptInterface()
     }
     private val receiptRepository: ReceiptRepository by lazy {
         ReceiptRepository()

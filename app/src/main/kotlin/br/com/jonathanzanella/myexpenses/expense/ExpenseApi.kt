@@ -1,6 +1,6 @@
 package br.com.jonathanzanella.myexpenses.expense
 
-import br.com.jonathanzanella.myexpenses.MyApplication
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.server.Server
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi
@@ -10,7 +10,7 @@ import java.io.IOException
 
 class ExpenseApi(private val expenseRepository: ExpenseRepository) : UnsyncModelApi<Expense> {
     private val expenseInterface : ExpenseInterface by lazy {
-        Server(MyApplication.getContext()).expenseInterface()
+        Server(App.getContext()).expenseInterface()
     }
 
     override fun index(): List<Expense> {

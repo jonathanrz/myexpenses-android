@@ -1,14 +1,14 @@
 package br.com.jonathanzanella.myexpenses.source
 
 import android.support.annotation.WorkerThread
-import br.com.jonathanzanella.myexpenses.MyApplication
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult
 import org.apache.commons.lang3.StringUtils
 import timber.log.Timber
 import java.util.*
 
-open class SourceRepository(val dao: SourceDao = MyApplication.database.sourceDao()) {
+open class SourceRepository(val dao: SourceDao = App.database.sourceDao()) {
     @WorkerThread
     fun find(uuid: String): Source? {
         return dao.find(uuid).blockingFirst().firstOrNull()

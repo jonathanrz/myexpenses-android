@@ -1,7 +1,7 @@
 package br.com.jonathanzanella.myexpenses.receipt
 
 import android.support.annotation.WorkerThread
-import br.com.jonathanzanella.myexpenses.MyApplication
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.helpers.firstDayOfMonth
 import br.com.jonathanzanella.myexpenses.helpers.lastDayOfMonth
@@ -12,7 +12,7 @@ import org.joda.time.DateTime
 import timber.log.Timber
 import java.util.*
 
-open class ReceiptRepository(private val dao: ReceiptDao = MyApplication.database.receiptDao()) {
+open class ReceiptRepository(private val dao: ReceiptDao = App.database.receiptDao()) {
 
     @WorkerThread
     fun find(uuid: String): Receipt? {
