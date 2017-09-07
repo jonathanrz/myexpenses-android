@@ -14,12 +14,8 @@ import android.widget.RadioGroup
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.Account
-import br.com.jonathanzanella.myexpenses.account.AccountDataSource
 import br.com.jonathanzanella.myexpenses.card.CardType.CREDIT
 import br.com.jonathanzanella.myexpenses.card.CardType.DEBIT
-import br.com.jonathanzanella.myexpenses.expense.ExpenseDataSource
-import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
-import br.com.jonathanzanella.myexpenses.helpers.ResourcesHelper
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.views.anko.*
 import org.jetbrains.anko.*
@@ -28,18 +24,12 @@ import javax.inject.Inject
 
 class EditCardActivity : AppCompatActivity(), CardContract.EditView {
     @Inject
-    lateinit var accountDataSource: AccountDataSource
-    @Inject
-    lateinit var cardDataSource: CardDataSource
-    @Inject
-    lateinit var expenseDataSource: ExpenseDataSource
+    lateinit var presenter: CardPresenter
     override val context = this
     private val ui = EditCardActivityUi()
-    private val presenter: CardPresenter
 
     init {
         App.getAppComponent().inject(this)
-        presenter = CardPresenter(cardDataSource, accountDataSource, expenseDataSource, ResourcesHelper(this))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

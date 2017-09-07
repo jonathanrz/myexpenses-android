@@ -17,10 +17,12 @@ import br.com.jonathanzanella.myexpenses.helpers.ResourcesHelper
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import org.joda.time.DateTime
+import javax.inject.Inject
 
-class CardPresenter(private val dataSource: CardDataSource, private val accountDataSource: AccountDataSource,
-                     private val expenseDataSource: ExpenseDataSource, private val resourcesHelper: ResourcesHelper) {
-
+class CardPresenter @Inject constructor(private val accountDataSource: AccountDataSource,
+                                        private val dataSource: CardDataSource,
+                                        private val expenseDataSource: ExpenseDataSource,
+                                        private val resourcesHelper: ResourcesHelper) {
     private var view: CardContract.View? = null
     private var editView: CardContract.EditView? = null
     private var card: Card? = null

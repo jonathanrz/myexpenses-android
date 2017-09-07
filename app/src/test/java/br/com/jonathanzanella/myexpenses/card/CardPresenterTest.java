@@ -52,7 +52,7 @@ public class CardPresenterTest {
 	public void setUp() throws Exception {
 		initMocks(this);
 		DateTimeZone.setDefault(DateTimeZone.UTC);
-		presenter = new CardPresenter(dataSource, accountDataSource, expenseRepository, resourcesHelper);
+		presenter = new CardPresenter(accountDataSource, dataSource, expenseRepository, resourcesHelper);
 		presenter.attachView(view);
 	}
 

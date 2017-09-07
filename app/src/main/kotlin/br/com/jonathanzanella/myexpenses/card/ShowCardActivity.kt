@@ -11,10 +11,7 @@ import android.widget.TextView
 import android.widget.Toast
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.account.AccountDataSource
 import br.com.jonathanzanella.myexpenses.expense.EditExpenseActivity
-import br.com.jonathanzanella.myexpenses.expense.ExpenseDataSource
-import br.com.jonathanzanella.myexpenses.helpers.ResourcesHelper
 import br.com.jonathanzanella.myexpenses.views.anko.*
 import org.jetbrains.anko.*
 import org.joda.time.DateTime
@@ -22,18 +19,12 @@ import javax.inject.Inject
 
 class ShowCardActivity : AppCompatActivity(), CardContract.View {
     @Inject
-    lateinit var accountDataSource: AccountDataSource
-    @Inject
-    lateinit var cardDataSource: CardDataSource
-    @Inject
-    lateinit var expenseDataSource: ExpenseDataSource
+    lateinit var presenter: CardPresenter
     override val context = this
-    private var presenter: CardPresenter
     private val ui = ShowCardActivityUi()
 
     init {
         App.getAppComponent().inject(this)
-        presenter = CardPresenter(cardDataSource, accountDataSource, expenseDataSource, ResourcesHelper(this))
     }
 
     @UiThread

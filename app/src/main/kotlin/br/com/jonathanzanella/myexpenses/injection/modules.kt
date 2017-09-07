@@ -9,6 +9,7 @@ import br.com.jonathanzanella.myexpenses.card.*
 import br.com.jonathanzanella.myexpenses.database.DB_NAME
 import br.com.jonathanzanella.myexpenses.database.MyDatabase
 import br.com.jonathanzanella.myexpenses.expense.*
+import br.com.jonathanzanella.myexpenses.helpers.ResourcesHelper
 import br.com.jonathanzanella.myexpenses.receipt.*
 import br.com.jonathanzanella.myexpenses.server.Server
 import br.com.jonathanzanella.myexpenses.source.*
@@ -25,6 +26,10 @@ class AppModule(private val app: App) {
     @Singleton
     @Provides
     fun providesContext(): Context = app
+
+    @Singleton
+    @Provides
+    fun providesResourcesHelper(context: Context): ResourcesHelper = ResourcesHelper(context)
 }
 
 @Module
@@ -96,6 +101,12 @@ class PresenterModule {
     @Singleton
     @Provides
     fun providesBillPresenter(dataSource: BillDataSource) = BillPresenter(dataSource)
+
+    @Singleton
+    @Provides
+    fun providesCardPresenter(accountDataSource: AccountDataSource, cardDataSource: CardDataSource,
+                              expenseDataSource: ExpenseDataSource, resourcesHelper: ResourcesHelper)
+            = CardPresenter(accountDataSource, cardDataSource, expenseDataSource, resourcesHelper)
 }
 
 @Module
