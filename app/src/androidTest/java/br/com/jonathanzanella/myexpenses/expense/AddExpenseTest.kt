@@ -16,7 +16,7 @@ import br.com.jonathanzanella.TestApp
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.Account
-import br.com.jonathanzanella.myexpenses.account.AccountRepository
+import br.com.jonathanzanella.myexpenses.account.AccountDataSource
 import br.com.jonathanzanella.myexpenses.bill.Bill
 import br.com.jonathanzanella.myexpenses.bill.BillRepository
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper
@@ -44,7 +44,7 @@ class AddExpenseTest {
     var editExpenseActivityTestRule = ActivityTestRule(EditExpenseActivity::class.java)
 
     @Inject
-    lateinit var accountRepository: AccountRepository
+    lateinit var accountDataSource: AccountDataSource
     @Inject
     lateinit var billRepository: BillRepository
     private var account: Account? = null
@@ -60,7 +60,7 @@ class AddExpenseTest {
             uiDevice.wakeUp()
 
         account = AccountBuilder().build()
-        accountRepository.save(account!!)
+        accountDataSource.save(account!!)
     }
 
     @After

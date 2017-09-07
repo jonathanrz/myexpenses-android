@@ -1,7 +1,8 @@
 package br.com.jonathanzanella.myexpenses.injection
 
 import br.com.jonathanzanella.myexpenses.account.AccountAdapterPresenter
-import br.com.jonathanzanella.myexpenses.account.AccountPresenter
+import br.com.jonathanzanella.myexpenses.account.EditAccountActivity
+import br.com.jonathanzanella.myexpenses.account.ShowAccountActivity
 import br.com.jonathanzanella.myexpenses.account.transactions.MonthTransactionsPresenter
 import br.com.jonathanzanella.myexpenses.bill.BillAdapter
 import br.com.jonathanzanella.myexpenses.bill.BillMonthlyResumeAdapter
@@ -27,8 +28,9 @@ interface AppComponent {
     fun inject(databaseHelper: DatabaseHelper)
 
     fun inject(accountAdapterPresenter: AccountAdapterPresenter)
-    fun inject(accountPresenter: AccountPresenter)
     fun inject(monthTransactionsPresenter: MonthTransactionsPresenter)
+    fun inject(editAccountActivity: EditAccountActivity)
+    fun inject(showAccountActivity: ShowAccountActivity)
 
     fun inject(billAdapter: BillAdapter)
     fun inject(billMonthlyResumeAdapter: BillMonthlyResumeAdapter)

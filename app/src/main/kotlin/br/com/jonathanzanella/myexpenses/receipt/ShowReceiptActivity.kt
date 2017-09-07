@@ -10,7 +10,7 @@ import android.view.MenuItem
 import android.widget.TextView
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.account.AccountRepository
+import br.com.jonathanzanella.myexpenses.account.AccountDataSource
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.source.SourceRepository
 import br.com.jonathanzanella.myexpenses.transaction.Transaction
@@ -23,7 +23,7 @@ class ShowReceiptActivity : AppCompatActivity(), ReceiptContract.View {
     private val ui = ShowReceiptActivityUi()
 
     @Inject
-    lateinit var accountRepository: AccountRepository
+    lateinit var accountDataSource: AccountDataSource
     @Inject
     lateinit var receiptRepository: ReceiptRepository
     @Inject
@@ -33,7 +33,7 @@ class ShowReceiptActivity : AppCompatActivity(), ReceiptContract.View {
 
     init {
         App.getAppComponent().inject(this)
-        presenter = ReceiptPresenter(receiptRepository, sourceRepository, accountRepository)
+        presenter = ReceiptPresenter(receiptRepository, sourceRepository, accountDataSource)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

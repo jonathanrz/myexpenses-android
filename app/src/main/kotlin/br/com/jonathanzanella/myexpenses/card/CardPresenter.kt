@@ -7,7 +7,7 @@ import android.support.annotation.UiThread
 import android.support.annotation.WorkerThread
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.Account
-import br.com.jonathanzanella.myexpenses.account.AccountRepository
+import br.com.jonathanzanella.myexpenses.account.AccountDataSource
 import br.com.jonathanzanella.myexpenses.account.ListAccountActivity
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException
 import br.com.jonathanzanella.myexpenses.exceptions.ValidationException
@@ -18,7 +18,7 @@ import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import org.joda.time.DateTime
 
-class CardPresenter(private val repository: CardRepository, private val accountRepository: AccountRepository,
+class CardPresenter(private val repository: CardRepository, private val accountDataSource: AccountDataSource,
                      private val expenseRepository: ExpenseRepository, private val resourcesHelper: ResourcesHelper) {
 
     private var view: CardContract.View? = null
@@ -101,7 +101,7 @@ class CardPresenter(private val repository: CardRepository, private val accountR
     fun save() {
         val v = editView ?: throw InvalidMethodCallException("save", javaClass.toString(), "View should be a Edit View")
         if (card == null)
-            card = Card(accountRepository)
+            card = Card(accountDataSource)
         card = v.fillCard(card!!)
         if (account != null)
             card!!.account = account
@@ -138,7 +138,7 @@ class CardPresenter(private val repository: CardRepository, private val accountR
     @UiThread
     private fun loadAccount(uuid: String) {
         doAsync {
-            account = accountRepository.find(uuid)
+            account = accountDataSource.find(uuid)
 
             uiThread { account?.let { editView?.onAccountSelected(it) }}
         }

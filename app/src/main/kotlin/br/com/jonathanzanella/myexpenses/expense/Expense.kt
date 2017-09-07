@@ -7,7 +7,7 @@ import android.support.annotation.WorkerThread
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.Environment
 import br.com.jonathanzanella.myexpenses.account.Account
-import br.com.jonathanzanella.myexpenses.account.AccountRepository
+import br.com.jonathanzanella.myexpenses.account.AccountDataSource
 import br.com.jonathanzanella.myexpenses.bill.Bill
 import br.com.jonathanzanella.myexpenses.bill.BillRepository
 import br.com.jonathanzanella.myexpenses.card.Card
@@ -25,7 +25,7 @@ import javax.inject.Inject
 @Entity
 class Expense : Transaction, UnsyncModel {
     @Ignore @Inject
-    lateinit var accountRepository: AccountRepository
+    lateinit var accountDataSource: AccountDataSource
     @Ignore @Inject
     lateinit var billRepository: BillRepository
     @Ignore @Inject
@@ -115,7 +115,7 @@ class Expense : Transaction, UnsyncModel {
             c.credit(value)
             when (c.chargeableType) {
                 ChargeableType.ACCOUNT -> {
-                    accountRepository.save(c as Account)
+                    accountDataSource.save(c as Account)
                     if (c is Card)
                         cardRepository.save(c as Card)
                     else
@@ -187,7 +187,7 @@ class Expense : Transaction, UnsyncModel {
         val c = loadChargeable()!!
         c.debit(value)
         when (c.chargeableType) {
-            ChargeableType.ACCOUNT -> accountRepository.save(c as Account)
+            ChargeableType.ACCOUNT -> accountDataSource.save(c as Account)
             ChargeableType.DEBIT_CARD, ChargeableType.CREDIT_CARD -> cardRepository.save(c as Card)
         }
         charged = true
@@ -219,7 +219,7 @@ class Expense : Transaction, UnsyncModel {
             return null
 
         return when (type) {
-            ChargeableType.ACCOUNT -> accountRepository.find(uuid)
+            ChargeableType.ACCOUNT -> accountDataSource.find(uuid)
             ChargeableType.DEBIT_CARD, ChargeableType.CREDIT_CARD -> cardRepository.find(uuid)
         }
     }

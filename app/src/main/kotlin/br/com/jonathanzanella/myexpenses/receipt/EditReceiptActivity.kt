@@ -14,7 +14,7 @@ import android.widget.CheckBox
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.Account
-import br.com.jonathanzanella.myexpenses.account.AccountRepository
+import br.com.jonathanzanella.myexpenses.account.AccountDataSource
 import br.com.jonathanzanella.myexpenses.account.ListAccountActivity
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
@@ -37,7 +37,7 @@ class EditReceiptActivity : AppCompatActivity(), ReceiptContract.EditView {
         get() = Integer.parseInt(ui.editRepetition.text.toString())
 
     @Inject
-    lateinit var accountRepository: AccountRepository
+    lateinit var accountDataSource: AccountDataSource
     @Inject
     lateinit var receiptRepository: ReceiptRepository
     @Inject
@@ -49,7 +49,7 @@ class EditReceiptActivity : AppCompatActivity(), ReceiptContract.EditView {
 
     init {
         App.getAppComponent().inject(this)
-        presenter = ReceiptPresenter(receiptRepository, sourceRepository, accountRepository)
+        presenter = ReceiptPresenter(receiptRepository, sourceRepository, accountDataSource)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

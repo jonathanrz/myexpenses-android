@@ -8,34 +8,46 @@ import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 
-open class AccountRepository @Inject constructor(val dao: AccountDao) {
-    @WorkerThread
-    fun find(uuid: String): Account? {
-        return dao.find(uuid).blockingFirst().firstOrNull()
-    }
+interface AccountDataSource {
+    fun all(): List<Account>
+    fun forResumeScreen(): List<Account>
+    fun unsync(): List<Account>
 
+    fun find(uuid: String): Account?
+    fun greaterUpdatedAt(): Long
+
+    fun save(account: Account): ValidationResult
+    fun syncAndSave(unsync: Account): ValidationResult
+}
+
+class AccountRepository @Inject constructor(val dao: AccountDao): AccountDataSource {
     @WorkerThread
-    fun all(): List<Account> {
+    override fun all(): List<Account> {
         return dao.all().blockingFirst()
     }
 
     @WorkerThread
-    internal fun forResumeScreen(): List<Account> {
+    override fun forResumeScreen(): List<Account> {
         return dao.showInResume().blockingFirst()
     }
 
     @WorkerThread
-    fun greaterUpdatedAt(): Long {
-        return dao.greaterUpdatedAt().blockingFirst().firstOrNull()?.updatedAt ?:0
-    }
-
-    @WorkerThread
-    fun unsync(): List<Account> {
+    override fun unsync(): List<Account> {
         return dao.unsync().blockingFirst()
     }
 
     @WorkerThread
-    fun save(account: Account): ValidationResult {
+    override fun find(uuid: String): Account? {
+        return dao.find(uuid).blockingFirst().firstOrNull()
+    }
+
+    @WorkerThread
+    override fun greaterUpdatedAt(): Long {
+        return dao.greaterUpdatedAt().blockingFirst().firstOrNull()?.updatedAt ?:0
+    }
+
+    @WorkerThread
+    override fun save(account: Account): ValidationResult {
         val result = validate(account)
         if (result.isValid) {
             if (account.id == 0L && account.uuid == null)
@@ -54,7 +66,7 @@ open class AccountRepository @Inject constructor(val dao: AccountDao) {
     }
 
     @WorkerThread
-    fun syncAndSave(unsync: Account): ValidationResult {
+    override fun syncAndSave(unsync: Account): ValidationResult {
         val result = validate(unsync)
         if (!result.isValid) {
             Timber.tag("Account validation fail")

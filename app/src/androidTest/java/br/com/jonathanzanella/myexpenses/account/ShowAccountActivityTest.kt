@@ -43,7 +43,7 @@ class ShowAccountActivityTest {
 
     private var account: Account? = null
     @Inject
-    lateinit var repository: AccountRepository
+    lateinit var dataSource: AccountDataSource
     @Inject
     lateinit var expenseRepository: ExpenseRepository
     @Inject
@@ -64,7 +64,7 @@ class ShowAccountActivityTest {
         account!!.name = "test"
         account!!.balance = ACCOUNT_BALANCE
         account!!.accountToPayCreditCard = true
-        repository.save(account!!)
+        dataSource.save(account!!)
     }
 
     @After
@@ -89,7 +89,7 @@ class ShowAccountActivityTest {
     @Test
     @Throws(InterruptedException::class)
     fun show_credit_card_bill_in_account_show_activity() {
-        val card = CardBuilder().account(account).build(repository)
+        val card = CardBuilder().account(account).build(dataSource)
         assertTrue(cardRepository.save(card).isValid)
         val expense = ExpenseBuilder().chargeable(card).build()
         assertTrue(expenseRepository.save(expense).isValid)

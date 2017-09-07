@@ -14,7 +14,7 @@ import br.com.jonathanzanella.TestApp
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.Account
-import br.com.jonathanzanella.myexpenses.account.AccountRepository
+import br.com.jonathanzanella.myexpenses.account.AccountDataSource
 import br.com.jonathanzanella.myexpenses.expense.Expense
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper
@@ -44,7 +44,7 @@ class ShowCardActivityTest {
     @Inject
     lateinit var repository: CardRepository
     @Inject
-    lateinit var accountRepository: AccountRepository
+    lateinit var accountDataSource: AccountDataSource
 
     private var card: Card? = null
     private var account: Account? = null
@@ -56,9 +56,9 @@ class ShowCardActivityTest {
         App.resetDatabase()
 
         account = AccountBuilder().build()
-        accountRepository.save(account!!)
+        accountDataSource.save(account!!)
 
-        card = CardBuilder().account(account).type(CardType.CREDIT).build(accountRepository)
+        card = CardBuilder().account(account).type(CardType.CREDIT).build(accountDataSource)
         repository.save(card!!)
     }
 

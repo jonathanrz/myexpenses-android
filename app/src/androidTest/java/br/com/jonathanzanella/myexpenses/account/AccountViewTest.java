@@ -34,7 +34,7 @@ public class AccountViewTest {
 	@Rule
 	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
 	@Inject
-	AccountRepository repository;
+	AccountDataSource dataSource;
 
 	private Account accountToShowInResume;
 	private Account accountToHideInResume;
@@ -47,8 +47,8 @@ public class AccountViewTest {
 		accountToShowInResume = new AccountBuilder().name("accountToShowInResume").showInResume(true).build();
 		accountToHideInResume = new AccountBuilder().name("accountToHideInResume").showInResume(false).build();
 
-		assertTrue(repository.save(accountToShowInResume).isValid());
-		assertTrue(repository.save(accountToHideInResume).isValid());
+		assertTrue(dataSource.save(accountToShowInResume).isValid());
+		assertTrue(dataSource.save(accountToHideInResume).isValid());
 	}
 
 	@After

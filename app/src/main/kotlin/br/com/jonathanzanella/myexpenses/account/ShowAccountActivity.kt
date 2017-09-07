@@ -8,6 +8,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.FrameLayout
 import android.widget.TextView
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.transactions.TransactionsView
 import br.com.jonathanzanella.myexpenses.helpers.firstDayOfMonth
@@ -15,12 +16,18 @@ import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.views.anko.*
 import org.jetbrains.anko.*
 import org.joda.time.DateTime
+import javax.inject.Inject
 
 class ShowAccountActivity : AppCompatActivity(), AccountContract.View {
     override val context = this
+    @Inject
+    lateinit var presenter: AccountPresenter
     private var monthToShow: DateTime? = null
     private val ui = ShowAccountActivityUi()
-    private val presenter = AccountPresenter()
+
+    init {
+        App.getAppComponent().inject(this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

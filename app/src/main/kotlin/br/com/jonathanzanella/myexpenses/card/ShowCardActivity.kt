@@ -11,7 +11,7 @@ import android.widget.TextView
 import android.widget.Toast
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.account.AccountRepository
+import br.com.jonathanzanella.myexpenses.account.AccountDataSource
 import br.com.jonathanzanella.myexpenses.expense.EditExpenseActivity
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.helpers.ResourcesHelper
@@ -22,7 +22,7 @@ import javax.inject.Inject
 
 class ShowCardActivity : AppCompatActivity(), CardContract.View {
     @Inject
-    lateinit var accountRepository: AccountRepository
+    lateinit var accountDataSource: AccountDataSource
     @Inject
     lateinit var cardRepository: CardRepository
     @Inject
@@ -33,7 +33,7 @@ class ShowCardActivity : AppCompatActivity(), CardContract.View {
 
     init {
         App.getAppComponent().inject(this)
-        presenter = CardPresenter(cardRepository, accountRepository, expenseRepository, ResourcesHelper(this))
+        presenter = CardPresenter(cardRepository, accountDataSource, expenseRepository, ResourcesHelper(this))
     }
 
     @UiThread

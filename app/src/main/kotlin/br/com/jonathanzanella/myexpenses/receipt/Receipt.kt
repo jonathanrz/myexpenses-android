@@ -7,7 +7,7 @@ import android.support.annotation.WorkerThread
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.Environment
 import br.com.jonathanzanella.myexpenses.account.Account
-import br.com.jonathanzanella.myexpenses.account.AccountRepository
+import br.com.jonathanzanella.myexpenses.account.AccountDataSource
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.source.Source
 import br.com.jonathanzanella.myexpenses.source.SourceRepository
@@ -21,7 +21,7 @@ import javax.inject.Inject
 @Entity
 class Receipt : Transaction, UnsyncModel {
     @Ignore @Inject
-    lateinit var accountRepository: AccountRepository
+    lateinit var accountDataSource: AccountDataSource
     @Ignore @Inject
     lateinit var receiptRepository: ReceiptRepository
     @Ignore @Inject
@@ -101,7 +101,7 @@ class Receipt : Transaction, UnsyncModel {
     private fun getAccount(ignoreCache: Boolean): Account? {
         if (account == null || ignoreCache) {
             accountUuid?.let {
-                account = accountRepository.find(it)
+                account = accountDataSource.find(it)
             }
         }
         return account
@@ -157,7 +157,7 @@ class Receipt : Transaction, UnsyncModel {
     fun credit() {
         val acc = loadAccount()!!
         acc.credit(income)
-        accountRepository.save(acc)
+        accountDataSource.save(acc)
         credited = true
         receiptRepository.save(this)
     }

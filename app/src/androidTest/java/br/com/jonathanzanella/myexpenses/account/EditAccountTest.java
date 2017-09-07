@@ -40,7 +40,7 @@ public class EditAccountTest {
 	public ActivityTestRule<ShowAccountActivity> activityTestRule = new ActivityTestRule<>(ShowAccountActivity.class, true, false);
 
 	@Inject
-	AccountRepository repository;
+	AccountDataSource dataSource;
 
 	private Account account;
 
@@ -50,7 +50,7 @@ public class EditAccountTest {
 		App.Companion.resetDatabase();
 
 		account = new AccountBuilder().build();
-		assertTrue(repository.save(account).isValid());
+		assertTrue(dataSource.save(account).isValid());
 	}
 
 	@After
@@ -80,10 +80,10 @@ public class EditAccountTest {
 
 		matchToolbarTitle(showAccountTitle + " changed");
 
-		account = repository.find(account.getUuid());
+		account = dataSource.find(account.getUuid());
 
 		onView(withId(R.id.act_show_account_name)).check(matches(withText(account.getName())));
-		assertThat(repository.all().size(), is(1));
+		assertThat(dataSource.all().size(), is(1));
 		assertThat(account.getShowInResume(), is(false));
 	}
 }

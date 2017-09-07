@@ -15,14 +15,13 @@ import android.view.View
 import br.com.jonathanzanella.TestApp
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.account.AccountRepository
+import br.com.jonathanzanella.myexpenses.account.AccountDataSource
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper
 import br.com.jonathanzanella.myexpenses.helpers.UIHelper
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder
 import br.com.jonathanzanella.myexpenses.helpers.builder.ReceiptBuilder
 import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
-import br.com.jonathanzanella.myexpenses.injection.DaggerTestComponent
 import br.com.jonathanzanella.myexpenses.source.SourceRepository
 import br.com.jonathanzanella.myexpenses.views.MainActivity
 import junit.framework.Assert.assertTrue
@@ -46,7 +45,7 @@ class ReceiptsViewTest {
     @Inject
     lateinit var sourceRepository: SourceRepository
     @Inject
-    lateinit var accountRepository: AccountRepository
+    lateinit var accountDataSource: AccountDataSource
 
     private var receipt: Receipt? = null
     private var receipt2: Receipt? = null
@@ -61,7 +60,7 @@ class ReceiptsViewTest {
         assertTrue(sourceRepository.save(s).isValid)
 
         val a = AccountBuilder().build()
-        assertTrue(accountRepository.save(a).isValid)
+        assertTrue(accountDataSource.save(a).isValid)
 
         receipt = ReceiptBuilder().name("receipt1").source(s).account(a).build()
         assertTrue(repository.save(receipt!!).isValid)

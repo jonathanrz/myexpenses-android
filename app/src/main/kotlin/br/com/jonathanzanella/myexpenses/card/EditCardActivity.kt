@@ -14,7 +14,7 @@ import android.widget.RadioGroup
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.Account
-import br.com.jonathanzanella.myexpenses.account.AccountRepository
+import br.com.jonathanzanella.myexpenses.account.AccountDataSource
 import br.com.jonathanzanella.myexpenses.card.CardType.CREDIT
 import br.com.jonathanzanella.myexpenses.card.CardType.DEBIT
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
@@ -27,7 +27,7 @@ import javax.inject.Inject
 
 class EditCardActivity : AppCompatActivity(), CardContract.EditView {
     @Inject
-    lateinit var accountRepository: AccountRepository
+    lateinit var accountDataSource: AccountDataSource
     @Inject
     lateinit var cardRepository: CardRepository
     @Inject
@@ -38,8 +38,7 @@ class EditCardActivity : AppCompatActivity(), CardContract.EditView {
 
     init {
         App.getAppComponent().inject(this)
-        presenter = CardPresenter(cardRepository,
-                accountRepository, expenseRepository, ResourcesHelper(this))
+        presenter = CardPresenter(cardRepository, accountDataSource, expenseRepository, ResourcesHelper(this))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -3,10 +3,7 @@ package br.com.jonathanzanella.myexpenses.injection
 import android.arch.persistence.room.Room
 import android.content.Context
 import br.com.jonathanzanella.myexpenses.App
-import br.com.jonathanzanella.myexpenses.account.AccountApi
-import br.com.jonathanzanella.myexpenses.account.AccountDao
-import br.com.jonathanzanella.myexpenses.account.AccountInterface
-import br.com.jonathanzanella.myexpenses.account.AccountRepository
+import br.com.jonathanzanella.myexpenses.account.*
 import br.com.jonathanzanella.myexpenses.bill.BillApi
 import br.com.jonathanzanella.myexpenses.bill.BillDao
 import br.com.jonathanzanella.myexpenses.bill.BillInterface
@@ -80,7 +77,7 @@ class DatabaseModule {
 class RepositoryModule {
     @Singleton
     @Provides
-    fun providesAccountRepository(accountDao: AccountDao) = AccountRepository(accountDao)
+    fun providesAccountDataSource(accountDao: AccountDao): AccountDataSource = AccountRepository(accountDao)
 
     @Singleton
     @Provides

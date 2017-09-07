@@ -11,7 +11,7 @@ import android.support.annotation.WorkerThread
 import android.support.v7.app.AlertDialog
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.Account
-import br.com.jonathanzanella.myexpenses.account.AccountRepository
+import br.com.jonathanzanella.myexpenses.account.AccountDataSource
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException
 import br.com.jonathanzanella.myexpenses.source.Source
 import br.com.jonathanzanella.myexpenses.source.SourceRepository
@@ -22,7 +22,7 @@ import timber.log.Timber
 
 @Suppress("LargeClass")
 class ReceiptPresenter(private val repository: ReceiptRepository, private val sourceRepository: SourceRepository,
-                       private val accountRepository: AccountRepository) {
+                       private val accountDataSource: AccountDataSource) {
     private var view: ReceiptContract.View? = null
     private var editView: ReceiptContract.EditView? = null
     private var receipt: Receipt? = null
@@ -174,7 +174,7 @@ class ReceiptPresenter(private val repository: ReceiptRepository, private val so
                         receipt!!.let {
                             val acc = it.accountFromCache
                             acc!!.credit(it.income * -1)
-                            accountRepository.save(acc)
+                            accountDataSource.save(acc)
 
                             it.delete()
                         }
@@ -203,7 +203,7 @@ class ReceiptPresenter(private val repository: ReceiptRepository, private val so
                 source = sourceRepository.find(extras.getString(KEY_SOURCE_UUID))
 
             if (extras.containsKey(KEY_ACCOUNT_UUID))
-                account = accountRepository.find(extras.getString(KEY_ACCOUNT_UUID)!!)
+                account = accountDataSource.find(extras.getString(KEY_ACCOUNT_UUID)!!)
 
             if (extras.containsKey(KEY_DATE))
                 date = DateTime(extras.getLong(KEY_DATE))
@@ -230,7 +230,7 @@ class ReceiptPresenter(private val repository: ReceiptRepository, private val so
     @UiThread
     fun onAccountSelected(accountUuid: String) {
         doAsync {
-            account = accountRepository.find(accountUuid)
+            account = accountDataSource.find(accountUuid)
 
             uiThread { editView?.onAccountSelected(account!!) }
         }

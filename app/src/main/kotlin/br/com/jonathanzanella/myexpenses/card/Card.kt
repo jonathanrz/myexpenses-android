@@ -6,7 +6,7 @@ import android.arch.persistence.room.PrimaryKey
 import android.support.annotation.WorkerThread
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.account.Account
-import br.com.jonathanzanella.myexpenses.account.AccountRepository
+import br.com.jonathanzanella.myexpenses.account.AccountDataSource
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable
 import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel
@@ -19,7 +19,7 @@ import javax.inject.Inject
 class Card : Chargeable, UnsyncModel {
     @Ignore
     @Inject
-    lateinit var accountRepository: AccountRepository
+    lateinit var accountDataSource: AccountDataSource
         set
 
     @PrimaryKey(autoGenerate = true)
@@ -40,15 +40,15 @@ class Card : Chargeable, UnsyncModel {
         App.getAppComponent().inject(this)
     }
 
-    constructor(accountRepository: AccountRepository) {
-        this.accountRepository = accountRepository
+    constructor(dataSource: AccountDataSource) {
+        this.accountDataSource = dataSource
     }
 
     var account: Account?
         @WorkerThread
         get() {
             return accountUuid?.let {
-                accountRepository?.find(it)
+                accountDataSource.find(it)
             }
         }
         set(account) {
@@ -75,7 +75,7 @@ class Card : Chargeable, UnsyncModel {
         if (type == CardType.DEBIT) {
             val account = account
             account!!.debit(value)
-            accountRepository.save(account)
+            accountDataSource.save(account)
         }
     }
 
@@ -84,7 +84,7 @@ class Card : Chargeable, UnsyncModel {
         if (type == CardType.DEBIT) {
             val account = account
             account!!.credit(value)
-            accountRepository.save(account)
+            accountDataSource.save(account)
         }
     }
 

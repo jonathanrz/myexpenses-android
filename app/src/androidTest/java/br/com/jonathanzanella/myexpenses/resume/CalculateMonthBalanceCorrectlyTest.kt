@@ -13,7 +13,7 @@ import br.com.jonathanzanella.TestApp
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.Account
-import br.com.jonathanzanella.myexpenses.account.AccountRepository
+import br.com.jonathanzanella.myexpenses.account.AccountDataSource
 import br.com.jonathanzanella.myexpenses.bill.BillRepository
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper
@@ -49,7 +49,7 @@ class CalculateMonthBalanceCorrectlyTest {
     @Inject
     lateinit var sourceRepository: SourceRepository
     @Inject
-    lateinit var accountRepository: AccountRepository
+    lateinit var accountDataSource: AccountDataSource
     @Inject
     lateinit var receiptRepository: ReceiptRepository
     @Inject
@@ -64,7 +64,7 @@ class CalculateMonthBalanceCorrectlyTest {
         App.resetDatabase()
 
         val a = br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder().build()
-        assertTrue(accountRepository.save(a).isValid)
+        assertTrue(accountDataSource.save(a).isValid)
 
         val s = SourceBuilder().build()
         assertTrue(sourceRepository.save(s).isValid)

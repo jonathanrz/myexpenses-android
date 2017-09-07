@@ -13,7 +13,7 @@ import android.support.test.runner.AndroidJUnit4
 import br.com.jonathanzanella.TestApp
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.account.AccountRepository
+import br.com.jonathanzanella.myexpenses.account.AccountDataSource
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper
 import br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder
@@ -41,7 +41,7 @@ class ShowReceiptActivityTest {
     @Inject
     lateinit var sourceRepository: SourceRepository
     @Inject
-    lateinit var accountRepository: AccountRepository
+    lateinit var accountDataSource: AccountDataSource
 
     @Before
     @Throws(Exception::class)
@@ -53,7 +53,7 @@ class ShowReceiptActivityTest {
         sourceRepository.save(s)
 
         val a = AccountBuilder().build()
-        accountRepository.save(a)
+        accountDataSource.save(a)
 
         receipt = ReceiptBuilder().source(s).account(a).build()
         repository.save(receipt!!)

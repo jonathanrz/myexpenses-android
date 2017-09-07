@@ -13,7 +13,7 @@ import android.support.test.runner.AndroidJUnit4
 import br.com.jonathanzanella.TestApp
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.account.AccountRepository
+import br.com.jonathanzanella.myexpenses.account.AccountDataSource
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper
 import br.com.jonathanzanella.myexpenses.helpers.UIHelper.clickIntoView
 import br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle
@@ -37,7 +37,7 @@ class ShowExpenseActivityTest {
     @Inject
     lateinit var repository: ExpenseRepository
     @Inject
-    lateinit var accountRepository: AccountRepository
+    lateinit var accountDataSource: AccountDataSource
     private var expense: Expense? = null
 
     @Before
@@ -47,7 +47,7 @@ class ShowExpenseActivityTest {
         App.resetDatabase()
 
         val a = AccountBuilder().build()
-        accountRepository.save(a)
+        accountDataSource.save(a)
 
         expense = ExpenseBuilder().chargeable(a).build()
         assertTrue(repository.save(expense!!).isValid)

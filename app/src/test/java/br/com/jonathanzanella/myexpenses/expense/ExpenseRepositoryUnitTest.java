@@ -29,7 +29,7 @@ public class ExpenseRepositoryUnitTest {
 	}
 
 	@Test
-	@Ignore("update when remove repository from models")
+	@Ignore("update when remove dataSource from models")
 	public void return_with_error_when_tried_to_save_source_without_name() throws Exception {
 		Expense expense = new ExpenseBuilder()
 				.name(null)

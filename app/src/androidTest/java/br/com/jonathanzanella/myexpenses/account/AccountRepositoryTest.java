@@ -20,7 +20,7 @@ import static org.hamcrest.Matchers.not;
 @SmallTest
 public class AccountRepositoryTest {
 	@Inject
-	AccountRepository repository;
+	AccountDataSource dataSource;
 
 	@Before
 	public void setUp() throws Exception {
@@ -32,7 +32,7 @@ public class AccountRepositoryTest {
 	public void can_save_account() throws Exception {
 		Account account = new Account();
 		account.setName("test");
-		repository.save(account);
+		dataSource.save(account);
 
 		assertThat(account.getId(), is(not(0L)));
 		assertThat(account.getUuid(), is(not("")));
@@ -42,9 +42,9 @@ public class AccountRepositoryTest {
 	public void can_load_saved_account() throws Exception {
 		Account account = new Account();
 		account.setName("test");
-		repository.save(account);
+		dataSource.save(account);
 
-		Account loadAccount = repository.find(account.getUuid());
+		Account loadAccount = dataSource.find(account.getUuid());
 		assertThat(loadAccount.getUuid(), is(account.getUuid()));
 	}
 }
