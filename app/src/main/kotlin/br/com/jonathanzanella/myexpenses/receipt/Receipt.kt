@@ -23,7 +23,7 @@ class Receipt : Transaction, UnsyncModel {
     @Ignore @Inject
     lateinit var accountDataSource: AccountDataSource
     @Ignore @Inject
-    lateinit var receiptRepository: ReceiptRepository
+    lateinit var receiptDataSource: ReceiptDataSource
     @Ignore @Inject
     lateinit var sourceRepository: SourceRepository
 
@@ -159,13 +159,13 @@ class Receipt : Transaction, UnsyncModel {
         acc.credit(income)
         accountDataSource.save(acc)
         credited = true
-        receiptRepository.save(this)
+        receiptDataSource.save(this)
     }
 
     fun delete() {
         removed = true
         sync = false
-        receiptRepository.save(this)
+        receiptDataSource.save(this)
     }
 
     fun isDatePresent() = date != null

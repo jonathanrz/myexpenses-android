@@ -20,14 +20,14 @@ import javax.inject.Inject
 
 open class ReceiptAdapter : RecyclerView.Adapter<ReceiptAdapter.ViewHolder>() {
     @Inject
-    lateinit var receiptRepository: ReceiptRepository
+    lateinit var receiptDataSource: ReceiptDataSource
     private var receipts: List<Receipt> = ArrayList()
     private val presenter: ReceiptAdapterPresenter
     private var date: DateTime? = null
 
     init {
         App.getAppComponent().inject(this)
-        presenter = ReceiptAdapterPresenter(receiptRepository)
+        presenter = ReceiptAdapterPresenter(receiptDataSource)
     }
 
     inner class ViewHolder internal constructor(itemView: View, private val ui: ViewUI) : RecyclerView.ViewHolder(itemView), View.OnClickListener {

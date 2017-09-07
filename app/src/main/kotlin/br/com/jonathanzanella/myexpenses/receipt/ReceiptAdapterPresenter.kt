@@ -4,13 +4,13 @@ import org.apache.commons.lang3.StringUtils
 import org.joda.time.DateTime
 import java.util.*
 
-class ReceiptAdapterPresenter(private val repository: ReceiptRepository) {
+class ReceiptAdapterPresenter(private val dataSource: ReceiptDataSource) {
 
     private var receipts: MutableList<Receipt>? = null
     private var receiptsFiltered: MutableList<Receipt>? = null
 
     private fun loadReceipts(date: DateTime) {
-        receipts = repository.monthly(date) as MutableList<Receipt>
+        receipts = dataSource.monthly(date) as MutableList<Receipt>
         receiptsFiltered = receipts
     }
 
@@ -26,10 +26,9 @@ class ReceiptAdapterPresenter(private val repository: ReceiptRepository) {
             return
         }
 
-        receiptsFiltered = ArrayList<Receipt>()
-        for (bill in receipts!!) {
-            if (StringUtils.containsIgnoreCase(bill.name, filter))
-                receiptsFiltered!!.add(bill)
-        }
+        receiptsFiltered = ArrayList()
+        receipts!!
+                .filter { StringUtils.containsIgnoreCase(it.name, filter) }
+                .forEach { receiptsFiltered!!.add(it) }
     }
 }

@@ -23,7 +23,7 @@ import br.com.jonathanzanella.myexpenses.helpers.builder.ExpenseBuilder
 import br.com.jonathanzanella.myexpenses.helpers.builder.ReceiptBuilder
 import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
-import br.com.jonathanzanella.myexpenses.receipt.ReceiptRepository
+import br.com.jonathanzanella.myexpenses.receipt.ReceiptDataSource
 import br.com.jonathanzanella.myexpenses.source.Source
 import br.com.jonathanzanella.myexpenses.source.SourceRepository
 import br.com.jonathanzanella.myexpenses.views.MainActivity
@@ -51,7 +51,7 @@ class CalculateMonthBalanceCorrectlyTest {
     @Inject
     lateinit var accountDataSource: AccountDataSource
     @Inject
-    lateinit var receiptRepository: ReceiptRepository
+    lateinit var receiptDataSource: ReceiptDataSource
     @Inject
     lateinit var expenseDataSource: ExpenseDataSource
 
@@ -95,7 +95,7 @@ class CalculateMonthBalanceCorrectlyTest {
                 .date(dateTime)
                 .income(RECEIPT_INCOME)
                 .build()
-        assertTrue(receiptRepository.save(r).isValid)
+        assertTrue(receiptDataSource.save(r).isValid)
         dateTime = dateTime.plusMonths(1)
         r = ReceiptBuilder()
                 .account(a)
@@ -103,7 +103,7 @@ class CalculateMonthBalanceCorrectlyTest {
                 .date(dateTime)
                 .income(RECEIPT_INCOME * 2)
                 .build()
-        assertTrue(receiptRepository.save(r).isValid)
+        assertTrue(receiptDataSource.save(r).isValid)
         dateTime = dateTime.plusMonths(1)
         r = ReceiptBuilder()
                 .account(a)
@@ -111,7 +111,7 @@ class CalculateMonthBalanceCorrectlyTest {
                 .date(dateTime)
                 .income(RECEIPT_INCOME * 3)
                 .build()
-        assertTrue(receiptRepository.save(r).isValid)
+        assertTrue(receiptDataSource.save(r).isValid)
     }
 
     private fun generateThreeMonthlyExpenses(a: Account) {

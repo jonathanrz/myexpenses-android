@@ -25,7 +25,7 @@ class ShowReceiptActivity : AppCompatActivity(), ReceiptContract.View {
     @Inject
     lateinit var accountDataSource: AccountDataSource
     @Inject
-    lateinit var receiptRepository: ReceiptRepository
+    lateinit var receiptDataSource: ReceiptDataSource
     @Inject
     lateinit var sourceRepository: SourceRepository
 
@@ -33,7 +33,7 @@ class ShowReceiptActivity : AppCompatActivity(), ReceiptContract.View {
 
     init {
         App.getAppComponent().inject(this)
-        presenter = ReceiptPresenter(receiptRepository, sourceRepository, accountDataSource)
+        presenter = ReceiptPresenter(receiptDataSource, sourceRepository, accountDataSource)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

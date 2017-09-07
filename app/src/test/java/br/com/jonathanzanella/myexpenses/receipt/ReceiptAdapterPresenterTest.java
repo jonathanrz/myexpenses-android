@@ -15,9 +15,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class ReceiptAdapterPresenterTest {
 	@Mock
-	private ReceiptAdapter adapter;
-	@Mock
-	private ReceiptRepository repository;
+	private ReceiptDataSource dataSource;
 
 	private ReceiptAdapterPresenter presenter;
 
@@ -25,14 +23,14 @@ public class ReceiptAdapterPresenterTest {
 	public void setUp() throws Exception {
 		initMocks(this);
 
-		presenter = new ReceiptAdapterPresenter(repository);
+		presenter = new ReceiptAdapterPresenter(dataSource);
 	}
 
 	@Test(expected = UnsupportedOperationException.class)
 	@Ignore("fix when convert to kotlin")
 	public void get_sources_return_unmodifiable_list() {
 		DateTime dateTime = new DateTime(2016, 9, 26, 0, 0, 0, DateTimeZone.UTC);
-		when(repository.monthly(dateTime)).thenReturn(new ArrayList<Receipt>());
+		when(dataSource.monthly(dateTime)).thenReturn(new ArrayList<>());
 
 		List<Receipt> receipts = presenter.getReceipts(true, dateTime);
 		receipts.add(new Receipt());

@@ -22,7 +22,7 @@ import br.com.jonathanzanella.myexpenses.helpers.builder.ExpenseBuilder
 import br.com.jonathanzanella.myexpenses.helpers.builder.ReceiptBuilder
 import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
-import br.com.jonathanzanella.myexpenses.receipt.ReceiptRepository
+import br.com.jonathanzanella.myexpenses.receipt.ReceiptDataSource
 import br.com.jonathanzanella.myexpenses.source.SourceRepository
 import junit.framework.Assert.assertTrue
 import org.hamcrest.core.AllOf.allOf
@@ -47,7 +47,7 @@ class ShowAccountActivityTest {
     @Inject
     lateinit var expenseDataSource: ExpenseDataSource
     @Inject
-    lateinit var receiptRepository: ReceiptRepository
+    lateinit var receiptDataSource: ReceiptDataSource
     @Inject
     lateinit var sourceRepository: SourceRepository
     @Inject
@@ -147,14 +147,14 @@ class ShowAccountActivityTest {
                 .account(account)
                 .source(s)
                 .build()
-        assertTrue(receiptRepository.save(receipt).isValid)
+        assertTrue(receiptDataSource.save(receipt).isValid)
         receipt = ReceiptBuilder()
                 .income(RECEIPT_INCOME)
                 .date(DateTime.now().plusMonths(1))
                 .account(account)
                 .source(s)
                 .build()
-        assertTrue(receiptRepository.save(receipt).isValid)
+        assertTrue(receiptDataSource.save(receipt).isValid)
     }
 
     private fun generateTwoMonthsExpenses() {

@@ -21,7 +21,7 @@ import org.joda.time.DateTime
 import timber.log.Timber
 
 @Suppress("LargeClass")
-class ReceiptPresenter(private val repository: ReceiptRepository, private val sourceRepository: SourceRepository,
+class ReceiptPresenter(private val dataSource: ReceiptDataSource, private val sourceRepository: SourceRepository,
                        private val accountDataSource: AccountDataSource) {
     private var view: ReceiptContract.View? = null
     private var editView: ReceiptContract.EditView? = null
@@ -97,7 +97,7 @@ class ReceiptPresenter(private val repository: ReceiptRepository, private val so
     fun refreshReceipt() {
         doAsync {
             val uuid = receipt!!.uuid
-            receipt = repository.find(uuid!!)
+            receipt = dataSource.find(uuid!!)
             if (receipt == null)
                 throw ReceiptNotFoundException(uuid)
 
@@ -108,7 +108,7 @@ class ReceiptPresenter(private val repository: ReceiptRepository, private val so
     @WorkerThread
     fun loadReceipt(uuid: String) {
         resetCache()
-        val r = repository.find(uuid) ?: throw ReceiptNotFoundException(uuid)
+        val r = dataSource.find(uuid) ?: throw ReceiptNotFoundException(uuid)
         receipt = r
         r.let {
             source = it.source
@@ -140,12 +140,12 @@ class ReceiptPresenter(private val repository: ReceiptRepository, private val so
         }
 
         doAsync {
-            val result = repository.save(receipt!!)
+            val result = dataSource.save(receipt!!)
             if (result.isValid) {
                 for (i in 1 until r.repetition) {
                     r = r.repeat(originalName!!, i + 1)
                     receipt = r
-                    val repetitionResult = repository.save(r)
+                    val repetitionResult = dataSource.save(r)
                     if (!repetitionResult.isValid)
                         Timber.e("Error saving repetition of receipt ${r.getData()} error=${repetitionResult.errors}")
                 }

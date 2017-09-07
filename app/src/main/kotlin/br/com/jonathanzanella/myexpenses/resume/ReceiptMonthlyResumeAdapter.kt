@@ -11,7 +11,7 @@ import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.helpers.TransactionsHelper
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.receipt.Receipt
-import br.com.jonathanzanella.myexpenses.receipt.ReceiptRepository
+import br.com.jonathanzanella.myexpenses.receipt.ReceiptDataSource
 import br.com.jonathanzanella.myexpenses.receipt.ShowReceiptActivity
 import kotlinx.android.synthetic.main.row_monthly_resume_receipt.view.*
 import org.jetbrains.anko.doAsync
@@ -21,7 +21,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-internal class ReceiptMonthlyResumeAdapter(private val receiptRepository: ReceiptRepository) :
+internal class ReceiptMonthlyResumeAdapter(private val receiptDataSource: ReceiptDataSource) :
         RecyclerView.Adapter<ReceiptMonthlyResumeAdapter.ViewHolder>() {
     private var receipts: List<Receipt> = ArrayList()
     var totalValue: Int = 0
@@ -134,7 +134,7 @@ internal class ReceiptMonthlyResumeAdapter(private val receiptRepository: Receip
 
     fun loadDataAsync(month: DateTime, runnable: Runnable?) {
         doAsync {
-            receipts = receiptRepository.resume(month)
+            receipts = receiptDataSource.resume(month)
             updateTotalValue()
 
             uiThread {

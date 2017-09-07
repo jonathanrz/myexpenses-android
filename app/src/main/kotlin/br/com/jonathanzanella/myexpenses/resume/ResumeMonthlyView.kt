@@ -14,6 +14,7 @@ import br.com.jonathanzanella.myexpenses.account.AccountAdapter
 import br.com.jonathanzanella.myexpenses.bill.BillMonthlyResumeAdapter
 import br.com.jonathanzanella.myexpenses.expense.ExpenseDataSource
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
+import br.com.jonathanzanella.myexpenses.receipt.ReceiptDataSource
 import br.com.jonathanzanella.myexpenses.receipt.ReceiptRepository
 import br.com.jonathanzanella.myexpenses.views.FilterableView
 import br.com.jonathanzanella.myexpenses.views.RefreshableView
@@ -29,7 +30,7 @@ class ResumeMonthlyView(context: Context, private val month: DateTime) : FrameLa
     private var singleRowHeight: Int = 0
 
     @Inject
-    lateinit var receiptRepository: ReceiptRepository
+    lateinit var receiptDataSource: ReceiptDataSource
     @Inject
     lateinit var expenseDataSource: ExpenseDataSource
 
@@ -40,7 +41,7 @@ class ResumeMonthlyView(context: Context, private val month: DateTime) : FrameLa
 
     init {
         App.getAppComponent().inject(this)
-        receiptAdapter = ReceiptMonthlyResumeAdapter(receiptRepository)
+        receiptAdapter = ReceiptMonthlyResumeAdapter(receiptDataSource)
         singleRowHeight = resources.getDimensionPixelSize(R.dimen.single_row_height)
 
         View.inflate(context, R.layout.view_monthly_resume, this)

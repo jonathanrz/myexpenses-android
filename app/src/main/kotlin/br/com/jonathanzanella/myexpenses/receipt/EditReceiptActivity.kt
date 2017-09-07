@@ -39,7 +39,7 @@ class EditReceiptActivity : AppCompatActivity(), ReceiptContract.EditView {
     @Inject
     lateinit var accountDataSource: AccountDataSource
     @Inject
-    lateinit var receiptRepository: ReceiptRepository
+    lateinit var receiptDataSource: ReceiptDataSource
     @Inject
     lateinit var sourceRepository: SourceRepository
 
@@ -49,7 +49,7 @@ class EditReceiptActivity : AppCompatActivity(), ReceiptContract.EditView {
 
     init {
         App.getAppComponent().inject(this)
-        presenter = ReceiptPresenter(receiptRepository, sourceRepository, accountDataSource)
+        presenter = ReceiptPresenter(receiptDataSource, sourceRepository, accountDataSource)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

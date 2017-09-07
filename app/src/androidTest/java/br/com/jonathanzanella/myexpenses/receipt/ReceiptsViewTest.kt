@@ -41,7 +41,7 @@ class ReceiptsViewTest {
     var activityTestRule = ActivityTestRule(MainActivity::class.java, true, false)
 
     @Inject
-    lateinit var repository: ReceiptRepository
+    lateinit var dataSource: ReceiptDataSource
     @Inject
     lateinit var sourceRepository: SourceRepository
     @Inject
@@ -63,10 +63,10 @@ class ReceiptsViewTest {
         assertTrue(accountDataSource.save(a).isValid)
 
         receipt = ReceiptBuilder().name("receipt1").source(s).account(a).build()
-        assertTrue(repository.save(receipt!!).isValid)
+        assertTrue(dataSource.save(receipt!!).isValid)
 
         receipt2 = ReceiptBuilder().name("receipt2").source(s).account(a).build()
-        assertTrue(repository.save(receipt2!!).isValid)
+        assertTrue(dataSource.save(receipt2!!).isValid)
     }
 
     @After

@@ -9,10 +9,7 @@ import br.com.jonathanzanella.myexpenses.card.*
 import br.com.jonathanzanella.myexpenses.database.DB_NAME
 import br.com.jonathanzanella.myexpenses.database.MyDatabase
 import br.com.jonathanzanella.myexpenses.expense.*
-import br.com.jonathanzanella.myexpenses.receipt.ReceiptApi
-import br.com.jonathanzanella.myexpenses.receipt.ReceiptDao
-import br.com.jonathanzanella.myexpenses.receipt.ReceiptInterface
-import br.com.jonathanzanella.myexpenses.receipt.ReceiptRepository
+import br.com.jonathanzanella.myexpenses.receipt.*
 import br.com.jonathanzanella.myexpenses.server.Server
 import br.com.jonathanzanella.myexpenses.source.SourceApi
 import br.com.jonathanzanella.myexpenses.source.SourceDao
@@ -86,7 +83,7 @@ class RepositoryModule {
 
     @Singleton
     @Provides
-    fun providesReceiptRepository(receiptDao: ReceiptDao) = ReceiptRepository(receiptDao)
+    fun providesReceipDataSource(receiptDao: ReceiptDao): ReceiptDataSource = ReceiptRepository(receiptDao)
 
     @Singleton
     @Provides

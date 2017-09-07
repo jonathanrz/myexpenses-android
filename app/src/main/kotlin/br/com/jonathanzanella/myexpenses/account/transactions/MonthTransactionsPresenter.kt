@@ -4,7 +4,7 @@ import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.bill.BillDataSource
 import br.com.jonathanzanella.myexpenses.expense.ExpenseDataSource
-import br.com.jonathanzanella.myexpenses.receipt.ReceiptRepository
+import br.com.jonathanzanella.myexpenses.receipt.ReceiptDataSource
 import br.com.jonathanzanella.myexpenses.transaction.TransactionAdapter
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
@@ -14,7 +14,7 @@ import javax.inject.Inject
 class MonthTransactionsPresenter(private val view: MonthTransactionsContractView) {
     val adapter = TransactionAdapter()
     @Inject
-    lateinit var receiptRepository: ReceiptRepository
+    lateinit var receiptDataSource: ReceiptDataSource
     @Inject
     lateinit var expenseDataSource: ExpenseDataSource
     @Inject
@@ -32,7 +32,7 @@ class MonthTransactionsPresenter(private val view: MonthTransactionsContractView
             if (account.accountToPayBills)
                 adapter.addTransactions(billDataSource.monthly(month))
             adapter.addTransactions(expenseDataSource.accountExpenses(account, month))
-            adapter.addTransactions(receiptRepository.monthly(month, account))
+            adapter.addTransactions(receiptDataSource.monthly(month, account))
 
             for (transaction in adapter.getTransactions()) {
                 with(transaction) {

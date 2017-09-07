@@ -16,7 +16,7 @@ import javax.inject.Inject;
 import br.com.jonathanzanella.TestApp;
 import br.com.jonathanzanella.myexpenses.App;
 import br.com.jonathanzanella.myexpenses.account.Account;
-import br.com.jonathanzanella.myexpenses.account.AccountRepository;
+import br.com.jonathanzanella.myexpenses.account.AccountDataSource;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.ReceiptBuilder;
@@ -33,9 +33,9 @@ import static org.hamcrest.Matchers.not;
 @SmallTest
 public class ReceiptRepositoryTest {
 	@Inject
-	ReceiptRepository repository;
+	ReceiptDataSource dataSource;
 	@Inject
-	AccountRepository accountRepository;
+	AccountDataSource accountDataSource;
 	@Inject
 	SourceRepository sourceRepository;
 
@@ -48,7 +48,7 @@ public class ReceiptRepositoryTest {
 		App.Companion.resetDatabase();
 
 		account = new AccountBuilder().build();
-		accountRepository.save(account);
+		accountDataSource.save(account);
 		source = new SourceBuilder().build();
 		sourceRepository.save(source);
 	}
@@ -61,7 +61,7 @@ public class ReceiptRepositoryTest {
 	@Test
 	public void can_save_receipt() throws Exception {
 		Receipt receipt = new ReceiptBuilder().source(source).account(account).build();
-		repository.save(receipt);
+		dataSource.save(receipt);
 
 		assertThat(receipt.getId(), is(not(0L)));
 		assertThat(receipt.getUuid(), is(not("")));
@@ -73,9 +73,9 @@ public class ReceiptRepositoryTest {
 				.source(source)
 				.account(account)
 				.build();
-		repository.save(receipt);
+		dataSource.save(receipt);
 
-		Receipt loadReceipt = repository.find(receipt.getUuid());
+		Receipt loadReceipt = dataSource.find(receipt.getUuid());
 		assertThat(loadReceipt.getUuid(), is(receipt.getUuid()));
 	}
 
@@ -88,7 +88,7 @@ public class ReceiptRepositoryTest {
 				.account(account)
 				.date(date)
 				.build();
-		repository.save(receiptA);
+		dataSource.save(receiptA);
 
 		Receipt receiptB = new ReceiptBuilder()
 				.name("b")
@@ -96,9 +96,9 @@ public class ReceiptRepositoryTest {
 				.account(account)
 				.date(date.minusDays(1))
 				.build();
-		repository.save(receiptB);
+		dataSource.save(receiptB);
 
-		List<Receipt> sources = repository.all();
+		List<Receipt> sources = dataSource.all();
 		assertThat(sources.get(0).getUuid(), is(receiptB.getUuid()));
 		assertThat(sources.get(1).getUuid(), is(receiptA.getUuid()));
 	}

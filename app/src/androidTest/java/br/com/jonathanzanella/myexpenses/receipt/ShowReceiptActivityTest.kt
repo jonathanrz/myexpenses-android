@@ -37,7 +37,7 @@ class ShowReceiptActivityTest {
     private var receipt: Receipt? = null
 
     @Inject
-    lateinit var repository: ReceiptRepository
+    lateinit var dataSource: ReceiptDataSource
     @Inject
     lateinit var sourceRepository: SourceRepository
     @Inject
@@ -56,7 +56,7 @@ class ShowReceiptActivityTest {
         accountDataSource.save(a)
 
         receipt = ReceiptBuilder().source(s).account(a).build()
-        repository.save(receipt!!)
+        dataSource.save(receipt!!)
     }
 
     @After

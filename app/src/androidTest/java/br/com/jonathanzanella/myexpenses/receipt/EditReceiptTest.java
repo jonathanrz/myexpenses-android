@@ -18,7 +18,7 @@ import br.com.jonathanzanella.TestApp;
 import br.com.jonathanzanella.myexpenses.App;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
-import br.com.jonathanzanella.myexpenses.account.AccountRepository;
+import br.com.jonathanzanella.myexpenses.account.AccountDataSource;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.ReceiptBuilder;
@@ -46,7 +46,7 @@ public class EditReceiptTest {
 	@Rule
 	public ActivityTestRule<ShowReceiptActivity> activityTestRule = new ActivityTestRule<>(ShowReceiptActivity.class, true, false);
 	@Inject
-	AccountRepository accountRepository;
+	AccountDataSource accountDataSource;
 	@Inject
 	SourceRepository sourceRepository;
 	@Inject
@@ -60,7 +60,7 @@ public class EditReceiptTest {
 		App.Companion.resetDatabase();
 
 		Account a = new AccountBuilder().build();
-		assertTrue(accountRepository.save(a).isValid());
+		assertTrue(accountDataSource.save(a).isValid());
 
 		Source s = new SourceBuilder().build();
 		assertTrue(sourceRepository.save(s).isValid());

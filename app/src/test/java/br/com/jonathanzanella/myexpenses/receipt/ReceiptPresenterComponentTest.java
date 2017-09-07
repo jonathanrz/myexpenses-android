@@ -21,7 +21,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 @Ignore("needs to be reviewed")
 public class ReceiptPresenterComponentTest {
-	private ReceiptRepository repository;
+	private ReceiptDataSource dataSource;
 	private ReceiptPresenter presenter;
 
 	@Mock
@@ -36,8 +36,8 @@ public class ReceiptPresenterComponentTest {
 	@Before
 	public void setUp() throws Exception {
 		initMocks(this);
-		repository = new ReceiptRepository(dao);
-		presenter = new ReceiptPresenter(repository, sourceRepository, accountRepository);
+		dataSource = new ReceiptRepository(dao);
+		presenter = new ReceiptPresenter(dataSource, sourceRepository, accountRepository);
 		presenter.attachView(view);
 	}
 
@@ -55,7 +55,7 @@ public class ReceiptPresenterComponentTest {
 		when(view.fillReceipt(any(Receipt.class))).thenReturn(receipt);
 		presenter.save();
 
-		List<Receipt> receipts = repository.all();
+		List<Receipt> receipts = dataSource.all();
 		assertThat(receipts.size(), is(3));
 		assertThat(receipts.get(0).getName(), is(name + " 01/03"));
 		assertThat(receipts.get(0).getDate().getMonthOfYear(), is(date.getMonthOfYear()));
@@ -82,7 +82,7 @@ public class ReceiptPresenterComponentTest {
 		when(view.fillReceipt(any(Receipt.class))).thenReturn(receipt);
 		presenter.save();
 
-		List<Receipt> receipts = repository.all();
+		List<Receipt> receipts = dataSource.all();
 		assertThat(receipts.size(), is(3));
 		assertThat(receipts.get(0).getName(), is(name));
 		assertThat(receipts.get(0).getDate().getMonthOfYear(), is(date.getMonthOfYear()));

@@ -21,7 +21,7 @@ import br.com.jonathanzanella.TestApp;
 import br.com.jonathanzanella.myexpenses.App;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
-import br.com.jonathanzanella.myexpenses.account.AccountRepository;
+import br.com.jonathanzanella.myexpenses.account.AccountDataSource;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder;
@@ -54,7 +54,7 @@ public class AddReceiptTest {
 	@Inject
 	SourceRepository sourceRepository;
 	@Inject
-	AccountRepository accountRepository;
+	AccountDataSource accountDataSource;
 	private Account account;
 	private Source source;
 
@@ -68,7 +68,7 @@ public class AddReceiptTest {
 			uiDevice.wakeUp();
 
 		account = new AccountBuilder().build();
-		accountRepository.save(account);
+		accountDataSource.save(account);
 
 		source = new SourceBuilder().build();
 		sourceRepository.save(source);
