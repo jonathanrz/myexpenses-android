@@ -11,7 +11,6 @@ import android.widget.TableRow
 import android.widget.TextView
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.bill.BillDataSource
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import br.com.jonathanzanella.myexpenses.views.anko.*
@@ -21,15 +20,11 @@ import javax.inject.Inject
 class ShowExpenseActivity : AppCompatActivity(), ExpenseContract.View {
     override val context = this
     private val ui = ShowExpenseActivityUi()
-    private var presenter: ExpensePresenter
     @Inject
-    lateinit var expenseDataSource: ExpenseDataSource
-    @Inject
-    lateinit var billDataSource: BillDataSource
+    lateinit var presenter: ExpensePresenter
 
     init {
         App.getAppComponent().inject(this)
-        presenter = ExpensePresenter(expenseDataSource, billDataSource)
     }
 
     @UiThread

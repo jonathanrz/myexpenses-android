@@ -104,6 +104,10 @@ class PresenterModule {
     fun providesCardPresenter(accountDataSource: AccountDataSource, cardDataSource: CardDataSource,
                               expenseDataSource: ExpenseDataSource, resourcesHelper: ResourcesHelper)
             = CardPresenter(accountDataSource, cardDataSource, expenseDataSource, resourcesHelper)
+
+    @Provides
+    fun providesExpensePresenter(dataSource: ExpenseDataSource, billDataSource: BillDataSource)
+            = ExpensePresenter(dataSource, billDataSource)
 }
 
 @Module
