@@ -15,7 +15,7 @@ import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.account.AccountDataSource
 import br.com.jonathanzanella.myexpenses.bill.BillDataSource
-import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
+import br.com.jonathanzanella.myexpenses.expense.ExpenseDataSource
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper
 import br.com.jonathanzanella.myexpenses.helpers.UIHelper.clickIntoView
 import br.com.jonathanzanella.myexpenses.helpers.builder.BillBuilder
@@ -53,7 +53,7 @@ class CalculateMonthBalanceCorrectlyTest {
     @Inject
     lateinit var receiptRepository: ReceiptRepository
     @Inject
-    lateinit var expenseRepository: ExpenseRepository
+    lateinit var expenseDataSource: ExpenseDataSource
 
     private val monthlyPagerAdapterHelper = MonthlyPagerAdapterHelper()
 
@@ -121,21 +121,21 @@ class CalculateMonthBalanceCorrectlyTest {
                 .date(dateTime)
                 .value(EXPENSE_VALUE)
                 .build()
-        assertTrue(expenseRepository.save(r).isValid)
+        assertTrue(expenseDataSource.save(r).isValid)
         dateTime = dateTime.plusMonths(1)
         r = ExpenseBuilder()
                 .chargeable(a)
                 .date(dateTime)
                 .value(EXPENSE_VALUE * 2)
                 .build()
-        assertTrue(expenseRepository.save(r).isValid)
+        assertTrue(expenseDataSource.save(r).isValid)
         dateTime = dateTime.plusMonths(1)
         r = ExpenseBuilder()
                 .chargeable(a)
                 .date(dateTime)
                 .value(EXPENSE_VALUE * 3)
                 .build()
-        assertTrue(expenseRepository.save(r).isValid)
+        assertTrue(expenseDataSource.save(r).isValid)
     }
 
     @Test

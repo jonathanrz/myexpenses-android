@@ -15,7 +15,7 @@ import br.com.jonathanzanella.TestApp;
 import br.com.jonathanzanella.myexpenses.App;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
-import br.com.jonathanzanella.myexpenses.account.AccountRepository;
+import br.com.jonathanzanella.myexpenses.account.AccountDataSource;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.ExpenseBuilder;
@@ -43,9 +43,9 @@ public class ExpensesViewTest {
 	@Rule
 	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
 	@Inject
-	AccountRepository accountRepository;
+	AccountDataSource accountDataSource;
 	@Inject
-	ExpenseRepository repository;
+	ExpenseDataSource dataSource;
 
 	private Expense expense1;
 	private Expense expense2;
@@ -56,12 +56,12 @@ public class ExpensesViewTest {
 		App.Companion.resetDatabase();
 
 		Account account = new AccountBuilder().build();
-		accountRepository.save(account);
+		accountDataSource.save(account);
 
 		expense1 = new ExpenseBuilder().chargeable(account).name("Expense1").build();
-		assertTrue(repository.save(expense1).isValid());
+		assertTrue(dataSource.save(expense1).isValid());
 		expense2 = new ExpenseBuilder().chargeable(account).name("Expense2").build();
-		assertTrue(repository.save(expense2).isValid());
+		assertTrue(dataSource.save(expense2).isValid());
 	}
 
 	@After

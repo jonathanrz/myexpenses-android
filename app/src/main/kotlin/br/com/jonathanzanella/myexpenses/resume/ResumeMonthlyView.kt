@@ -12,7 +12,7 @@ import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.AccountAdapter
 import br.com.jonathanzanella.myexpenses.bill.BillMonthlyResumeAdapter
-import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
+import br.com.jonathanzanella.myexpenses.expense.ExpenseDataSource
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.receipt.ReceiptRepository
 import br.com.jonathanzanella.myexpenses.views.FilterableView
@@ -31,7 +31,7 @@ class ResumeMonthlyView(context: Context, private val month: DateTime) : FrameLa
     @Inject
     lateinit var receiptRepository: ReceiptRepository
     @Inject
-    lateinit var expenseRepository: ExpenseRepository
+    lateinit var expenseDataSource: ExpenseDataSource
 
     private var accountAdapter = AccountAdapter(month)
     private val receiptAdapter: ReceiptMonthlyResumeAdapter
@@ -108,7 +108,7 @@ class ResumeMonthlyView(context: Context, private val month: DateTime) : FrameLa
     @UiThread
     private fun loadExpenses() {
         doAsync {
-            val expensesList = expenseRepository.expensesForResumeScreen(month)
+            val expensesList = expenseDataSource.expensesForResumeScreen(month)
 
             uiThread {
                 expensesAdapter.setExpenses(expensesList)

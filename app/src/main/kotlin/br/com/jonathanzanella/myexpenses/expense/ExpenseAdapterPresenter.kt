@@ -5,12 +5,12 @@ import org.joda.time.DateTime
 import java.util.*
 import kotlin.collections.ArrayList
 
-class ExpenseAdapterPresenter(private val repository: ExpenseRepository) {
-    private var expenses: List<Expense> = ArrayList<Expense>()
-    private var expensesFiltered: MutableList<Expense> = ArrayList<Expense>()
+class ExpenseAdapterPresenter(private val dataSource: ExpenseDataSource) {
+    private var expenses: List<Expense> = ArrayList()
+    private var expensesFiltered: MutableList<Expense> = ArrayList()
 
     private fun loadExpenses(date: DateTime) {
-        expenses = repository.monthly(date)
+        expenses = dataSource.monthly(date)
         expensesFiltered = expenses as MutableList<Expense>
     }
 

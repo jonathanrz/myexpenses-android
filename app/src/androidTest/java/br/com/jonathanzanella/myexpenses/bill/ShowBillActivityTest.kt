@@ -13,7 +13,6 @@ import android.support.test.runner.AndroidJUnit4
 import br.com.jonathanzanella.TestApp
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper
 import br.com.jonathanzanella.myexpenses.helpers.TestUtils.waitForIdling
 import br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle
@@ -33,8 +32,6 @@ class ShowBillActivityTest {
     var activityTestRule = ActivityTestRule(ShowBillActivity::class.java, true, false)
 
     private var bill: Bill? = null
-    @Inject
-    lateinit var expenseRepository: ExpenseRepository
     @Inject
     lateinit var dataSource: BillDataSource
 

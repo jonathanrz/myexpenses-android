@@ -14,7 +14,7 @@ import br.com.jonathanzanella.TestApp
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.card.CardDataSource
-import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
+import br.com.jonathanzanella.myexpenses.expense.ExpenseDataSource
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper
 import br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle
 import br.com.jonathanzanella.myexpenses.helpers.builder.CardBuilder
@@ -45,7 +45,7 @@ class ShowAccountActivityTest {
     @Inject
     lateinit var dataSource: AccountDataSource
     @Inject
-    lateinit var expenseRepository: ExpenseRepository
+    lateinit var expenseDataSource: ExpenseDataSource
     @Inject
     lateinit var receiptRepository: ReceiptRepository
     @Inject
@@ -92,7 +92,7 @@ class ShowAccountActivityTest {
         val card = CardBuilder().account(account).build(dataSource)
         assertTrue(cardDataSource.save(card).isValid)
         val expense = ExpenseBuilder().chargeable(card).build()
-        assertTrue(expenseRepository.save(expense).isValid)
+        assertTrue(expenseDataSource.save(expense).isValid)
 
         launchActivity()
 
@@ -163,13 +163,13 @@ class ShowAccountActivityTest {
                 .date(DateTime.now())
                 .chargeable(account)
                 .build()
-        assertTrue(expenseRepository.save(expense).isValid)
+        assertTrue(expenseDataSource.save(expense).isValid)
         expense = ExpenseBuilder()
                 .value(EXPENSE_VALUE)
                 .date(DateTime.now().plusMonths(1))
                 .chargeable(account)
                 .build()
-        assertTrue(expenseRepository.save(expense).isValid)
+        assertTrue(expenseDataSource.save(expense).isValid)
     }
 
     companion object {

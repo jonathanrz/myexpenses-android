@@ -35,7 +35,7 @@ class ShowExpenseActivityTest {
     var activityTestRule = ActivityTestRule(ShowExpenseActivity::class.java, true, false)
 
     @Inject
-    lateinit var repository: ExpenseRepository
+    lateinit var dataSource: ExpenseDataSource
     @Inject
     lateinit var accountDataSource: AccountDataSource
     private var expense: Expense? = null
@@ -50,7 +50,7 @@ class ShowExpenseActivityTest {
         accountDataSource.save(a)
 
         expense = ExpenseBuilder().chargeable(a).build()
-        assertTrue(repository.save(expense!!).isValid)
+        assertTrue(dataSource.save(expense!!).isValid)
     }
 
     @After

@@ -38,11 +38,11 @@ class EditExpenseActivity : AppCompatActivity(), ExpenseContract.EditView {
     @Inject
     lateinit var billDataSource: BillDataSource
     @Inject
-    lateinit var expenseRepository: ExpenseRepository
+    lateinit var expenseDataSource: ExpenseDataSource
 
     init {
         App.getAppComponent().inject(this)
-        presenter = ExpensePresenter(expenseRepository, billDataSource)
+        presenter = ExpensePresenter(expenseDataSource, billDataSource)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

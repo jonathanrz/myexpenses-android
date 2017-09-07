@@ -23,13 +23,13 @@ class ShowExpenseActivity : AppCompatActivity(), ExpenseContract.View {
     private val ui = ShowExpenseActivityUi()
     private var presenter: ExpensePresenter
     @Inject
-    lateinit var expenseRepository: ExpenseRepository
+    lateinit var expenseDataSource: ExpenseDataSource
     @Inject
     lateinit var billDataSource: BillDataSource
 
     init {
         App.getAppComponent().inject(this)
-        presenter = ExpensePresenter(expenseRepository, billDataSource)
+        presenter = ExpensePresenter(expenseDataSource, billDataSource)
     }
 
     @UiThread

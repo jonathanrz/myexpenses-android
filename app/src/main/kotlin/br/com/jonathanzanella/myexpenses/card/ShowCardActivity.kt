@@ -13,7 +13,7 @@ import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.AccountDataSource
 import br.com.jonathanzanella.myexpenses.expense.EditExpenseActivity
-import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
+import br.com.jonathanzanella.myexpenses.expense.ExpenseDataSource
 import br.com.jonathanzanella.myexpenses.helpers.ResourcesHelper
 import br.com.jonathanzanella.myexpenses.views.anko.*
 import org.jetbrains.anko.*
@@ -26,14 +26,14 @@ class ShowCardActivity : AppCompatActivity(), CardContract.View {
     @Inject
     lateinit var cardDataSource: CardDataSource
     @Inject
-    lateinit var expenseRepository: ExpenseRepository
+    lateinit var expenseDataSource: ExpenseDataSource
     override val context = this
     private var presenter: CardPresenter
     private val ui = ShowCardActivityUi()
 
     init {
         App.getAppComponent().inject(this)
-        presenter = CardPresenter(cardDataSource, accountDataSource, expenseRepository, ResourcesHelper(this))
+        presenter = CardPresenter(cardDataSource, accountDataSource, expenseDataSource, ResourcesHelper(this))
     }
 
     @UiThread

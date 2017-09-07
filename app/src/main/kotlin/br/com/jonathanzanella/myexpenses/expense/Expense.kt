@@ -31,7 +31,7 @@ class Expense : Transaction, UnsyncModel {
     @Ignore @Inject
     lateinit var cardDataSource: CardDataSource
     @Ignore @Inject
-    lateinit var expenseRepository: ExpenseRepository
+    lateinit var expenseDataSource: ExpenseDataSource
 
     @PrimaryKey(autoGenerate = true)
     override var id: Long = 0
@@ -191,7 +191,7 @@ class Expense : Transaction, UnsyncModel {
             ChargeableType.DEBIT_CARD, ChargeableType.CREDIT_CARD -> cardDataSource.save(c as Card)
         }
         charged = true
-        expenseRepository.save(this)
+        expenseDataSource.save(this)
 
     }
 
@@ -201,7 +201,7 @@ class Expense : Transaction, UnsyncModel {
     fun delete() {
         removed = true
         sync = false
-        expenseRepository.save(this)
+        expenseDataSource.save(this)
     }
 
     fun dateIsPresent() = date != null

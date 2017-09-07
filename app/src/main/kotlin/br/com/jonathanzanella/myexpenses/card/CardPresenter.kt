@@ -12,14 +12,14 @@ import br.com.jonathanzanella.myexpenses.account.ListAccountActivity
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException
 import br.com.jonathanzanella.myexpenses.exceptions.ValidationException
 import br.com.jonathanzanella.myexpenses.expense.Expense
-import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
+import br.com.jonathanzanella.myexpenses.expense.ExpenseDataSource
 import br.com.jonathanzanella.myexpenses.helpers.ResourcesHelper
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import org.joda.time.DateTime
 
 class CardPresenter(private val dataSource: CardDataSource, private val accountDataSource: AccountDataSource,
-                     private val expenseRepository: ExpenseRepository, private val resourcesHelper: ResourcesHelper) {
+                     private val expenseDataSource: ExpenseDataSource, private val resourcesHelper: ResourcesHelper) {
 
     private var view: CardContract.View? = null
     private var editView: CardContract.EditView? = null
@@ -146,12 +146,12 @@ class CardPresenter(private val dataSource: CardDataSource, private val accountD
 
     fun generateCreditCardBill(month: DateTime): Expense? {
         val c = card!!
-        val expenses = expenseRepository.creditCardBills(c, month)
+        val expenses = expenseDataSource.creditCardBills(c, month)
         var totalExpense = 0
         for (expense in expenses) {
             totalExpense += expense.value
             expense.charged = true
-            expenseRepository.save(expense)
+            expenseDataSource.save(expense)
         }
 
         if (totalExpense == 0)
@@ -162,7 +162,7 @@ class CardPresenter(private val dataSource: CardDataSource, private val accountD
         e.setDate(DateTime.now())
         e.value = totalExpense
         e.setChargeable(c.account!!)
-        val validationResult = expenseRepository.save(e)
+        val validationResult = expenseDataSource.save(e)
         if (!validationResult.isValid)
             throw ValidationException(validationResult)
 

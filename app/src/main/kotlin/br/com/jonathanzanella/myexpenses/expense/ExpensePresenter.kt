@@ -23,7 +23,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @Suppress("LargeClass")
-class ExpensePresenter @Inject constructor(val repository: ExpenseRepository, val billDataSource: BillDataSource) {
+class ExpensePresenter @Inject constructor(val dataSource: ExpenseDataSource, val billDataSource: BillDataSource) {
     private var view: ExpenseContract.View? = null
     private var editView: ExpenseContract.EditView? = null
     private var expense: Expense? = null
@@ -58,7 +58,7 @@ class ExpensePresenter @Inject constructor(val repository: ExpenseRepository, va
         if (e != null) {
             if (invalidateCache) {
                 doAsync {
-                    expense = repository.find(e.uuid!!)
+                    expense = dataSource.find(e.uuid!!)
 
                     uiThread { updateView() }
                 }
@@ -130,7 +130,7 @@ class ExpensePresenter @Inject constructor(val repository: ExpenseRepository, va
     @WorkerThread
     fun loadExpense(uuid: String): Expense {
         resetCache()
-        expense = repository.find(uuid)
+        expense = dataSource.find(uuid)
         val e = expense ?: throw ExpenseNotFoundException(uuid)
         date = e.getDate()
         return e
@@ -157,11 +157,11 @@ class ExpensePresenter @Inject constructor(val repository: ExpenseRepository, va
         }
 
         doAsync {
-            val result = repository.save(e)
+            val result = dataSource.save(e)
             if (result.isValid) {
                 for (i in 1 until e.repetition) {
                     e = e.repeat(originalName!!, i + 1)
-                    val repetitionResult = repository.save(e)
+                    val repetitionResult = dataSource.save(e)
                     if (!repetitionResult.isValid)
                         Timber.e("Error saving repetition of expense " + e.getData() +
                                 " error=" + repetitionResult.errors.toString())

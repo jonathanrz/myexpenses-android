@@ -17,6 +17,7 @@ import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.account.AccountDataSource
 import br.com.jonathanzanella.myexpenses.card.CardType.CREDIT
 import br.com.jonathanzanella.myexpenses.card.CardType.DEBIT
+import br.com.jonathanzanella.myexpenses.expense.ExpenseDataSource
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.helpers.ResourcesHelper
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
@@ -31,14 +32,14 @@ class EditCardActivity : AppCompatActivity(), CardContract.EditView {
     @Inject
     lateinit var cardDataSource: CardDataSource
     @Inject
-    lateinit var expenseRepository: ExpenseRepository
+    lateinit var expenseDataSource: ExpenseDataSource
     override val context = this
     private val ui = EditCardActivityUi()
     private val presenter: CardPresenter
 
     init {
         App.getAppComponent().inject(this)
-        presenter = CardPresenter(cardDataSource, accountDataSource, expenseRepository, ResourcesHelper(this))
+        presenter = CardPresenter(cardDataSource, accountDataSource, expenseDataSource, ResourcesHelper(this))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

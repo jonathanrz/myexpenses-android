@@ -34,7 +34,7 @@ class ExpenseView@JvmOverloads constructor(
     private val ui = ExpenseViewUI()
     internal var adapter: MonthlyPagerAdapter
     @Inject
-    lateinit var expenseRepository: ExpenseRepository
+    lateinit var expenseDataSource: ExpenseDataSource
 
     init {
         App.getAppComponent().inject(this)
@@ -91,7 +91,7 @@ class ExpenseView@JvmOverloads constructor(
 
     private fun loadExpense(uuid: String) {
         doAsync {
-            val expense = expenseRepository.find(uuid)
+            val expense = expenseDataSource.find(uuid)
 
             uiThread {
                 expense?.let {

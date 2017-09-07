@@ -8,10 +8,7 @@ import br.com.jonathanzanella.myexpenses.bill.*
 import br.com.jonathanzanella.myexpenses.card.*
 import br.com.jonathanzanella.myexpenses.database.DB_NAME
 import br.com.jonathanzanella.myexpenses.database.MyDatabase
-import br.com.jonathanzanella.myexpenses.expense.ExpenseApi
-import br.com.jonathanzanella.myexpenses.expense.ExpenseDao
-import br.com.jonathanzanella.myexpenses.expense.ExpenseInterface
-import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
+import br.com.jonathanzanella.myexpenses.expense.*
 import br.com.jonathanzanella.myexpenses.receipt.ReceiptApi
 import br.com.jonathanzanella.myexpenses.receipt.ReceiptDao
 import br.com.jonathanzanella.myexpenses.receipt.ReceiptInterface
@@ -75,7 +72,8 @@ class RepositoryModule {
 
     @Singleton
     @Provides
-    fun providesBillDataSource(billDao: BillDao, expenseRepository: ExpenseRepository): BillDataSource = BillRepository(billDao, expenseRepository)
+    fun providesBillDataSource(billDao: BillDao, expenseRepository: ExpenseRepository): BillDataSource
+            = BillRepository(billDao, expenseRepository)
 
     @Singleton
     @Provides
@@ -83,7 +81,8 @@ class RepositoryModule {
 
     @Singleton
     @Provides
-    fun providesExpenseRepository(expenseDao: ExpenseDao, cardRepository: CardRepository) = ExpenseRepository(expenseDao, cardRepository)
+    fun providesExpenseDataSource(expenseDao: ExpenseDao, cardRepository: CardRepository): ExpenseDataSource
+            = ExpenseRepository(expenseDao, cardRepository)
 
     @Singleton
     @Provides

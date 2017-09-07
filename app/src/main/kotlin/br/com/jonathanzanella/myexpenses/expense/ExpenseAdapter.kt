@@ -21,7 +21,7 @@ import javax.inject.Inject
 
 open class ExpenseAdapter : RecyclerView.Adapter<ExpenseAdapter.ViewHolder>() {
     @Inject
-    lateinit var expenseRepository: ExpenseRepository
+    lateinit var expenseDataSource: ExpenseDataSource
     private val presenter: ExpenseAdapterPresenter
     private var expenses: List<Expense> = ArrayList()
     private var date: DateTime? = null
@@ -83,7 +83,7 @@ open class ExpenseAdapter : RecyclerView.Adapter<ExpenseAdapter.ViewHolder>() {
     }
 
     init {
-        presenter = ExpenseAdapterPresenter(expenseRepository)
+        presenter = ExpenseAdapterPresenter(expenseDataSource)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

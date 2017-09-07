@@ -6,7 +6,7 @@ import android.view.View
 import android.widget.FrameLayout
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
+import br.com.jonathanzanella.myexpenses.expense.ExpenseDataSource
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapter
 import kotlinx.android.synthetic.main.view_overview_expenses_monthly.view.*
@@ -16,7 +16,7 @@ import javax.inject.Inject
 @SuppressLint("ViewConstructor")
 class OverviewExpensesMonthlyView(context: Context, month: DateTime) : FrameLayout(context) {
     @Inject
-    lateinit var expenseRepository: ExpenseRepository
+    lateinit var expenseDataSource: ExpenseDataSource
 
     init {
         App.getAppComponent().inject(this)
@@ -39,6 +39,6 @@ class OverviewExpensesMonthlyView(context: Context, month: DateTime) : FrameLayo
         val period = WeeklyPagerAdapter.Period()
         period.init = month.dayOfMonth().withMinimumValue()
         period.end = month.dayOfMonth().withMaximumValue()
-        total.text = expenseRepository.expenses(period).sumBy { it.valueToShowInOverview }.toCurrencyFormatted()
+        total.text = expenseDataSource.expenses(period).sumBy { it.valueToShowInOverview }.toCurrencyFormatted()
     }
 }

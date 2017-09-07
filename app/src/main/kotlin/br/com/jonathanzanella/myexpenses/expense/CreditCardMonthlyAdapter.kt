@@ -21,7 +21,7 @@ import javax.inject.Inject
 class CreditCardMonthlyAdapter : RecyclerView.Adapter<CreditCardMonthlyAdapter.ViewHolder>() {
     private var expenses: List<Expense> = ArrayList()
     @Inject
-    lateinit var expenseRepository: ExpenseRepository
+    lateinit var expenseDataSource: ExpenseDataSource
     private var totalValue: Int = 0
 
     private enum class ViewType {
@@ -84,7 +84,7 @@ class CreditCardMonthlyAdapter : RecyclerView.Adapter<CreditCardMonthlyAdapter.V
 
     @WorkerThread
     fun loadData(creditCard: Card, month: DateTime) {
-        expenses = expenseRepository.creditCardBills(creditCard, month)
+        expenses = expenseDataSource.creditCardBills(creditCard, month)
         totalValue = expenses.sumBy { it.value }
     }
 

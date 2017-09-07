@@ -7,7 +7,7 @@ import android.view.View
 import android.widget.FrameLayout
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
+import br.com.jonathanzanella.myexpenses.expense.ExpenseDataSource
 import br.com.jonathanzanella.myexpenses.expense.ExpenseWeeklyOverviewAdapter
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.views.FilterableView
@@ -20,7 +20,7 @@ class OverviewExpensesWeeklyView(context: Context, private val period: WeeklyPag
         FrameLayout(context), FilterableView, RefreshableView {
     override var filter = ""
     @Inject
-    lateinit var expenseRepository: ExpenseRepository
+    lateinit var expenseDataSource: ExpenseDataSource
     private var adapter = ExpenseWeeklyOverviewAdapter()
 
     init {
@@ -38,7 +38,7 @@ class OverviewExpensesWeeklyView(context: Context, private val period: WeeklyPag
     }
 
     override fun refreshData() {
-        adapter.setExpenses(expenseRepository.expenses(period))
+        adapter.setExpenses(expenseDataSource.expenses(period))
         adapter.notifyDataSetChanged()
 
         total.text = adapter.totalValue.toCurrencyFormatted()

@@ -18,7 +18,7 @@ import br.com.jonathanzanella.TestApp;
 import br.com.jonathanzanella.myexpenses.App;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
-import br.com.jonathanzanella.myexpenses.account.AccountRepository;
+import br.com.jonathanzanella.myexpenses.account.AccountDataSource;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.ExpenseBuilder;
@@ -45,9 +45,9 @@ public class EditExpenseTest {
 
 	private Expense expense;
 	@Inject
-	ExpenseRepository repository;
+	ExpenseDataSource dataSource;
 	@Inject
-	AccountRepository accountRepository;
+	AccountDataSource accountDataSource;
 
 	@Before
 	public void setUp() throws Exception {
@@ -55,13 +55,13 @@ public class EditExpenseTest {
 		App.Companion.resetDatabase();
 
 		Account a = new AccountBuilder().build();
-		accountRepository.save(a);
+		accountDataSource.save(a);
 
 		expense = new ExpenseBuilder()
 				.date(DateTime.now().minusDays(1))
 				.chargeable(a)
 				.build();
-		assertTrue(repository.save(expense).isValid());
+		assertTrue(dataSource.save(expense).isValid());
 	}
 
 	@After
@@ -91,9 +91,9 @@ public class EditExpenseTest {
 
 		matchToolbarTitle(showExpenseTitle + " changed");
 
-		expense = repository.find(expense.getUuid());
+		expense = dataSource.find(expense.getUuid());
 
 		onView(withId(R.id.act_show_expense_name)).check(matches(withText(expense.getName())));
-		assertThat(repository.all().size(), is(1));
+		assertThat(dataSource.all().size(), is(1));
 	}
 }
