@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import javax.inject.Inject;
 
+import br.com.jonathanzanella.TestApp;
 import br.com.jonathanzanella.myexpenses.App;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
@@ -21,7 +22,6 @@ import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.ExpenseBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.ReceiptBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder;
-import br.com.jonathanzanella.myexpenses.injection.DaggerTestComponent;
 import br.com.jonathanzanella.myexpenses.receipt.Receipt;
 import br.com.jonathanzanella.myexpenses.receipt.ReceiptRepository;
 import br.com.jonathanzanella.myexpenses.source.Source;
@@ -59,7 +59,7 @@ public class ShowDetailScreenTest {
 
 	@Before
 	public void setUp() throws Exception {
-		DaggerTestComponent.builder().build().inject(this);
+		TestApp.Companion.getTestComponent().inject(this);
 		App.Companion.resetDatabase();
 
 		account = new AccountBuilder().build();

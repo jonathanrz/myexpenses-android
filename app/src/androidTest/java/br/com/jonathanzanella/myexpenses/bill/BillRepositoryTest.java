@@ -13,6 +13,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import br.com.jonathanzanella.TestApp;
 import br.com.jonathanzanella.myexpenses.App;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
@@ -24,7 +25,6 @@ import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.BillBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.CardBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.ExpenseBuilder;
-import br.com.jonathanzanella.myexpenses.injection.DaggerTestComponent;
 
 import static br.com.jonathanzanella.myexpenses.helpers.TestUtils.waitForIdling;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -46,7 +46,7 @@ public class BillRepositoryTest {
 
 	@Before
 	public void setUp() throws Exception {
-		DaggerTestComponent.builder().build().inject(this);
+		TestApp.Companion.getTestComponent().inject(this);
 		App.Companion.resetDatabase();
 	}
 

@@ -12,6 +12,7 @@ import android.support.test.filters.MediumTest
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import android.view.View
+import br.com.jonathanzanella.TestApp
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.AccountRepository
@@ -21,6 +22,7 @@ import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder
 import br.com.jonathanzanella.myexpenses.helpers.builder.ReceiptBuilder
 import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
+import br.com.jonathanzanella.myexpenses.injection.DaggerTestComponent
 import br.com.jonathanzanella.myexpenses.source.SourceRepository
 import br.com.jonathanzanella.myexpenses.views.MainActivity
 import junit.framework.Assert.assertTrue
@@ -52,7 +54,7 @@ class ReceiptsViewTest {
     @Before
     @Throws(Exception::class)
     fun setUp() {
-//        DaggerTestComponent.builder().build().inject(this)
+        TestApp.getTestComponent().inject(this)
         App.resetDatabase()
 
         val s = SourceBuilder().build()

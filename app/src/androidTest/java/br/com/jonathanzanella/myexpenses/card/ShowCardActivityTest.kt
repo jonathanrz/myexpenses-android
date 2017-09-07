@@ -10,6 +10,7 @@ import android.support.test.espresso.matcher.ViewMatchers.withText
 import android.support.test.filters.MediumTest
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
+import br.com.jonathanzanella.TestApp
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.Account
@@ -51,7 +52,7 @@ class ShowCardActivityTest {
     @Before
     @Throws(Exception::class)
     fun setUp() {
-//        DaggerTestComponent.builder().build().inject(this)
+        TestApp.getTestComponent().inject(this)
         App.resetDatabase()
 
         account = AccountBuilder().build()

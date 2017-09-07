@@ -34,14 +34,13 @@ open class App : Application() {
         }
 
         buildComponent()
+        databaseHelper = DatabaseHelper(appComponent)
     }
 
-    private fun buildComponent() {
+    open fun buildComponent() {
         appComponent = DaggerAppComponent.builder()
                 .appModule(AppModule(this))
                 .build()
-
-        databaseHelper = DatabaseHelper(appComponent)
     }
 
     companion object {

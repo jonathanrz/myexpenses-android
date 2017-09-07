@@ -55,4 +55,5 @@ interface TestComponent: AppComponent {
     fun inject(receiptsInPeriodTest: ReceiptsInPeriodTest)
     fun inject(addReceiptTest: AddReceiptTest)
     fun inject(editReceiptTest: EditReceiptTest)
+    fun inject(receiptsViewTest: ReceiptsViewTest)
 }

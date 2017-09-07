@@ -12,10 +12,10 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import br.com.jonathanzanella.TestApp;
 import br.com.jonathanzanella.myexpenses.App;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
-import br.com.jonathanzanella.myexpenses.injection.DaggerTestComponent;
 import br.com.jonathanzanella.myexpenses.overview.WeeklyPagerAdapter;
 
 import static org.hamcrest.core.Is.is;
@@ -36,7 +36,7 @@ public class ExpensesInPeriodTest {
 
 	@Before
 	public void setUp() throws Exception {
-		DaggerTestComponent.builder().build().inject(this);
+		TestApp.Companion.getTestComponent().inject(this);
 		App.Companion.resetDatabase();
 
 		account.setName("Account");

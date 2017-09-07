@@ -9,12 +9,12 @@ import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
 
+import br.com.jonathanzanella.TestApp;
 import br.com.jonathanzanella.myexpenses.App;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.CardBuilder;
-import br.com.jonathanzanella.myexpenses.injection.DaggerTestComponent;
 
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -32,7 +32,7 @@ public class CardRepositoryTest {
 
 	@Before
 	public void setUp() throws Exception {
-		DaggerTestComponent.builder().build().inject(this);
+		TestApp.Companion.getTestComponent().inject(this);
 		App.Companion.resetDatabase();
 
 		account = new AccountBuilder().build();

@@ -13,6 +13,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import br.com.jonathanzanella.TestApp;
 import br.com.jonathanzanella.myexpenses.App;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
@@ -23,7 +24,6 @@ import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.CardBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.ExpenseBuilder;
-import br.com.jonathanzanella.myexpenses.injection.DaggerTestComponent;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static junit.framework.Assert.assertTrue;
@@ -47,7 +47,7 @@ public class ExpenseRepositoryTest {
 
 	@Before
 	public void setUp() throws Exception {
-		DaggerTestComponent.builder().build().inject(this);
+		TestApp.Companion.getTestComponent().inject(this);
 		App.Companion.resetDatabase();
 
 		account = new AccountBuilder()

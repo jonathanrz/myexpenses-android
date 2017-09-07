@@ -9,6 +9,7 @@ import android.support.test.filters.SmallTest
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import android.view.View
+import br.com.jonathanzanella.TestApp
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.Account
@@ -59,7 +60,7 @@ class CalculateMonthBalanceCorrectlyTest {
     @Before
     @Throws(Exception::class)
     fun setUp() {
-//        DaggerTestComponent.builder().build().inject(this)
+        TestApp.getTestComponent().inject(this)
         App.resetDatabase()
 
         val a = br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder().build()
