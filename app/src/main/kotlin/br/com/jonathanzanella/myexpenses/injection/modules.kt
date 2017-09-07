@@ -94,15 +94,12 @@ class RepositoryModule {
 
 @Module
 class PresenterModule {
-    @Singleton
     @Provides
     fun providesAccountPresenter(dataSource: AccountDataSource) = AccountPresenter(dataSource)
 
-    @Singleton
     @Provides
     fun providesBillPresenter(dataSource: BillDataSource) = BillPresenter(dataSource)
 
-    @Singleton
     @Provides
     fun providesCardPresenter(accountDataSource: AccountDataSource, cardDataSource: CardDataSource,
                               expenseDataSource: ExpenseDataSource, resourcesHelper: ResourcesHelper)
