@@ -1,8 +1,6 @@
 package br.com.jonathanzanella.myexpenses.account
 
 import android.support.annotation.WorkerThread
-import br.com.jonathanzanella.myexpenses.App
-import br.com.jonathanzanella.myexpenses.server.Server
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi
 import org.apache.commons.lang3.StringUtils
@@ -12,16 +10,8 @@ import java.io.IOException
 import javax.inject.Inject
 
 @WorkerThread
-class AccountApi : UnsyncModelApi<Account> {
-    private val accountInterface: AccountInterface by lazy {
-        Server(App.getContext()).accountInterface()
-    }
-    @Inject
-    lateinit var repository: AccountRepository
-
-    init {
-        App.getAppComponent().inject(this)
-    }
+class AccountApi @Inject constructor(private var accountInterface: AccountInterface,
+                                     private val repository: AccountRepository) : UnsyncModelApi<Account> {
 
     override fun index(): List<Account> {
         val lastUpdatedAt = repository.greaterUpdatedAt()

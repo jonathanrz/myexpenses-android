@@ -1,8 +1,6 @@
 package br.com.jonathanzanella.myexpenses.bill
 
 import android.support.annotation.WorkerThread
-import br.com.jonathanzanella.myexpenses.App
-import br.com.jonathanzanella.myexpenses.server.Server
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi
 import org.apache.commons.lang3.StringUtils
@@ -12,16 +10,8 @@ import java.io.IOException
 import javax.inject.Inject
 
 @WorkerThread
-class BillApi : UnsyncModelApi<Bill> {
-    @Inject
-    lateinit var billRepository: BillRepository
-    private val billInterface: BillInterface by lazy {
-        Server(App.getContext()).billInterface()
-    }
-
-    init {
-        App.getAppComponent().inject(this)
-    }
+class BillApi @Inject constructor(private val billInterface: BillInterface,
+                                  private val billRepository: BillRepository): UnsyncModelApi<Bill> {
 
     override fun index(): List<Bill> {
         val lastUpdatedAt = billRepository.greaterUpdatedAt()

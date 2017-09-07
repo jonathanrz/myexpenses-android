@@ -37,7 +37,6 @@ class Server(context: Context) {
     }
 
     init {
-
         val dateTimeJsonSerializer = JsonSerializer<DateTime> { src, _, _ -> if (src == null) null else JsonPrimitive(src.millis) }
         val dateTimeJsonDeserializer = JsonDeserializer<DateTime> { json, _, _ -> if (json == null) null else DateTime(json.asLong) }
         val gson = GsonBuilder()

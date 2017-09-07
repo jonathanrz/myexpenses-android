@@ -8,7 +8,6 @@ import br.com.jonathanzanella.myexpenses.account.AccountApi
 import br.com.jonathanzanella.myexpenses.bill.BillApi
 import br.com.jonathanzanella.myexpenses.card.CardApi
 import br.com.jonathanzanella.myexpenses.expense.ExpenseApi
-import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.receipt.ReceiptApi
 import br.com.jonathanzanella.myexpenses.server.ServerApi
 import br.com.jonathanzanella.myexpenses.source.SourceApi
@@ -23,7 +22,17 @@ import javax.inject.Inject
 
 class SyncService : GcmTaskService() {
     @Inject
-    lateinit var expenseRepository: ExpenseRepository
+    lateinit var accountApi: AccountApi
+    @Inject
+    lateinit var billApi: BillApi
+    @Inject
+    lateinit var cardApi: CardApi
+    @Inject
+    lateinit var sourceApi: SourceApi
+    @Inject
+    lateinit var expenseApi: ExpenseApi
+    @Inject
+    lateinit var receiptApi: ReceiptApi
     private val apis: MutableList<UnsyncModelApi<UnsyncModel>>
 
     private var totalSaved: Int = 0
@@ -33,12 +42,12 @@ class SyncService : GcmTaskService() {
         App.getAppComponent().inject(this)
 
         apis = ArrayList()
-        apis.add(AccountApi())
-        apis.add(BillApi())
-        apis.add(CardApi())
-        apis.add(SourceApi())
-        apis.add(ExpenseApi(expenseRepository))
-        apis.add(ReceiptApi())
+        apis.add(accountApi)
+        apis.add(billApi)
+        apis.add(cardApi)
+        apis.add(sourceApi)
+        apis.add(expenseApi)
+        apis.add(receiptApi)
     }
 
     private fun selfSchedule() {

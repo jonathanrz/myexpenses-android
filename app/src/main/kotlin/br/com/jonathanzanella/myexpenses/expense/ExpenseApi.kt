@@ -1,17 +1,14 @@
 package br.com.jonathanzanella.myexpenses.expense
 
-import br.com.jonathanzanella.myexpenses.App
-import br.com.jonathanzanella.myexpenses.server.Server
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi
 import org.apache.commons.lang3.StringUtils
 import timber.log.Timber
 import java.io.IOException
+import javax.inject.Inject
 
-class ExpenseApi(private val expenseRepository: ExpenseRepository) : UnsyncModelApi<Expense> {
-    private val expenseInterface : ExpenseInterface by lazy {
-        Server(App.getContext()).expenseInterface()
-    }
+class ExpenseApi @Inject constructor(private val expenseInterface: ExpenseInterface,
+                                     private val expenseRepository: ExpenseRepository) : UnsyncModelApi<Expense> {
 
     override fun index(): List<Expense> {
         val lastUpdatedAt = greaterUpdatedAt()

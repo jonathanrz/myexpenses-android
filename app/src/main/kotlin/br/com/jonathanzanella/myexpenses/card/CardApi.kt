@@ -1,7 +1,5 @@
 package br.com.jonathanzanella.myexpenses.card
 
-import br.com.jonathanzanella.myexpenses.App
-import br.com.jonathanzanella.myexpenses.server.Server
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi
 import org.apache.commons.lang3.StringUtils
@@ -9,16 +7,8 @@ import timber.log.Timber
 import java.io.IOException
 import javax.inject.Inject
 
-class CardApi : UnsyncModelApi<Card> {
-    private val cardInterface: CardInterface by lazy {
-        Server(App.getContext()).cardInterface()
-    }
-    @Inject
-    lateinit var cardRepository: CardRepository
-
-    init {
-        App.getAppComponent().inject(this)
-    }
+class CardApi @Inject constructor(private val cardInterface: CardInterface,
+                                  private val cardRepository: CardRepository): UnsyncModelApi<Card> {
 
     override fun index(): List<Card> {
         val lastUpdatedAt = greaterUpdatedAt()

@@ -25,7 +25,7 @@ import javax.inject.Singleton
 //Idea based in https://medium.com/@fabioCollini/android-testing-using-dagger-2-mockito-and-a-custom-junit-rule-c8487ed01b56
 
 @Singleton
-@Component(modules = arrayOf(AppModule::class, DatabaseModule::class, RepositoryModule::class))
+@Component(modules = arrayOf(AppModule::class, DatabaseModule::class, RepositoryModule::class, ServerModule::class))
 interface TestComponent: AppComponent {
     fun inject(accountRepositoryTest: AccountRepositoryTest)
     fun inject(showAccountActivityTest: ShowAccountActivityTest)

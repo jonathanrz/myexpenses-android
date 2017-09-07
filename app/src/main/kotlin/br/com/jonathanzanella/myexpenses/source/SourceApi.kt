@@ -1,7 +1,5 @@
 package br.com.jonathanzanella.myexpenses.source
 
-import br.com.jonathanzanella.myexpenses.App
-import br.com.jonathanzanella.myexpenses.server.Server
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi
 import org.apache.commons.lang3.StringUtils
@@ -10,16 +8,8 @@ import timber.log.Timber
 import java.io.IOException
 import javax.inject.Inject
 
-class SourceApi : UnsyncModelApi<Source> {
-    private val sourceInterface: SourceInterface by lazy {
-        Server(App.getContext()).sourceInterface()
-    }
-    @Inject
-    lateinit var sourceRepository: SourceRepository
-
-    init {
-        App.getAppComponent().inject(this)
-    }
+class SourceApi @Inject constructor(private val sourceInterface: SourceInterface,
+                                    private val sourceRepository: SourceRepository): UnsyncModelApi<Source> {
 
     override fun index(): List<Source> {
         val lastUpdatedAt = sourceRepository.greaterUpdatedAt()
