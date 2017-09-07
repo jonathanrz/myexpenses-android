@@ -9,8 +9,9 @@ import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import org.joda.time.DateTime
+import javax.inject.Inject
 
-class BillPresenter(private val dataSource: BillDataSource) {
+class BillPresenter @Inject constructor(private val dataSource: BillDataSource) {
     private var view: BillContract.View? = null
     private var editView: BillContract.EditView? = null
     private var bill: Bill? = null

@@ -23,7 +23,7 @@ import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = arrayOf(AppModule::class, DatabaseModule::class, RepositoryModule::class, ServerModule::class))
+@Component(modules = arrayOf(AppModule::class, DatabaseModule::class, RepositoryModule::class, PresenterModule::class, ServerModule::class))
 interface AppComponent {
     fun inject(databaseHelper: DatabaseHelper)
 

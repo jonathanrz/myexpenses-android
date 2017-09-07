@@ -15,16 +15,13 @@ import org.jetbrains.anko.*
 import javax.inject.Inject
 
 class ShowBillActivity : AppCompatActivity(), BillContract.View {
-
     @Inject
-    lateinit var billDataSource: BillDataSource
+    lateinit var presenter: BillPresenter
     override val context = this
-    private val presenter: BillPresenter
     private val ui = ShowBillActivityUi()
 
     init {
         App.getAppComponent().inject(this)
-        presenter = BillPresenter(billDataSource)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

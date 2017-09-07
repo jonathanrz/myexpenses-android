@@ -88,6 +88,17 @@ class RepositoryModule {
 }
 
 @Module
+class PresenterModule {
+    @Singleton
+    @Provides
+    fun providesAccountPresenter(dataSource: AccountDataSource) = AccountPresenter(dataSource)
+
+    @Singleton
+    @Provides
+    fun providesBillPresenter(dataSource: BillDataSource) = BillPresenter(dataSource)
+}
+
+@Module
 class ServerModule {
     @Singleton
     @Provides
