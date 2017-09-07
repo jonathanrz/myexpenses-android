@@ -2,7 +2,7 @@ package br.com.jonathanzanella.myexpenses.account.transactions
 
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.account.Account
-import br.com.jonathanzanella.myexpenses.bill.BillRepository
+import br.com.jonathanzanella.myexpenses.bill.BillDataSource
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.receipt.ReceiptRepository
 import br.com.jonathanzanella.myexpenses.transaction.TransactionAdapter
@@ -18,7 +18,7 @@ class MonthTransactionsPresenter(private val view: MonthTransactionsContractView
     @Inject
     lateinit var expenseRepository: ExpenseRepository
     @Inject
-    lateinit var billRepository: BillRepository
+    lateinit var billDataSource: BillDataSource
     private var currentBalance: Int = 0
 
     init {
@@ -30,7 +30,7 @@ class MonthTransactionsPresenter(private val view: MonthTransactionsContractView
 
         doAsync {
             if (account.accountToPayBills)
-                adapter.addTransactions(billRepository.monthly(month))
+                adapter.addTransactions(billDataSource.monthly(month))
             adapter.addTransactions(expenseRepository.accountExpenses(account, month))
             adapter.addTransactions(receiptRepository.monthly(month, account))
 

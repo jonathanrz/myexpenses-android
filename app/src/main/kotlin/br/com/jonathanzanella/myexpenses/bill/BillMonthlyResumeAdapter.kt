@@ -20,7 +20,7 @@ import javax.inject.Inject
 
 class BillMonthlyResumeAdapter : RecyclerView.Adapter<BillMonthlyResumeAdapter.ViewHolder>() {
     @Inject
-    lateinit var billRepository: BillRepository
+    lateinit var billDataSource: BillDataSource
     private var bills: List<Bill> = ArrayList()
     var totalValue: Int = 0
         private set
@@ -79,7 +79,7 @@ class BillMonthlyResumeAdapter : RecyclerView.Adapter<BillMonthlyResumeAdapter.V
 
     @WorkerThread
     fun loadData(month: DateTime) {
-        bills = billRepository.monthly(month)
+        bills = billDataSource.monthly(month)
         totalValue = bills.sumBy { it.amount }
     }
 }

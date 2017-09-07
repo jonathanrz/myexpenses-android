@@ -16,7 +16,7 @@ import javax.inject.Inject;
 import br.com.jonathanzanella.TestApp;
 import br.com.jonathanzanella.myexpenses.App;
 import br.com.jonathanzanella.myexpenses.account.Account;
-import br.com.jonathanzanella.myexpenses.account.AccountRepository;
+import br.com.jonathanzanella.myexpenses.account.AccountDataSource;
 import br.com.jonathanzanella.myexpenses.card.Card;
 import br.com.jonathanzanella.myexpenses.card.CardRepository;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
@@ -36,7 +36,7 @@ import static org.hamcrest.Matchers.not;
 public class BillRepositoryTest {
 	private final DateTime firstDayOfJune = new DateTime(2016, 6, 1, 0, 0, 0, 0);
 	@Inject
-	AccountRepository accountRepository;
+	AccountDataSource accountDataSource;
 	@Inject
 	CardRepository cardRepository;
 	@Inject
@@ -78,9 +78,9 @@ public class BillRepositoryTest {
 		billRepository.save(bill);
 
 		Account account = new AccountBuilder().build();
-		accountRepository.save(account);
+		accountDataSource.save(account);
 
-		Card card = new CardBuilder().account(account).build(accountRepository);
+		Card card = new CardBuilder().account(account).build(accountDataSource);
 		cardRepository.save(card);
 
 		Expense expense = new ExpenseBuilder()

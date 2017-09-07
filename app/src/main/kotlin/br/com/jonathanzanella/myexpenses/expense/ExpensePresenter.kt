@@ -11,7 +11,7 @@ import android.support.annotation.WorkerThread
 import android.support.v7.app.AlertDialog
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.bill.Bill
-import br.com.jonathanzanella.myexpenses.bill.BillRepository
+import br.com.jonathanzanella.myexpenses.bill.BillDataSource
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable
 import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType
 import br.com.jonathanzanella.myexpenses.chargeable.ListChargeableActivity
@@ -23,7 +23,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @Suppress("LargeClass")
-class ExpensePresenter @Inject constructor(val repository: ExpenseRepository, val billRepository: BillRepository) {
+class ExpensePresenter @Inject constructor(val repository: ExpenseRepository, val billDataSource: BillDataSource) {
     private var view: ExpenseContract.View? = null
     private var editView: ExpenseContract.EditView? = null
     private var expense: Expense? = null
@@ -223,7 +223,7 @@ class ExpensePresenter @Inject constructor(val repository: ExpenseRepository, va
     @UiThread
     fun onBillSelected(uuid: String) {
         doAsync {
-            bill = billRepository.find(uuid)
+            bill = billDataSource.find(uuid)
 
             uiThread { bill?.let { editView!!.onBillSelected(it) } }
         }
@@ -238,7 +238,7 @@ class ExpensePresenter @Inject constructor(val repository: ExpenseRepository, va
             if (extras.containsKey(KEY_EXPENSE_UUID))
                 loadExpense(extras.getString(KEY_EXPENSE_UUID))
             if (extras.containsKey(KEY_BILL_UUID))
-                bill = billRepository.find(extras.getString(KEY_BILL_UUID)!!)
+                bill = billDataSource.find(extras.getString(KEY_BILL_UUID)!!)
             if (extras.containsKey(KEY_DATE))
                 date = DateTime(extras.getLong(KEY_DATE))
             val key = ListChargeableActivity.KEY_CHARGEABLE_SELECTED_TYPE

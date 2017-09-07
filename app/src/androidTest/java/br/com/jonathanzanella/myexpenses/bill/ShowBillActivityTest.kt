@@ -36,7 +36,7 @@ class ShowBillActivityTest {
     @Inject
     lateinit var expenseRepository: ExpenseRepository
     @Inject
-    lateinit var repository: BillRepository
+    lateinit var dataSource: BillDataSource
 
     @Before
     @Throws(Exception::class)
@@ -45,7 +45,7 @@ class ShowBillActivityTest {
         App.resetDatabase()
 
         bill = BillBuilder().build()
-        repository.save(bill!!)
+        dataSource.save(bill!!)
     }
 
     @After

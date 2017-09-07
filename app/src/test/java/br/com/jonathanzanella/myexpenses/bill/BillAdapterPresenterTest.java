@@ -13,9 +13,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class BillAdapterPresenterTest {
 	@Mock
-	private BillAdapter adapter;
-	@Mock
-	private BillRepository repository;
+	private BillDataSource dataSource;
 
 	private BillAdapterPresenter presenter;
 
@@ -23,9 +21,9 @@ public class BillAdapterPresenterTest {
 	public void setUp() throws Exception {
 		initMocks(this);
 
-		when(repository.all()).thenReturn(new ArrayList<Bill>());
+		when(dataSource.all()).thenReturn(new ArrayList<>());
 
-		presenter = new BillAdapterPresenter(repository);
+		presenter = new BillAdapterPresenter(dataSource);
 	}
 
 	@Test(expected = UnsupportedOperationException.class)

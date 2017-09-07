@@ -14,7 +14,7 @@ import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.account.AccountDataSource
-import br.com.jonathanzanella.myexpenses.bill.BillRepository
+import br.com.jonathanzanella.myexpenses.bill.BillDataSource
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper
 import br.com.jonathanzanella.myexpenses.helpers.UIHelper.clickIntoView
@@ -45,7 +45,7 @@ class CalculateMonthBalanceCorrectlyTest {
     var activityTestRule = ActivityTestRule(MainActivity::class.java)
 
     @Inject
-    lateinit var billRepository: BillRepository
+    lateinit var billDataSource: BillDataSource
     @Inject
     lateinit var sourceRepository: SourceRepository
     @Inject
@@ -75,7 +75,7 @@ class CalculateMonthBalanceCorrectlyTest {
                 .endDate(now.plusMonths(12))
                 .amount(BILL_AMOUNT)
                 .build()
-        assertTrue(billRepository.save(b).isValid)
+        assertTrue(billDataSource.save(b).isValid)
 
         generateThreeMonthlyReceipts(a, s)
         generateThreeMonthlyExpenses(a)

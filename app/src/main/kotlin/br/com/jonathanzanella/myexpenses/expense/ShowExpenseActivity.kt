@@ -11,7 +11,7 @@ import android.widget.TableRow
 import android.widget.TextView
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.bill.BillRepository
+import br.com.jonathanzanella.myexpenses.bill.BillDataSource
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import br.com.jonathanzanella.myexpenses.views.anko.*
@@ -25,11 +25,11 @@ class ShowExpenseActivity : AppCompatActivity(), ExpenseContract.View {
     @Inject
     lateinit var expenseRepository: ExpenseRepository
     @Inject
-    lateinit var billRepository: BillRepository
+    lateinit var billDataSource: BillDataSource
 
     init {
         App.getAppComponent().inject(this)
-        presenter = ExpensePresenter(expenseRepository, billRepository)
+        presenter = ExpensePresenter(expenseRepository, billDataSource)
     }
 
     @UiThread

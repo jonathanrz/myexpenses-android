@@ -9,7 +9,7 @@ import br.com.jonathanzanella.myexpenses.Environment
 import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.account.AccountDataSource
 import br.com.jonathanzanella.myexpenses.bill.Bill
-import br.com.jonathanzanella.myexpenses.bill.BillRepository
+import br.com.jonathanzanella.myexpenses.bill.BillDataSource
 import br.com.jonathanzanella.myexpenses.card.Card
 import br.com.jonathanzanella.myexpenses.card.CardRepository
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable
@@ -27,7 +27,7 @@ class Expense : Transaction, UnsyncModel {
     @Ignore @Inject
     lateinit var accountDataSource: AccountDataSource
     @Ignore @Inject
-    lateinit var billRepository: BillRepository
+    lateinit var billDataSource: BillDataSource
     @Ignore @Inject
     lateinit var cardRepository: CardRepository
     @Ignore @Inject
@@ -133,7 +133,7 @@ class Expense : Transaction, UnsyncModel {
     var bill: Bill?
         @WorkerThread
         get() {
-            return billUuid?.let { billRepository.find(it) }
+            return billUuid?.let { billDataSource.find(it) }
         }
         set(bill) {
             billUuid = bill?.uuid

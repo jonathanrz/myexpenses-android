@@ -15,7 +15,7 @@ import android.widget.LinearLayout
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.bill.Bill
-import br.com.jonathanzanella.myexpenses.bill.BillRepository
+import br.com.jonathanzanella.myexpenses.bill.BillDataSource
 import br.com.jonathanzanella.myexpenses.bill.ListBillActivity
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable
 import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType
@@ -36,13 +36,13 @@ class EditExpenseActivity : AppCompatActivity(), ExpenseContract.EditView {
     private val ui = EditExpenseActivityUi()
     private val presenter: ExpensePresenter
     @Inject
-    lateinit var billRepository: BillRepository
+    lateinit var billDataSource: BillDataSource
     @Inject
     lateinit var expenseRepository: ExpenseRepository
 
     init {
         App.getAppComponent().inject(this)
-        presenter = ExpensePresenter(expenseRepository, billRepository)
+        presenter = ExpensePresenter(expenseRepository, billDataSource)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

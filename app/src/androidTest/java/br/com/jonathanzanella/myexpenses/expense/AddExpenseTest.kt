@@ -18,7 +18,7 @@ import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.account.AccountDataSource
 import br.com.jonathanzanella.myexpenses.bill.Bill
-import br.com.jonathanzanella.myexpenses.bill.BillRepository
+import br.com.jonathanzanella.myexpenses.bill.BillDataSource
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper
 import br.com.jonathanzanella.myexpenses.helpers.UIHelper
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder
@@ -46,7 +46,7 @@ class AddExpenseTest {
     @Inject
     lateinit var accountDataSource: AccountDataSource
     @Inject
-    lateinit var billRepository: BillRepository
+    lateinit var billDataSource: BillDataSource
     private var account: Account? = null
 
     @Before
@@ -148,7 +148,7 @@ class AddExpenseTest {
     @Throws(Exception::class)
     fun add_new_expense_with_bill() {
         val bill = BillBuilder().build()
-        billRepository.save(bill)
+        billDataSource.save(bill)
 
         mainActivityTestRule.launchActivity(Intent())
 

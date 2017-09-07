@@ -17,14 +17,14 @@ import javax.inject.Inject
 class ShowBillActivity : AppCompatActivity(), BillContract.View {
 
     @Inject
-    lateinit var billRepository: BillRepository
+    lateinit var billDataSource: BillDataSource
     override val context = this
     private val presenter: BillPresenter
     private val ui = ShowBillActivityUi()
 
     init {
         App.getAppComponent().inject(this)
-        presenter = BillPresenter(billRepository)
+        presenter = BillPresenter(billDataSource)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
