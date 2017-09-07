@@ -14,13 +14,11 @@ import android.widget.CheckBox
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.Account
-import br.com.jonathanzanella.myexpenses.account.AccountDataSource
 import br.com.jonathanzanella.myexpenses.account.ListAccountActivity
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.source.ListSourceActivity
 import br.com.jonathanzanella.myexpenses.source.Source
-import br.com.jonathanzanella.myexpenses.source.SourceDataSource
 import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.views.anko.*
@@ -31,25 +29,18 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class EditReceiptActivity : AppCompatActivity(), ReceiptContract.EditView {
+    @Inject
+    lateinit var presenter: ReceiptPresenter
+    override val context = this
+    private val ui = EditReceiptActivityUi()
+
     override val installment: Int
         get() = Integer.parseInt(ui.editInstallment.text.toString())
     override val repetition: Int
         get() = Integer.parseInt(ui.editRepetition.text.toString())
 
-    @Inject
-    lateinit var accountDataSource: AccountDataSource
-    @Inject
-    lateinit var receiptDataSource: ReceiptDataSource
-    @Inject
-    lateinit var sourceDataSource: SourceDataSource
-
-    override val context = this
-    private val ui = EditReceiptActivityUi()
-    private val presenter: ReceiptPresenter
-
     init {
         App.getAppComponent().inject(this)
-        presenter = ReceiptPresenter(receiptDataSource, sourceDataSource, accountDataSource)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

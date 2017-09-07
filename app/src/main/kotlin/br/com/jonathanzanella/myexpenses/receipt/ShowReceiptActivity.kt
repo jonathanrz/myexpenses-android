@@ -10,30 +10,20 @@ import android.view.MenuItem
 import android.widget.TextView
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.account.AccountDataSource
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
-import br.com.jonathanzanella.myexpenses.source.SourceDataSource
 import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import br.com.jonathanzanella.myexpenses.views.anko.*
 import org.jetbrains.anko.*
 import javax.inject.Inject
 
 class ShowReceiptActivity : AppCompatActivity(), ReceiptContract.View {
+    @Inject
+    lateinit var presenter: ReceiptPresenter
     override val context = this
     private val ui = ShowReceiptActivityUi()
 
-    @Inject
-    lateinit var accountDataSource: AccountDataSource
-    @Inject
-    lateinit var receiptDataSource: ReceiptDataSource
-    @Inject
-    lateinit var sourceDataSource: SourceDataSource
-
-    private val presenter: ReceiptPresenter
-
     init {
         App.getAppComponent().inject(this)
-        presenter = ReceiptPresenter(receiptDataSource, sourceDataSource, accountDataSource)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

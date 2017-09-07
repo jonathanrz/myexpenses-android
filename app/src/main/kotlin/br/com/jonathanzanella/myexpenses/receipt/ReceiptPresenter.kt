@@ -19,10 +19,12 @@ import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import org.joda.time.DateTime
 import timber.log.Timber
+import javax.inject.Inject
 
 @Suppress("LargeClass")
-class ReceiptPresenter(private val dataSource: ReceiptDataSource, private val sourceDataSource: SourceDataSource,
-                       private val accountDataSource: AccountDataSource) {
+class ReceiptPresenter @Inject constructor(private val dataSource: ReceiptDataSource,
+                                           private val sourceDataSource: SourceDataSource,
+                                           private val accountDataSource: AccountDataSource) {
     private var view: ReceiptContract.View? = null
     private var editView: ReceiptContract.EditView? = null
     private var receipt: Receipt? = null

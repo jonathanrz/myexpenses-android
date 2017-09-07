@@ -108,6 +108,11 @@ class PresenterModule {
     @Provides
     fun providesExpensePresenter(dataSource: ExpenseDataSource, billDataSource: BillDataSource)
             = ExpensePresenter(dataSource, billDataSource)
+
+    @Provides
+    fun providesReceiptPresenter(dataSource: ReceiptDataSource, sourceDataSource: SourceDataSource,
+                                 accountDataSource: AccountDataSource)
+            = ReceiptPresenter(dataSource, sourceDataSource, accountDataSource)
 }
 
 @Module
