@@ -14,14 +14,12 @@ import javax.inject.Inject
 
 class ShowSourceActivity : AppCompatActivity(), SourceContract.View {
     @Inject
-    lateinit var sourceDataSource: SourceDataSource
+    lateinit var presenter: SourcePresenter
     override val context = this
-    private val presenter: SourcePresenter
     private val ui = ShowSourceActivityUi()
 
     init {
         App.getAppComponent().inject(this)
-        presenter = SourcePresenter(sourceDataSource)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

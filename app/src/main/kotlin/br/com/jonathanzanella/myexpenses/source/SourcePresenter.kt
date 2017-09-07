@@ -5,8 +5,9 @@ import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
+import javax.inject.Inject
 
-class SourcePresenter(private val dataSource: SourceDataSource) {
+class SourcePresenter @Inject constructor(private val dataSource: SourceDataSource) {
     private var view: SourceContract.View? = null
     private var editView: SourceContract.EditView? = null
     private var source: Source? = null
