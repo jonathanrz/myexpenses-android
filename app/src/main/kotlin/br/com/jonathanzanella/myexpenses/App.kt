@@ -41,7 +41,7 @@ open class App : Application() {
                 .appModule(AppModule(this))
                 .build()
 
-        appComponent.inject(databaseHelper)
+        databaseHelper = DatabaseHelper(appComponent)
     }
 
     companion object {

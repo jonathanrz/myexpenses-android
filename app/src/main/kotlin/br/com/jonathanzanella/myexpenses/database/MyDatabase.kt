@@ -11,6 +11,7 @@ import br.com.jonathanzanella.myexpenses.card.Card
 import br.com.jonathanzanella.myexpenses.card.CardDao
 import br.com.jonathanzanella.myexpenses.expense.Expense
 import br.com.jonathanzanella.myexpenses.expense.ExpenseDao
+import br.com.jonathanzanella.myexpenses.injection.AppComponent
 import br.com.jonathanzanella.myexpenses.receipt.Receipt
 import br.com.jonathanzanella.myexpenses.receipt.ReceiptDao
 import br.com.jonathanzanella.myexpenses.source.Source
@@ -31,13 +32,17 @@ abstract class MyDatabase : RoomDatabase() {
     abstract fun sourceDao(): SourceDao
 }
 
-class DatabaseHelper {
+class DatabaseHelper(appComponent: AppComponent) {
     @Inject lateinit var accountDao: AccountDao
     @Inject lateinit var billDao: BillDao
     @Inject lateinit var cardDao: CardDao
     @Inject lateinit var expenseDao: ExpenseDao
     @Inject lateinit var receiptDao: ReceiptDao
     @Inject lateinit var sourceDao: SourceDao
+
+    init {
+        appComponent.inject(this)
+    }
 
     fun resetDatabase() {
         accountDao.deleteAll()

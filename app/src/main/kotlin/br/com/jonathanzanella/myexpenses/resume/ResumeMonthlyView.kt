@@ -34,12 +34,13 @@ class ResumeMonthlyView(context: Context, private val month: DateTime) : FrameLa
     lateinit var expenseRepository: ExpenseRepository
 
     private var accountAdapter = AccountAdapter(month)
-    private var receiptAdapter = ReceiptMonthlyResumeAdapter(receiptRepository)
+    private val receiptAdapter: ReceiptMonthlyResumeAdapter
     private var expensesAdapter = ExpenseMonthlyResumeAdapter()
     private var billsAdapter = BillMonthlyResumeAdapter()
 
     init {
         App.getAppComponent().inject(this)
+        receiptAdapter = ReceiptMonthlyResumeAdapter(receiptRepository)
         singleRowHeight = resources.getDimensionPixelSize(R.dimen.single_row_height)
 
         View.inflate(context, R.layout.view_monthly_resume, this)
