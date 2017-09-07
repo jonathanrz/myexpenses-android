@@ -6,7 +6,7 @@ import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 
-class SourcePresenter(private val repository: SourceRepository) {
+class SourcePresenter(private val dataSource: SourceDataSource) {
     private var view: SourceContract.View? = null
     private var editView: SourceContract.EditView? = null
     private var source: Source? = null
@@ -46,7 +46,7 @@ class SourcePresenter(private val repository: SourceRepository) {
     @UiThread
     fun loadSource(uuid: String) {
         doAsync {
-            source = repository.find(uuid)
+            source = dataSource.find(uuid)
 
             uiThread { viewUpdated() }
         }
@@ -57,7 +57,7 @@ class SourcePresenter(private val repository: SourceRepository) {
         val v = editView ?: throw InvalidMethodCallException("save", javaClass.toString(), "View should be a Edit View")
         source = v.fillSource(source ?: Source())
         doAsync {
-            val result = repository.save(source!!)
+            val result = dataSource.save(source!!)
 
             uiThread {
                 if (result.isValid) {

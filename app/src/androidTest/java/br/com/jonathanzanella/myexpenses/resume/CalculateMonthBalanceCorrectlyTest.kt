@@ -25,7 +25,7 @@ import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.receipt.ReceiptDataSource
 import br.com.jonathanzanella.myexpenses.source.Source
-import br.com.jonathanzanella.myexpenses.source.SourceRepository
+import br.com.jonathanzanella.myexpenses.source.SourceDataSource
 import br.com.jonathanzanella.myexpenses.views.MainActivity
 import junit.framework.Assert.assertTrue
 import org.hamcrest.Matchers.allOf
@@ -47,7 +47,7 @@ class CalculateMonthBalanceCorrectlyTest {
     @Inject
     lateinit var billDataSource: BillDataSource
     @Inject
-    lateinit var sourceRepository: SourceRepository
+    lateinit var sourceDataSource: SourceDataSource
     @Inject
     lateinit var accountDataSource: AccountDataSource
     @Inject
@@ -67,7 +67,7 @@ class CalculateMonthBalanceCorrectlyTest {
         assertTrue(accountDataSource.save(a).isValid)
 
         val s = SourceBuilder().build()
-        assertTrue(sourceRepository.save(s).isValid)
+        assertTrue(sourceDataSource.save(s).isValid)
 
         val now = DateTime.now().withDayOfMonth(1)
         val b = BillBuilder()

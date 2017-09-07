@@ -20,7 +20,7 @@ import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder
 import br.com.jonathanzanella.myexpenses.helpers.builder.ReceiptBuilder
 import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
-import br.com.jonathanzanella.myexpenses.source.SourceRepository
+import br.com.jonathanzanella.myexpenses.source.SourceDataSource
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -39,7 +39,7 @@ class ShowReceiptActivityTest {
     @Inject
     lateinit var dataSource: ReceiptDataSource
     @Inject
-    lateinit var sourceRepository: SourceRepository
+    lateinit var sourceDataSource: SourceDataSource
     @Inject
     lateinit var accountDataSource: AccountDataSource
 
@@ -50,7 +50,7 @@ class ShowReceiptActivityTest {
         App.resetDatabase()
 
         val s = SourceBuilder().build()
-        sourceRepository.save(s)
+        sourceDataSource.save(s)
 
         val a = AccountBuilder().build()
         accountDataSource.save(a)

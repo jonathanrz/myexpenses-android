@@ -20,7 +20,7 @@ import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.source.ListSourceActivity
 import br.com.jonathanzanella.myexpenses.source.Source
-import br.com.jonathanzanella.myexpenses.source.SourceRepository
+import br.com.jonathanzanella.myexpenses.source.SourceDataSource
 import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.views.anko.*
@@ -41,7 +41,7 @@ class EditReceiptActivity : AppCompatActivity(), ReceiptContract.EditView {
     @Inject
     lateinit var receiptDataSource: ReceiptDataSource
     @Inject
-    lateinit var sourceRepository: SourceRepository
+    lateinit var sourceDataSource: SourceDataSource
 
     override val context = this
     private val ui = EditReceiptActivityUi()
@@ -49,7 +49,7 @@ class EditReceiptActivity : AppCompatActivity(), ReceiptContract.EditView {
 
     init {
         App.getAppComponent().inject(this)
-        presenter = ReceiptPresenter(receiptDataSource, sourceRepository, accountDataSource)
+        presenter = ReceiptPresenter(receiptDataSource, sourceDataSource, accountDataSource)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

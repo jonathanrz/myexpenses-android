@@ -23,7 +23,7 @@ import br.com.jonathanzanella.myexpenses.helpers.builder.ReceiptBuilder
 import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.receipt.ReceiptDataSource
-import br.com.jonathanzanella.myexpenses.source.SourceRepository
+import br.com.jonathanzanella.myexpenses.source.SourceDataSource
 import junit.framework.Assert.assertTrue
 import org.hamcrest.core.AllOf.allOf
 import org.joda.time.DateTime
@@ -49,7 +49,7 @@ class ShowAccountActivityTest {
     @Inject
     lateinit var receiptDataSource: ReceiptDataSource
     @Inject
-    lateinit var sourceRepository: SourceRepository
+    lateinit var sourceDataSource: SourceDataSource
     @Inject
     lateinit var cardDataSource: CardDataSource
 
@@ -139,7 +139,7 @@ class ShowAccountActivityTest {
 
     private fun generateTwoMonthsReceipts() {
         val s = SourceBuilder().build()
-        sourceRepository.save(s)
+        sourceDataSource.save(s)
 
         var receipt = ReceiptBuilder()
                 .income(RECEIPT_INCOME)

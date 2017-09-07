@@ -17,14 +17,14 @@ import javax.inject.Inject
 
 class EditSourceActivity : AppCompatActivity(), SourceContract.EditView {
     @Inject
-    lateinit var sourceRepository: SourceRepository
+    lateinit var sourceDataSource: SourceDataSource
     override val context = this
     private val presenter: SourcePresenter
     private val ui = EditSourceActivityUi()
 
     init {
         App.getAppComponent().inject(this)
-        presenter = SourcePresenter(sourceRepository)
+        presenter = SourcePresenter(sourceDataSource)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

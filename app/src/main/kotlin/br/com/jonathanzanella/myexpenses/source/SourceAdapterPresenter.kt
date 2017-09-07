@@ -2,7 +2,7 @@ package br.com.jonathanzanella.myexpenses.source
 
 import java.util.*
 
-class SourceAdapterPresenter(private val repository: SourceRepository) {
+class SourceAdapterPresenter(private val dataSource: SourceDataSource) {
 
     private var sources: List<Source>? = null
 
@@ -11,7 +11,7 @@ class SourceAdapterPresenter(private val repository: SourceRepository) {
     }
 
     private fun loadSources() {
-        sources = repository.all()
+        sources = dataSource.all()
     }
 
     fun getSources(invalidateCache: Boolean): List<Source> {

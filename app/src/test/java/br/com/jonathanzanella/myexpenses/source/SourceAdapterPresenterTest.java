@@ -13,7 +13,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class SourceAdapterPresenterTest {
 	@Mock
-	private SourceRepository repository;
+	private SourceDataSource dataSource;
 
 	private SourceAdapterPresenter presenter;
 
@@ -21,13 +21,13 @@ public class SourceAdapterPresenterTest {
 	public void setUp() throws Exception {
 		initMocks(this);
 
-		presenter = new SourceAdapterPresenter(repository);
+		presenter = new SourceAdapterPresenter(dataSource);
 	}
 
 	@Test(expected = UnsupportedOperationException.class)
 	@Ignore("fix when convert  to kotlin")
 	public void get_sources_return_unmodifiable_list() {
-		when(repository.all()).thenReturn(new ArrayList<Source>());
+		when(dataSource.all()).thenReturn(new ArrayList<>());
 
 		List<Source> sources = presenter.getSources(false);
 		sources.add(new Source());

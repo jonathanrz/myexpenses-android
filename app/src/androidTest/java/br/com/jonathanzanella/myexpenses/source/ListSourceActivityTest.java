@@ -33,7 +33,7 @@ public class ListSourceActivityTest {
 	public ActivityTestRule<ListSourceActivity> activityTestRule = new ActivityTestRule<>(ListSourceActivity.class, true, false);
 
 	@Inject
-	SourceRepository repository;
+	SourceDataSource dataSource;
 
 	@Before
 	public void setUp() throws Exception {
@@ -53,7 +53,7 @@ public class ListSourceActivityTest {
 	@Test
 	public void show_source_in_list() throws Exception {
 		Source source = new SourceBuilder().build();
-		repository.save(source);
+		dataSource.save(source);
 
 		activityTestRule.launchActivity(new Intent());
 
@@ -64,10 +64,10 @@ public class ListSourceActivityTest {
 	@Test
 	public void show_sources_in_alphabetical_order() throws Exception {
 		Source sourceB = new SourceBuilder().name("b").build();
-		repository.save(sourceB);
+		dataSource.save(sourceB);
 
 		Source sourceA = new SourceBuilder().name("a").build();
-		repository.save(sourceA);
+		dataSource.save(sourceA);
 
 		activityTestRule.launchActivity(new Intent());
 

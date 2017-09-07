@@ -30,7 +30,7 @@ public class ShowSourceActivityTest {
 	public ActivityTestRule<ShowSourceActivity> activityTestRule = new ActivityTestRule<>(ShowSourceActivity.class, true, false);
 
 	@Inject
-	SourceRepository repository;
+	SourceDataSource dataSource;
 	private Source source;
 
 	@Before
@@ -40,7 +40,7 @@ public class ShowSourceActivityTest {
 
 		source = new Source();
 		source.setName("test");
-		repository.save(source);
+		dataSource.save(source);
 	}
 
 	@Test

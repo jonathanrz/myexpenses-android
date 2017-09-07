@@ -14,14 +14,14 @@ import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.account.AccountDataSource
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException
 import br.com.jonathanzanella.myexpenses.source.Source
-import br.com.jonathanzanella.myexpenses.source.SourceRepository
+import br.com.jonathanzanella.myexpenses.source.SourceDataSource
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import org.joda.time.DateTime
 import timber.log.Timber
 
 @Suppress("LargeClass")
-class ReceiptPresenter(private val dataSource: ReceiptDataSource, private val sourceRepository: SourceRepository,
+class ReceiptPresenter(private val dataSource: ReceiptDataSource, private val sourceDataSource: SourceDataSource,
                        private val accountDataSource: AccountDataSource) {
     private var view: ReceiptContract.View? = null
     private var editView: ReceiptContract.EditView? = null
@@ -200,7 +200,7 @@ class ReceiptPresenter(private val dataSource: ReceiptDataSource, private val so
                 loadReceipt(extras.getString(KEY_RECEIPT_UUID))
 
             if (extras.containsKey(KEY_SOURCE_UUID))
-                source = sourceRepository.find(extras.getString(KEY_SOURCE_UUID))
+                source = sourceDataSource.find(extras.getString(KEY_SOURCE_UUID))
 
             if (extras.containsKey(KEY_ACCOUNT_UUID))
                 account = accountDataSource.find(extras.getString(KEY_ACCOUNT_UUID)!!)
@@ -221,7 +221,7 @@ class ReceiptPresenter(private val dataSource: ReceiptDataSource, private val so
 
     fun onSourceSelected(sourceUuid: String) {
         doAsync {
-            source = sourceRepository.find(sourceUuid)
+            source = sourceDataSource.find(sourceUuid)
 
             uiThread { editView?.onSourceSelected(source!!) }
         }

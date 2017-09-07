@@ -11,10 +11,7 @@ import br.com.jonathanzanella.myexpenses.database.MyDatabase
 import br.com.jonathanzanella.myexpenses.expense.*
 import br.com.jonathanzanella.myexpenses.receipt.*
 import br.com.jonathanzanella.myexpenses.server.Server
-import br.com.jonathanzanella.myexpenses.source.SourceApi
-import br.com.jonathanzanella.myexpenses.source.SourceDao
-import br.com.jonathanzanella.myexpenses.source.SourceInterface
-import br.com.jonathanzanella.myexpenses.source.SourceRepository
+import br.com.jonathanzanella.myexpenses.source.*
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -87,7 +84,7 @@ class RepositoryModule {
 
     @Singleton
     @Provides
-    fun providesSourceRepository(sourceDao: SourceDao) = SourceRepository(sourceDao)
+    fun providesSourceDataSource(sourceDao: SourceDao): SourceDataSource = SourceRepository(sourceDao)
 }
 
 @Module

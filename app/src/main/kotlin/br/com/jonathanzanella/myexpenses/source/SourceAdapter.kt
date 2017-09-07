@@ -14,14 +14,14 @@ import javax.inject.Inject
 
 class SourceAdapter: RecyclerView.Adapter<SourceAdapter.ViewHolder>() {
     @Inject
-    lateinit var sourceRepository: SourceRepository
+    lateinit var sourceDataSource: SourceDataSource
     private val presenter: SourceAdapterPresenter
     private var sources: List<Source>
     private var callback: SourceAdapterCallback? = null
 
     init {
         App.getAppComponent().inject(this)
-        presenter = SourceAdapterPresenter(sourceRepository)
+        presenter = SourceAdapterPresenter(sourceDataSource)
         sources = presenter.getSources(false)
     }
 

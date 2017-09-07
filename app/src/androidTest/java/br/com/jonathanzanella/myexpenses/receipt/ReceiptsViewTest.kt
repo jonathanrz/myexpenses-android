@@ -22,7 +22,7 @@ import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder
 import br.com.jonathanzanella.myexpenses.helpers.builder.ReceiptBuilder
 import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
-import br.com.jonathanzanella.myexpenses.source.SourceRepository
+import br.com.jonathanzanella.myexpenses.source.SourceDataSource
 import br.com.jonathanzanella.myexpenses.views.MainActivity
 import junit.framework.Assert.assertTrue
 import org.hamcrest.Matchers.`is`
@@ -43,7 +43,7 @@ class ReceiptsViewTest {
     @Inject
     lateinit var dataSource: ReceiptDataSource
     @Inject
-    lateinit var sourceRepository: SourceRepository
+    lateinit var sourceDataSource: SourceDataSource
     @Inject
     lateinit var accountDataSource: AccountDataSource
 
@@ -57,7 +57,7 @@ class ReceiptsViewTest {
         App.resetDatabase()
 
         val s = SourceBuilder().build()
-        assertTrue(sourceRepository.save(s).isValid)
+        assertTrue(sourceDataSource.save(s).isValid)
 
         val a = AccountBuilder().build()
         assertTrue(accountDataSource.save(a).isValid)
