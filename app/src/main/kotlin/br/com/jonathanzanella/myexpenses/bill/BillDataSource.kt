@@ -1,7 +1,7 @@
 package br.com.jonathanzanella.myexpenses.bill
 
 import android.support.annotation.WorkerThread
-import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
+import br.com.jonathanzanella.myexpenses.expense.ExpenseDataSource
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult
 import org.apache.commons.lang3.StringUtils
@@ -22,7 +22,7 @@ interface BillDataSource {
     fun syncAndSave(unsync: Bill): ValidationResult
 }
 
-class BillRepository @Inject constructor(val dao: BillDao, private val expenseRepository: ExpenseRepository): BillDataSource {
+class BillRepository @Inject constructor(val dao: BillDao, private val expenseDataSource: ExpenseDataSource): BillDataSource {
     @WorkerThread
     override fun all(): List<Bill> {
         return dao.all().blockingFirst()
@@ -35,7 +35,7 @@ class BillRepository @Inject constructor(val dao: BillDao, private val expenseRe
 
     @WorkerThread
     override fun monthly(month: DateTime): List<Bill> {
-        val expenses = expenseRepository.monthly(month)
+        val expenses = expenseDataSource.monthly(month)
         val bills = dao.monthly(month.millis).blockingFirst() as MutableList<Bill>
         var i = 0
         while (i < bills.size) {
