@@ -10,7 +10,6 @@ import android.widget.TextView
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.card.Card
-import br.com.jonathanzanella.myexpenses.card.CardRepository
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
 import org.jetbrains.anko.*
@@ -21,8 +20,6 @@ import javax.inject.Inject
 
 class CreditCardMonthlyAdapter : RecyclerView.Adapter<CreditCardMonthlyAdapter.ViewHolder>() {
     private var expenses: List<Expense> = ArrayList()
-    @Inject
-    lateinit var cardRepository: CardRepository
     @Inject
     lateinit var expenseRepository: ExpenseRepository
     private var totalValue: Int = 0

@@ -24,7 +24,7 @@ class ShowCardActivity : AppCompatActivity(), CardContract.View {
     @Inject
     lateinit var accountDataSource: AccountDataSource
     @Inject
-    lateinit var cardRepository: CardRepository
+    lateinit var cardDataSource: CardDataSource
     @Inject
     lateinit var expenseRepository: ExpenseRepository
     override val context = this
@@ -33,7 +33,7 @@ class ShowCardActivity : AppCompatActivity(), CardContract.View {
 
     init {
         App.getAppComponent().inject(this)
-        presenter = CardPresenter(cardRepository, accountDataSource, expenseRepository, ResourcesHelper(this))
+        presenter = CardPresenter(cardDataSource, accountDataSource, expenseRepository, ResourcesHelper(this))
     }
 
     @UiThread

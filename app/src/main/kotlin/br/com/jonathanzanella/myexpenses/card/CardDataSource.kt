@@ -9,40 +9,53 @@ import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 
-open class CardRepository @Inject constructor(val dao: CardDao) {
+interface CardDataSource {
+    fun all(): List<Card>
+    fun unsync(): List<Card>
+    fun creditCards(): List<Card>
+
+    fun find(uuid: String): Card?
+    fun accountDebitCard(account: Account): Card?
+    fun greaterUpdatedAt(): Long
+
+    fun save(card: Card): ValidationResult
+    fun syncAndSave(unsync: Card): ValidationResult
+}
+
+class CardRepository @Inject constructor(val dao: CardDao): CardDataSource {
 
     @WorkerThread
-    fun find(uuid: String): Card? {
-        return dao.find(uuid).blockingFirst().firstOrNull()
-    }
-
-    @WorkerThread
-    fun all(): List<Card> {
+    override fun all(): List<Card> {
         return dao.all().blockingFirst()
     }
 
     @WorkerThread
-    fun unsync(): List<Card> {
+    override fun unsync(): List<Card> {
         return dao.unsync().blockingFirst()
     }
 
     @WorkerThread
-    fun creditCards(): List<Card> {
+    override fun creditCards(): List<Card> {
         return dao.cards(CardType.CREDIT.value).blockingFirst()
     }
 
     @WorkerThread
-    fun accountDebitCard(account: Account): Card? {
+    override fun find(uuid: String): Card? {
+        return dao.find(uuid).blockingFirst().firstOrNull()
+    }
+
+    @WorkerThread
+    override fun accountDebitCard(account: Account): Card? {
         return dao.accountCard(CardType.DEBIT.value, account.uuid!!).blockingFirst().firstOrNull()
     }
 
     @WorkerThread
-    fun greaterUpdatedAt(): Long {
+    override fun greaterUpdatedAt(): Long {
         return dao.greaterUpdatedAt().blockingFirst().firstOrNull()?.updatedAt ?: 0L
     }
 
     @WorkerThread
-    fun save(card: Card): ValidationResult {
+    override fun save(card: Card): ValidationResult {
         val result = validate(card)
         if (result.isValid) {
             if (card.id == 0L && card.uuid == null)
@@ -65,7 +78,7 @@ open class CardRepository @Inject constructor(val dao: CardDao) {
     }
 
     @WorkerThread
-    fun syncAndSave(unsync: Card): ValidationResult {
+    override fun syncAndSave(unsync: Card): ValidationResult {
         val result = validate(unsync)
         if (!result.isValid) {
             Timber.tag("Card sync valida failed")

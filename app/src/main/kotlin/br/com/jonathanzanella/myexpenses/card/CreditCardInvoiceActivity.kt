@@ -25,7 +25,7 @@ class CreditCardInvoiceActivity : AppCompatActivity() {
     private var card: Card? = null
     private var initDate: DateTime? = null
     @Inject
-    lateinit var cardRepository: CardRepository
+    lateinit var cardDataSource: CardDataSource
     private val ui = CreditCardInvoiceActivityUi()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,7 +46,7 @@ class CreditCardInvoiceActivity : AppCompatActivity() {
 
         doAsync {
             if (extras.containsKey(KEY_CREDIT_CARD_UUID))
-                card = cardRepository.find(extras.getString(KEY_CREDIT_CARD_UUID))
+                card = cardDataSource.find(extras.getString(KEY_CREDIT_CARD_UUID))
             if (extras.containsKey(KEY_INIT_DATE))
                 initDate = extras.getSerializable(KEY_INIT_DATE) as DateTime
 

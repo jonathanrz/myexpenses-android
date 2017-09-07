@@ -29,7 +29,7 @@ class EditCardActivity : AppCompatActivity(), CardContract.EditView {
     @Inject
     lateinit var accountDataSource: AccountDataSource
     @Inject
-    lateinit var cardRepository: CardRepository
+    lateinit var cardDataSource: CardDataSource
     @Inject
     lateinit var expenseRepository: ExpenseRepository
     override val context = this
@@ -38,7 +38,7 @@ class EditCardActivity : AppCompatActivity(), CardContract.EditView {
 
     init {
         App.getAppComponent().inject(this)
-        presenter = CardPresenter(cardRepository, accountDataSource, expenseRepository, ResourcesHelper(this))
+        presenter = CardPresenter(cardDataSource, accountDataSource, expenseRepository, ResourcesHelper(this))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -23,7 +23,7 @@ class CardAdapter : RecyclerView.Adapter<CardAdapter.ViewHolder>() {
     private var callback: CardAdapterCallback? = null
 
     @Inject
-    lateinit var cardRepository: CardRepository
+    lateinit var cardDataSource: CardDataSource
 
     inner class ViewHolder(itemView: View, val ui: CardAdapterViewUI) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         private val adapterColorHelper: AdapterColorHelper
@@ -88,7 +88,7 @@ class CardAdapter : RecyclerView.Adapter<CardAdapter.ViewHolder>() {
 
     @WorkerThread
     fun loadData() {
-        cards = cardRepository.all()
+        cards = cardDataSource.all()
     }
 
     private fun getCreditCard(position: Int): Card {

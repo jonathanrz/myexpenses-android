@@ -20,7 +20,7 @@ import br.com.jonathanzanella.TestApp;
 import br.com.jonathanzanella.myexpenses.App;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
-import br.com.jonathanzanella.myexpenses.account.AccountRepository;
+import br.com.jonathanzanella.myexpenses.account.AccountDataSource;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.views.MainActivity;
@@ -47,7 +47,7 @@ public class AddCardTest {
 	public ActivityTestRule<EditCardActivity> editCardActivityTestRule = new ActivityTestRule<>(EditCardActivity.class);
 
 	@Inject
-	AccountRepository accountRepository;
+	AccountDataSource accountDataSource;
 
 	private Account account;
 
@@ -61,7 +61,7 @@ public class AddCardTest {
 			uiDevice.wakeUp();
 
 		account = new AccountBuilder().build();
-		accountRepository.save(account);
+		accountDataSource.save(account);
 	}
 
 	@After

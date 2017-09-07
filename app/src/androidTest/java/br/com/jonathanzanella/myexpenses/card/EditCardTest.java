@@ -14,7 +14,7 @@ import br.com.jonathanzanella.TestApp;
 import br.com.jonathanzanella.myexpenses.App;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
-import br.com.jonathanzanella.myexpenses.account.AccountRepository;
+import br.com.jonathanzanella.myexpenses.account.AccountDataSource;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
@@ -39,7 +39,7 @@ public class EditCardTest {
 	public ActivityTestRule<ShowCardActivity> activityTestRule = new ActivityTestRule<>(ShowCardActivity.class, true, false);
 
 	@Inject
-	AccountRepository accountRepository;
+	AccountDataSource accountDataSource;
 	@Inject
 	ExpenseRepository expenseRepository;
 	@Inject
@@ -53,9 +53,9 @@ public class EditCardTest {
 		App.Companion.resetDatabase();
 
 		Account a = new AccountBuilder().build();
-		accountRepository.save(a);
+		accountDataSource.save(a);
 
-		card = new CardBuilder().account(a).build(accountRepository);
+		card = new CardBuilder().account(a).build(accountDataSource);
 		assertTrue(repository.save(card).isValid());
 	}
 

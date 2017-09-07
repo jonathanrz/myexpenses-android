@@ -11,7 +11,7 @@ import br.com.jonathanzanella.myexpenses.account.AccountDataSource
 import br.com.jonathanzanella.myexpenses.bill.Bill
 import br.com.jonathanzanella.myexpenses.bill.BillDataSource
 import br.com.jonathanzanella.myexpenses.card.Card
-import br.com.jonathanzanella.myexpenses.card.CardRepository
+import br.com.jonathanzanella.myexpenses.card.CardDataSource
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable
 import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
@@ -29,7 +29,7 @@ class Expense : Transaction, UnsyncModel {
     @Ignore @Inject
     lateinit var billDataSource: BillDataSource
     @Ignore @Inject
-    lateinit var cardRepository: CardRepository
+    lateinit var cardDataSource: CardDataSource
     @Ignore @Inject
     lateinit var expenseRepository: ExpenseRepository
 
@@ -117,12 +117,12 @@ class Expense : Transaction, UnsyncModel {
                 ChargeableType.ACCOUNT -> {
                     accountDataSource.save(c as Account)
                     if (c is Card)
-                        cardRepository.save(c as Card)
+                        cardDataSource.save(c as Card)
                     else
                         throw UnsupportedOperationException("Chargeable should be a card")
                 }
                 ChargeableType.CREDIT_CARD, ChargeableType.DEBIT_CARD -> if (c is Card)
-                    cardRepository.save(c)
+                    cardDataSource.save(c)
                 else
                     throw UnsupportedOperationException("Chargeable should be a card")
             }
@@ -188,7 +188,7 @@ class Expense : Transaction, UnsyncModel {
         c.debit(value)
         when (c.chargeableType) {
             ChargeableType.ACCOUNT -> accountDataSource.save(c as Account)
-            ChargeableType.DEBIT_CARD, ChargeableType.CREDIT_CARD -> cardRepository.save(c as Card)
+            ChargeableType.DEBIT_CARD, ChargeableType.CREDIT_CARD -> cardDataSource.save(c as Card)
         }
         charged = true
         expenseRepository.save(this)
@@ -220,7 +220,7 @@ class Expense : Transaction, UnsyncModel {
 
         return when (type) {
             ChargeableType.ACCOUNT -> accountDataSource.find(uuid)
-            ChargeableType.DEBIT_CARD, ChargeableType.CREDIT_CARD -> cardRepository.find(uuid)
+            ChargeableType.DEBIT_CARD, ChargeableType.CREDIT_CARD -> cardDataSource.find(uuid)
         }
     }
 }

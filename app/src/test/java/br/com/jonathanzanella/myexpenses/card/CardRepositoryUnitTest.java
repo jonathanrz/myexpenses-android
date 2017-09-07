@@ -5,7 +5,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import br.com.jonathanzanella.myexpenses.account.AccountRepository;
+import br.com.jonathanzanella.myexpenses.account.AccountDataSource;
 import br.com.jonathanzanella.myexpenses.helper.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helper.builder.CardBuilder;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
@@ -18,7 +18,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class CardRepositoryUnitTest {
 	private CardRepository subject;
 	@Mock
-	private AccountRepository accountRepository;
+	private AccountDataSource accountDataSource;
 	@Mock
 	private CardDao cardDao;
 
@@ -34,7 +34,7 @@ public class CardRepositoryUnitTest {
 		Card card = new CardBuilder()
 				.name(null)
 				.account(new AccountBuilder().build())
-				.build(accountRepository);
+				.build(accountDataSource);
 
 		ValidationResult result = subject.save(card);
 
@@ -49,7 +49,7 @@ public class CardRepositoryUnitTest {
 				.name("Test")
 				.account(new AccountBuilder().build())
 				.type(null)
-				.build(accountRepository);
+				.build(accountDataSource);
 
 		ValidationResult result = subject.save(card);
 
@@ -64,7 +64,7 @@ public class CardRepositoryUnitTest {
 				.name("Test")
 				.type(CardType.DEBIT)
 				.account(new AccountBuilder().build())
-				.build(accountRepository);
+				.build(accountDataSource);
 
 		ValidationResult result = subject.save(card);
 

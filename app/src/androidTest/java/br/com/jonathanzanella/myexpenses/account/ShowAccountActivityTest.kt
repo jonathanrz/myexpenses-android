@@ -13,7 +13,7 @@ import android.view.View
 import br.com.jonathanzanella.TestApp
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.card.CardRepository
+import br.com.jonathanzanella.myexpenses.card.CardDataSource
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper
 import br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle
@@ -51,7 +51,7 @@ class ShowAccountActivityTest {
     @Inject
     lateinit var sourceRepository: SourceRepository
     @Inject
-    lateinit var cardRepository: CardRepository
+    lateinit var cardDataSource: CardDataSource
 
     @Before
     @Throws(Exception::class)
@@ -90,7 +90,7 @@ class ShowAccountActivityTest {
     @Throws(InterruptedException::class)
     fun show_credit_card_bill_in_account_show_activity() {
         val card = CardBuilder().account(account).build(dataSource)
-        assertTrue(cardRepository.save(card).isValid)
+        assertTrue(cardDataSource.save(card).isValid)
         val expense = ExpenseBuilder().chargeable(card).build()
         assertTrue(expenseRepository.save(expense).isValid)
 

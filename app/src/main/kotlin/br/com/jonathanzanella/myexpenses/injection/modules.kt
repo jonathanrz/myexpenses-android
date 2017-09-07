@@ -4,14 +4,8 @@ import android.arch.persistence.room.Room
 import android.content.Context
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.account.*
-import br.com.jonathanzanella.myexpenses.bill.BillApi
-import br.com.jonathanzanella.myexpenses.bill.BillDao
-import br.com.jonathanzanella.myexpenses.bill.BillInterface
-import br.com.jonathanzanella.myexpenses.bill.BillRepository
-import br.com.jonathanzanella.myexpenses.card.CardApi
-import br.com.jonathanzanella.myexpenses.card.CardDao
-import br.com.jonathanzanella.myexpenses.card.CardInterface
-import br.com.jonathanzanella.myexpenses.card.CardRepository
+import br.com.jonathanzanella.myexpenses.bill.*
+import br.com.jonathanzanella.myexpenses.card.*
 import br.com.jonathanzanella.myexpenses.database.DB_NAME
 import br.com.jonathanzanella.myexpenses.database.MyDatabase
 import br.com.jonathanzanella.myexpenses.expense.ExpenseApi
@@ -81,11 +75,11 @@ class RepositoryModule {
 
     @Singleton
     @Provides
-    fun providesBillRepository(billDao: BillDao, expenseRepository: ExpenseRepository) = BillRepository(billDao, expenseRepository)
+    fun providesBillDataSource(billDao: BillDao, expenseRepository: ExpenseRepository): BillDataSource = BillRepository(billDao, expenseRepository)
 
     @Singleton
     @Provides
-    fun providesCardRepository(cardDao: CardDao) = CardRepository(cardDao)
+    fun providesCardDataSource(cardDao: CardDao): CardDataSource = CardRepository(cardDao)
 
     @Singleton
     @Provides

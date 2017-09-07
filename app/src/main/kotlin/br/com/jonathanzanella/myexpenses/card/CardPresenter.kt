@@ -18,7 +18,7 @@ import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import org.joda.time.DateTime
 
-class CardPresenter(private val repository: CardRepository, private val accountDataSource: AccountDataSource,
+class CardPresenter(private val dataSource: CardDataSource, private val accountDataSource: AccountDataSource,
                      private val expenseRepository: ExpenseRepository, private val resourcesHelper: ResourcesHelper) {
 
     private var view: CardContract.View? = null
@@ -45,7 +45,7 @@ class CardPresenter(private val repository: CardRepository, private val accountD
         if (card != null) {
             if (invalidateCache) {
                 doAsync {
-                    card = repository.find(card!!.uuid!!)
+                    card = dataSource.find(card!!.uuid!!)
 
                     uiThread { updateView() }
                 }
@@ -92,7 +92,7 @@ class CardPresenter(private val repository: CardRepository, private val accountD
 
     @WorkerThread
     fun loadCard(uuid: String) {
-        card = repository.find(uuid)
+        card = dataSource.find(uuid)
         if (card == null)
             throw CardNotFoundException(uuid)
     }
@@ -107,7 +107,7 @@ class CardPresenter(private val repository: CardRepository, private val accountD
             card!!.account = account
 
         doAsync {
-            val result = repository.save(card!!)
+            val result = dataSource.save(card!!)
 
             if (result.isValid) {
                 v.finishView()

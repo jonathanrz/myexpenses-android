@@ -42,7 +42,7 @@ class ShowCardActivityTest {
     @Inject
     lateinit var expenseRepository: ExpenseRepository
     @Inject
-    lateinit var repository: CardRepository
+    lateinit var dataSource: CardDataSource
     @Inject
     lateinit var accountDataSource: AccountDataSource
 
@@ -59,7 +59,7 @@ class ShowCardActivityTest {
         accountDataSource.save(account!!)
 
         card = CardBuilder().account(account).type(CardType.CREDIT).build(accountDataSource)
-        repository.save(card!!)
+        dataSource.save(card!!)
     }
 
     @After
