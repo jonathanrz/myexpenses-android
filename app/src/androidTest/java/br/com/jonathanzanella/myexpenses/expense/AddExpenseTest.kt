@@ -12,6 +12,7 @@ import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import android.support.test.uiautomator.UiDevice
 import android.view.View
+import br.com.jonathanzanella.TestApp
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.Account
@@ -23,7 +24,6 @@ import br.com.jonathanzanella.myexpenses.helpers.UIHelper
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder
 import br.com.jonathanzanella.myexpenses.helpers.builder.BillBuilder
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
-import br.com.jonathanzanella.myexpenses.injection.DaggerTestComponent
 import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import br.com.jonathanzanella.myexpenses.views.MainActivity
 import org.hamcrest.core.IsNot.not
@@ -52,7 +52,7 @@ class AddExpenseTest {
     @Before
     @Throws(Exception::class)
     fun setUp() {
-        DaggerTestComponent.builder().build().inject(this)
+        TestApp.getTestComponent().inject(this)
         App.resetDatabase()
 
         val uiDevice = UiDevice.getInstance(getInstrumentation())

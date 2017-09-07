@@ -10,6 +10,7 @@ import android.support.test.filters.MediumTest
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import android.view.View
+import br.com.jonathanzanella.TestApp
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.card.CardRepository
@@ -21,7 +22,6 @@ import br.com.jonathanzanella.myexpenses.helpers.builder.ExpenseBuilder
 import br.com.jonathanzanella.myexpenses.helpers.builder.ReceiptBuilder
 import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
-import br.com.jonathanzanella.myexpenses.injection.DaggerTestComponent
 import br.com.jonathanzanella.myexpenses.receipt.ReceiptRepository
 import br.com.jonathanzanella.myexpenses.source.SourceRepository
 import junit.framework.Assert.assertTrue
@@ -56,7 +56,7 @@ class ShowAccountActivityTest {
     @Before
     @Throws(Exception::class)
     fun setUp() {
-        DaggerTestComponent.builder().build().inject(this)
+        TestApp.getTestComponent().inject(this)
 
         App.resetDatabase()
 
