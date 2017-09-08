@@ -111,7 +111,7 @@ class ReceiptsViewTest {
         UIHelper.matchToolbarTitle(title)
 
         UIHelper.clickIntoView(R.id.search)
-        UIHelper.typeTextIntoView(R.id.search_src_text, receipt!!.name)
+        UIHelper.clearAndTypeTextIntoView(R.id.search_src_text, receipt!!.name)
 
         onViewReceiptName(receipt).check(matches(ViewMatchers.isDisplayed()))
         onViewReceiptName(receipt2).check(doesNotExist())

@@ -27,9 +27,9 @@ import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
 import static android.support.test.espresso.matcher.ViewMatchers.isChecked;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.clearAndTypeTextIntoView;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.clickIntoView;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle;
-import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.typeTextIntoView;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.core.Is.is;
 
@@ -74,7 +74,7 @@ public class EditAccountTest {
 		onView(withId(R.id.act_edit_account_name)).check(matches(withText(account.getName())));
 		onView(withId(R.id.act_edit_account_show_in_resume)).check(matches(isChecked()));
 		clickIntoView(R.id.act_edit_account_show_in_resume);
-		typeTextIntoView(R.id.act_edit_account_name, " changed");
+		clearAndTypeTextIntoView(R.id.act_edit_account_name, account.getName() + " changed");
 
 		clickIntoView(R.id.action_save);
 

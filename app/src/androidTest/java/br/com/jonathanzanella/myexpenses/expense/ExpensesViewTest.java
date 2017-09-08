@@ -31,10 +31,10 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withTagValue;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.clearAndTypeTextIntoView;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.clickIntoView;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.openMenuAndClickItem;
-import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.typeTextIntoView;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.AllOf.allOf;
@@ -79,7 +79,7 @@ public class ExpensesViewTest {
 		matchToolbarTitle(expensesTitle);
 
 		clickIntoView(R.id.search);
-		typeTextIntoView(R.id.search_src_text, expense1.getName());
+		clearAndTypeTextIntoView(R.id.search_src_text, expense1.getName());
 
 		onViewExpenseName(expense1).check(matches(isDisplayed()));
 		onViewExpenseName(expense2).check(doesNotExist());

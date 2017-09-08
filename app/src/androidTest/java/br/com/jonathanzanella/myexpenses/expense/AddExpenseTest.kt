@@ -85,8 +85,8 @@ class AddExpenseTest {
         UIHelper.matchToolbarTitle(newExpenseTitle)
 
         val expenseName = "Test"
-        UIHelper.typeTextIntoView(R.id.act_edit_expense_name, expenseName)
-        UIHelper.typeTextIntoView(R.id.act_edit_expense_value, "100")
+        UIHelper.clearAndTypeTextIntoView(R.id.act_edit_expense_name, expenseName)
+        UIHelper.clearAndTypeTextIntoView(R.id.act_edit_expense_value, "100")
         UIHelper.clickIntoView(R.id.act_edit_expense_value_to_show_in_overview)
         UIHelper.clickIntoView(R.id.act_edit_expense_date)
         val time = DateTime.now().plusMonths(1)

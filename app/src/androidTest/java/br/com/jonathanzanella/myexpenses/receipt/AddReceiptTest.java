@@ -36,12 +36,12 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.clearAndTypeTextIntoView;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.clickIntoView;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchErrorMessage;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.openMenuAndClickItem;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.setTimeInDatePicker;
-import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.typeTextIntoView;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
@@ -94,8 +94,8 @@ public class AddReceiptTest {
 		matchToolbarTitle(newReceiptTitle);
 
 		final String receiptName = "Test";
-		typeTextIntoView(R.id.act_edit_receipt_name, receiptName);
-		typeTextIntoView(R.id.act_edit_receipt_income, "100");
+		clearAndTypeTextIntoView(R.id.act_edit_receipt_name, receiptName);
+		clearAndTypeTextIntoView(R.id.act_edit_receipt_income, "100");
 		clickIntoView(R.id.act_edit_receipt_date);
 		DateTime time = DateTime.now().plusMonths(1);
 		setTimeInDatePicker(time.getYear(), time.getMonthOfYear(), time.getDayOfMonth());

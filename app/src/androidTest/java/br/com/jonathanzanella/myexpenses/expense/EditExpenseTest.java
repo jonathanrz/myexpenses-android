@@ -31,9 +31,9 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.clearAndTypeTextIntoView;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.clickIntoView;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle;
-import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.typeTextIntoView;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.core.Is.is;
 
@@ -85,7 +85,7 @@ public class EditExpenseTest {
 		onView(withId(R.id.act_edit_expense_name)).check(matches(withText(expense.getName())));
 		String expectedDate = Transaction.Companion.getSIMPLE_DATE_FORMAT().format(expense.getDate().toDate());
 		onView(withId(R.id.act_edit_expense_date)).check(matches(withText(expectedDate)));
-		typeTextIntoView(R.id.act_edit_expense_name, " changed");
+		clearAndTypeTextIntoView(R.id.act_edit_expense_name, expense.getName() + " changed");
 
 		clickIntoView(R.id.action_save);
 

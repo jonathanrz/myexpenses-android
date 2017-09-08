@@ -57,7 +57,7 @@ class AddAccountTest {
         UIHelper.matchToolbarTitle(newAccountTitle)
 
         val accountTitle = "Test"
-        UIHelper.typeTextIntoView(R.id.act_edit_account_name, accountTitle)
+        UIHelper.clearAndTypeTextIntoView(R.id.act_edit_account_name, accountTitle)
         UIHelper.clickIntoView(R.id.action_save)
 
         UIHelper.matchToolbarTitle(accountsTitle)
