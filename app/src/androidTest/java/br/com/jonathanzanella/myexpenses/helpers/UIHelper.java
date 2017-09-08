@@ -84,23 +84,6 @@ public final class UIHelper {
 		}
 	}
 
-	/**
-	 *
-	 * @deprecated Sometimes when clicking into a edit with text makes android open a popup.
-	 * You should use clearAndTypeTextIntoView to first clear the edit text
-	 */
-	@Deprecated
-	public static void typeTextIntoView(@IdRes int view, String text) {
-		try {
-			onView(withId(view))
-					.perform(scrollTo())
-					.perform(typeText(text))
-					.perform(closeSoftKeyboard());
-		} catch (PerformException e) {
-			onView(withId(view)).perform(typeText(text)).perform(closeSoftKeyboard());
-		}
-	}
-
 	public static void clickIntoView(@IdRes int view) {
 		try {
 			Espresso.closeSoftKeyboard();

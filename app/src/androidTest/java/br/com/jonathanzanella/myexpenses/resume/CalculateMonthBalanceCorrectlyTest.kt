@@ -9,12 +9,13 @@ import android.support.test.filters.SmallTest
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import android.view.View
-import br.com.jonathanzanella.myexpenses.MyApplication
+import br.com.jonathanzanella.TestApp
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.Account
-import br.com.jonathanzanella.myexpenses.account.AccountRepository
-import br.com.jonathanzanella.myexpenses.bill.BillRepository
-import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
+import br.com.jonathanzanella.myexpenses.account.AccountDataSource
+import br.com.jonathanzanella.myexpenses.bill.BillDataSource
+import br.com.jonathanzanella.myexpenses.expense.ExpenseDataSource
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper
 import br.com.jonathanzanella.myexpenses.helpers.UIHelper.clickIntoView
 import br.com.jonathanzanella.myexpenses.helpers.builder.BillBuilder
@@ -22,9 +23,9 @@ import br.com.jonathanzanella.myexpenses.helpers.builder.ExpenseBuilder
 import br.com.jonathanzanella.myexpenses.helpers.builder.ReceiptBuilder
 import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
-import br.com.jonathanzanella.myexpenses.receipt.ReceiptRepository
+import br.com.jonathanzanella.myexpenses.receipt.ReceiptDataSource
 import br.com.jonathanzanella.myexpenses.source.Source
-import br.com.jonathanzanella.myexpenses.source.SourceRepository
+import br.com.jonathanzanella.myexpenses.source.SourceDataSource
 import br.com.jonathanzanella.myexpenses.views.MainActivity
 import junit.framework.Assert.assertTrue
 import org.hamcrest.Matchers.allOf
@@ -34,6 +35,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import javax.inject.Inject
 
 @RunWith(AndroidJUnit4::class)
 @SmallTest
@@ -42,18 +44,30 @@ class CalculateMonthBalanceCorrectlyTest {
     @Rule @JvmField
     var activityTestRule = ActivityTestRule(MainActivity::class.java)
 
+    @Inject
+    lateinit var billDataSource: BillDataSource
+    @Inject
+    lateinit var sourceDataSource: SourceDataSource
+    @Inject
+    lateinit var accountDataSource: AccountDataSource
+    @Inject
+    lateinit var receiptDataSource: ReceiptDataSource
+    @Inject
+    lateinit var expenseDataSource: ExpenseDataSource
+
     private val monthlyPagerAdapterHelper = MonthlyPagerAdapterHelper()
 
     @Before
     @Throws(Exception::class)
     fun setUp() {
-        MyApplication.resetDatabase()
+        TestApp.getTestComponent().inject(this)
+        App.resetDatabase()
 
         val a = br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder().build()
-        assertTrue(AccountRepository().save(a).isValid)
+        assertTrue(accountDataSource.save(a).isValid)
 
         val s = SourceBuilder().build()
-        assertTrue(SourceRepository().save(s).isValid)
+        assertTrue(sourceDataSource.save(s).isValid)
 
         val now = DateTime.now().withDayOfMonth(1)
         val b = BillBuilder()
@@ -61,7 +75,7 @@ class CalculateMonthBalanceCorrectlyTest {
                 .endDate(now.plusMonths(12))
                 .amount(BILL_AMOUNT)
                 .build()
-        assertTrue(BillRepository(ExpenseRepository(), MyApplication.database.billDao()).save(b).isValid)
+        assertTrue(billDataSource.save(b).isValid)
 
         generateThreeMonthlyReceipts(a, s)
         generateThreeMonthlyExpenses(a)
@@ -75,14 +89,13 @@ class CalculateMonthBalanceCorrectlyTest {
 
     private fun generateThreeMonthlyReceipts(a: Account, s: Source) {
         var dateTime = DateTime.now()
-        val receiptRepository = ReceiptRepository()
         var r = ReceiptBuilder()
                 .account(a)
                 .source(s)
                 .date(dateTime)
                 .income(RECEIPT_INCOME)
                 .build()
-        assertTrue(receiptRepository.save(r).isValid)
+        assertTrue(receiptDataSource.save(r).isValid)
         dateTime = dateTime.plusMonths(1)
         r = ReceiptBuilder()
                 .account(a)
@@ -90,7 +103,7 @@ class CalculateMonthBalanceCorrectlyTest {
                 .date(dateTime)
                 .income(RECEIPT_INCOME * 2)
                 .build()
-        assertTrue(receiptRepository.save(r).isValid)
+        assertTrue(receiptDataSource.save(r).isValid)
         dateTime = dateTime.plusMonths(1)
         r = ReceiptBuilder()
                 .account(a)
@@ -98,32 +111,31 @@ class CalculateMonthBalanceCorrectlyTest {
                 .date(dateTime)
                 .income(RECEIPT_INCOME * 3)
                 .build()
-        assertTrue(receiptRepository.save(r).isValid)
+        assertTrue(receiptDataSource.save(r).isValid)
     }
 
     private fun generateThreeMonthlyExpenses(a: Account) {
         var dateTime = DateTime.now()
-        val expenseRepository = ExpenseRepository()
         var r = ExpenseBuilder()
                 .chargeable(a)
                 .date(dateTime)
                 .value(EXPENSE_VALUE)
                 .build()
-        assertTrue(expenseRepository.save(r).isValid)
+        assertTrue(expenseDataSource.save(r).isValid)
         dateTime = dateTime.plusMonths(1)
         r = ExpenseBuilder()
                 .chargeable(a)
                 .date(dateTime)
                 .value(EXPENSE_VALUE * 2)
                 .build()
-        assertTrue(expenseRepository.save(r).isValid)
+        assertTrue(expenseDataSource.save(r).isValid)
         dateTime = dateTime.plusMonths(1)
         r = ExpenseBuilder()
                 .chargeable(a)
                 .date(dateTime)
                 .value(EXPENSE_VALUE * 3)
                 .build()
-        assertTrue(expenseRepository.save(r).isValid)
+        assertTrue(expenseDataSource.save(r).isValid)
     }
 
     @Test

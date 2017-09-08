@@ -1,7 +1,6 @@
 package br.com.jonathanzanella.myexpenses.receipt
 
 import android.support.annotation.WorkerThread
-import br.com.jonathanzanella.myexpenses.MyApplication
 import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.helpers.firstDayOfMonth
 import br.com.jonathanzanella.myexpenses.helpers.lastDayOfMonth
@@ -11,49 +10,64 @@ import org.apache.commons.lang3.StringUtils
 import org.joda.time.DateTime
 import timber.log.Timber
 import java.util.*
+import javax.inject.Inject
 
-open class ReceiptRepository(private val dao: ReceiptDao = MyApplication.database.receiptDao()) {
+interface ReceiptDataSource {
+    fun all(): List<Receipt>
+    fun monthly(month: DateTime): List<Receipt>
+    fun monthly(month: DateTime, account: Account): List<Receipt>
+    fun resume(month: DateTime): List<Receipt>
+    fun unsync(): List<Receipt>
+
+    fun find(uuid: String): Receipt?
+    fun greaterUpdatedAt(): Long
+
+    fun save(receipt: Receipt): ValidationResult
+    fun syncAndSave(unsync: Receipt): ValidationResult
+}
+
+class ReceiptRepository @Inject constructor(private val dao: ReceiptDao): ReceiptDataSource {
 
     @WorkerThread
-    fun find(uuid: String): Receipt? {
-        return dao.find(uuid).blockingFirst().firstOrNull()
-    }
-
-    @WorkerThread
-    fun all(): List<Receipt> {
+    override fun all(): List<Receipt> {
         return dao.all().blockingFirst()
     }
 
     @WorkerThread
-    fun monthly(month: DateTime): List<Receipt> {
+    override fun monthly(month: DateTime): List<Receipt> {
         return dao.monthly(month.firstDayOfMonth().millis,
                 month.lastDayOfMonth().millis).blockingFirst()
     }
 
     @WorkerThread
-    fun monthly(month: DateTime, account: Account): List<Receipt> {
+    override fun monthly(month: DateTime, account: Account): List<Receipt> {
         return dao.monthly(month.firstDayOfMonth().millis,
                 month.lastDayOfMonth().millis, account.uuid!!).blockingFirst()
     }
 
     @WorkerThread
-    fun resume(month: DateTime): List<Receipt> {
+    override fun resume(month: DateTime): List<Receipt> {
         return dao.resume(month.firstDayOfMonth().millis,
                 month.lastDayOfMonth().millis).blockingFirst()
     }
 
     @WorkerThread
-    fun greaterUpdatedAt(): Long {
-        return dao.greaterUpdatedAt().blockingFirst().firstOrNull()?.updatedAt ?: 0L
-    }
-
-    @WorkerThread
-    fun unsync(): List<Receipt> {
+    override fun unsync(): List<Receipt> {
         return dao.unsync().blockingFirst()
     }
 
     @WorkerThread
-    fun save(receipt: Receipt): ValidationResult {
+    override fun find(uuid: String): Receipt? {
+        return dao.find(uuid).blockingFirst().firstOrNull()
+    }
+
+    @WorkerThread
+    override fun greaterUpdatedAt(): Long {
+        return dao.greaterUpdatedAt().blockingFirst().firstOrNull()?.updatedAt ?: 0L
+    }
+
+    @WorkerThread
+    override fun save(receipt: Receipt): ValidationResult {
         val result = validate(receipt)
         if (result.isValid) {
             if (receipt.id == 0L && receipt.uuid == null)
@@ -80,7 +94,7 @@ open class ReceiptRepository(private val dao: ReceiptDao = MyApplication.databas
     }
 
     @WorkerThread
-    fun syncAndSave(unsync: Receipt): ValidationResult {
+    override fun syncAndSave(unsync: Receipt): ValidationResult {
         val result = validate(unsync)
         if (!result.isValid) {
             Timber.tag("Receipt sync validation failed").w(unsync.getData() + "\nerrors: " + result.errorsAsString)

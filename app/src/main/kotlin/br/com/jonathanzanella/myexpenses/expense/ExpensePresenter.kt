@@ -11,7 +11,7 @@ import android.support.annotation.WorkerThread
 import android.support.v7.app.AlertDialog
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.bill.Bill
-import br.com.jonathanzanella.myexpenses.bill.BillRepository
+import br.com.jonathanzanella.myexpenses.bill.BillDataSource
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable
 import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType
 import br.com.jonathanzanella.myexpenses.chargeable.ListChargeableActivity
@@ -20,9 +20,10 @@ import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import org.joda.time.DateTime
 import timber.log.Timber
+import javax.inject.Inject
 
 @Suppress("LargeClass")
-class ExpensePresenter(private val repository: ExpenseRepository, private val billRepository: BillRepository) {
+class ExpensePresenter @Inject constructor(val dataSource: ExpenseDataSource, val billDataSource: BillDataSource) {
     private var view: ExpenseContract.View? = null
     private var editView: ExpenseContract.EditView? = null
     private var expense: Expense? = null
@@ -57,7 +58,7 @@ class ExpensePresenter(private val repository: ExpenseRepository, private val bi
         if (e != null) {
             if (invalidateCache) {
                 doAsync {
-                    expense = repository.find(e.uuid!!)
+                    expense = dataSource.find(e.uuid!!)
 
                     uiThread { updateView() }
                 }
@@ -129,7 +130,7 @@ class ExpensePresenter(private val repository: ExpenseRepository, private val bi
     @WorkerThread
     fun loadExpense(uuid: String): Expense {
         resetCache()
-        expense = repository.find(uuid)
+        expense = dataSource.find(uuid)
         val e = expense ?: throw ExpenseNotFoundException(uuid)
         date = e.getDate()
         return e
@@ -156,11 +157,11 @@ class ExpensePresenter(private val repository: ExpenseRepository, private val bi
         }
 
         doAsync {
-            val result = repository.save(e)
+            val result = dataSource.save(e)
             if (result.isValid) {
                 for (i in 1 until e.repetition) {
                     e = e.repeat(originalName!!, i + 1)
-                    val repetitionResult = repository.save(e)
+                    val repetitionResult = dataSource.save(e)
                     if (!repetitionResult.isValid)
                         Timber.e("Error saving repetition of expense " + e.getData() +
                                 " error=" + repetitionResult.errors.toString())
@@ -213,7 +214,7 @@ class ExpensePresenter(private val repository: ExpenseRepository, private val bi
     @UiThread
     fun onChargeableSelected(type: ChargeableType, uuid: String) {
         doAsync {
-            chargeable = Expense.findChargeable(type, uuid)
+            chargeable = Expense().findChargeable(type, uuid)
 
             uiThread { chargeable?.let { editView!!.onChargeableSelected(it) } }
         }
@@ -222,7 +223,7 @@ class ExpensePresenter(private val repository: ExpenseRepository, private val bi
     @UiThread
     fun onBillSelected(uuid: String) {
         doAsync {
-            bill = BillRepository(repository).find(uuid)
+            bill = billDataSource.find(uuid)
 
             uiThread { bill?.let { editView!!.onBillSelected(it) } }
         }
@@ -237,13 +238,13 @@ class ExpensePresenter(private val repository: ExpenseRepository, private val bi
             if (extras.containsKey(KEY_EXPENSE_UUID))
                 loadExpense(extras.getString(KEY_EXPENSE_UUID))
             if (extras.containsKey(KEY_BILL_UUID))
-                bill = billRepository.find(extras.getString(KEY_BILL_UUID)!!)
+                bill = billDataSource.find(extras.getString(KEY_BILL_UUID)!!)
             if (extras.containsKey(KEY_DATE))
                 date = DateTime(extras.getLong(KEY_DATE))
             val key = ListChargeableActivity.KEY_CHARGEABLE_SELECTED_TYPE
             if (extras.containsKey(key)) {
                 val selectedUuid = extras.getString(ListChargeableActivity.KEY_CHARGEABLE_SELECTED_UUID)
-                chargeable = Expense.findChargeable(extras.getSerializable(key) as ChargeableType, selectedUuid)
+                chargeable = Expense().findChargeable(extras.getSerializable(key) as ChargeableType, selectedUuid)
             }
 
             uiThread { updateView() }

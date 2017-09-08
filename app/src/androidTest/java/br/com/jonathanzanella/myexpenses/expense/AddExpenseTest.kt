@@ -12,12 +12,13 @@ import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import android.support.test.uiautomator.UiDevice
 import android.view.View
-import br.com.jonathanzanella.myexpenses.MyApplication
+import br.com.jonathanzanella.TestApp
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.Account
-import br.com.jonathanzanella.myexpenses.account.AccountRepository
+import br.com.jonathanzanella.myexpenses.account.AccountDataSource
 import br.com.jonathanzanella.myexpenses.bill.Bill
-import br.com.jonathanzanella.myexpenses.bill.BillRepository
+import br.com.jonathanzanella.myexpenses.bill.BillDataSource
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper
 import br.com.jonathanzanella.myexpenses.helpers.UIHelper
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder
@@ -32,6 +33,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import javax.inject.Inject
 
 @RunWith(AndroidJUnit4::class)
 @LargeTest
@@ -41,19 +43,24 @@ class AddExpenseTest {
     @Rule @JvmField
     var editExpenseActivityTestRule = ActivityTestRule(EditExpenseActivity::class.java)
 
+    @Inject
+    lateinit var accountDataSource: AccountDataSource
+    @Inject
+    lateinit var billDataSource: BillDataSource
     private var account: Account? = null
 
     @Before
     @Throws(Exception::class)
     fun setUp() {
-        MyApplication.resetDatabase()
+        TestApp.getTestComponent().inject(this)
+        App.resetDatabase()
 
         val uiDevice = UiDevice.getInstance(getInstrumentation())
         if (!uiDevice.isScreenOn)
             uiDevice.wakeUp()
 
         account = AccountBuilder().build()
-        AccountRepository().save(account!!)
+        accountDataSource.save(account!!)
     }
 
     @After
@@ -78,8 +85,8 @@ class AddExpenseTest {
         UIHelper.matchToolbarTitle(newExpenseTitle)
 
         val expenseName = "Test"
-        UIHelper.typeTextIntoView(R.id.act_edit_expense_name, expenseName)
-        UIHelper.typeTextIntoView(R.id.act_edit_expense_value, "100")
+        UIHelper.clearAndTypeTextIntoView(R.id.act_edit_expense_name, expenseName)
+        UIHelper.clearAndTypeTextIntoView(R.id.act_edit_expense_value, "100")
         UIHelper.clickIntoView(R.id.act_edit_expense_value_to_show_in_overview)
         UIHelper.clickIntoView(R.id.act_edit_expense_date)
         val time = DateTime.now().plusMonths(1)
@@ -141,8 +148,7 @@ class AddExpenseTest {
     @Throws(Exception::class)
     fun add_new_expense_with_bill() {
         val bill = BillBuilder().build()
-        val expenseRepository = ExpenseRepository()
-        BillRepository(expenseRepository, MyApplication.database.billDao()).save(bill)
+        billDataSource.save(bill)
 
         mainActivityTestRule.launchActivity(Intent())
 

@@ -12,10 +12,13 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import br.com.jonathanzanella.myexpenses.MyApplication;
+import javax.inject.Inject;
+
+import br.com.jonathanzanella.TestApp;
+import br.com.jonathanzanella.myexpenses.App;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
-import br.com.jonathanzanella.myexpenses.account.AccountRepository;
+import br.com.jonathanzanella.myexpenses.account.AccountDataSource;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.ExpenseBuilder;
@@ -28,9 +31,9 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.clearAndTypeTextIntoView;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.clickIntoView;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle;
-import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.typeTextIntoView;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.core.Is.is;
 
@@ -41,21 +44,24 @@ public class EditExpenseTest {
 	public ActivityTestRule<ShowExpenseActivity> activityTestRule = new ActivityTestRule<>(ShowExpenseActivity.class, true, false);
 
 	private Expense expense;
-	private ExpenseRepository repository;
+	@Inject
+	ExpenseDataSource dataSource;
+	@Inject
+	AccountDataSource accountDataSource;
 
 	@Before
 	public void setUp() throws Exception {
-		MyApplication.Companion.resetDatabase();
+		TestApp.Companion.getTestComponent().inject(this);
+		App.Companion.resetDatabase();
 
 		Account a = new AccountBuilder().build();
-		new AccountRepository().save(a);
+		accountDataSource.save(a);
 
 		expense = new ExpenseBuilder()
 				.date(DateTime.now().minusDays(1))
 				.chargeable(a)
 				.build();
-		repository = new ExpenseRepository();
-		assertTrue(repository.save(expense).isValid());
+		assertTrue(dataSource.save(expense).isValid());
 	}
 
 	@After
@@ -79,15 +85,15 @@ public class EditExpenseTest {
 		onView(withId(R.id.act_edit_expense_name)).check(matches(withText(expense.getName())));
 		String expectedDate = Transaction.Companion.getSIMPLE_DATE_FORMAT().format(expense.getDate().toDate());
 		onView(withId(R.id.act_edit_expense_date)).check(matches(withText(expectedDate)));
-		typeTextIntoView(R.id.act_edit_expense_name, " changed");
+		clearAndTypeTextIntoView(R.id.act_edit_expense_name, expense.getName() + " changed");
 
 		clickIntoView(R.id.action_save);
 
 		matchToolbarTitle(showExpenseTitle + " changed");
 
-		expense = repository.find(expense.getUuid());
+		expense = dataSource.find(expense.getUuid());
 
 		onView(withId(R.id.act_show_expense_name)).check(matches(withText(expense.getName())));
-		assertThat(repository.all().size(), is(1));
+		assertThat(dataSource.all().size(), is(1));
 	}
 }

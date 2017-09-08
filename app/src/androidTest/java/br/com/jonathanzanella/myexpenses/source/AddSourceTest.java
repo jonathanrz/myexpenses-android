@@ -13,7 +13,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import br.com.jonathanzanella.myexpenses.MyApplication;
+import br.com.jonathanzanella.myexpenses.App;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.views.MainActivity;
@@ -24,11 +24,11 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.clearAndTypeTextIntoView;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.clickIntoView;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchErrorMessage;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.openMenuAndClickItem;
-import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.typeTextIntoView;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
@@ -40,7 +40,7 @@ public class AddSourceTest {
 
 	@Before
 	public void setUp() throws Exception {
-		MyApplication.Companion.resetDatabase();
+		App.Companion.resetDatabase();
 
 		UiDevice uiDevice = UiDevice.getInstance(getInstrumentation());
 		if (!uiDevice.isScreenOn())
@@ -67,7 +67,7 @@ public class AddSourceTest {
 		matchToolbarTitle(newSourceTitle);
 
 		final String sourceTitle = "Test";
-		typeTextIntoView(R.id.act_edit_source_name, sourceTitle);
+		clearAndTypeTextIntoView(R.id.act_edit_source_name, sourceTitle);
 		clickIntoView(R.id.action_save);
 
 		matchToolbarTitle(sourcesTitle);

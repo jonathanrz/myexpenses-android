@@ -6,14 +6,21 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.views.anko.*
 import org.jetbrains.anko.*
+import javax.inject.Inject
 
 class ShowSourceActivity : AppCompatActivity(), SourceContract.View {
+    @Inject
+    lateinit var presenter: SourcePresenter
     override val context = this
-    private val presenter = SourcePresenter(SourceRepository())
     private val ui = ShowSourceActivityUi()
+
+    init {
+        App.getAppComponent().inject(this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -9,25 +9,22 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
 import android.widget.Toast
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.account.AccountRepository
 import br.com.jonathanzanella.myexpenses.expense.EditExpenseActivity
-import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
-import br.com.jonathanzanella.myexpenses.helpers.ResourcesHelper
 import br.com.jonathanzanella.myexpenses.views.anko.*
 import org.jetbrains.anko.*
 import org.joda.time.DateTime
+import javax.inject.Inject
 
 class ShowCardActivity : AppCompatActivity(), CardContract.View {
+    @Inject
+    lateinit var presenter: CardPresenter
     override val context = this
-    private var presenter: CardPresenter
     private val ui = ShowCardActivityUi()
 
     init {
-        val expenseRepository = ExpenseRepository()
-        val accountRepository = AccountRepository()
-        val cardRepository = CardRepository(expenseRepository)
-        presenter = CardPresenter(cardRepository, accountRepository, expenseRepository, ResourcesHelper(this))
+        App.getAppComponent().inject(this)
     }
 
     @UiThread

@@ -10,9 +10,9 @@ import android.support.test.espresso.matcher.ViewMatchers.withText
 import android.support.test.filters.MediumTest
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
-import br.com.jonathanzanella.myexpenses.MyApplication
+import br.com.jonathanzanella.TestApp
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper
 import br.com.jonathanzanella.myexpenses.helpers.TestUtils.waitForIdling
 import br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle
@@ -23,6 +23,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import javax.inject.Inject
 
 @RunWith(AndroidJUnit4::class)
 @MediumTest
@@ -31,16 +32,17 @@ class ShowBillActivityTest {
     var activityTestRule = ActivityTestRule(ShowBillActivity::class.java, true, false)
 
     private var bill: Bill? = null
-    private val expenseRepository = ExpenseRepository()
-    private val repository = BillRepository(expenseRepository, MyApplication.database.billDao())
+    @Inject
+    lateinit var dataSource: BillDataSource
 
     @Before
     @Throws(Exception::class)
     fun setUp() {
-        MyApplication.resetDatabase()
+        TestApp.getTestComponent().inject(this)
+        App.resetDatabase()
 
         bill = BillBuilder().build()
-        repository.save(bill!!)
+        dataSource.save(bill!!)
     }
 
     @After

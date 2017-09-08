@@ -8,10 +8,13 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import br.com.jonathanzanella.myexpenses.MyApplication;
+import javax.inject.Inject;
+
+import br.com.jonathanzanella.TestApp;
+import br.com.jonathanzanella.myexpenses.App;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
-import br.com.jonathanzanella.myexpenses.account.AccountRepository;
+import br.com.jonathanzanella.myexpenses.account.AccountDataSource;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
@@ -35,20 +38,24 @@ public class EditCardTest {
 	@Rule
 	public ActivityTestRule<ShowCardActivity> activityTestRule = new ActivityTestRule<>(ShowCardActivity.class, true, false);
 
+	@Inject
+	AccountDataSource accountDataSource;
+	@Inject
+	ExpenseRepository expenseRepository;
+	@Inject
+	CardRepository repository;
+
 	private Card card;
-	private CardRepository repository;
 
 	@Before
 	public void setUp() throws Exception {
-		MyApplication.Companion.resetDatabase();
+		TestApp.Companion.getTestComponent().inject(this);
+		App.Companion.resetDatabase();
 
 		Account a = new AccountBuilder().build();
-		AccountRepository accountRepository = new AccountRepository();
-		ExpenseRepository expenseRepository = new ExpenseRepository();
-		accountRepository.save(a);
+		accountDataSource.save(a);
 
-		card = new CardBuilder().account(a).build(accountRepository);
-		repository = new CardRepository(expenseRepository);
+		card = new CardBuilder().account(a).build(accountDataSource);
 		assertTrue(repository.save(card).isValid());
 	}
 

@@ -11,18 +11,20 @@ import android.support.annotation.WorkerThread
 import android.support.v7.app.AlertDialog
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.Account
-import br.com.jonathanzanella.myexpenses.account.AccountRepository
+import br.com.jonathanzanella.myexpenses.account.AccountDataSource
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException
 import br.com.jonathanzanella.myexpenses.source.Source
-import br.com.jonathanzanella.myexpenses.source.SourceRepository
+import br.com.jonathanzanella.myexpenses.source.SourceDataSource
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import org.joda.time.DateTime
 import timber.log.Timber
+import javax.inject.Inject
 
 @Suppress("LargeClass")
-class ReceiptPresenter(private val repository: ReceiptRepository, private val sourceRepository: SourceRepository,
-                       private val accountRepository: AccountRepository) {
+class ReceiptPresenter @Inject constructor(private val dataSource: ReceiptDataSource,
+                                           private val sourceDataSource: SourceDataSource,
+                                           private val accountDataSource: AccountDataSource) {
     private var view: ReceiptContract.View? = null
     private var editView: ReceiptContract.EditView? = null
     private var receipt: Receipt? = null
@@ -97,7 +99,7 @@ class ReceiptPresenter(private val repository: ReceiptRepository, private val so
     fun refreshReceipt() {
         doAsync {
             val uuid = receipt!!.uuid
-            receipt = repository.find(uuid!!)
+            receipt = dataSource.find(uuid!!)
             if (receipt == null)
                 throw ReceiptNotFoundException(uuid)
 
@@ -108,7 +110,7 @@ class ReceiptPresenter(private val repository: ReceiptRepository, private val so
     @WorkerThread
     fun loadReceipt(uuid: String) {
         resetCache()
-        val r = repository.find(uuid) ?: throw ReceiptNotFoundException(uuid)
+        val r = dataSource.find(uuid) ?: throw ReceiptNotFoundException(uuid)
         receipt = r
         r.let {
             source = it.source
@@ -140,12 +142,12 @@ class ReceiptPresenter(private val repository: ReceiptRepository, private val so
         }
 
         doAsync {
-            val result = repository.save(receipt!!)
+            val result = dataSource.save(receipt!!)
             if (result.isValid) {
                 for (i in 1 until r.repetition) {
                     r = r.repeat(originalName!!, i + 1)
                     receipt = r
-                    val repetitionResult = repository.save(r)
+                    val repetitionResult = dataSource.save(r)
                     if (!repetitionResult.isValid)
                         Timber.e("Error saving repetition of receipt ${r.getData()} error=${repetitionResult.errors}")
                 }
@@ -174,7 +176,7 @@ class ReceiptPresenter(private val repository: ReceiptRepository, private val so
                         receipt!!.let {
                             val acc = it.accountFromCache
                             acc!!.credit(it.income * -1)
-                            accountRepository.save(acc)
+                            accountDataSource.save(acc)
 
                             it.delete()
                         }
@@ -200,10 +202,10 @@ class ReceiptPresenter(private val repository: ReceiptRepository, private val so
                 loadReceipt(extras.getString(KEY_RECEIPT_UUID))
 
             if (extras.containsKey(KEY_SOURCE_UUID))
-                source = sourceRepository.find(extras.getString(KEY_SOURCE_UUID))
+                source = sourceDataSource.find(extras.getString(KEY_SOURCE_UUID))
 
             if (extras.containsKey(KEY_ACCOUNT_UUID))
-                account = accountRepository.find(extras.getString(KEY_ACCOUNT_UUID)!!)
+                account = accountDataSource.find(extras.getString(KEY_ACCOUNT_UUID)!!)
 
             if (extras.containsKey(KEY_DATE))
                 date = DateTime(extras.getLong(KEY_DATE))
@@ -221,7 +223,7 @@ class ReceiptPresenter(private val repository: ReceiptRepository, private val so
 
     fun onSourceSelected(sourceUuid: String) {
         doAsync {
-            source = sourceRepository.find(sourceUuid)
+            source = sourceDataSource.find(sourceUuid)
 
             uiThread { editView?.onSourceSelected(source!!) }
         }
@@ -230,7 +232,7 @@ class ReceiptPresenter(private val repository: ReceiptRepository, private val so
     @UiThread
     fun onAccountSelected(accountUuid: String) {
         doAsync {
-            account = accountRepository.find(accountUuid)
+            account = accountDataSource.find(accountUuid)
 
             uiThread { editView?.onAccountSelected(account!!) }
         }

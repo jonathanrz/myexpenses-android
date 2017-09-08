@@ -4,28 +4,28 @@ import android.arch.persistence.room.Entity
 import android.arch.persistence.room.Ignore
 import android.arch.persistence.room.PrimaryKey
 import android.support.annotation.WorkerThread
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.Environment
 import br.com.jonathanzanella.myexpenses.account.Account
-import br.com.jonathanzanella.myexpenses.account.AccountRepository
+import br.com.jonathanzanella.myexpenses.account.AccountDataSource
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.source.Source
-import br.com.jonathanzanella.myexpenses.source.SourceRepository
+import br.com.jonathanzanella.myexpenses.source.SourceDataSource
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel
 import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import org.joda.time.DateTime
+import javax.inject.Inject
 
 @Entity
 class Receipt : Transaction, UnsyncModel {
-    companion object {
-        private val accountRepository by lazy {
-            AccountRepository()
-        }
-        private val receiptRepository by lazy {
-            ReceiptRepository()
-        }
-    }
+    @Ignore @Inject
+    lateinit var accountDataSource: AccountDataSource
+    @Ignore @Inject
+    lateinit var receiptDataSource: ReceiptDataSource
+    @Ignore @Inject
+    lateinit var sourceDataSource: SourceDataSource
 
     @PrimaryKey(autoGenerate = true)
     override var id: Long = 0
@@ -67,7 +67,7 @@ class Receipt : Transaction, UnsyncModel {
         get() {
             val uuid = sourceUuid
             if (field == null && uuid != null)
-                field = SourceRepository().find(uuid)
+                field = sourceDataSource.find(uuid)
             return field
         }
         set(s) {
@@ -77,6 +77,10 @@ class Receipt : Transaction, UnsyncModel {
 
     override val amount: Int
         get() = income
+
+    init {
+        App.getAppComponent().inject(this)
+    }
 
     @Ignore
     override fun credited(): Boolean {
@@ -97,7 +101,7 @@ class Receipt : Transaction, UnsyncModel {
     private fun getAccount(ignoreCache: Boolean): Account? {
         if (account == null || ignoreCache) {
             accountUuid?.let {
-                account = accountRepository.find(it)
+                account = accountDataSource.find(it)
             }
         }
         return account
@@ -153,15 +157,15 @@ class Receipt : Transaction, UnsyncModel {
     fun credit() {
         val acc = loadAccount()!!
         acc.credit(income)
-        accountRepository.save(acc)
+        accountDataSource.save(acc)
         credited = true
-        receiptRepository.save(this)
+        receiptDataSource.save(this)
     }
 
     fun delete() {
         removed = true
         sync = false
-        receiptRepository.save(this)
+        receiptDataSource.save(this)
     }
 
     fun isDatePresent() = date != null

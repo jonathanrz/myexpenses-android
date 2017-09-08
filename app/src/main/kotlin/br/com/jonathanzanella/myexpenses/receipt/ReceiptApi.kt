@@ -1,22 +1,16 @@
 package br.com.jonathanzanella.myexpenses.receipt
 
 import android.support.annotation.WorkerThread
-import br.com.jonathanzanella.myexpenses.MyApplication
-import br.com.jonathanzanella.myexpenses.server.Server
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi
 import org.apache.commons.lang3.StringUtils
 import timber.log.Timber
 import java.io.IOException
+import javax.inject.Inject
 
 @WorkerThread
-class ReceiptApi : UnsyncModelApi<Receipt> {
-    private val receiptInterface: ReceiptInterface by lazy {
-        Server(MyApplication.getContext()).receiptInterface()
-    }
-    private val receiptRepository: ReceiptRepository by lazy {
-        ReceiptRepository()
-    }
+class ReceiptApi @Inject constructor(private val receiptInterface: ReceiptInterface,
+                                     private val receiptRepository: ReceiptRepository) : UnsyncModelApi<Receipt> {
 
     override fun index(): List<Receipt> {
         val lastUpdatedAt = greaterUpdatedAt()

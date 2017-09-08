@@ -8,7 +8,10 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import br.com.jonathanzanella.myexpenses.MyApplication;
+import javax.inject.Inject;
+
+import br.com.jonathanzanella.TestApp;
+import br.com.jonathanzanella.myexpenses.App;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
@@ -41,13 +44,17 @@ public class UpdateAccountBalanceTest {
 	public ActivityTestRule<MainActivity> mainActivityTestRule = new ActivityTestRule<>(MainActivity.class);
 
 	private Account account;
-	private AccountRepository accountRepository;
+	@Inject
+	AccountRepository accountRepository;
+	@Inject
+	ExpenseRepository expenseRepository;
+	@Inject
+	ReceiptRepository receiptRepository;
 
 	@Before
 	public void setUp() throws Exception {
-		MyApplication.Companion.resetDatabase();
-
-		accountRepository = new AccountRepository();
+		TestApp.Companion.getTestComponent().inject(this);
+		App.Companion.resetDatabase();
 
 		account = new AccountBuilder().build();
 		assertTrue(accountRepository.save(account).isValid());
@@ -61,7 +68,7 @@ public class UpdateAccountBalanceTest {
 	@Test
 	public void confirm_receipt_should_increase_account_balance() {
 		Receipt receipt = new ReceiptBuilder().account(account).income(1000).build();
-		assertTrue(new ReceiptRepository().save(receipt).isValid());
+		assertTrue(receiptRepository.save(receipt).isValid());
 
 		mainActivityTestRule.launchActivity(new Intent());
 
@@ -78,7 +85,7 @@ public class UpdateAccountBalanceTest {
 	@Test
 	public void confirm_expense_should_decrease_account_balance() {
 		Expense expense = new ExpenseBuilder().chargeable(account).value(1000).build();
-		assertTrue(new ExpenseRepository().save(expense).isValid());
+		assertTrue(expenseRepository.save(expense).isValid());
 
 		mainActivityTestRule.launchActivity(new Intent());
 
@@ -95,10 +102,10 @@ public class UpdateAccountBalanceTest {
 	@Test
 	public void confirm_expense_and_receipt_should_update_account_balance() {
 		Expense expense = new ExpenseBuilder().chargeable(account).value(100).build();
-		assertTrue(new ExpenseRepository().save(expense).isValid());
+		assertTrue(expenseRepository.save(expense).isValid());
 
 		Receipt receipt = new ReceiptBuilder().account(account).income(1000).build();
-		assertTrue(new ReceiptRepository().save(receipt).isValid());
+		assertTrue(receiptRepository.save(receipt).isValid());
 
 		mainActivityTestRule.launchActivity(new Intent());
 

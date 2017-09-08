@@ -2,12 +2,12 @@ package br.com.jonathanzanella.myexpenses.sync
 
 import android.app.Service
 import android.content.Intent
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.Environment
 import br.com.jonathanzanella.myexpenses.account.AccountApi
 import br.com.jonathanzanella.myexpenses.bill.BillApi
 import br.com.jonathanzanella.myexpenses.card.CardApi
 import br.com.jonathanzanella.myexpenses.expense.ExpenseApi
-import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.receipt.ReceiptApi
 import br.com.jonathanzanella.myexpenses.server.ServerApi
 import br.com.jonathanzanella.myexpenses.source.SourceApi
@@ -18,21 +18,36 @@ import com.google.android.gms.gcm.TaskParams
 import org.apache.commons.lang3.StringUtils
 import timber.log.Timber
 import java.util.*
+import javax.inject.Inject
 
 class SyncService : GcmTaskService() {
+    @Inject
+    lateinit var accountApi: AccountApi
+    @Inject
+    lateinit var billApi: BillApi
+    @Inject
+    lateinit var cardApi: CardApi
+    @Inject
+    lateinit var sourceApi: SourceApi
+    @Inject
+    lateinit var expenseApi: ExpenseApi
+    @Inject
+    lateinit var receiptApi: ReceiptApi
     private val apis: MutableList<UnsyncModelApi<UnsyncModel>>
 
     private var totalSaved: Int = 0
     private var totalUpdated: Int = 0
 
     init {
+        App.getAppComponent().inject(this)
+
         apis = ArrayList()
-        apis.add(AccountApi())
-        apis.add(BillApi())
-        apis.add(CardApi())
-        apis.add(SourceApi())
-        apis.add(ExpenseApi(ExpenseRepository()))
-        apis.add(ReceiptApi())
+        apis.add(accountApi)
+        apis.add(billApi)
+        apis.add(cardApi)
+        apis.add(sourceApi)
+        apis.add(expenseApi)
+        apis.add(receiptApi)
     }
 
     private fun selfSchedule() {

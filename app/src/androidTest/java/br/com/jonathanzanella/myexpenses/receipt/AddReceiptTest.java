@@ -15,10 +15,13 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import br.com.jonathanzanella.myexpenses.MyApplication;
+import javax.inject.Inject;
+
+import br.com.jonathanzanella.TestApp;
+import br.com.jonathanzanella.myexpenses.App;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
-import br.com.jonathanzanella.myexpenses.account.AccountRepository;
+import br.com.jonathanzanella.myexpenses.account.AccountDataSource;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder;
@@ -33,12 +36,12 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.clearAndTypeTextIntoView;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.clickIntoView;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchErrorMessage;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.openMenuAndClickItem;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.setTimeInDatePicker;
-import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.typeTextIntoView;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
@@ -48,20 +51,24 @@ public class AddReceiptTest {
 	@Rule
 	public ActivityTestRule<EditReceiptActivity> editReceiptActivityTestRule = new ActivityTestRule<>(EditReceiptActivity.class);
 
-	private final SourceRepository sourceRepository = new SourceRepository();
+	@Inject
+	SourceRepository sourceRepository;
+	@Inject
+	AccountDataSource accountDataSource;
 	private Account account;
 	private Source source;
 
 	@Before
 	public void setUp() throws Exception {
-		MyApplication.Companion.resetDatabase();
+		TestApp.Companion.getTestComponent().inject(this);
+		App.Companion.resetDatabase();
 
 		UiDevice uiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
 		if (!uiDevice.isScreenOn())
 			uiDevice.wakeUp();
 
 		account = new AccountBuilder().build();
-		new AccountRepository().save(account);
+		accountDataSource.save(account);
 
 		source = new SourceBuilder().build();
 		sourceRepository.save(source);
@@ -87,8 +94,8 @@ public class AddReceiptTest {
 		matchToolbarTitle(newReceiptTitle);
 
 		final String receiptName = "Test";
-		typeTextIntoView(R.id.act_edit_receipt_name, receiptName);
-		typeTextIntoView(R.id.act_edit_receipt_income, "100");
+		clearAndTypeTextIntoView(R.id.act_edit_receipt_name, receiptName);
+		clearAndTypeTextIntoView(R.id.act_edit_receipt_income, "100");
 		clickIntoView(R.id.act_edit_receipt_date);
 		DateTime time = DateTime.now().plusMonths(1);
 		setTimeInDatePicker(time.getYear(), time.getMonthOfYear(), time.getDayOfMonth());

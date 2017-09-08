@@ -8,11 +8,13 @@ import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import android.widget.FrameLayout
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.AccountAdapter
 import br.com.jonathanzanella.myexpenses.bill.BillMonthlyResumeAdapter
-import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
+import br.com.jonathanzanella.myexpenses.expense.ExpenseDataSource
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
+import br.com.jonathanzanella.myexpenses.receipt.ReceiptDataSource
 import br.com.jonathanzanella.myexpenses.receipt.ReceiptRepository
 import br.com.jonathanzanella.myexpenses.views.FilterableView
 import br.com.jonathanzanella.myexpenses.views.RefreshableView
@@ -20,21 +22,26 @@ import kotlinx.android.synthetic.main.view_monthly_resume.view.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import org.joda.time.DateTime
+import javax.inject.Inject
 
 @SuppressLint("ViewConstructor")
-internal class ResumeMonthlyView(context: Context, private val month: DateTime) : FrameLayout(context), RefreshableView, FilterableView {
+class ResumeMonthlyView(context: Context, private val month: DateTime) : FrameLayout(context), RefreshableView, FilterableView {
     override var filter = ""
     private var singleRowHeight: Int = 0
 
-    private var receiptRepository = ReceiptRepository()
-    private var expenseRepository = ExpenseRepository()
+    @Inject
+    lateinit var receiptDataSource: ReceiptDataSource
+    @Inject
+    lateinit var expenseDataSource: ExpenseDataSource
 
     private var accountAdapter = AccountAdapter(month)
-    private var receiptAdapter = ReceiptMonthlyResumeAdapter(receiptRepository)
+    private val receiptAdapter: ReceiptMonthlyResumeAdapter
     private var expensesAdapter = ExpenseMonthlyResumeAdapter()
     private var billsAdapter = BillMonthlyResumeAdapter()
 
     init {
+        App.getAppComponent().inject(this)
+        receiptAdapter = ReceiptMonthlyResumeAdapter(receiptDataSource)
         singleRowHeight = resources.getDimensionPixelSize(R.dimen.single_row_height)
 
         View.inflate(context, R.layout.view_monthly_resume, this)
@@ -102,7 +109,7 @@ internal class ResumeMonthlyView(context: Context, private val month: DateTime) 
     @UiThread
     private fun loadExpenses() {
         doAsync {
-            val expensesList = expenseRepository.expensesForResumeScreen(month)
+            val expensesList = expenseDataSource.expensesForResumeScreen(month)
 
             uiThread {
                 expensesAdapter.setExpenses(expensesList)

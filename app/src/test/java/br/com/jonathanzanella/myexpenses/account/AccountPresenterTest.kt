@@ -1,35 +1,40 @@
 package br.com.jonathanzanella.myexpenses.account
 
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult
-import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.whenever
+import org.junit.Before
 import org.junit.Ignore
 import org.junit.Test
 import org.mockito.Mockito.verify
 
 class AccountPresenterTest {
+    lateinit var dataSource: AccountDataSource
+    lateinit var view: AccountContract.EditView
+
+    @Before
+    fun setUp() {
+        dataSource = mock()
+        view = mock()
+    }
 
     @Test
-    @Ignore("fix when add DI")
+    @Ignore("Fix when add RX")
     fun save_gets_data_from_screen_and_save_to_repository() {
         val account = Account()
         account.uuid = "uuid"
 
-        val repository = mock<AccountRepository> {
-            on { find(account.uuid!!) } doReturn account
-            on { save(account) } doReturn ValidationResult()
-        }
+        whenever(dataSource.find(account.uuid!!)).thenReturn(account)
+        whenever(dataSource.save(account)).thenReturn(ValidationResult())
 
-        val view = mock<AccountContract.EditView>()
-
-        val presenter = AccountPresenter(repository)
+        val presenter = AccountPresenter(dataSource)
         presenter.attachView(view)
 
         presenter.loadAccount(account.uuid!!)
         presenter.save()
 
         verify(view).fillAccount(account)
-        verify(repository).save(account)
+        verify(dataSource).save(account)
         verify(view).finishView()
     }
 
@@ -39,7 +44,7 @@ class AccountPresenterTest {
 //        val result = ValidationResult()
 //        result.addError(ValidationError.NAME)
 //
-//        `when`(repository!!.save(any(Account::class.java))).thenReturn(result)
+//        `when`(dataSource!!.save(any(Account::class.java))).thenReturn(result)
 //
 //        presenter!!.save()
 

@@ -1,10 +1,11 @@
 package br.com.jonathanzanella.myexpenses.expense
 
 import android.support.annotation.WorkerThread
-import br.com.jonathanzanella.myexpenses.MyApplication
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.card.Card
+import br.com.jonathanzanella.myexpenses.card.CardDataSource
 import br.com.jonathanzanella.myexpenses.card.CardRepository
 import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType
 import br.com.jonathanzanella.myexpenses.helpers.firstDayOfMonth
@@ -18,24 +19,34 @@ import org.apache.commons.lang3.StringUtils
 import org.joda.time.DateTime
 import timber.log.Timber
 import java.util.*
+import javax.inject.Inject
 
-open class ExpenseRepository(private val dao: ExpenseDao = MyApplication.database.expenseDao()) {
-    private val cardRepository: CardRepository by lazy {
-        CardRepository(this)
-    }
+interface ExpenseDataSource {
+    fun all(): List<Expense>
+    fun monthly(month: DateTime): List<Expense>
+    fun expenses(period: WeeklyPagerAdapter.Period, card: Card? = null): List<Expense>
+    fun unpaidCardExpenses(month: DateTime, card: Card): List<Expense>
+    fun expensesForResumeScreen(date: DateTime): List<Expense>
+    fun accountExpenses(account: Account, month: DateTime): List<Expense>
+    fun unsync(): List<Expense>
+    fun creditCardBills(card: Card, month: DateTime): List<Expense>
 
+    fun find(uuid: String): Expense?
+    fun greaterUpdatedAt(): Long
+    fun getInvoiceValue(card: Card, month: DateTime): Int
+
+    fun save(expense: Expense): ValidationResult
+    fun syncAndSave(unsync: Expense): ValidationResult
+}
+
+class ExpenseRepository @Inject constructor(private val dao: ExpenseDao, val cardDataSource: CardDataSource): ExpenseDataSource {
     @WorkerThread
-    fun find(uuid: String): Expense? {
-        return dao.find(uuid).blockingFirst().firstOrNull()
-    }
-
-    @WorkerThread
-    fun all(): List<Expense> {
+    override fun all(): List<Expense> {
         return dao.all().blockingFirst()
     }
 
     @WorkerThread
-    fun monthly(month: DateTime): List<Expense> {
+    override fun monthly(month: DateTime): List<Expense> {
         val lastMonth = month.minusMonths(1)
         var initOfMonth = lastMonth.firstDayOfMonth()
         var endOfMonth = lastMonth.lastDayOfMonth()
@@ -50,12 +61,8 @@ open class ExpenseRepository(private val dao: ExpenseDao = MyApplication.databas
         return expenses
     }
 
-    fun expenses(period: WeeklyPagerAdapter.Period): List<Expense> {
-        return expenses(period, null)
-    }
-
     @WorkerThread
-    fun expenses(period: WeeklyPagerAdapter.Period, card: Card?): List<Expense> {
+    override fun expenses(period: WeeklyPagerAdapter.Period, card: Card?): List<Expense> {
         val expenses = ArrayList<Expense>()
 
         if (period.init?.dayOfMonth == 1) {
@@ -81,7 +88,7 @@ open class ExpenseRepository(private val dao: ExpenseDao = MyApplication.databas
     }
 
     @WorkerThread
-    fun unpaidCardExpenses(month: DateTime, card: Card): List<Expense> {
+    override fun unpaidCardExpenses(month: DateTime, card: Card): List<Expense> {
         val expenses = ArrayList<Expense>()
         val lastMonth = month.minusMonths(1)
 
@@ -92,7 +99,7 @@ open class ExpenseRepository(private val dao: ExpenseDao = MyApplication.databas
     }
 
     @WorkerThread
-    fun expensesForResumeScreen(date: DateTime): List<Expense> {
+    override fun expensesForResumeScreen(date: DateTime): List<Expense> {
         val lastMonth = date.minusMonths(1)
         var initOfMonth = lastMonth.firstDayOfMonth()
         var endOfMonth = lastMonth.lastDayOfMonth()
@@ -105,15 +112,15 @@ open class ExpenseRepository(private val dao: ExpenseDao = MyApplication.databas
         expenses.addAll(dao.resumeCurrentMonth(initOfMonth.millis, endOfMonth.millis, ChargeableType.CREDIT_CARD.name).blockingFirst())
 
         val creditCardMonth = date.minusMonths(1)
-        val cards = cardRepository.creditCards()
+        val cards = cardDataSource.creditCards()
         for (card in cards) {
-            val total = cardRepository.getInvoiceValue(card, creditCardMonth)
+            val total = getInvoiceValue(card, creditCardMonth)
             if (total == 0)
                 continue
 
             val expense = Expense()
             expense.setChargeable(card)
-            expense.name = MyApplication.getContext().getString(R.string.invoice)
+            expense.name = App.getContext().getString(R.string.invoice)
             expense.setDate(creditCardMonth)
             expense.value = total
             expense.creditCard = card
@@ -124,12 +131,12 @@ open class ExpenseRepository(private val dao: ExpenseDao = MyApplication.databas
     }
 
     @WorkerThread
-    fun accountExpenses(account: Account, month: DateTime): List<Expense> {
+    override fun accountExpenses(account: Account, month: DateTime): List<Expense> {
         val lastMonth = month.minusMonths(1)
         var initOfMonth = lastMonth.firstDayOfMonth()
         var endOfMonth = lastMonth.lastDayOfMonth()
 
-        val card = cardRepository.accountDebitCard(account)
+        val card = cardDataSource.accountDebitCard(account)
 
         val expenses = dao.nextMonth(initOfMonth.millis, endOfMonth.millis, account.uuid!!).blockingFirst()
 
@@ -146,15 +153,15 @@ open class ExpenseRepository(private val dao: ExpenseDao = MyApplication.databas
 
         if (account.accountToPayCreditCard) {
             val creditCardMonth = month.minusMonths(1)
-            val cards = cardRepository.creditCards()
+            val cards = cardDataSource.creditCards()
             for (creditCard in cards) {
-                val total = cardRepository.getInvoiceValue(creditCard, creditCardMonth)
+                val total = getInvoiceValue(creditCard, creditCardMonth)
                 if (total == 0)
                     continue
 
                 val expense = Expense()
                 expense.setChargeable(creditCard)
-                expense.name = MyApplication.getContext().getString(R.string.invoice) + " " + creditCard.name
+                expense.name = App.getContext().getString(R.string.invoice) + " " + creditCard.name
                 expense.setDate(creditCardMonth.plusMonths(1))
                 expense.value = total
                 expense.creditCard = creditCard
@@ -172,17 +179,28 @@ open class ExpenseRepository(private val dao: ExpenseDao = MyApplication.databas
     }
 
     @WorkerThread
-    fun greaterUpdatedAt(): Long {
-        return dao.greaterUpdatedAt().blockingFirst().firstOrNull()?.updatedAt ?: 0L
-    }
-
-    @WorkerThread
-    fun unsync(): List<Expense> {
+    override fun unsync(): List<Expense> {
         return dao.unsync().blockingFirst()
     }
 
     @WorkerThread
-    fun save(expense: Expense): ValidationResult {
+    override fun creditCardBills(card: Card, month: DateTime) = unpaidCardExpenses(month, card)
+
+    @WorkerThread
+    override fun find(uuid: String): Expense? {
+        return dao.find(uuid).blockingFirst().firstOrNull()
+    }
+
+    @WorkerThread
+    override fun greaterUpdatedAt(): Long {
+        return dao.greaterUpdatedAt().blockingFirst().firstOrNull()?.updatedAt ?: 0L
+    }
+
+    @WorkerThread
+    override fun getInvoiceValue(card: Card, month: DateTime) = creditCardBills(card, month).sumBy { it.value }
+
+    @WorkerThread
+    override fun save(expense: Expense): ValidationResult {
         val result = validate(expense)
         if (result.isValid) {
             if (expense.id == 0L && expense.uuid == null)
@@ -207,7 +225,7 @@ open class ExpenseRepository(private val dao: ExpenseDao = MyApplication.databas
     }
 
     @WorkerThread
-    fun syncAndSave(unsync: Expense): ValidationResult {
+    override fun syncAndSave(unsync: Expense): ValidationResult {
         val result = validate(unsync)
         if (!result.isValid) {
             Timber.tag("Expense validation fail")

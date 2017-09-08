@@ -8,6 +8,7 @@ import android.support.v7.widget.AppCompatEditText
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.CheckBox
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
@@ -16,11 +17,17 @@ import br.com.jonathanzanella.myexpenses.views.anko.*
 import org.apache.commons.lang3.StringUtils
 import org.jetbrains.anko.*
 import timber.log.Timber
+import javax.inject.Inject
 
 class EditAccountActivity : AppCompatActivity(), AccountContract.EditView {
     override val context = this
+    @Inject
+    lateinit var presenter: AccountPresenter
     private val ui = EditAccountActivityUi()
-    private val presenter = AccountPresenter(AccountRepository())
+
+    init {
+        App.getAppComponent().inject(this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

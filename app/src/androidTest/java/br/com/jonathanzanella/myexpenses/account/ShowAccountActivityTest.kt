@@ -10,10 +10,11 @@ import android.support.test.filters.MediumTest
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import android.view.View
-import br.com.jonathanzanella.myexpenses.MyApplication
+import br.com.jonathanzanella.TestApp
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.card.CardRepository
-import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
+import br.com.jonathanzanella.myexpenses.card.CardDataSource
+import br.com.jonathanzanella.myexpenses.expense.ExpenseDataSource
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper
 import br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle
 import br.com.jonathanzanella.myexpenses.helpers.builder.CardBuilder
@@ -21,8 +22,8 @@ import br.com.jonathanzanella.myexpenses.helpers.builder.ExpenseBuilder
 import br.com.jonathanzanella.myexpenses.helpers.builder.ReceiptBuilder
 import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
-import br.com.jonathanzanella.myexpenses.receipt.ReceiptRepository
-import br.com.jonathanzanella.myexpenses.source.SourceRepository
+import br.com.jonathanzanella.myexpenses.receipt.ReceiptDataSource
+import br.com.jonathanzanella.myexpenses.source.SourceDataSource
 import junit.framework.Assert.assertTrue
 import org.hamcrest.core.AllOf.allOf
 import org.joda.time.DateTime
@@ -31,6 +32,8 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import javax.inject.Inject
+
 
 @RunWith(AndroidJUnit4::class)
 @MediumTest
@@ -39,28 +42,29 @@ class ShowAccountActivityTest {
     var activityTestRule = ActivityTestRule(ShowAccountActivity::class.java, true, false)
 
     private var account: Account? = null
-    private var repository: AccountRepository? = null
-    private var expenseRepository: ExpenseRepository? = null
-    private var receiptRepository: ReceiptRepository? = null
-    private var sourceRepository: SourceRepository? = null
-    private var cardRepository: CardRepository? = null
+    @Inject
+    lateinit var dataSource: AccountDataSource
+    @Inject
+    lateinit var expenseDataSource: ExpenseDataSource
+    @Inject
+    lateinit var receiptDataSource: ReceiptDataSource
+    @Inject
+    lateinit var sourceDataSource: SourceDataSource
+    @Inject
+    lateinit var cardDataSource: CardDataSource
 
     @Before
     @Throws(Exception::class)
     fun setUp() {
-        MyApplication.resetDatabase()
+        TestApp.getTestComponent().inject(this)
 
-        repository = AccountRepository()
-        receiptRepository = ReceiptRepository()
-        expenseRepository = ExpenseRepository()
-        cardRepository = CardRepository(expenseRepository!!)
-        sourceRepository = SourceRepository()
+        App.resetDatabase()
 
         account = Account()
         account!!.name = "test"
         account!!.balance = ACCOUNT_BALANCE
         account!!.accountToPayCreditCard = true
-        repository!!.save(account!!)
+        dataSource.save(account!!)
     }
 
     @After
@@ -85,10 +89,10 @@ class ShowAccountActivityTest {
     @Test
     @Throws(InterruptedException::class)
     fun show_credit_card_bill_in_account_show_activity() {
-        val card = CardBuilder().account(account).build(repository)
-        assertTrue(cardRepository!!.save(card).isValid)
+        val card = CardBuilder().account(account).build(dataSource)
+        assertTrue(cardDataSource.save(card).isValid)
         val expense = ExpenseBuilder().chargeable(card).build()
-        assertTrue(expenseRepository!!.save(expense).isValid)
+        assertTrue(expenseDataSource.save(expense).isValid)
 
         launchActivity()
 
@@ -135,7 +139,7 @@ class ShowAccountActivityTest {
 
     private fun generateTwoMonthsReceipts() {
         val s = SourceBuilder().build()
-        sourceRepository!!.save(s)
+        sourceDataSource.save(s)
 
         var receipt = ReceiptBuilder()
                 .income(RECEIPT_INCOME)
@@ -143,14 +147,14 @@ class ShowAccountActivityTest {
                 .account(account)
                 .source(s)
                 .build()
-        assertTrue(receiptRepository!!.save(receipt).isValid)
+        assertTrue(receiptDataSource.save(receipt).isValid)
         receipt = ReceiptBuilder()
                 .income(RECEIPT_INCOME)
                 .date(DateTime.now().plusMonths(1))
                 .account(account)
                 .source(s)
                 .build()
-        assertTrue(receiptRepository!!.save(receipt).isValid)
+        assertTrue(receiptDataSource.save(receipt).isValid)
     }
 
     private fun generateTwoMonthsExpenses() {
@@ -159,13 +163,13 @@ class ShowAccountActivityTest {
                 .date(DateTime.now())
                 .chargeable(account)
                 .build()
-        assertTrue(expenseRepository!!.save(expense).isValid)
+        assertTrue(expenseDataSource.save(expense).isValid)
         expense = ExpenseBuilder()
                 .value(EXPENSE_VALUE)
                 .date(DateTime.now().plusMonths(1))
                 .chargeable(account)
                 .build()
-        assertTrue(expenseRepository!!.save(expense).isValid)
+        assertTrue(expenseDataSource.save(expense).isValid)
     }
 
     companion object {

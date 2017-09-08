@@ -1,12 +1,12 @@
 package br.com.jonathanzanella.myexpenses.server
 
-import br.com.jonathanzanella.myexpenses.MyApplication
+import br.com.jonathanzanella.myexpenses.App
 import timber.log.Timber
 import java.io.IOException
 
 class ServerApi {
     private val serverInterface: ServerInterface by lazy {
-        Server(MyApplication.getContext()).serverInterface()
+        Server(App.getContext()).serverInterface()
     }
 
     fun healthCheck(): Boolean {

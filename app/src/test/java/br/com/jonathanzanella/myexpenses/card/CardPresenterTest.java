@@ -12,7 +12,7 @@ import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
-import br.com.jonathanzanella.myexpenses.account.AccountRepository;
+import br.com.jonathanzanella.myexpenses.account.AccountDataSource;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
 import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
 import br.com.jonathanzanella.myexpenses.helper.builder.AccountBuilder;
@@ -36,9 +36,9 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class CardPresenterTest {
 	private static final String UUID = "uuid";
 	@Mock
-	private CardRepository repository;
+	private CardDataSource dataSource;
 	@Mock
-	private AccountRepository accountRepository;
+	private AccountDataSource accountDataSource;
 	@Mock
 	private ExpenseRepository expenseRepository;
 	@Mock
@@ -52,14 +52,14 @@ public class CardPresenterTest {
 	public void setUp() throws Exception {
 		initMocks(this);
 		DateTimeZone.setDefault(DateTimeZone.UTC);
-		presenter = new CardPresenter(repository, accountRepository, expenseRepository, resourcesHelper);
+		presenter = new CardPresenter(accountDataSource, dataSource, expenseRepository, resourcesHelper);
 		presenter.attachView(view);
 	}
 
 	@Test(expected = CardNotFoundException.class)
 	@Ignore("fix when convert tests to kotlin")
 	public void load_empty_card_throws_not_found_exception() {
-		when(repository.find(UUID)).thenReturn(null);
+		when(dataSource.find(UUID)).thenReturn(null);
 
 		presenter.loadCard(UUID);
 	}
@@ -67,13 +67,13 @@ public class CardPresenterTest {
 	@Test
 	@Ignore("fix when convert tests to kotlin")
 	public void save_gets_data_from_screen_and_save_to_repository() {
-		when(repository.save(any(Card.class))).thenReturn(new ValidationResult());
-		when(view.fillCard(any(Card.class))).thenReturn(new Card(accountRepository));
+		when(dataSource.save(any(Card.class))).thenReturn(new ValidationResult());
+		when(view.fillCard(any(Card.class))).thenReturn(new Card(accountDataSource));
 
 		presenter.save();
 
 		verify(view, times(1)).fillCard(any(Card.class));
-		verify(repository, times(1)).save(any(Card.class));
+		verify(dataSource, times(1)).save(any(Card.class));
 		verify(view, times(1)).finishView();
 	}
 
@@ -83,8 +83,8 @@ public class CardPresenterTest {
 		ValidationResult result = new ValidationResult();
 		result.addError(ValidationError.NAME);
 
-		when(view.fillCard(any(Card.class))).thenReturn(new Card(accountRepository));
-		when(repository.save(any(Card.class))).thenReturn(result);
+		when(view.fillCard(any(Card.class))).thenReturn(new Card(accountDataSource));
+		when(dataSource.save(any(Card.class))).thenReturn(result);
 
 		presenter.save();
 
@@ -97,14 +97,14 @@ public class CardPresenterTest {
 		final String uuid = "uuid";
 		final int value = 100;
 		Account account = new AccountBuilder().build();
-		Card card = new CardBuilder().account(account).build(accountRepository);
-		when(repository.find(uuid)).thenReturn(card);
-		when(accountRepository.find(anyString())).thenReturn(account);
+		Card card = new CardBuilder().account(account).build(accountDataSource);
+		when(dataSource.find(uuid)).thenReturn(card);
+		when(accountDataSource.find(anyString())).thenReturn(account);
 		when(expenseRepository.save(any(Expense.class))).thenReturn(new ValidationResult());
 		List<Expense> expenseList = new ArrayList<>();
 		expenseList.add(new ExpenseBuilder().value(value).build());
 		expenseList.add(new ExpenseBuilder().value(value).build());
-		when(repository.creditCardBills(any(Card.class), any(DateTime.class))).thenReturn(expenseList);
+		when(expenseRepository.creditCardBills(any(Card.class), any(DateTime.class))).thenReturn(expenseList);
 
 		String invoice = "Fatura";
 		when(resourcesHelper.getString(R.string.invoice)).thenReturn(invoice);
@@ -124,10 +124,10 @@ public class CardPresenterTest {
 	public void not_generate_card_bill_when_there_are_no_expenses() throws Exception {
 		final String uuid = "uuid";
 		Account account = new AccountBuilder().build();
-		Card card = new CardBuilder().account(account).build(accountRepository);
-		when(repository.find(uuid)).thenReturn(card);
+		Card card = new CardBuilder().account(account).build(accountDataSource);
+		when(dataSource.find(uuid)).thenReturn(card);
 		List<Expense> expenseList = new ArrayList<>();
-		when(repository.creditCardBills(any(Card.class), any(DateTime.class))).thenReturn(expenseList);
+		when(expenseRepository.creditCardBills(any(Card.class), any(DateTime.class))).thenReturn(expenseList);
 
 		String invoice = "Fatura";
 		when(resourcesHelper.getString(R.string.invoice)).thenReturn(invoice);

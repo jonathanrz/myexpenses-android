@@ -10,9 +10,12 @@ import org.junit.runner.RunWith;
 
 import java.util.List;
 
-import br.com.jonathanzanella.myexpenses.MyApplication;
+import javax.inject.Inject;
+
+import br.com.jonathanzanella.TestApp;
+import br.com.jonathanzanella.myexpenses.App;
 import br.com.jonathanzanella.myexpenses.account.Account;
-import br.com.jonathanzanella.myexpenses.account.AccountRepository;
+import br.com.jonathanzanella.myexpenses.account.AccountDataSource;
 import br.com.jonathanzanella.myexpenses.overview.WeeklyPagerAdapter;
 
 import static org.hamcrest.core.Is.is;
@@ -21,8 +24,10 @@ import static org.junit.Assert.assertThat;
 @RunWith(AndroidJUnit4.class)
 @SmallTest
 public class ExpensesInPeriodTest {
-	private final AccountRepository accountRepository = new AccountRepository();
-	private final ExpenseRepository expenseRepository = new ExpenseRepository();
+	@Inject
+	AccountDataSource accountDataSource;
+	@Inject
+	ExpenseDataSource expenseDataSource;
 	private final DateTime firstDayOfJune = new DateTime(2016, 6, 1, 0, 0, 0, 0);
 	private final DateTime lastDayOfJune = firstDayOfJune.dayOfMonth().withMaximumValue();
 	private final DateTime firstDayOfJuly = firstDayOfJune.plusMonths(1);
@@ -31,10 +36,11 @@ public class ExpensesInPeriodTest {
 
 	@Before
 	public void setUp() throws Exception {
-		MyApplication.Companion.resetDatabase();
+		TestApp.Companion.getTestComponent().inject(this);
+		App.Companion.resetDatabase();
 
 		account.setName("Account");
-		accountRepository.save(account);
+		accountDataSource.save(account);
 	}
 
 	private Expense newExpense(String name, DateTime date, int value) {
@@ -51,19 +57,19 @@ public class ExpensesInPeriodTest {
 	@Test
 	public void testExpensesInPeriod() {
 		Expense firstOfMonth = newExpense("First", firstDayOfJune, 1000);
-		expenseRepository.save(firstOfMonth);
+		expenseDataSource.save(firstOfMonth);
 
 		Expense endOfMonth = newExpense("End", lastDayOfJune.withHourOfDay(23), 500);
-		expenseRepository.save(endOfMonth);
+		expenseDataSource.save(endOfMonth);
 
 		Expense firstOfJuly = newExpense("July", firstDayOfJuly, 200);
-		expenseRepository.save(firstOfJuly);
+		expenseDataSource.save(firstOfJuly);
 
 		WeeklyPagerAdapter.Period period = new WeeklyPagerAdapter.Period();
 		period.setInit(firstDayOfJune);
 		period.setEnd(lastDayOfJune);
 
-		List<Expense> expenses = expenseRepository.expenses(period);
+		List<Expense> expenses = expenseDataSource.expenses(period, null);
 		assertThat(expenses.size(), is(2));
 		assertThat(expenses.get(0).getUuid(), is(firstOfMonth.getUuid()));
 		assertThat(expenses.get(1).getUuid(), is(endOfMonth.getUuid()));
@@ -72,25 +78,25 @@ public class ExpensesInPeriodTest {
 	@Test
 	public void testExpensesInPeriodWeekly() {
 		Expense firstOfMonth = newExpense("First", firstDayOfJune, 1000);
-		expenseRepository.save(firstOfMonth);
+		expenseDataSource.save(firstOfMonth);
 
 		Expense sixOfMonth = newExpense("Six", firstDayOfJune.plusDays(6), 850);
-		expenseRepository.save(sixOfMonth);
+		expenseDataSource.save(sixOfMonth);
 
 		Expense sevenOfMonth = newExpense("Seven", firstDayOfJune.plusDays(7), 900);
-		expenseRepository.save(sevenOfMonth);
+		expenseDataSource.save(sevenOfMonth);
 
 		Expense endOfMonth = newExpense("End", lastDayOfJune.withHourOfDay(23), 500);
-		expenseRepository.save(endOfMonth);
+		expenseDataSource.save(endOfMonth);
 
 		Expense firstOfJuly = newExpense("July", firstDayOfJuly, 200);
-		expenseRepository.save(firstOfJuly);
+		expenseDataSource.save(firstOfJuly);
 
 		WeeklyPagerAdapter.Period period = new WeeklyPagerAdapter.Period();
 		period.setInit(firstDayOfJune);
 		period.setEnd(firstDayOfJune.plusDays(6));
 
-		List<Expense> expenses = expenseRepository.expenses(period);
+		List<Expense> expenses = expenseDataSource.expenses(period, null);
 		assertThat(expenses.size(), is(2));
 		assertThat(expenses.get(0).getUuid(), is(firstOfMonth.getUuid()));
 		assertThat(expenses.get(1).getUuid(), is(sixOfMonth.getUuid()));
@@ -99,15 +105,15 @@ public class ExpensesInPeriodTest {
 	@Test
 	public void testExpensesInMonth() {
 		Expense firstOfMonth = newExpense("First", firstDayOfJune, 1000);
-		expenseRepository.save(firstOfMonth);
+		expenseDataSource.save(firstOfMonth);
 
 		Expense endOfMonth = newExpense("End", lastDayOfJune.withHourOfDay(23), 500);
-		expenseRepository.save(endOfMonth);
+		expenseDataSource.save(endOfMonth);
 
 		Expense firstOfJuly = newExpense("July", firstDayOfJuly, 200);
-		expenseRepository.save(firstOfJuly);
+		expenseDataSource.save(firstOfJuly);
 
-		List<Expense> expenses = expenseRepository.expensesForResumeScreen(firstDayOfJune);
+		List<Expense> expenses = expenseDataSource.expensesForResumeScreen(firstDayOfJune);
 		assertThat(expenses.size(), is(2));
 		assertThat(expenses.get(0).getUuid(), is(firstOfMonth.getUuid()));
 		assertThat(expenses.get(1).getUuid(), is(endOfMonth.getUuid()));

@@ -7,10 +7,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import br.com.jonathanzanella.myexpenses.MyApplication;
+import javax.inject.Inject;
+
+import br.com.jonathanzanella.TestApp;
+import br.com.jonathanzanella.myexpenses.App;
 import br.com.jonathanzanella.myexpenses.account.Account;
-import br.com.jonathanzanella.myexpenses.account.AccountRepository;
-import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
+import br.com.jonathanzanella.myexpenses.account.AccountDataSource;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.CardBuilder;
 
@@ -22,24 +24,24 @@ import static org.hamcrest.Matchers.not;
 @RunWith(AndroidJUnit4.class)
 @SmallTest
 public class CardRepositoryTest {
-	private CardRepository subject;
+	@Inject
+	CardDataSource subject;
+	@Inject
+	AccountDataSource accountDataSource;
 	private Account account;
-	private AccountRepository accountRepository;
 
 	@Before
 	public void setUp() throws Exception {
-		MyApplication.Companion.resetDatabase();
+		TestApp.Companion.getTestComponent().inject(this);
+		App.Companion.resetDatabase();
 
 		account = new AccountBuilder().build();
-		accountRepository = new AccountRepository();
-		accountRepository.save(account);
-		ExpenseRepository expenseRepository = new ExpenseRepository();
-		subject = new CardRepository(expenseRepository);
+		accountDataSource.save(account);
 	}
 
 	@Test
 	public void can_save_card() throws Exception {
-		Card card = new CardBuilder().account(account).build(accountRepository);
+		Card card = new CardBuilder().account(account).build(accountDataSource);
 		subject.save(card);
 
 		assertThat(card.getId(), is(not(0L)));
@@ -48,7 +50,7 @@ public class CardRepositoryTest {
 
 	@Test
 	public void can_load_saved_card() throws Exception {
-		Card card = new CardBuilder().account(account).build(accountRepository);
+		Card card = new CardBuilder().account(account).build(accountDataSource);
 		subject.save(card);
 
 		Card loadCard = subject.find(card.getUuid());
@@ -57,7 +59,7 @@ public class CardRepositoryTest {
 
 	@Test
 	public void load_account_debit_card() throws Exception {
-		Card debitCard = new CardBuilder().account(account).type(CardType.DEBIT).build(accountRepository);
+		Card debitCard = new CardBuilder().account(account).type(CardType.DEBIT).build(accountDataSource);
 		assertTrue(subject.save(debitCard).isValid());
 
 		Card loadedCard = subject.accountDebitCard(account);

@@ -1,56 +1,67 @@
 package br.com.jonathanzanella.myexpenses.card
 
 import android.support.annotation.WorkerThread
-import br.com.jonathanzanella.myexpenses.MyApplication
 import br.com.jonathanzanella.myexpenses.account.Account
-import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult
 import org.apache.commons.lang3.StringUtils
-import org.joda.time.DateTime
 import timber.log.Timber
 import java.util.*
+import javax.inject.Inject
 
-open class CardRepository(private val expenseRepository: ExpenseRepository) {
+interface CardDataSource {
+    fun all(): List<Card>
+    fun unsync(): List<Card>
+    fun creditCards(): List<Card>
+
+    fun find(uuid: String): Card?
+    fun accountDebitCard(account: Account): Card?
+    fun greaterUpdatedAt(): Long
+
+    fun save(card: Card): ValidationResult
+    fun syncAndSave(unsync: Card): ValidationResult
+}
+
+class CardRepository @Inject constructor(val dao: CardDao): CardDataSource {
 
     @WorkerThread
-    fun find(uuid: String): Card? {
-        return MyApplication.database.cardDao().find(uuid).blockingFirst().firstOrNull()
+    override fun all(): List<Card> {
+        return dao.all().blockingFirst()
     }
 
     @WorkerThread
-    fun all(): List<Card> {
-        return MyApplication.database.cardDao().all().blockingFirst()
+    override fun unsync(): List<Card> {
+        return dao.unsync().blockingFirst()
     }
 
     @WorkerThread
-    fun unsync(): List<Card> {
-        return MyApplication.database.cardDao().unsync().blockingFirst()
+    override fun creditCards(): List<Card> {
+        return dao.cards(CardType.CREDIT.value).blockingFirst()
     }
 
     @WorkerThread
-    fun creditCards(): List<Card> {
-        return MyApplication.database.cardDao().cards(CardType.CREDIT.value).blockingFirst()
+    override fun find(uuid: String): Card? {
+        return dao.find(uuid).blockingFirst().firstOrNull()
     }
 
     @WorkerThread
-    fun accountDebitCard(account: Account): Card? {
-        return MyApplication.database.cardDao().accountCard(CardType.DEBIT.value, account.uuid!!).blockingFirst().firstOrNull()
+    override fun accountDebitCard(account: Account): Card? {
+        return dao.accountCard(CardType.DEBIT.value, account.uuid!!).blockingFirst().firstOrNull()
     }
 
     @WorkerThread
-    fun greaterUpdatedAt(): Long {
-        return MyApplication.database.cardDao().greaterUpdatedAt().blockingFirst().firstOrNull()?.updatedAt ?: 0L
+    override fun greaterUpdatedAt(): Long {
+        return dao.greaterUpdatedAt().blockingFirst().firstOrNull()?.updatedAt ?: 0L
     }
 
     @WorkerThread
-    fun save(card: Card): ValidationResult {
+    override fun save(card: Card): ValidationResult {
         val result = validate(card)
         if (result.isValid) {
             if (card.id == 0L && card.uuid == null)
                 card.uuid = UUID.randomUUID().toString()
             card.sync = false
-            card.id = MyApplication.database.cardDao().saveAtDatabase(card)
+            card.id = dao.saveAtDatabase(card)
         }
         return result
     }
@@ -67,7 +78,7 @@ open class CardRepository(private val expenseRepository: ExpenseRepository) {
     }
 
     @WorkerThread
-    fun syncAndSave(unsync: Card): ValidationResult {
+    override fun syncAndSave(unsync: Card): ValidationResult {
         val result = validate(unsync)
         if (!result.isValid) {
             Timber.tag("Card sync valida failed")
@@ -83,16 +94,8 @@ open class CardRepository(private val expenseRepository: ExpenseRepository) {
         }
 
         unsync.sync = true
-        unsync.id = MyApplication.database.cardDao().saveAtDatabase(unsync)
+        unsync.id = dao.saveAtDatabase(unsync)
 
         return result
     }
-
-    @WorkerThread
-    fun creditCardBills(card: Card, month: DateTime) =
-        expenseRepository.unpaidCardExpenses(month, card)
-
-    @WorkerThread
-    fun getInvoiceValue(card: Card, month: DateTime) =
-        creditCardBills(card, month).sumBy { it.value }
 }

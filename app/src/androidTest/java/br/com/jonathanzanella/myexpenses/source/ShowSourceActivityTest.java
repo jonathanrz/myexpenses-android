@@ -10,7 +10,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import br.com.jonathanzanella.myexpenses.MyApplication;
+import javax.inject.Inject;
+
+import br.com.jonathanzanella.TestApp;
+import br.com.jonathanzanella.myexpenses.App;
 import br.com.jonathanzanella.myexpenses.R;
 
 import static android.support.test.InstrumentationRegistry.getTargetContext;
@@ -26,16 +29,18 @@ public class ShowSourceActivityTest {
 	@Rule
 	public ActivityTestRule<ShowSourceActivity> activityTestRule = new ActivityTestRule<>(ShowSourceActivity.class, true, false);
 
-	private final SourceRepository repository = new SourceRepository();
+	@Inject
+	SourceDataSource dataSource;
 	private Source source;
 
 	@Before
 	public void setUp() throws Exception {
-		MyApplication.Companion.resetDatabase();
+		TestApp.Companion.getTestComponent().inject(this);
+		App.Companion.resetDatabase();
 
 		source = new Source();
 		source.setName("test");
-		repository.save(source);
+		dataSource.save(source);
 	}
 
 	@Test

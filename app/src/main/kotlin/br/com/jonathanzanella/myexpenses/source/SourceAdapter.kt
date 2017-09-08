@@ -6,14 +6,24 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.helpers.AdapterColorHelper
 import org.jetbrains.anko.*
+import javax.inject.Inject
 
-internal class SourceAdapter : RecyclerView.Adapter<SourceAdapter.ViewHolder>() {
-    private val presenter = SourceAdapterPresenter(SourceRepository())
-    private var sources = presenter.getSources(false)
+class SourceAdapter: RecyclerView.Adapter<SourceAdapter.ViewHolder>() {
+    @Inject
+    lateinit var sourceDataSource: SourceDataSource
+    private val presenter: SourceAdapterPresenter
+    private var sources: List<Source>
     private var callback: SourceAdapterCallback? = null
+
+    init {
+        App.getAppComponent().inject(this)
+        presenter = SourceAdapterPresenter(sourceDataSource)
+        sources = presenter.getSources(false)
+    }
 
     inner class ViewHolder(itemView: View, val ui: SourceAdapterViewUI) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 

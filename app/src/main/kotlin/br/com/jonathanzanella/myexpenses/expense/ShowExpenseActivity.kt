@@ -9,22 +9,22 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.TableRow
 import android.widget.TextView
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.bill.BillRepository
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import br.com.jonathanzanella.myexpenses.views.anko.*
 import org.jetbrains.anko.*
+import javax.inject.Inject
 
 class ShowExpenseActivity : AppCompatActivity(), ExpenseContract.View {
     override val context = this
     private val ui = ShowExpenseActivityUi()
-    private var presenter: ExpensePresenter
+    @Inject
+    lateinit var presenter: ExpensePresenter
 
     init {
-        val expenseRepository = ExpenseRepository()
-        val billRepository = BillRepository(expenseRepository)
-        presenter = ExpensePresenter(expenseRepository, billRepository)
+        App.getAppComponent().inject(this)
     }
 
     @UiThread

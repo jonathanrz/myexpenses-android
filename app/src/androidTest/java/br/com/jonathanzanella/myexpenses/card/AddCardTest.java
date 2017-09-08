@@ -14,10 +14,13 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import br.com.jonathanzanella.myexpenses.MyApplication;
+import javax.inject.Inject;
+
+import br.com.jonathanzanella.TestApp;
+import br.com.jonathanzanella.myexpenses.App;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
-import br.com.jonathanzanella.myexpenses.account.AccountRepository;
+import br.com.jonathanzanella.myexpenses.account.AccountDataSource;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.views.MainActivity;
@@ -43,18 +46,22 @@ public class AddCardTest {
 	@Rule
 	public ActivityTestRule<EditCardActivity> editCardActivityTestRule = new ActivityTestRule<>(EditCardActivity.class);
 
+	@Inject
+	AccountDataSource accountDataSource;
+
 	private Account account;
 
 	@Before
 	public void setUp() throws Exception {
-		MyApplication.Companion.resetDatabase();
+		TestApp.Companion.getTestComponent().inject(this);
+		App.Companion.resetDatabase();
 
 		UiDevice uiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
 		if (!uiDevice.isScreenOn())
 			uiDevice.wakeUp();
 
 		account = new AccountBuilder().build();
-		new AccountRepository().save(account);
+		accountDataSource.save(account);
 	}
 
 	@After

@@ -10,12 +10,13 @@ import android.support.test.espresso.matcher.ViewMatchers.withText
 import android.support.test.filters.MediumTest
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
-import br.com.jonathanzanella.myexpenses.MyApplication
+import br.com.jonathanzanella.TestApp
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.Account
-import br.com.jonathanzanella.myexpenses.account.AccountRepository
+import br.com.jonathanzanella.myexpenses.account.AccountDataSource
 import br.com.jonathanzanella.myexpenses.expense.Expense
-import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
+import br.com.jonathanzanella.myexpenses.expense.ExpenseDataSource
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper
 import br.com.jonathanzanella.myexpenses.helpers.UIHelper.clickIntoView
 import br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle
@@ -30,6 +31,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import javax.inject.Inject
 
 @RunWith(AndroidJUnit4::class)
 @MediumTest
@@ -37,9 +39,12 @@ class ShowCardActivityTest {
     @Rule @JvmField
     var activityTestRule = ActivityTestRule(ShowCardActivity::class.java, true, false)
 
-    private val expenseRepository = ExpenseRepository()
-    private val repository = CardRepository(expenseRepository)
-    private val accountRepository = AccountRepository()
+    @Inject
+    lateinit var expenseDataSource: ExpenseDataSource
+    @Inject
+    lateinit var dataSource: CardDataSource
+    @Inject
+    lateinit var accountDataSource: AccountDataSource
 
     private var card: Card? = null
     private var account: Account? = null
@@ -47,13 +52,14 @@ class ShowCardActivityTest {
     @Before
     @Throws(Exception::class)
     fun setUp() {
-        MyApplication.resetDatabase()
+        TestApp.getTestComponent().inject(this)
+        App.resetDatabase()
 
         account = AccountBuilder().build()
-        accountRepository.save(account!!)
+        accountDataSource.save(account!!)
 
-        card = CardBuilder().account(account).type(CardType.CREDIT).build(accountRepository)
-        repository.save(card!!)
+        card = CardBuilder().account(account).type(CardType.CREDIT).build(accountDataSource)
+        dataSource.save(card!!)
     }
 
     @After
@@ -85,9 +91,9 @@ class ShowCardActivityTest {
     fun generate_and_pay_credit_card_bill() {
         val date = DateTime.now().minusMonths(1)
         var expense1: Expense? = ExpenseBuilder().chargeable(card).date(date).build()
-        assertTrue(expenseRepository.save(expense1!!).isValid)
+        assertTrue(expenseDataSource.save(expense1!!).isValid)
         var expense2: Expense? = ExpenseBuilder().chargeable(card).date(date).build()
-        assertTrue(expenseRepository.save(expense2!!).isValid)
+        assertTrue(expenseDataSource.save(expense2!!).isValid)
 
         callActivity()
 
@@ -102,9 +108,9 @@ class ShowCardActivityTest {
         onView(withId(R.id.act_edit_expense_value)).check(matches(withText(cardBillValue)))
         onView(withId(R.id.act_edit_expense_chargeable)).check(matches(withText(card!!.account!!.name)))
 
-        expense1 = expenseRepository.find(expense1.uuid!!)
+        expense1 = expenseDataSource.find(expense1.uuid!!)
         assertTrue(expense1!!.charged)
-        expense2 = expenseRepository.find(expense1.uuid!!)
+        expense2 = expenseDataSource.find(expense1.uuid!!)
         assertTrue(expense2!!.charged)
     }
 }

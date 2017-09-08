@@ -1,39 +1,41 @@
 package br.com.jonathanzanella.myexpenses.bill
 
 import android.support.annotation.WorkerThread
-import br.com.jonathanzanella.myexpenses.MyApplication
-import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
+import br.com.jonathanzanella.myexpenses.expense.ExpenseDataSource
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult
 import org.apache.commons.lang3.StringUtils
 import org.joda.time.DateTime
 import timber.log.Timber
 import java.util.*
+import javax.inject.Inject
 
-open class BillRepository(private val expenseRepository: ExpenseRepository, private val dao: BillDao = MyApplication.database.billDao()) {
-    @WorkerThread
-    fun find(uuid: String): Bill? {
-        return dao.find(uuid).blockingFirst().firstOrNull()
-    }
+interface BillDataSource {
+    fun all(): List<Bill>
+    fun unsync(): List<Bill>
+    fun monthly(month: DateTime): List<Bill>
 
+    fun find(uuid: String): Bill?
+    fun greaterUpdatedAt(): Long
+
+    fun save(bill: Bill): ValidationResult
+    fun syncAndSave(unsync: Bill): ValidationResult
+}
+
+class BillRepository @Inject constructor(val dao: BillDao, private val expenseDataSource: ExpenseDataSource): BillDataSource {
     @WorkerThread
-    fun all(): List<Bill> {
+    override fun all(): List<Bill> {
         return dao.all().blockingFirst()
     }
 
     @WorkerThread
-    fun greaterUpdatedAt(): Long {
-        return dao.greaterUpdatedAt().blockingFirst().firstOrNull()?.updatedAt ?: 0L
-    }
-
-    @WorkerThread
-    fun unsync(): List<Bill> {
+    override fun unsync(): List<Bill> {
         return dao.unsync().blockingFirst()
     }
 
     @WorkerThread
-    fun monthly(month: DateTime): List<Bill> {
-        val expenses = expenseRepository.monthly(month)
+    override fun monthly(month: DateTime): List<Bill> {
+        val expenses = expenseDataSource.monthly(month)
         val bills = dao.monthly(month.millis).blockingFirst() as MutableList<Bill>
         var i = 0
         while (i < bills.size) {
@@ -56,7 +58,17 @@ open class BillRepository(private val expenseRepository: ExpenseRepository, priv
     }
 
     @WorkerThread
-    fun save(bill: Bill): ValidationResult {
+    override fun find(uuid: String): Bill? {
+        return dao.find(uuid).blockingFirst().firstOrNull()
+    }
+
+    @WorkerThread
+    override fun greaterUpdatedAt(): Long {
+        return dao.greaterUpdatedAt().blockingFirst().firstOrNull()?.updatedAt ?: 0L
+    }
+
+    @WorkerThread
+    override fun save(bill: Bill): ValidationResult {
         val result = validate(bill)
         if (result.isValid) {
             if (bill.id == 0L && bill.uuid == null)
@@ -85,7 +97,7 @@ open class BillRepository(private val expenseRepository: ExpenseRepository, priv
     }
 
     @WorkerThread
-    fun syncAndSave(unsync: Bill): ValidationResult {
+    override fun syncAndSave(unsync: Bill): ValidationResult {
         val result = validate(unsync)
         if (!result.isValid) {
             Timber.tag("Bill sync valid failed")

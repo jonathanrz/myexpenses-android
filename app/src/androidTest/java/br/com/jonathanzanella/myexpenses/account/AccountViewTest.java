@@ -9,7 +9,10 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import br.com.jonathanzanella.myexpenses.MyApplication;
+import javax.inject.Inject;
+
+import br.com.jonathanzanella.TestApp;
+import br.com.jonathanzanella.myexpenses.App;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
@@ -30,20 +33,22 @@ import static org.hamcrest.Matchers.is;
 public class AccountViewTest {
 	@Rule
 	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
+	@Inject
+	AccountDataSource dataSource;
 
 	private Account accountToShowInResume;
 	private Account accountToHideInResume;
 
 	@Before
 	public void setUp() throws Exception {
-		MyApplication.Companion.resetDatabase();
+		TestApp.Companion.getTestComponent().inject(this);
+		App.Companion.resetDatabase();
 
 		accountToShowInResume = new AccountBuilder().name("accountToShowInResume").showInResume(true).build();
 		accountToHideInResume = new AccountBuilder().name("accountToHideInResume").showInResume(false).build();
 
-		AccountRepository repository = new AccountRepository();
-		assertTrue(repository.save(accountToShowInResume).isValid());
-		assertTrue(repository.save(accountToHideInResume).isValid());
+		assertTrue(dataSource.save(accountToShowInResume).isValid());
+		assertTrue(dataSource.save(accountToHideInResume).isValid());
 	}
 
 	@After

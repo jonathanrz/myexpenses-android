@@ -1,7 +1,7 @@
 package br.com.jonathanzanella.myexpenses.helpers.builder;
 
 import br.com.jonathanzanella.myexpenses.account.Account;
-import br.com.jonathanzanella.myexpenses.account.AccountRepository;
+import br.com.jonathanzanella.myexpenses.account.AccountDataSource;
 import br.com.jonathanzanella.myexpenses.card.Card;
 import br.com.jonathanzanella.myexpenses.card.CardType;
 
@@ -25,10 +25,10 @@ public class CardBuilder {
 		return this;
 	}
 
-	public Card build(AccountRepository accountRepository) {
+	public Card build(AccountDataSource accountDataSource) {
 		if(account == null)
 			throw new NullPointerException("Account can't be empty");
-		Card card = new Card(accountRepository);
+		Card card = new Card(accountDataSource);
 		card.setName(name);
 		card.setType(type);
 		card.setAccount(account);

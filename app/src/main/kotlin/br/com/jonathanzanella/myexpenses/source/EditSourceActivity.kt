@@ -7,16 +7,23 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.AppCompatEditText
 import android.view.Menu
 import android.view.MenuItem
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.views.anko.*
 import org.jetbrains.anko.*
 import timber.log.Timber
+import javax.inject.Inject
 
 class EditSourceActivity : AppCompatActivity(), SourceContract.EditView {
+    @Inject
+    lateinit var presenter: SourcePresenter
     override val context = this
-    private val presenter: SourcePresenter = SourcePresenter(SourceRepository())
     private val ui = EditSourceActivityUi()
+
+    init {
+        App.getAppComponent().inject(this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

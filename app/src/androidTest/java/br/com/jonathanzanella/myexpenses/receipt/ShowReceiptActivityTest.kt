@@ -10,21 +10,23 @@ import android.support.test.espresso.matcher.ViewMatchers.withText
 import android.support.test.filters.MediumTest
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
-import br.com.jonathanzanella.myexpenses.MyApplication
+import br.com.jonathanzanella.TestApp
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.account.AccountRepository
+import br.com.jonathanzanella.myexpenses.account.AccountDataSource
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper
 import br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder
 import br.com.jonathanzanella.myexpenses.helpers.builder.ReceiptBuilder
 import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
-import br.com.jonathanzanella.myexpenses.source.SourceRepository
+import br.com.jonathanzanella.myexpenses.source.SourceDataSource
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import javax.inject.Inject
 
 @RunWith(AndroidJUnit4::class)
 @MediumTest
@@ -34,21 +36,27 @@ class ShowReceiptActivityTest {
 
     private var receipt: Receipt? = null
 
+    @Inject
+    lateinit var dataSource: ReceiptDataSource
+    @Inject
+    lateinit var sourceDataSource: SourceDataSource
+    @Inject
+    lateinit var accountDataSource: AccountDataSource
+
     @Before
     @Throws(Exception::class)
     fun setUp() {
-        MyApplication.resetDatabase()
-
-        val repository = ReceiptRepository()
+        TestApp.getTestComponent().inject(this)
+        App.resetDatabase()
 
         val s = SourceBuilder().build()
-        SourceRepository().save(s)
+        sourceDataSource.save(s)
 
         val a = AccountBuilder().build()
-        AccountRepository().save(a)
+        accountDataSource.save(a)
 
         receipt = ReceiptBuilder().source(s).account(a).build()
-        repository.save(receipt!!)
+        dataSource.save(receipt!!)
     }
 
     @After

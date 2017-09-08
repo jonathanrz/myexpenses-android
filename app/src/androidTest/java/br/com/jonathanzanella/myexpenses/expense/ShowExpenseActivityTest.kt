@@ -10,9 +10,10 @@ import android.support.test.espresso.matcher.ViewMatchers.withText
 import android.support.test.filters.MediumTest
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
-import br.com.jonathanzanella.myexpenses.MyApplication
+import br.com.jonathanzanella.TestApp
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.account.AccountRepository
+import br.com.jonathanzanella.myexpenses.account.AccountDataSource
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper
 import br.com.jonathanzanella.myexpenses.helpers.UIHelper.clickIntoView
 import br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle
@@ -25,6 +26,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import javax.inject.Inject
 
 @RunWith(AndroidJUnit4::class)
 @MediumTest
@@ -32,19 +34,23 @@ class ShowExpenseActivityTest {
     @Rule @JvmField
     var activityTestRule = ActivityTestRule(ShowExpenseActivity::class.java, true, false)
 
-    private val repository = ExpenseRepository()
+    @Inject
+    lateinit var dataSource: ExpenseDataSource
+    @Inject
+    lateinit var accountDataSource: AccountDataSource
     private var expense: Expense? = null
 
     @Before
     @Throws(Exception::class)
     fun setUp() {
-        MyApplication.resetDatabase()
+        TestApp.getTestComponent().inject(this)
+        App.resetDatabase()
 
         val a = AccountBuilder().build()
-        AccountRepository().save(a)
+        accountDataSource.save(a)
 
         expense = ExpenseBuilder().chargeable(a).build()
-        assertTrue(repository.save(expense!!).isValid)
+        assertTrue(dataSource.save(expense!!).isValid)
     }
 
     @After

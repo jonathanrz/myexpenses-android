@@ -1,36 +1,47 @@
 package br.com.jonathanzanella.myexpenses.source
 
 import android.support.annotation.WorkerThread
-import br.com.jonathanzanella.myexpenses.MyApplication
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult
 import org.apache.commons.lang3.StringUtils
 import timber.log.Timber
 import java.util.*
+import javax.inject.Inject
 
-open class SourceRepository(val dao: SourceDao = MyApplication.database.sourceDao()) {
-    @WorkerThread
-    fun find(uuid: String): Source? {
-        return dao.find(uuid).blockingFirst().firstOrNull()
-    }
+interface SourceDataSource {
+    fun all(): List<Source>
+    fun unsync(): List<Source>
 
-    @WorkerThread
-    fun greaterUpdatedAt(): Long {
-        return dao.greaterUpdatedAt().blockingFirst().firstOrNull()?.updatedAt ?: 0L
-    }
+    fun find(uuid: String): Source?
+    fun greaterUpdatedAt(): Long
 
+    fun save(source: Source): ValidationResult
+    fun syncAndSave(unsync: Source): ValidationResult
+}
+
+class SourceRepository @Inject constructor(val dao: SourceDao): SourceDataSource {
     @WorkerThread
-    fun all(): List<Source> {
+    override fun all(): List<Source> {
         return dao.all().blockingFirst()
     }
 
     @WorkerThread
-    fun unsync(): List<Source> {
+    override fun unsync(): List<Source> {
         return dao.unsync().blockingFirst()
     }
 
     @WorkerThread
-    fun save(source: Source): ValidationResult {
+    override fun find(uuid: String): Source? {
+        return dao.find(uuid).blockingFirst().firstOrNull()
+    }
+
+    @WorkerThread
+    override fun greaterUpdatedAt(): Long {
+        return dao.greaterUpdatedAt().blockingFirst().firstOrNull()?.updatedAt ?: 0L
+    }
+
+    @WorkerThread
+    override fun save(source: Source): ValidationResult {
         val result = validate(source)
         if (result.isValid) {
             if (source.id == 0L && source.uuid == null)
@@ -49,7 +60,7 @@ open class SourceRepository(val dao: SourceDao = MyApplication.database.sourceDa
     }
 
     @WorkerThread
-    fun syncAndSave(unsync: Source): ValidationResult {
+    override fun syncAndSave(unsync: Source): ValidationResult {
         val result = validate(unsync)
         if (!result.isValid) {
             Timber.tag("Source sync vali failed").w(unsync.getData() + "\nerrors: " + result.errorsAsString)

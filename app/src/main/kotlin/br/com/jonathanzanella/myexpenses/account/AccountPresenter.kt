@@ -5,8 +5,9 @@ import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
+import javax.inject.Inject
 
-class AccountPresenter(private val repository: AccountRepository) {
+class AccountPresenter @Inject constructor(private val dataSource: AccountDataSource) {
 
     private var view: AccountContract.View? = null
     private var editView: AccountContract.EditView? = null
@@ -59,7 +60,7 @@ class AccountPresenter(private val repository: AccountRepository) {
     @UiThread
     fun loadAccount(uuid: String) {
         doAsync {
-            account = repository.find(uuid)
+            account = dataSource.find(uuid)
 
             uiThread { account?.let { updateView() } }
         }
@@ -75,7 +76,7 @@ class AccountPresenter(private val repository: AccountRepository) {
         account = v.fillAccount(account!!)
 
         doAsync {
-            val result = repository.save(account!!)
+            val result = dataSource.save(account!!)
 
             uiThread {
                 if (result.isValid) {

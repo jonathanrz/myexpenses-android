@@ -11,9 +11,12 @@ import org.junit.runner.RunWith;
 
 import java.util.List;
 
-import br.com.jonathanzanella.myexpenses.MyApplication;
+import javax.inject.Inject;
+
+import br.com.jonathanzanella.TestApp;
+import br.com.jonathanzanella.myexpenses.App;
 import br.com.jonathanzanella.myexpenses.account.Account;
-import br.com.jonathanzanella.myexpenses.account.AccountRepository;
+import br.com.jonathanzanella.myexpenses.account.AccountDataSource;
 import br.com.jonathanzanella.myexpenses.card.Card;
 import br.com.jonathanzanella.myexpenses.card.CardRepository;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
@@ -32,12 +35,19 @@ import static org.hamcrest.Matchers.not;
 @SmallTest
 public class BillRepositoryTest {
 	private final DateTime firstDayOfJune = new DateTime(2016, 6, 1, 0, 0, 0, 0);
-	private final ExpenseRepository expenseRepository = new ExpenseRepository();
-	private final BillRepository billRepository = new BillRepository(expenseRepository, MyApplication.database.billDao());
+	@Inject
+	AccountDataSource accountDataSource;
+	@Inject
+	CardRepository cardRepository;
+	@Inject
+	ExpenseRepository expenseRepository;
+	@Inject
+	BillRepository billRepository;
 
 	@Before
 	public void setUp() throws Exception {
-		MyApplication.Companion.resetDatabase();
+		TestApp.Companion.getTestComponent().inject(this);
+		App.Companion.resetDatabase();
 	}
 
 	@Test
@@ -68,11 +78,10 @@ public class BillRepositoryTest {
 		billRepository.save(bill);
 
 		Account account = new AccountBuilder().build();
-		AccountRepository accountRepository = new AccountRepository();
-		accountRepository.save(account);
+		accountDataSource.save(account);
 
-		Card card = new CardBuilder().account(account).build(accountRepository);
-		new CardRepository(expenseRepository).save(card);
+		Card card = new CardBuilder().account(account).build(accountDataSource);
+		cardRepository.save(card);
 
 		Expense expense = new ExpenseBuilder()
 				.date(firstDayOfJune)

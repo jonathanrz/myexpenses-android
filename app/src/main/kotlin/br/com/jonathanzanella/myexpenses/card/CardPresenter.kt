@@ -7,20 +7,22 @@ import android.support.annotation.UiThread
 import android.support.annotation.WorkerThread
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.Account
-import br.com.jonathanzanella.myexpenses.account.AccountRepository
+import br.com.jonathanzanella.myexpenses.account.AccountDataSource
 import br.com.jonathanzanella.myexpenses.account.ListAccountActivity
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException
 import br.com.jonathanzanella.myexpenses.exceptions.ValidationException
 import br.com.jonathanzanella.myexpenses.expense.Expense
-import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
+import br.com.jonathanzanella.myexpenses.expense.ExpenseDataSource
 import br.com.jonathanzanella.myexpenses.helpers.ResourcesHelper
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import org.joda.time.DateTime
+import javax.inject.Inject
 
-class CardPresenter(private val repository: CardRepository, private val accountRepository: AccountRepository,
-                     private val expenseRepository: ExpenseRepository, private val resourcesHelper: ResourcesHelper) {
-
+class CardPresenter @Inject constructor(private val accountDataSource: AccountDataSource,
+                                        private val dataSource: CardDataSource,
+                                        private val expenseDataSource: ExpenseDataSource,
+                                        private val resourcesHelper: ResourcesHelper) {
     private var view: CardContract.View? = null
     private var editView: CardContract.EditView? = null
     private var card: Card? = null
@@ -45,7 +47,7 @@ class CardPresenter(private val repository: CardRepository, private val accountR
         if (card != null) {
             if (invalidateCache) {
                 doAsync {
-                    card = repository.find(card!!.uuid!!)
+                    card = dataSource.find(card!!.uuid!!)
 
                     uiThread { updateView() }
                 }
@@ -92,7 +94,7 @@ class CardPresenter(private val repository: CardRepository, private val accountR
 
     @WorkerThread
     fun loadCard(uuid: String) {
-        card = repository.find(uuid)
+        card = dataSource.find(uuid)
         if (card == null)
             throw CardNotFoundException(uuid)
     }
@@ -101,13 +103,13 @@ class CardPresenter(private val repository: CardRepository, private val accountR
     fun save() {
         val v = editView ?: throw InvalidMethodCallException("save", javaClass.toString(), "View should be a Edit View")
         if (card == null)
-            card = Card(accountRepository)
+            card = Card(accountDataSource)
         card = v.fillCard(card!!)
         if (account != null)
             card!!.account = account
 
         doAsync {
-            val result = repository.save(card!!)
+            val result = dataSource.save(card!!)
 
             if (result.isValid) {
                 v.finishView()
@@ -138,7 +140,7 @@ class CardPresenter(private val repository: CardRepository, private val accountR
     @UiThread
     private fun loadAccount(uuid: String) {
         doAsync {
-            account = accountRepository.find(uuid)
+            account = accountDataSource.find(uuid)
 
             uiThread { account?.let { editView?.onAccountSelected(it) }}
         }
@@ -146,12 +148,12 @@ class CardPresenter(private val repository: CardRepository, private val accountR
 
     fun generateCreditCardBill(month: DateTime): Expense? {
         val c = card!!
-        val expenses = repository.creditCardBills(c, month)
+        val expenses = expenseDataSource.creditCardBills(c, month)
         var totalExpense = 0
         for (expense in expenses) {
             totalExpense += expense.value
             expense.charged = true
-            expenseRepository.save(expense)
+            expenseDataSource.save(expense)
         }
 
         if (totalExpense == 0)
@@ -162,7 +164,7 @@ class CardPresenter(private val repository: CardRepository, private val accountR
         e.setDate(DateTime.now())
         e.value = totalExpense
         e.setChargeable(c.account!!)
-        val validationResult = expenseRepository.save(e)
+        val validationResult = expenseDataSource.save(e)
         if (!validationResult.isValid)
             throw ValidationException(validationResult)
 

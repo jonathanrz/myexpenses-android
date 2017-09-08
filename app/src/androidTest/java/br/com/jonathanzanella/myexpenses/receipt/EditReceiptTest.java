@@ -12,10 +12,13 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import br.com.jonathanzanella.myexpenses.MyApplication;
+import javax.inject.Inject;
+
+import br.com.jonathanzanella.TestApp;
+import br.com.jonathanzanella.myexpenses.App;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
-import br.com.jonathanzanella.myexpenses.account.AccountRepository;
+import br.com.jonathanzanella.myexpenses.account.AccountDataSource;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.ReceiptBuilder;
@@ -42,26 +45,31 @@ import static org.hamcrest.core.Is.is;
 public class EditReceiptTest {
 	@Rule
 	public ActivityTestRule<ShowReceiptActivity> activityTestRule = new ActivityTestRule<>(ShowReceiptActivity.class, true, false);
+	@Inject
+	AccountDataSource accountDataSource;
+	@Inject
+	SourceRepository sourceRepository;
+	@Inject
+	ReceiptRepository repository;
 
 	private Receipt receipt;
-	private ReceiptRepository repository;
 
 	@Before
 	public void setUp() throws Exception {
-		MyApplication.Companion.resetDatabase();
+		TestApp.Companion.getTestComponent().inject(this);
+		App.Companion.resetDatabase();
 
 		Account a = new AccountBuilder().build();
-		assertTrue(new AccountRepository().save(a).isValid());
+		assertTrue(accountDataSource.save(a).isValid());
 
 		Source s = new SourceBuilder().build();
-		assertTrue(new SourceRepository().save(s).isValid());
+		assertTrue(sourceRepository.save(s).isValid());
 
 		receipt = new ReceiptBuilder()
 				.date(DateTime.now().minusDays(1))
 				.account(a)
 				.source(s)
 				.build();
-		repository = new ReceiptRepository();
 		assertTrue(repository.save(receipt).isValid());
 	}
 

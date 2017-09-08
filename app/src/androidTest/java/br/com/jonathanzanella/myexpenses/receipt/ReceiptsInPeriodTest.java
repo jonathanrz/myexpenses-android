@@ -11,9 +11,12 @@ import org.junit.runner.RunWith;
 
 import java.util.List;
 
-import br.com.jonathanzanella.myexpenses.MyApplication;
+import javax.inject.Inject;
+
+import br.com.jonathanzanella.TestApp;
+import br.com.jonathanzanella.myexpenses.App;
 import br.com.jonathanzanella.myexpenses.account.Account;
-import br.com.jonathanzanella.myexpenses.account.AccountRepository;
+import br.com.jonathanzanella.myexpenses.account.AccountDataSource;
 import br.com.jonathanzanella.myexpenses.source.Source;
 import br.com.jonathanzanella.myexpenses.source.SourceRepository;
 
@@ -31,16 +34,20 @@ public class ReceiptsInPeriodTest {
 	private final Account account = new Account();
 	private final Source source = new Source();
 
-	private final SourceRepository sourceRepository = new SourceRepository();
-	private final AccountRepository accountRepository = new AccountRepository();
-	private final ReceiptRepository receiptRepository = new ReceiptRepository();
+	@Inject
+	SourceRepository sourceRepository;
+	@Inject
+	AccountDataSource accountDataSource;
+	@Inject
+	ReceiptDataSource receiptDataSource;
 
 	@Before
 	public void setUp() throws Exception {
-		MyApplication.Companion.resetDatabase();
+		TestApp.Companion.getTestComponent().inject(this);
+		App.Companion.resetDatabase();
 
 		account.setName("Account");
-		accountRepository.save(account);
+		accountDataSource.save(account);
 
 		source.setName("Source");
 		sourceRepository.save(source);
@@ -59,15 +66,15 @@ public class ReceiptsInPeriodTest {
 	@Test
 	public void testReceiptsInMonthly() {
 		Receipt firstOfMonth = newReceipt("First", firstDayOfJune, 1000);
-		receiptRepository.save(firstOfMonth);
+		receiptDataSource.save(firstOfMonth);
 
 		Receipt endOfMonth = newReceipt("End", lastDayOfJune.withHourOfDay(23), 500);
-		receiptRepository.save(endOfMonth);
+		receiptDataSource.save(endOfMonth);
 
 		Receipt firstOfJuly = newReceipt("July", firstDayOfJuly, 200);
-		receiptRepository.save(firstOfJuly);
+		receiptDataSource.save(firstOfJuly);
 
-		List<Receipt> receipts = receiptRepository.monthly(firstDayOfJune);
+		List<Receipt> receipts = receiptDataSource.monthly(firstDayOfJune);
 		assertThat(receipts.size(), is(2));
 		assertThat(receipts.get(0).getUuid(), is(firstOfMonth.getUuid()));
 		assertThat(receipts.get(1).getUuid(), is(endOfMonth.getUuid()));

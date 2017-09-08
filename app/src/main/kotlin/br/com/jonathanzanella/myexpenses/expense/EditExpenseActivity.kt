@@ -12,9 +12,9 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.CheckBox
 import android.widget.LinearLayout
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.bill.Bill
-import br.com.jonathanzanella.myexpenses.bill.BillRepository
 import br.com.jonathanzanella.myexpenses.bill.ListBillActivity
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable
 import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType
@@ -28,15 +28,16 @@ import org.apache.commons.lang3.StringUtils
 import org.jetbrains.anko.*
 import org.joda.time.DateTime
 import timber.log.Timber
+import javax.inject.Inject
 
 class EditExpenseActivity : AppCompatActivity(), ExpenseContract.EditView {
     override val context = this
     private val ui = EditExpenseActivityUi()
-    private val presenter: ExpensePresenter
+    @Inject
+    lateinit var presenter: ExpensePresenter
 
     init {
-        val expenseRepository = ExpenseRepository()
-        presenter = ExpensePresenter(expenseRepository, BillRepository(expenseRepository))
+        App.getAppComponent().inject(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

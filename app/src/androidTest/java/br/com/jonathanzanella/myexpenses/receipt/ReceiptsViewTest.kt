@@ -12,16 +12,17 @@ import android.support.test.filters.MediumTest
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import android.view.View
-import br.com.jonathanzanella.myexpenses.MyApplication
+import br.com.jonathanzanella.TestApp
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.account.AccountRepository
+import br.com.jonathanzanella.myexpenses.account.AccountDataSource
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper
 import br.com.jonathanzanella.myexpenses.helpers.UIHelper
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder
 import br.com.jonathanzanella.myexpenses.helpers.builder.ReceiptBuilder
 import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
-import br.com.jonathanzanella.myexpenses.source.SourceRepository
+import br.com.jonathanzanella.myexpenses.source.SourceDataSource
 import br.com.jonathanzanella.myexpenses.views.MainActivity
 import junit.framework.Assert.assertTrue
 import org.hamcrest.Matchers.`is`
@@ -31,6 +32,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import javax.inject.Inject
 
 @RunWith(AndroidJUnit4::class)
 @MediumTest
@@ -38,27 +40,33 @@ class ReceiptsViewTest {
     @Rule @JvmField
     var activityTestRule = ActivityTestRule(MainActivity::class.java, true, false)
 
+    @Inject
+    lateinit var dataSource: ReceiptDataSource
+    @Inject
+    lateinit var sourceDataSource: SourceDataSource
+    @Inject
+    lateinit var accountDataSource: AccountDataSource
+
     private var receipt: Receipt? = null
     private var receipt2: Receipt? = null
 
     @Before
     @Throws(Exception::class)
     fun setUp() {
-        MyApplication.resetDatabase()
-
-        val repository = ReceiptRepository()
+        TestApp.getTestComponent().inject(this)
+        App.resetDatabase()
 
         val s = SourceBuilder().build()
-        assertTrue(SourceRepository().save(s).isValid)
+        assertTrue(sourceDataSource.save(s).isValid)
 
         val a = AccountBuilder().build()
-        assertTrue(AccountRepository().save(a).isValid)
+        assertTrue(accountDataSource.save(a).isValid)
 
         receipt = ReceiptBuilder().name("receipt1").source(s).account(a).build()
-        assertTrue(repository.save(receipt!!).isValid)
+        assertTrue(dataSource.save(receipt!!).isValid)
 
         receipt2 = ReceiptBuilder().name("receipt2").source(s).account(a).build()
-        assertTrue(repository.save(receipt2!!).isValid)
+        assertTrue(dataSource.save(receipt2!!).isValid)
     }
 
     @After
@@ -103,7 +111,7 @@ class ReceiptsViewTest {
         UIHelper.matchToolbarTitle(title)
 
         UIHelper.clickIntoView(R.id.search)
-        UIHelper.typeTextIntoView(R.id.search_src_text, receipt!!.name)
+        UIHelper.clearAndTypeTextIntoView(R.id.search_src_text, receipt!!.name)
 
         onViewReceiptName(receipt).check(matches(ViewMatchers.isDisplayed()))
         onViewReceiptName(receipt2).check(doesNotExist())

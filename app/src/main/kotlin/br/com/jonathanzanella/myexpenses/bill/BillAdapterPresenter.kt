@@ -3,7 +3,7 @@ package br.com.jonathanzanella.myexpenses.bill
 import org.apache.commons.lang3.StringUtils
 import java.util.*
 
-class BillAdapterPresenter(private val repository: BillRepository) {
+class BillAdapterPresenter(private val dataSource: BillDataSource) {
     private var bills: MutableList<Bill>? = null
     private var billsFiltered: MutableList<Bill>? = null
 
@@ -12,7 +12,7 @@ class BillAdapterPresenter(private val repository: BillRepository) {
     }
 
     private fun loadBills() {
-        bills = repository.all() as MutableList<Bill>
+        bills = dataSource.all() as MutableList<Bill>
         billsFiltered = bills
     }
 

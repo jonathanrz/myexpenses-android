@@ -1,24 +1,18 @@
 package br.com.jonathanzanella.myexpenses.source
 
-import br.com.jonathanzanella.myexpenses.MyApplication
-import br.com.jonathanzanella.myexpenses.server.Server
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi
 import org.apache.commons.lang3.StringUtils
 import retrofit2.Call
 import timber.log.Timber
 import java.io.IOException
+import javax.inject.Inject
 
-class SourceApi : UnsyncModelApi<Source> {
-    private val sourceInterface: SourceInterface by lazy {
-        Server(MyApplication.getContext()).sourceInterface()
-    }
-    private val sourceRepository: SourceRepository by lazy {
-        SourceRepository()
-    }
+class SourceApi @Inject constructor(private val sourceInterface: SourceInterface,
+                                    private val sourceRepository: SourceRepository): UnsyncModelApi<Source> {
 
     override fun index(): List<Source> {
-        val lastUpdatedAt = SourceRepository().greaterUpdatedAt()
+        val lastUpdatedAt = sourceRepository.greaterUpdatedAt()
         Timber.tag("SourceApi.index with lastUpdatedAt: $lastUpdatedAt")
         val caller = sourceInterface.index(lastUpdatedAt)
 
@@ -66,10 +60,10 @@ class SourceApi : UnsyncModelApi<Source> {
     }
 
     override fun unsyncModels(): List<Source> {
-        return SourceRepository().unsync()
+        return sourceRepository.unsync()
     }
 
     override fun greaterUpdatedAt(): Long {
-        return SourceRepository().greaterUpdatedAt()
+        return sourceRepository.greaterUpdatedAt()
     }
 }

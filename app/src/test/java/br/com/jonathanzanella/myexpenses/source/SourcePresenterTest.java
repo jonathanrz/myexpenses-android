@@ -15,9 +15,8 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class SourcePresenterTest {
-	private static final String UUID = "uuid";
 	@Mock
-	private SourceRepository repository;
+	private SourceDataSource dataSource;
 	@Mock
 	private SourceContract.EditView view;
 
@@ -26,19 +25,19 @@ public class SourcePresenterTest {
 	@Before
 	public void setUp() throws Exception {
 		initMocks(this);
-		presenter = new SourcePresenter(repository);
+		presenter = new SourcePresenter(dataSource);
 		presenter.attachView(view);
 	}
 
 	@Test
 	@Ignore("fix when convert  to kotlin")
 	public void save_gets_data_from_screen_and_save_to_repository() {
-		when(repository.save(any(Source.class))).thenReturn(new ValidationResult());
+		when(dataSource.save(any(Source.class))).thenReturn(new ValidationResult());
 
 		presenter.save();
 
 		verify(view, times(1)).fillSource(any(Source.class));
-		verify(repository, times(1)).save(any(Source.class));
+		verify(dataSource, times(1)).save(any(Source.class));
 		verify(view, times(1)).finishView();
 	}
 
@@ -48,7 +47,7 @@ public class SourcePresenterTest {
 		ValidationResult result = new ValidationResult();
 		result.addError(ValidationError.NAME);
 
-		when(repository.save(any(Source.class))).thenReturn(result);
+		when(dataSource.save(any(Source.class))).thenReturn(result);
 
 		presenter.save();
 

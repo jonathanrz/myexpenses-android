@@ -43,3 +43,4 @@ proguard/
 captures/
 
 app/schemas/
+app/fabric.properties

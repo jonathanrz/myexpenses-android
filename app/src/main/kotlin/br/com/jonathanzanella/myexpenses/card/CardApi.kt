@@ -1,24 +1,14 @@
 package br.com.jonathanzanella.myexpenses.card
 
-import br.com.jonathanzanella.myexpenses.MyApplication
-import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
-import br.com.jonathanzanella.myexpenses.server.Server
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi
 import org.apache.commons.lang3.StringUtils
 import timber.log.Timber
 import java.io.IOException
+import javax.inject.Inject
 
-class CardApi : UnsyncModelApi<Card> {
-    private val cardInterface: CardInterface by lazy {
-        Server(MyApplication.getContext()).cardInterface()
-    }
-    private val cardRepository: CardRepository by lazy {
-        CardRepository(expenseRepository)
-    }
-    private val expenseRepository: ExpenseRepository by lazy {
-        ExpenseRepository()
-    }
+class CardApi @Inject constructor(private val cardInterface: CardInterface,
+                                  private val cardRepository: CardRepository): UnsyncModelApi<Card> {
 
     override fun index(): List<Card> {
         val lastUpdatedAt = greaterUpdatedAt()

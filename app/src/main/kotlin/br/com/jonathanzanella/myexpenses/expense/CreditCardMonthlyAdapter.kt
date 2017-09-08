@@ -7,25 +7,30 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.card.Card
-import br.com.jonathanzanella.myexpenses.card.CardRepository
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
 import org.jetbrains.anko.*
 import org.joda.time.DateTime
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
 class CreditCardMonthlyAdapter : RecyclerView.Adapter<CreditCardMonthlyAdapter.ViewHolder>() {
     private var expenses: List<Expense> = ArrayList()
-    private val cardRepository: CardRepository = CardRepository(
-            ExpenseRepository())
+    @Inject
+    lateinit var expenseDataSource: ExpenseDataSource
     private var totalValue: Int = 0
 
     private enum class ViewType {
         TYPE_NORMAL,
         TYPE_TOTAL
+    }
+
+    init {
+        App.getAppComponent().inject(this)
     }
 
     class ViewHolder(itemView: View, val income: TextView, val name: TextView? = null, val date: TextView? = null, val source: TextView? = null) :
@@ -79,7 +84,7 @@ class CreditCardMonthlyAdapter : RecyclerView.Adapter<CreditCardMonthlyAdapter.V
 
     @WorkerThread
     fun loadData(creditCard: Card, month: DateTime) {
-        expenses = cardRepository.creditCardBills(creditCard, month)
+        expenses = expenseDataSource.creditCardBills(creditCard, month)
         totalValue = expenses.sumBy { it.value }
     }
 

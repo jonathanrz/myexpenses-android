@@ -1,23 +1,17 @@
 package br.com.jonathanzanella.myexpenses.account
 
 import android.support.annotation.WorkerThread
-import br.com.jonathanzanella.myexpenses.MyApplication
-import br.com.jonathanzanella.myexpenses.server.Server
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModel
 import br.com.jonathanzanella.myexpenses.sync.UnsyncModelApi
 import org.apache.commons.lang3.StringUtils
 import retrofit2.Call
 import timber.log.Timber
 import java.io.IOException
+import javax.inject.Inject
 
 @WorkerThread
-class AccountApi : UnsyncModelApi<Account> {
-    private val accountInterface: AccountInterface by lazy {
-        Server(MyApplication.getContext()).accountInterface()
-    }
-    val repository: AccountRepository by lazy {
-        AccountRepository()
-    }
+class AccountApi @Inject constructor(private var accountInterface: AccountInterface,
+                                     private val repository: AccountRepository) : UnsyncModelApi<Account> {
 
     override fun index(): List<Account> {
         val lastUpdatedAt = repository.greaterUpdatedAt()

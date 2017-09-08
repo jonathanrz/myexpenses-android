@@ -11,15 +11,14 @@ import android.text.InputType
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.CheckBox
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.Account
-import br.com.jonathanzanella.myexpenses.account.AccountRepository
 import br.com.jonathanzanella.myexpenses.account.ListAccountActivity
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.source.ListSourceActivity
 import br.com.jonathanzanella.myexpenses.source.Source
-import br.com.jonathanzanella.myexpenses.source.SourceRepository
 import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.views.anko.*
@@ -27,17 +26,22 @@ import org.apache.commons.lang3.StringUtils
 import org.jetbrains.anko.*
 import org.joda.time.DateTime
 import timber.log.Timber
+import javax.inject.Inject
 
 class EditReceiptActivity : AppCompatActivity(), ReceiptContract.EditView {
+    @Inject
+    lateinit var presenter: ReceiptPresenter
+    override val context = this
+    private val ui = EditReceiptActivityUi()
+
     override val installment: Int
         get() = Integer.parseInt(ui.editInstallment.text.toString())
     override val repetition: Int
         get() = Integer.parseInt(ui.editRepetition.text.toString())
 
-    override val context = this
-    private val ui = EditReceiptActivityUi()
-    private val presenter: ReceiptPresenter = ReceiptPresenter(ReceiptRepository(),
-            SourceRepository(), AccountRepository())
+    init {
+        App.getAppComponent().inject(this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -9,7 +9,10 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import br.com.jonathanzanella.myexpenses.MyApplication;
+import javax.inject.Inject;
+
+import br.com.jonathanzanella.TestApp;
+import br.com.jonathanzanella.myexpenses.App;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
@@ -33,10 +36,13 @@ import static org.hamcrest.core.Is.is;
 public class ShowAccountInResumeTest {
 	@Rule
 	public ActivityTestRule<MainActivity> mainActivityTestRule = new ActivityTestRule<>(MainActivity.class);
+	@Inject
+	AccountRepository accountRepository;
 
 	@Before
 	public void setUp() throws Exception {
-		MyApplication.Companion.resetDatabase();
+		TestApp.Companion.getTestComponent().inject(this);
+		App.Companion.resetDatabase();
 	}
 
 	@After
@@ -46,8 +52,6 @@ public class ShowAccountInResumeTest {
 
 	@Test
 	public void show_only_account_marked_to_show() {
-		AccountRepository accountRepository = new AccountRepository();
-
 		Account accountToShow = new AccountBuilder().name("accountToShow").showInResume(true).build();
 		assertTrue(accountRepository.save(accountToShow).isValid());
 		Account accountToHide = new AccountBuilder().name("accountToHide").showInResume(false).build();

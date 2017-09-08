@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.helpers.AdapterColorHelper
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
@@ -15,11 +16,19 @@ import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import br.com.jonathanzanella.myexpenses.views.anko.*
 import org.jetbrains.anko.*
 import org.joda.time.DateTime
+import javax.inject.Inject
 
 open class ReceiptAdapter : RecyclerView.Adapter<ReceiptAdapter.ViewHolder>() {
+    @Inject
+    lateinit var receiptDataSource: ReceiptDataSource
     private var receipts: List<Receipt> = ArrayList()
-    private val presenter: ReceiptAdapterPresenter = ReceiptAdapterPresenter(ReceiptRepository())
+    private val presenter: ReceiptAdapterPresenter
     private var date: DateTime? = null
+
+    init {
+        App.getAppComponent().inject(this)
+        presenter = ReceiptAdapterPresenter(receiptDataSource)
+    }
 
     inner class ViewHolder internal constructor(itemView: View, private val ui: ViewUI) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         private val adapterColorHelper: AdapterColorHelper
