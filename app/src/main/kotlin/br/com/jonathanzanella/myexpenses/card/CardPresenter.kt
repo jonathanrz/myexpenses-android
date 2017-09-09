@@ -111,11 +111,13 @@ class CardPresenter @Inject constructor(private val accountDataSource: AccountDa
         doAsync {
             val result = dataSource.save(card!!)
 
-            if (result.isValid) {
-                v.finishView()
-            } else {
-                for (validationError in result.errors)
-                    v.showError(validationError)
+            uiThread {
+                if (result.isValid) {
+                    v.finishView()
+                } else {
+                    for (validationError in result.errors)
+                        v.showError(validationError)
+                }
             }
         }
     }
