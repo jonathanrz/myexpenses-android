@@ -21,9 +21,9 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class EditAccountActivity : AppCompatActivity(), AccountContract.EditView {
-    override val context = this
     @Inject
     lateinit var presenter: AccountPresenter
+    override val context = this
     private val ui = EditAccountActivityUi()
 
     init {

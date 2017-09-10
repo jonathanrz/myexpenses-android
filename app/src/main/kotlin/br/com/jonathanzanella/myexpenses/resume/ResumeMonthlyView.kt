@@ -32,8 +32,9 @@ class ResumeMonthlyView(context: Context, private val month: DateTime) : FrameLa
     lateinit var receiptDataSource: ReceiptDataSource
     @Inject
     lateinit var expenseDataSource: ExpenseDataSource
+    @Inject
+    lateinit var accountAdapter: AccountAdapter
 
-    private var accountAdapter = AccountAdapter(month)
     private val receiptAdapter: ReceiptMonthlyResumeAdapter
     private var expensesAdapter = ExpenseMonthlyResumeAdapter()
     private var billsAdapter = BillMonthlyResumeAdapter()
@@ -51,9 +52,17 @@ class ResumeMonthlyView(context: Context, private val month: DateTime) : FrameLa
         initBills()
     }
 
-    private fun initAccount() {
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
         accountAdapter.setFormat(AccountAdapter.Format.RESUME)
+    }
 
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        accountAdapter.onDestroy()
+    }
+
+    private fun initAccount() {
         accounts.adapter = accountAdapter
         accounts.setHasFixedSize(true)
         accounts.layoutManager = GridLayoutManager(context, 1)

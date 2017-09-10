@@ -1,7 +1,8 @@
 package br.com.jonathanzanella.myexpenses.injection
 
-import br.com.jonathanzanella.myexpenses.account.AccountAdapter
+import br.com.jonathanzanella.myexpenses.account.AccountView
 import br.com.jonathanzanella.myexpenses.account.EditAccountActivity
+import br.com.jonathanzanella.myexpenses.account.ListAccountActivity
 import br.com.jonathanzanella.myexpenses.account.ShowAccountActivity
 import br.com.jonathanzanella.myexpenses.account.transactions.MonthTransactionsPresenter
 import br.com.jonathanzanella.myexpenses.bill.BillAdapter
@@ -9,6 +10,7 @@ import br.com.jonathanzanella.myexpenses.bill.BillMonthlyResumeAdapter
 import br.com.jonathanzanella.myexpenses.bill.EditBillActivity
 import br.com.jonathanzanella.myexpenses.bill.ShowBillActivity
 import br.com.jonathanzanella.myexpenses.card.*
+import br.com.jonathanzanella.myexpenses.chargeable.ListChargeableActivity
 import br.com.jonathanzanella.myexpenses.database.DatabaseHelper
 import br.com.jonathanzanella.myexpenses.expense.*
 import br.com.jonathanzanella.myexpenses.overview.OverviewExpensesMonthlyView
@@ -23,14 +25,16 @@ import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = arrayOf(AppModule::class, DatabaseModule::class, RepositoryModule::class, PresenterModule::class, ServerModule::class))
+@Component(modules = arrayOf(AppModule::class, DatabaseModule::class, RepositoryModule::class, PresenterModule::class, ServerModule::class, AccountModule::class))
 interface AppComponent {
     fun inject(databaseHelper: DatabaseHelper)
 
-    fun inject(accountAdapter: AccountAdapter)
+    fun inject(accountView: AccountView)
     fun inject(monthTransactionsPresenter: MonthTransactionsPresenter)
     fun inject(editAccountActivity: EditAccountActivity)
     fun inject(showAccountActivity: ShowAccountActivity)
+    fun inject(listAccountActivity: ListAccountActivity)
+    fun inject(listChargeableActivity: ListChargeableActivity)
 
     fun inject(billAdapter: BillAdapter)
     fun inject(billMonthlyResumeAdapter: BillMonthlyResumeAdapter)

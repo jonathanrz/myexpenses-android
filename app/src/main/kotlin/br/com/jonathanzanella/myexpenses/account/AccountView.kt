@@ -8,6 +8,7 @@ import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
 import android.widget.FrameLayout
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.views.FilterableView
 import br.com.jonathanzanella.myexpenses.views.TabableView
@@ -15,23 +16,34 @@ import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
 import br.com.jonathanzanella.myexpenses.views.anko.recyclerView
 import org.jetbrains.anko.*
 import org.jetbrains.anko.design.floatingActionButton
-import org.joda.time.DateTime
+import javax.inject.Inject
 
 class AccountView@JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr), FilterableView, TabableView {
     override var filter: String = ""
 
+    @Inject
+    lateinit var adapter: AccountAdapter
     private val ui = AccountViewUI()
-    private var adapter = AccountAdapter(DateTime.now())
 
     init {
+        App.getAppComponent().inject(this)
         addView(ui.createView(AnkoContext.Companion.create(context, this)))
 
         ui.accounts.adapter = adapter
         ui.accounts.layoutManager = GridLayoutManager(context, 2)
         ui.accounts.itemAnimator = DefaultItemAnimator()
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
         adapter.setFormat(AccountAdapter.Format.LIST)
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        adapter.onDestroy()
     }
 
     companion object {

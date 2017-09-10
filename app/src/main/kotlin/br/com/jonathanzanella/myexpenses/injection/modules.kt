@@ -42,10 +42,6 @@ class DatabaseModule {
 
     @Singleton
     @Provides
-    fun providesAccountDao(database: MyDatabase) = database.accountDao()
-
-    @Singleton
-    @Provides
     fun providesBillDao(database: MyDatabase) = database.billDao()
 
     @Singleton
@@ -67,10 +63,6 @@ class DatabaseModule {
 
 @Module
 class RepositoryModule {
-    @Singleton
-    @Provides
-    fun providesAccountDataSource(accountDao: AccountDao): AccountDataSource = AccountRepository(accountDao)
-
     @Singleton
     @Provides
     fun providesBillDataSource(billDao: BillDao, expenseRepository: ExpenseRepository): BillDataSource
@@ -96,9 +88,6 @@ class RepositoryModule {
 
 @Module
 class PresenterModule {
-    @Provides
-    fun providesAccountPresenter(dataSource: AccountDataSource) = AccountPresenter(dataSource)
-
     @Provides
     fun providesBillPresenter(dataSource: BillDataSource) = BillPresenter(dataSource)
 
@@ -181,4 +170,21 @@ class ServerModule {
     @Singleton
     @Provides
     fun providesServerApi(serverInterface: ServerInterface) = ServerApi(serverInterface)
+}
+
+@Module
+class AccountModule {
+    @Singleton
+    @Provides
+    fun providesAccountDao(database: MyDatabase) = database.accountDao()
+
+    @Singleton
+    @Provides
+    fun providesAccountDataSource(accountDao: AccountDao): AccountDataSource = AccountRepository(accountDao)
+
+    @Provides
+    fun providesAccountPresenter(dataSource: AccountDataSource) = AccountPresenter(dataSource)
+
+    @Provides
+    fun providesAccountAdapter(repository: AccountRepository) = AccountAdapter(repository)
 }

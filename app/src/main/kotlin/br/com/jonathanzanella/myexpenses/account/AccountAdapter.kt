@@ -8,7 +8,6 @@ import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.AccountAdapter.Format.NORMAL
 import br.com.jonathanzanella.myexpenses.helpers.AdapterColorHelper
@@ -18,13 +17,10 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import org.jetbrains.anko.*
-import org.joda.time.DateTime
 import timber.log.Timber
 import javax.inject.Inject
 
-class AccountAdapter(val month : DateTime) : RecyclerView.Adapter<AccountAdapter.ViewHolder>() {
-    @Inject
-    lateinit var repository: AccountRepository
+class AccountAdapter @Inject constructor(val repository: AccountRepository) : RecyclerView.Adapter<AccountAdapter.ViewHolder>() {
     private var format = NORMAL
     private var callback: AccountAdapterCallback? = null
     private var accounts: List<Account> = ArrayList()
@@ -64,7 +60,6 @@ class AccountAdapter(val month : DateTime) : RecyclerView.Adapter<AccountAdapter
             if (callback == null) {
                 val i = Intent(itemView.context, ShowAccountActivity::class.java)
                 i.putExtra(ShowAccountActivity.KEY_ACCOUNT_UUID, acc.uuid)
-                i.putExtra(ShowAccountActivity.KEY_ACCOUNT_MONTH_TO_SHOW, month.millis)
                 itemView.context.startActivity(i)
             } else {
                 callback!!.onAccountSelected(acc)
@@ -72,9 +67,8 @@ class AccountAdapter(val month : DateTime) : RecyclerView.Adapter<AccountAdapter
         }
     }
 
-    init {
-        App.getAppComponent().inject(this)
-        loadData()
+    fun onDestroy() {
+        dbQueryDisposable?.dispose()
     }
 
     private fun loadData() {

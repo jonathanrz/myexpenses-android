@@ -7,16 +7,23 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.views.anko.TemplateToolbar
 import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
 import br.com.jonathanzanella.myexpenses.views.anko.recyclerView
 import br.com.jonathanzanella.myexpenses.views.anko.toolbarTemplate
 import org.jetbrains.anko.*
-import org.joda.time.DateTime
+import javax.inject.Inject
 
 class ListAccountActivity : AppCompatActivity(), AccountAdapterCallback {
+    @Inject
+    lateinit var adapter: AccountAdapter
     private val ui = ListAccountActivityUi()
+
+    init {
+        App.getAppComponent().inject(this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +37,6 @@ class ListAccountActivity : AppCompatActivity(), AccountAdapterCallback {
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
 
-        val adapter = AccountAdapter(DateTime.now())
         adapter.setCallback(this)
         adapter.setFormat(AccountAdapter.Format.LIST)
 
@@ -38,6 +44,11 @@ class ListAccountActivity : AppCompatActivity(), AccountAdapterCallback {
         ui.accounts.setHasFixedSize(true)
         ui.accounts.layoutManager = GridLayoutManager(this, 2)
         ui.accounts.itemAnimator = DefaultItemAnimator()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        adapter.onDestroy()
     }
 
     override fun onAccountSelected(account: Account) {
