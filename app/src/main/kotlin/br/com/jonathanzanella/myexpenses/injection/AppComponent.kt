@@ -1,6 +1,6 @@
 package br.com.jonathanzanella.myexpenses.injection
 
-import br.com.jonathanzanella.myexpenses.account.AccountAdapterPresenter
+import br.com.jonathanzanella.myexpenses.account.AccountAdapter
 import br.com.jonathanzanella.myexpenses.account.EditAccountActivity
 import br.com.jonathanzanella.myexpenses.account.ShowAccountActivity
 import br.com.jonathanzanella.myexpenses.account.transactions.MonthTransactionsPresenter
@@ -27,7 +27,7 @@ import javax.inject.Singleton
 interface AppComponent {
     fun inject(databaseHelper: DatabaseHelper)
 
-    fun inject(accountAdapterPresenter: AccountAdapterPresenter)
+    fun inject(accountAdapter: AccountAdapter)
     fun inject(monthTransactionsPresenter: MonthTransactionsPresenter)
     fun inject(editAccountActivity: EditAccountActivity)
     fun inject(showAccountActivity: ShowAccountActivity)

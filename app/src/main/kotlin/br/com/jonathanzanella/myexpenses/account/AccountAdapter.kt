@@ -8,19 +8,27 @@ import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.AccountAdapter.Format.NORMAL
 import br.com.jonathanzanella.myexpenses.helpers.AdapterColorHelper
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import org.jetbrains.anko.*
 import org.joda.time.DateTime
 import timber.log.Timber
+import javax.inject.Inject
 
 class AccountAdapter(val month : DateTime) : RecyclerView.Adapter<AccountAdapter.ViewHolder>() {
-    private val presenter = AccountAdapterPresenter(this)
+    @Inject
+    lateinit var repository: AccountRepository
     private var format = NORMAL
     private var callback: AccountAdapterCallback? = null
+    private var accounts: List<Account> = ArrayList()
+    private var dbQueryDisposable: Disposable? = null
 
     enum class Format {
         NORMAL,
@@ -64,8 +72,22 @@ class AccountAdapter(val month : DateTime) : RecyclerView.Adapter<AccountAdapter
         }
     }
 
-    fun refreshData() {
-        presenter.loadAccountsAsync(format)
+    init {
+        App.getAppComponent().inject(this)
+        loadData()
+    }
+
+    private fun loadData() {
+        dbQueryDisposable?.dispose()
+
+        dbQueryDisposable = when {
+            format === AccountAdapter.Format.RESUME -> repository.forResumeScreen()
+            else -> repository.all()
+        }
+                .doOnNext { accounts = it }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { notifyDataSetChanged() }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -86,11 +108,11 @@ class AccountAdapter(val month : DateTime) : RecyclerView.Adapter<AccountAdapter
     }
 
     override fun getItemCount(): Int {
-        return presenter.accountsSize
+        return accounts.size
     }
 
     fun getAccount(position: Int): Account {
-        return presenter.getAccount(position)
+        return accounts[position]
     }
 
     fun setCallback(callback: AccountAdapterCallback) {
@@ -99,7 +121,7 @@ class AccountAdapter(val month : DateTime) : RecyclerView.Adapter<AccountAdapter
 
     fun setFormat(format: Format) {
         this.format = format
-        refreshData()
+        loadData()
     }
 }
 

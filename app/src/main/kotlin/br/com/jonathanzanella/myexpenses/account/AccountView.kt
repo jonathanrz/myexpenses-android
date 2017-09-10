@@ -10,8 +10,6 @@ import android.util.AttributeSet
 import android.widget.FrameLayout
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.views.FilterableView
-import br.com.jonathanzanella.myexpenses.views.RefreshableView
-import br.com.jonathanzanella.myexpenses.views.ResultableView
 import br.com.jonathanzanella.myexpenses.views.TabableView
 import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
 import br.com.jonathanzanella.myexpenses.views.anko.recyclerView
@@ -21,7 +19,7 @@ import org.joda.time.DateTime
 
 class AccountView@JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : FrameLayout(context, attrs, defStyleAttr), RefreshableView, ResultableView, FilterableView, TabableView {
+) : FrameLayout(context, attrs, defStyleAttr), FilterableView, TabableView {
     override var filter: String = ""
 
     private val ui = AccountViewUI()
@@ -34,17 +32,6 @@ class AccountView@JvmOverloads constructor(
         ui.accounts.layoutManager = GridLayoutManager(context, 2)
         ui.accounts.itemAnimator = DefaultItemAnimator()
         adapter.setFormat(AccountAdapter.Format.LIST)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        when (requestCode) {
-            REQUEST_ADD_ACCOUNT -> if (resultCode == Activity.RESULT_OK)
-                adapter.refreshData()
-        }
-    }
-
-    override fun refreshData() {
-        adapter.refreshData()
     }
 
     companion object {

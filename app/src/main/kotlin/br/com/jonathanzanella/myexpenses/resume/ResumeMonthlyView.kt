@@ -15,7 +15,6 @@ import br.com.jonathanzanella.myexpenses.bill.BillMonthlyResumeAdapter
 import br.com.jonathanzanella.myexpenses.expense.ExpenseDataSource
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.receipt.ReceiptDataSource
-import br.com.jonathanzanella.myexpenses.receipt.ReceiptRepository
 import br.com.jonathanzanella.myexpenses.views.FilterableView
 import br.com.jonathanzanella.myexpenses.views.RefreshableView
 import kotlinx.android.synthetic.main.view_monthly_resume.view.*
@@ -84,9 +83,6 @@ class ResumeMonthlyView(context: Context, private val month: DateTime) : FrameLa
 
     @UiThread
     override fun refreshData() {
-        accountAdapter.refreshData()
-        accountAdapter.notifyDataSetChanged()
-
         loadReceipts()
         loadExpenses()
         loadBills()

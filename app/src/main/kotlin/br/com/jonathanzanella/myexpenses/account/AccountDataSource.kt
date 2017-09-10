@@ -3,14 +3,15 @@ package br.com.jonathanzanella.myexpenses.account
 import android.support.annotation.WorkerThread
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult
+import io.reactivex.Flowable
 import org.apache.commons.lang3.StringUtils
 import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 
 interface AccountDataSource {
-    fun all(): List<Account>
-    fun forResumeScreen(): List<Account>
+    fun all(): Flowable<List<Account>>
+    fun forResumeScreen(): Flowable<List<Account>>
     fun unsync(): List<Account>
 
     fun find(uuid: String): Account?
@@ -22,13 +23,13 @@ interface AccountDataSource {
 
 class AccountRepository @Inject constructor(val dao: AccountDao): AccountDataSource {
     @WorkerThread
-    override fun all(): List<Account> {
-        return dao.all().blockingFirst()
+    override fun all(): Flowable<List<Account>> {
+        return dao.all()
     }
 
     @WorkerThread
-    override fun forResumeScreen(): List<Account> {
-        return dao.showInResume().blockingFirst()
+    override fun forResumeScreen(): Flowable<List<Account>> {
+        return dao.showInResume()
     }
 
     @WorkerThread

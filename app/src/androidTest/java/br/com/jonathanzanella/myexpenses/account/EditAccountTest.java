@@ -84,7 +84,7 @@ public class EditAccountTest {
 		account = dataSource.find(account.getUuid());
 
 		onView(withId(R.id.act_show_account_name)).check(matches(withText(account.getName())));
-		assertThat(dataSource.all().size(), is(1));
+		assertThat(dataSource.all().blockingFirst().size(), is(1));
 		assertThat(account.getShowInResume(), is(false));
 
 		snapActivity(activityTestRule.getActivity()).record();
