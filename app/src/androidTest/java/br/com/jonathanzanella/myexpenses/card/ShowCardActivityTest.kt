@@ -24,7 +24,6 @@ import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder
 import br.com.jonathanzanella.myexpenses.helpers.builder.CardBuilder
 import br.com.jonathanzanella.myexpenses.helpers.builder.ExpenseBuilder
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
-import junit.framework.Assert.assertTrue
 import org.joda.time.DateTime
 import org.junit.After
 import org.junit.Before
@@ -91,9 +90,9 @@ class ShowCardActivityTest {
     fun generate_and_pay_credit_card_bill() {
         val date = DateTime.now().minusMonths(1)
         var expense1: Expense? = ExpenseBuilder().chargeable(card).date(date).build()
-        assertTrue(expenseDataSource.save(expense1!!).isValid)
+        assert(expenseDataSource.save(expense1!!).isValid)
         var expense2: Expense? = ExpenseBuilder().chargeable(card).date(date).build()
-        assertTrue(expenseDataSource.save(expense2!!).isValid)
+        assert(expenseDataSource.save(expense2!!).isValid)
 
         callActivity()
 
@@ -109,8 +108,8 @@ class ShowCardActivityTest {
         onView(withId(R.id.act_edit_expense_chargeable)).check(matches(withText(card!!.account!!.name)))
 
         expense1 = expenseDataSource.find(expense1.uuid!!)
-        assertTrue(expense1!!.charged)
+        assert(expense1!!.charged)
         expense2 = expenseDataSource.find(expense1.uuid!!)
-        assertTrue(expense2!!.charged)
+        assert(expense2!!.charged)
     }
 }

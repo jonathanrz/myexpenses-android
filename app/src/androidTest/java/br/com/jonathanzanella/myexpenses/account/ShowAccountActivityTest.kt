@@ -24,7 +24,6 @@ import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.receipt.ReceiptDataSource
 import br.com.jonathanzanella.myexpenses.source.SourceDataSource
-import junit.framework.Assert.assertTrue
 import org.hamcrest.core.AllOf.allOf
 import org.joda.time.DateTime
 import org.junit.After
@@ -33,7 +32,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import javax.inject.Inject
-
 
 @RunWith(AndroidJUnit4::class)
 @MediumTest
@@ -90,9 +88,9 @@ class ShowAccountActivityTest {
     @Throws(InterruptedException::class)
     fun show_credit_card_bill_in_account_show_activity() {
         val card = CardBuilder().account(account).build(dataSource)
-        assertTrue(cardDataSource.save(card).isValid)
+        assert(cardDataSource.save(card).isValid)
         val expense = ExpenseBuilder().chargeable(card).build()
-        assertTrue(expenseDataSource.save(expense).isValid)
+        assert(expenseDataSource.save(expense).isValid)
 
         launchActivity()
 
@@ -147,14 +145,14 @@ class ShowAccountActivityTest {
                 .account(account)
                 .source(s)
                 .build()
-        assertTrue(receiptDataSource.save(receipt).isValid)
+        assert(receiptDataSource.save(receipt).isValid)
         receipt = ReceiptBuilder()
                 .income(RECEIPT_INCOME)
                 .date(DateTime.now().plusMonths(1))
                 .account(account)
                 .source(s)
                 .build()
-        assertTrue(receiptDataSource.save(receipt).isValid)
+        assert(receiptDataSource.save(receipt).isValid)
     }
 
     private fun generateTwoMonthsExpenses() {
@@ -163,13 +161,13 @@ class ShowAccountActivityTest {
                 .date(DateTime.now())
                 .chargeable(account)
                 .build()
-        assertTrue(expenseDataSource.save(expense).isValid)
+        assert(expenseDataSource.save(expense).isValid)
         expense = ExpenseBuilder()
                 .value(EXPENSE_VALUE)
                 .date(DateTime.now().plusMonths(1))
                 .chargeable(account)
                 .build()
-        assertTrue(expenseDataSource.save(expense).isValid)
+        assert(expenseDataSource.save(expense).isValid)
     }
 
     companion object {

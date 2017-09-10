@@ -27,7 +27,6 @@ import br.com.jonathanzanella.myexpenses.receipt.ReceiptDataSource
 import br.com.jonathanzanella.myexpenses.source.Source
 import br.com.jonathanzanella.myexpenses.source.SourceDataSource
 import br.com.jonathanzanella.myexpenses.views.MainActivity
-import junit.framework.Assert.assertTrue
 import org.hamcrest.Matchers.allOf
 import org.joda.time.DateTime
 import org.junit.After
@@ -64,10 +63,10 @@ class CalculateMonthBalanceCorrectlyTest {
         App.resetDatabase()
 
         val a = br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder().build()
-        assertTrue(accountDataSource.save(a).isValid)
+        assert(accountDataSource.save(a).isValid)
 
         val s = SourceBuilder().build()
-        assertTrue(sourceDataSource.save(s).isValid)
+        assert(sourceDataSource.save(s).isValid)
 
         val now = DateTime.now().withDayOfMonth(1)
         val b = BillBuilder()
@@ -75,7 +74,7 @@ class CalculateMonthBalanceCorrectlyTest {
                 .endDate(now.plusMonths(12))
                 .amount(BILL_AMOUNT)
                 .build()
-        assertTrue(billDataSource.save(b).isValid)
+        assert(billDataSource.save(b).isValid)
 
         generateThreeMonthlyReceipts(a, s)
         generateThreeMonthlyExpenses(a)
@@ -95,7 +94,7 @@ class CalculateMonthBalanceCorrectlyTest {
                 .date(dateTime)
                 .income(RECEIPT_INCOME)
                 .build()
-        assertTrue(receiptDataSource.save(r).isValid)
+        assert(receiptDataSource.save(r).isValid)
         dateTime = dateTime.plusMonths(1)
         r = ReceiptBuilder()
                 .account(a)
@@ -103,7 +102,7 @@ class CalculateMonthBalanceCorrectlyTest {
                 .date(dateTime)
                 .income(RECEIPT_INCOME * 2)
                 .build()
-        assertTrue(receiptDataSource.save(r).isValid)
+        assert(receiptDataSource.save(r).isValid)
         dateTime = dateTime.plusMonths(1)
         r = ReceiptBuilder()
                 .account(a)
@@ -111,7 +110,7 @@ class CalculateMonthBalanceCorrectlyTest {
                 .date(dateTime)
                 .income(RECEIPT_INCOME * 3)
                 .build()
-        assertTrue(receiptDataSource.save(r).isValid)
+        assert(receiptDataSource.save(r).isValid)
     }
 
     private fun generateThreeMonthlyExpenses(a: Account) {
@@ -121,21 +120,21 @@ class CalculateMonthBalanceCorrectlyTest {
                 .date(dateTime)
                 .value(EXPENSE_VALUE)
                 .build()
-        assertTrue(expenseDataSource.save(r).isValid)
+        assert(expenseDataSource.save(r).isValid)
         dateTime = dateTime.plusMonths(1)
         r = ExpenseBuilder()
                 .chargeable(a)
                 .date(dateTime)
                 .value(EXPENSE_VALUE * 2)
                 .build()
-        assertTrue(expenseDataSource.save(r).isValid)
+        assert(expenseDataSource.save(r).isValid)
         dateTime = dateTime.plusMonths(1)
         r = ExpenseBuilder()
                 .chargeable(a)
                 .date(dateTime)
                 .value(EXPENSE_VALUE * 3)
                 .build()
-        assertTrue(expenseDataSource.save(r).isValid)
+        assert(expenseDataSource.save(r).isValid)
     }
 
     @Test

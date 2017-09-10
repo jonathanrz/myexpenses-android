@@ -20,7 +20,6 @@ import br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder
 import br.com.jonathanzanella.myexpenses.helpers.builder.ExpenseBuilder
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
-import junit.framework.Assert.assertTrue
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -50,7 +49,7 @@ class ShowExpenseActivityTest {
         accountDataSource.save(a)
 
         expense = ExpenseBuilder().chargeable(a).build()
-        assertTrue(dataSource.save(expense!!).isValid)
+        assert(dataSource.save(expense!!).isValid)
     }
 
     @After

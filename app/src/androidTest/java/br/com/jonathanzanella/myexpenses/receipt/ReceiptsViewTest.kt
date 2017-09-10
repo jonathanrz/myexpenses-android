@@ -24,7 +24,6 @@ import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.source.SourceDataSource
 import br.com.jonathanzanella.myexpenses.views.MainActivity
-import junit.framework.Assert.assertTrue
 import org.hamcrest.Matchers.`is`
 import org.hamcrest.core.AllOf.allOf
 import org.junit.After
@@ -57,16 +56,16 @@ class ReceiptsViewTest {
         App.resetDatabase()
 
         val s = SourceBuilder().build()
-        assertTrue(sourceDataSource.save(s).isValid)
+        assert(sourceDataSource.save(s).isValid)
 
         val a = AccountBuilder().build()
-        assertTrue(accountDataSource.save(a).isValid)
+        assert(accountDataSource.save(a).isValid)
 
         receipt = ReceiptBuilder().name("receipt1").source(s).account(a).build()
-        assertTrue(dataSource.save(receipt!!).isValid)
+        assert(dataSource.save(receipt!!).isValid)
 
         receipt2 = ReceiptBuilder().name("receipt2").source(s).account(a).build()
-        assertTrue(dataSource.save(receipt2!!).isValid)
+        assert(dataSource.save(receipt2!!).isValid)
     }
 
     @After
