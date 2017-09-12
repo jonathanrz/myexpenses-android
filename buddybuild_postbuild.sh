@@ -4,4 +4,5 @@
 ./gradlew detektCheck
 ./gradlew lintKotlin
 ./gradlew jacocoTestReport
+./gradlew executeScreenshotTests
 ./app/codecov.sh
