@@ -228,5 +228,5 @@ kotlinter {
 }
 
 shot {
-    appId = "br.com.jonathanzanella.myexpenses"
+    appId = "br.com.jonathanzanella.myexpenses.debug"
 }
