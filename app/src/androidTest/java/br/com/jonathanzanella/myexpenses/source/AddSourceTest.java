@@ -29,6 +29,7 @@ import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.clickIntoView;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchErrorMessage;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.openMenuAndClickItem;
+import static com.facebook.testing.screenshot.Screenshot.snapActivity;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
@@ -73,6 +74,8 @@ public class AddSourceTest {
 		matchToolbarTitle(sourcesTitle);
 
 		onView(withId(R.id.row_source_name)).check(matches(withText(sourceTitle)));
+
+		snapActivity(mainActivityTestRule.getActivity()).record();
 	}
 
 	@Test
@@ -86,6 +89,8 @@ public class AddSourceTest {
 
 		final String errorMessage = getContext().getString(R.string.error_message_name_not_informed);
 		matchErrorMessage(R.id.act_edit_source_name, errorMessage);
+
+		snapActivity(editSourceActivityTestRule.getActivity()).record();
 	}
 
 	private Context getContext() {

@@ -26,6 +26,7 @@ import br.com.jonathanzanella.myexpenses.helpers.builder.BillBuilder
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import br.com.jonathanzanella.myexpenses.views.MainActivity
+import com.facebook.testing.screenshot.Screenshot
 import org.hamcrest.core.IsNot.not
 import org.joda.time.DateTime
 import org.junit.After
@@ -103,6 +104,8 @@ class AddExpenseTest {
         onView(ViewMatchers.withId(R.id.name)).check(matches(ViewMatchers.withText(expenseName)))
         onView(ViewMatchers.withId(R.id.billLayout)).check(matches(not<View>(ViewMatchers.isDisplayed())))
         onView(ViewMatchers.withId(R.id.date)).check(matches(ViewMatchers.withText(Transaction.SIMPLE_DATE_FORMAT.format(time.toDate()))))
+
+        Screenshot.snapActivity(mainActivityTestRule.getActivity()).record()
     }
 
     @Test
@@ -116,6 +119,8 @@ class AddExpenseTest {
 
         val errorMessage = context.getString(R.string.error_message_name_not_informed)
         UIHelper.matchErrorMessage(R.id.act_edit_expense_name, errorMessage)
+
+        Screenshot.snapActivity(editExpenseActivityTestRule.activity).record()
     }
 
     @Test
@@ -129,6 +134,8 @@ class AddExpenseTest {
 
         val errorMessage = context.getString(R.string.error_message_amount_zero)
         UIHelper.matchErrorMessage(R.id.act_edit_expense_value, errorMessage)
+
+        Screenshot.snapActivity(editExpenseActivityTestRule.activity).record()
     }
 
     @Test
@@ -142,6 +149,8 @@ class AddExpenseTest {
 
         val errorMessage = context.getString(R.string.error_message_chargeable_not_informed)
         UIHelper.matchErrorMessage(R.id.act_edit_expense_chargeable, errorMessage)
+
+        Screenshot.snapActivity(editExpenseActivityTestRule.activity).record()
     }
 
     @Test
@@ -172,6 +181,8 @@ class AddExpenseTest {
         onView(ViewMatchers.withId(R.id.name)).check(matches(ViewMatchers.withText(bill.name)))
         onView(ViewMatchers.withId(R.id.billLayout)).check(matches(ViewMatchers.isDisplayed()))
         onView(ViewMatchers.withId(R.id.bill)).check(matches(ViewMatchers.withText(bill.name)))
+
+        Screenshot.snapActivity(mainActivityTestRule.activity).record()
     }
 
     @Test
@@ -203,6 +214,8 @@ class AddExpenseTest {
         onView(ViewMatchers.withId(R.id.name)).check(matches(ViewMatchers.withText(expenseName)))
         val expectedValue = (value * -1).toCurrencyFormatted()
         onView(ViewMatchers.withId(R.id.value)).check(matches(ViewMatchers.withText(expectedValue)))
+
+        Screenshot.snapActivity(mainActivityTestRule.activity).record()
     }
 
     private fun selectChargeable() {

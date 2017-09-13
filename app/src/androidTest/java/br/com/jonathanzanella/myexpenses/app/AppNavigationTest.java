@@ -6,7 +6,6 @@ import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.Gravity;
-import android.view.WindowManager;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -22,6 +21,7 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.contrib.DrawerMatchers.isClosed;
 import static android.support.test.espresso.contrib.DrawerMatchers.isOpen;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static com.facebook.testing.screenshot.Screenshot.snapActivity;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
@@ -32,13 +32,9 @@ public class AppNavigationTest {
 	@Before
 	public void setUp() throws Exception {
 		final MainActivity activity = activityTestRule.getActivity();
-		Runnable wakeUpDevice = new Runnable() {
-			public void run() {
-				activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON |
-						WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
-						WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-			}
-		};
+		Runnable wakeUpDevice = () -> activity.getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON |
+				android.view.WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
+				android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		activity.runOnUiThread(wakeUpDevice);
 	}
 
@@ -50,5 +46,7 @@ public class AppNavigationTest {
 		UIHelper.openMenu();
 
 		onView(withId(R.id.drawer)).check(matches(isOpen(Gravity.START)));
+
+		snapActivity(activityTestRule.getActivity()).record();
 	}
 }

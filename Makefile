@@ -7,3 +7,9 @@ runTests:
 runTestsWithCoverage: runTests
 	./gradlew jacocoTestReport
 	./app/codecov.sh
+
+saveScreenshots:
+	./gradlew executeScreenshotTests -Precord
+
+validateScreenshots:
+	./gradlew executeScreenshotTests

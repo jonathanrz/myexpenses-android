@@ -25,6 +25,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static br.com.jonathanzanella.myexpenses.helpers.TestUtils.withRecyclerView;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle;
+import static com.facebook.testing.screenshot.Screenshot.snapActivity;
 
 @RunWith(AndroidJUnit4.class)
 @MediumTest
@@ -48,6 +49,8 @@ public class ListSourceActivityTest {
 		matchToolbarTitle(getTargetContext().getString(R.string.select_source_title));
 
 		onView(withId(R.id.act_sources_list_empty)).check(matches(isDisplayed()));
+
+		snapActivity(activityTestRule.getActivity()).record();
 	}
 
 	@Test
@@ -59,6 +62,8 @@ public class ListSourceActivityTest {
 
 		matchToolbarTitle(getTargetContext().getString(R.string.select_source_title));
 		onView(withId(R.id.row_source_name)).check(matches(withText(source.getName())));
+
+		snapActivity(activityTestRule.getActivity()).record();
 	}
 
 	@Test
@@ -78,5 +83,7 @@ public class ListSourceActivityTest {
 		onView(withRecyclerView(R.id.act_sources_list)
 				.atPositionOnView(1, R.id.row_source_name))
 				.check(matches(withText(sourceB.getName())));
+
+		snapActivity(activityTestRule.getActivity()).record();
 	}
 }

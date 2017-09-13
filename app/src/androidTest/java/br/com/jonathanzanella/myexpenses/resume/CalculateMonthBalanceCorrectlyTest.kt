@@ -27,6 +27,7 @@ import br.com.jonathanzanella.myexpenses.receipt.ReceiptDataSource
 import br.com.jonathanzanella.myexpenses.source.Source
 import br.com.jonathanzanella.myexpenses.source.SourceDataSource
 import br.com.jonathanzanella.myexpenses.views.MainActivity
+import com.facebook.testing.screenshot.Screenshot
 import org.hamcrest.Matchers.allOf
 import org.joda.time.DateTime
 import org.junit.After
@@ -154,6 +155,8 @@ class CalculateMonthBalanceCorrectlyTest {
 
         scrollToMonth(DateTime.now())
         validateExpectedBalance(expectedBalance)
+
+        Screenshot.snapActivity(activityTestRule.activity).record()
     }
 
     private fun validateExpectedBalance(expectedBalance: String) {

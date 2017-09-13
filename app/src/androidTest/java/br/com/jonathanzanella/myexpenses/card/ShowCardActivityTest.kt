@@ -24,6 +24,7 @@ import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder
 import br.com.jonathanzanella.myexpenses.helpers.builder.CardBuilder
 import br.com.jonathanzanella.myexpenses.helpers.builder.ExpenseBuilder
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
+import com.facebook.testing.screenshot.Screenshot
 import org.joda.time.DateTime
 import org.junit.After
 import org.junit.Before
@@ -77,6 +78,8 @@ class ShowCardActivityTest {
 
         onView(withId(R.id.act_show_card_name)).check(matches(withText(card!!.name)))
         onView(withId(R.id.act_show_card_account)).check(matches(withText(account!!.name)))
+
+        Screenshot.snapActivity(activityTestRule.activity).record()
     }
 
     private fun callActivity() {
@@ -111,5 +114,7 @@ class ShowCardActivityTest {
         assert(expense1!!.charged)
         expense2 = expenseDataSource.find(expense1.uuid!!)
         assert(expense2!!.charged)
+
+        Screenshot.snapActivity(activityTestRule.activity).record()
     }
 }

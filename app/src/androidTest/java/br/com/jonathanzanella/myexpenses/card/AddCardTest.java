@@ -37,6 +37,7 @@ import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.clickIntoView;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchErrorMessage;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.openMenuAndClickItem;
+import static com.facebook.testing.screenshot.Screenshot.snapActivity;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
@@ -100,6 +101,8 @@ public class AddCardTest {
 		matchToolbarTitle(cardsTitle);
 
 		onView(withId(R.id.row_card_name)).check(matches(withText(accountTitle + " - " + getTargetContext().getString(R.string.credit))));
+
+		snapActivity(activityTestRule.getActivity()).record();
 	}
 
 	@Test
@@ -113,6 +116,8 @@ public class AddCardTest {
 
 		final String errorMessage = getContext().getString(R.string.error_message_name_not_informed);
 		matchErrorMessage(R.id.act_edit_card_name, errorMessage);
+
+		snapActivity(editCardActivityTestRule.getActivity()).record();
 	}
 
 	@Test
@@ -129,6 +134,8 @@ public class AddCardTest {
 
 		final String errorMessage = getContext().getString(R.string.error_message_card_type_not_selected);
 		checkSnackbarText(errorMessage);
+
+		snapActivity(editCardActivityTestRule.getActivity()).record();
 	}
 
 	@Test
@@ -147,6 +154,8 @@ public class AddCardTest {
 
 		final String errorMessage = getContext().getString(R.string.error_message_account_not_informed);
 		matchErrorMessage(R.id.act_edit_card_account, errorMessage);
+
+		snapActivity(editCardActivityTestRule.getActivity()).record();
 	}
 
 	private Context getContext() {
