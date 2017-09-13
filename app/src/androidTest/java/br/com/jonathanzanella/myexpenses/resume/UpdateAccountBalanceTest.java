@@ -35,6 +35,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withTagValue;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.clickIntoView;
+import static com.facebook.testing.screenshot.Screenshot.snapActivity;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.core.Is.is;
@@ -80,6 +81,8 @@ public class UpdateAccountBalanceTest {
 
 		account = accountRepository.find(account.getUuid());
 		assertThat(account.getBalance(), is(receipt.getIncome()));
+
+		snapActivity(mainActivityTestRule.getActivity()).record();
 	}
 
 	@Test
@@ -97,6 +100,8 @@ public class UpdateAccountBalanceTest {
 
 		account = accountRepository.find(account.getUuid());
 		assertThat(account.getBalance(), is(expense.getValue() * -1));
+
+		snapActivity(mainActivityTestRule.getActivity()).record();
 	}
 
 	@Test
@@ -123,5 +128,7 @@ public class UpdateAccountBalanceTest {
 
 		account = accountRepository.find(account.getUuid());
 		assertThat(account.getBalance(), is(receipt.getIncome() - expense.getValue()));
+
+		snapActivity(mainActivityTestRule.getActivity()).record();
 	}
 }

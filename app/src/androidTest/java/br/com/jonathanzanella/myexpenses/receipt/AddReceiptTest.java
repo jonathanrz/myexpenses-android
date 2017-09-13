@@ -42,6 +42,7 @@ import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchErrorMessa
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.openMenuAndClickItem;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.setTimeInDatePicker;
+import static com.facebook.testing.screenshot.Screenshot.snapActivity;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
@@ -113,6 +114,8 @@ public class AddReceiptTest {
 
 		onView(withId(R.id.row_receipt_name)).check(matches(withText(receiptName)));
 		onView(withId(R.id.row_receipt_date)).check(matches(withText(formattedDate)));
+
+		snapActivity(mainActivityTestRule.getActivity()).record();
 	}
 
 	@Test
@@ -126,6 +129,8 @@ public class AddReceiptTest {
 
 		final String errorMessage = getContext().getString(R.string.error_message_name_not_informed);
 		matchErrorMessage(R.id.act_edit_receipt_name, errorMessage);
+
+		snapActivity(editReceiptActivityTestRule.getActivity()).record();
 	}
 
 	@Test
@@ -139,6 +144,8 @@ public class AddReceiptTest {
 
 		final String errorMessage = getContext().getString(R.string.error_message_amount_zero);
 		matchErrorMessage(R.id.act_edit_receipt_income, errorMessage);
+
+		snapActivity(editReceiptActivityTestRule.getActivity()).record();
 	}
 
 	@Test
@@ -152,6 +159,8 @@ public class AddReceiptTest {
 
 		final String errorMessage = getContext().getString(R.string.error_message_source_not_informed);
 		matchErrorMessage(R.id.act_edit_receipt_source, errorMessage);
+
+		snapActivity(editReceiptActivityTestRule.getActivity()).record();
 	}
 
 	@Test
@@ -165,6 +174,8 @@ public class AddReceiptTest {
 
 		final String errorMessage = getContext().getString(R.string.error_message_account_not_informed);
 		matchErrorMessage(R.id.act_edit_receipt_account, errorMessage);
+
+		snapActivity(editReceiptActivityTestRule.getActivity()).record();
 	}
 
 	private void selectSource() {

@@ -31,6 +31,7 @@ import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchErrorMessa
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.openMenuAndClickItem;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.setTimeInDatePicker;
+import static com.facebook.testing.screenshot.Screenshot.snapActivity;
 
 @RunWith(AndroidJUnit4.class)
 @MediumTest
@@ -88,6 +89,8 @@ public class AddBillTest {
 		String initDateText = Bill.Companion.getSIMPLE_DATE_FORMAT().format(initDate.toDate());
 		String endDateText = Bill.Companion.getSIMPLE_DATE_FORMAT().format(endDate.toDate());
 		onView(withId(R.id.row_bill_dates)).check(matches(withText(initDateText + " - " + endDateText)));
+
+		snapActivity(activityTestRule.getActivity()).record();
 	}
 
 	@Test
@@ -109,6 +112,8 @@ public class AddBillTest {
 		matchErrorMessage(R.id.act_edit_bill_init_date, errorMessage);
 		errorMessage = getContext().getString(R.string.error_message_end_date_not_informed);
 		matchErrorMessage(R.id.act_edit_bill_end_date, errorMessage);
+
+		snapActivity(activityTestRule.getActivity()).record();
 	}
 
 	@Test
@@ -129,6 +134,8 @@ public class AddBillTest {
 
 		String errorMessage = getContext().getString(R.string.error_message_init_date_greater_than_end_date);
 		matchErrorMessage(R.id.act_edit_bill_init_date, errorMessage);
+
+		snapActivity(activityTestRule.getActivity()).record();
 	}
 
 	private Context getContext() {

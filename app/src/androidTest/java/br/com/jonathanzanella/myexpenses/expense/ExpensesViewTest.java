@@ -35,6 +35,7 @@ import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.clearAndTypeTex
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.clickIntoView;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.openMenuAndClickItem;
+import static com.facebook.testing.screenshot.Screenshot.snapActivity;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.AllOf.allOf;
@@ -83,6 +84,8 @@ public class ExpensesViewTest {
 
 		onViewExpenseName(expense1).check(matches(isDisplayed()));
 		onViewExpenseName(expense2).check(doesNotExist());
+
+		snapActivity(activityTestRule.getActivity()).record();
 	}
 
 	private ViewInteraction onViewExpenseName(Expense expense) {

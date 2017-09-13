@@ -12,6 +12,7 @@ apply plugin: 'checkstyle'
 apply plugin: 'findbugs'
 apply plugin: 'pmd'
 apply plugin: 'io.fabric'
+apply plugin: 'shot'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -224,4 +225,8 @@ kotlinter {
     ignoreFailures = false
     indentSize = 4
     reporter = 'checkstyle'
+}
+
+shot {
+    appId = "br.com.jonathanzanella.myexpenses.debug"
 }
