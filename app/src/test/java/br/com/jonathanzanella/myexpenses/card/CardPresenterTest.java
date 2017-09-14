@@ -21,6 +21,7 @@ import br.com.jonathanzanella.myexpenses.helper.builder.ExpenseBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.ResourcesHelper;
 import br.com.jonathanzanella.myexpenses.validations.ValidationError;
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult;
+import io.reactivex.Maybe;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNull;
@@ -99,7 +100,7 @@ public class CardPresenterTest {
 		Account account = new AccountBuilder().build();
 		Card card = new CardBuilder().account(account).build(accountDataSource);
 		when(dataSource.find(uuid)).thenReturn(card);
-		when(accountDataSource.find(anyString())).thenReturn(account);
+		when(accountDataSource.find(anyString())).thenReturn(Maybe.just(account));
 		when(expenseRepository.save(any(Expense.class))).thenReturn(new ValidationResult());
 		List<Expense> expenseList = new ArrayList<>();
 		expenseList.add(new ExpenseBuilder().value(value).build());

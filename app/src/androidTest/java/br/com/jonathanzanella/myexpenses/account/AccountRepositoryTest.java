@@ -44,7 +44,7 @@ public class AccountRepositoryTest {
 		account.setName("test");
 		dataSource.save(account);
 
-		Account loadAccount = dataSource.find(account.getUuid());
+		Account loadAccount = dataSource.find(account.getUuid()).blockingGet();
 		assertThat(loadAccount.getUuid(), is(account.getUuid()));
 	}
 }

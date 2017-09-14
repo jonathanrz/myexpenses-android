@@ -79,7 +79,7 @@ public class UpdateAccountBalanceTest {
 				.perform(scrollTo()).perform(click());
 		clickIntoView(getTargetContext().getString(android.R.string.yes));
 
-		account = accountRepository.find(account.getUuid());
+		account = accountRepository.find(account.getUuid()).blockingGet();
 		assertThat(account.getBalance(), is(receipt.getIncome()));
 
 		snapActivity(mainActivityTestRule.getActivity()).record();
@@ -98,7 +98,7 @@ public class UpdateAccountBalanceTest {
 				.perform(scrollTo()).perform(click());
 		clickIntoView(getTargetContext().getString(android.R.string.yes));
 
-		account = accountRepository.find(account.getUuid());
+		account = accountRepository.find(account.getUuid()).blockingGet();
 		assertThat(account.getBalance(), is(expense.getValue() * -1));
 
 		snapActivity(mainActivityTestRule.getActivity()).record();
@@ -126,7 +126,7 @@ public class UpdateAccountBalanceTest {
 				.perform(scrollTo()).perform(click());
 		clickIntoView(getTargetContext().getString(android.R.string.yes));
 
-		account = accountRepository.find(account.getUuid());
+		account = accountRepository.find(account.getUuid()).blockingGet();
 		assertThat(account.getBalance(), is(receipt.getIncome() - expense.getValue()));
 
 		snapActivity(mainActivityTestRule.getActivity()).record();

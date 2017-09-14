@@ -3,6 +3,7 @@ package br.com.jonathanzanella.myexpenses.account
 import android.support.annotation.UiThread
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException
+import br.com.jonathanzanella.myexpenses.extensions.fromIOToMainThread
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import javax.inject.Inject
@@ -59,11 +60,12 @@ class AccountPresenter @Inject constructor(private val dataSource: AccountDataSo
 
     @UiThread
     fun loadAccount(uuid: String) {
-        doAsync {
-            account = dataSource.find(uuid)
-
-            uiThread { account?.let { updateView() } }
-        }
+        dataSource.find(uuid)
+                .fromIOToMainThread()
+                .subscribe {
+                    account = it
+                    account?.let { updateView() }
+                }
     }
 
     @UiThread

@@ -4,6 +4,7 @@ import android.support.annotation.WorkerThread
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult
 import io.reactivex.Flowable
+import io.reactivex.Maybe
 import org.apache.commons.lang3.StringUtils
 import timber.log.Timber
 import java.util.*
@@ -14,7 +15,7 @@ interface AccountDataSource {
     fun forResumeScreen(): Flowable<List<Account>>
     fun unsync(): Flowable<List<Account>>
 
-    fun find(uuid: String): Account?
+    fun find(uuid: String): Maybe<Account>
     fun greaterUpdatedAt(): Long
 
     fun save(account: Account): ValidationResult
@@ -38,8 +39,8 @@ class AccountRepository @Inject constructor(val dao: AccountDao): AccountDataSou
     }
 
     @WorkerThread
-    override fun find(uuid: String): Account? {
-        return dao.find(uuid).blockingFirst().firstOrNull()
+    override fun find(uuid: String): Maybe<Account> {
+        return dao.find(uuid)
     }
 
     @WorkerThread
@@ -75,7 +76,7 @@ class AccountRepository @Inject constructor(val dao: AccountDao): AccountDataSou
             return result
         }
 
-        val account = find(unsync.uuid!!)
+        val account = find(unsync.uuid!!).blockingGet()
 
         if (account != null && account.id != unsync.id) {
             if (account.updatedAt != unsync.updatedAt)

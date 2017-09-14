@@ -13,6 +13,7 @@ import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.account.AccountDataSource
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException
+import br.com.jonathanzanella.myexpenses.extensions.fromIOToMainThread
 import br.com.jonathanzanella.myexpenses.source.Source
 import br.com.jonathanzanella.myexpenses.source.SourceDataSource
 import org.jetbrains.anko.doAsync
@@ -197,20 +198,25 @@ class ReceiptPresenter @Inject constructor(private val dataSource: ReceiptDataSo
 
     @UiThread
     fun storeBundle(extras: Bundle) {
-        doAsync {
-            if (extras.containsKey(KEY_RECEIPT_UUID))
-                loadReceipt(extras.getString(KEY_RECEIPT_UUID))
+        with(extras) {
+            containsKey(KEY_ACCOUNT_UUID).apply {
+                accountDataSource.find(extras.getString(KEY_ACCOUNT_UUID)!!)
+                        .fromIOToMainThread()
+                        .subscribe { account = it }
+            }
 
-            if (extras.containsKey(KEY_SOURCE_UUID))
-                source = sourceDataSource.find(extras.getString(KEY_SOURCE_UUID))
+            doAsync {
+                if (containsKey(KEY_RECEIPT_UUID))
+                    loadReceipt(getString(KEY_RECEIPT_UUID))
 
-            if (extras.containsKey(KEY_ACCOUNT_UUID))
-                account = accountDataSource.find(extras.getString(KEY_ACCOUNT_UUID)!!)
+                if (containsKey(KEY_SOURCE_UUID))
+                    source = sourceDataSource.find(getString(KEY_SOURCE_UUID))
 
-            if (extras.containsKey(KEY_DATE))
-                date = DateTime(extras.getLong(KEY_DATE))
+                if (containsKey(KEY_DATE))
+                    date = DateTime(getLong(KEY_DATE))
 
-            uiThread { updateView() }
+                uiThread { updateView() }
+            }
         }
     }
 
@@ -231,11 +237,13 @@ class ReceiptPresenter @Inject constructor(private val dataSource: ReceiptDataSo
 
     @UiThread
     fun onAccountSelected(accountUuid: String) {
-        doAsync {
-            account = accountDataSource.find(accountUuid)
+        accountDataSource.find(accountUuid)
+                .fromIOToMainThread()
+                .subscribe {
+                    account = it
 
-            uiThread { editView?.onAccountSelected(account!!) }
-        }
+                    editView?.onAccountSelected(account!!)
+                }
     }
 
     fun hasReceipt(): Boolean {

@@ -211,7 +211,7 @@ class Expense : Transaction, UnsyncModel {
             return null
 
         return when (type) {
-            ChargeableType.ACCOUNT -> accountDataSource.find(uuid)
+            ChargeableType.ACCOUNT -> accountDataSource.find(uuid).blockingGet()
             ChargeableType.DEBIT_CARD, ChargeableType.CREDIT_CARD -> cardDataSource.find(uuid)
         }
     }

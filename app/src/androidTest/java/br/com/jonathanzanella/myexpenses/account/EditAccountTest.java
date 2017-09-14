@@ -81,7 +81,7 @@ public class EditAccountTest {
 
 		matchToolbarTitle(showAccountTitle + " changed");
 
-		account = dataSource.find(account.getUuid());
+		account = dataSource.find(account.getUuid()).blockingGet();
 
 		onView(withId(R.id.act_show_account_name)).check(matches(withText(account.getName())));
 		assertThat(dataSource.all().blockingFirst().size(), is(1));

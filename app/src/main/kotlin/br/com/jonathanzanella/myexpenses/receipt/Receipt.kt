@@ -101,7 +101,7 @@ class Receipt : Transaction, UnsyncModel {
     private fun getAccount(ignoreCache: Boolean): Account? {
         if (account == null || ignoreCache) {
             accountUuid?.let {
-                account = accountDataSource.find(it)
+                account = accountDataSource.find(it).blockingGet()
             }
         }
         return account
