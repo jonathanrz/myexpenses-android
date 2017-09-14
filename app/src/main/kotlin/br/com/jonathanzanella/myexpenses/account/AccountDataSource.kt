@@ -12,7 +12,7 @@ import javax.inject.Inject
 interface AccountDataSource {
     fun all(): Flowable<List<Account>>
     fun forResumeScreen(): Flowable<List<Account>>
-    fun unsync(): List<Account>
+    fun unsync(): Flowable<List<Account>>
 
     fun find(uuid: String): Account?
     fun greaterUpdatedAt(): Long
@@ -33,8 +33,8 @@ class AccountRepository @Inject constructor(val dao: AccountDao): AccountDataSou
     }
 
     @WorkerThread
-    override fun unsync(): List<Account> {
-        return dao.unsync().blockingFirst()
+    override fun unsync(): Flowable<List<Account>> {
+        return dao.unsync()
     }
 
     @WorkerThread

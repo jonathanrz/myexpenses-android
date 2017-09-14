@@ -64,7 +64,7 @@ class AccountApi @Inject constructor(private val accountInterface: AccountInterf
     }
 
     override fun unsyncModels(): List<Account> {
-        return repository.unsync()
+        return repository.unsync().blockingFirst()
     }
 
     override fun greaterUpdatedAt(): Long {
