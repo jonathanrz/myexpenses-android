@@ -49,7 +49,7 @@ ext {
     mockitoKotlinVersion = '1.5.0'
     playServicesVersion = '11.2.0'
     retrofitVersion = '2.2.0'
-    roomVersion = '1.0.0-alpha5'
+    roomVersion = '1.0.0-alpha9'
     rxAndroidVersion = '2.0.1'
     rxJavaVersion = '2.1.0'
     rulesVersion = '0.5'
