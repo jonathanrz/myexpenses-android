@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.AppCompatEditText
+import android.text.InputType
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.CheckBox
@@ -165,6 +166,7 @@ private class EditAccountActivityUi : AnkoComponent<EditAccountActivity> {
                             editBalance = appCompatEditText {
                                 id = R.id.act_edit_account_balance
                                 hint = resources.getString(R.string.balance)
+                                inputType = InputType.TYPE_CLASS_NUMBER
                             }
                         }
                         checkAccountBalanceNegative = checkBox {
