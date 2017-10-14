@@ -13,6 +13,7 @@ apply plugin: 'findbugs'
 apply plugin: 'pmd'
 apply plugin: 'io.fabric'
 apply plugin: 'shot'
+apply plugin: 'com.getkeepsafe.dexcount'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion

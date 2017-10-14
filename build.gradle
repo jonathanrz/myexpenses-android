@@ -11,6 +11,7 @@ buildscript {
         classpath 'com.android.tools.build:gradle:3.0.0-beta7'
         classpath 'com.dicedmelon.gradle:jacoco-android:0.1.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.8.1'
         //noinspection GradleDynamicVersion
         classpath 'io.fabric.tools:gradle:1.+'
         classpath 'com.karumi:shot:0.1.2'
