@@ -126,27 +126,27 @@ class ServerModule {
 
     @Singleton
     @Provides
-    fun providesAccountInterface(server: Server) = server.accountInterface()
+    fun providesAccountInterface(server: Server) = server.accountInterface()!!
 
     @Singleton
     @Provides
-    fun providesBillInterface(server: Server) = server.billInterface()
+    fun providesBillInterface(server: Server) = server.billInterface()!!
 
     @Singleton
     @Provides
-    fun providesCardInterface(server: Server) = server.cardInterface()
+    fun providesCardInterface(server: Server) = server.cardInterface()!!
 
     @Singleton
     @Provides
-    fun providesExpenseInterface(server: Server) = server.expenseInterface()
+    fun providesExpenseInterface(server: Server) = server.expenseInterface()!!
 
     @Singleton
     @Provides
-    fun providesReceiptInterface(server: Server) = server.receiptInterface()
+    fun providesReceiptInterface(server: Server) = server.receiptInterface()!!
 
     @Singleton
     @Provides
-    fun providesSourceInterface(server: Server) = server.sourceInterface()
+    fun providesSourceInterface(server: Server) = server.sourceInterface()!!
 
     @Singleton
     @Provides

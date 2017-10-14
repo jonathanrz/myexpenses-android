@@ -6,7 +6,7 @@ import java.io.IOException
 
 class ServerApi {
     private val serverInterface: ServerInterface by lazy {
-        Server(App.getContext()).serverInterface()
+        Server(App.getContext()).serverInterface()!!
     }
 
     fun healthCheck(): Boolean {

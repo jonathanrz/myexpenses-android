@@ -23,6 +23,8 @@ class ServerData(context: Context) {
     val serverToken: String
         get() = sharedPreferences.getString(SERVER_TOKEN, "")
 
+    val hasData = serverUrl.isNotEmpty()
+
     companion object {
         private val SERVER_URL = "ServerUrl"
         private val SERVER_TOKEN = "ServerToken"

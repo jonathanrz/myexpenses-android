@@ -22,7 +22,7 @@ import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 class Server(context: Context) {
-    private val retrofit: Retrofit
+    private var retrofit: Retrofit? = null
     private val serverData: ServerData = ServerData(context)
 
     private inner class HeaderInterceptor : Interceptor {
@@ -51,39 +51,41 @@ class Server(context: Context) {
                 .readTimeout(TIMEOUT.toLong(), TimeUnit.SECONDS)
                 .build()
 
-        retrofit = Retrofit.Builder()
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .baseUrl(serverData.serverUrl)
-                .client(client)
-                .build()
+        if(serverData.hasData) {
+            retrofit = Retrofit.Builder()
+                    .addConverterFactory(GsonConverterFactory.create(gson))
+                    .baseUrl(serverData.serverUrl)
+                    .client(client)
+                    .build()
+        }
     }
 
-    internal fun serverInterface(): ServerInterface {
-        return retrofit.create(ServerInterface::class.java)
+    internal fun serverInterface(): ServerInterface? {
+        return retrofit?.create(ServerInterface::class.java)
     }
 
-    fun sourceInterface(): SourceInterface {
-        return retrofit.create(SourceInterface::class.java)
+    fun sourceInterface(): SourceInterface? {
+        return retrofit?.create(SourceInterface::class.java)
     }
 
-    fun accountInterface(): AccountInterface {
-        return retrofit.create(AccountInterface::class.java)
+    fun accountInterface(): AccountInterface? {
+        return retrofit?.create(AccountInterface::class.java)
     }
 
-    fun billInterface(): BillInterface {
-        return retrofit.create(BillInterface::class.java)
+    fun billInterface(): BillInterface? {
+        return retrofit?.create(BillInterface::class.java)
     }
 
-    fun cardInterface(): CardInterface {
-        return retrofit.create(CardInterface::class.java)
+    fun cardInterface(): CardInterface? {
+        return retrofit?.create(CardInterface::class.java)
     }
 
-    fun expenseInterface(): ExpenseInterface {
-        return retrofit.create(ExpenseInterface::class.java)
+    fun expenseInterface(): ExpenseInterface? {
+        return retrofit?.create(ExpenseInterface::class.java)
     }
 
-    fun receiptInterface(): ReceiptInterface {
-        return retrofit.create(ReceiptInterface::class.java)
+    fun receiptInterface(): ReceiptInterface? {
+        return retrofit?.create(ReceiptInterface::class.java)
     }
 
     companion object {
