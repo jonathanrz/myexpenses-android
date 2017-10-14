@@ -55,12 +55,6 @@ class EditExpenseActivity : AppCompatActivity(), ExpenseContract.EditView {
         super.onPostCreate(savedInstanceState)
 
         ui.value.addTextChangedListener(CurrencyTextWatch(ui.value))
-        ui.valueToShowInOverview.addTextChangedListener(CurrencyTextWatch(ui.valueToShowInOverview))
-        ui.value.onFocusChangeListener = View.OnFocusChangeListener { _, _ ->
-            if (ui.valueToShowInOverview.text.toString().isEmpty() && !ui.value.text.toString().isEmpty()) {
-                ui.valueToShowInOverview.text = ui.value.text
-            }
-        }
         presenter.attachView(this)
         presenter.onViewUpdated(false)
     }
@@ -181,17 +175,10 @@ class EditExpenseActivity : AppCompatActivity(), ExpenseContract.EditView {
         if (!StringUtils.isEmpty(valueText))
             value = Integer.parseInt(valueText)
 
-        var valueToShowInOverview = 0
-        val valueToShowInOverviewText = ui.valueToShowInOverview.text.toString().replace("[^\\d]".toRegex(), "")
-        if (!StringUtils.isEmpty(valueToShowInOverviewText))
-            valueToShowInOverview = Integer.parseInt(valueToShowInOverviewText)
-
         if (ui.repayment.isChecked) {
             value *= -1
-            valueToShowInOverview *= -1
         }
         expense.value = value
-        expense.valueToShowInOverview = valueToShowInOverview
         expense.chargedNextMonth = ui.payNextMonth.isChecked
         expense.showInOverview(ui.showInOverview.isChecked)
         expense.showInResume(ui.showInResume.isChecked)
@@ -225,7 +212,6 @@ class EditExpenseActivity : AppCompatActivity(), ExpenseContract.EditView {
     override fun showExpense(expense: Expense) {
         ui.name.setText(expense.name)
         ui.value.setText(Math.abs(expense.value).toCurrencyFormatted())
-        ui.valueToShowInOverview.setText(Math.abs(expense.valueToShowInOverview).toCurrencyFormatted())
         if (expense.charged) {
             ui.value.setTextColor(ResourcesCompat.getColor(resources, R.color.value_unpaid, null))
             ui.repayment.isEnabled = false
@@ -250,7 +236,6 @@ private class EditExpenseActivityUi : AnkoComponent<EditExpenseActivity> {
     lateinit var name : AppCompatEditText
     lateinit var date : AppCompatEditText
     lateinit var value : AppCompatEditText
-    lateinit var valueToShowInOverview : AppCompatEditText
     lateinit var repayment : CheckBox
     lateinit var chargeable : AppCompatEditText
     lateinit var bill : AppCompatEditText
@@ -285,13 +270,6 @@ private class EditExpenseActivityUi : AnkoComponent<EditExpenseActivity> {
                         value = appCompatEditText {
                             id = R.id.act_edit_expense_value
                             hint = resources.getString(R.string.value)
-                            inputType = InputType.TYPE_CLASS_NUMBER
-                        }
-                    }
-                    textInputLayout {
-                        valueToShowInOverview = appCompatEditText {
-                            id = R.id.act_edit_expense_value_to_show_in_overview
-                            hint = resources.getString(R.string.income_to_show_in_overview)
                             inputType = InputType.TYPE_CLASS_NUMBER
                         }
                     }

@@ -39,6 +39,6 @@ class OverviewExpensesMonthlyView(context: Context, month: DateTime) : FrameLayo
         val period = WeeklyPagerAdapter.Period()
         period.init = month.dayOfMonth().withMinimumValue()
         period.end = month.dayOfMonth().withMaximumValue()
-        total.text = expenseDataSource.expenses(period).sumBy { it.valueToShowInOverview }.toCurrencyFormatted()
+        total.text = expenseDataSource.expenses(period).sumBy { it.value }.toCurrencyFormatted()
     }
 }

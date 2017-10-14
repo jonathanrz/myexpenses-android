@@ -153,7 +153,6 @@ class ExpensePresenter @Inject constructor(val dataSource: ExpenseDataSource, va
         if (e.installments != 1) {
             e.name = e.formatExpenseName(e.name!!, 1)
             e.value = e.value / e.installments
-            e.valueToShowInOverview = e.valueToShowInOverview / e.installments
         }
 
         doAsync {

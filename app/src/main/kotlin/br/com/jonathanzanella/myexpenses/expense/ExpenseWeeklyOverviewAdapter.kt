@@ -33,7 +33,7 @@ class ExpenseWeeklyOverviewAdapter : RecyclerView.Adapter<ExpenseWeeklyOverviewA
             synchronized(this) {
                 ui.date.text = SIMPLE_DATE_FORMAT.format(expense.getDate().toDate())
             }
-            ui.income.text = expense.valueToShowInOverview.toCurrencyFormatted()
+            ui.income.text = expense.value.toCurrencyFormatted()
 
             doAsync {
                 val chargeable = expense.chargeableFromCache
@@ -75,7 +75,7 @@ class ExpenseWeeklyOverviewAdapter : RecyclerView.Adapter<ExpenseWeeklyOverviewA
 
     fun setExpenses(expenses: List<Expense>) {
         this.expenses = expenses
-        totalValue = expenses.sumBy { it.valueToShowInOverview }
+        totalValue = expenses.sumBy { it.value }
     }
 
     private fun getExpense(position: Int): Expense? {

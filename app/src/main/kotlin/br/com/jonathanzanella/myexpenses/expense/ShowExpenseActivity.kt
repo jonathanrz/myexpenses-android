@@ -94,7 +94,6 @@ class ShowExpenseActivity : AppCompatActivity(), ExpenseContract.View {
             name.text = expense.name
             date.text = Transaction.SIMPLE_DATE_FORMAT.format(expense.getDate().toDate())
             value.text = expense.value.toCurrencyFormatted()
-            showInOverview.text = expense.valueToShowInOverview.toCurrencyFormatted()
             chargeNextMonth.visibility = if (expense.chargedNextMonth) View.VISIBLE else View.GONE
         }
 
@@ -122,7 +121,6 @@ private class ShowExpenseActivityUi : AnkoComponent<ShowExpenseActivity> {
     lateinit var name : TextView
     lateinit var date : TextView
     lateinit var value : TextView
-    lateinit var showInOverview : TextView
     lateinit var chargeable : TextView
     lateinit var bill : TextView
     lateinit var chargeNextMonth : TableRow
@@ -143,10 +141,6 @@ private class ShowExpenseActivityUi : AnkoComponent<ShowExpenseActivity> {
                 tableRow {
                     static { text = resources.getString(R.string.income) }
                     value = staticWithData { id = R.id.act_show_expense_value }
-                }
-                tableRow {
-                    static { text = resources.getString(R.string.income_to_show_in_overview) }
-                    showInOverview = staticWithData { id = R.id.act_show_expense_value_to_show_in_overview }
                 }
                 tableRow {
                     static { text = resources.getString(R.string.paid_with) }

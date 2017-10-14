@@ -40,7 +40,6 @@ class Expense : Transaction, UnsyncModel {
     @Expose override var name: String? = null
     @Expose private var date: DateTime? = null
     @Expose var value: Int = 0
-    @Expose var valueToShowInOverview: Int = 0
     @Expose var chargeableUuid: String? = null
     @Expose var chargeableType: ChargeableType? = null
     @Expose var removed: Boolean = false
@@ -147,7 +146,6 @@ class Expense : Transaction, UnsyncModel {
             expense.name = originalName
         expense.date = date!!.plusMonths(1)
         expense.value = value
-        expense.valueToShowInOverview = valueToShowInOverview
         expense.chargeableUuid = chargeableUuid
         expense.chargeableType = chargeableType
         expense.billUuid = billUuid
