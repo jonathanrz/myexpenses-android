@@ -14,6 +14,7 @@ import android.widget.CheckBox
 import android.widget.LinearLayout
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
+import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.bill.Bill
 import br.com.jonathanzanella.myexpenses.bill.ListBillActivity
 import br.com.jonathanzanella.myexpenses.chargeable.Chargeable
@@ -135,6 +136,10 @@ class EditExpenseActivity : AppCompatActivity(), ExpenseContract.EditView {
     override fun onChargeableSelected(chargeable: Chargeable) {
         ui.chargeable.setText(chargeable.name)
         ui.payNextMonth.visibility = if (chargeable.canBePaidNextMonth()) View.VISIBLE else View.GONE
+        if(chargeable is Account) {
+            ui.showInResume.isChecked = chargeable.showInResume
+            ui.showInOverview.isChecked = chargeable.showInResume
+        }
     }
 
     internal fun onChargeable() {
