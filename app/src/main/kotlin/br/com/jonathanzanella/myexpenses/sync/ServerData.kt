@@ -17,13 +17,11 @@ class ServerData(context: Context) {
         editor.commit()
     }
 
-    val serverUrl: String
-        get() = sharedPreferences.getString(SERVER_URL, "")
+    val serverUrl: String?
+        get() = sharedPreferences.getString(SERVER_URL, null)
 
-    val serverToken: String
-        get() = sharedPreferences.getString(SERVER_TOKEN, "")
-
-    val hasData = serverUrl.isNotEmpty()
+    val serverToken: String?
+        get() = sharedPreferences.getString(SERVER_TOKEN, null)
 
     companion object {
         private val SERVER_URL = "ServerUrl"
