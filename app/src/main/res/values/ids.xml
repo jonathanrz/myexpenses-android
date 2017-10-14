@@ -104,7 +104,6 @@
 	<item type="id" name="act_edit_expense_name"/>
 	<item type="id" name="act_edit_expense_date"/>
 	<item type="id" name="act_edit_expense_value"/>
-	<item type="id" name="act_edit_expense_value_to_show_in_overview"/>
 	<item type="id" name="act_edit_expense_repayment"/>
 	<item type="id" name="act_edit_expense_chargeable"/>
 	<item type="id" name="act_edit_expense_bill"/>

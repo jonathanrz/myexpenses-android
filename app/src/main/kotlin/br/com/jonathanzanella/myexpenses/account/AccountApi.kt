@@ -10,7 +10,7 @@ import java.io.IOException
 import javax.inject.Inject
 
 @WorkerThread
-class AccountApi @Inject constructor(private var accountInterface: AccountInterface,
+class AccountApi @Inject constructor(private val accountInterface: AccountInterface,
                                      private val repository: AccountRepository) : UnsyncModelApi<Account> {
 
     override fun index(): List<Account> {

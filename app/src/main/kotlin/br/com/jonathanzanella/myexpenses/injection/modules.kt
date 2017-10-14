@@ -12,6 +12,8 @@ import br.com.jonathanzanella.myexpenses.expense.*
 import br.com.jonathanzanella.myexpenses.helpers.ResourcesHelper
 import br.com.jonathanzanella.myexpenses.receipt.*
 import br.com.jonathanzanella.myexpenses.server.Server
+import br.com.jonathanzanella.myexpenses.server.ServerApi
+import br.com.jonathanzanella.myexpenses.server.ServerInterface
 import br.com.jonathanzanella.myexpenses.source.*
 import dagger.Module
 import dagger.Provides
@@ -150,6 +152,10 @@ class ServerModule {
 
     @Singleton
     @Provides
+    fun providesServerInterface(server: Server) = server.serverInterface()
+
+    @Singleton
+    @Provides
     fun providesAccountApi(accountInterface: AccountInterface, accountRepository: AccountRepository) = AccountApi(accountInterface, accountRepository)
 
     @Singleton
@@ -171,4 +177,8 @@ class ServerModule {
     @Singleton
     @Provides
     fun providesSourceApi(sourceInterface: SourceInterface, sourceRepository: SourceRepository) = SourceApi(sourceInterface, sourceRepository)
+
+    @Singleton
+    @Provides
+    fun providesServerApi(serverInterface: ServerInterface) = ServerApi(serverInterface)
 }

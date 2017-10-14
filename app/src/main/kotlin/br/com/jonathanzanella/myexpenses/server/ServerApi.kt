@@ -1,14 +1,10 @@
 package br.com.jonathanzanella.myexpenses.server
 
-import br.com.jonathanzanella.myexpenses.App
 import timber.log.Timber
 import java.io.IOException
+import javax.inject.Inject
 
-class ServerApi {
-    private val serverInterface: ServerInterface by lazy {
-        Server(App.getContext()).serverInterface()!!
-    }
-
+class ServerApi @Inject constructor(private val serverInterface: ServerInterface) {
     fun healthCheck(): Boolean {
         val caller = serverInterface.healthCheck()
         return try {

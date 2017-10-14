@@ -88,7 +88,6 @@ class AddExpenseTest {
         val expenseName = "Test"
         UIHelper.clearAndTypeTextIntoView(R.id.act_edit_expense_name, expenseName)
         UIHelper.clearAndTypeTextIntoView(R.id.act_edit_expense_value, "100")
-        UIHelper.clickIntoView(R.id.act_edit_expense_value_to_show_in_overview)
         UIHelper.clickIntoView(R.id.act_edit_expense_date)
         val time = DateTime.now().plusMonths(1)
         UIHelper.setTimeInDatePicker(time.year, time.monthOfYear, time.dayOfMonth)
@@ -104,8 +103,6 @@ class AddExpenseTest {
         onView(ViewMatchers.withId(R.id.name)).check(matches(ViewMatchers.withText(expenseName)))
         onView(ViewMatchers.withId(R.id.billLayout)).check(matches(not<View>(ViewMatchers.isDisplayed())))
         onView(ViewMatchers.withId(R.id.date)).check(matches(ViewMatchers.withText(Transaction.SIMPLE_DATE_FORMAT.format(time.toDate()))))
-
-        Screenshot.snapActivity(mainActivityTestRule.getActivity()).record()
     }
 
     @Test

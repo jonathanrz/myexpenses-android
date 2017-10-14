@@ -33,6 +33,8 @@ class SyncService : GcmTaskService() {
     lateinit var expenseApi: ExpenseApi
     @Inject
     lateinit var receiptApi: ReceiptApi
+    @Inject
+    lateinit var serverApi: ServerApi
     private val apis: MutableList<UnsyncModelApi<UnsyncModel>>
 
     private var totalSaved: Int = 0
@@ -85,7 +87,7 @@ class SyncService : GcmTaskService() {
 
         val notification = SyncServiceNotification(this, notificationId++, apis.size)
 
-        if (ServerApi().healthCheck()) {
+        if (serverApi.healthCheck()) {
             notification.incrementProgress()
             for (api in apis) {
                 syncApi(api)
