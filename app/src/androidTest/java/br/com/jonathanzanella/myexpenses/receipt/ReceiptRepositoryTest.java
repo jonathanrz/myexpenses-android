@@ -102,4 +102,27 @@ public class ReceiptRepositoryTest {
 		assertThat(sources.get(0).getUuid(), is(receiptB.getUuid()));
 		assertThat(sources.get(1).getUuid(), is(receiptA.getUuid()));
 	}
+
+	@Test
+	public void load_only_not_removed_receipts() throws Exception {
+		Receipt receiptSaved = new ReceiptBuilder()
+				.name("a")
+				.source(source)
+				.account(account)
+				.removed(false)
+				.build();
+		dataSource.save(receiptSaved);
+
+		Receipt receiptRemoved = new ReceiptBuilder()
+				.name("b")
+				.source(source)
+				.account(account)
+				.removed(true)
+				.build();
+		dataSource.save(receiptRemoved);
+
+		List<Receipt> sources = dataSource.all();
+		assertThat(sources.size(), is(1));
+		assertThat(sources.get(0).getUuid(), is(receiptSaved.getUuid()));
+	}
 }

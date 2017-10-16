@@ -193,4 +193,22 @@ public class ExpenseRepositoryTest {
 		assertThat(expenses.size(), is(1));
 		assertThat(expenses.get(0).getUuid(), is(creditCardExpense.getUuid()));
 	}
+
+	@Test
+	public void load_only_not_removed_expenses() {
+		Expense expenseSaved = new ExpenseBuilder()
+				.removed(false)
+				.chargeable(account)
+				.build();
+		assertTrue(dataSource.save(expenseSaved).isValid());
+		Expense expenseRemoved = new ExpenseBuilder()
+				.removed(true)
+				.chargeable(account)
+				.build();
+		assertTrue(dataSource.save(expenseRemoved).isValid());
+
+		List<Expense> expenses = dataSource.all();
+		assertThat(expenses.size(), is(1));
+		assertThat(expenses.get(0).getUuid(), is(expenseSaved.getUuid()));
+	}
 }

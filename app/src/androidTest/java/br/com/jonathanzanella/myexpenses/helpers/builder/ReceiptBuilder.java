@@ -12,6 +12,7 @@ public class ReceiptBuilder {
 	private Account account = new AccountBuilder().build();
 	private DateTime date = DateTime.now();
 	private int income = 100;
+	private boolean removed = false;
 
 	public ReceiptBuilder name(String name) {
 		this.name = name;
@@ -38,6 +39,11 @@ public class ReceiptBuilder {
 		return this;
 	}
 
+	public ReceiptBuilder removed(boolean b) {
+		this.removed = b;
+		return this;
+	}
+
 	public Receipt build() {
 		Receipt receipt = new Receipt();
 		receipt.setName(name);
@@ -45,6 +51,7 @@ public class ReceiptBuilder {
 		receipt.setAccount(account);
 		receipt.setDate(date);
 		receipt.setIncome(income);
+		receipt.setRemoved(removed);
 		return receipt;
 	}
 }

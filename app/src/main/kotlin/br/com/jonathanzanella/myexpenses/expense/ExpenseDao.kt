@@ -8,7 +8,7 @@ import io.reactivex.Flowable
 
 @Dao
 interface ExpenseDao {
-    @Query("SELECT * FROM Expense ORDER BY date")
+    @Query("SELECT * FROM Expense WHERE removed = 0 ORDER BY date")
     fun all(): Flowable<List<Expense>>
 
     @Query("SELECT * FROM Expense WHERE date >= :initDate AND date <= :endDate AND removed = 0 ORDER BY date")
