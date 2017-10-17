@@ -113,13 +113,7 @@ class Expense : Transaction, UnsyncModel {
             val c = chargeableFromCache!!
             c.credit(value)
             when (c.chargeableType) {
-                ChargeableType.ACCOUNT -> {
-                    accountDataSource.save(c as Account)
-                    if (c is Card)
-                        cardDataSource.save(c as Card)
-                    else
-                        throw UnsupportedOperationException("Chargeable should be a card")
-                }
+                ChargeableType.ACCOUNT -> accountDataSource.save(c as Account)
                 ChargeableType.CREDIT_CARD, ChargeableType.DEBIT_CARD -> if (c is Card)
                     cardDataSource.save(c)
                 else
