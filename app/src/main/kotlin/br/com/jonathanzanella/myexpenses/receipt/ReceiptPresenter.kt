@@ -198,22 +198,22 @@ class ReceiptPresenter @Inject constructor(private val dataSource: ReceiptDataSo
 
     @UiThread
     fun storeBundle(extras: Bundle) {
-        with(extras) {
-            containsKey(KEY_ACCOUNT_UUID).apply {
-                accountDataSource.find(extras.getString(KEY_ACCOUNT_UUID)!!)
+        extras.let {
+            if(it.containsKey(KEY_ACCOUNT_UUID)) {
+                accountDataSource.find(it.getString(KEY_ACCOUNT_UUID)!!)
                         .fromIOToMainThread()
                         .subscribe { account = it }
             }
 
             doAsync {
-                if (containsKey(KEY_RECEIPT_UUID))
-                    loadReceipt(getString(KEY_RECEIPT_UUID))
+                if (it.containsKey(KEY_RECEIPT_UUID))
+                    loadReceipt(it.getString(KEY_RECEIPT_UUID))
 
-                if (containsKey(KEY_SOURCE_UUID))
-                    source = sourceDataSource.find(getString(KEY_SOURCE_UUID))
+                if (it.containsKey(KEY_SOURCE_UUID))
+                    source = sourceDataSource.find(it.getString(KEY_SOURCE_UUID))
 
-                if (containsKey(KEY_DATE))
-                    date = DateTime(getLong(KEY_DATE))
+                if (it.containsKey(KEY_DATE))
+                    date = DateTime(it.getLong(KEY_DATE))
 
                 uiThread { updateView() }
             }
