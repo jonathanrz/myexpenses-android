@@ -64,7 +64,7 @@ class BillApi @Inject constructor(private val billInterface: BillInterface,
     }
 
     override fun unsyncModels(): List<Bill> {
-        return billRepository.unsync()
+        return billRepository.unsync().blockingFirst()
     }
 
     override fun greaterUpdatedAt(): Long {

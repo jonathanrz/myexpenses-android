@@ -120,7 +120,7 @@ public class BillRepositoryTest {
 
 		waitForIdling();
 
-		List<Bill> bills = billRepository.unsync();
+		List<Bill> bills = billRepository.unsync().blockingFirst();
 		assertThat(bills.size(), is(1));
 		assertThat(bills.get(0).getUuid(), is(billUnsync.getUuid()));
 	}

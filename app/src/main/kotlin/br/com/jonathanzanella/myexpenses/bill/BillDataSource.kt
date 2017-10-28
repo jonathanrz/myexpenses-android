@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 interface BillDataSource {
     fun all(): Flowable<List<Bill>>
-    fun unsync(): List<Bill>
+    fun unsync(): Flowable<List<Bill>>
     fun monthly(month: DateTime): List<Bill>
 
     fun find(uuid: String): Bill?
@@ -28,9 +28,7 @@ class BillRepository @Inject constructor(val dao: BillDao, private val expenseDa
     override fun all(): Flowable<List<Bill>> = dao.all()
 
     @WorkerThread
-    override fun unsync(): List<Bill> {
-        return dao.unsync().blockingFirst()
-    }
+    override fun unsync(): Flowable<List<Bill>> = dao.unsync()
 
     @WorkerThread
     override fun monthly(month: DateTime): List<Bill> {
