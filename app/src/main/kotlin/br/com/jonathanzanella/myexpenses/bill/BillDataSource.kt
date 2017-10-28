@@ -4,6 +4,7 @@ import android.support.annotation.WorkerThread
 import br.com.jonathanzanella.myexpenses.expense.ExpenseDataSource
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult
+import io.reactivex.Flowable
 import org.apache.commons.lang3.StringUtils
 import org.joda.time.DateTime
 import timber.log.Timber
@@ -11,7 +12,7 @@ import java.util.*
 import javax.inject.Inject
 
 interface BillDataSource {
-    fun all(): List<Bill>
+    fun all(): Flowable<List<Bill>>
     fun unsync(): List<Bill>
     fun monthly(month: DateTime): List<Bill>
 
@@ -24,9 +25,7 @@ interface BillDataSource {
 
 class BillRepository @Inject constructor(val dao: BillDao, private val expenseDataSource: ExpenseDataSource): BillDataSource {
     @WorkerThread
-    override fun all(): List<Bill> {
-        return dao.all().blockingFirst()
-    }
+    override fun all(): Flowable<List<Bill>> = dao.all()
 
     @WorkerThread
     override fun unsync(): List<Bill> {

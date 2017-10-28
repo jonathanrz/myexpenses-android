@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.helpers.AdapterColorHelper
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
@@ -15,14 +14,16 @@ import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
 import br.com.jonathanzanella.myexpenses.views.anko.rowPrincipalInformation
 import br.com.jonathanzanella.myexpenses.views.anko.rowSecondaryInformation
 import br.com.jonathanzanella.myexpenses.views.anko.rowStaticInformation
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import org.jetbrains.anko.*
 import javax.inject.Inject
 
-open class BillAdapter : RecyclerView.Adapter<BillAdapter.ViewHolder>() {
-    @Inject
-    lateinit var repository: BillRepository
+open class BillAdapter @Inject constructor(val repository: BillRepository) : RecyclerView.Adapter<BillAdapter.ViewHolder>() {
+    private var dbQueryDisposable: Disposable? = null
     private var callback: BillAdapterCallback? = null
-    private val presenter: BillAdapterPresenter
+    private var bills: List<Bill> = ArrayList()
 
     inner class ViewHolder(itemView: View, val ui : ViewUI) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         private val adapterColorHelper: AdapterColorHelper
@@ -57,12 +58,6 @@ open class BillAdapter : RecyclerView.Adapter<BillAdapter.ViewHolder>() {
         }
     }
 
-    init {
-        App.getAppComponent().inject(this)
-        this.presenter = BillAdapterPresenter(repository)
-        refreshData()
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val ui = ViewUI()
         return ViewHolder(ui.createView(AnkoContext.create(parent.context, parent)), ui)
@@ -72,21 +67,31 @@ open class BillAdapter : RecyclerView.Adapter<BillAdapter.ViewHolder>() {
         holder.setData(getBill(position))
     }
 
-    override fun getItemCount(): Int {
-        return presenter.billsCount
+    override fun getItemCount(): Int = bills.size
+
+    fun onDestroy() {
+        dbQueryDisposable?.dispose()
     }
 
-    fun refreshData() {
-        presenter.getBills(true)
+    fun refreshData(filter: String? = null) {
+        dbQueryDisposable?.dispose()
+
+        var flowable = repository.all()
+
+        if(filter != null)
+            flowable = flowable.map { it.filter { it.name!!.contains(filter) } }
+
+        dbQueryDisposable = flowable
+            .doOnNext { bills = it }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { notifyDataSetChanged() }
     }
 
-    private fun getBill(position: Int): Bill {
-        return presenter.getBill(position)
-    }
+    private fun getBill(position: Int): Bill = bills[position]
 
     fun filter(filter: String) {
-        presenter.filter(filter)
-        presenter.getBills(false)
+        refreshData(filter)
     }
 
     fun setCallback(callback: BillAdapterCallback) {

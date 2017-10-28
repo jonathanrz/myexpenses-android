@@ -133,7 +133,7 @@ public class BillRepositoryTest {
 		Bill billA = new BillBuilder().name("a").build();
 		billRepository.save(billA);
 
-		List<Bill> bills = billRepository.all();
+		List<Bill> bills = billRepository.all().blockingFirst();
 		assertThat(bills.get(0).getUuid(), is(billA.getUuid()));
 		assertThat(bills.get(1).getUuid(), is(billB.getUuid()));
 	}

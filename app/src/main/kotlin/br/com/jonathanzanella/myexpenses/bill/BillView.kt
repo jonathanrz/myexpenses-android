@@ -8,6 +8,7 @@ import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
 import android.widget.FrameLayout
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.views.FilterableView
 import br.com.jonathanzanella.myexpenses.views.RefreshableView
@@ -17,20 +18,29 @@ import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
 import br.com.jonathanzanella.myexpenses.views.anko.recyclerView
 import org.jetbrains.anko.*
 import org.jetbrains.anko.design.floatingActionButton
+import javax.inject.Inject
 
 class BillView@JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr), RefreshableView, ResultableView, FilterableView, TabableView {
     override var filter = ""
     private val ui = BillViewUI()
-    private var adapter: BillAdapter = BillAdapter()
+    @Inject
+    lateinit var adapter: BillAdapter
 
     init {
+        App.getAppComponent().inject(this)
+
         addView(ui.createView(AnkoContext.Companion.create(context, this)))
 
         ui.bills.adapter = adapter
         ui.bills.layoutManager = GridLayoutManager(context, 2)
         ui.bills.itemAnimator = DefaultItemAnimator()
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        adapter.onDestroy()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -42,13 +52,11 @@ class BillView@JvmOverloads constructor(
 
     override fun refreshData() {
         adapter.refreshData()
-        adapter.notifyDataSetChanged()
     }
 
     override fun filter(s: String) {
         super.filter(s)
         adapter.filter(s)
-        adapter.notifyDataSetChanged()
     }
 
     companion object {
