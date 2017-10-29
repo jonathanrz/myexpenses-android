@@ -36,9 +36,9 @@ task clean(type: Delete) {
 ext {
     // Sdk and tools
     minSdkVersion = 21
-    targetSdkVersion = 26
-    compileSdkVersion = 26
-    buildToolsVersion = '26.0.2'
+    targetSdkVersion = 27
+    compileSdkVersion = 27
+    buildToolsVersion = '27.0.0'
 
     // App dependencies
     ankoVersion = '0.9.1'
@@ -52,14 +52,14 @@ ext {
     mockitoKotlinVersion = '1.5.0'
     playServicesVersion = '11.2.0'
     retrofitVersion = '2.2.0'
-    roomVersion = '1.0.0-alpha5'
+    roomVersion = '1.0.0-rc1'
     rxAndroidVersion = '2.0.1'
     rxJavaVersion = '2.1.0'
     rulesVersion = '0.5'
     runnerVersion = '0.5'
     stethoVersion = '1.4.2'
     stickyHeadersVersion = '0.4.3@aar'
-    supportLibraryVersion = '26.0.2'
+    supportLibraryVersion = '27.0.0'
     timberVersion = '4.5.1'
     uiAutomatorVersion = '2.1.1'
 }
