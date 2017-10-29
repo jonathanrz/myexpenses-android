@@ -14,7 +14,7 @@ import javax.inject.Inject
 interface BillDataSource {
     fun all(): Flowable<List<Bill>>
     fun unsync(): Flowable<List<Bill>>
-    fun monthly(month: DateTime): List<Bill>
+    fun monthly(month: DateTime): Flowable<List<Bill>>
 
     fun find(uuid: String): Bill?
     fun greaterUpdatedAt(): Long
@@ -31,27 +31,22 @@ class BillRepository @Inject constructor(val dao: BillDao, private val expenseDa
     override fun unsync(): Flowable<List<Bill>> = dao.unsync()
 
     @WorkerThread
-    override fun monthly(month: DateTime): List<Bill> {
-        val expenses = expenseDataSource.monthly(month)
-        val bills = dao.monthly(month.millis).blockingFirst() as MutableList<Bill>
-        var i = 0
-        while (i < bills.size) {
-            val bill = bills[i]
-            val billAlreadyPaid = expenses
-                    .filter { it.billUuid != null }
-                    .map { find(it.billUuid!!) }
-                    .any { it != null && it.uuid == bill.uuid }
-            if (billAlreadyPaid) {
-                bills.removeAt(i)
-                i--
-            }
-            i++
-        }
+    override fun monthly(month: DateTime): Flowable<List<Bill>> {
+        return dao.monthly(month.millis)
+                .flatMap {
+                    val expenses = expenseDataSource.monthly(month)
 
-        for (bill in bills)
-            bill.month = month
-
-        return bills
+                    Flowable.just(it.filter {
+                        @Suppress("UnnecessaryVariable")
+                        val bill = it
+                        expenses
+                            .filter { it.billUuid != null }
+                            .map { find(it.billUuid!!) }
+                            .any { it != null && it.uuid == bill.uuid }
+                    })
+                }.doOnNext {
+                    it.map { it.month = month }
+                }
     }
 
     @WorkerThread

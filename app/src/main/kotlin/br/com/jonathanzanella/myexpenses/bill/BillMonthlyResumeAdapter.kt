@@ -14,6 +14,9 @@ import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
 import br.com.jonathanzanella.myexpenses.views.anko.resumeRowCell
 import br.com.jonathanzanella.myexpenses.views.anko.singleRowCell
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import org.jetbrains.anko.*
 import org.joda.time.DateTime
 import javax.inject.Inject
@@ -21,6 +24,7 @@ import javax.inject.Inject
 class BillMonthlyResumeAdapter : RecyclerView.Adapter<BillMonthlyResumeAdapter.ViewHolder>() {
     @Inject
     lateinit var billDataSource: BillDataSource
+    private var dbQueryDisposable: Disposable? = null
     private var bills: List<Bill> = ArrayList()
     var totalValue: Int = 0
         private set
@@ -46,25 +50,22 @@ class BillMonthlyResumeAdapter : RecyclerView.Adapter<BillMonthlyResumeAdapter.V
         App.getAppComponent().inject(this)
     }
 
-    override fun getItemViewType(position: Int): Int {
-        return when (position) {
-            bills.size -> ViewType.TYPE_TOTAL.ordinal
-            else -> ViewType.TYPE_NORMAL.ordinal
-        }
+    override fun getItemViewType(position: Int): Int = when (position) {
+        bills.size -> ViewType.TYPE_TOTAL.ordinal
+        else -> ViewType.TYPE_NORMAL.ordinal
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return when (viewType) {
-            ViewType.TYPE_TOTAL.ordinal -> {
-                val ui = TotalViewUI()
-                ViewHolder(ui.createView(AnkoContext.create(parent.context, parent)), ui.name, ui.amount, null)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
+            when (viewType) {
+                ViewType.TYPE_TOTAL.ordinal -> {
+                    val ui = TotalViewUI()
+                    ViewHolder(ui.createView(AnkoContext.create(parent.context, parent)), ui.name, ui.amount, null)
+                }
+                else -> {
+                    val ui = NormalViewUI()
+                    ViewHolder(ui.createView(AnkoContext.create(parent.context, parent)), ui.name, ui.amount, ui.day)
+                }
             }
-            else -> {
-                val ui = NormalViewUI()
-                ViewHolder(ui.createView(AnkoContext.create(parent.context, parent)), ui.name, ui.amount, ui.day)
-            }
-        }
-    }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         if (position == bills.size)
@@ -73,14 +74,24 @@ class BillMonthlyResumeAdapter : RecyclerView.Adapter<BillMonthlyResumeAdapter.V
             holder.setData(bills[position])
     }
 
-    override fun getItemCount(): Int {
-        return bills.size + 1
+    override fun getItemCount(): Int = bills.size + 1
+
+    fun onDestroy() {
+        dbQueryDisposable?.dispose()
     }
 
     @WorkerThread
     fun loadData(month: DateTime) {
-        bills = billDataSource.monthly(month)
-        totalValue = bills.sumBy { it.amount }
+        dbQueryDisposable?.dispose()
+
+        dbQueryDisposable = billDataSource.monthly(month)
+                .doOnNext {
+                    bills = it
+                    totalValue = it.sumBy { it.amount }
+                }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { notifyDataSetChanged() }
     }
 }
 

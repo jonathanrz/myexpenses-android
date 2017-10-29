@@ -60,6 +60,7 @@ class ResumeMonthlyView(context: Context, private val month: DateTime) : FrameLa
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         accountAdapter.onDestroy()
+        billsAdapter.onDestroy()
     }
 
     private fun initAccount() {

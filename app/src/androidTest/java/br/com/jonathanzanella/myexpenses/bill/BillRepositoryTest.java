@@ -89,12 +89,12 @@ public class BillRepositoryTest {
 				.chargeable(card)
 				.build();
 
-		List<Bill> bills = billRepository.monthly(firstDayOfJune);
+		List<Bill> bills = billRepository.monthly(firstDayOfJune).blockingFirst();
 		assertThat(bills.size(), Is.is(1));
 
 		expenseRepository.save(expense);
 
-		bills = billRepository.monthly(firstDayOfJune);
+		bills = billRepository.monthly(firstDayOfJune).blockingFirst();
 		assertThat(bills.size(), Is.is(0));
 	}
 

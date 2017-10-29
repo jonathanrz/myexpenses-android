@@ -30,7 +30,7 @@ class MonthTransactionsPresenter(private val view: MonthTransactionsContractView
 
         doAsync {
             if (account.accountToPayBills)
-                adapter.addTransactions(billDataSource.monthly(month))
+                adapter.addTransactions(billDataSource.monthly(month).blockingFirst())
             adapter.addTransactions(expenseDataSource.accountExpenses(account, month))
             adapter.addTransactions(receiptDataSource.monthly(month, account))
 
