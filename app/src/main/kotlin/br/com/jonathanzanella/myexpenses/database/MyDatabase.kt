@@ -19,7 +19,7 @@ import br.com.jonathanzanella.myexpenses.source.SourceDao
 import javax.inject.Inject
 
 const val DB_NAME = "data.db"
-const val DB_VERSION = 2
+const val DB_VERSION = 1
 
 @Database(entities = arrayOf(Account::class, Bill::class, Card::class, Expense::class, Receipt::class, Source::class), version = DB_VERSION)
 @TypeConverters(Converters::class)
