@@ -64,7 +64,7 @@ public class BillRepositoryTest {
 		Bill savedBill = new BillBuilder().build();
 		billRepository.save(savedBill);
 
-		Bill bill = billRepository.find(savedBill.getUuid());
+		Bill bill = billRepository.find(savedBill.getUuid()).blockingGet();
 		assertThat(bill.getUuid(), is(savedBill.getUuid()));
 		assertThat(bill.getInitDate(), is(savedBill.getInitDate()));
 	}

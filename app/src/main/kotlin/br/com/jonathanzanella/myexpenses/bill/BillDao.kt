@@ -5,6 +5,7 @@ import android.arch.persistence.room.Insert
 import android.arch.persistence.room.OnConflictStrategy
 import android.arch.persistence.room.Query
 import io.reactivex.Flowable
+import io.reactivex.Maybe
 
 @Dao
 interface BillDao {
@@ -15,7 +16,7 @@ interface BillDao {
     fun unsync(): Flowable<List<Bill>>
 
     @Query("SELECT * FROM Bill WHERE uuid = :uuid")
-    fun find(uuid: String): Flowable<List<Bill>>
+    fun find(uuid: String): Maybe<Bill>
 
     @Query("SELECT * FROM Bill ORDER BY updatedAt DESC LIMIT 1")
     fun greaterUpdatedAt(): Flowable<List<Bill>>

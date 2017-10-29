@@ -51,11 +51,7 @@ class EditBillActivity : AppCompatActivity(), BillContract.EditView {
 
     fun storeBundle(extras: Bundle?) {
         if (extras?.containsKey(KEY_BILL_UUID) == true) {
-            doAsync {
-                presenter.loadBill(extras.getString(KEY_BILL_UUID))
-
-                uiThread { presenter.onViewUpdated(false) }
-            }
+            presenter.loadBill(extras.getString(KEY_BILL_UUID))
         }
     }
 

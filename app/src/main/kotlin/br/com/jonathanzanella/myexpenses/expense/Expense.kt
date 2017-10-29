@@ -126,7 +126,12 @@ class Expense : Transaction, UnsyncModel {
     var bill: Bill?
         @WorkerThread
         get() {
-            return billUuid?.let { billDataSource.find(it) }
+            return billUuid?.let {
+                val maybeBill = billDataSource.find(it)
+                if(maybeBill.isEmpty.blockingGet())
+                    return null
+                return maybeBill.blockingGet()
+            }
         }
         set(bill) {
             billUuid = bill?.uuid

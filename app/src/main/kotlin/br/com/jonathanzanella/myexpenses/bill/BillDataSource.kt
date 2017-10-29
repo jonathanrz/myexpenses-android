@@ -5,6 +5,7 @@ import br.com.jonathanzanella.myexpenses.expense.ExpenseDataSource
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult
 import io.reactivex.Flowable
+import io.reactivex.Maybe
 import org.apache.commons.lang3.StringUtils
 import org.joda.time.DateTime
 import timber.log.Timber
@@ -16,7 +17,7 @@ interface BillDataSource {
     fun unsync(): Flowable<List<Bill>>
     fun monthly(month: DateTime): Flowable<List<Bill>>
 
-    fun find(uuid: String): Bill?
+    fun find(uuid: String): Maybe<Bill>
     fun greaterUpdatedAt(): Long
 
     fun save(bill: Bill): ValidationResult
@@ -42,7 +43,7 @@ class BillRepository @Inject constructor(val dao: BillDao, private val expenseDa
                         expenses
                             .filter { it.billUuid != null }
                             .map { find(it.billUuid!!) }
-                            .any { it != null && it.uuid == bill.uuid }
+                            .any { !it.isEmpty.blockingGet() && it.blockingGet().uuid == bill.uuid }
                     })
                 }.doOnNext {
                     it.map { it.month = month }
@@ -50,9 +51,7 @@ class BillRepository @Inject constructor(val dao: BillDao, private val expenseDa
     }
 
     @WorkerThread
-    override fun find(uuid: String): Bill? {
-        return dao.find(uuid).blockingFirst().firstOrNull()
-    }
+    override fun find(uuid: String): Maybe<Bill> = dao.find(uuid)
 
     @WorkerThread
     override fun greaterUpdatedAt(): Long {
@@ -97,12 +96,15 @@ class BillRepository @Inject constructor(val dao: BillDao, private val expenseDa
             return result
         }
 
-        val bill = find(unsync.uuid!!)
-        if (bill != null && bill.id != unsync.id) {
-            if (bill.updatedAt != unsync.updatedAt)
-                Timber.tag("Bill overwritten")
-                        .w( unsync.getData())
-            unsync.id = bill.id
+        val maybeBill = find(unsync.uuid!!)
+        if(maybeBill.isEmpty.blockingGet()) {
+            val bill = maybeBill.blockingGet()
+            if (bill.id != unsync.id) {
+                if (bill.updatedAt != unsync.updatedAt)
+                    Timber.tag("Bill overwritten")
+                            .w(unsync.getData())
+                unsync.id = bill.id
+            }
         }
 
         unsync.sync = true
