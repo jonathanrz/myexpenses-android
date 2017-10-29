@@ -101,7 +101,8 @@ dependencies {
     implementation "org.jetbrains.anko:anko-appcompat-v7:$ankoVersion"
     implementation "org.jetbrains.anko:anko-design:$ankoVersion"
 
-    // Room
+    // Archtecture components
+    implementation "android.arch.lifecycle:extensions:$roomVersion"
     implementation "android.arch.persistence.room:runtime:$roomVersion"
     implementation "android.arch.persistence.room:rxjava2:$roomVersion"
     kapt "android.arch.persistence.room:compiler:$roomVersion"
