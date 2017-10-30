@@ -26,14 +26,14 @@ interface BillDataSource {
 
 class BillRepository @Inject constructor(val dao: BillDao, private val expenseDataSource: ExpenseDataSource): BillDataSource {
     @WorkerThread
-    override fun all(): Flowable<List<Bill>> = dao.all()
+    override fun all(): Flowable<List<Bill>> = Flowable.fromCallable { dao.all() }
 
     @WorkerThread
-    override fun unsync(): Flowable<List<Bill>> = dao.unsync()
+    override fun unsync(): Flowable<List<Bill>> = Flowable.fromCallable { dao.unsync() }
 
     @WorkerThread
     override fun monthly(month: DateTime): Flowable<List<Bill>> {
-        return dao.monthly(month.millis)
+        return Flowable.fromCallable { dao.monthly(month.millis) }
                 .flatMap {
                     val expenses = expenseDataSource.monthly(month)
 
@@ -55,7 +55,7 @@ class BillRepository @Inject constructor(val dao: BillDao, private val expenseDa
 
     @WorkerThread
     override fun greaterUpdatedAt(): Long {
-        return dao.greaterUpdatedAt().blockingFirst().firstOrNull()?.updatedAt ?: 0L
+        return dao.greaterUpdatedAt().firstOrNull()?.updatedAt ?: 0L
     }
 
     @WorkerThread

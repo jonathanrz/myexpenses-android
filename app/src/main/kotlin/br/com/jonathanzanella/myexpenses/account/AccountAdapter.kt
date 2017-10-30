@@ -81,19 +81,18 @@ class AccountAdapter @Inject constructor(val repository: AccountRepository) : Re
                 .doOnNext { accounts = it }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnError { e -> Log.e(javaClass.name, e.localizedMessage) }
                 .subscribe { notifyDataSetChanged() }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return when (format) {
-            NORMAL -> {
-                val ui = NormalViewUI()
-                ViewHolder(ui.createView(AnkoContext.create(parent.context, parent)), ui.accountName, ui.accountBalance, ui.accountToPayCreditCard)
-            }
-            else -> {
-                val ui = SimplifiedViewUI(format)
-                ViewHolder(ui.createView(AnkoContext.create(parent.context, parent)), ui.accountName, ui.accountBalance, null)
-            }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = when (format) {
+        NORMAL -> {
+            val ui = NormalViewUI()
+            ViewHolder(ui.createView(AnkoContext.create(parent.context, parent)), ui.accountName, ui.accountBalance, ui.accountToPayCreditCard)
+        }
+        else -> {
+            val ui = SimplifiedViewUI(format)
+            ViewHolder(ui.createView(AnkoContext.create(parent.context, parent)), ui.accountName, ui.accountBalance, null)
         }
     }
 
@@ -101,13 +100,9 @@ class AccountAdapter @Inject constructor(val repository: AccountRepository) : Re
         holder.setData(getAccount(position))
     }
 
-    override fun getItemCount(): Int {
-        return accounts.size
-    }
+    override fun getItemCount(): Int = accounts.size
 
-    fun getAccount(position: Int): Account {
-        return accounts[position]
-    }
+    fun getAccount(position: Int): Account = accounts[position]
 
     fun setCallback(callback: AccountAdapterCallback) {
         this.callback = callback

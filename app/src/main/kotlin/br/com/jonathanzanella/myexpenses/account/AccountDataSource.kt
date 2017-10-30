@@ -7,7 +7,6 @@ import io.reactivex.Flowable
 import io.reactivex.Maybe
 import org.apache.commons.lang3.StringUtils
 import timber.log.Timber
-import java.util.*
 import javax.inject.Inject
 
 interface AccountDataSource {
@@ -24,19 +23,14 @@ interface AccountDataSource {
 
 class AccountRepository @Inject constructor(val dao: AccountDao): AccountDataSource {
     @WorkerThread
-    override fun all(): Flowable<List<Account>> {
-        return dao.all()
-    }
+    override fun all(): Flowable<List<Account>> = Flowable.fromCallable { dao.all() }
 
     @WorkerThread
-    override fun forResumeScreen(): Flowable<List<Account>> {
-        return dao.showInResume()
-    }
+    override fun forResumeScreen(): Flowable<List<Account>> =
+            Flowable.fromCallable { dao.showInResume() }
 
     @WorkerThread
-    override fun unsync(): Flowable<List<Account>> {
-        return dao.unsync()
-    }
+    override fun unsync(): Flowable<List<Account>> = Flowable.fromCallable { dao.unsync() }
 
     @WorkerThread
     override fun find(uuid: String): Maybe<Account> {
@@ -45,7 +39,7 @@ class AccountRepository @Inject constructor(val dao: AccountDao): AccountDataSou
 
     @WorkerThread
     override fun greaterUpdatedAt(): Long {
-        return dao.greaterUpdatedAt().blockingFirst().firstOrNull()?.updatedAt ?:0
+        return dao.greaterUpdatedAt().firstOrNull()?.updatedAt ?:0
     }
 
     @WorkerThread
@@ -53,7 +47,7 @@ class AccountRepository @Inject constructor(val dao: AccountDao): AccountDataSou
         val result = validate(account)
         if (result.isValid) {
             if (account.id == 0L && account.uuid == null)
-                account.uuid = UUID.randomUUID().toString()
+                account.uuid = java.util.UUID.randomUUID().toString()
             account.sync = false
             account.id = dao.saveAtDatabase(account)
         }
