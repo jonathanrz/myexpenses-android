@@ -18,7 +18,6 @@ import br.com.jonathanzanella.myexpenses.helpers.TestUtils.waitForIdling
 import br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle
 import br.com.jonathanzanella.myexpenses.helpers.builder.BillBuilder
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
-import com.facebook.testing.screenshot.Screenshot
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -67,7 +66,5 @@ class ShowBillActivityTest {
         val balanceAsCurrency = bill!!.amount.toCurrencyFormatted()
         onView(withId(R.id.act_show_bill_name)).check(matches(withText(bill!!.name)))
         onView(withId(R.id.act_show_bill_amount)).check(matches(withText(balanceAsCurrency)))
-
-        Screenshot.snapActivity(activityTestRule.activity).record()
     }
 }

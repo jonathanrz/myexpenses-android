@@ -22,7 +22,6 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle;
-import static com.facebook.testing.screenshot.Screenshot.snapActivity;
 
 @RunWith(AndroidJUnit4.class)
 @MediumTest
@@ -54,7 +53,5 @@ public class ShowSourceActivityTest {
 		matchToolbarTitle(editSourceTitle);
 
 		onView(withId(R.id.act_show_source_name)).check(matches(withText(source.getName())));
-
-		snapActivity(activityTestRule.getActivity()).record();
 	}
 }

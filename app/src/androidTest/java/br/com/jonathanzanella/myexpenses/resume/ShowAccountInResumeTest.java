@@ -29,7 +29,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withTagValue;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static com.facebook.testing.screenshot.Screenshot.snapActivity;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.core.Is.is;
@@ -62,8 +61,6 @@ public class ShowAccountInResumeTest {
 
 		getAccountNameView(accountToShow).check(matches(isDisplayed()));
 		getAccountNameView(accountToHide).check(doesNotExist());
-
-		snapActivity(mainActivityTestRule.getActivity()).record();
 	}
 
 	private ViewInteraction getAccountNameView(Account account) {

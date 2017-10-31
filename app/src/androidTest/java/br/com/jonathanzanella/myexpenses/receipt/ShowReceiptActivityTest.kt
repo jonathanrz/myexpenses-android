@@ -21,7 +21,6 @@ import br.com.jonathanzanella.myexpenses.helpers.builder.ReceiptBuilder
 import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.source.SourceDataSource
-import com.facebook.testing.screenshot.Screenshot
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -84,7 +83,5 @@ class ShowReceiptActivityTest {
 
         val source = receipt!!.source
         onView(withId(R.id.act_show_receipt_source)).check(matches(withText(source!!.name)))
-
-        Screenshot.snapActivity(activityTestRule.activity).record()
     }
 }

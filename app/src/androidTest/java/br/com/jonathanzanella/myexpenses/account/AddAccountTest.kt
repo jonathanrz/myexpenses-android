@@ -18,7 +18,6 @@ import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper
 import br.com.jonathanzanella.myexpenses.helpers.UIHelper
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.views.MainActivity
-import com.facebook.testing.screenshot.Screenshot
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -69,8 +68,6 @@ class AddAccountTest {
         onView(withId(R.id.row_account_name)).check(matches(withText(accountTitle)))
         val balance = 0.toCurrencyFormatted()
         onView(withId(R.id.row_account_balance)).check(matches(withText(balance)))
-
-        Screenshot.snapActivity(activityTestRule.activity).record()
     }
 
     @Test
@@ -84,8 +81,6 @@ class AddAccountTest {
 
         val errorMessage = context.getString(R.string.error_message_name_not_informed)
         UIHelper.matchErrorMessage(R.id.act_edit_account_name, errorMessage)
-
-        Screenshot.snapActivity(activityTestRule.activity).record()
     }
 
     private val context: Context

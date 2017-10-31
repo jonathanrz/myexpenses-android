@@ -24,7 +24,6 @@ import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.receipt.ReceiptDataSource
 import br.com.jonathanzanella.myexpenses.source.SourceDataSource
-import com.facebook.testing.screenshot.Screenshot
 import org.hamcrest.core.AllOf.allOf
 import org.joda.time.DateTime
 import org.junit.After
@@ -83,8 +82,6 @@ class ShowAccountActivityTest {
         val balanceAsCurrency = account!!.balance.toCurrencyFormatted()
         onView(ViewMatchers.withId(R.id.act_show_account_name)).check(matches(ViewMatchers.withText(account!!.name)))
         onView(ViewMatchers.withId(R.id.act_show_account_balance)).check(matches(ViewMatchers.withText(balanceAsCurrency)))
-
-        Screenshot.snapActivity(activityTestRule.activity).record()
     }
 
     @Test
@@ -104,8 +101,6 @@ class ShowAccountActivityTest {
         onView(ViewMatchers.withId(R.id.act_show_account_name)).check(matches(ViewMatchers.withText(account!!.name)))
         onView(ViewMatchers.withId(R.id.name)).check(matches(ViewMatchers.withText(billName)))
         onView(ViewMatchers.withId(R.id.value)).check(matches(ViewMatchers.withText(value)))
-
-        Screenshot.snapActivity(activityTestRule.activity).record()
     }
 
     @Test
@@ -132,8 +127,6 @@ class ShowAccountActivityTest {
                 ViewMatchers.withId(R.id.balance),
                 ViewMatchers.isDescendantOfA(ViewMatchers.withId(R.id.nextMonth))))
                 .check(matches(ViewMatchers.withText(expectedValue)))
-
-        Screenshot.snapActivity(activityTestRule.activity).record()
     }
 
     private fun launchActivity() {

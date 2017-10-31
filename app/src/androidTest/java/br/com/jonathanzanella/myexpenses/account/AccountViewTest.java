@@ -26,7 +26,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withTagValue;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.openMenuAndClickItem;
-import static com.facebook.testing.screenshot.Screenshot.*;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
@@ -65,8 +64,6 @@ public class AccountViewTest {
 
 		accountNameView(accountToShowInResume).check(matches(withText(accountToShowInResume.getName())));
 		accountNameView(accountToHideInResume).check(matches(withText(accountToHideInResume.getName())));
-
-		snapActivity(activityTestRule.getActivity()).record();
 	}
 
 	private ViewInteraction accountNameView(Account account) {

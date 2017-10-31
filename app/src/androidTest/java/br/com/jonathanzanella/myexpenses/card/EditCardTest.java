@@ -30,7 +30,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.clearAndTypeTextIntoView;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.clickIntoView;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle;
-import static com.facebook.testing.screenshot.Screenshot.snapActivity;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -90,7 +89,5 @@ public class EditCardTest {
 
 		onView(withId(R.id.act_show_card_name)).check(matches(withText(card.getName())));
 		assertThat(repository.all().size(), is(1));
-
-		snapActivity(activityTestRule.getActivity()).record();
 	}
 }

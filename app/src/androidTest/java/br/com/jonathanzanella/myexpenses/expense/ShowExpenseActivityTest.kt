@@ -20,7 +20,6 @@ import br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder
 import br.com.jonathanzanella.myexpenses.helpers.builder.ExpenseBuilder
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
-import com.facebook.testing.screenshot.Screenshot
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -74,8 +73,6 @@ class ShowExpenseActivityTest {
         onView(withId(R.id.act_show_expense_value)).check(matches(withText(incomeAsCurrency)))
         val chargeable = expense!!.chargeableFromCache
         onView(withId(R.id.act_show_expense_chargeable)).check(matches(withText(chargeable!!.name)))
-
-        Screenshot.snapActivity(activityTestRule.activity).record()
     }
 
     @Test
@@ -92,7 +89,5 @@ class ShowExpenseActivityTest {
 
         val editExpenseTitle = getTargetContext().getString(R.string.edit_expense_title)
         matchToolbarTitle(editExpenseTitle)
-
-        Screenshot.snapActivity(activityTestRule.activity).record()
     }
 }

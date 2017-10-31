@@ -21,7 +21,6 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.contrib.DrawerMatchers.isClosed;
 import static android.support.test.espresso.contrib.DrawerMatchers.isOpen;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static com.facebook.testing.screenshot.Screenshot.snapActivity;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
@@ -46,7 +45,5 @@ public class AppNavigationTest {
 		UIHelper.openMenu();
 
 		onView(withId(R.id.drawer)).check(matches(isOpen(Gravity.START)));
-
-		snapActivity(activityTestRule.getActivity()).record();
 	}
 }

@@ -39,7 +39,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withTagValue;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle;
-import static com.facebook.testing.screenshot.Screenshot.snapActivity;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.core.Is.is;
@@ -90,8 +89,6 @@ public class ShowDetailScreenTest {
 
 		onView(withId(R.id.act_show_receipt_name)).check(matches(withText(receipt.getName())));
 		onView(withId(R.id.act_show_receipt_account)).check(matches(withText(account.getName())));
-
-		snapActivity(mainActivityTestRule.getActivity()).record();
 	}
 
 	@Test
@@ -110,8 +107,6 @@ public class ShowDetailScreenTest {
 
 		onView(withId(R.id.act_show_expense_name)).check(matches(withText(expense.getName())));
 		onView(withId(R.id.act_show_expense_chargeable)).check(matches(withText(account.getName())));
-
-		snapActivity(mainActivityTestRule.getActivity()).record();
 	}
 }
 
