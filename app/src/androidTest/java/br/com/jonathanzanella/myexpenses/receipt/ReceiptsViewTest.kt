@@ -60,7 +60,7 @@ class ReceiptsViewTest {
         assert(sourceDataSource.save(s).isValid)
 
         val a = AccountBuilder().build()
-        assert(accountDataSource.save(a).isValid)
+        assert(accountDataSource.save(a).blockingFirst().isValid)
 
         receipt = ReceiptBuilder().name("receipt1").source(s).account(a).build()
         assert(dataSource.save(receipt!!).isValid)

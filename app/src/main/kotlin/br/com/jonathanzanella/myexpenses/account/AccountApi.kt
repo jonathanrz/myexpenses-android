@@ -14,7 +14,7 @@ class AccountApi @Inject constructor(private val accountInterface: AccountInterf
                                      private val repository: AccountRepository) : UnsyncModelApi<Account> {
 
     override fun index(): List<Account> {
-        val lastUpdatedAt = repository.greaterUpdatedAt()
+        val lastUpdatedAt = repository.greaterUpdatedAt().blockingFirst()
         val caller = accountInterface.index(lastUpdatedAt)
 
         Timber.tag("AccountApi.index with lastUpdatedAt: $lastUpdatedAt")
@@ -63,11 +63,7 @@ class AccountApi @Inject constructor(private val accountInterface: AccountInterf
         repository.syncAndSave(unsync)
     }
 
-    override fun unsyncModels(): List<Account> {
-        return repository.unsync().blockingFirst()
-    }
+    override fun unsyncModels(): List<Account> = repository.unsync().blockingFirst()
 
-    override fun greaterUpdatedAt(): Long {
-        return repository.greaterUpdatedAt()
-    }
+    override fun greaterUpdatedAt(): Long = repository.greaterUpdatedAt().blockingFirst()
 }

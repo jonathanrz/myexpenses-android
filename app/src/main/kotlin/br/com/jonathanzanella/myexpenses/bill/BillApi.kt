@@ -14,7 +14,7 @@ class BillApi @Inject constructor(private val billInterface: BillInterface,
                                   private val billRepository: BillRepository): UnsyncModelApi<Bill> {
 
     override fun index(): List<Bill> {
-        val lastUpdatedAt = billRepository.greaterUpdatedAt()
+        val lastUpdatedAt = billRepository.greaterUpdatedAt().blockingFirst()
         Timber.tag("BillApi.index with lastUpdatedAt: $lastUpdatedAt")
 
         val caller = billInterface.index(lastUpdatedAt)
@@ -63,11 +63,7 @@ class BillApi @Inject constructor(private val billInterface: BillInterface,
         billRepository.syncAndSave(unsync)
     }
 
-    override fun unsyncModels(): List<Bill> {
-        return billRepository.unsync().blockingFirst()
-    }
+    override fun unsyncModels(): List<Bill> = billRepository.unsync().blockingFirst()
 
-    override fun greaterUpdatedAt(): Long {
-        return billRepository.greaterUpdatedAt()
-    }
+    override fun greaterUpdatedAt(): Long = billRepository.greaterUpdatedAt().blockingFirst()
 }

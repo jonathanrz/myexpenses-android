@@ -5,18 +5,16 @@ import android.support.v4.content.ContextCompat
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.RecyclerView
 import android.text.TextUtils
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.AccountAdapter.Format.NORMAL
+import br.com.jonathanzanella.myexpenses.extensions.fromIOToMainThread
 import br.com.jonathanzanella.myexpenses.helpers.AdapterColorHelper
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 import org.jetbrains.anko.*
 import timber.log.Timber
 import javax.inject.Inject
@@ -80,9 +78,8 @@ class AccountAdapter @Inject constructor(val repository: AccountRepository) : Re
             else -> repository.all()
         }
                 .doOnNext { accounts = it }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnError { e -> Log.e(javaClass.name, e.localizedMessage) }
+                .fromIOToMainThread()
+                .doOnError { Timber.e(it) }
                 .subscribe { notifyDataSetChanged() }
     }
 

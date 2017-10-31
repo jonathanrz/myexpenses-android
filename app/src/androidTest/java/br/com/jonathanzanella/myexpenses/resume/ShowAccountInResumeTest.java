@@ -54,9 +54,9 @@ public class ShowAccountInResumeTest {
 	@Test
 	public void show_only_account_marked_to_show() {
 		Account accountToShow = new AccountBuilder().name("accountToShow").showInResume(true).build();
-		assertTrue(accountRepository.save(accountToShow).isValid());
+		assertTrue(accountRepository.save(accountToShow).blockingFirst().isValid());
 		Account accountToHide = new AccountBuilder().name("accountToHide").showInResume(false).build();
-		assertTrue(accountRepository.save(accountToHide).isValid());
+		assertTrue(accountRepository.save(accountToHide).blockingFirst().isValid());
 
 		mainActivityTestRule.launchActivity(new Intent());
 

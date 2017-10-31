@@ -4,7 +4,6 @@ import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Insert
 import android.arch.persistence.room.OnConflictStrategy
 import android.arch.persistence.room.Query
-import io.reactivex.Maybe
 
 @Dao
 interface AccountDao {
@@ -18,7 +17,7 @@ interface AccountDao {
     fun showInResume(): List<Account>
 
     @Query("SELECT * FROM Account WHERE uuid = :uuid")
-    fun find(uuid: String): Maybe<Account>
+    fun find(uuid: String): Account?
 
     @Query("SELECT * FROM Account ORDER BY updatedAt DESC LIMIT 1")
     fun greaterUpdatedAt(): List<Account>

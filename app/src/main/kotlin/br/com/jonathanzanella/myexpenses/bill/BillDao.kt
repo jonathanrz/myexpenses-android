@@ -4,7 +4,6 @@ import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Insert
 import android.arch.persistence.room.OnConflictStrategy
 import android.arch.persistence.room.Query
-import io.reactivex.Maybe
 
 @Dao
 interface BillDao {
@@ -15,7 +14,7 @@ interface BillDao {
     fun unsync(): List<Bill>
 
     @Query("SELECT * FROM Bill WHERE uuid = :uuid")
-    fun find(uuid: String): Maybe<Bill>
+    fun find(uuid: String): Bill?
 
     @Query("SELECT * FROM Bill ORDER BY updatedAt DESC LIMIT 1")
     fun greaterUpdatedAt(): List<Bill>

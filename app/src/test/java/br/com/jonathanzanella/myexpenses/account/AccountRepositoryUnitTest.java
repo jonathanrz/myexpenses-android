@@ -32,7 +32,7 @@ public class AccountRepositoryUnitTest {
 	public void return_success_when_tried_to_save_valid_account() throws Exception {
 		when(account.getName()).thenReturn("account");
 
-		ValidationResult result = accountRepository.save(account);
+		ValidationResult result = accountRepository.save(account).blockingFirst();
 
 		assertTrue(result.isValid());
 	}
@@ -41,7 +41,7 @@ public class AccountRepositoryUnitTest {
 	public void return_with_error_when_tried_to_save_account_without_name() throws Exception {
 		when(account.getName()).thenReturn(null);
 
-		ValidationResult result = accountRepository.save(account);
+		ValidationResult result = accountRepository.save(account).blockingFirst();
 
 		assertFalse(result.isValid());
 		assertTrue(result.getErrors().contains(ValidationError.NAME));

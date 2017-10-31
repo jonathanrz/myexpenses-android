@@ -64,7 +64,7 @@ class CalculateMonthBalanceCorrectlyTest {
         App.resetDatabase()
 
         val a = br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder().build()
-        assert(accountDataSource.save(a).isValid)
+        assert(accountDataSource.save(a).blockingFirst().isValid)
 
         val s = SourceBuilder().build()
         assert(sourceDataSource.save(s).isValid)
@@ -75,7 +75,7 @@ class CalculateMonthBalanceCorrectlyTest {
                 .endDate(now.plusMonths(12))
                 .amount(BILL_AMOUNT)
                 .build()
-        assert(billDataSource.save(b).isValid)
+        assert(billDataSource.save(b).blockingFirst().isValid)
 
         generateThreeMonthlyReceipts(a, s)
         generateThreeMonthlyExpenses(a)

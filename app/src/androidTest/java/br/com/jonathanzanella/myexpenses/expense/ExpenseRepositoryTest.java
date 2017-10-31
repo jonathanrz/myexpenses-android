@@ -54,7 +54,7 @@ public class ExpenseRepositoryTest {
 				.accountToPayBills(true)
 				.accountToPayCreditCard(true)
 				.build();
-		assertTrue(accountDataSource.save(account).isValid());
+		assertTrue(accountDataSource.save(account).blockingFirst().isValid());
 		creditCard = new CardBuilder().name("CreditCard").account(account).type(CardType.CREDIT).build(accountDataSource);
 		debitCard = new CardBuilder().name("DebitCard").account(account).type(CardType.DEBIT).build(accountDataSource);
 		assertTrue(cardDataSource.save(debitCard).isValid());

@@ -5,12 +5,10 @@ import android.content.Context
 import android.support.annotation.UiThread
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException
-import io.reactivex.android.schedulers.AndroidSchedulers
+import br.com.jonathanzanella.myexpenses.extensions.fromIOToMainThread
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
 import org.joda.time.DateTime
+import timber.log.Timber
 import javax.inject.Inject
 
 class BillPresenter @Inject constructor(private val dataSource: BillDataSource) {
@@ -49,7 +47,7 @@ class BillPresenter @Inject constructor(private val dataSource: BillDataSource) 
         }
     }
 
-    fun updateView() {
+    private fun updateView() {
         val v = editView
         val b = bill
         if (b != null) {
@@ -99,14 +97,14 @@ class BillPresenter @Inject constructor(private val dataSource: BillDataSource) 
 
     @UiThread
     fun loadBill(uuid: String) {
-        disposable.addAll(
-            dataSource.find(uuid)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    bill = it
-                    updateView()
-                })
+        //TODO: check disposable
+        dataSource.find(uuid)
+            .fromIOToMainThread()
+            .doOnError { Timber.e(it) }
+            .subscribe {
+                bill = it
+                updateView()
+            }
     }
 
     private fun checkEditViewSet() {
@@ -126,18 +124,17 @@ class BillPresenter @Inject constructor(private val dataSource: BillDataSource) 
         b.initDate = initDate
         b.endDate = endDate
 
-        doAsync {
-            val result = dataSource.save(b)
-
-            uiThread {
-                if (result.isValid) {
-                    v.finishView()
-                } else {
-                    for (validationError in result.errors)
-                        v.showError(validationError)
+        dataSource.save(b)
+                .fromIOToMainThread()
+                .doOnError { Timber.e(it) }
+                .subscribe {
+                    if (it.isValid) {
+                        v.finishView()
+                    } else {
+                        for (validationError in it.errors)
+                            v.showError(validationError)
+                    }
                 }
-            }
-        }
     }
 
     val uuid: String?

@@ -64,7 +64,7 @@ public class ShowDetailScreenTest {
 		App.Companion.resetDatabase();
 
 		account = new AccountBuilder().build();
-		assertTrue(accountRepository.save(account).isValid());
+		assertTrue(accountRepository.save(account).blockingFirst().isValid());
 	}
 
 	@After

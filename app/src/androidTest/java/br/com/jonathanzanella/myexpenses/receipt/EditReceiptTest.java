@@ -60,7 +60,7 @@ public class EditReceiptTest {
 		App.Companion.resetDatabase();
 
 		Account a = new AccountBuilder().build();
-		assertTrue(accountDataSource.save(a).isValid());
+		assertTrue(accountDataSource.save(a).blockingFirst().isValid());
 
 		Source s = new SourceBuilder().build();
 		assertTrue(sourceRepository.save(s).isValid());

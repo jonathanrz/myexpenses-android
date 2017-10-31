@@ -48,8 +48,8 @@ public class AccountViewTest {
 		accountToShowInResume = new AccountBuilder().name("accountToShowInResume").showInResume(true).build();
 		accountToHideInResume = new AccountBuilder().name("accountToHideInResume").showInResume(false).build();
 
-		assertTrue(dataSource.save(accountToShowInResume).isValid());
-		assertTrue(dataSource.save(accountToHideInResume).isValid());
+		assertTrue(dataSource.save(accountToShowInResume).blockingFirst().isValid());
+		assertTrue(dataSource.save(accountToHideInResume).blockingFirst().isValid());
 	}
 
 	@After

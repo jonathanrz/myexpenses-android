@@ -130,7 +130,7 @@ class Expense : Transaction, UnsyncModel {
                 val maybeBill = billDataSource.find(it)
                 if(maybeBill.isEmpty.blockingGet())
                     return null
-                return maybeBill.blockingGet()
+                return maybeBill.blockingFirst()
             }
         }
         set(bill) {
@@ -216,7 +216,7 @@ class Expense : Transaction, UnsyncModel {
             return null
 
         return when (type) {
-            ChargeableType.ACCOUNT -> accountDataSource.find(uuid).blockingGet()
+            ChargeableType.ACCOUNT -> accountDataSource.find(uuid).blockingFirst()
             ChargeableType.DEBIT_CARD, ChargeableType.CREDIT_CARD -> cardDataSource.find(uuid)
         }
     }

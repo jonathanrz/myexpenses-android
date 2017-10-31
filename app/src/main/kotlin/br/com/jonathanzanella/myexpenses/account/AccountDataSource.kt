@@ -4,7 +4,7 @@ import android.support.annotation.WorkerThread
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult
 import io.reactivex.Flowable
-import io.reactivex.Maybe
+import io.reactivex.Observable
 import org.apache.commons.lang3.StringUtils
 import timber.log.Timber
 import javax.inject.Inject
@@ -14,11 +14,11 @@ interface AccountDataSource {
     fun forResumeScreen(): Flowable<List<Account>>
     fun unsync(): Flowable<List<Account>>
 
-    fun find(uuid: String): Maybe<Account>
-    fun greaterUpdatedAt(): Long
+    fun find(uuid: String): Observable<Account>
+    fun greaterUpdatedAt(): Observable<Long>
 
-    fun save(account: Account): ValidationResult
-    fun syncAndSave(unsync: Account): ValidationResult
+    fun save(account: Account): Observable<ValidationResult>
+    fun syncAndSave(unsync: Account): Observable<ValidationResult>
 }
 
 class AccountRepository @Inject constructor(val dao: AccountDao): AccountDataSource {
@@ -33,25 +33,24 @@ class AccountRepository @Inject constructor(val dao: AccountDao): AccountDataSou
     override fun unsync(): Flowable<List<Account>> = Flowable.fromCallable { dao.unsync() }
 
     @WorkerThread
-    override fun find(uuid: String): Maybe<Account> {
-        return dao.find(uuid)
-    }
+    override fun find(uuid: String): Observable<Account> = Observable.fromCallable { dao.find(uuid) }
 
     @WorkerThread
-    override fun greaterUpdatedAt(): Long {
-        return dao.greaterUpdatedAt().firstOrNull()?.updatedAt ?:0
-    }
+    override fun greaterUpdatedAt(): Observable<Long> =
+            Observable.fromCallable { dao.greaterUpdatedAt().firstOrNull()?.updatedAt ?:0 }
 
     @WorkerThread
-    override fun save(account: Account): ValidationResult {
-        val result = validate(account)
-        if (result.isValid) {
-            if (account.id == 0L && account.uuid == null)
-                account.uuid = java.util.UUID.randomUUID().toString()
-            account.sync = false
-            account.id = dao.saveAtDatabase(account)
+    override fun save(account: Account): Observable<ValidationResult> {
+        return Observable.fromCallable {
+            val result = validate(account)
+            if (result.isValid) {
+                if (account.id == 0L && account.uuid == null)
+                    account.uuid = java.util.UUID.randomUUID().toString()
+                account.sync = false
+                account.id = dao.saveAtDatabase(account)
+            }
+            result
         }
-        return result
     }
 
     private fun validate(account: Account): ValidationResult {
@@ -62,26 +61,28 @@ class AccountRepository @Inject constructor(val dao: AccountDao): AccountDataSou
     }
 
     @WorkerThread
-    override fun syncAndSave(unsync: Account): ValidationResult {
-        val result = validate(unsync)
-        if (!result.isValid) {
-            Timber.tag("Account validation fail")
-                    .w(unsync.getData() + "\nerrors: " + result.errorsAsString)
-            return result
+    override fun syncAndSave(unsync: Account): Observable<ValidationResult> {
+        return Observable.fromCallable {
+            val result = validate(unsync)
+            if (!result.isValid) {
+                Timber.tag("Account validation fail")
+                        .w(unsync.getData() + "\nerrors: " + result.errorsAsString)
+                result
+            } else {
+                val account = find(unsync.uuid!!).blockingFirst()
+
+                if (account != null && account.id != unsync.id) {
+                    if (account.updatedAt != unsync.updatedAt)
+                        Timber.tag("Account overwritten")
+                                .w(unsync.getData())
+                    unsync.id = account.id
+                }
+
+                unsync.sync = true
+                unsync.id = dao.saveAtDatabase(unsync)
+
+                result
+            }
         }
-
-        val account = find(unsync.uuid!!).blockingGet()
-
-        if (account != null && account.id != unsync.id) {
-            if (account.updatedAt != unsync.updatedAt)
-                Timber.tag("Account overwritten")
-                        .w(unsync.getData())
-            unsync.id = account.id
-        }
-
-        unsync.sync = true
-        unsync.id = dao.saveAtDatabase(unsync)
-
-        return result
     }
 }
