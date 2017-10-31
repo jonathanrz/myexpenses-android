@@ -174,7 +174,7 @@ class AccountModule {
     fun providesAccountPresenter(dataSource: AccountDataSource) = AccountPresenter(dataSource)
 
     @Provides
-    fun providesAccountAdapter(repository: AccountRepository) = AccountAdapter(repository)
+    fun providesAccountAdapter(dataSource: AccountDataSource) = AccountAdapter(dataSource)
 }
 
 @Module
@@ -191,6 +191,6 @@ class BillModule {
     fun providesBillPresenter(dataSource: BillDataSource) = BillPresenter(dataSource)
 
     @Provides
-    fun providesBillAdapter(repository: BillRepository) = BillAdapter(repository)
+    fun providesBillAdapter(dataSource: BillDataSource) = BillAdapter(dataSource)
 
 }

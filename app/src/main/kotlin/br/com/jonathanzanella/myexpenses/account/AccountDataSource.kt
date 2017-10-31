@@ -1,18 +1,18 @@
 package br.com.jonathanzanella.myexpenses.account
 
 import android.support.annotation.WorkerThread
+import br.com.jonathanzanella.myexpenses.database.DatabaseObservable
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult
-import io.reactivex.Flowable
 import io.reactivex.Observable
 import org.apache.commons.lang3.StringUtils
 import timber.log.Timber
 import javax.inject.Inject
 
 interface AccountDataSource {
-    fun all(): Flowable<List<Account>>
-    fun forResumeScreen(): Flowable<List<Account>>
-    fun unsync(): Flowable<List<Account>>
+    fun all(): Observable<List<Account>>
+    fun forResumeScreen(): Observable<List<Account>>
+    fun unsync(): Observable<List<Account>>
 
     fun find(uuid: String): Observable<Account>
     fun greaterUpdatedAt(): Observable<Long>
@@ -22,15 +22,24 @@ interface AccountDataSource {
 }
 
 class AccountRepository @Inject constructor(val dao: AccountDao): AccountDataSource {
-    @WorkerThread
-    override fun all(): Flowable<List<Account>> = Flowable.fromCallable { dao.all() }
+    private val allData: DatabaseObservable<List<Account>> = DatabaseObservable { dao.all() }
+    private val resumeScreenData: DatabaseObservable<List<Account>> = DatabaseObservable  { dao.showInResume() }
+    private val unsyncData: DatabaseObservable<List<Account>> = DatabaseObservable  { dao.unsync() }
+
+    private fun refreshObservables() {
+        allData.emit()
+        resumeScreenData.emit()
+        unsyncData.emit()
+    }
 
     @WorkerThread
-    override fun forResumeScreen(): Flowable<List<Account>> =
-            Flowable.fromCallable { dao.showInResume() }
+    override fun all(): Observable<List<Account>> = allData.cache().replay(1).autoConnect()
 
     @WorkerThread
-    override fun unsync(): Flowable<List<Account>> = Flowable.fromCallable { dao.unsync() }
+    override fun forResumeScreen(): Observable<List<Account>> = resumeScreenData.cache().replay(1).autoConnect()
+
+    @WorkerThread
+    override fun unsync(): Observable<List<Account>> = unsyncData.cache().replay(1).autoConnect()
 
     @WorkerThread
     override fun find(uuid: String): Observable<Account> = Observable.fromCallable { dao.find(uuid) }
@@ -48,6 +57,8 @@ class AccountRepository @Inject constructor(val dao: AccountDao): AccountDataSou
                     account.uuid = java.util.UUID.randomUUID().toString()
                 account.sync = false
                 account.id = dao.saveAtDatabase(account)
+
+                refreshObservables()
             }
             result
         }
@@ -80,6 +91,8 @@ class AccountRepository @Inject constructor(val dao: AccountDao): AccountDataSou
 
                 unsync.sync = true
                 unsync.id = dao.saveAtDatabase(unsync)
+
+                refreshObservables()
 
                 result
             }

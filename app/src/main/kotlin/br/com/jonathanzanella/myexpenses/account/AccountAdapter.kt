@@ -19,7 +19,7 @@ import org.jetbrains.anko.*
 import timber.log.Timber
 import javax.inject.Inject
 
-class AccountAdapter @Inject constructor(val repository: AccountRepository) : RecyclerView.Adapter<AccountAdapter.ViewHolder>() {
+class AccountAdapter @Inject constructor(val dataSource: AccountDataSource) : RecyclerView.Adapter<AccountAdapter.ViewHolder>() {
     private var format = NORMAL
     private var callback: AccountAdapterCallback? = null
     private var accounts: List<Account> = ArrayList()
@@ -74,8 +74,8 @@ class AccountAdapter @Inject constructor(val repository: AccountRepository) : Re
         dbQueryDisposable?.dispose()
 
         dbQueryDisposable = when {
-            format === AccountAdapter.Format.RESUME -> repository.forResumeScreen()
-            else -> repository.all()
+            format === AccountAdapter.Format.RESUME -> dataSource.forResumeScreen()
+            else -> dataSource.all()
         }
                 .doOnNext { accounts = it }
                 .fromIOToMainThread()

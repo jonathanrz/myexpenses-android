@@ -20,7 +20,7 @@ import io.reactivex.schedulers.Schedulers
 import org.jetbrains.anko.*
 import javax.inject.Inject
 
-open class BillAdapter @Inject constructor(val repository: BillRepository) : RecyclerView.Adapter<BillAdapter.ViewHolder>() {
+open class BillAdapter @Inject constructor(val dataSource: BillDataSource) : RecyclerView.Adapter<BillAdapter.ViewHolder>() {
     private var dbQueryDisposable: Disposable? = null
     private var callback: BillAdapterCallback? = null
     private var bills: List<Bill> = ArrayList()
@@ -76,7 +76,7 @@ open class BillAdapter @Inject constructor(val repository: BillRepository) : Rec
     fun refreshData(filter: String? = null) {
         dbQueryDisposable?.dispose()
 
-        var flowable = repository.all()
+        var flowable = dataSource.all()
 
         if(filter != null)
             flowable = flowable.map { it.filter { it.name!!.contains(filter) } }
