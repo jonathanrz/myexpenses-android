@@ -33,13 +33,13 @@ class AccountRepository @Inject constructor(val dao: AccountDao): AccountDataSou
     }
 
     @WorkerThread
-    override fun all(): Observable<List<Account>> = allData.cache().replay(1).autoConnect()
+    override fun all(): Observable<List<Account>> = allData.cache()
 
     @WorkerThread
-    override fun forResumeScreen(): Observable<List<Account>> = resumeScreenData.cache().replay(1).autoConnect()
+    override fun forResumeScreen(): Observable<List<Account>> = resumeScreenData.cache()
 
     @WorkerThread
-    override fun unsync(): Observable<List<Account>> = unsyncData.cache().replay(1).autoConnect()
+    override fun unsync(): Observable<List<Account>> = unsyncData.cache()
 
     @WorkerThread
     override fun find(uuid: String): Observable<Account> = Observable.fromCallable { dao.find(uuid) }

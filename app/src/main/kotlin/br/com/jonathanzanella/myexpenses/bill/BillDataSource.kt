@@ -1,10 +1,11 @@
 package br.com.jonathanzanella.myexpenses.bill
 
 import android.support.annotation.WorkerThread
+import br.com.jonathanzanella.myexpenses.database.DatabaseObservable
+import br.com.jonathanzanella.myexpenses.database.DatabaseObservableWithValue
 import br.com.jonathanzanella.myexpenses.expense.ExpenseDataSource
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult
-import io.reactivex.Flowable
 import io.reactivex.Observable
 import org.apache.commons.lang3.StringUtils
 import org.joda.time.DateTime
@@ -12,9 +13,9 @@ import timber.log.Timber
 import javax.inject.Inject
 
 interface BillDataSource {
-    fun all(): Flowable<List<Bill>>
-    fun unsync(): Flowable<List<Bill>>
-    fun monthly(month: DateTime): Flowable<List<Bill>>
+    fun all(): Observable<List<Bill>>
+    fun unsync(): Observable<List<Bill>>
+    fun monthly(month: DateTime): Observable<List<Bill>>
 
     fun find(uuid: String): Observable<Bill>
     fun greaterUpdatedAt(): Observable<Long>
@@ -24,26 +25,37 @@ interface BillDataSource {
 }
 
 class BillRepository @Inject constructor(val dao: BillDao, private val expenseDataSource: ExpenseDataSource): BillDataSource {
-    override fun all(): Flowable<List<Bill>> = Flowable.fromCallable { dao.all() }
-    override fun unsync(): Flowable<List<Bill>> = Flowable.fromCallable { dao.unsync() }
+    private val generateMonthlyData: (DateTime) -> List<Bill> = { month ->
+        val bills = dao.monthly(month.millis)
 
-    override fun monthly(month: DateTime): Flowable<List<Bill>> {
-        return Flowable.fromCallable { dao.monthly(month.millis) }
-                .flatMap {
-                    val expenses = expenseDataSource.monthly(month)
+        val expenses = expenseDataSource.monthly(month)
 
-                    Flowable.just(it.filter {
-                        @Suppress("UnnecessaryVariable")
-                        val bill = it
-                        expenses
-                            .filter { it.billUuid != null }
-                            .map { find(it.billUuid!!) }
-                            .any { it.blockingFirst().uuid == bill.uuid }
-                    })
-                }.doOnNext {
-                    it.map { it.month = month }
-                }
+        bills.filter {
+            @Suppress("UnnecessaryVariable")
+            val bill = it
+            expenses
+                    .filter { it.billUuid != null }
+                    .map { find(it.billUuid!!) }
+                    .any { it.blockingFirst().uuid == bill.uuid }
+        }.map {
+            it.month = month
+            it
+        }
     }
+
+    private val allData: DatabaseObservable<List<Bill>> = DatabaseObservable { dao.all() }
+    private val unsyncData: DatabaseObservable<List<Bill>> = DatabaseObservable  { dao.unsync() }
+    private val monthlyData: DatabaseObservableWithValue<DateTime, List<Bill>> = DatabaseObservableWithValue(generateMonthlyData)
+
+    private fun refreshObservables() {
+        allData.emit()
+        unsyncData.emit()
+        monthlyData.emit()
+    }
+
+    override fun all(): Observable<List<Bill>> = allData.cache()
+    override fun unsync(): Observable<List<Bill>> = unsyncData.cache()
+    override fun monthly(month: DateTime) = monthlyData.cache(month)
 
     override fun find(uuid: String): Observable<Bill> = Observable.fromCallable { dao.find(uuid) }
 
@@ -59,6 +71,8 @@ class BillRepository @Inject constructor(val dao: BillDao, private val expenseDa
                     bill.uuid = java.util.UUID.randomUUID().toString()
                 bill.sync = false
                 bill.id = dao.saveAtDatabase(bill)
+
+                refreshObservables()
             }
             result
         }
@@ -100,6 +114,8 @@ class BillRepository @Inject constructor(val dao: BillDao, private val expenseDa
 
                 unsync.sync = true
                 unsync.id = dao.saveAtDatabase(unsync)
+
+                refreshObservables()
 
                 result
             }

@@ -1,6 +1,5 @@
 package br.com.jonathanzanella.myexpenses.bill
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.support.v7.widget.DefaultItemAnimator
@@ -11,8 +10,6 @@ import android.widget.FrameLayout
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.views.FilterableView
-import br.com.jonathanzanella.myexpenses.views.RefreshableView
-import br.com.jonathanzanella.myexpenses.views.ResultableView
 import br.com.jonathanzanella.myexpenses.views.TabableView
 import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
 import br.com.jonathanzanella.myexpenses.views.anko.recyclerView
@@ -22,7 +19,7 @@ import javax.inject.Inject
 
 class BillView@JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : FrameLayout(context, attrs, defStyleAttr), RefreshableView, ResultableView, FilterableView, TabableView {
+) : FrameLayout(context, attrs, defStyleAttr), FilterableView, TabableView {
     override var filter = ""
     private val ui = BillViewUI()
     @Inject
@@ -43,24 +40,9 @@ class BillView@JvmOverloads constructor(
         adapter.onDestroy()
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        when (requestCode) {
-            REQUEST_ADD_BILL -> if (resultCode == Activity.RESULT_OK)
-                refreshData()
-        }
-    }
-
-    override fun refreshData() {
-        adapter.refreshData()
-    }
-
     override fun filter(s: String) {
         super.filter(s)
         adapter.filter(s)
-    }
-
-    companion object {
-        val REQUEST_ADD_BILL = 1003
     }
 }
 
@@ -72,15 +54,7 @@ class BillViewUI: AnkoComponent<BillView> {
             bills = recyclerView { id = R.id.view_bills_list}
             floatingActionButton {
                 id = R.id.view_bills_fab
-                onClick {
-                    val ctx = context
-                    val i = Intent(context, EditBillActivity::class.java)
-                    if (ctx is Activity) {
-                        ctx.startActivityForResult(i, BillView.REQUEST_ADD_BILL)
-                    } else {
-                        ctx.startActivity(i)
-                    }
-                }
+                onClick { context.startActivity(Intent(context, EditBillActivity::class.java)) }
             }
         }.applyRecursively(::applyTemplateViewStyles)
     }
