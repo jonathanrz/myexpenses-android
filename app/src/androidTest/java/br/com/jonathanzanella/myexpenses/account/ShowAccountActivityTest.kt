@@ -62,7 +62,7 @@ class ShowAccountActivityTest {
         account!!.name = "test"
         account!!.balance = ACCOUNT_BALANCE
         account!!.accountToPayCreditCard = true
-        dataSource.save(account!!)
+        dataSource.save(account!!).subscribe { assert(it.isValid) }
     }
 
     @After
