@@ -46,7 +46,7 @@ class ShowExpenseActivityTest {
         App.resetDatabase()
 
         val a = AccountBuilder().build()
-        accountDataSource.save(a)
+        accountDataSource.save(a).subscribe { assert(it.isValid) }
 
         expense = ExpenseBuilder().chargeable(a).build()
         assert(dataSource.save(expense!!).isValid)
