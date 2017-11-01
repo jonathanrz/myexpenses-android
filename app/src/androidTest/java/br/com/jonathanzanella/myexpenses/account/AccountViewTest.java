@@ -62,6 +62,8 @@ public class AccountViewTest {
 
 		openMenuAndClickItem(R.string.accounts);
 
+		Thread.sleep(500);
+
 		accountNameView(accountToShowInResume).check(matches(withText(accountToShowInResume.getName())));
 		accountNameView(accountToHideInResume).check(matches(withText(accountToHideInResume.getName())));
 	}
@@ -69,6 +71,6 @@ public class AccountViewTest {
 	private ViewInteraction accountNameView(Account account) {
 		return onView(allOf(
 				withId(R.id.row_account_name),
-				isDescendantOfA(withTagValue(is((Object)account.getUuid())))));
+				isDescendantOfA(withTagValue(is(account.getUuid())))));
 	}
 }
