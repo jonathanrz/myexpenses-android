@@ -33,10 +33,14 @@ class BillRepository @Inject constructor(val dao: BillDao, private val expenseDa
         bills.filter {
             @Suppress("UnnecessaryVariable")
             val bill = it
-            expenses
+            !expenses
                     .filter { it.billUuid != null }
-                    .map { find(it.billUuid!!) }
-                    .any { it.blockingFirst().uuid == bill.uuid }
+                    .map {
+                        find(it.billUuid!!).blockingFirst()
+                    }
+                    .any {
+                        it.uuid == bill.uuid
+                    }
         }.map {
             it.month = month
             it

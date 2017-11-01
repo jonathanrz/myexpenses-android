@@ -31,7 +31,7 @@ class ShowBillActivityTest {
     @Rule @JvmField
     var activityTestRule = ActivityTestRule(ShowBillActivity::class.java, true, false)
 
-    private var bill: Bill? = null
+    private lateinit var bill: Bill
     @Inject
     lateinit var dataSource: BillDataSource
 
@@ -42,7 +42,7 @@ class ShowBillActivityTest {
         App.resetDatabase()
 
         bill = BillBuilder().build()
-        dataSource.save(bill!!)
+        dataSource.save(bill).subscribe { assert(it.isValid) }
     }
 
     @After
@@ -55,16 +55,16 @@ class ShowBillActivityTest {
     @Throws(Exception::class)
     fun shows_account_correctly() {
         val i = Intent()
-        i.putExtra(ShowBillActivity.KEY_BILL_UUID, bill!!.uuid)
+        i.putExtra(ShowBillActivity.KEY_BILL_UUID, bill.uuid)
         activityTestRule.launchActivity(i)
 
         waitForIdling()
 
-        val editBillTitle = getTargetContext().getString(R.string.bill) + " " + bill!!.name
+        val editBillTitle = getTargetContext().getString(R.string.bill) + " " + bill.name
         matchToolbarTitle(editBillTitle)
 
-        val balanceAsCurrency = bill!!.amount.toCurrencyFormatted()
-        onView(withId(R.id.act_show_bill_name)).check(matches(withText(bill!!.name)))
+        val balanceAsCurrency = bill.amount.toCurrencyFormatted()
+        onView(withId(R.id.act_show_bill_name)).check(matches(withText(bill.name)))
         onView(withId(R.id.act_show_bill_amount)).check(matches(withText(balanceAsCurrency)))
     }
 }
