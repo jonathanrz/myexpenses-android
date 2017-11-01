@@ -1,6 +1,5 @@
 package br.com.jonathanzanella.myexpenses.account
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.support.v7.widget.DefaultItemAnimator
@@ -45,10 +44,6 @@ class AccountView@JvmOverloads constructor(
         super.onDetachedFromWindow()
         adapter.onDestroy()
     }
-
-    companion object {
-        val REQUEST_ADD_ACCOUNT = 1003
-    }
 }
 
 class AccountViewUI: AnkoComponent<AccountView> {
@@ -59,14 +54,7 @@ class AccountViewUI: AnkoComponent<AccountView> {
             accounts = recyclerView { id = R.id.view_accounts_list }
             floatingActionButton {
                 id = R.id.view_accounts_fab
-                onClick {
-                    val i = Intent(context, EditAccountActivity::class.java)
-                    if (ctx is Activity) {
-                        (ctx as Activity).startActivityForResult(i, AccountView.REQUEST_ADD_ACCOUNT)
-                    } else {
-                        ctx.startActivity(i)
-                    }
-                }
+                onClick { ctx.startActivity(Intent(context, EditAccountActivity::class.java)) }
             }
         }.applyRecursively(::applyTemplateViewStyles)
     }
