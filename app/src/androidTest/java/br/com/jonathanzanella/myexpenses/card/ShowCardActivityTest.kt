@@ -24,6 +24,7 @@ import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder
 import br.com.jonathanzanella.myexpenses.helpers.builder.CardBuilder
 import br.com.jonathanzanella.myexpenses.helpers.builder.ExpenseBuilder
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
+import junit.framework.Assert.assertTrue
 import org.joda.time.DateTime
 import org.junit.After
 import org.junit.Before
@@ -55,10 +56,10 @@ class ShowCardActivityTest {
         App.resetDatabase()
 
         account = AccountBuilder().build()
-        accountDataSource.save(account!!)
+        assertTrue(accountDataSource.save(account!!).blockingFirst().isValid)
 
         card = CardBuilder().account(account).type(CardType.CREDIT).build(accountDataSource)
-        dataSource.save(card!!)
+        assertTrue(dataSource.save(card!!).isValid)
     }
 
     @After
