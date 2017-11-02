@@ -27,6 +27,7 @@ import br.com.jonathanzanella.myexpenses.receipt.ReceiptDataSource
 import br.com.jonathanzanella.myexpenses.source.Source
 import br.com.jonathanzanella.myexpenses.source.SourceDataSource
 import br.com.jonathanzanella.myexpenses.views.MainActivity
+import junit.framework.Assert.assertTrue
 import org.hamcrest.Matchers.allOf
 import org.joda.time.DateTime
 import org.junit.After
@@ -63,10 +64,10 @@ class CalculateMonthBalanceCorrectlyTest {
         App.resetDatabase()
 
         val a = br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder().build()
-        assert(accountDataSource.save(a).blockingFirst().isValid)
+        assertTrue(accountDataSource.save(a).blockingFirst().isValid)
 
         val s = SourceBuilder().build()
-        assert(sourceDataSource.save(s).isValid)
+        assertTrue(sourceDataSource.save(s).isValid)
 
         val now = DateTime.now().withDayOfMonth(1)
         val b = BillBuilder()
@@ -74,7 +75,7 @@ class CalculateMonthBalanceCorrectlyTest {
                 .endDate(now.plusMonths(12))
                 .amount(BILL_AMOUNT)
                 .build()
-        assert(billDataSource.save(b).blockingFirst().isValid)
+        assertTrue(billDataSource.save(b).blockingFirst().isValid)
 
         generateThreeMonthlyReceipts(a, s)
         generateThreeMonthlyExpenses(a)
