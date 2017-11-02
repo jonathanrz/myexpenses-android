@@ -55,7 +55,7 @@ public class EditExpenseTest {
 		App.Companion.resetDatabase();
 
 		Account a = new AccountBuilder().build();
-		accountDataSource.save(a);
+		assertTrue(accountDataSource.save(a).blockingFirst().isValid());
 
 		expense = new ExpenseBuilder()
 				.date(DateTime.now().minusDays(1))
