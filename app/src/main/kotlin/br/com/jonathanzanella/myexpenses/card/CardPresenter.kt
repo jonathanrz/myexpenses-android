@@ -131,11 +131,11 @@ class CardPresenter @Inject constructor(private val accountDataSource: AccountDa
             act.startActivityForResult(Intent(act, ListAccountActivity::class.java), REQUEST_SELECT_ACCOUNT)
     }
 
-    fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             REQUEST_SELECT_ACCOUNT -> {
                 if (resultCode == RESULT_OK)
-                    loadAccount(data.getStringExtra(ListAccountActivity.KEY_ACCOUNT_SELECTED_UUID))
+                    loadAccount(data!!.getStringExtra(ListAccountActivity.KEY_ACCOUNT_SELECTED_UUID))
             }
         }
     }

@@ -37,6 +37,7 @@ import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.clickIntoView;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchErrorMessage;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.openMenuAndClickItem;
+import static junit.framework.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
@@ -61,7 +62,7 @@ public class AddCardTest {
 			uiDevice.wakeUp();
 
 		account = new AccountBuilder().build();
-		accountDataSource.save(account);
+		assertTrue(accountDataSource.save(account).blockingFirst().isValid());
 	}
 
 	@After
