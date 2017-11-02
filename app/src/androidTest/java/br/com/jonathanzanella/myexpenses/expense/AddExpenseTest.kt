@@ -26,6 +26,7 @@ import br.com.jonathanzanella.myexpenses.helpers.builder.BillBuilder
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import br.com.jonathanzanella.myexpenses.views.MainActivity
+import junit.framework.Assert.assertTrue
 import org.hamcrest.core.IsNot.not
 import org.joda.time.DateTime
 import org.junit.After
@@ -60,7 +61,7 @@ class AddExpenseTest {
             uiDevice.wakeUp()
 
         account = AccountBuilder().build()
-        accountDataSource.save(account!!)
+        assertTrue(accountDataSource.save(account!!).blockingFirst().isValid)
     }
 
     @After
