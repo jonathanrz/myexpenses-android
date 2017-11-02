@@ -41,10 +41,7 @@ class AccountRepository @Inject constructor(val dao: AccountDao): AccountDataSou
     override fun unsync(): Observable<List<Account>> = unsyncData.cache()
 
     override fun find(uuid: String): Observable<Account> = Observable.fromCallable {
-        Log.i("teste", "will load account $uuid")
-        val account = dao.find(uuid).first()
-        Log.i("teste", "loaded account ${account.name}")
-        account
+        dao.find(uuid).first()
     }
 
     override fun greaterUpdatedAt(): Observable<Long> =
