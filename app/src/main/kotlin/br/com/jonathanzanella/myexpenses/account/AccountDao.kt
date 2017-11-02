@@ -17,7 +17,7 @@ interface AccountDao {
     fun showInResume(): List<Account>
 
     @Query("SELECT * FROM Account WHERE uuid = :uuid")
-    fun find(uuid: String): Account?
+    fun find(uuid: String): List<Account>
 
     @Query("SELECT * FROM Account ORDER BY updatedAt DESC LIMIT 1")
     fun greaterUpdatedAt(): List<Account>

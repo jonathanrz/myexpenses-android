@@ -19,6 +19,7 @@ interface AccountDataSource {
 
     fun save(account: Account): Observable<ValidationResult>
     fun syncAndSave(unsync: Account): Observable<ValidationResult>
+    fun deleteAll()
 }
 
 class AccountRepository @Inject constructor(val dao: AccountDao): AccountDataSource {
@@ -35,20 +36,20 @@ class AccountRepository @Inject constructor(val dao: AccountDao): AccountDataSou
     @WorkerThread
     override fun all(): Observable<List<Account>> = allData.cache()
 
-    @WorkerThread
     override fun forResumeScreen(): Observable<List<Account>> = resumeScreenData.cache()
 
-    @WorkerThread
     override fun unsync(): Observable<List<Account>> = unsyncData.cache()
 
-    @WorkerThread
-    override fun find(uuid: String): Observable<Account> = Observable.fromCallable { dao.find(uuid) }
+    override fun find(uuid: String): Observable<Account> = Observable.fromCallable {
+        Log.i("teste", "will load account $uuid")
+        val account = dao.find(uuid).first()
+        Log.i("teste", "loaded account ${account.name}")
+        account
+    }
 
-    @WorkerThread
     override fun greaterUpdatedAt(): Observable<Long> =
             Observable.fromCallable { dao.greaterUpdatedAt().firstOrNull()?.updatedAt ?:0 }
 
-    @WorkerThread
     override fun save(account: Account): Observable<ValidationResult> {
         return Observable.fromCallable {
             val result = validate(account)
@@ -71,7 +72,6 @@ class AccountRepository @Inject constructor(val dao: AccountDao): AccountDataSou
         return result
     }
 
-    @WorkerThread
     override fun syncAndSave(unsync: Account): Observable<ValidationResult> {
         return Observable.fromCallable {
             val result = validate(unsync)
@@ -97,5 +97,11 @@ class AccountRepository @Inject constructor(val dao: AccountDao): AccountDataSou
                 result
             }
         }
+    }
+
+    @WorkerThread
+    override fun deleteAll() {
+        dao.deleteAll()
+        refreshObservables()
     }
 }

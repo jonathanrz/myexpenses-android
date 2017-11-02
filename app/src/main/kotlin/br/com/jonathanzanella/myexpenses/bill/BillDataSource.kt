@@ -23,6 +23,7 @@ interface BillDataSource {
 
     fun save(bill: Bill): Observable<ValidationResult>
     fun syncAndSave(unsync: Bill): Observable<ValidationResult>
+    fun deleteAll()
 }
 
 class BillRepository @Inject constructor(val dao: BillDao, val expenseDataSource: ExpenseDataSource): BillDataSource {
@@ -71,7 +72,6 @@ class BillRepository @Inject constructor(val dao: BillDao, val expenseDataSource
     override fun greaterUpdatedAt(): Observable<Long> =
             Observable.fromCallable { dao.greaterUpdatedAt().firstOrNull()?.updatedAt ?: 0L }
 
-    @WorkerThread
     override fun save(bill: Bill): Observable<ValidationResult> {
         return Observable.fromCallable {
             val result = validate(bill)
@@ -104,7 +104,6 @@ class BillRepository @Inject constructor(val dao: BillDao, val expenseDataSource
         return result
     }
 
-    @WorkerThread
     override fun syncAndSave(unsync: Bill): Observable<ValidationResult> {
         return Observable.fromCallable {
             val result = validate(unsync)
@@ -129,5 +128,11 @@ class BillRepository @Inject constructor(val dao: BillDao, val expenseDataSource
                 result
             }
         }
+    }
+
+    @WorkerThread
+    override fun deleteAll() {
+        dao.deleteAll()
+        refreshObservables()
     }
 }

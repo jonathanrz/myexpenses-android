@@ -5,8 +5,10 @@ import android.arch.persistence.room.RoomDatabase
 import android.arch.persistence.room.TypeConverters
 import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.account.AccountDao
+import br.com.jonathanzanella.myexpenses.account.AccountDataSource
 import br.com.jonathanzanella.myexpenses.bill.Bill
 import br.com.jonathanzanella.myexpenses.bill.BillDao
+import br.com.jonathanzanella.myexpenses.bill.BillDataSource
 import br.com.jonathanzanella.myexpenses.card.Card
 import br.com.jonathanzanella.myexpenses.card.CardDao
 import br.com.jonathanzanella.myexpenses.expense.Expense
@@ -33,8 +35,8 @@ abstract class MyDatabase : RoomDatabase() {
 }
 
 class DatabaseHelper(appComponent: AppComponent) {
-    @Inject lateinit var accountDao: AccountDao
-    @Inject lateinit var billDao: BillDao
+    @Inject lateinit var accountDataSource: AccountDataSource
+    @Inject lateinit var billDataSource: BillDataSource
     @Inject lateinit var cardDao: CardDao
     @Inject lateinit var expenseDao: ExpenseDao
     @Inject lateinit var receiptDao: ReceiptDao
@@ -45,8 +47,8 @@ class DatabaseHelper(appComponent: AppComponent) {
     }
 
     fun resetDatabase() {
-        accountDao.deleteAll()
-        billDao.deleteAll()
+        accountDataSource.deleteAll()
+        billDataSource.deleteAll()
         cardDao.deleteAll()
         expenseDao.deleteAll()
         receiptDao.deleteAll()
