@@ -1,6 +1,7 @@
 package br.com.jonathanzanella.myexpenses.bill
 
 import android.support.annotation.WorkerThread
+import br.com.jonathanzanella.myexpenses.database.DataSourceObserver
 import br.com.jonathanzanella.myexpenses.database.DatabaseObservable
 import br.com.jonathanzanella.myexpenses.database.DatabaseObservableWithValue
 import br.com.jonathanzanella.myexpenses.expense.ExpenseDataSource
@@ -24,7 +25,7 @@ interface BillDataSource {
     fun syncAndSave(unsync: Bill): Observable<ValidationResult>
 }
 
-class BillRepository @Inject constructor(val dao: BillDao, private val expenseDataSource: ExpenseDataSource): BillDataSource {
+class BillRepository @Inject constructor(val dao: BillDao, val expenseDataSource: ExpenseDataSource): BillDataSource {
     private val generateMonthlyData: (DateTime) -> List<Bill> = { month ->
         val bills = dao.monthly(month.millis)
 
@@ -35,21 +36,25 @@ class BillRepository @Inject constructor(val dao: BillDao, private val expenseDa
             val bill = it
             !expenses
                     .filter { it.billUuid != null }
-                    .map {
-                        find(it.billUuid!!).blockingFirst()
-                    }
-                    .any {
-                        it.uuid == bill.uuid
-                    }
+                    .map { find(it.billUuid!!).blockingFirst() }
+                    .any { it.uuid == bill.uuid }
         }.map {
             it.month = month
             it
         }
     }
 
+    private val expenseDataObserver = object: DataSourceObserver {
+        override fun onDataChanged() {
+            monthlyData.emit()
+        }
+    }
+
     private val allData: DatabaseObservable<List<Bill>> = DatabaseObservable { dao.all() }
     private val unsyncData: DatabaseObservable<List<Bill>> = DatabaseObservable  { dao.unsync() }
     private val monthlyData: DatabaseObservableWithValue<DateTime, List<Bill>> = DatabaseObservableWithValue(generateMonthlyData)
+
+    init { expenseDataSource.registerDataSourceObserver(expenseDataObserver) }
 
     private fun refreshObservables() {
         allData.emit()

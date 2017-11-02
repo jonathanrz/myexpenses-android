@@ -185,8 +185,8 @@ class BillModule {
 
     @Singleton
     @Provides
-    fun providesBillDataSource(billDao: BillDao, expenseRepository: ExpenseRepository): BillDataSource
-            = BillRepository(billDao, expenseRepository)
+    fun providesBillDataSource(billDao: BillDao, expenseDataSource: ExpenseDataSource): BillDataSource
+            = BillRepository(billDao, expenseDataSource)
     @Provides
     fun providesBillPresenter(dataSource: BillDataSource) = BillPresenter(dataSource)
 

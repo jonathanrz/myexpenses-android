@@ -6,7 +6,6 @@ import br.com.jonathanzanella.TestApp
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.account.AccountDataSource
 import br.com.jonathanzanella.myexpenses.card.CardRepository
-import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository
 import br.com.jonathanzanella.myexpenses.helpers.TestUtils.waitForIdling
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder
 import br.com.jonathanzanella.myexpenses.helpers.builder.BillBuilder
@@ -30,8 +29,6 @@ class BillRepositoryTest {
     lateinit var accountDataSource: AccountDataSource
     @Inject
     lateinit var cardRepository: CardRepository
-    @Inject
-    lateinit var expenseRepository: ExpenseRepository
     @Inject
     lateinit var billRepository: BillRepository
 
@@ -84,13 +81,25 @@ class BillRepositoryTest {
                 .chargeable(card)
                 .build()
 
-        var bills = billRepository.monthly(firstDayOfJune).blockingFirst()
-        assertThat(bills.size, Is.`is`(1))
+        var emissionCount = 0
 
-        assert(expenseRepository.save(expense).isValid)
+        billRepository.monthly(firstDayOfJune).subscribe {
+            emissionCount++
 
-        bills = billRepository.monthly(firstDayOfJune).blockingFirst()
-        assertThat(bills.size, Is.`is`(0))
+            when(emissionCount) {
+                1 -> { assertThat(it.size, Is.`is`(1)) }
+                2 -> { assertThat(it.size, Is.`is`(0)) }
+                else -> { assert(false, { "it should not emit more then twice" }) }
+            }
+        }
+
+        Thread.sleep(100) //Wait for first emission
+
+        assert(billRepository.expenseDataSource.save(expense).isValid)
+
+        Thread.sleep(100) //Wait for second emission
+
+        assertThat(emissionCount, Is.`is`(2))
     }
 
     @Test

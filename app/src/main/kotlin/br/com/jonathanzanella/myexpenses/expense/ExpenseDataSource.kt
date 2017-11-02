@@ -6,8 +6,8 @@ import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.card.Card
 import br.com.jonathanzanella.myexpenses.card.CardDataSource
-import br.com.jonathanzanella.myexpenses.card.CardRepository
 import br.com.jonathanzanella.myexpenses.chargeable.ChargeableType
+import br.com.jonathanzanella.myexpenses.database.DataSourceObserver
 import br.com.jonathanzanella.myexpenses.helpers.firstDayOfMonth
 import br.com.jonathanzanella.myexpenses.helpers.firstMillisOfDay
 import br.com.jonathanzanella.myexpenses.helpers.lastDayOfMonth
@@ -18,8 +18,10 @@ import br.com.jonathanzanella.myexpenses.validations.ValidationResult
 import org.apache.commons.lang3.StringUtils
 import org.joda.time.DateTime
 import timber.log.Timber
+import java.lang.ref.WeakReference
 import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 interface ExpenseDataSource {
     fun all(): List<Expense>
@@ -37,13 +39,23 @@ interface ExpenseDataSource {
 
     fun save(expense: Expense): ValidationResult
     fun syncAndSave(unsync: Expense): ValidationResult
+
+    fun registerDataSourceObserver(observer: DataSourceObserver)
 }
 
 class ExpenseRepository @Inject constructor(private val dao: ExpenseDao, val cardDataSource: CardDataSource): ExpenseDataSource {
-    @WorkerThread
-    override fun all(): List<Expense> {
-        return dao.all().blockingFirst()
+    private val observers = ArrayList<WeakReference<DataSourceObserver>>()
+
+    override fun registerDataSourceObserver(observer: DataSourceObserver) {
+        observers.add(WeakReference(observer))
     }
+
+    private fun refreshObservables() {
+        observers.forEach { it.get()?.onDataChanged() }
+    }
+
+    @WorkerThread
+    override fun all(): List<Expense> = dao.all().blockingFirst()
 
     @WorkerThread
     override fun monthly(month: DateTime): List<Expense> {
@@ -207,6 +219,8 @@ class ExpenseRepository @Inject constructor(private val dao: ExpenseDao, val car
                 expense.uuid = UUID.randomUUID().toString()
             expense.sync = false
             expense.id = dao.saveAtDatabase(expense)
+
+            refreshObservables()
         }
         return result
     }
@@ -243,6 +257,8 @@ class ExpenseRepository @Inject constructor(private val dao: ExpenseDao, val car
 
         unsync.sync = true
         unsync.id = dao.saveAtDatabase(unsync)
+
+        refreshObservables()
 
         return result
     }
