@@ -42,6 +42,7 @@ import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchErrorMessa
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.openMenuAndClickItem;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.setTimeInDatePicker;
+import static junit.framework.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
@@ -68,10 +69,10 @@ public class AddReceiptTest {
 			uiDevice.wakeUp();
 
 		account = new AccountBuilder().build();
-		accountDataSource.save(account);
+		assertTrue(accountDataSource.save(account).blockingFirst().isValid());
 
 		source = new SourceBuilder().build();
-		sourceRepository.save(source);
+		assertTrue(sourceRepository.save(source).isValid());
 	}
 
 	@After
