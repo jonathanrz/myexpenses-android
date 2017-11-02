@@ -53,7 +53,7 @@ public class EditCardTest {
 		App.Companion.resetDatabase();
 
 		Account a = new AccountBuilder().build();
-		accountDataSource.save(a);
+		assertTrue(accountDataSource.save(a).blockingFirst().isValid());
 
 		card = new CardBuilder().account(a).build(accountDataSource);
 		assertTrue(repository.save(card).isValid());
