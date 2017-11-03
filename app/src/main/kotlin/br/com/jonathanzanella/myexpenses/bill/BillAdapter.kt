@@ -73,12 +73,12 @@ open class BillAdapter @Inject constructor(val dataSource: BillDataSource) : Rec
         dbQueryDisposable?.dispose()
     }
 
-    fun refreshData(filter: String? = null) {
+    fun refreshData(filter: String = "") {
         dbQueryDisposable?.dispose()
 
         var flowable = dataSource.all()
 
-        if(filter != null)
+        if(filter.isNotBlank())
             flowable = flowable.map { it.filter { it.name!!.contains(filter) } }
 
         dbQueryDisposable = flowable

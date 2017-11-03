@@ -43,6 +43,8 @@ class ListBillActivity : AppCompatActivity(), BillAdapterCallback {
         ui.bills.setHasFixedSize(true)
         ui.bills.layoutManager = GridLayoutManager(this, 2)
         ui.bills.itemAnimator = DefaultItemAnimator()
+
+        adapter.refreshData()
     }
 
     override fun onDestroy() {

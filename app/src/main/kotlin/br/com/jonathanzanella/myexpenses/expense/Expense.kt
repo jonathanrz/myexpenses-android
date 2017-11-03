@@ -184,7 +184,7 @@ class Expense : Transaction, UnsyncModel {
         val c = loadChargeable()!!
         c.debit(value)
         when (c.chargeableType) {
-            ChargeableType.ACCOUNT -> accountDataSource.save(c as Account)
+            ChargeableType.ACCOUNT -> accountDataSource.save(c as Account).blockingFirst()
             ChargeableType.DEBIT_CARD, ChargeableType.CREDIT_CARD -> cardDataSource.save(c as Card)
         }
         charged = true

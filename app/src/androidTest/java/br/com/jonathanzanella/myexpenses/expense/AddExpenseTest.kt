@@ -14,7 +14,6 @@ import android.support.test.uiautomator.UiDevice
 import android.view.View
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.account.AccountDataSource
 import br.com.jonathanzanella.myexpenses.bill.Bill
 import br.com.jonathanzanella.myexpenses.bill.BillDataSource
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper
@@ -41,7 +40,6 @@ class AddExpenseTest {
     @Rule @JvmField
     var editExpenseActivityTestRule = ActivityTestRule(EditExpenseActivity::class.java)
 
-    lateinit var accountDataSource: AccountDataSource
     lateinit var billDataSource: BillDataSource
     private val account = AccountBuilder().build()
 
@@ -49,7 +47,8 @@ class AddExpenseTest {
     @Throws(Exception::class)
     fun setUp() {
         App.resetDatabase()
-        accountDataSource = App.getApp().appComponent.accountDataSource()
+
+        val accountDataSource = App.getApp().appComponent.accountDataSource()
         billDataSource = App.getApp().appComponent.billDataSource()
 
         val uiDevice = UiDevice.getInstance(getInstrumentation())
@@ -143,7 +142,7 @@ class AddExpenseTest {
     @Throws(Exception::class)
     fun add_new_expense_with_bill() {
         val bill = BillBuilder().build()
-        billDataSource.save(bill)
+        assertTrue(billDataSource.save(bill).blockingFirst().isValid)
 
         mainActivityTestRule.launchActivity(Intent())
 
@@ -156,6 +155,8 @@ class AddExpenseTest {
 
         val newExpenseTitle = context.getString(R.string.new_expense_title)
         UIHelper.matchToolbarTitle(newExpenseTitle)
+
+        Thread.sleep(100)
 
         selectBill(bill)
         selectChargeable()

@@ -44,22 +44,22 @@ class BillRepositoryTest {
     @Throws(Exception::class)
     fun can_save_bill() {
         val bill = BillBuilder().build()
-        billDataSource.save(bill).subscribe {
-            assertThat(bill.id, `is`(not(0L)))
-            assertThat<String>(bill.uuid, `is`(not("")))
-        }
+        billDataSource.save(bill).blockingFirst()
+
+        assertThat(bill.id, `is`(not(0L)))
+        assertThat<String>(bill.uuid, `is`(not("")))
     }
 
     @Test
     @Throws(Exception::class)
     fun can_load_saved_bill() {
         val savedBill = BillBuilder().build()
-        billDataSource.save(savedBill).subscribe {
-            billDataSource.find(savedBill.uuid!!).subscribe {
-                assertThat<String>(it.uuid, `is`<String>(savedBill.uuid))
-                assertThat<DateTime>(it.initDate, `is`<DateTime>(savedBill.initDate))
-            }
-        }
+        billDataSource.save(savedBill).blockingFirst()
+
+        val bill = billDataSource.find(savedBill.uuid!!).blockingFirst()
+
+        assertThat<String>(bill.uuid, `is`<String>(savedBill.uuid))
+        assertThat<DateTime>(bill.initDate, `is`<DateTime>(savedBill.initDate))
     }
 
     @Test
@@ -84,7 +84,7 @@ class BillRepositoryTest {
 
         var emissionCount = 0
 
-        billDataSource.monthly(firstDayOfJune).subscribe {
+        val disposable = billDataSource.monthly(firstDayOfJune).subscribe {
             emissionCount++
 
             when(emissionCount) {
@@ -101,6 +101,8 @@ class BillRepositoryTest {
         Thread.sleep(100) //Wait for second emission
 
         assertThat(emissionCount, Is.`is`(2))
+
+        disposable.dispose()
     }
 
     @Test
@@ -111,9 +113,18 @@ class BillRepositoryTest {
         bill = BillBuilder().name("bill99").updatedAt(99L).build()
         assertTrue(billDataSource.save(bill).blockingFirst().isValid)
 
-        billDataSource.greaterUpdatedAt().subscribe {
+        var asserted = false
+
+        val disposable = billDataSource.greaterUpdatedAt().subscribe {
             assertThat(it, `is`(100L))
+            asserted = true
         }
+
+        Thread.sleep(100)
+
+        assertTrue(asserted)
+
+        disposable.dispose()
     }
 
     @Test
@@ -144,7 +155,7 @@ class BillRepositoryTest {
 
         var asserted = false
 
-        billDataSource.all().subscribe {
+        val disposable = billDataSource.all().subscribe {
             if(it.size == 2) {
                 assertThat<String>(it[0].uuid, `is`<String>(billA.uuid))
                 assertThat<String>(it[1].uuid, `is`<String>(billB.uuid))
@@ -159,5 +170,7 @@ class BillRepositoryTest {
         Thread.sleep(100)
 
         assertTrue(asserted)
+
+        disposable.dispose()
     }
 }

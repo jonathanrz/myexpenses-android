@@ -150,7 +150,7 @@ class Receipt : Transaction, UnsyncModel {
     fun credit() {
         val acc = loadAccount()!!
         acc.credit(income)
-        accountDataSource.save(acc)
+        accountDataSource.save(acc).blockingFirst()
         credited = true
         receiptDataSource.save(this)
     }

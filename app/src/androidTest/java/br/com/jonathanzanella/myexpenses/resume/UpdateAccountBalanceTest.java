@@ -41,9 +41,9 @@ public class UpdateAccountBalanceTest {
 	public ActivityTestRule<MainActivity> mainActivityTestRule = new ActivityTestRule<>(MainActivity.class);
 
 	private Account account;
-	AccountDataSource accountDataSource;
-	ExpenseDataSource expenseDataSource;
-	ReceiptDataSource receiptRepository;
+	private AccountDataSource accountDataSource;
+	private ExpenseDataSource expenseDataSource;
+	private ReceiptDataSource receiptRepository;
 
 	@Before
 	public void setUp() throws Exception {
@@ -63,7 +63,7 @@ public class UpdateAccountBalanceTest {
 	}
 
 	@Test
-	public void confirm_receipt_should_increase_account_balance() {
+	public void confirm_receipt_should_increase_account_balance() throws InterruptedException {
 		Receipt receipt = new ReceiptBuilder().account(account).income(1000).build();
 		assertTrue(receiptRepository.save(receipt).isValid());
 
@@ -75,12 +75,14 @@ public class UpdateAccountBalanceTest {
 				.perform(scrollTo()).perform(click());
 		clickIntoView(getTargetContext().getString(android.R.string.yes));
 
+		Thread.sleep(100);
+
 		account = accountDataSource.find(account.getUuid()).blockingFirst();
 		assertThat(account.getBalance(), is(receipt.getIncome()));
 	}
 
 	@Test
-	public void confirm_expense_should_decrease_account_balance() {
+	public void confirm_expense_should_decrease_account_balance() throws InterruptedException {
 		Expense expense = new ExpenseBuilder().chargeable(account).value(1000).build();
 		assertTrue(expenseDataSource.save(expense).isValid());
 
@@ -92,12 +94,14 @@ public class UpdateAccountBalanceTest {
 				.perform(scrollTo()).perform(click());
 		clickIntoView(getTargetContext().getString(android.R.string.yes));
 
+		Thread.sleep(100);
+
 		account = accountDataSource.find(account.getUuid()).blockingFirst();
 		assertThat(account.getBalance(), is(expense.getValue() * -1));
 	}
 
 	@Test
-	public void confirm_expense_and_receipt_should_update_account_balance() {
+	public void confirm_expense_and_receipt_should_update_account_balance() throws InterruptedException {
 		Expense expense = new ExpenseBuilder().chargeable(account).value(100).build();
 		assertTrue(expenseDataSource.save(expense).isValid());
 
@@ -117,6 +121,8 @@ public class UpdateAccountBalanceTest {
 				isDescendantOfA(withTagValue(is(expense.getUuid())))))
 				.perform(scrollTo()).perform(click());
 		clickIntoView(getTargetContext().getString(android.R.string.yes));
+
+		Thread.sleep(100);
 
 		account = accountDataSource.find(account.getUuid()).blockingFirst();
 		assertThat(account.getBalance(), is(receipt.getIncome() - expense.getValue()));
