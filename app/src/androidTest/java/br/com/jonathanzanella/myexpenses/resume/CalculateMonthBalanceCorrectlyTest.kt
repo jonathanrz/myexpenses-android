@@ -9,7 +9,6 @@ import android.support.test.filters.SmallTest
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import android.view.View
-import br.com.jonathanzanella.TestApp
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.Account
@@ -35,7 +34,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import javax.inject.Inject
 
 @RunWith(AndroidJUnit4::class)
 @SmallTest
@@ -44,15 +42,10 @@ class CalculateMonthBalanceCorrectlyTest {
     @Rule @JvmField
     var activityTestRule = ActivityTestRule(MainActivity::class.java)
 
-    @Inject
     lateinit var billDataSource: BillDataSource
-    @Inject
     lateinit var sourceDataSource: SourceDataSource
-    @Inject
     lateinit var accountDataSource: AccountDataSource
-    @Inject
     lateinit var receiptDataSource: ReceiptDataSource
-    @Inject
     lateinit var expenseDataSource: ExpenseDataSource
 
     private val monthlyPagerAdapterHelper = MonthlyPagerAdapterHelper()
@@ -60,8 +53,12 @@ class CalculateMonthBalanceCorrectlyTest {
     @Before
     @Throws(Exception::class)
     fun setUp() {
-        TestApp.getTestComponent().inject(this)
         App.resetDatabase()
+        billDataSource = App.getApp().appComponent.billDataSource()
+        sourceDataSource = App.getApp().appComponent.sourceDataSource()
+        accountDataSource = App.getApp().appComponent.accountDataSource()
+        receiptDataSource = App.getApp().appComponent.receiptDataSource()
+        expenseDataSource = App.getApp().appComponent.expenseDataSource()
 
         val a = br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder().build()
         assertTrue(accountDataSource.save(a).blockingFirst().isValid)

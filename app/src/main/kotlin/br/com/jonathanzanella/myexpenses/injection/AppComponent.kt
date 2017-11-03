@@ -1,9 +1,6 @@
 package br.com.jonathanzanella.myexpenses.injection
 
-import br.com.jonathanzanella.myexpenses.account.AccountView
-import br.com.jonathanzanella.myexpenses.account.EditAccountActivity
-import br.com.jonathanzanella.myexpenses.account.ListAccountActivity
-import br.com.jonathanzanella.myexpenses.account.ShowAccountActivity
+import br.com.jonathanzanella.myexpenses.account.*
 import br.com.jonathanzanella.myexpenses.account.transactions.MonthTransactionsPresenter
 import br.com.jonathanzanella.myexpenses.bill.*
 import br.com.jonathanzanella.myexpenses.card.*
@@ -17,6 +14,7 @@ import br.com.jonathanzanella.myexpenses.resume.ResumeMonthlyView
 import br.com.jonathanzanella.myexpenses.source.EditSourceActivity
 import br.com.jonathanzanella.myexpenses.source.ShowSourceActivity
 import br.com.jonathanzanella.myexpenses.source.SourceAdapter
+import br.com.jonathanzanella.myexpenses.source.SourceDataSource
 import br.com.jonathanzanella.myexpenses.sync.SyncService
 import dagger.Component
 import javax.inject.Singleton
@@ -24,6 +22,13 @@ import javax.inject.Singleton
 @Singleton
 @Component(modules = arrayOf(AppModule::class, DatabaseModule::class, RepositoryModule::class, PresenterModule::class, ServerModule::class, AccountModule::class, BillModule::class))
 interface AppComponent {
+    fun accountDataSource(): AccountDataSource
+    fun billDataSource(): BillDataSource
+    fun cardDataSource(): CardDataSource
+    fun expenseDataSource(): ExpenseDataSource
+    fun receiptDataSource(): ReceiptDataSource
+    fun sourceDataSource(): SourceDataSource
+
     fun inject(databaseHelper: DatabaseHelper)
 
     fun inject(accountView: AccountView)

@@ -15,9 +15,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import javax.inject.Inject;
-
-import br.com.jonathanzanella.TestApp;
 import br.com.jonathanzanella.myexpenses.App;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
@@ -26,7 +23,7 @@ import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder;
 import br.com.jonathanzanella.myexpenses.source.Source;
-import br.com.jonathanzanella.myexpenses.source.SourceRepository;
+import br.com.jonathanzanella.myexpenses.source.SourceDataSource;
 import br.com.jonathanzanella.myexpenses.transaction.Transaction;
 import br.com.jonathanzanella.myexpenses.views.MainActivity;
 
@@ -52,17 +49,14 @@ public class AddReceiptTest {
 	@Rule
 	public ActivityTestRule<EditReceiptActivity> editReceiptActivityTestRule = new ActivityTestRule<>(EditReceiptActivity.class);
 
-	@Inject
-	SourceRepository sourceRepository;
-	@Inject
-	AccountDataSource accountDataSource;
 	private Account account;
 	private Source source;
 
 	@Before
 	public void setUp() throws Exception {
-		TestApp.Companion.getTestComponent().inject(this);
 		App.Companion.resetDatabase();
+		AccountDataSource accountDataSource = App.Companion.getApp().appComponent.accountDataSource();
+		SourceDataSource sourceDataSource = App.Companion.getApp().appComponent.sourceDataSource();
 
 		UiDevice uiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
 		if (!uiDevice.isScreenOn())
@@ -72,7 +66,7 @@ public class AddReceiptTest {
 		assertTrue(accountDataSource.save(account).blockingFirst().isValid());
 
 		source = new SourceBuilder().build();
-		assertTrue(sourceRepository.save(source).isValid());
+		assertTrue(sourceDataSource.save(source).isValid());
 	}
 
 	@After

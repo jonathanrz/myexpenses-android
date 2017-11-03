@@ -16,7 +16,7 @@ import timber.log.Timber.DebugTree
 import java.lang.ref.WeakReference
 
 open class App : Application() {
-    private lateinit var appComponent: AppComponent
+    lateinit var appComponent: AppComponent
     private lateinit var databaseHelper: DatabaseHelper
 
     override fun onCreate() {

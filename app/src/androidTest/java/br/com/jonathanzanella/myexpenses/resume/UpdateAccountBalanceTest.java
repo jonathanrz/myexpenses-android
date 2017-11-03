@@ -8,21 +8,18 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import javax.inject.Inject;
-
-import br.com.jonathanzanella.TestApp;
 import br.com.jonathanzanella.myexpenses.App;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
-import br.com.jonathanzanella.myexpenses.account.AccountRepository;
+import br.com.jonathanzanella.myexpenses.account.AccountDataSource;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
-import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
+import br.com.jonathanzanella.myexpenses.expense.ExpenseDataSource;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.ExpenseBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.ReceiptBuilder;
 import br.com.jonathanzanella.myexpenses.receipt.Receipt;
-import br.com.jonathanzanella.myexpenses.receipt.ReceiptRepository;
+import br.com.jonathanzanella.myexpenses.receipt.ReceiptDataSource;
 import br.com.jonathanzanella.myexpenses.views.MainActivity;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
@@ -44,20 +41,20 @@ public class UpdateAccountBalanceTest {
 	public ActivityTestRule<MainActivity> mainActivityTestRule = new ActivityTestRule<>(MainActivity.class);
 
 	private Account account;
-	@Inject
-	AccountRepository accountRepository;
-	@Inject
-	ExpenseRepository expenseRepository;
-	@Inject
-	ReceiptRepository receiptRepository;
+	AccountDataSource accountDataSource;
+	ExpenseDataSource expenseDataSource;
+	ReceiptDataSource receiptRepository;
 
 	@Before
 	public void setUp() throws Exception {
-		TestApp.Companion.getTestComponent().inject(this);
 		App.Companion.resetDatabase();
 
+		accountDataSource = App.Companion.getApp().appComponent.accountDataSource();
+		expenseDataSource = App.Companion.getApp().appComponent.expenseDataSource();
+		receiptRepository = App.Companion.getApp().appComponent.receiptDataSource();
+
 		account = new AccountBuilder().build();
-		assertTrue(accountRepository.save(account).blockingFirst().isValid());
+		assertTrue(accountDataSource.save(account).blockingFirst().isValid());
 	}
 
 	@After
@@ -78,14 +75,14 @@ public class UpdateAccountBalanceTest {
 				.perform(scrollTo()).perform(click());
 		clickIntoView(getTargetContext().getString(android.R.string.yes));
 
-		account = accountRepository.find(account.getUuid()).blockingFirst();
+		account = accountDataSource.find(account.getUuid()).blockingFirst();
 		assertThat(account.getBalance(), is(receipt.getIncome()));
 	}
 
 	@Test
 	public void confirm_expense_should_decrease_account_balance() {
 		Expense expense = new ExpenseBuilder().chargeable(account).value(1000).build();
-		assertTrue(expenseRepository.save(expense).isValid());
+		assertTrue(expenseDataSource.save(expense).isValid());
 
 		mainActivityTestRule.launchActivity(new Intent());
 
@@ -95,14 +92,14 @@ public class UpdateAccountBalanceTest {
 				.perform(scrollTo()).perform(click());
 		clickIntoView(getTargetContext().getString(android.R.string.yes));
 
-		account = accountRepository.find(account.getUuid()).blockingFirst();
+		account = accountDataSource.find(account.getUuid()).blockingFirst();
 		assertThat(account.getBalance(), is(expense.getValue() * -1));
 	}
 
 	@Test
 	public void confirm_expense_and_receipt_should_update_account_balance() {
 		Expense expense = new ExpenseBuilder().chargeable(account).value(100).build();
-		assertTrue(expenseRepository.save(expense).isValid());
+		assertTrue(expenseDataSource.save(expense).isValid());
 
 		Receipt receipt = new ReceiptBuilder().account(account).income(1000).build();
 		assertTrue(receiptRepository.save(receipt).isValid());
@@ -121,7 +118,7 @@ public class UpdateAccountBalanceTest {
 				.perform(scrollTo()).perform(click());
 		clickIntoView(getTargetContext().getString(android.R.string.yes));
 
-		account = accountRepository.find(account.getUuid()).blockingFirst();
+		account = accountDataSource.find(account.getUuid()).blockingFirst();
 		assertThat(account.getBalance(), is(receipt.getIncome() - expense.getValue()));
 	}
 }

@@ -12,10 +12,8 @@ import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import android.support.test.uiautomator.UiDevice
 import android.view.View
-import br.com.jonathanzanella.TestApp
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.account.AccountDataSource
 import br.com.jonathanzanella.myexpenses.bill.Bill
 import br.com.jonathanzanella.myexpenses.bill.BillDataSource
@@ -34,7 +32,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import javax.inject.Inject
 
 @RunWith(AndroidJUnit4::class)
 @LargeTest
@@ -44,24 +41,22 @@ class AddExpenseTest {
     @Rule @JvmField
     var editExpenseActivityTestRule = ActivityTestRule(EditExpenseActivity::class.java)
 
-    @Inject
     lateinit var accountDataSource: AccountDataSource
-    @Inject
     lateinit var billDataSource: BillDataSource
-    private var account: Account? = null
+    private val account = AccountBuilder().build()
 
     @Before
     @Throws(Exception::class)
     fun setUp() {
-        TestApp.getTestComponent().inject(this)
         App.resetDatabase()
+        accountDataSource = App.getApp().appComponent.accountDataSource()
+        billDataSource = App.getApp().appComponent.billDataSource()
 
         val uiDevice = UiDevice.getInstance(getInstrumentation())
         if (!uiDevice.isScreenOn)
             uiDevice.wakeUp()
 
-        account = AccountBuilder().build()
-        assertTrue(accountDataSource.save(account!!).blockingFirst().isValid)
+        accountDataSource.save(account).subscribe { assertTrue(it.isValid) }
     }
 
     @After
