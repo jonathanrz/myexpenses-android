@@ -12,11 +12,8 @@ import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import android.support.test.uiautomator.UiDevice
 import android.view.View
-import br.com.jonathanzanella.TestApp
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.account.Account
-import br.com.jonathanzanella.myexpenses.account.AccountDataSource
 import br.com.jonathanzanella.myexpenses.bill.Bill
 import br.com.jonathanzanella.myexpenses.bill.BillDataSource
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper
@@ -26,7 +23,7 @@ import br.com.jonathanzanella.myexpenses.helpers.builder.BillBuilder
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import br.com.jonathanzanella.myexpenses.views.MainActivity
-import com.facebook.testing.screenshot.Screenshot
+import junit.framework.Assert.assertTrue
 import org.hamcrest.core.IsNot.not
 import org.joda.time.DateTime
 import org.junit.After
@@ -34,7 +31,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import javax.inject.Inject
 
 @RunWith(AndroidJUnit4::class)
 @LargeTest
@@ -44,24 +40,22 @@ class AddExpenseTest {
     @Rule @JvmField
     var editExpenseActivityTestRule = ActivityTestRule(EditExpenseActivity::class.java)
 
-    @Inject
-    lateinit var accountDataSource: AccountDataSource
-    @Inject
     lateinit var billDataSource: BillDataSource
-    private var account: Account? = null
+    private val account = AccountBuilder().build()
 
     @Before
     @Throws(Exception::class)
     fun setUp() {
-        TestApp.getTestComponent().inject(this)
         App.resetDatabase()
+
+        val accountDataSource = App.getApp().appComponent.accountDataSource()
+        billDataSource = App.getApp().appComponent.billDataSource()
 
         val uiDevice = UiDevice.getInstance(getInstrumentation())
         if (!uiDevice.isScreenOn)
             uiDevice.wakeUp()
 
-        account = AccountBuilder().build()
-        accountDataSource.save(account!!)
+        accountDataSource.save(account).subscribe { assertTrue(it.isValid) }
     }
 
     @After
@@ -116,8 +110,6 @@ class AddExpenseTest {
 
         val errorMessage = context.getString(R.string.error_message_name_not_informed)
         UIHelper.matchErrorMessage(R.id.act_edit_expense_name, errorMessage)
-
-        Screenshot.snapActivity(editExpenseActivityTestRule.activity).record()
     }
 
     @Test
@@ -131,8 +123,6 @@ class AddExpenseTest {
 
         val errorMessage = context.getString(R.string.error_message_amount_zero)
         UIHelper.matchErrorMessage(R.id.act_edit_expense_value, errorMessage)
-
-        Screenshot.snapActivity(editExpenseActivityTestRule.activity).record()
     }
 
     @Test
@@ -146,15 +136,13 @@ class AddExpenseTest {
 
         val errorMessage = context.getString(R.string.error_message_chargeable_not_informed)
         UIHelper.matchErrorMessage(R.id.act_edit_expense_chargeable, errorMessage)
-
-        Screenshot.snapActivity(editExpenseActivityTestRule.activity).record()
     }
 
     @Test
     @Throws(Exception::class)
     fun add_new_expense_with_bill() {
         val bill = BillBuilder().build()
-        billDataSource.save(bill)
+        assertTrue(billDataSource.save(bill).blockingFirst().isValid)
 
         mainActivityTestRule.launchActivity(Intent())
 
@@ -168,6 +156,8 @@ class AddExpenseTest {
         val newExpenseTitle = context.getString(R.string.new_expense_title)
         UIHelper.matchToolbarTitle(newExpenseTitle)
 
+        Thread.sleep(100)
+
         selectBill(bill)
         selectChargeable()
 
@@ -178,8 +168,6 @@ class AddExpenseTest {
         onView(ViewMatchers.withId(R.id.name)).check(matches(ViewMatchers.withText(bill.name)))
         onView(ViewMatchers.withId(R.id.billLayout)).check(matches(ViewMatchers.isDisplayed()))
         onView(ViewMatchers.withId(R.id.bill)).check(matches(ViewMatchers.withText(bill.name)))
-
-        Screenshot.snapActivity(mainActivityTestRule.activity).record()
     }
 
     @Test
@@ -211,8 +199,6 @@ class AddExpenseTest {
         onView(ViewMatchers.withId(R.id.name)).check(matches(ViewMatchers.withText(expenseName)))
         val expectedValue = (value * -1).toCurrencyFormatted()
         onView(ViewMatchers.withId(R.id.value)).check(matches(ViewMatchers.withText(expectedValue)))
-
-        Screenshot.snapActivity(mainActivityTestRule.activity).record()
     }
 
     private fun selectChargeable() {

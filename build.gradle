@@ -1,7 +1,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    ext.kotlin_version = '1.1.51'
+    ext.kotlin_version = '1.2.0-rc-39'
     repositories {
         jcenter()
         maven { url 'https://maven.google.com' }
@@ -15,7 +15,6 @@ buildscript {
         classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.8.1'
         //noinspection GradleDynamicVersion
         classpath 'io.fabric.tools:gradle:1.+'
-        classpath 'com.karumi:shot:0.1.2'
     }
 }
 
@@ -36,9 +35,9 @@ task clean(type: Delete) {
 ext {
     // Sdk and tools
     minSdkVersion = 21
-    targetSdkVersion = 26
-    compileSdkVersion = 26
-    buildToolsVersion = '26.0.2'
+    targetSdkVersion = 27
+    compileSdkVersion = 27
+    buildToolsVersion = '27.0.0'
 
     // App dependencies
     ankoVersion = '0.9.1'
@@ -50,16 +49,16 @@ ext {
     jodaVersion = '2.9.9'
     junitVersion = '4.12'
     mockitoKotlinVersion = '1.5.0'
-    playServicesVersion = '11.2.0'
+    playServicesVersion = '11.4.2'
     retrofitVersion = '2.2.0'
-    roomVersion = '1.0.0-alpha5'
+    roomVersion = '1.0.0-rc1'
     rxAndroidVersion = '2.0.1'
     rxJavaVersion = '2.1.0'
     rulesVersion = '0.5'
     runnerVersion = '0.5'
-    stethoVersion = '1.4.2'
+    stethoVersion = '1.5.0'
     stickyHeadersVersion = '0.4.3@aar'
-    supportLibraryVersion = '26.0.2'
+    supportLibraryVersion = '27.0.0'
     timberVersion = '4.5.1'
     uiAutomatorVersion = '2.1.1'
 }

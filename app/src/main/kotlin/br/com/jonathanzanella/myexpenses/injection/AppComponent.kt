@@ -1,14 +1,10 @@
 package br.com.jonathanzanella.myexpenses.injection
 
-import br.com.jonathanzanella.myexpenses.account.AccountAdapterPresenter
-import br.com.jonathanzanella.myexpenses.account.EditAccountActivity
-import br.com.jonathanzanella.myexpenses.account.ShowAccountActivity
+import br.com.jonathanzanella.myexpenses.account.*
 import br.com.jonathanzanella.myexpenses.account.transactions.MonthTransactionsPresenter
-import br.com.jonathanzanella.myexpenses.bill.BillAdapter
-import br.com.jonathanzanella.myexpenses.bill.BillMonthlyResumeAdapter
-import br.com.jonathanzanella.myexpenses.bill.EditBillActivity
-import br.com.jonathanzanella.myexpenses.bill.ShowBillActivity
+import br.com.jonathanzanella.myexpenses.bill.*
 import br.com.jonathanzanella.myexpenses.card.*
+import br.com.jonathanzanella.myexpenses.chargeable.ListChargeableActivity
 import br.com.jonathanzanella.myexpenses.database.DatabaseHelper
 import br.com.jonathanzanella.myexpenses.expense.*
 import br.com.jonathanzanella.myexpenses.overview.OverviewExpensesMonthlyView
@@ -18,24 +14,36 @@ import br.com.jonathanzanella.myexpenses.resume.ResumeMonthlyView
 import br.com.jonathanzanella.myexpenses.source.EditSourceActivity
 import br.com.jonathanzanella.myexpenses.source.ShowSourceActivity
 import br.com.jonathanzanella.myexpenses.source.SourceAdapter
+import br.com.jonathanzanella.myexpenses.source.SourceDataSource
 import br.com.jonathanzanella.myexpenses.sync.SyncService
 import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = arrayOf(AppModule::class, DatabaseModule::class, RepositoryModule::class, PresenterModule::class, ServerModule::class))
+@Component(modules = arrayOf(AppModule::class, DatabaseModule::class, RepositoryModule::class, PresenterModule::class, ServerModule::class, AccountModule::class, BillModule::class))
 interface AppComponent {
+    fun accountDataSource(): AccountDataSource
+    fun billDataSource(): BillDataSource
+    fun cardDataSource(): CardDataSource
+    fun expenseDataSource(): ExpenseDataSource
+    fun receiptDataSource(): ReceiptDataSource
+    fun sourceDataSource(): SourceDataSource
+
     fun inject(databaseHelper: DatabaseHelper)
 
-    fun inject(accountAdapterPresenter: AccountAdapterPresenter)
+    fun inject(accountView: AccountView)
     fun inject(monthTransactionsPresenter: MonthTransactionsPresenter)
     fun inject(editAccountActivity: EditAccountActivity)
     fun inject(showAccountActivity: ShowAccountActivity)
+    fun inject(listAccountActivity: ListAccountActivity)
+    fun inject(listChargeableActivity: ListChargeableActivity)
 
+    fun inject(billView: BillView)
     fun inject(billAdapter: BillAdapter)
     fun inject(billMonthlyResumeAdapter: BillMonthlyResumeAdapter)
     fun inject(editBillActivity: EditBillActivity)
     fun inject(showBillActivity: ShowBillActivity)
+    fun inject(listBillActivity: ListBillActivity)
 
     fun inject(card: Card)
     fun inject(cardAdapter: CardAdapter)

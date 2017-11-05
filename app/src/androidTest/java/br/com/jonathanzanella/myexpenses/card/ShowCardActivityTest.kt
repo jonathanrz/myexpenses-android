@@ -24,7 +24,7 @@ import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder
 import br.com.jonathanzanella.myexpenses.helpers.builder.CardBuilder
 import br.com.jonathanzanella.myexpenses.helpers.builder.ExpenseBuilder
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
-import com.facebook.testing.screenshot.Screenshot
+import junit.framework.Assert.assertTrue
 import org.joda.time.DateTime
 import org.junit.After
 import org.junit.Before
@@ -56,10 +56,10 @@ class ShowCardActivityTest {
         App.resetDatabase()
 
         account = AccountBuilder().build()
-        accountDataSource.save(account!!)
+        assertTrue(accountDataSource.save(account!!).blockingFirst().isValid)
 
         card = CardBuilder().account(account).type(CardType.CREDIT).build(accountDataSource)
-        dataSource.save(card!!)
+        assertTrue(dataSource.save(card!!).isValid)
     }
 
     @After
@@ -78,8 +78,6 @@ class ShowCardActivityTest {
 
         onView(withId(R.id.act_show_card_name)).check(matches(withText(card!!.name)))
         onView(withId(R.id.act_show_card_account)).check(matches(withText(account!!.name)))
-
-        Screenshot.snapActivity(activityTestRule.activity).record()
     }
 
     private fun callActivity() {
@@ -114,7 +112,5 @@ class ShowCardActivityTest {
         assert(expense1!!.charged)
         expense2 = expenseDataSource.find(expense1.uuid!!)
         assert(expense2!!.charged)
-
-        Screenshot.snapActivity(activityTestRule.activity).record()
     }
 }

@@ -136,9 +136,8 @@ class ExpensePresenter @Inject constructor(val dataSource: ExpenseDataSource, va
         return e
     }
 
-    private fun checkEditViewSet() : ExpenseContract.EditView {
-        return editView ?: throw InvalidMethodCallException("save", javaClass.toString(), "View should be a Edit View")
-    }
+    private fun checkEditViewSet() : ExpenseContract.EditView =
+            editView ?: throw InvalidMethodCallException("save", javaClass.toString(), "View should be a Edit View")
 
     @UiThread
     fun save() {
@@ -222,7 +221,7 @@ class ExpensePresenter @Inject constructor(val dataSource: ExpenseDataSource, va
     @UiThread
     fun onBillSelected(uuid: String) {
         doAsync {
-            bill = billDataSource.find(uuid)
+            bill = billDataSource.find(uuid).blockingFirst()
 
             uiThread { bill?.let { editView!!.onBillSelected(it) } }
         }
@@ -237,7 +236,7 @@ class ExpensePresenter @Inject constructor(val dataSource: ExpenseDataSource, va
             if (extras.containsKey(KEY_EXPENSE_UUID))
                 loadExpense(extras.getString(KEY_EXPENSE_UUID))
             if (extras.containsKey(KEY_BILL_UUID))
-                bill = billDataSource.find(extras.getString(KEY_BILL_UUID)!!)
+                bill = billDataSource.find(extras.getString(KEY_BILL_UUID)!!).blockingFirst()
             if (extras.containsKey(KEY_DATE))
                 date = DateTime(extras.getLong(KEY_DATE))
             val key = ListChargeableActivity.KEY_CHARGEABLE_SELECTED_TYPE
@@ -271,9 +270,7 @@ class ExpensePresenter @Inject constructor(val dataSource: ExpenseDataSource, va
     }
 
     @WorkerThread
-    fun hasChargeable(): Boolean {
-        return expense?.chargeableFromCache != null
-    }
+    fun hasChargeable(): Boolean = expense?.chargeableFromCache != null
 
     @UiThread
     fun onDate(ctx: Context) {

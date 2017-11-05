@@ -3,15 +3,16 @@ package br.com.jonathanzanella.myexpenses.bill
 import android.app.DatePickerDialog
 import android.content.Context
 import android.support.annotation.UiThread
-import android.support.annotation.WorkerThread
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
+import br.com.jonathanzanella.myexpenses.extensions.fromIOToMainThread
+import io.reactivex.disposables.CompositeDisposable
 import org.joda.time.DateTime
+import timber.log.Timber
 import javax.inject.Inject
 
 class BillPresenter @Inject constructor(private val dataSource: BillDataSource) {
+    private val disposable = CompositeDisposable()
     private var view: BillContract.View? = null
     private var editView: BillContract.EditView? = null
     private var bill: Bill? = null
@@ -28,6 +29,7 @@ class BillPresenter @Inject constructor(private val dataSource: BillDataSource) 
     }
 
     fun detachView() {
+        disposable.dispose()
         this.view = null
         this.editView = null
     }
@@ -36,11 +38,7 @@ class BillPresenter @Inject constructor(private val dataSource: BillDataSource) 
     fun onViewUpdated(invalidateCache: Boolean) {
         if (bill != null) {
             if (invalidateCache) {
-                doAsync {
-                    loadBill(bill!!.uuid!!)
-
-                    uiThread { updateView() }
-                }
+                loadBill(bill!!.uuid!!)
             } else {
                 updateView()
             }
@@ -49,7 +47,7 @@ class BillPresenter @Inject constructor(private val dataSource: BillDataSource) 
         }
     }
 
-    fun updateView() {
+    private fun updateView() {
         val v = editView
         val b = bill
         if (b != null) {
@@ -97,9 +95,16 @@ class BillPresenter @Inject constructor(private val dataSource: BillDataSource) 
         }, time!!.year, time.monthOfYear - 1, time.dayOfMonth).show()
     }
 
-    @WorkerThread
+    @UiThread
     fun loadBill(uuid: String) {
-        bill = dataSource.find(uuid)
+        //TODO: check disposable
+        dataSource.find(uuid)
+            .fromIOToMainThread()
+            .doOnError { Timber.e(it) }
+            .subscribe {
+                bill = it
+                updateView()
+            }
     }
 
     private fun checkEditViewSet() {
@@ -119,18 +124,17 @@ class BillPresenter @Inject constructor(private val dataSource: BillDataSource) 
         b.initDate = initDate
         b.endDate = endDate
 
-        doAsync {
-            val result = dataSource.save(b)
-
-            uiThread {
-                if (result.isValid) {
-                    v.finishView()
-                } else {
-                    for (validationError in result.errors)
-                        v.showError(validationError)
+        dataSource.save(b)
+                .fromIOToMainThread()
+                .doOnError { Timber.e(it) }
+                .subscribe {
+                    if (it.isValid) {
+                        v.finishView()
+                    } else {
+                        for (validationError in it.errors)
+                            v.showError(validationError)
+                    }
                 }
-            }
-        }
     }
 
     val uuid: String?

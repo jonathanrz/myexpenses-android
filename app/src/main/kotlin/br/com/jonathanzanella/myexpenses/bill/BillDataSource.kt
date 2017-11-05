@@ -1,82 +1,90 @@
 package br.com.jonathanzanella.myexpenses.bill
 
 import android.support.annotation.WorkerThread
+import br.com.jonathanzanella.myexpenses.database.DataSourceObserver
+import br.com.jonathanzanella.myexpenses.database.DatabaseObservable
+import br.com.jonathanzanella.myexpenses.database.DatabaseObservableWithValue
 import br.com.jonathanzanella.myexpenses.expense.ExpenseDataSource
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult
+import io.reactivex.Observable
 import org.apache.commons.lang3.StringUtils
 import org.joda.time.DateTime
 import timber.log.Timber
-import java.util.*
 import javax.inject.Inject
 
 interface BillDataSource {
-    fun all(): List<Bill>
-    fun unsync(): List<Bill>
-    fun monthly(month: DateTime): List<Bill>
+    fun all(): Observable<List<Bill>>
+    fun unsync(): Observable<List<Bill>>
+    fun monthly(month: DateTime): Observable<List<Bill>>
 
-    fun find(uuid: String): Bill?
-    fun greaterUpdatedAt(): Long
+    fun find(uuid: String): Observable<Bill>
+    fun greaterUpdatedAt(): Observable<Long>
 
-    fun save(bill: Bill): ValidationResult
-    fun syncAndSave(unsync: Bill): ValidationResult
+    fun save(bill: Bill): Observable<ValidationResult>
+    fun syncAndSave(unsync: Bill): Observable<ValidationResult>
+    fun deleteAll()
 }
 
-class BillRepository @Inject constructor(val dao: BillDao, private val expenseDataSource: ExpenseDataSource): BillDataSource {
-    @WorkerThread
-    override fun all(): List<Bill> {
-        return dao.all().blockingFirst()
-    }
+class BillRepository @Inject constructor(val dao: BillDao, val expenseDataSource: ExpenseDataSource): BillDataSource {
+    private val generateMonthlyData: (DateTime) -> List<Bill> = { month ->
+        val bills = dao.monthly(month.millis)
 
-    @WorkerThread
-    override fun unsync(): List<Bill> {
-        return dao.unsync().blockingFirst()
-    }
-
-    @WorkerThread
-    override fun monthly(month: DateTime): List<Bill> {
         val expenses = expenseDataSource.monthly(month)
-        val bills = dao.monthly(month.millis).blockingFirst() as MutableList<Bill>
-        var i = 0
-        while (i < bills.size) {
-            val bill = bills[i]
-            val billAlreadyPaid = expenses
+
+        bills.filter {
+            @Suppress("UnnecessaryVariable")
+            val bill = it
+            !expenses
                     .filter { it.billUuid != null }
-                    .map { find(it.billUuid!!) }
-                    .any { it != null && it.uuid == bill.uuid }
-            if (billAlreadyPaid) {
-                bills.removeAt(i)
-                i--
+                    .map { find(it.billUuid!!).blockingFirst() }
+                    .any { it.uuid == bill.uuid }
+        }.map {
+            it.month = month
+            it
+        }
+    }
+
+    private val expenseDataObserver = object: DataSourceObserver {
+        override fun onDataChanged() {
+            monthlyData.emit()
+        }
+    }
+
+    private val allData: DatabaseObservable<List<Bill>> = DatabaseObservable { dao.all() }
+    private val unsyncData: DatabaseObservable<List<Bill>> = DatabaseObservable  { dao.unsync() }
+    private val monthlyData: DatabaseObservableWithValue<DateTime, List<Bill>> = DatabaseObservableWithValue(generateMonthlyData)
+
+    init { expenseDataSource.registerDataSourceObserver(expenseDataObserver) }
+
+    private fun refreshObservables() {
+        allData.emit()
+        unsyncData.emit()
+        monthlyData.emit()
+    }
+
+    override fun all(): Observable<List<Bill>> = allData.cache()
+    override fun unsync(): Observable<List<Bill>> = unsyncData.cache()
+    override fun monthly(month: DateTime) = monthlyData.cache(month)
+
+    override fun find(uuid: String): Observable<Bill> = Observable.fromCallable { dao.find(uuid) }
+
+    override fun greaterUpdatedAt(): Observable<Long> =
+            Observable.fromCallable { dao.greaterUpdatedAt().firstOrNull()?.updatedAt ?: 0L }
+
+    override fun save(bill: Bill): Observable<ValidationResult> {
+        return Observable.fromCallable {
+            val result = validate(bill)
+            if (result.isValid) {
+                if (bill.id == 0L && bill.uuid == null)
+                    bill.uuid = java.util.UUID.randomUUID().toString()
+                bill.sync = false
+                bill.id = dao.saveAtDatabase(bill)
+
+                refreshObservables()
             }
-            i++
+            result
         }
-
-        for (bill in bills)
-            bill.month = month
-
-        return bills
-    }
-
-    @WorkerThread
-    override fun find(uuid: String): Bill? {
-        return dao.find(uuid).blockingFirst().firstOrNull()
-    }
-
-    @WorkerThread
-    override fun greaterUpdatedAt(): Long {
-        return dao.greaterUpdatedAt().blockingFirst().firstOrNull()?.updatedAt ?: 0L
-    }
-
-    @WorkerThread
-    override fun save(bill: Bill): ValidationResult {
-        val result = validate(bill)
-        if (result.isValid) {
-            if (bill.id == 0L && bill.uuid == null)
-                bill.uuid = UUID.randomUUID().toString()
-            bill.sync = false
-            bill.id = dao.saveAtDatabase(bill)
-        }
-        return result
     }
 
     private fun validate(bill: Bill): ValidationResult {
@@ -96,26 +104,35 @@ class BillRepository @Inject constructor(val dao: BillDao, private val expenseDa
         return result
     }
 
+    override fun syncAndSave(unsync: Bill): Observable<ValidationResult> {
+        return Observable.fromCallable {
+            val result = validate(unsync)
+            if (!result.isValid) {
+                Timber.tag("Bill sync valid failed")
+                        .w(unsync.getData() + "\nerrors: " + result.errorsAsString)
+                result
+            } else {
+                val bill = find(unsync.uuid!!).blockingFirst()
+                if (bill.id != unsync.id) {
+                    if (bill.updatedAt != unsync.updatedAt)
+                        Timber.tag("Bill overwritten")
+                                .w(unsync.getData())
+                    unsync.id = bill.id
+                }
+
+                unsync.sync = true
+                unsync.id = dao.saveAtDatabase(unsync)
+
+                refreshObservables()
+
+                result
+            }
+        }
+    }
+
     @WorkerThread
-    override fun syncAndSave(unsync: Bill): ValidationResult {
-        val result = validate(unsync)
-        if (!result.isValid) {
-            Timber.tag("Bill sync valid failed")
-                    .w(unsync.getData() + "\nerrors: " + result.errorsAsString)
-            return result
-        }
-
-        val bill = find(unsync.uuid!!)
-        if (bill != null && bill.id != unsync.id) {
-            if (bill.updatedAt != unsync.updatedAt)
-                Timber.tag("Bill overwritten")
-                        .w( unsync.getData())
-            unsync.id = bill.id
-        }
-
-        unsync.sync = true
-        unsync.id = dao.saveAtDatabase(unsync)
-
-        return result
+    override fun deleteAll() {
+        dao.deleteAll()
+        refreshObservables()
     }
 }

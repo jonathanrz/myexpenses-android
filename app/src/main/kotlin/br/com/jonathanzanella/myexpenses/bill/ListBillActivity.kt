@@ -7,16 +7,24 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.views.anko.TemplateToolbar
 import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
 import br.com.jonathanzanella.myexpenses.views.anko.recyclerView
 import br.com.jonathanzanella.myexpenses.views.anko.toolbarTemplate
 import org.jetbrains.anko.*
+import javax.inject.Inject
 
 class ListBillActivity : AppCompatActivity(), BillAdapterCallback {
 
+    @Inject
+    lateinit var adapter: BillAdapter
     private val ui = ListBillActivityUi()
+
+    init {
+        App.getAppComponent().inject(this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,13 +37,19 @@ class ListBillActivity : AppCompatActivity(), BillAdapterCallback {
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
 
-        val adapter = BillAdapter()
         adapter.setCallback(this)
 
         ui.bills.adapter = adapter
         ui.bills.setHasFixedSize(true)
         ui.bills.layoutManager = GridLayoutManager(this, 2)
         ui.bills.itemAnimator = DefaultItemAnimator()
+
+        adapter.refreshData()
+    }
+
+    override fun onDestroy() {
+        adapter.onDestroy()
+        super.onDestroy()
     }
 
     override fun onBillSelected(bill: Bill) {

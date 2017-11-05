@@ -126,7 +126,12 @@ class Expense : Transaction, UnsyncModel {
     var bill: Bill?
         @WorkerThread
         get() {
-            return billUuid?.let { billDataSource.find(it) }
+            return billUuid?.let {
+                val maybeBill = billDataSource.find(it)
+                if(maybeBill.isEmpty.blockingGet())
+                    return null
+                return maybeBill.blockingFirst()
+            }
         }
         set(bill) {
             billUuid = bill?.uuid
@@ -179,7 +184,7 @@ class Expense : Transaction, UnsyncModel {
         val c = loadChargeable()!!
         c.debit(value)
         when (c.chargeableType) {
-            ChargeableType.ACCOUNT -> accountDataSource.save(c as Account)
+            ChargeableType.ACCOUNT -> accountDataSource.save(c as Account).blockingFirst()
             ChargeableType.DEBIT_CARD, ChargeableType.CREDIT_CARD -> cardDataSource.save(c as Card)
         }
         charged = true
@@ -211,7 +216,7 @@ class Expense : Transaction, UnsyncModel {
             return null
 
         return when (type) {
-            ChargeableType.ACCOUNT -> accountDataSource.find(uuid)
+            ChargeableType.ACCOUNT -> accountDataSource.find(uuid).blockingFirst()
             ChargeableType.DEBIT_CARD, ChargeableType.CREDIT_CARD -> cardDataSource.find(uuid)
         }
     }

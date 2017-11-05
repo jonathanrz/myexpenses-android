@@ -33,7 +33,7 @@ public class BillRepositoryUnitTest {
 		Bill bill = new Bill();
 		bill.setName(null);
 
-		ValidationResult result = billRepository.save(bill);
+		ValidationResult result = billRepository.save(bill).blockingFirst();
 
 		assertFalse(result.isValid());
 		assertTrue(result.getErrors().contains(ValidationError.NAME));
@@ -45,7 +45,7 @@ public class BillRepositoryUnitTest {
 		bill.setName("a");
 		bill.setAmount(0);
 
-		ValidationResult result = billRepository.save(bill);
+		ValidationResult result = billRepository.save(bill).blockingFirst();
 
 		assertFalse(result.isValid());
 		assertTrue(result.getErrors().contains(ValidationError.AMOUNT));
@@ -56,7 +56,7 @@ public class BillRepositoryUnitTest {
 		Bill bill = new Bill();
 		bill.setDueDate(0);
 
-		ValidationResult result = billRepository.save(bill);
+		ValidationResult result = billRepository.save(bill).blockingFirst();
 
 		assertFalse(result.isValid());
 		assertTrue(result.getErrors().contains(ValidationError.DUE_DATE));
@@ -68,7 +68,7 @@ public class BillRepositoryUnitTest {
 		bill.setInitDate(null);
 		bill.setEndDate(null);
 
-		ValidationResult result = billRepository.save(bill);
+		ValidationResult result = billRepository.save(bill).blockingFirst();
 
 		assertFalse(result.isValid());
 		assertTrue(result.getErrors().contains(ValidationError.INIT_DATE));
@@ -81,7 +81,7 @@ public class BillRepositoryUnitTest {
 		bill.setInitDate(new DateTime(2016, 10, 3, 0, 0, 0, DateTimeZone.UTC));
 		bill.setEndDate(new DateTime(2016, 10, 2, 0, 0, 0, DateTimeZone.UTC));
 
-		ValidationResult result = billRepository.save(bill);
+		ValidationResult result = billRepository.save(bill).blockingFirst();
 
 		assertFalse(result.isValid());
 		assertTrue(result.getErrors().contains(ValidationError.INIT_DATE_GREATER_THAN_END_DATE));

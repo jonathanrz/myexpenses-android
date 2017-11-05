@@ -10,17 +10,20 @@ import android.view.ViewGroup
 import android.widget.TextView
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.AccountAdapter.Format.NORMAL
+import br.com.jonathanzanella.myexpenses.extensions.fromIOToMainThread
 import br.com.jonathanzanella.myexpenses.helpers.AdapterColorHelper
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
+import io.reactivex.disposables.Disposable
 import org.jetbrains.anko.*
-import org.joda.time.DateTime
 import timber.log.Timber
+import javax.inject.Inject
 
-class AccountAdapter(val month : DateTime) : RecyclerView.Adapter<AccountAdapter.ViewHolder>() {
-    private val presenter = AccountAdapterPresenter(this)
+class AccountAdapter @Inject constructor(val dataSource: AccountDataSource) : RecyclerView.Adapter<AccountAdapter.ViewHolder>() {
     private var format = NORMAL
     private var callback: AccountAdapterCallback? = null
+    private var accounts: List<Account> = ArrayList()
+    private var dbQueryDisposable: Disposable? = null
 
     enum class Format {
         NORMAL,
@@ -56,7 +59,6 @@ class AccountAdapter(val month : DateTime) : RecyclerView.Adapter<AccountAdapter
             if (callback == null) {
                 val i = Intent(itemView.context, ShowAccountActivity::class.java)
                 i.putExtra(ShowAccountActivity.KEY_ACCOUNT_UUID, acc.uuid)
-                i.putExtra(ShowAccountActivity.KEY_ACCOUNT_MONTH_TO_SHOW, month.millis)
                 itemView.context.startActivity(i)
             } else {
                 callback!!.onAccountSelected(acc)
@@ -64,20 +66,31 @@ class AccountAdapter(val month : DateTime) : RecyclerView.Adapter<AccountAdapter
         }
     }
 
-    fun refreshData() {
-        presenter.loadAccountsAsync(format)
+    fun onDestroy() {
+        dbQueryDisposable?.dispose()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return when (format) {
-            NORMAL -> {
-                val ui = NormalViewUI()
-                ViewHolder(ui.createView(AnkoContext.create(parent.context, parent)), ui.accountName, ui.accountBalance, ui.accountToPayCreditCard)
-            }
-            else -> {
-                val ui = SimplifiedViewUI(format)
-                ViewHolder(ui.createView(AnkoContext.create(parent.context, parent)), ui.accountName, ui.accountBalance, null)
-            }
+    private fun loadData() {
+        dbQueryDisposable?.dispose()
+
+        dbQueryDisposable = when {
+            format === AccountAdapter.Format.RESUME -> dataSource.forResumeScreen()
+            else -> dataSource.all()
+        }
+                .doOnNext { accounts = it }
+                .fromIOToMainThread()
+                .doOnError { Timber.e(it) }
+                .subscribe { notifyDataSetChanged() }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = when (format) {
+        NORMAL -> {
+            val ui = NormalViewUI()
+            ViewHolder(ui.createView(AnkoContext.create(parent.context, parent)), ui.accountName, ui.accountBalance, ui.accountToPayCreditCard)
+        }
+        else -> {
+            val ui = SimplifiedViewUI(format)
+            ViewHolder(ui.createView(AnkoContext.create(parent.context, parent)), ui.accountName, ui.accountBalance, null)
         }
     }
 
@@ -85,13 +98,9 @@ class AccountAdapter(val month : DateTime) : RecyclerView.Adapter<AccountAdapter
         holder.setData(getAccount(position))
     }
 
-    override fun getItemCount(): Int {
-        return presenter.accountsSize
-    }
+    override fun getItemCount(): Int = accounts.size
 
-    fun getAccount(position: Int): Account {
-        return presenter.getAccount(position)
-    }
+    fun getAccount(position: Int): Account = accounts[position]
 
     fun setCallback(callback: AccountAdapterCallback) {
         this.callback = callback
@@ -99,7 +108,7 @@ class AccountAdapter(val month : DateTime) : RecyclerView.Adapter<AccountAdapter
 
     fun setFormat(format: Format) {
         this.format = format
-        refreshData()
+        loadData()
     }
 }
 

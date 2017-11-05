@@ -8,21 +8,18 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import javax.inject.Inject;
-
-import br.com.jonathanzanella.TestApp;
 import br.com.jonathanzanella.myexpenses.App;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
-import br.com.jonathanzanella.myexpenses.account.AccountRepository;
+import br.com.jonathanzanella.myexpenses.account.AccountDataSource;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
-import br.com.jonathanzanella.myexpenses.expense.ExpenseRepository;
+import br.com.jonathanzanella.myexpenses.expense.ExpenseDataSource;
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.ExpenseBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.ReceiptBuilder;
 import br.com.jonathanzanella.myexpenses.receipt.Receipt;
-import br.com.jonathanzanella.myexpenses.receipt.ReceiptRepository;
+import br.com.jonathanzanella.myexpenses.receipt.ReceiptDataSource;
 import br.com.jonathanzanella.myexpenses.views.MainActivity;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
@@ -35,7 +32,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withTagValue;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.clickIntoView;
-import static com.facebook.testing.screenshot.Screenshot.snapActivity;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.core.Is.is;
@@ -45,20 +41,20 @@ public class UpdateAccountBalanceTest {
 	public ActivityTestRule<MainActivity> mainActivityTestRule = new ActivityTestRule<>(MainActivity.class);
 
 	private Account account;
-	@Inject
-	AccountRepository accountRepository;
-	@Inject
-	ExpenseRepository expenseRepository;
-	@Inject
-	ReceiptRepository receiptRepository;
+	private AccountDataSource accountDataSource;
+	private ExpenseDataSource expenseDataSource;
+	private ReceiptDataSource receiptRepository;
 
 	@Before
 	public void setUp() throws Exception {
-		TestApp.Companion.getTestComponent().inject(this);
 		App.Companion.resetDatabase();
 
+		accountDataSource = App.Companion.getApp().appComponent.accountDataSource();
+		expenseDataSource = App.Companion.getApp().appComponent.expenseDataSource();
+		receiptRepository = App.Companion.getApp().appComponent.receiptDataSource();
+
 		account = new AccountBuilder().build();
-		assertTrue(accountRepository.save(account).isValid());
+		assertTrue(accountDataSource.save(account).blockingFirst().isValid());
 	}
 
 	@After
@@ -67,7 +63,7 @@ public class UpdateAccountBalanceTest {
 	}
 
 	@Test
-	public void confirm_receipt_should_increase_account_balance() {
+	public void confirm_receipt_should_increase_account_balance() throws InterruptedException {
 		Receipt receipt = new ReceiptBuilder().account(account).income(1000).build();
 		assertTrue(receiptRepository.save(receipt).isValid());
 
@@ -79,16 +75,16 @@ public class UpdateAccountBalanceTest {
 				.perform(scrollTo()).perform(click());
 		clickIntoView(getTargetContext().getString(android.R.string.yes));
 
-		account = accountRepository.find(account.getUuid());
+		Thread.sleep(100);
+
+		account = accountDataSource.find(account.getUuid()).blockingFirst();
 		assertThat(account.getBalance(), is(receipt.getIncome()));
-
-		snapActivity(mainActivityTestRule.getActivity()).record();
 	}
 
 	@Test
-	public void confirm_expense_should_decrease_account_balance() {
+	public void confirm_expense_should_decrease_account_balance() throws InterruptedException {
 		Expense expense = new ExpenseBuilder().chargeable(account).value(1000).build();
-		assertTrue(expenseRepository.save(expense).isValid());
+		assertTrue(expenseDataSource.save(expense).isValid());
 
 		mainActivityTestRule.launchActivity(new Intent());
 
@@ -98,16 +94,16 @@ public class UpdateAccountBalanceTest {
 				.perform(scrollTo()).perform(click());
 		clickIntoView(getTargetContext().getString(android.R.string.yes));
 
-		account = accountRepository.find(account.getUuid());
-		assertThat(account.getBalance(), is(expense.getValue() * -1));
+		Thread.sleep(100);
 
-		snapActivity(mainActivityTestRule.getActivity()).record();
+		account = accountDataSource.find(account.getUuid()).blockingFirst();
+		assertThat(account.getBalance(), is(expense.getValue() * -1));
 	}
 
 	@Test
-	public void confirm_expense_and_receipt_should_update_account_balance() {
+	public void confirm_expense_and_receipt_should_update_account_balance() throws InterruptedException {
 		Expense expense = new ExpenseBuilder().chargeable(account).value(100).build();
-		assertTrue(expenseRepository.save(expense).isValid());
+		assertTrue(expenseDataSource.save(expense).isValid());
 
 		Receipt receipt = new ReceiptBuilder().account(account).income(1000).build();
 		assertTrue(receiptRepository.save(receipt).isValid());
@@ -126,9 +122,9 @@ public class UpdateAccountBalanceTest {
 				.perform(scrollTo()).perform(click());
 		clickIntoView(getTargetContext().getString(android.R.string.yes));
 
-		account = accountRepository.find(account.getUuid());
-		assertThat(account.getBalance(), is(receipt.getIncome() - expense.getValue()));
+		Thread.sleep(100);
 
-		snapActivity(mainActivityTestRule.getActivity()).record();
+		account = accountDataSource.find(account.getUuid()).blockingFirst();
+		assertThat(account.getBalance(), is(receipt.getIncome() - expense.getValue()));
 	}
 }

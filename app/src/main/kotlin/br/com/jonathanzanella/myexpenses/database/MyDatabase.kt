@@ -5,8 +5,10 @@ import android.arch.persistence.room.RoomDatabase
 import android.arch.persistence.room.TypeConverters
 import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.account.AccountDao
+import br.com.jonathanzanella.myexpenses.account.AccountDataSource
 import br.com.jonathanzanella.myexpenses.bill.Bill
 import br.com.jonathanzanella.myexpenses.bill.BillDao
+import br.com.jonathanzanella.myexpenses.bill.BillDataSource
 import br.com.jonathanzanella.myexpenses.card.Card
 import br.com.jonathanzanella.myexpenses.card.CardDao
 import br.com.jonathanzanella.myexpenses.expense.Expense
@@ -18,8 +20,8 @@ import br.com.jonathanzanella.myexpenses.source.Source
 import br.com.jonathanzanella.myexpenses.source.SourceDao
 import javax.inject.Inject
 
-const val DB_NAME = "data.db"
-const val DB_VERSION = 2
+const val DB_NAME = "data-v2.db"
+const val DB_VERSION = 1
 
 @Database(entities = arrayOf(Account::class, Bill::class, Card::class, Expense::class, Receipt::class, Source::class), version = DB_VERSION)
 @TypeConverters(Converters::class)
@@ -33,8 +35,8 @@ abstract class MyDatabase : RoomDatabase() {
 }
 
 class DatabaseHelper(appComponent: AppComponent) {
-    @Inject lateinit var accountDao: AccountDao
-    @Inject lateinit var billDao: BillDao
+    @Inject lateinit var accountDataSource: AccountDataSource
+    @Inject lateinit var billDataSource: BillDataSource
     @Inject lateinit var cardDao: CardDao
     @Inject lateinit var expenseDao: ExpenseDao
     @Inject lateinit var receiptDao: ReceiptDao
@@ -45,8 +47,8 @@ class DatabaseHelper(appComponent: AppComponent) {
     }
 
     fun resetDatabase() {
-        accountDao.deleteAll()
-        billDao.deleteAll()
+        accountDataSource.deleteAll()
+        billDataSource.deleteAll()
         cardDao.deleteAll()
         expenseDao.deleteAll()
         receiptDao.deleteAll()

@@ -10,7 +10,6 @@ import android.support.test.espresso.matcher.ViewMatchers.withText
 import android.support.test.filters.MediumTest
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
-import br.com.jonathanzanella.TestApp
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper
@@ -18,13 +17,11 @@ import br.com.jonathanzanella.myexpenses.helpers.TestUtils.waitForIdling
 import br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle
 import br.com.jonathanzanella.myexpenses.helpers.builder.BillBuilder
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
-import com.facebook.testing.screenshot.Screenshot
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import javax.inject.Inject
 
 @RunWith(AndroidJUnit4::class)
 @MediumTest
@@ -32,18 +29,17 @@ class ShowBillActivityTest {
     @Rule @JvmField
     var activityTestRule = ActivityTestRule(ShowBillActivity::class.java, true, false)
 
-    private var bill: Bill? = null
-    @Inject
+    private lateinit var bill: Bill
     lateinit var dataSource: BillDataSource
 
     @Before
     @Throws(Exception::class)
     fun setUp() {
-        TestApp.getTestComponent().inject(this)
         App.resetDatabase()
+        dataSource = App.getApp().appComponent.billDataSource()
 
         bill = BillBuilder().build()
-        dataSource.save(bill!!)
+        dataSource.save(bill).subscribe { assert(it.isValid) }
     }
 
     @After
@@ -56,18 +52,16 @@ class ShowBillActivityTest {
     @Throws(Exception::class)
     fun shows_account_correctly() {
         val i = Intent()
-        i.putExtra(ShowBillActivity.KEY_BILL_UUID, bill!!.uuid)
+        i.putExtra(ShowBillActivity.KEY_BILL_UUID, bill.uuid)
         activityTestRule.launchActivity(i)
 
         waitForIdling()
 
-        val editBillTitle = getTargetContext().getString(R.string.bill) + " " + bill!!.name
+        val editBillTitle = getTargetContext().getString(R.string.bill) + " " + bill.name
         matchToolbarTitle(editBillTitle)
 
-        val balanceAsCurrency = bill!!.amount.toCurrencyFormatted()
-        onView(withId(R.id.act_show_bill_name)).check(matches(withText(bill!!.name)))
+        val balanceAsCurrency = bill.amount.toCurrencyFormatted()
+        onView(withId(R.id.act_show_bill_name)).check(matches(withText(bill.name)))
         onView(withId(R.id.act_show_bill_amount)).check(matches(withText(balanceAsCurrency)))
-
-        Screenshot.snapActivity(activityTestRule.activity).record()
     }
 }

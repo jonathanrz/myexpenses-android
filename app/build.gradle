@@ -12,7 +12,6 @@ apply plugin: 'checkstyle'
 apply plugin: 'findbugs'
 apply plugin: 'pmd'
 apply plugin: 'io.fabric'
-apply plugin: 'shot'
 apply plugin: 'com.getkeepsafe.dexcount'
 
 android {
@@ -101,7 +100,8 @@ dependencies {
     implementation "org.jetbrains.anko:anko-appcompat-v7:$ankoVersion"
     implementation "org.jetbrains.anko:anko-design:$ankoVersion"
 
-    // Room
+    // Architecture components
+    implementation "android.arch.lifecycle:extensions:$roomVersion"
     implementation "android.arch.persistence.room:runtime:$roomVersion"
     implementation "android.arch.persistence.room:rxjava2:$roomVersion"
     kapt "android.arch.persistence.room:compiler:$roomVersion"
@@ -226,8 +226,4 @@ kotlinter {
     ignoreFailures = false
     indentSize = 4
     reporter = 'checkstyle'
-}
-
-shot {
-    appId = "br.com.jonathanzanella.myexpenses.debug"
 }

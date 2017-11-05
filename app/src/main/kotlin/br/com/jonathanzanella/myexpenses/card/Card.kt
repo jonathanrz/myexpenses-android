@@ -48,7 +48,7 @@ class Card : Chargeable, UnsyncModel {
         @WorkerThread
         get() {
             return accountUuid?.let {
-                accountDataSource.find(it)
+                accountDataSource.find(it).blockingFirst()
             }
         }
         set(account) {

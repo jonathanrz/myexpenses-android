@@ -22,7 +22,6 @@ class ShowAccountActivity : AppCompatActivity(), AccountContract.View {
     override val context = this
     @Inject
     lateinit var presenter: AccountPresenter
-    private var monthToShow: DateTime? = null
     private val ui = ShowAccountActivityUi()
 
     init {
@@ -36,9 +35,6 @@ class ShowAccountActivity : AppCompatActivity(), AccountContract.View {
         storeBundle(savedInstanceState)
         storeBundle(intent.extras)
 
-        if (monthToShow == null)
-            monthToShow = DateTime.now().firstDayOfMonth()
-
         ui.toolbar.setup(this)
     }
 
@@ -46,8 +42,6 @@ class ShowAccountActivity : AppCompatActivity(), AccountContract.View {
         if (extras == null)
             return
         presenter.loadAccount(extras.getString(KEY_ACCOUNT_UUID))
-        if (extras.containsKey(KEY_ACCOUNT_MONTH_TO_SHOW))
-            monthToShow = DateTime(extras.getLong(KEY_ACCOUNT_MONTH_TO_SHOW)).firstDayOfMonth()
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -58,7 +52,6 @@ class ShowAccountActivity : AppCompatActivity(), AccountContract.View {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(KEY_ACCOUNT_UUID, presenter.uuid)
-        outState.putLong(KEY_ACCOUNT_MONTH_TO_SHOW, monthToShow!!.millis)
     }
 
     override fun onStart() {
@@ -93,7 +86,7 @@ class ShowAccountActivity : AppCompatActivity(), AccountContract.View {
         ui.accountToPayCreditCard.setText(if (account.accountToPayCreditCard) R.string.yes else R.string.no)
         ui.accountToPayBills.setText(if (account.accountToPayBills) R.string.yes else R.string.no)
 
-        ui.transactionsView.showTransactions(account, monthToShow!!)
+        ui.transactionsView.showTransactions(account, DateTime.now().firstDayOfMonth())
     }
 
     override fun setTitle(string: String) {
@@ -108,7 +101,6 @@ class ShowAccountActivity : AppCompatActivity(), AccountContract.View {
 
     companion object {
         val KEY_ACCOUNT_UUID = "KeyAccountUuid"
-        val KEY_ACCOUNT_MONTH_TO_SHOW = "KeyAccountMonthToShow"
         private val EDIT_ACCOUNT = 1001
     }
 }

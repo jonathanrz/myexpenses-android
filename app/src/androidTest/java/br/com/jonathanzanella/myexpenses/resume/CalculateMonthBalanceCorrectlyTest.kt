@@ -9,7 +9,6 @@ import android.support.test.filters.SmallTest
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import android.view.View
-import br.com.jonathanzanella.TestApp
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.Account
@@ -27,7 +26,7 @@ import br.com.jonathanzanella.myexpenses.receipt.ReceiptDataSource
 import br.com.jonathanzanella.myexpenses.source.Source
 import br.com.jonathanzanella.myexpenses.source.SourceDataSource
 import br.com.jonathanzanella.myexpenses.views.MainActivity
-import com.facebook.testing.screenshot.Screenshot
+import junit.framework.Assert.assertTrue
 import org.hamcrest.Matchers.allOf
 import org.joda.time.DateTime
 import org.junit.After
@@ -35,7 +34,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import javax.inject.Inject
 
 @RunWith(AndroidJUnit4::class)
 @SmallTest
@@ -44,15 +42,10 @@ class CalculateMonthBalanceCorrectlyTest {
     @Rule @JvmField
     var activityTestRule = ActivityTestRule(MainActivity::class.java)
 
-    @Inject
     lateinit var billDataSource: BillDataSource
-    @Inject
     lateinit var sourceDataSource: SourceDataSource
-    @Inject
     lateinit var accountDataSource: AccountDataSource
-    @Inject
     lateinit var receiptDataSource: ReceiptDataSource
-    @Inject
     lateinit var expenseDataSource: ExpenseDataSource
 
     private val monthlyPagerAdapterHelper = MonthlyPagerAdapterHelper()
@@ -60,14 +53,18 @@ class CalculateMonthBalanceCorrectlyTest {
     @Before
     @Throws(Exception::class)
     fun setUp() {
-        TestApp.getTestComponent().inject(this)
         App.resetDatabase()
+        billDataSource = App.getApp().appComponent.billDataSource()
+        sourceDataSource = App.getApp().appComponent.sourceDataSource()
+        accountDataSource = App.getApp().appComponent.accountDataSource()
+        receiptDataSource = App.getApp().appComponent.receiptDataSource()
+        expenseDataSource = App.getApp().appComponent.expenseDataSource()
 
         val a = br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder().build()
-        assert(accountDataSource.save(a).isValid)
+        assertTrue(accountDataSource.save(a).blockingFirst().isValid)
 
         val s = SourceBuilder().build()
-        assert(sourceDataSource.save(s).isValid)
+        assertTrue(sourceDataSource.save(s).isValid)
 
         val now = DateTime.now().withDayOfMonth(1)
         val b = BillBuilder()
@@ -75,7 +72,7 @@ class CalculateMonthBalanceCorrectlyTest {
                 .endDate(now.plusMonths(12))
                 .amount(BILL_AMOUNT)
                 .build()
-        assert(billDataSource.save(b).isValid)
+        assertTrue(billDataSource.save(b).blockingFirst().isValid)
 
         generateThreeMonthlyReceipts(a, s)
         generateThreeMonthlyExpenses(a)
@@ -155,8 +152,6 @@ class CalculateMonthBalanceCorrectlyTest {
 
         scrollToMonth(DateTime.now())
         validateExpectedBalance(expectedBalance)
-
-        Screenshot.snapActivity(activityTestRule.activity).record()
     }
 
     private fun validateExpectedBalance(expectedBalance: String) {

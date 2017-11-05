@@ -36,7 +36,7 @@ public class CardRepositoryTest {
 		App.Companion.resetDatabase();
 
 		account = new AccountBuilder().build();
-		accountDataSource.save(account);
+		assertTrue(accountDataSource.save(account).blockingFirst().isValid());
 	}
 
 	@Test

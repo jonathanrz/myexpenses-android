@@ -37,7 +37,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.clearAndTypeTextIntoView;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.clickIntoView;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle;
-import static com.facebook.testing.screenshot.Screenshot.snapActivity;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.core.Is.is;
 
@@ -61,7 +60,7 @@ public class EditReceiptTest {
 		App.Companion.resetDatabase();
 
 		Account a = new AccountBuilder().build();
-		assertTrue(accountDataSource.save(a).isValid());
+		assertTrue(accountDataSource.save(a).blockingFirst().isValid());
 
 		Source s = new SourceBuilder().build();
 		assertTrue(sourceRepository.save(s).isValid());
@@ -106,7 +105,5 @@ public class EditReceiptTest {
 
 		onView(withId(R.id.act_show_receipt_name)).check(matches(withText(receipt.getName())));
 		assertThat(repository.all().size(), is(1));
-
-		snapActivity(activityTestRule.getActivity()).record();
 	}
 }

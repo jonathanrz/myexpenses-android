@@ -26,7 +26,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withTagValue;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.openMenuAndClickItem;
-import static com.facebook.testing.screenshot.Screenshot.*;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
@@ -48,8 +47,8 @@ public class AccountViewTest {
 		accountToShowInResume = new AccountBuilder().name("accountToShowInResume").showInResume(true).build();
 		accountToHideInResume = new AccountBuilder().name("accountToHideInResume").showInResume(false).build();
 
-		assertTrue(dataSource.save(accountToShowInResume).isValid());
-		assertTrue(dataSource.save(accountToHideInResume).isValid());
+		assertTrue(dataSource.save(accountToShowInResume).blockingFirst().isValid());
+		assertTrue(dataSource.save(accountToHideInResume).blockingFirst().isValid());
 	}
 
 	@After
@@ -63,15 +62,15 @@ public class AccountViewTest {
 
 		openMenuAndClickItem(R.string.accounts);
 
+		Thread.sleep(500);
+
 		accountNameView(accountToShowInResume).check(matches(withText(accountToShowInResume.getName())));
 		accountNameView(accountToHideInResume).check(matches(withText(accountToHideInResume.getName())));
-
-		snapActivity(activityTestRule.getActivity()).record();
 	}
 
 	private ViewInteraction accountNameView(Account account) {
 		return onView(allOf(
 				withId(R.id.row_account_name),
-				isDescendantOfA(withTagValue(is((Object)account.getUuid())))));
+				isDescendantOfA(withTagValue(is(account.getUuid())))));
 	}
 }

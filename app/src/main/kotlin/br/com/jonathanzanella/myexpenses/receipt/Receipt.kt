@@ -83,25 +83,19 @@ class Receipt : Transaction, UnsyncModel {
     }
 
     @Ignore
-    override fun credited(): Boolean {
-        return credited
-    }
+    override fun credited(): Boolean = credited
 
-    override fun debited(): Boolean {
-        return true
-    }
+    override fun debited(): Boolean = true
 
     val accountFromCache: Account?
         get() = getAccount(false)
 
-    private fun loadAccount(): Account? {
-        return getAccount(true)
-    }
+    private fun loadAccount(): Account? = getAccount(true)
 
     private fun getAccount(ignoreCache: Boolean): Account? {
         if (account == null || ignoreCache) {
             accountUuid?.let {
-                account = accountDataSource.find(it)
+                account = accountDataSource.find(it).blockingFirst()
             }
         }
         return account
@@ -141,9 +135,8 @@ class Receipt : Transaction, UnsyncModel {
         return receipt
     }
 
-    fun formatReceiptName(originalName: String, i: Int): String {
-        return String.format(Environment.PTBR_LOCALE, "%s %02d/%02d", originalName, i, installments)
-    }
+    fun formatReceiptName(originalName: String, i: Int): String =
+            String.format(Environment.PTBR_LOCALE, "%s %02d/%02d", originalName, i, installments)
 
     override fun getData(): String {
         return "name=" + name +
@@ -157,7 +150,7 @@ class Receipt : Transaction, UnsyncModel {
     fun credit() {
         val acc = loadAccount()!!
         acc.credit(income)
-        accountDataSource.save(acc)
+        accountDataSource.save(acc).blockingFirst()
         credited = true
         receiptDataSource.save(this)
     }
@@ -170,9 +163,7 @@ class Receipt : Transaction, UnsyncModel {
 
     fun isDatePresent() = date != null
 
-    override fun getDate(): DateTime {
-        return date!!
-    }
+    override fun getDate(): DateTime = date!!
 
     fun setDate(date: DateTime) {
         this.date = date

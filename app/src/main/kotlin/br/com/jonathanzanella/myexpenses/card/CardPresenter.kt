@@ -13,6 +13,7 @@ import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException
 import br.com.jonathanzanella.myexpenses.exceptions.ValidationException
 import br.com.jonathanzanella.myexpenses.expense.Expense
 import br.com.jonathanzanella.myexpenses.expense.ExpenseDataSource
+import br.com.jonathanzanella.myexpenses.extensions.fromIOToMainThread
 import br.com.jonathanzanella.myexpenses.helpers.ResourcesHelper
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
@@ -130,22 +131,24 @@ class CardPresenter @Inject constructor(private val accountDataSource: AccountDa
             act.startActivityForResult(Intent(act, ListAccountActivity::class.java), REQUEST_SELECT_ACCOUNT)
     }
 
-    fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             REQUEST_SELECT_ACCOUNT -> {
                 if (resultCode == RESULT_OK)
-                    loadAccount(data.getStringExtra(ListAccountActivity.KEY_ACCOUNT_SELECTED_UUID))
+                    loadAccount(data!!.getStringExtra(ListAccountActivity.KEY_ACCOUNT_SELECTED_UUID))
             }
         }
     }
 
     @UiThread
     private fun loadAccount(uuid: String) {
-        doAsync {
-            account = accountDataSource.find(uuid)
+        accountDataSource.find(uuid)
+                .fromIOToMainThread()
+                .subscribe {
+                    account = it
 
-            uiThread { account?.let { editView?.onAccountSelected(it) }}
-        }
+                    account?.let { editView?.onAccountSelected(it) }
+                }
     }
 
     fun generateCreditCardBill(month: DateTime): Expense? {

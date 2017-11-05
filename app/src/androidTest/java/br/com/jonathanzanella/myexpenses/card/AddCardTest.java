@@ -14,9 +14,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import javax.inject.Inject;
-
-import br.com.jonathanzanella.TestApp;
 import br.com.jonathanzanella.myexpenses.App;
 import br.com.jonathanzanella.myexpenses.R;
 import br.com.jonathanzanella.myexpenses.account.Account;
@@ -37,7 +34,7 @@ import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.clickIntoView;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchErrorMessage;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.openMenuAndClickItem;
-import static com.facebook.testing.screenshot.Screenshot.snapActivity;
+import static junit.framework.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
@@ -47,22 +44,19 @@ public class AddCardTest {
 	@Rule
 	public ActivityTestRule<EditCardActivity> editCardActivityTestRule = new ActivityTestRule<>(EditCardActivity.class);
 
-	@Inject
-	AccountDataSource accountDataSource;
-
 	private Account account;
 
 	@Before
 	public void setUp() throws Exception {
-		TestApp.Companion.getTestComponent().inject(this);
 		App.Companion.resetDatabase();
+		AccountDataSource accountDataSource = App.Companion.getApp().appComponent.accountDataSource();
 
 		UiDevice uiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
 		if (!uiDevice.isScreenOn())
 			uiDevice.wakeUp();
 
 		account = new AccountBuilder().build();
-		accountDataSource.save(account);
+		accountDataSource.save(account).subscribe(validationResult -> assertTrue(validationResult.isValid()));
 	}
 
 	@After
@@ -101,8 +95,6 @@ public class AddCardTest {
 		matchToolbarTitle(cardsTitle);
 
 		onView(withId(R.id.row_card_name)).check(matches(withText(accountTitle + " - " + getTargetContext().getString(R.string.credit))));
-
-		snapActivity(activityTestRule.getActivity()).record();
 	}
 
 	@Test
@@ -116,8 +108,6 @@ public class AddCardTest {
 
 		final String errorMessage = getContext().getString(R.string.error_message_name_not_informed);
 		matchErrorMessage(R.id.act_edit_card_name, errorMessage);
-
-		snapActivity(editCardActivityTestRule.getActivity()).record();
 	}
 
 	@Test
@@ -134,8 +124,6 @@ public class AddCardTest {
 
 		final String errorMessage = getContext().getString(R.string.error_message_card_type_not_selected);
 		checkSnackbarText(errorMessage);
-
-		snapActivity(editCardActivityTestRule.getActivity()).record();
 	}
 
 	@Test
@@ -154,8 +142,6 @@ public class AddCardTest {
 
 		final String errorMessage = getContext().getString(R.string.error_message_account_not_informed);
 		matchErrorMessage(R.id.act_edit_card_account, errorMessage);
-
-		snapActivity(editCardActivityTestRule.getActivity()).record();
 	}
 
 	private Context getContext() {

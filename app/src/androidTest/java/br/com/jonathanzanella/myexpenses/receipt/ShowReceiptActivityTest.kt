@@ -10,7 +10,6 @@ import android.support.test.espresso.matcher.ViewMatchers.withText
 import android.support.test.filters.MediumTest
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
-import br.com.jonathanzanella.TestApp
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.AccountDataSource
@@ -21,13 +20,12 @@ import br.com.jonathanzanella.myexpenses.helpers.builder.ReceiptBuilder
 import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.source.SourceDataSource
-import com.facebook.testing.screenshot.Screenshot
+import junit.framework.Assert.assertTrue
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import javax.inject.Inject
 
 @RunWith(AndroidJUnit4::class)
 @MediumTest
@@ -37,27 +35,26 @@ class ShowReceiptActivityTest {
 
     private var receipt: Receipt? = null
 
-    @Inject
     lateinit var dataSource: ReceiptDataSource
-    @Inject
     lateinit var sourceDataSource: SourceDataSource
-    @Inject
     lateinit var accountDataSource: AccountDataSource
 
     @Before
     @Throws(Exception::class)
     fun setUp() {
-        TestApp.getTestComponent().inject(this)
         App.resetDatabase()
+        dataSource = App.getApp().appComponent.receiptDataSource()
+        accountDataSource = App.getApp().appComponent.accountDataSource()
+        sourceDataSource = App.getApp().appComponent.sourceDataSource()
 
         val s = SourceBuilder().build()
-        sourceDataSource.save(s)
+        assertTrue(sourceDataSource.save(s).isValid)
 
         val a = AccountBuilder().build()
-        accountDataSource.save(a)
+        assertTrue(accountDataSource.save(a).blockingFirst().isValid)
 
         receipt = ReceiptBuilder().source(s).account(a).build()
-        dataSource.save(receipt!!)
+        assertTrue(dataSource.save(receipt!!).isValid)
     }
 
     @After
@@ -84,7 +81,5 @@ class ShowReceiptActivityTest {
 
         val source = receipt!!.source
         onView(withId(R.id.act_show_receipt_source)).check(matches(withText(source!!.name)))
-
-        Screenshot.snapActivity(activityTestRule.activity).record()
     }
 }

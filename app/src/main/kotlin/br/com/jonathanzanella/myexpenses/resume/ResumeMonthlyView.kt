@@ -15,7 +15,6 @@ import br.com.jonathanzanella.myexpenses.bill.BillMonthlyResumeAdapter
 import br.com.jonathanzanella.myexpenses.expense.ExpenseDataSource
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.receipt.ReceiptDataSource
-import br.com.jonathanzanella.myexpenses.receipt.ReceiptRepository
 import br.com.jonathanzanella.myexpenses.views.FilterableView
 import br.com.jonathanzanella.myexpenses.views.RefreshableView
 import kotlinx.android.synthetic.main.view_monthly_resume.view.*
@@ -33,8 +32,9 @@ class ResumeMonthlyView(context: Context, private val month: DateTime) : FrameLa
     lateinit var receiptDataSource: ReceiptDataSource
     @Inject
     lateinit var expenseDataSource: ExpenseDataSource
+    @Inject
+    lateinit var accountAdapter: AccountAdapter
 
-    private var accountAdapter = AccountAdapter(month)
     private val receiptAdapter: ReceiptMonthlyResumeAdapter
     private var expensesAdapter = ExpenseMonthlyResumeAdapter()
     private var billsAdapter = BillMonthlyResumeAdapter()
@@ -52,9 +52,18 @@ class ResumeMonthlyView(context: Context, private val month: DateTime) : FrameLa
         initBills()
     }
 
-    private fun initAccount() {
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
         accountAdapter.setFormat(AccountAdapter.Format.RESUME)
+    }
 
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        accountAdapter.onDestroy()
+        billsAdapter.onDestroy()
+    }
+
+    private fun initAccount() {
         accounts.adapter = accountAdapter
         accounts.setHasFixedSize(true)
         accounts.layoutManager = GridLayoutManager(context, 1)
@@ -84,9 +93,6 @@ class ResumeMonthlyView(context: Context, private val month: DateTime) : FrameLa
 
     @UiThread
     override fun refreshData() {
-        accountAdapter.refreshData()
-        accountAdapter.notifyDataSetChanged()
-
         loadReceipts()
         loadExpenses()
         loadBills()

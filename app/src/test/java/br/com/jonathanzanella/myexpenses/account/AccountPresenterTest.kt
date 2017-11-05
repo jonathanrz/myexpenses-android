@@ -3,6 +3,7 @@ package br.com.jonathanzanella.myexpenses.account
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
+import io.reactivex.Observable
 import org.junit.Before
 import org.junit.Ignore
 import org.junit.Test
@@ -24,8 +25,8 @@ class AccountPresenterTest {
         val account = Account()
         account.uuid = "uuid"
 
-        whenever(dataSource.find(account.uuid!!)).thenReturn(account)
-        whenever(dataSource.save(account)).thenReturn(ValidationResult())
+        whenever(dataSource.find(account.uuid!!)).thenReturn(Observable.just(account))
+        whenever(dataSource.save(account)).thenReturn(Observable.just(ValidationResult()))
 
         val presenter = AccountPresenter(dataSource)
         presenter.attachView(view)

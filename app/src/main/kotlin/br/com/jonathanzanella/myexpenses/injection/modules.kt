@@ -42,14 +42,6 @@ class DatabaseModule {
 
     @Singleton
     @Provides
-    fun providesAccountDao(database: MyDatabase) = database.accountDao()
-
-    @Singleton
-    @Provides
-    fun providesBillDao(database: MyDatabase) = database.billDao()
-
-    @Singleton
-    @Provides
     fun providesCardDao(database: MyDatabase) = database.cardDao()
 
     @Singleton
@@ -67,15 +59,6 @@ class DatabaseModule {
 
 @Module
 class RepositoryModule {
-    @Singleton
-    @Provides
-    fun providesAccountDataSource(accountDao: AccountDao): AccountDataSource = AccountRepository(accountDao)
-
-    @Singleton
-    @Provides
-    fun providesBillDataSource(billDao: BillDao, expenseRepository: ExpenseRepository): BillDataSource
-            = BillRepository(billDao, expenseRepository)
-
     @Singleton
     @Provides
     fun providesCardDataSource(cardDao: CardDao): CardDataSource = CardRepository(cardDao)
@@ -96,12 +79,6 @@ class RepositoryModule {
 
 @Module
 class PresenterModule {
-    @Provides
-    fun providesAccountPresenter(dataSource: AccountDataSource) = AccountPresenter(dataSource)
-
-    @Provides
-    fun providesBillPresenter(dataSource: BillDataSource) = BillPresenter(dataSource)
-
     @Provides
     fun providesCardPresenter(accountDataSource: AccountDataSource, cardDataSource: CardDataSource,
                               expenseDataSource: ExpenseDataSource, resourcesHelper: ResourcesHelper)
@@ -181,4 +158,39 @@ class ServerModule {
     @Singleton
     @Provides
     fun providesServerApi(serverInterface: ServerInterface) = ServerApi(serverInterface)
+}
+
+@Module
+class AccountModule {
+    @Singleton
+    @Provides
+    fun providesAccountDao(database: MyDatabase) = database.accountDao()
+
+    @Singleton
+    @Provides
+    fun providesAccountDataSource(accountDao: AccountDao): AccountDataSource = AccountRepository(accountDao)
+
+    @Provides
+    fun providesAccountPresenter(dataSource: AccountDataSource) = AccountPresenter(dataSource)
+
+    @Provides
+    fun providesAccountAdapter(dataSource: AccountDataSource) = AccountAdapter(dataSource)
+}
+
+@Module
+class BillModule {
+    @Singleton
+    @Provides
+    fun providesBillDao(database: MyDatabase) = database.billDao()
+
+    @Singleton
+    @Provides
+    fun providesBillDataSource(billDao: BillDao, expenseDataSource: ExpenseDataSource): BillDataSource
+            = BillRepository(billDao, expenseDataSource)
+    @Provides
+    fun providesBillPresenter(dataSource: BillDataSource) = BillPresenter(dataSource)
+
+    @Provides
+    fun providesBillAdapter(dataSource: BillDataSource) = BillAdapter(dataSource)
+
 }

@@ -34,7 +34,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.clearAndTypeTextIntoView;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.clickIntoView;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle;
-import static com.facebook.testing.screenshot.Screenshot.snapActivity;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.core.Is.is;
 
@@ -56,7 +55,7 @@ public class EditExpenseTest {
 		App.Companion.resetDatabase();
 
 		Account a = new AccountBuilder().build();
-		accountDataSource.save(a);
+		assertTrue(accountDataSource.save(a).blockingFirst().isValid());
 
 		expense = new ExpenseBuilder()
 				.date(DateTime.now().minusDays(1))
@@ -96,7 +95,5 @@ public class EditExpenseTest {
 
 		onView(withId(R.id.act_show_expense_name)).check(matches(withText(expense.getName())));
 		assertThat(dataSource.all().size(), is(1));
-
-		snapActivity(activityTestRule.getActivity()).record();
 	}
 }

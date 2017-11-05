@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
+import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.account.AccountAdapter
@@ -16,10 +17,16 @@ import br.com.jonathanzanella.myexpenses.card.CardAdapter
 import br.com.jonathanzanella.myexpenses.card.CardAdapterCallback
 import br.com.jonathanzanella.myexpenses.views.anko.*
 import org.jetbrains.anko.*
-import org.joda.time.DateTime
+import javax.inject.Inject
 
 class ListChargeableActivity : AppCompatActivity(), AccountAdapterCallback, CardAdapterCallback {
+    @Inject
+    lateinit var adapter: AccountAdapter
     private val ui = ListChargeableActivityUi()
+
+    init {
+        App.getAppComponent().inject(this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,8 +43,12 @@ class ListChargeableActivity : AppCompatActivity(), AccountAdapterCallback, Card
         initCreditCards()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        adapter.onDestroy()
+    }
+
     private fun initAccounts() {
-        val adapter = AccountAdapter(DateTime.now())
         adapter.setCallback(this)
         adapter.setFormat(AccountAdapter.Format.LIST)
 

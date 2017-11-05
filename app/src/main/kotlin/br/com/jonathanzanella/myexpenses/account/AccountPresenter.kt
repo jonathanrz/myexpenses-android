@@ -3,8 +3,8 @@ package br.com.jonathanzanella.myexpenses.account
 import android.support.annotation.UiThread
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
+import br.com.jonathanzanella.myexpenses.extensions.fromIOToMainThread
+import timber.log.Timber
 import javax.inject.Inject
 
 class AccountPresenter @Inject constructor(private val dataSource: AccountDataSource) {
@@ -57,13 +57,15 @@ class AccountPresenter @Inject constructor(private val dataSource: AccountDataSo
         loadAccount(account!!.uuid!!)
     }
 
-    @UiThread
     fun loadAccount(uuid: String) {
-        doAsync {
-            account = dataSource.find(uuid)
-
-            uiThread { account?.let { updateView() } }
-        }
+        //TODO: check disposable
+        dataSource.find(uuid)
+                .fromIOToMainThread()
+                .doOnError { Timber.e(it) }
+                .subscribe {
+                    account = it
+                    account?.let { updateView() }
+                }
     }
 
     @UiThread
@@ -75,18 +77,17 @@ class AccountPresenter @Inject constructor(private val dataSource: AccountDataSo
 
         account = v.fillAccount(account!!)
 
-        doAsync {
-            val result = dataSource.save(account!!)
-
-            uiThread {
-                if (result.isValid) {
-                    v.finishView()
-                } else {
-                    for (validationError in result.errors)
-                        v.showError(validationError)
+        dataSource.save(account!!)
+                .fromIOToMainThread()
+                .doOnError { Timber.e(it) }
+                .subscribe {
+                    if (it.isValid) {
+                        v.finishView()
+                    } else {
+                        for (validationError in it.errors)
+                            v.showError(validationError)
+                    }
                 }
-            }
-        }
     }
 
     val uuid: String?

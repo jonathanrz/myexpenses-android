@@ -1,61 +1,65 @@
 package br.com.jonathanzanella.myexpenses.account
 
 import android.support.annotation.WorkerThread
+import br.com.jonathanzanella.myexpenses.database.DatabaseObservable
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult
+import io.reactivex.Observable
 import org.apache.commons.lang3.StringUtils
 import timber.log.Timber
-import java.util.*
 import javax.inject.Inject
 
 interface AccountDataSource {
-    fun all(): List<Account>
-    fun forResumeScreen(): List<Account>
-    fun unsync(): List<Account>
+    fun all(): Observable<List<Account>>
+    fun forResumeScreen(): Observable<List<Account>>
+    fun unsync(): Observable<List<Account>>
 
-    fun find(uuid: String): Account?
-    fun greaterUpdatedAt(): Long
+    fun find(uuid: String): Observable<Account>
+    fun greaterUpdatedAt(): Observable<Long>
 
-    fun save(account: Account): ValidationResult
-    fun syncAndSave(unsync: Account): ValidationResult
+    fun save(account: Account): Observable<ValidationResult>
+    fun syncAndSave(unsync: Account): Observable<ValidationResult>
+    fun deleteAll()
 }
 
 class AccountRepository @Inject constructor(val dao: AccountDao): AccountDataSource {
-    @WorkerThread
-    override fun all(): List<Account> {
-        return dao.all().blockingFirst()
+    private val allData: DatabaseObservable<List<Account>> = DatabaseObservable { dao.all() }
+    private val resumeScreenData: DatabaseObservable<List<Account>> = DatabaseObservable  { dao.showInResume() }
+    private val unsyncData: DatabaseObservable<List<Account>> = DatabaseObservable  { dao.unsync() }
+
+    private fun refreshObservables() {
+        allData.emit()
+        resumeScreenData.emit()
+        unsyncData.emit()
     }
 
     @WorkerThread
-    override fun forResumeScreen(): List<Account> {
-        return dao.showInResume().blockingFirst()
+    override fun all(): Observable<List<Account>> = allData.cache()
+
+    override fun forResumeScreen(): Observable<List<Account>> = resumeScreenData.cache()
+
+    override fun unsync(): Observable<List<Account>> = unsyncData.cache()
+
+    override fun find(uuid: String): Observable<Account> = Observable.fromCallable {
+        dao.find(uuid).first()
     }
 
-    @WorkerThread
-    override fun unsync(): List<Account> {
-        return dao.unsync().blockingFirst()
-    }
+    override fun greaterUpdatedAt(): Observable<Long> =
+            Observable.fromCallable { dao.greaterUpdatedAt().firstOrNull()?.updatedAt ?:0 }
 
-    @WorkerThread
-    override fun find(uuid: String): Account? {
-        return dao.find(uuid).blockingFirst().firstOrNull()
-    }
+    override fun save(account: Account): Observable<ValidationResult> {
+        return Observable.fromCallable {
+            val result = validate(account)
+            if (result.isValid) {
+                if (account.id == 0L && account.uuid == null)
+                    account.uuid = java.util.UUID.randomUUID().toString()
+                account.sync = false
+                account.id = dao.saveAtDatabase(account)
 
-    @WorkerThread
-    override fun greaterUpdatedAt(): Long {
-        return dao.greaterUpdatedAt().blockingFirst().firstOrNull()?.updatedAt ?:0
-    }
-
-    @WorkerThread
-    override fun save(account: Account): ValidationResult {
-        val result = validate(account)
-        if (result.isValid) {
-            if (account.id == 0L && account.uuid == null)
-                account.uuid = UUID.randomUUID().toString()
-            account.sync = false
-            account.id = dao.saveAtDatabase(account)
+                refreshObservables()
+            }
+            result
         }
-        return result
     }
 
     private fun validate(account: Account): ValidationResult {
@@ -65,27 +69,36 @@ class AccountRepository @Inject constructor(val dao: AccountDao): AccountDataSou
         return result
     }
 
+    override fun syncAndSave(unsync: Account): Observable<ValidationResult> {
+        return Observable.fromCallable {
+            val result = validate(unsync)
+            if (!result.isValid) {
+                Timber.tag("Account validation fail")
+                        .w(unsync.getData() + "\nerrors: " + result.errorsAsString)
+                result
+            } else {
+                val account = find(unsync.uuid!!).blockingFirst()
+
+                if (account != null && account.id != unsync.id) {
+                    if (account.updatedAt != unsync.updatedAt)
+                        Timber.tag("Account overwritten")
+                                .w(unsync.getData())
+                    unsync.id = account.id
+                }
+
+                unsync.sync = true
+                unsync.id = dao.saveAtDatabase(unsync)
+
+                refreshObservables()
+
+                result
+            }
+        }
+    }
+
     @WorkerThread
-    override fun syncAndSave(unsync: Account): ValidationResult {
-        val result = validate(unsync)
-        if (!result.isValid) {
-            Timber.tag("Account validation fail")
-                    .w(unsync.getData() + "\nerrors: " + result.errorsAsString)
-            return result
-        }
-
-        val account = find(unsync.uuid!!)
-
-        if (account != null && account.id != unsync.id) {
-            if (account.updatedAt != unsync.updatedAt)
-                Timber.tag("Account overwritten")
-                        .w(unsync.getData())
-            unsync.id = account.id
-        }
-
-        unsync.sync = true
-        unsync.id = dao.saveAtDatabase(unsync)
-
-        return result
+    override fun deleteAll() {
+        dao.deleteAll()
+        refreshObservables()
     }
 }

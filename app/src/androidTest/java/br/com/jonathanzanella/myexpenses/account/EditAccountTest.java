@@ -30,7 +30,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.clearAndTypeTextIntoView;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.clickIntoView;
 import static br.com.jonathanzanella.myexpenses.helpers.UIHelper.matchToolbarTitle;
-import static com.facebook.testing.screenshot.Screenshot.snapActivity;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.core.Is.is;
 
@@ -51,7 +50,7 @@ public class EditAccountTest {
 		App.Companion.resetDatabase();
 
 		account = new AccountBuilder().build();
-		assertTrue(dataSource.save(account).isValid());
+		assertTrue(dataSource.save(account).blockingFirst().isValid());
 	}
 
 	@After
@@ -81,12 +80,10 @@ public class EditAccountTest {
 
 		matchToolbarTitle(showAccountTitle + " changed");
 
-		account = dataSource.find(account.getUuid());
+		account = dataSource.find(account.getUuid()).blockingFirst();
 
 		onView(withId(R.id.act_show_account_name)).check(matches(withText(account.getName())));
-		assertThat(dataSource.all().size(), is(1));
+		assertThat(dataSource.all().blockingFirst().size(), is(1));
 		assertThat(account.getShowInResume(), is(false));
-
-		snapActivity(activityTestRule.getActivity()).record();
 	}
 }

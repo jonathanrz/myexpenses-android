@@ -24,7 +24,6 @@ import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.source.SourceDataSource
 import br.com.jonathanzanella.myexpenses.views.MainActivity
-import com.facebook.testing.screenshot.Screenshot
 import org.hamcrest.Matchers.`is`
 import org.hamcrest.core.AllOf.allOf
 import org.junit.After
@@ -60,7 +59,7 @@ class ReceiptsViewTest {
         assert(sourceDataSource.save(s).isValid)
 
         val a = AccountBuilder().build()
-        assert(accountDataSource.save(a).isValid)
+        assert(accountDataSource.save(a).blockingFirst().isValid)
 
         receipt = ReceiptBuilder().name("receipt1").source(s).account(a).build()
         assert(dataSource.save(receipt!!).isValid)
@@ -98,8 +97,6 @@ class ReceiptsViewTest {
 
         val source = receipt!!.source
         onView(ViewMatchers.withId(R.id.act_show_receipt_source)).check(matches(ViewMatchers.withText(source!!.name)))
-
-        Screenshot.snapActivity(activityTestRule.activity).record()
     }
 
     @Test
@@ -117,8 +114,6 @@ class ReceiptsViewTest {
 
         onViewReceiptName(receipt).check(matches(ViewMatchers.isDisplayed()))
         onViewReceiptName(receipt2).check(doesNotExist())
-
-        Screenshot.snapActivity(activityTestRule.activity).record()
     }
 
     private fun onViewReceiptName(receipt: Receipt?): ViewInteraction {
