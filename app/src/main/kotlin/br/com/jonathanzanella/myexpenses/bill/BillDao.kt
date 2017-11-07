@@ -14,7 +14,7 @@ interface BillDao {
     fun unsync(): List<Bill>
 
     @Query("SELECT * FROM Bill WHERE uuid = :uuid")
-    fun find(uuid: String): Bill?
+    fun find(uuid: String): List<Bill>
 
     @Query("SELECT * FROM Bill ORDER BY updatedAt DESC LIMIT 1")
     fun greaterUpdatedAt(): List<Bill>

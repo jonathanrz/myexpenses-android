@@ -9,6 +9,8 @@ import org.apache.commons.lang3.StringUtils
 import timber.log.Timber
 import javax.inject.Inject
 
+class AccountNotFoundException : Exception()
+
 interface AccountDataSource {
     fun all(): Observable<List<Account>>
     fun forResumeScreen(): Observable<List<Account>>
@@ -41,7 +43,7 @@ class AccountRepository @Inject constructor(val dao: AccountDao): AccountDataSou
     override fun unsync(): Observable<List<Account>> = unsyncData.cache()
 
     override fun find(uuid: String): Observable<Account> = Observable.fromCallable {
-        dao.find(uuid).firstOrNull() ?: Account(name = "Inválida")
+        dao.find(uuid).firstOrNull() ?: throw AccountNotFoundException()
     }
 
     override fun greaterUpdatedAt(): Observable<Long> =
@@ -77,14 +79,16 @@ class AccountRepository @Inject constructor(val dao: AccountDao): AccountDataSou
                         .w(unsync.getData() + "\nerrors: " + result.errorsAsString)
                 result
             } else {
-                val account = find(unsync.uuid!!).blockingFirst()
+                try {
+                    val account = find(unsync.uuid!!).blockingFirst()
 
-                if (account != null && account.id != unsync.id) {
-                    if (account.updatedAt != unsync.updatedAt)
-                        Timber.tag("Account overwritten")
-                                .w(unsync.getData())
-                    unsync.id = account.id
-                }
+                    if (account.id != unsync.id) {
+                        if (account.updatedAt != unsync.updatedAt)
+                            Timber.tag("Account overwritten")
+                                    .w(unsync.getData())
+                        unsync.id = account.id
+                    }
+                } catch (ignored: RuntimeException) {}
 
                 unsync.sync = true
                 unsync.id = dao.saveAtDatabase(unsync)

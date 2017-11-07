@@ -13,6 +13,8 @@ import org.joda.time.DateTime
 import timber.log.Timber
 import javax.inject.Inject
 
+class BillNotFoundException : Exception()
+
 interface BillDataSource {
     fun all(): Observable<List<Bill>>
     fun unsync(): Observable<List<Bill>>
@@ -37,7 +39,7 @@ class BillRepository @Inject constructor(val dao: BillDao, val expenseDataSource
             val bill = it
             !expenses
                     .filter { it.billUuid != null }
-                    .map { find(it.billUuid!!).blockingFirst() }
+                    .map { find(it.billUuid!!).blockingFirst()!! }
                     .any { it.uuid == bill.uuid }
         }.map {
             it.month = month
@@ -67,7 +69,7 @@ class BillRepository @Inject constructor(val dao: BillDao, val expenseDataSource
     override fun unsync(): Observable<List<Bill>> = unsyncData.cache()
     override fun monthly(month: DateTime) = monthlyData.cache(month)
 
-    override fun find(uuid: String): Observable<Bill> = Observable.fromCallable { dao.find(uuid) }
+    override fun find(uuid: String): Observable<Bill> = Observable.fromCallable { dao.find(uuid).firstOrNull() ?: throw BillNotFoundException() }
 
     override fun greaterUpdatedAt(): Observable<Long> =
             Observable.fromCallable { dao.greaterUpdatedAt().firstOrNull()?.updatedAt ?: 0L }
@@ -112,13 +114,15 @@ class BillRepository @Inject constructor(val dao: BillDao, val expenseDataSource
                         .w(unsync.getData() + "\nerrors: " + result.errorsAsString)
                 result
             } else {
-                val bill = find(unsync.uuid!!).blockingFirst()
-                if (bill.id != unsync.id) {
-                    if (bill.updatedAt != unsync.updatedAt)
-                        Timber.tag("Bill overwritten")
-                                .w(unsync.getData())
-                    unsync.id = bill.id
-                }
+                try {
+                    val bill = find(unsync.uuid!!).blockingFirst()
+                    if (bill.id != unsync.id) {
+                        if (bill.updatedAt != unsync.updatedAt)
+                            Timber.tag("Bill overwritten")
+                                    .w(unsync.getData())
+                        unsync.id = bill.id
+                    }
+                } catch (ignored: RuntimeException) {}
 
                 unsync.sync = true
                 unsync.id = dao.saveAtDatabase(unsync)

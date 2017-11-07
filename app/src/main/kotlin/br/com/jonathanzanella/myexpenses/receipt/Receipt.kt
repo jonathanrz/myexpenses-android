@@ -95,7 +95,9 @@ class Receipt : Transaction, UnsyncModel {
     private fun getAccount(ignoreCache: Boolean): Account? {
         if (account == null || ignoreCache) {
             accountUuid?.let {
-                account = accountDataSource.find(it).blockingFirst()
+                try {
+                    account = accountDataSource.find(it).blockingFirst()
+                } catch (ignored: RuntimeException) {}
             }
         }
         return account

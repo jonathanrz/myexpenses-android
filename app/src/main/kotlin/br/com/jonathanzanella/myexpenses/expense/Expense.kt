@@ -215,9 +215,13 @@ class Expense : Transaction, UnsyncModel {
         if (type == null || uuid == null)
             return null
 
-        return when (type) {
-            ChargeableType.ACCOUNT -> accountDataSource.find(uuid).blockingFirst()
-            ChargeableType.DEBIT_CARD, ChargeableType.CREDIT_CARD -> cardDataSource.find(uuid)
+        return try {
+            when (type) {
+                ChargeableType.ACCOUNT -> accountDataSource.find(uuid).blockingFirst()
+                ChargeableType.DEBIT_CARD, ChargeableType.CREDIT_CARD -> cardDataSource.find(uuid)
+            }
+        } catch (ignored: RuntimeException) {
+            null
         }
     }
 }
