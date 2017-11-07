@@ -45,8 +45,8 @@ class BillApi @Inject constructor(private val billInterface: BillInterface,
         try {
             val response = caller.execute()
             if (response.isSuccessful) {
-                billRepository.syncAndSave(response.body())
-                Timber.i("Updated: " + bill.getData())
+                val validationResult = billRepository.syncAndSave(response.body()).blockingFirst()
+                Timber.i("Updated: ${bill.getData()} errors ${validationResult.errorsAsString}")
             } else {
                 Timber.e("Save request error: " + response.message() + " uuid: " + bill.uuid)
             }
@@ -60,7 +60,8 @@ class BillApi @Inject constructor(private val billInterface: BillInterface,
     override fun syncAndSave(unsync: UnsyncModel) {
         if (unsync !is Bill)
             throw UnsupportedOperationException("UnsyncModel is not a Bill")
-        billRepository.syncAndSave(unsync)
+        val validationResult = billRepository.syncAndSave(unsync).blockingFirst()
+        Timber.i("Updated: ${unsync.getData()} errors ${validationResult.errorsAsString}")
     }
 
     override fun unsyncModels(): List<Bill> = billRepository.unsync().blockingFirst()

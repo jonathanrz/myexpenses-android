@@ -45,8 +45,8 @@ class AccountApi @Inject constructor(private val accountInterface: AccountInterf
         try {
             val response = caller.execute()
             if (response.isSuccessful) {
-                repository.syncAndSave(response.body())
-                Timber.i("Updated: " + account.getData())
+                val validationResult = repository.syncAndSave(response.body()).blockingFirst()
+                Timber.i("Updated: ${account.getData()} errors ${validationResult.errorsAsString}")
             } else {
                 Timber.e("Save request error: " + response.message() + " uuid: " + account.uuid)
             }
@@ -60,7 +60,8 @@ class AccountApi @Inject constructor(private val accountInterface: AccountInterf
     override fun syncAndSave(unsync: UnsyncModel) {
         if (unsync !is Account)
             throw UnsupportedOperationException("UnsyncModel is not an Account")
-        repository.syncAndSave(unsync)
+        val validationResult = repository.syncAndSave(unsync).blockingFirst()
+        Timber.i("Updated: ${unsync.getData()} errors ${validationResult.errorsAsString}")
     }
 
     override fun unsyncModels(): List<Account> = repository.unsync().blockingFirst()
