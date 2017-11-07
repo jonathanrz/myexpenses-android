@@ -14,7 +14,7 @@ interface AccountDataSource {
     fun forResumeScreen(): Observable<List<Account>>
     fun unsync(): Observable<List<Account>>
 
-    fun find(uuid: String): Observable<Account?>
+    fun find(uuid: String): Observable<Account>
     fun greaterUpdatedAt(): Observable<Long>
 
     fun save(account: Account): Observable<ValidationResult>
@@ -40,8 +40,8 @@ class AccountRepository @Inject constructor(val dao: AccountDao): AccountDataSou
 
     override fun unsync(): Observable<List<Account>> = unsyncData.cache()
 
-    override fun find(uuid: String): Observable<Account?> = Observable.fromCallable {
-        dao.find(uuid).firstOrNull()
+    override fun find(uuid: String): Observable<Account> = Observable.fromCallable {
+        dao.find(uuid).firstOrNull() ?: Account(name = "Inválida")
     }
 
     override fun greaterUpdatedAt(): Observable<Long> =

@@ -10,7 +10,7 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 @Entity
-open class Account : Chargeable, UnsyncModel {
+open class Account(@Expose override var name: String? = null) : Chargeable, UnsyncModel {
     @PrimaryKey(autoGenerate = true)
     override var id: Long = 0
     override var sync: Boolean = false
@@ -18,7 +18,6 @@ open class Account : Chargeable, UnsyncModel {
     override val chargeableType = ChargeableType.ACCOUNT
 
     @Expose override var uuid: String? = null
-    @Expose override var name: String? = null
     @Expose var balance: Int = 0
     @Expose var accountToPayCreditCard: Boolean = false
     @Expose var accountToPayBills: Boolean = false
