@@ -1,12 +1,10 @@
 package br.com.jonathanzanella.myexpenses.injection
 
-import android.arch.persistence.room.Room
 import android.content.Context
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.account.*
 import br.com.jonathanzanella.myexpenses.bill.*
 import br.com.jonathanzanella.myexpenses.card.*
-import br.com.jonathanzanella.myexpenses.database.DB_NAME
 import br.com.jonathanzanella.myexpenses.database.MyDatabase
 import br.com.jonathanzanella.myexpenses.expense.*
 import br.com.jonathanzanella.myexpenses.helpers.ResourcesHelper
@@ -38,7 +36,7 @@ class AppModule(private val app: App) {
 class DatabaseModule {
     @Singleton
     @Provides
-    fun providesDatabase(context: Context): MyDatabase = Room.databaseBuilder(context, MyDatabase::class.java, DB_NAME).build()
+    fun providesDatabase(context: Context): MyDatabase = MyDatabase.buildDatabase(context)
 
     @Singleton
     @Provides

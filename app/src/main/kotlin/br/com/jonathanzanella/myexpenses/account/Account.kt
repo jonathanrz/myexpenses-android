@@ -25,6 +25,8 @@ open class Account(@Expose override var name: String? = null) : Chargeable, Unsy
     @Expose @SerializedName("_id") override var serverId: String? = null
     @Expose @SerializedName("created_at") override var createdAt: Long = 0
     @Expose @SerializedName("updated_at") override var updatedAt: Long = 0
+    @Expose
+    var removed: Boolean = false
 
     override fun credit(value: Int) {
         balance += value
