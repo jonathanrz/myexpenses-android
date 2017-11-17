@@ -51,7 +51,7 @@ ext {
     mockitoKotlinVersion = '1.5.0'
     playServicesVersion = '11.4.2'
     retrofitVersion = '2.2.0'
-    roomVersion = '1.0.0-rc1'
+    roomVersion = '1.0.0'
     rxAndroidVersion = '2.0.1'
     rxJavaVersion = '2.1.0'
     rulesVersion = '0.5'
