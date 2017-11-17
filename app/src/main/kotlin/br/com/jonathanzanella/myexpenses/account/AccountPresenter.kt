@@ -15,6 +15,7 @@ class AccountPresenter @Inject constructor(private val dataSource: AccountDataSo
 
     fun attachView(view: AccountContract.View) {
         this.view = view
+        updateView()
     }
 
     fun attachView(view: AccountContract.EditView) {
@@ -44,17 +45,10 @@ class AccountPresenter @Inject constructor(private val dataSource: AccountDataSo
         if (v != null) {
             v.setTitle(R.string.edit_account_title)
         } else {
-            view!!.let {
-                val title = it.context.getString(R.string.account)
-                it.setTitle(title + " " + account!!.name)
-            }
+            val title = view!!.context.getString(R.string.account)
+            account?.let { view!!.setTitle(title + " " + it.name) }
         }
-        view!!.showAccount(account!!)
-    }
-
-    @UiThread
-    fun reloadAccount() {
-        loadAccount(account!!.uuid!!)
+        account?.let { view!!.showAccount(it) }
     }
 
     fun loadAccount(uuid: String): Observable<Account> {

@@ -1,6 +1,5 @@
 package br.com.jonathanzanella.myexpenses.account
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -48,9 +47,7 @@ class ShowAccountActivity : AppCompatActivity(), AccountContract.View {
         compositeDisposable.add(presenter.loadAccount(extras.getString(KEY_ACCOUNT_UUID))
                 .fromIOToMainThread()
                 .doOnError { Timber.e(it) }
-                .subscribe {
-                    presenter.updateView()
-                })
+                .subscribe { presenter.updateView() })
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -101,12 +98,6 @@ class ShowAccountActivity : AppCompatActivity(), AccountContract.View {
 
     override fun setTitle(string: String) {
         ui.toolbar.title = string
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == EDIT_ACCOUNT && resultCode == Activity.RESULT_OK)
-            presenter.reloadAccount()
     }
 
     companion object {
