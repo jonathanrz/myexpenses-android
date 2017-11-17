@@ -1,11 +1,8 @@
 package br.com.jonathanzanella.myexpenses.database
 
-import android.support.test.runner.AndroidJUnit4
-import org.junit.runner.RunWith
-
-@RunWith(AndroidJUnit4::class)
-@Suppress("IllegalIdentifier")
-class MigrationTest {
+//@RunWith(AndroidJUnit4::class)
+//@Suppress("IllegalIdentifier")
+//class MigrationTest {
 //    @Rule @JvmField
 //    val testHelper = MigrationTestHelper(InstrumentationRegistry.getInstrumentation(),
 //                                            MyDatabase::class.java.canonicalName,
@@ -34,4 +31,4 @@ class MigrationTest {
 //        assertThat(accounts[0].uuid, `is`("uuid"))
 //        assertThat(accounts[0].removed, `is`(false))
 //    }
-}
+//}
