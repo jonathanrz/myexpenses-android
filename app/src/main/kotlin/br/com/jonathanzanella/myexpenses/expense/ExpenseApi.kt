@@ -18,7 +18,7 @@ class ExpenseApi @Inject constructor(private val expenseInterface: ExpenseInterf
         return try {
             val response = caller.execute()
             if (response.isSuccessful) {
-                response.body()
+                response.body().orEmpty()
             } else {
                 Timber.e("Index request error: " + response.message())
                 ArrayList()
@@ -40,7 +40,7 @@ class ExpenseApi @Inject constructor(private val expenseInterface: ExpenseInterf
         try {
             val response = caller.execute()
             if (response.isSuccessful) {
-                expenseRepository.syncAndSave(response.body())
+                expenseRepository.syncAndSave(response.body()!!)
                 Timber.i("Updated: " + expense.getData())
             } else {
                 Timber.e("Save request error: " + response.message() + " uuid: " + expense.uuid)

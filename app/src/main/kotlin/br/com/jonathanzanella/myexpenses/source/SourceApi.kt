@@ -19,7 +19,7 @@ class SourceApi @Inject constructor(private val sourceInterface: SourceInterface
         return try {
             val response = caller.execute()
             if (response.isSuccessful) {
-                response.body()
+                response.body().orEmpty()
             } else {
                 Timber.e("Index request error: " + response.message())
                 ArrayList()
@@ -42,7 +42,7 @@ class SourceApi @Inject constructor(private val sourceInterface: SourceInterface
         try {
             val response = caller.execute()
             if (response.isSuccessful) {
-                sourceRepository.syncAndSave(response.body())
+                sourceRepository.syncAndSave(response.body()!!)
                 Timber.i("Updated: " + source.getData())
             } else {
                 Timber.e("Save request error: " + response.message() + " uuid: " + source.uuid)

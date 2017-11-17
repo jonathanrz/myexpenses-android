@@ -20,7 +20,7 @@ class ReceiptApi @Inject constructor(private val receiptInterface: ReceiptInterf
         return try {
             val response = caller.execute()
             if (response.isSuccessful) {
-                response.body()
+                response.body().orEmpty()
             } else {
                 Timber.e("Index request error: " + response.message())
                 ArrayList()
@@ -42,7 +42,7 @@ class ReceiptApi @Inject constructor(private val receiptInterface: ReceiptInterf
         try {
             val response = caller.execute()
             if (response.isSuccessful) {
-                receiptRepository.syncAndSave(response.body())
+                receiptRepository.syncAndSave(response.body()!!)
                 Timber.i("Updated: " + receipt.getData())
             } else {
                 Timber.e("Save request error: " + response.message() + " uuid: " + receipt.uuid)

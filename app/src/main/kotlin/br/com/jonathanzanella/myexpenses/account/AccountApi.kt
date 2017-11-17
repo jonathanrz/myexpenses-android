@@ -22,7 +22,7 @@ class AccountApi @Inject constructor(private val accountInterface: AccountInterf
         return try {
             val response = caller.execute()
             if (response.isSuccessful) {
-                response.body()
+                response.body().orEmpty()
             } else {
                 Timber.e("Index request error: " + response.message())
                 ArrayList()
@@ -45,7 +45,7 @@ class AccountApi @Inject constructor(private val accountInterface: AccountInterf
         try {
             val response = caller.execute()
             if (response.isSuccessful) {
-                val validationResult = repository.syncAndSave(response.body()).blockingFirst()
+                val validationResult = repository.syncAndSave(response.body()!!).blockingFirst()
                 Timber.i("Updated: ${account.getData()} errors ${validationResult.errorsAsString}")
             } else {
                 Timber.e("Save request error: " + response.message() + " uuid: " + account.uuid)

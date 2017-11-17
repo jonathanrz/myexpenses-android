@@ -22,7 +22,7 @@ class BillApi @Inject constructor(private val billInterface: BillInterface,
         return try {
             val response = caller.execute()
             if (response.isSuccessful) {
-                response.body()
+                response.body().orEmpty()
             } else {
                 Timber.e("Index request error: " + response.message())
                 ArrayList()
@@ -45,7 +45,7 @@ class BillApi @Inject constructor(private val billInterface: BillInterface,
         try {
             val response = caller.execute()
             if (response.isSuccessful) {
-                val validationResult = billRepository.syncAndSave(response.body()).blockingFirst()
+                val validationResult = billRepository.syncAndSave(response.body()!!).blockingFirst()
                 Timber.i("Updated: ${bill.getData()} errors ${validationResult.errorsAsString}")
             } else {
                 Timber.e("Save request error: " + response.message() + " uuid: " + bill.uuid)

@@ -18,7 +18,7 @@ class CardApi @Inject constructor(private val cardInterface: CardInterface,
         try {
             val response = caller.execute()
             if (response.isSuccessful) {
-                return response.body()
+                return response.body().orEmpty()
             } else {
                 Timber.e("Index request error: " + response.message())
             }
@@ -40,7 +40,7 @@ class CardApi @Inject constructor(private val cardInterface: CardInterface,
         try {
             val response = caller.execute()
             if (response.isSuccessful) {
-                cardRepository.syncAndSave(response.body())
+                cardRepository.syncAndSave(response.body()!!)
                 Timber.i("Updated: " + card.getData())
             } else {
                 Timber.e("Save request error: " + response.message() + " uuid: " + card.uuid)
