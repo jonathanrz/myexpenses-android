@@ -11,10 +11,12 @@ import android.view.MenuItem
 import android.widget.CheckBox
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
+import br.com.jonathanzanella.myexpenses.extensions.fromIOToMainThread
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.views.anko.*
+import io.reactivex.disposables.CompositeDisposable
 import org.apache.commons.lang3.StringUtils
 import org.jetbrains.anko.*
 import timber.log.Timber
@@ -25,6 +27,7 @@ class EditAccountActivity : AppCompatActivity(), AccountContract.EditView {
     lateinit var presenter: AccountPresenter
     override val context = this
     private val ui = EditAccountActivityUi()
+    private val compositeDisposable = CompositeDisposable()
 
     init {
         App.getAppComponent().inject(this)
@@ -48,7 +51,12 @@ class EditAccountActivity : AppCompatActivity(), AccountContract.EditView {
 
     fun storeBundle(extras: Bundle?) {
         if (extras != null && extras.containsKey(KEY_ACCOUNT_UUID))
-            presenter.loadAccount(extras.getString(KEY_ACCOUNT_UUID))
+            compositeDisposable.add(presenter.loadAccount(extras.getString(KEY_ACCOUNT_UUID))
+                    .fromIOToMainThread()
+                    .doOnError { Timber.e(it) }
+                    .subscribe {
+                        presenter.updateView()
+                    })
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -65,6 +73,7 @@ class EditAccountActivity : AppCompatActivity(), AccountContract.EditView {
 
     override fun onStop() {
         presenter.detachView()
+        compositeDisposable.dispose()
         super.onStop()
     }
 
@@ -79,7 +88,17 @@ class EditAccountActivity : AppCompatActivity(), AccountContract.EditView {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_save -> presenter.save()
+            R.id.action_save -> compositeDisposable.add(presenter.save()
+                    .fromIOToMainThread()
+                    .doOnError { Timber.e(it) }
+                    .subscribe {
+                        if (it.isValid) {
+                            finishView()
+                        } else {
+                            for (validationError in it.errors)
+                                showError(validationError)
+                        }
+                    })
         }
         return super.onOptionsItemSelected(item)
     }

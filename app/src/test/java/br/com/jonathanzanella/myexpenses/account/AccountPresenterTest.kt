@@ -5,10 +5,10 @@ import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 import org.mockito.Mockito.verify
 
+@Suppress("IllegalIdentifier")
 class AccountPresenterTest {
     lateinit var dataSource: AccountDataSource
     lateinit var view: AccountContract.EditView
@@ -20,35 +20,21 @@ class AccountPresenterTest {
     }
 
     @Test
-    @Ignore("Fix when add RX")
-    fun save_gets_data_from_screen_and_save_to_repository() {
+    fun `save account with the data from the screen`() {
         val account = Account()
         account.uuid = "uuid"
 
+        whenever(view.fillAccount(account)).thenReturn(account)
         whenever(dataSource.find(account.uuid!!)).thenReturn(Observable.just(account))
         whenever(dataSource.save(account)).thenReturn(Observable.just(ValidationResult()))
 
         val presenter = AccountPresenter(dataSource)
         presenter.attachView(view)
 
-        presenter.loadAccount(account.uuid!!)
-        presenter.save()
+        presenter.loadAccount(account.uuid!!).blockingFirst()
+        presenter.save().blockingFirst()
 
         verify(view).fillAccount(account)
         verify(dataSource).save(account)
-        verify(view).finishView()
     }
-
-//    @Test
-//    @Ignore("fix when add DI")
-//    fun call_view_with_errors() {
-//        val result = ValidationResult()
-//        result.addError(ValidationError.NAME)
-//
-//        `when`(dataSource!!.save(any(Account::class.java))).thenReturn(result)
-//
-//        presenter!!.save()
-
-//        verify<EditView>(view, times(1)).showError(ValidationError.NAME)
-//    }
 }

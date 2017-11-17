@@ -11,11 +11,14 @@ import android.widget.TextView
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.transactions.TransactionsView
+import br.com.jonathanzanella.myexpenses.extensions.fromIOToMainThread
 import br.com.jonathanzanella.myexpenses.helpers.firstDayOfMonth
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.views.anko.*
+import io.reactivex.disposables.CompositeDisposable
 import org.jetbrains.anko.*
 import org.joda.time.DateTime
+import timber.log.Timber
 import javax.inject.Inject
 
 class ShowAccountActivity : AppCompatActivity(), AccountContract.View {
@@ -23,6 +26,7 @@ class ShowAccountActivity : AppCompatActivity(), AccountContract.View {
     @Inject
     lateinit var presenter: AccountPresenter
     private val ui = ShowAccountActivityUi()
+    private val compositeDisposable = CompositeDisposable()
 
     init {
         App.getAppComponent().inject(this)
@@ -41,7 +45,12 @@ class ShowAccountActivity : AppCompatActivity(), AccountContract.View {
     fun storeBundle(extras: Bundle?) {
         if (extras == null)
             return
-        presenter.loadAccount(extras.getString(KEY_ACCOUNT_UUID))
+        compositeDisposable.add(presenter.loadAccount(extras.getString(KEY_ACCOUNT_UUID))
+                .fromIOToMainThread()
+                .doOnError { Timber.e(it) }
+                .subscribe {
+                    presenter.updateView()
+                })
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -60,8 +69,9 @@ class ShowAccountActivity : AppCompatActivity(), AccountContract.View {
     }
 
     override fun onStop() {
-        super.onStop()
         presenter.detachView()
+        compositeDisposable.dispose()
+        super.onStop()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
