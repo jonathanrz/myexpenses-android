@@ -29,6 +29,7 @@ class MonthTransactionsPresenter(private val view: MonthTransactionsContractView
         currentBalance = balance
 
         doAsync {
+            adapter.resetTransactions()
             if (account.accountToPayBills)
                 adapter.addTransactions(billDataSource.monthly(month).blockingFirst())
             adapter.addTransactions(expenseDataSource.accountExpenses(account, month))

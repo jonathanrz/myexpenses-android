@@ -64,8 +64,10 @@ class TransactionAdapter : RecyclerView.Adapter<TransactionAdapter.ViewHolder>()
         holder.setData(transactions[position])
     }
 
-    override fun getItemCount(): Int {
-        return transactions.size
+    override fun getItemCount(): Int = transactions.size
+
+    fun resetTransactions() {
+        transactions.clear()
     }
 
     fun addTransactions(transactions: List<Transaction>) {
@@ -77,7 +79,5 @@ class TransactionAdapter : RecyclerView.Adapter<TransactionAdapter.ViewHolder>()
         })
     }
 
-    fun getTransactions(): List<Transaction> {
-        return transactions
-    }
+    fun getTransactions(): List<Transaction> = transactions
 }
