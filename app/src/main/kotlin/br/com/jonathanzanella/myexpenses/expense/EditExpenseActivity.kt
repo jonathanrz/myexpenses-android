@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.content.res.ResourcesCompat
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.AppCompatEditText
 import android.text.InputType
@@ -192,6 +193,23 @@ class EditExpenseActivity : AppCompatActivity(), ExpenseContract.EditView {
         i.putExtra(KEY_EXPENSE_UUID, presenter.uuid)
         setResult(Activity.RESULT_OK, i)
         finish()
+    }
+
+    override fun showConfirmDialog(expense: Expense) {
+        AlertDialog.Builder(ctx)
+                .setMessage("${getString(R.string.message_confirm_expense)} ${expense.name} - ${expense.incomeFormatted}?")
+                .setPositiveButton(android.R.string.yes) { _, _ ->
+                    doAsync {
+                        expense.debit()
+
+                        uiThread { finishView() }
+                    }
+                }
+                .setNegativeButton(android.R.string.no) { dialogInterface, _ ->
+                    dialogInterface.dismiss()
+                    finishView()
+                }
+                .show()
     }
 
     override fun showError(error: ValidationError) {

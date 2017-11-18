@@ -19,6 +19,7 @@ import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import org.joda.time.DateTime
+import org.joda.time.Days
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -168,7 +169,13 @@ class ExpensePresenter @Inject constructor(val dataSource: ExpenseDataSource, va
 
             uiThread {
                 if (result.isValid) {
-                    v.finishView()
+                    val isCreditCard = e.chargeableType != ChargeableType.CREDIT_CARD
+                    val isAfterToday = Days.daysBetween(DateTime.now(), e.getDate()).days > 1
+
+                    if(e.repetition == 1 && !isAfterToday && isCreditCard)
+                        v.showConfirmDialog(e)
+                    else
+                        v.finishView()
                 } else {
                     for (validationError in result.errors)
                         v.showError(validationError)
