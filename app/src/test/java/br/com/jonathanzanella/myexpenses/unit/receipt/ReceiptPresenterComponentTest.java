@@ -1,4 +1,4 @@
-package br.com.jonathanzanella.myexpenses.receipt;
+package br.com.jonathanzanella.myexpenses.unit.receipt;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -10,7 +10,7 @@ import org.mockito.Mock;
 import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.account.AccountRepository;
-import br.com.jonathanzanella.myexpenses.helper.builder.ReceiptBuilder;
+import br.com.jonathanzanella.myexpenses.unit.helper.builder.ReceiptBuilder;
 import br.com.jonathanzanella.myexpenses.source.SourceRepository;
 
 import static org.hamcrest.core.Is.is;
@@ -21,23 +21,23 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 @Ignore("needs to be reviewed")
 public class ReceiptPresenterComponentTest {
-	private ReceiptDataSource dataSource;
-	private ReceiptPresenter presenter;
+	private br.com.jonathanzanella.myexpenses.receipt.ReceiptDataSource dataSource;
+	private br.com.jonathanzanella.myexpenses.receipt.ReceiptPresenter presenter;
 
 	@Mock
-	private ReceiptContract.EditView view;
+	private br.com.jonathanzanella.myexpenses.receipt.ReceiptContract.EditView view;
 	@Mock
 	private AccountRepository accountRepository;
 	@Mock
 	private SourceRepository sourceRepository;
 	@Mock
-	private ReceiptDao dao;
+	private br.com.jonathanzanella.myexpenses.receipt.ReceiptDao dao;
 
 	@Before
 	public void setUp() throws Exception {
 		initMocks(this);
-		dataSource = new ReceiptRepository(dao);
-		presenter = new ReceiptPresenter(dataSource, sourceRepository, accountRepository);
+		dataSource = new br.com.jonathanzanella.myexpenses.receipt.ReceiptRepository(dao);
+		presenter = new br.com.jonathanzanella.myexpenses.receipt.ReceiptPresenter(dataSource, sourceRepository, accountRepository);
 		presenter.attachView(view);
 	}
 
@@ -46,16 +46,16 @@ public class ReceiptPresenterComponentTest {
 		DateTime date = new DateTime(2016, 9, 26, 0, 0, 0, DateTimeZone.UTC);
 		int income = 30000;
 		String name = "expense installment";
-		Receipt receipt = new ReceiptBuilder()
+		br.com.jonathanzanella.myexpenses.receipt.Receipt receipt = new ReceiptBuilder()
 				.name(name)
 				.income(income)
 				.date(date)
 				.installments(3)
 				.build();
-		when(view.fillReceipt(any(Receipt.class))).thenReturn(receipt);
+		when(view.fillReceipt(any(br.com.jonathanzanella.myexpenses.receipt.Receipt.class))).thenReturn(receipt);
 		presenter.save();
 
-		List<Receipt> receipts = dataSource.all();
+		List<br.com.jonathanzanella.myexpenses.receipt.Receipt> receipts = dataSource.all();
 		assertThat(receipts.size(), is(3));
 		assertThat(receipts.get(0).getName(), is(name + " 01/03"));
 		assertThat(receipts.get(0).getDate().getMonthOfYear(), is(date.getMonthOfYear()));
@@ -73,16 +73,16 @@ public class ReceiptPresenterComponentTest {
 		DateTime date = new DateTime(2016, 9, 26, 0, 0, 0, DateTimeZone.UTC);
 		int income = 30000;
 		String name = "expense repetition";
-		Receipt receipt = new ReceiptBuilder()
+		br.com.jonathanzanella.myexpenses.receipt.Receipt receipt = new ReceiptBuilder()
 				.name(name)
 				.income(income)
 				.date(date)
 				.repetition(3)
 				.build();
-		when(view.fillReceipt(any(Receipt.class))).thenReturn(receipt);
+		when(view.fillReceipt(any(br.com.jonathanzanella.myexpenses.receipt.Receipt.class))).thenReturn(receipt);
 		presenter.save();
 
-		List<Receipt> receipts = dataSource.all();
+		List<br.com.jonathanzanella.myexpenses.receipt.Receipt> receipts = dataSource.all();
 		assertThat(receipts.size(), is(3));
 		assertThat(receipts.get(0).getName(), is(name));
 		assertThat(receipts.get(0).getDate().getMonthOfYear(), is(date.getMonthOfYear()));

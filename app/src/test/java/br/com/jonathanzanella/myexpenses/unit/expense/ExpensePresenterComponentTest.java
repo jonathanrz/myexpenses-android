@@ -1,4 +1,4 @@
-package br.com.jonathanzanella.myexpenses.expense;
+package br.com.jonathanzanella.myexpenses.unit.expense;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -11,7 +11,7 @@ import java.util.List;
 
 import br.com.jonathanzanella.myexpenses.bill.BillDataSource;
 import br.com.jonathanzanella.myexpenses.card.CardDataSource;
-import br.com.jonathanzanella.myexpenses.helper.builder.ExpenseBuilder;
+import br.com.jonathanzanella.myexpenses.unit.helper.builder.ExpenseBuilder;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -21,23 +21,23 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 @Ignore
 public class ExpensePresenterComponentTest {
-	private ExpenseRepository repository;
-	private ExpensePresenter presenter;
+	private br.com.jonathanzanella.myexpenses.expense.ExpenseRepository repository;
+	private br.com.jonathanzanella.myexpenses.expense.ExpensePresenter presenter;
 
 	@Mock
-	private ExpenseContract.EditView view;
+	private br.com.jonathanzanella.myexpenses.expense.ExpenseContract.EditView view;
 	@Mock
 	private BillDataSource billDataSource;
 	@Mock
 	private CardDataSource cardDataSource;
 	@Mock
-	private ExpenseDao dao;
+	private br.com.jonathanzanella.myexpenses.expense.ExpenseDao dao;
 
 	@Before
 	public void setUp() throws Exception {
 		initMocks(this);
-		repository = new ExpenseRepository(dao, cardDataSource);
-		presenter = new ExpensePresenter(repository, billDataSource);
+		repository = new br.com.jonathanzanella.myexpenses.expense.ExpenseRepository(dao, cardDataSource);
+		presenter = new br.com.jonathanzanella.myexpenses.expense.ExpensePresenter(repository, billDataSource);
 		presenter.attachView(view);
 	}
 
@@ -46,16 +46,16 @@ public class ExpensePresenterComponentTest {
 		DateTime date = new DateTime(2016, 9, 26, 0, 0, 0, DateTimeZone.UTC);
 		int value = 30000;
 		String name = "expense installment";
-		Expense expense = new ExpenseBuilder()
+		br.com.jonathanzanella.myexpenses.expense.Expense expense = new ExpenseBuilder()
 				.name(name)
 				.value(value)
 				.date(date)
 				.installments(3)
 				.build();
-		when(view.fillExpense(any(Expense.class))).thenReturn(expense);
+		when(view.fillExpense(any(br.com.jonathanzanella.myexpenses.expense.Expense.class))).thenReturn(expense);
 		presenter.save();
 
-		List<Expense> expenses = repository.all();
+		List<br.com.jonathanzanella.myexpenses.expense.Expense> expenses = repository.all();
 		assertThat(expenses.size(), is(3));
 		assertThat(expenses.get(0).getName(), is(name + " 01/03"));
 		assertThat(expenses.get(0).getDate().getMonthOfYear(), is(date.getMonthOfYear()));
@@ -73,16 +73,16 @@ public class ExpensePresenterComponentTest {
 		DateTime date = new DateTime(2016, 9, 26, 0, 0, 0, DateTimeZone.UTC);
 		int value = 30000;
 		String name = "expense repetition";
-		Expense expense = new ExpenseBuilder()
+		br.com.jonathanzanella.myexpenses.expense.Expense expense = new ExpenseBuilder()
 				.name(name)
 				.value(value)
 				.date(date)
 				.repetition(3)
 				.build();
-		when(view.fillExpense(any(Expense.class))).thenReturn(expense);
+		when(view.fillExpense(any(br.com.jonathanzanella.myexpenses.expense.Expense.class))).thenReturn(expense);
 		presenter.save();
 
-		List<Expense> expenses = repository.all();
+		List<br.com.jonathanzanella.myexpenses.expense.Expense> expenses = repository.all();
 		assertThat(expenses.size(), is(3));
 		assertThat(expenses.get(0).getName(), is(name));
 		assertThat(expenses.get(0).getDate().getMonthOfYear(), is(date.getMonthOfYear()));

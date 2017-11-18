@@ -1,4 +1,4 @@
-package br.com.jonathanzanella.myexpenses.helper.builder;
+package br.com.jonathanzanella.myexpenses.unit.helper.builder;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -9,7 +9,7 @@ import br.com.jonathanzanella.myexpenses.expense.Expense;
 
 public class ExpenseBuilder {
 	private String name = "a";
-	private Chargeable chargeable = new AccountBuilder().build();
+	private Chargeable chargeable = new br.com.jonathanzanella.myexpenses.unit.helper.builder.AccountBuilder().build();
 	private DateTime date = new DateTime(2016, 9, 26, 0, 0, 0,DateTimeZone.UTC);
 	private Bill bill = null;
 	private boolean sync = false;

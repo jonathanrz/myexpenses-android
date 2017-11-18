@@ -1,4 +1,4 @@
-package br.com.jonathanzanella.myexpenses.receipt;
+package br.com.jonathanzanella.myexpenses.unit.receipt;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -15,15 +15,15 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class ReceiptAdapterPresenterTest {
 	@Mock
-	private ReceiptDataSource dataSource;
+	private br.com.jonathanzanella.myexpenses.receipt.ReceiptDataSource dataSource;
 
-	private ReceiptAdapterPresenter presenter;
+	private br.com.jonathanzanella.myexpenses.receipt.ReceiptAdapterPresenter presenter;
 
 	@Before
 	public void setUp() throws Exception {
 		initMocks(this);
 
-		presenter = new ReceiptAdapterPresenter(dataSource);
+		presenter = new br.com.jonathanzanella.myexpenses.receipt.ReceiptAdapterPresenter(dataSource);
 	}
 
 	@Test(expected = UnsupportedOperationException.class)
@@ -32,7 +32,7 @@ public class ReceiptAdapterPresenterTest {
 		DateTime dateTime = new DateTime(2016, 9, 26, 0, 0, 0, DateTimeZone.UTC);
 		when(dataSource.monthly(dateTime)).thenReturn(new ArrayList<>());
 
-		List<Receipt> receipts = presenter.getReceipts(true, dateTime);
-		receipts.add(new Receipt());
+		List<br.com.jonathanzanella.myexpenses.receipt.Receipt> receipts = presenter.getReceipts(true, dateTime);
+		receipts.add(new br.com.jonathanzanella.myexpenses.receipt.Receipt());
 	}
 }

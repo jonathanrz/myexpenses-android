@@ -1,4 +1,4 @@
-package br.com.jonathanzanella.myexpenses.receipt;
+package br.com.jonathanzanella.myexpenses.unit.receipt;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -19,24 +19,24 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class ReceiptPresenterTest {
 	private static final String UUID = "uuid";
 	@Mock
-	private ReceiptDataSource dataSource;
+	private br.com.jonathanzanella.myexpenses.receipt.ReceiptDataSource dataSource;
 	@Mock
 	private SourceRepository sourceRepository;
 	@Mock
 	private AccountDataSource accountDataSource;
 	@Mock
-	private ReceiptContract.EditView view;
+	private br.com.jonathanzanella.myexpenses.receipt.ReceiptContract.EditView view;
 
-	private ReceiptPresenter presenter;
+	private br.com.jonathanzanella.myexpenses.receipt.ReceiptPresenter presenter;
 
 	@Before
 	public void setUp() throws Exception {
 		initMocks(this);
-		presenter = new ReceiptPresenter(dataSource, sourceRepository, accountDataSource);
+		presenter = new br.com.jonathanzanella.myexpenses.receipt.ReceiptPresenter(dataSource, sourceRepository, accountDataSource);
 		presenter.attachView(view);
 	}
 
-	@Test(expected = ReceiptNotFoundException.class)
+	@Test(expected = br.com.jonathanzanella.myexpenses.receipt.ReceiptNotFoundException.class)
 	@Ignore("fix when convert to kotlin")
 	public void load_empty_source_throws_not_found_exception() {
 		when(dataSource.find(UUID)).thenReturn(null);
@@ -47,13 +47,13 @@ public class ReceiptPresenterTest {
 	@Test
 	@Ignore("fix when convert to kotlin")
 	public void save_gets_data_from_screen_and_save_to_repository() {
-		when(view.fillReceipt(any(Receipt.class))).thenReturn(new Receipt());
-		when(dataSource.save(any(Receipt.class))).thenReturn(new ValidationResult());
+		when(view.fillReceipt(any(br.com.jonathanzanella.myexpenses.receipt.Receipt.class))).thenReturn(new br.com.jonathanzanella.myexpenses.receipt.Receipt());
+		when(dataSource.save(any(br.com.jonathanzanella.myexpenses.receipt.Receipt.class))).thenReturn(new ValidationResult());
 
 		presenter.save();
 
-		verify(view, times(1)).fillReceipt(any(Receipt.class));
-		verify(dataSource, times(1)).save(any(Receipt.class));
+		verify(view, times(1)).fillReceipt(any(br.com.jonathanzanella.myexpenses.receipt.Receipt.class));
+		verify(dataSource, times(1)).save(any(br.com.jonathanzanella.myexpenses.receipt.Receipt.class));
 		verify(view, times(1)).finishView();
 	}
 
@@ -63,8 +63,8 @@ public class ReceiptPresenterTest {
 		ValidationResult result = new ValidationResult();
 		result.addError(ValidationError.NAME);
 
-		when(view.fillReceipt(any(Receipt.class))).thenReturn(new Receipt());
-		when(dataSource.save(any(Receipt.class))).thenReturn(result);
+		when(view.fillReceipt(any(br.com.jonathanzanella.myexpenses.receipt.Receipt.class))).thenReturn(new br.com.jonathanzanella.myexpenses.receipt.Receipt());
+		when(dataSource.save(any(br.com.jonathanzanella.myexpenses.receipt.Receipt.class))).thenReturn(result);
 
 		presenter.save();
 

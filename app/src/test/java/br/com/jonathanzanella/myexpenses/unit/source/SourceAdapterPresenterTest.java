@@ -1,4 +1,4 @@
-package br.com.jonathanzanella.myexpenses.source;
+package br.com.jonathanzanella.myexpenses.unit.source;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -13,15 +13,15 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class SourceAdapterPresenterTest {
 	@Mock
-	private SourceDataSource dataSource;
+	private br.com.jonathanzanella.myexpenses.source.SourceDataSource dataSource;
 
-	private SourceAdapterPresenter presenter;
+	private br.com.jonathanzanella.myexpenses.source.SourceAdapterPresenter presenter;
 
 	@Before
 	public void setUp() throws Exception {
 		initMocks(this);
 
-		presenter = new SourceAdapterPresenter(dataSource);
+		presenter = new br.com.jonathanzanella.myexpenses.source.SourceAdapterPresenter(dataSource);
 	}
 
 	@Test(expected = UnsupportedOperationException.class)
@@ -29,7 +29,7 @@ public class SourceAdapterPresenterTest {
 	public void get_sources_return_unmodifiable_list() {
 		when(dataSource.all()).thenReturn(new ArrayList<>());
 
-		List<Source> sources = presenter.getSources(false);
-		sources.add(new Source());
+		List<br.com.jonathanzanella.myexpenses.source.Source> sources = presenter.getSources(false);
+		sources.add(new br.com.jonathanzanella.myexpenses.source.Source());
 	}
 }

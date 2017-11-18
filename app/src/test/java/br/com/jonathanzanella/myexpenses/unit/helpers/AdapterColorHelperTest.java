@@ -1,4 +1,4 @@
-package br.com.jonathanzanella.myexpenses.helpers;
+package br.com.jonathanzanella.myexpenses.unit.helpers;
 
 import org.junit.Test;
 
@@ -9,7 +9,7 @@ public class AdapterColorHelperTest {
 
 	@Test
 	public void generate_colors_successfully() throws Exception {
-		AdapterColorHelper adapterColorHelper = new AdapterColorHelper(1, 2);
+		br.com.jonathanzanella.myexpenses.helpers.AdapterColorHelper adapterColorHelper = new br.com.jonathanzanella.myexpenses.helpers.AdapterColorHelper(1, 2);
 
 		assertThat(adapterColorHelper.getColorForGridWithTwoColumns(0), is(1));
 		assertThat(adapterColorHelper.getColorForGridWithTwoColumns(1), is(2));

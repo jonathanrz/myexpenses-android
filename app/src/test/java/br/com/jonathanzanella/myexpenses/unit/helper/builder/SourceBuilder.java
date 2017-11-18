@@ -1,4 +1,4 @@
-package br.com.jonathanzanella.myexpenses.helper.builder;
+package br.com.jonathanzanella.myexpenses.unit.helper.builder;
 
 import br.com.jonathanzanella.myexpenses.source.Source;
 
