@@ -2,6 +2,9 @@ package br.com.jonathanzanella.myexpenses.account
 
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.Snackbar
+import android.support.design.widget.Snackbar.LENGTH_LONG
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
@@ -72,7 +75,7 @@ class ShowAccountActivity : AppCompatActivity(), AccountContract.View {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.edit, menu)
+        menuInflater.inflate(R.menu.edit_delete, menu)
         return true
     }
 
@@ -83,8 +86,31 @@ class ShowAccountActivity : AppCompatActivity(), AccountContract.View {
                 i.putExtra(EditAccountActivity.KEY_ACCOUNT_UUID, presenter.uuid)
                 startActivityForResult(i, EDIT_ACCOUNT)
             }
+            R.id.action_delete -> {
+                delete()
+            }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun delete() {
+        AlertDialog.Builder(act)
+                .setTitle(android.R.string.dialog_alert_title)
+                .setMessage(R.string.message_confirm_deletion)
+                .setPositiveButton(android.R.string.yes) { dialog, _ ->
+                    dialog.dismiss()
+
+                    compositeDisposable.add(presenter.delete()
+                            .fromIOToMainThread()
+                            .subscribe {
+                                if(it.isValid)
+                                    finish()
+                                else
+                                    Snackbar.make(window.decorView, R.string.error_message_deletion, LENGTH_LONG).show()
+                    })
+                }
+                .setNegativeButton(android.R.string.no) { dialog, _ -> dialog.dismiss() }
+                .show()
     }
 
     override fun showAccount(account: Account) {
