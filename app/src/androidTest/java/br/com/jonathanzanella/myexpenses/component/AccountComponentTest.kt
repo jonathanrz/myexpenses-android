@@ -54,6 +54,8 @@ class AccountComponentTest {
 
         Log.i("logDoTeste", "saved")
 
+        Thread.sleep(500)
+
         var subscribeCalls = 0
         val disposable = dataSource.all().subscribe {
             subscribeCalls++
