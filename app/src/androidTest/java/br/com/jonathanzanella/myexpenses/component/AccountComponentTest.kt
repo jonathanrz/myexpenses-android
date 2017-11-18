@@ -4,6 +4,7 @@ import android.arch.persistence.room.Room
 import android.content.Context
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
+import android.util.Log
 import br.com.jonathanzanella.myexpenses.account.*
 import br.com.jonathanzanella.myexpenses.database.MyDatabase
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder
@@ -47,12 +48,17 @@ class AccountComponentTest {
 
     @Test
     fun deletedAccountIsNotReturnedInAllQuery() {
+        Log.i("logDoTeste", "init")
         val account = AccountBuilder().build()
         assertTrue(dataSource.save(account).blockingFirst().isValid)
+
+        Log.i("logDoTeste", "saved")
 
         var subscribeCalls = 0
         dataSource.all().subscribe {
             subscribeCalls++
+
+            Log.i("logDoTeste", "subscription called time ${subscribeCalls} size ${it.size}")
 
             when(subscribeCalls) {
                 1 -> assertThat(it.size, Matchers.`is`(1))
@@ -61,12 +67,19 @@ class AccountComponentTest {
             }
         }
 
+        Log.i("logDoTeste", "subscribed")
         presenter.loadAccount(account.uuid!!).blockingFirst()
+        Log.i("logDoTeste", "loaded")
         assertTrue(presenter.delete().blockingFirst().isValid)
+        Log.i("logDoTeste", "deleted")
 
         Thread.sleep(500)
 
+        Log.i("logDoTeste", "waited")
+
         assertThat(subscribeCalls, `is`(2))
+
+        Log.i("logDoTeste", "validated")
     }
 
     @After
