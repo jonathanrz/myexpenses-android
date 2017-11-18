@@ -1,4 +1,4 @@
-package br.com.jonathanzanella.myexpenses.bill;
+package br.com.jonathanzanella.myexpenses.unit.bill;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -18,19 +18,19 @@ public class BillRepositoryUnitTest {
 	@Mock
 	private ExpenseDataSource expenseDataSource;
 	@Mock
-	private BillDao dao;
+	private br.com.jonathanzanella.myexpenses.bill.BillDao dao;
 
-	private BillRepository billRepository;
+	private br.com.jonathanzanella.myexpenses.bill.BillRepository billRepository;
 
 	@Before
 	public void setUp() throws Exception {
 		initMocks(this);
-		billRepository = new BillRepository(dao, expenseDataSource);
+		billRepository = new br.com.jonathanzanella.myexpenses.bill.BillRepository(dao, expenseDataSource);
 	}
 
 	@Test
 	public void return_with_error_when_tried_to_save_bill_without_name() throws Exception {
-		Bill bill = new Bill();
+		br.com.jonathanzanella.myexpenses.bill.Bill bill = new br.com.jonathanzanella.myexpenses.bill.Bill();
 		bill.setName(null);
 
 		ValidationResult result = billRepository.save(bill).blockingFirst();
@@ -41,7 +41,7 @@ public class BillRepositoryUnitTest {
 
 	@Test
 	public void return_with_error_when_tried_to_save_bill_without_amount() throws Exception {
-		Bill bill = new Bill();
+		br.com.jonathanzanella.myexpenses.bill.Bill bill = new br.com.jonathanzanella.myexpenses.bill.Bill();
 		bill.setName("a");
 		bill.setAmount(0);
 
@@ -53,7 +53,7 @@ public class BillRepositoryUnitTest {
 
 	@Test
 	public void return_with_error_when_tried_to_save_bill_without_due_date() throws Exception {
-		Bill bill = new Bill();
+		br.com.jonathanzanella.myexpenses.bill.Bill bill = new br.com.jonathanzanella.myexpenses.bill.Bill();
 		bill.setDueDate(0);
 
 		ValidationResult result = billRepository.save(bill).blockingFirst();
@@ -64,7 +64,7 @@ public class BillRepositoryUnitTest {
 
 	@Test
 	public void return_with_error_when_tried_to_save_bill_without_dates() throws Exception {
-		Bill bill = new Bill();
+		br.com.jonathanzanella.myexpenses.bill.Bill bill = new br.com.jonathanzanella.myexpenses.bill.Bill();
 		bill.setInitDate(null);
 		bill.setEndDate(null);
 
@@ -77,7 +77,7 @@ public class BillRepositoryUnitTest {
 
 	@Test
 	public void return_with_error_when_tried_to_save_bill_with_init_date_greater_than_end_date() throws Exception {
-		Bill bill = new Bill();
+		br.com.jonathanzanella.myexpenses.bill.Bill bill = new br.com.jonathanzanella.myexpenses.bill.Bill();
 		bill.setInitDate(new DateTime(2016, 10, 3, 0, 0, 0, DateTimeZone.UTC));
 		bill.setEndDate(new DateTime(2016, 10, 2, 0, 0, 0, DateTimeZone.UTC));
 
