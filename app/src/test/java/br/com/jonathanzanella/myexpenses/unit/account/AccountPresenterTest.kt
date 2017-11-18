@@ -1,5 +1,9 @@
-package br.com.jonathanzanella.myexpenses.account
+package br.com.jonathanzanella.myexpenses.unit.account
 
+import br.com.jonathanzanella.myexpenses.account.Account
+import br.com.jonathanzanella.myexpenses.account.AccountContract
+import br.com.jonathanzanella.myexpenses.account.AccountDataSource
+import br.com.jonathanzanella.myexpenses.account.AccountPresenter
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
