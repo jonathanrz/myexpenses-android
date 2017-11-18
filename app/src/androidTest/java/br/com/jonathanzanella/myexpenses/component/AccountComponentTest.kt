@@ -55,7 +55,7 @@ class AccountComponentTest {
         Log.i("logDoTeste", "saved")
 
         var subscribeCalls = 0
-        dataSource.all().subscribe {
+        val disposable = dataSource.all().subscribe {
             subscribeCalls++
 
             Log.i("logDoTeste", "subscription called time ${subscribeCalls} size ${it.size}")
@@ -80,6 +80,8 @@ class AccountComponentTest {
         assertThat(subscribeCalls, `is`(2))
 
         Log.i("logDoTeste", "validated")
+
+        disposable.dispose()
     }
 
     @After
