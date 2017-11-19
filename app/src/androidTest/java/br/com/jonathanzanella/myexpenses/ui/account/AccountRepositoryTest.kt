@@ -2,7 +2,6 @@ package br.com.jonathanzanella.myexpenses.ui.account
 
 import android.support.test.filters.SmallTest
 import android.support.test.runner.AndroidJUnit4
-import br.com.jonathanzanella.TestApp
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.account.AccountDataSource
@@ -13,19 +12,18 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import javax.inject.Inject
 
 @RunWith(AndroidJUnit4::class)
 @SmallTest
 class AccountRepositoryTest {
-    @Inject
     lateinit var dataSource: AccountDataSource
 
     @Before
     @Throws(Exception::class)
     fun setUp() {
-        TestApp.getTestComponent().inject(this)
         App.resetDatabase()
+
+        dataSource = App.getApp().appComponent.accountDataSource()
     }
 
     @Test
