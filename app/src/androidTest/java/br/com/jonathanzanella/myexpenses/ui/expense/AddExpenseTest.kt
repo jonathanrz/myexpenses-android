@@ -23,6 +23,7 @@ import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import br.com.jonathanzanella.myexpenses.ui.helpers.ActivityLifecycleHelper
 import br.com.jonathanzanella.myexpenses.ui.helpers.UIHelper
+import br.com.jonathanzanella.myexpenses.ui.helpers.UIHelper.clickIntoView
 import br.com.jonathanzanella.myexpenses.views.MainActivity
 import junit.framework.Assert.assertTrue
 import org.hamcrest.core.IsNot.not
