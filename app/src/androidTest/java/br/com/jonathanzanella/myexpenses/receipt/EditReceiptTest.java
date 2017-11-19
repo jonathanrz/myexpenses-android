@@ -99,6 +99,8 @@ public class EditReceiptTest {
 
 		clickIntoView(R.id.action_save);
 
+		clickIntoView(getTargetContext().getString(R.string.yes));
+
 		matchToolbarTitle(showReceiptTitle + " changed");
 
 		receipt = repository.find(receipt.getUuid());
