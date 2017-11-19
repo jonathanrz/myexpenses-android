@@ -1,10 +1,12 @@
 package br.com.jonathanzanella.myexpenses.account.transactions
 
+import android.util.Log
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.bill.BillDataSource
 import br.com.jonathanzanella.myexpenses.expense.ExpenseDataSource
 import br.com.jonathanzanella.myexpenses.receipt.ReceiptDataSource
+import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import br.com.jonathanzanella.myexpenses.transaction.TransactionAdapter
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
@@ -28,12 +30,19 @@ class MonthTransactionsPresenter(private val view: MonthTransactionsContractView
     fun showBalance(account: Account, month: DateTime, balance: Int) {
         currentBalance = balance
 
+        Log.i("teste", "showBalance month=${month.millis}")
+
         doAsync {
-            adapter.resetTransactions()
+            val list = ArrayList<Transaction>()
+
             if (account.accountToPayBills)
-                adapter.addTransactions(billDataSource.monthly(month).blockingFirst())
-            adapter.addTransactions(expenseDataSource.accountExpenses(account, month))
-            adapter.addTransactions(receiptDataSource.monthly(month, account))
+                list.addAll(billDataSource.monthly(month).blockingFirst())
+            list.addAll(expenseDataSource.accountExpenses(account, month))
+            list.addAll(receiptDataSource.monthly(month, account))
+
+            adapter.setTransactions(list)
+
+            Log.i("teste", "transaction=${adapter.getTransactions().size} month=${month.millis}")
 
             for (transaction in adapter.getTransactions()) {
                 with(transaction) {

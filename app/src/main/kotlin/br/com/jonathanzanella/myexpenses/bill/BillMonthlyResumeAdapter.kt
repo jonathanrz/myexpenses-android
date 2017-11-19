@@ -10,13 +10,12 @@ import android.view.ViewGroup
 import android.widget.TextView
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
+import br.com.jonathanzanella.myexpenses.extensions.fromIOToMainThread
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
 import br.com.jonathanzanella.myexpenses.views.anko.resumeRowCell
 import br.com.jonathanzanella.myexpenses.views.anko.singleRowCell
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 import org.jetbrains.anko.*
 import org.joda.time.DateTime
 import javax.inject.Inject
@@ -89,8 +88,7 @@ class BillMonthlyResumeAdapter : RecyclerView.Adapter<BillMonthlyResumeAdapter.V
                     bills = it
                     totalValue = it.sumBy { it.amount }
                 }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .fromIOToMainThread()
                 .subscribe { notifyDataSetChanged() }
     }
 }

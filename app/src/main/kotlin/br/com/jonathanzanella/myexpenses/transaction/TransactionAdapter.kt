@@ -66,11 +66,8 @@ class TransactionAdapter : RecyclerView.Adapter<TransactionAdapter.ViewHolder>()
 
     override fun getItemCount(): Int = transactions.size
 
-    fun resetTransactions() {
-        transactions.clear()
-    }
-
-    fun addTransactions(transactions: List<Transaction>) {
+    fun setTransactions(transactions: List<Transaction>) {
+        this.transactions.clear()
         this.transactions.addAll(transactions)
         Collections.sort(this.transactions, Comparator<Transaction> { lhs, rhs ->
             if (lhs.getDate().isAfter(rhs.getDate()))
