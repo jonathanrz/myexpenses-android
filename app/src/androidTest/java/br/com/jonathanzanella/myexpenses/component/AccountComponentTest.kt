@@ -69,6 +69,8 @@ class AccountComponentTest {
             }
         }
 
+        Thread.sleep(500)
+
         Log.i("logDoTeste", "subscribed")
         presenter.loadAccount(account.uuid!!).blockingFirst()
         Log.i("logDoTeste", "loaded")
