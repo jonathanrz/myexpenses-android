@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.annotation.UiThread
 import android.support.v4.content.res.ResourcesCompat
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.AppCompatEditText
 import android.text.InputType
@@ -157,6 +158,23 @@ class EditReceiptActivity : AppCompatActivity(), ReceiptContract.EditView {
         receipt.installments = installment
         receipt.repetition = repetition
         return receipt
+    }
+
+    override fun showConfirmDialog(receipt: Receipt) {
+        AlertDialog.Builder(ctx)
+                .setMessage("${getString(R.string.message_confirm_receipt)} ${receipt.name} - ${receipt.incomeFormatted}?")
+                .setPositiveButton(R.string.yes) { _, _ ->
+                    doAsync {
+                        receipt.credit()
+
+                        uiThread { finishView() }
+                    }
+                }
+                .setNegativeButton(R.string.no) { dialogInterface, _ ->
+                    dialogInterface.dismiss()
+                    finishView()
+                }
+                .show()
     }
 
     override fun finishView() {
