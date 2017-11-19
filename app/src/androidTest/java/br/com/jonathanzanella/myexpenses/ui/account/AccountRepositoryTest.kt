@@ -9,6 +9,7 @@ import br.com.jonathanzanella.myexpenses.account.AccountDataSource
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.not
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -32,10 +33,18 @@ class AccountRepositoryTest {
     fun can_save_account() {
         val account = Account()
         account.name = "test"
-        dataSource.save(account).subscribe {
+        var asserted = false
+        val disposable = dataSource.save(account).subscribe {
             assertThat(account.id, `is`(not(0L)))
             assertThat<String>(account.uuid, `is`(not("")))
+
+            asserted = true
         }
+
+        Thread.sleep(500)
+
+        disposable.dispose()
+        assertTrue(asserted)
     }
 
     @Test
@@ -43,10 +52,9 @@ class AccountRepositoryTest {
     fun can_load_saved_account() {
         val account = Account()
         account.name = "test"
-        dataSource.save(account).subscribe {
-            dataSource.find(account.uuid!!).subscribe {
-                assertThat<String>(it.uuid, `is`<String>(account.uuid))
-            }
-        }
+        assertTrue(dataSource.save(account).blockingFirst().isValid)
+
+        val loadedAccount = dataSource.find(account.uuid!!).blockingFirst()
+        assertThat<String>(loadedAccount.uuid, `is`<String>(account.uuid))
     }
 }

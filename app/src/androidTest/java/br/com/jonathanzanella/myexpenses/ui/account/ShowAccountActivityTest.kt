@@ -27,10 +27,10 @@ import br.com.jonathanzanella.myexpenses.receipt.ReceiptDataSource
 import br.com.jonathanzanella.myexpenses.source.SourceDataSource
 import br.com.jonathanzanella.myexpenses.ui.helpers.ActivityLifecycleHelper
 import br.com.jonathanzanella.myexpenses.ui.helpers.UIHelper.matchToolbarTitle
-import io.reactivex.disposables.Disposable
 import org.hamcrest.core.AllOf.allOf
 import org.joda.time.DateTime
 import org.junit.After
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -55,7 +55,6 @@ class ShowAccountActivityTest {
     lateinit var cardDataSource: CardDataSource
 
     private lateinit var account: Account
-    private lateinit var accountDisposable: Disposable
 
     @Before
     @Throws(Exception::class)
@@ -68,13 +67,12 @@ class ShowAccountActivityTest {
         account.name = "test"
         account.balance = ACCOUNT_BALANCE
         account.accountToPayCreditCard = true
-        accountDisposable = dataSource.save(account).subscribe { assert(it.isValid) }
+        assertTrue(dataSource.save(account).blockingFirst().isValid)
     }
 
     @After
     @Throws(Exception::class)
     fun tearDown() {
-        accountDisposable.dispose()
         ActivityLifecycleHelper.closeAllActivities(getInstrumentation())
     }
 

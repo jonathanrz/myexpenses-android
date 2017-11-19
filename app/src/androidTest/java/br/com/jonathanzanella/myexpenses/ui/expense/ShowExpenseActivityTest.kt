@@ -23,8 +23,8 @@ import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.ui.helpers.ActivityLifecycleHelper
 import br.com.jonathanzanella.myexpenses.ui.helpers.UIHelper.clickIntoView
 import br.com.jonathanzanella.myexpenses.ui.helpers.UIHelper.matchToolbarTitle
-import io.reactivex.disposables.Disposable
 import org.junit.After
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -42,7 +42,6 @@ class ShowExpenseActivityTest {
     @Inject
     lateinit var accountDataSource: AccountDataSource
     private lateinit var expense: Expense
-    private lateinit var accountDisposable: Disposable
 
     @Before
     @Throws(Exception::class)
@@ -51,16 +50,15 @@ class ShowExpenseActivityTest {
         App.resetDatabase()
 
         val a = AccountBuilder().build()
-        accountDisposable = accountDataSource.save(a).subscribe { assert(it.isValid) }
+        assertTrue(accountDataSource.save(a).blockingFirst().isValid)
 
         expense = ExpenseBuilder().chargeable(a).build()
-        assert(dataSource.save(expense!!).isValid)
+        assertTrue(dataSource.save(expense).isValid)
     }
 
     @After
     @Throws(Exception::class)
     fun tearDown() {
-        accountDisposable.dispose()
         ActivityLifecycleHelper.closeAllActivities(getInstrumentation())
     }
 

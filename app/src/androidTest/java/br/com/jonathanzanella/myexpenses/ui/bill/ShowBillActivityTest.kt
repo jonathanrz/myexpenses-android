@@ -15,11 +15,11 @@ import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.bill.Bill
 import br.com.jonathanzanella.myexpenses.bill.BillDataSource
 import br.com.jonathanzanella.myexpenses.bill.ShowBillActivity
+import br.com.jonathanzanella.myexpenses.helpers.builder.BillBuilder
+import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.ui.helpers.ActivityLifecycleHelper
 import br.com.jonathanzanella.myexpenses.ui.helpers.TestUtils.waitForIdling
 import br.com.jonathanzanella.myexpenses.ui.helpers.UIHelper.matchToolbarTitle
-import br.com.jonathanzanella.myexpenses.helpers.builder.BillBuilder
-import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -42,7 +42,7 @@ class ShowBillActivityTest {
         dataSource = App.getApp().appComponent.billDataSource()
 
         bill = BillBuilder().build()
-        dataSource.save(bill).subscribe { assert(it.isValid) }
+        assert(dataSource.save(bill).blockingFirst().isValid)
     }
 
     @After

@@ -47,7 +47,7 @@ class ShowSourceActivityTest {
     @Throws(Exception::class)
     fun shows_account_correctly() {
         val i = Intent()
-        i.putExtra(br.com.jonathanzanella.myexpenses.source.ShowSourceActivity.KEY_SOURCE_UUID, source.uuid)
+        i.putExtra(ShowSourceActivity.KEY_SOURCE_UUID, source.uuid)
         activityTestRule.launchActivity(i)
 
         val editSourceTitle = getTargetContext().getString(R.string.source) + " " + source.name

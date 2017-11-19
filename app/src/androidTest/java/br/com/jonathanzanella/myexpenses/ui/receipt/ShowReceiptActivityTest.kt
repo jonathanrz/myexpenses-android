@@ -23,7 +23,6 @@ import br.com.jonathanzanella.myexpenses.receipt.ShowReceiptActivity
 import br.com.jonathanzanella.myexpenses.source.SourceDataSource
 import br.com.jonathanzanella.myexpenses.ui.helpers.ActivityLifecycleHelper
 import br.com.jonathanzanella.myexpenses.ui.helpers.UIHelper.matchToolbarTitle
-import io.reactivex.disposables.Disposable
 import junit.framework.Assert.assertTrue
 import org.junit.After
 import org.junit.Before
@@ -42,7 +41,6 @@ class ShowReceiptActivityTest {
     lateinit var dataSource: ReceiptDataSource
     lateinit var sourceDataSource: SourceDataSource
     lateinit var accountDataSource: AccountDataSource
-    lateinit var accountDisposable: Disposable
 
     @Before
     @Throws(Exception::class)
@@ -56,7 +54,7 @@ class ShowReceiptActivityTest {
         assertTrue(sourceDataSource.save(s).isValid)
 
         val a = AccountBuilder().build()
-        accountDisposable = accountDataSource.save(a).subscribe { assertTrue(it.isValid) }
+        assertTrue(accountDataSource.save(a).blockingFirst().isValid)
 
         receipt = ReceiptBuilder().source(s).account(a).build()
         assertTrue(dataSource.save(receipt!!).isValid)
@@ -65,7 +63,6 @@ class ShowReceiptActivityTest {
     @After
     @Throws(Exception::class)
     fun tearDown() {
-        accountDisposable.dispose()
         ActivityLifecycleHelper.closeAllActivities(getInstrumentation())
     }
 

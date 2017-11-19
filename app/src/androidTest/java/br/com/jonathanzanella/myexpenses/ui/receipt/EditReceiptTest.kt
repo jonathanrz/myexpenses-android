@@ -23,7 +23,6 @@ import br.com.jonathanzanella.myexpenses.source.SourceRepository
 import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import br.com.jonathanzanella.myexpenses.ui.helpers.ActivityLifecycleHelper
 import br.com.jonathanzanella.myexpenses.ui.helpers.UIHelper.*
-import io.reactivex.disposables.Disposable
 import junit.framework.Assert.assertTrue
 import org.hamcrest.core.Is.`is`
 import org.joda.time.DateTime
@@ -47,7 +46,6 @@ class EditReceiptTest {
     lateinit var repository: ReceiptRepository
 
     private lateinit var receipt: Receipt
-    private lateinit var accountDisposable: Disposable
 
     @Before
     @Throws(Exception::class)
@@ -56,7 +54,7 @@ class EditReceiptTest {
         App.resetDatabase()
 
         val a = AccountBuilder().build()
-        accountDisposable = accountDataSource.save(a).subscribe { assertTrue(it.isValid) }
+        assertTrue(accountDataSource.save(a).blockingFirst().isValid)
 
         val s = SourceBuilder().build()
         assertTrue(sourceRepository.save(s).isValid)
@@ -72,7 +70,6 @@ class EditReceiptTest {
     @After
     @Throws(Exception::class)
     fun tearDown() {
-        accountDisposable.dispose()
         ActivityLifecycleHelper.closeAllActivities(getInstrumentation())
     }
 

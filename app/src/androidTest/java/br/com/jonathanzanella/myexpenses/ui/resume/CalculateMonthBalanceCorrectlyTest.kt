@@ -49,7 +49,6 @@ class CalculateMonthBalanceCorrectlyTest {
     lateinit var accountDataSource: AccountDataSource
     lateinit var receiptDataSource: ReceiptDataSource
     lateinit var expenseDataSource: ExpenseDataSource
-    lateinit var accountDisposable: Disposable
 
     private val monthlyPagerAdapterHelper = MonthlyPagerAdapterHelper()
 
@@ -64,7 +63,7 @@ class CalculateMonthBalanceCorrectlyTest {
         expenseDataSource = App.getApp().appComponent.expenseDataSource()
 
         val a = br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder().build()
-        accountDisposable = accountDataSource.save(a).subscribe { assertTrue(it.isValid) }
+        assertTrue(accountDataSource.save(a).blockingFirst().isValid)
 
         val s = SourceBuilder().build()
         assertTrue(sourceDataSource.save(s).isValid)
@@ -84,7 +83,6 @@ class CalculateMonthBalanceCorrectlyTest {
     @After
     @Throws(Exception::class)
     fun tearDown() {
-        accountDisposable.dispose()
         ActivityLifecycleHelper.closeAllActivities(getInstrumentation())
     }
 

@@ -56,7 +56,7 @@ class AddExpenseTest {
         if (!uiDevice.isScreenOn)
             uiDevice.wakeUp()
 
-        accountDataSource.save(account).subscribe { assertTrue(it.isValid) }
+        assertTrue(accountDataSource.save(account).blockingFirst().isValid)
     }
 
     @After

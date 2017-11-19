@@ -26,7 +26,6 @@ import br.com.jonathanzanella.myexpenses.source.SourceDataSource
 import br.com.jonathanzanella.myexpenses.ui.helpers.ActivityLifecycleHelper
 import br.com.jonathanzanella.myexpenses.ui.helpers.UIHelper
 import br.com.jonathanzanella.myexpenses.views.MainActivity
-import io.reactivex.disposables.Disposable
 import org.hamcrest.Matchers.`is`
 import org.hamcrest.core.AllOf.allOf
 import org.junit.After
@@ -52,7 +51,6 @@ class ReceiptsViewTest {
 
     private lateinit var receipt: Receipt
     private lateinit var receipt2: Receipt
-    private lateinit var accountDisposable: Disposable
 
     @Before
     @Throws(Exception::class)
@@ -64,7 +62,7 @@ class ReceiptsViewTest {
         assertTrue(sourceDataSource.save(s).isValid)
 
         val a = AccountBuilder().build()
-        accountDisposable = accountDataSource.save(a).subscribe { assertTrue(it.isValid) }
+        assertTrue(accountDataSource.save(a).blockingFirst().isValid)
 
         receipt = ReceiptBuilder().name("receipt1").source(s).account(a).build()
         assertTrue(dataSource.save(receipt).isValid)
@@ -76,7 +74,6 @@ class ReceiptsViewTest {
     @After
     @Throws(Exception::class)
     fun tearDown() {
-        accountDisposable.dispose()
         ActivityLifecycleHelper.closeAllActivities(getInstrumentation())
     }
 

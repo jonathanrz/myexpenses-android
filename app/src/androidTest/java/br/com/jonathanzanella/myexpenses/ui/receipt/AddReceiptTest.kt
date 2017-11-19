@@ -23,7 +23,6 @@ import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import br.com.jonathanzanella.myexpenses.ui.helpers.ActivityLifecycleHelper
 import br.com.jonathanzanella.myexpenses.ui.helpers.UIHelper.*
 import br.com.jonathanzanella.myexpenses.views.MainActivity
-import io.reactivex.disposables.Disposable
 import junit.framework.Assert.assertTrue
 import org.joda.time.DateTime
 import org.junit.After
@@ -42,7 +41,6 @@ class AddReceiptTest {
 
     private lateinit var account: Account
     private lateinit var source: Source
-    private lateinit var accountDisposable: Disposable
 
     private val context: Context
         get() = getTargetContext()
@@ -59,7 +57,7 @@ class AddReceiptTest {
             uiDevice.wakeUp()
 
         account = AccountBuilder().build()
-        accountDisposable = accountDataSource.save(account).subscribe { assertTrue(it.isValid) }
+        assertTrue(accountDataSource.save(account).blockingFirst().isValid)
 
         source = SourceBuilder().build()
         assertTrue(sourceDataSource.save(source).isValid)
@@ -68,7 +66,6 @@ class AddReceiptTest {
     @After
     @Throws(Exception::class)
     fun tearDown() {
-        accountDisposable.dispose()
         ActivityLifecycleHelper.closeAllActivities(getInstrumentation())
     }
 

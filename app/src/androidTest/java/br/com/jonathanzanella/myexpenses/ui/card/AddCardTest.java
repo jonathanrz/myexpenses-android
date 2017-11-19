@@ -56,7 +56,7 @@ public class AddCardTest {
 			uiDevice.wakeUp();
 
 		account = new AccountBuilder().build();
-		accountDataSource.save(account).subscribe(validationResult -> assertTrue(validationResult.isValid()));
+		assertTrue(accountDataSource.save(account).blockingFirst().isValid());
 	}
 
 	@After
