@@ -2,11 +2,11 @@ package br.com.jonathanzanella.myexpenses.helpers.builder;
 
 import br.com.jonathanzanella.myexpenses.account.Account;
 
-import static org.apache.commons.lang3.RandomStringUtils.*;
+import static java.util.UUID.randomUUID;
 
 public class AccountBuilder {
 	private String name = "accountTest";
-	private String uuid = random(10);
+	private String uuid = randomUUID().toString();
 	private boolean accountToPayCreditCard = false;
 	private boolean accountToPayBills = false;
 	private boolean showInResume = true;

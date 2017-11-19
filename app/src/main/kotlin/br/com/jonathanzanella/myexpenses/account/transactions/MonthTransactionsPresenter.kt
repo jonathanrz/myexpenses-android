@@ -1,6 +1,5 @@
 package br.com.jonathanzanella.myexpenses.account.transactions
 
-import android.util.Log
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.bill.BillDataSource
@@ -30,8 +29,6 @@ class MonthTransactionsPresenter(private val view: MonthTransactionsContractView
     fun showBalance(account: Account, month: DateTime, balance: Int) {
         currentBalance = balance
 
-        Log.i("teste", "showBalance month=${month.millis}")
-
         doAsync {
             val list = ArrayList<Transaction>()
 
@@ -41,8 +38,6 @@ class MonthTransactionsPresenter(private val view: MonthTransactionsContractView
             list.addAll(receiptDataSource.monthly(month, account))
 
             adapter.setTransactions(list)
-
-            Log.i("teste", "transaction=${adapter.getTransactions().size} month=${month.millis}")
 
             for (transaction in adapter.getTransactions()) {
                 with(transaction) {
