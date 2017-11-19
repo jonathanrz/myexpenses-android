@@ -26,8 +26,6 @@ import br.com.jonathanzanella.myexpenses.receipt.ReceiptDataSource
 import br.com.jonathanzanella.myexpenses.source.SourceDataSource
 import br.com.jonathanzanella.myexpenses.ui.helpers.ActivityLifecycleHelper
 import br.com.jonathanzanella.myexpenses.ui.helpers.UIHelper.matchToolbarTitle
-import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.Matchers.`is`
 import org.hamcrest.core.AllOf.allOf
 import org.joda.time.DateTime
 import org.junit.After
@@ -67,7 +65,6 @@ class ShowAccountActivityTest {
         account.balance = ACCOUNT_BALANCE
         account.accountToPayCreditCard = true
 
-        assertThat(dataSource.all().blockingFirst().size, `is`(0))
         assertTrue(dataSource.save(account).blockingFirst().isValid)
     }
 
