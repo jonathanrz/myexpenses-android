@@ -32,7 +32,6 @@ interface TestComponent: AppComponent {
     fun inject(expensesInPeriodTest: ExpensesInPeriodTest)
     fun inject(expensesViewTest: ExpensesViewTest)
     fun inject(expenseRepositoryTest: ExpenseRepositoryTest)
-    fun inject(accountViewTest: AccountViewTest)
     fun inject(editAccountTest: EditAccountTest)
     fun inject(sourceRepositoryTest: SourceRepositoryTest)
     fun inject(listSourceActivityTest: ListSourceActivityTest)
