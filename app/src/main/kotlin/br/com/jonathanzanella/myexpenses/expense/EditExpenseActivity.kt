@@ -198,14 +198,14 @@ class EditExpenseActivity : AppCompatActivity(), ExpenseContract.EditView {
     override fun showConfirmDialog(expense: Expense) {
         AlertDialog.Builder(ctx)
                 .setMessage("${getString(R.string.message_confirm_expense)} ${expense.name} - ${expense.incomeFormatted}?")
-                .setPositiveButton(android.R.string.yes) { _, _ ->
+                .setPositiveButton(R.string.yes) { _, _ ->
                     doAsync {
                         expense.debit()
 
                         uiThread { finishView() }
                     }
                 }
-                .setNegativeButton(android.R.string.no) { dialogInterface, _ ->
+                .setNegativeButton(R.string.no) { dialogInterface, _ ->
                     dialogInterface.dismiss()
                     finishView()
                 }

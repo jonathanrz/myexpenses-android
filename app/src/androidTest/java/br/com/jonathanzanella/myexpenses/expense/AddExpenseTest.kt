@@ -18,6 +18,7 @@ import br.com.jonathanzanella.myexpenses.bill.Bill
 import br.com.jonathanzanella.myexpenses.bill.BillDataSource
 import br.com.jonathanzanella.myexpenses.helpers.ActivityLifecycleHelper
 import br.com.jonathanzanella.myexpenses.helpers.UIHelper
+import br.com.jonathanzanella.myexpenses.helpers.UIHelper.clickIntoView
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder
 import br.com.jonathanzanella.myexpenses.helpers.builder.BillBuilder
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
@@ -163,6 +164,8 @@ class AddExpenseTest {
 
         UIHelper.clickIntoView(R.id.action_save)
 
+        clickIntoView(context.getString(R.string.yes))
+
         UIHelper.matchToolbarTitle(expensesTitle)
 
         onView(ViewMatchers.withId(R.id.name)).check(matches(ViewMatchers.withText(bill.name)))
@@ -193,6 +196,8 @@ class AddExpenseTest {
         selectChargeable()
 
         UIHelper.clickIntoView(R.id.action_save)
+
+        clickIntoView(context.getString(R.string.yes))
 
         UIHelper.matchToolbarTitle(expensesTitle)
 
