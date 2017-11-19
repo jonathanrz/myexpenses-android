@@ -22,5 +22,6 @@ interface ExpenseContract {
         fun onDateChanged(date: DateTime)
         fun onBillSelected(bill: Bill?)
         fun onChargeableSelected(chargeable: Chargeable)
+        fun showConfirmDialog(expense: Expense)
     }
 }

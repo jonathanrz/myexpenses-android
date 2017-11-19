@@ -57,9 +57,7 @@ class Expense : Transaction, UnsyncModel {
     @Ignore
     var creditCard: Card? = null
     var repetition = 1
-        get() {
-            return Math.max(field, installments)
-        }
+        get() = Math.max(field, installments)
     var installments = 1
     @Ignore
     private var chargeable: Chargeable? = null

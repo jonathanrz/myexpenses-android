@@ -19,6 +19,7 @@ import br.com.jonathanzanella.myexpenses.source.SourceDataSource
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import org.joda.time.DateTime
+import org.joda.time.Days
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -156,7 +157,13 @@ class ReceiptPresenter @Inject constructor(private val dataSource: ReceiptDataSo
 
             uiThread {
                 if (result.isValid) {
-                    editView!!.finishView()
+                    val v = editView!!
+                    val isAfterToday = Days.daysBetween(DateTime.now(), r.getDate()).days > 1
+
+                    if(r.repetition == 1 && !isAfterToday)
+                        v.showConfirmDialog(r)
+                    else
+                        v.finishView()
                 } else {
                     for (validationError in result.errors)
                         editView!!.showError(validationError)

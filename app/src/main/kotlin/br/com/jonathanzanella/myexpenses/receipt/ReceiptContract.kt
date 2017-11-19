@@ -24,5 +24,6 @@ interface ReceiptContract {
         val installment: Int
         val repetition: Int
         fun onDateChanged(balanceDate: DateTime)
+        fun showConfirmDialog(receipt: Receipt)
     }
 }

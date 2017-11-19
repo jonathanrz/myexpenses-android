@@ -89,6 +89,8 @@ public class EditExpenseTest {
 
 		clickIntoView(R.id.action_save);
 
+		clickIntoView(getTargetContext().getString(R.string.yes));
+
 		matchToolbarTitle(showExpenseTitle + " changed");
 
 		expense = dataSource.find(expense.getUuid());
