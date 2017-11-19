@@ -18,8 +18,6 @@ import br.com.jonathanzanella.myexpenses.account.AccountDataSource
 import br.com.jonathanzanella.myexpenses.account.ShowAccountActivity
 import br.com.jonathanzanella.myexpenses.card.CardDataSource
 import br.com.jonathanzanella.myexpenses.expense.ExpenseDataSource
-import br.com.jonathanzanella.myexpenses.ui.helpers.ActivityLifecycleHelper
-import br.com.jonathanzanella.myexpenses.ui.helpers.UIHelper.matchToolbarTitle
 import br.com.jonathanzanella.myexpenses.helpers.builder.CardBuilder
 import br.com.jonathanzanella.myexpenses.helpers.builder.ExpenseBuilder
 import br.com.jonathanzanella.myexpenses.helpers.builder.ReceiptBuilder
@@ -27,6 +25,9 @@ import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.receipt.ReceiptDataSource
 import br.com.jonathanzanella.myexpenses.source.SourceDataSource
+import br.com.jonathanzanella.myexpenses.ui.helpers.ActivityLifecycleHelper
+import br.com.jonathanzanella.myexpenses.ui.helpers.UIHelper.matchToolbarTitle
+import io.reactivex.disposables.Disposable
 import org.hamcrest.core.AllOf.allOf
 import org.joda.time.DateTime
 import org.junit.After
@@ -42,7 +43,6 @@ class ShowAccountActivityTest {
     @Rule @JvmField
     var activityTestRule = ActivityTestRule(ShowAccountActivity::class.java, true, false)
 
-    private var account: Account? = null
     @Inject
     lateinit var dataSource: AccountDataSource
     @Inject
@@ -54,6 +54,9 @@ class ShowAccountActivityTest {
     @Inject
     lateinit var cardDataSource: CardDataSource
 
+    private lateinit var account: Account
+    private lateinit var accountDisposable: Disposable
+
     @Before
     @Throws(Exception::class)
     fun setUp() {
@@ -62,15 +65,16 @@ class ShowAccountActivityTest {
         App.resetDatabase()
 
         account = Account()
-        account!!.name = "test"
-        account!!.balance = ACCOUNT_BALANCE
-        account!!.accountToPayCreditCard = true
-        dataSource.save(account!!).subscribe { assert(it.isValid) }
+        account.name = "test"
+        account.balance = ACCOUNT_BALANCE
+        account.accountToPayCreditCard = true
+        accountDisposable = dataSource.save(account).subscribe { assert(it.isValid) }
     }
 
     @After
     @Throws(Exception::class)
     fun tearDown() {
+        accountDisposable.dispose()
         ActivityLifecycleHelper.closeAllActivities(getInstrumentation())
     }
 
@@ -79,11 +83,11 @@ class ShowAccountActivityTest {
     fun shows_account_correctly() {
         launchActivity()
 
-        val editAccountTitle = getTargetContext().getString(R.string.account) + " " + account!!.name
+        val editAccountTitle = getTargetContext().getString(R.string.account) + " " + account.name
         matchToolbarTitle(editAccountTitle)
 
-        val balanceAsCurrency = account!!.balance.toCurrencyFormatted()
-        onView(ViewMatchers.withId(R.id.act_show_account_name)).check(matches(ViewMatchers.withText(account!!.name)))
+        val balanceAsCurrency = account.balance.toCurrencyFormatted()
+        onView(ViewMatchers.withId(R.id.act_show_account_name)).check(matches(ViewMatchers.withText(account.name)))
         onView(ViewMatchers.withId(R.id.act_show_account_balance)).check(matches(ViewMatchers.withText(balanceAsCurrency)))
     }
 
@@ -101,7 +105,7 @@ class ShowAccountActivityTest {
         val value = expense.amount.toCurrencyFormatted()
 
         Thread.sleep(500)
-        onView(ViewMatchers.withId(R.id.act_show_account_name)).check(matches(ViewMatchers.withText(account!!.name)))
+        onView(ViewMatchers.withId(R.id.act_show_account_name)).check(matches(ViewMatchers.withText(account.name)))
         onView(ViewMatchers.withId(R.id.name)).check(matches(ViewMatchers.withText(billName)))
         onView(ViewMatchers.withId(R.id.value)).check(matches(ViewMatchers.withText(value)))
     }
@@ -134,7 +138,7 @@ class ShowAccountActivityTest {
 
     private fun launchActivity() {
         val i = Intent()
-        i.putExtra(ShowAccountActivity.KEY_ACCOUNT_UUID, account!!.uuid)
+        i.putExtra(ShowAccountActivity.KEY_ACCOUNT_UUID, account.uuid)
         activityTestRule.launchActivity(i)
     }
 

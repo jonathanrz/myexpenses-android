@@ -15,8 +15,6 @@ import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.account.AccountDataSource
 import br.com.jonathanzanella.myexpenses.bill.BillDataSource
 import br.com.jonathanzanella.myexpenses.expense.ExpenseDataSource
-import br.com.jonathanzanella.myexpenses.ui.helpers.ActivityLifecycleHelper
-import br.com.jonathanzanella.myexpenses.ui.helpers.UIHelper.clickIntoView
 import br.com.jonathanzanella.myexpenses.helpers.builder.BillBuilder
 import br.com.jonathanzanella.myexpenses.helpers.builder.ExpenseBuilder
 import br.com.jonathanzanella.myexpenses.helpers.builder.ReceiptBuilder
@@ -26,7 +24,10 @@ import br.com.jonathanzanella.myexpenses.receipt.ReceiptDataSource
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapterHelper
 import br.com.jonathanzanella.myexpenses.source.Source
 import br.com.jonathanzanella.myexpenses.source.SourceDataSource
+import br.com.jonathanzanella.myexpenses.ui.helpers.ActivityLifecycleHelper
+import br.com.jonathanzanella.myexpenses.ui.helpers.UIHelper.clickIntoView
 import br.com.jonathanzanella.myexpenses.views.MainActivity
+import io.reactivex.disposables.Disposable
 import junit.framework.Assert.assertTrue
 import org.hamcrest.Matchers.allOf
 import org.joda.time.DateTime
@@ -48,6 +49,7 @@ class CalculateMonthBalanceCorrectlyTest {
     lateinit var accountDataSource: AccountDataSource
     lateinit var receiptDataSource: ReceiptDataSource
     lateinit var expenseDataSource: ExpenseDataSource
+    lateinit var accountDisposable: Disposable
 
     private val monthlyPagerAdapterHelper = MonthlyPagerAdapterHelper()
 
@@ -62,7 +64,7 @@ class CalculateMonthBalanceCorrectlyTest {
         expenseDataSource = App.getApp().appComponent.expenseDataSource()
 
         val a = br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder().build()
-        assertTrue(accountDataSource.save(a).blockingFirst().isValid)
+        accountDisposable = accountDataSource.save(a).subscribe { assertTrue(it.isValid) }
 
         val s = SourceBuilder().build()
         assertTrue(sourceDataSource.save(s).isValid)
@@ -82,6 +84,7 @@ class CalculateMonthBalanceCorrectlyTest {
     @After
     @Throws(Exception::class)
     fun tearDown() {
+        accountDisposable.dispose()
         ActivityLifecycleHelper.closeAllActivities(getInstrumentation())
     }
 

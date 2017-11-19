@@ -17,12 +17,13 @@ import br.com.jonathanzanella.myexpenses.account.AccountDataSource
 import br.com.jonathanzanella.myexpenses.expense.Expense
 import br.com.jonathanzanella.myexpenses.expense.ExpenseDataSource
 import br.com.jonathanzanella.myexpenses.expense.ShowExpenseActivity
-import br.com.jonathanzanella.myexpenses.ui.helpers.ActivityLifecycleHelper
-import br.com.jonathanzanella.myexpenses.ui.helpers.UIHelper.clickIntoView
-import br.com.jonathanzanella.myexpenses.ui.helpers.UIHelper.matchToolbarTitle
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder
 import br.com.jonathanzanella.myexpenses.helpers.builder.ExpenseBuilder
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
+import br.com.jonathanzanella.myexpenses.ui.helpers.ActivityLifecycleHelper
+import br.com.jonathanzanella.myexpenses.ui.helpers.UIHelper.clickIntoView
+import br.com.jonathanzanella.myexpenses.ui.helpers.UIHelper.matchToolbarTitle
+import io.reactivex.disposables.Disposable
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -40,7 +41,8 @@ class ShowExpenseActivityTest {
     lateinit var dataSource: ExpenseDataSource
     @Inject
     lateinit var accountDataSource: AccountDataSource
-    private var expense: Expense? = null
+    private lateinit var expense: Expense
+    private lateinit var accountDisposable: Disposable
 
     @Before
     @Throws(Exception::class)
@@ -49,7 +51,7 @@ class ShowExpenseActivityTest {
         App.resetDatabase()
 
         val a = AccountBuilder().build()
-        accountDataSource.save(a).subscribe { assert(it.isValid) }
+        accountDisposable = accountDataSource.save(a).subscribe { assert(it.isValid) }
 
         expense = ExpenseBuilder().chargeable(a).build()
         assert(dataSource.save(expense!!).isValid)
@@ -58,6 +60,7 @@ class ShowExpenseActivityTest {
     @After
     @Throws(Exception::class)
     fun tearDown() {
+        accountDisposable.dispose()
         ActivityLifecycleHelper.closeAllActivities(getInstrumentation())
     }
 
@@ -65,16 +68,16 @@ class ShowExpenseActivityTest {
     @Throws(Exception::class)
     fun shows_expense_correctly() {
         val i = Intent()
-        i.putExtra(ShowExpenseActivity.KEY_EXPENSE_UUID, expense!!.uuid)
+        i.putExtra(ShowExpenseActivity.KEY_EXPENSE_UUID, expense.uuid)
         activityTestRule.launchActivity(i)
 
         val editExpenseTitle = getTargetContext().getString(R.string.expense) + " " + expense!!.name
         matchToolbarTitle(editExpenseTitle)
 
-        val incomeAsCurrency = expense!!.value.toCurrencyFormatted()
-        onView(withId(R.id.act_show_expense_name)).check(matches(withText(expense!!.name)))
+        val incomeAsCurrency = expense.value.toCurrencyFormatted()
+        onView(withId(R.id.act_show_expense_name)).check(matches(withText(expense.name)))
         onView(withId(R.id.act_show_expense_value)).check(matches(withText(incomeAsCurrency)))
-        val chargeable = expense!!.chargeableFromCache
+        val chargeable = expense.chargeableFromCache
         onView(withId(R.id.act_show_expense_chargeable)).check(matches(withText(chargeable!!.name)))
     }
 
@@ -82,10 +85,10 @@ class ShowExpenseActivityTest {
     @Throws(Exception::class)
     fun calls_edit_expense_activity() {
         val i = Intent()
-        i.putExtra(ShowExpenseActivity.KEY_EXPENSE_UUID, expense!!.uuid)
+        i.putExtra(ShowExpenseActivity.KEY_EXPENSE_UUID, expense.uuid)
         activityTestRule.launchActivity(i)
 
-        val showExpenseTitle = getTargetContext().getString(R.string.expense) + " " + expense!!.name
+        val showExpenseTitle = getTargetContext().getString(R.string.expense) + " " + expense.name
         matchToolbarTitle(showExpenseTitle)
 
         clickIntoView(R.id.action_edit)

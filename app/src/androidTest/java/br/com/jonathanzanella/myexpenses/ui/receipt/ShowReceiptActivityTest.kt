@@ -13,8 +13,6 @@ import android.support.test.runner.AndroidJUnit4
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.AccountDataSource
-import br.com.jonathanzanella.myexpenses.ui.helpers.ActivityLifecycleHelper
-import br.com.jonathanzanella.myexpenses.ui.helpers.UIHelper.matchToolbarTitle
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder
 import br.com.jonathanzanella.myexpenses.helpers.builder.ReceiptBuilder
 import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder
@@ -23,6 +21,9 @@ import br.com.jonathanzanella.myexpenses.receipt.Receipt
 import br.com.jonathanzanella.myexpenses.receipt.ReceiptDataSource
 import br.com.jonathanzanella.myexpenses.receipt.ShowReceiptActivity
 import br.com.jonathanzanella.myexpenses.source.SourceDataSource
+import br.com.jonathanzanella.myexpenses.ui.helpers.ActivityLifecycleHelper
+import br.com.jonathanzanella.myexpenses.ui.helpers.UIHelper.matchToolbarTitle
+import io.reactivex.disposables.Disposable
 import junit.framework.Assert.assertTrue
 import org.junit.After
 import org.junit.Before
@@ -41,6 +42,7 @@ class ShowReceiptActivityTest {
     lateinit var dataSource: ReceiptDataSource
     lateinit var sourceDataSource: SourceDataSource
     lateinit var accountDataSource: AccountDataSource
+    lateinit var accountDisposable: Disposable
 
     @Before
     @Throws(Exception::class)
@@ -54,7 +56,7 @@ class ShowReceiptActivityTest {
         assertTrue(sourceDataSource.save(s).isValid)
 
         val a = AccountBuilder().build()
-        assertTrue(accountDataSource.save(a).blockingFirst().isValid)
+        accountDisposable = accountDataSource.save(a).subscribe { assertTrue(it.isValid) }
 
         receipt = ReceiptBuilder().source(s).account(a).build()
         assertTrue(dataSource.save(receipt!!).isValid)
@@ -63,6 +65,7 @@ class ShowReceiptActivityTest {
     @After
     @Throws(Exception::class)
     fun tearDown() {
+        accountDisposable.dispose()
         ActivityLifecycleHelper.closeAllActivities(getInstrumentation())
     }
 

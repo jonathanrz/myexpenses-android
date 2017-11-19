@@ -16,8 +16,6 @@ import br.com.jonathanzanella.TestApp
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.AccountDataSource
-import br.com.jonathanzanella.myexpenses.ui.helpers.ActivityLifecycleHelper
-import br.com.jonathanzanella.myexpenses.ui.helpers.UIHelper
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder
 import br.com.jonathanzanella.myexpenses.helpers.builder.ReceiptBuilder
 import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder
@@ -25,10 +23,14 @@ import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.receipt.Receipt
 import br.com.jonathanzanella.myexpenses.receipt.ReceiptDataSource
 import br.com.jonathanzanella.myexpenses.source.SourceDataSource
+import br.com.jonathanzanella.myexpenses.ui.helpers.ActivityLifecycleHelper
+import br.com.jonathanzanella.myexpenses.ui.helpers.UIHelper
 import br.com.jonathanzanella.myexpenses.views.MainActivity
+import io.reactivex.disposables.Disposable
 import org.hamcrest.Matchers.`is`
 import org.hamcrest.core.AllOf.allOf
 import org.junit.After
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -48,8 +50,9 @@ class ReceiptsViewTest {
     @Inject
     lateinit var accountDataSource: AccountDataSource
 
-    private var receipt: Receipt? = null
-    private var receipt2: Receipt? = null
+    private lateinit var receipt: Receipt
+    private lateinit var receipt2: Receipt
+    private lateinit var accountDisposable: Disposable
 
     @Before
     @Throws(Exception::class)
@@ -58,21 +61,22 @@ class ReceiptsViewTest {
         App.resetDatabase()
 
         val s = SourceBuilder().build()
-        assert(sourceDataSource.save(s).isValid)
+        assertTrue(sourceDataSource.save(s).isValid)
 
         val a = AccountBuilder().build()
-        assert(accountDataSource.save(a).blockingFirst().isValid)
+        accountDisposable = accountDataSource.save(a).subscribe { assertTrue(it.isValid) }
 
         receipt = ReceiptBuilder().name("receipt1").source(s).account(a).build()
-        assert(dataSource.save(receipt!!).isValid)
+        assertTrue(dataSource.save(receipt).isValid)
 
         receipt2 = ReceiptBuilder().name("receipt2").source(s).account(a).build()
-        assert(dataSource.save(receipt2!!).isValid)
+        assertTrue(dataSource.save(receipt2).isValid)
     }
 
     @After
     @Throws(Exception::class)
     fun tearDown() {
+        accountDisposable.dispose()
         ActivityLifecycleHelper.closeAllActivities(getInstrumentation())
     }
 
@@ -86,18 +90,18 @@ class ReceiptsViewTest {
         val receiptsTitle = getTargetContext().getString(R.string.receipts)
         UIHelper.matchToolbarTitle(receiptsTitle)
 
-        UIHelper.clickIntoView(receipt!!.name, R.id.row_receipt_name)
+        UIHelper.clickIntoView(receipt.name, R.id.row_receipt_name)
 
-        val editReceiptTitle = getTargetContext().getString(R.string.receipt) + " " + receipt!!.name
+        val editReceiptTitle = getTargetContext().getString(R.string.receipt) + " " + receipt.name
         UIHelper.matchToolbarTitle(editReceiptTitle)
 
-        val incomeAsCurrency = receipt!!.income.toCurrencyFormatted()
-        onView(ViewMatchers.withId(R.id.act_show_receipt_name)).check(matches(ViewMatchers.withText(receipt!!.name)))
+        val incomeAsCurrency = receipt.income.toCurrencyFormatted()
+        onView(ViewMatchers.withId(R.id.act_show_receipt_name)).check(matches(ViewMatchers.withText(receipt.name)))
         onView(ViewMatchers.withId(R.id.act_show_receipt_income)).check(matches(ViewMatchers.withText(incomeAsCurrency)))
-        val account = receipt!!.accountFromCache
+        val account = receipt.accountFromCache
         onView(ViewMatchers.withId(R.id.act_show_receipt_account)).check(matches(ViewMatchers.withText(account!!.name)))
 
-        val source = receipt!!.source
+        val source = receipt.source
         onView(ViewMatchers.withId(R.id.act_show_receipt_source)).check(matches(ViewMatchers.withText(source!!.name)))
     }
 
