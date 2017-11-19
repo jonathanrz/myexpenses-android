@@ -18,7 +18,15 @@ class DatabaseObjectObservable<in Index, Object>(private val loadObject: (Index)
     }
 
     fun emit(index: Index) {
-        doAsync { bsMap[index]?.onNext(loadObject(index)) }
+        doAsync {
+            bsMap[index]?.let {
+                try {
+                    it.onNext(loadObject(index))
+                } catch (e: Exception) {
+                    it.onError(e)
+                }
+            }
+        }
     }
 
     fun clear() {
