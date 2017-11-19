@@ -49,6 +49,7 @@ class AddReceiptTest {
     @Throws(Exception::class)
     fun setUp() {
         App.resetDatabase()
+
         val accountDataSource = App.getApp().appComponent.accountDataSource()
         val sourceDataSource = App.getApp().appComponent.sourceDataSource()
 

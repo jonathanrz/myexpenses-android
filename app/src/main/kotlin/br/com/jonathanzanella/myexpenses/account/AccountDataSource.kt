@@ -35,7 +35,11 @@ class AccountRepository @Inject constructor(val dao: AccountDao): AccountDataSou
         allData.emit()
         resumeScreenData.emit()
         unsyncData.emit()
-        account?.let { findData.emit(it.uuid!!) }
+        if(account == null) {
+            findData.clear()
+        } else {
+            findData.emit(account.uuid!!)
+        }
     }
 
     @WorkerThread

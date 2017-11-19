@@ -9,7 +9,6 @@ import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.test.filters.MediumTest
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
-import br.com.jonathanzanella.TestApp
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.AccountDataSource
@@ -17,9 +16,9 @@ import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder
 import br.com.jonathanzanella.myexpenses.helpers.builder.ReceiptBuilder
 import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder
 import br.com.jonathanzanella.myexpenses.receipt.Receipt
-import br.com.jonathanzanella.myexpenses.receipt.ReceiptRepository
+import br.com.jonathanzanella.myexpenses.receipt.ReceiptDataSource
 import br.com.jonathanzanella.myexpenses.receipt.ShowReceiptActivity
-import br.com.jonathanzanella.myexpenses.source.SourceRepository
+import br.com.jonathanzanella.myexpenses.source.SourceDataSource
 import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import br.com.jonathanzanella.myexpenses.ui.helpers.ActivityLifecycleHelper
 import br.com.jonathanzanella.myexpenses.ui.helpers.UIHelper.*
@@ -31,40 +30,39 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import javax.inject.Inject
 
 @RunWith(AndroidJUnit4::class)
 @MediumTest
 class EditReceiptTest {
     @Rule @JvmField
     var activityTestRule = ActivityTestRule(ShowReceiptActivity::class.java, true, false)
-    @Inject
     lateinit var accountDataSource: AccountDataSource
-    @Inject
-    lateinit var sourceRepository: SourceRepository
-    @Inject
-    lateinit var repository: ReceiptRepository
+    lateinit var sourceDataSource: SourceDataSource
+    lateinit var dataSource: ReceiptDataSource
 
     private lateinit var receipt: Receipt
 
     @Before
     @Throws(Exception::class)
     fun setUp() {
-        TestApp.getTestComponent().inject(this)
         App.resetDatabase()
+
+        accountDataSource = App.getApp().appComponent.accountDataSource()
+        sourceDataSource = App.getApp().appComponent.sourceDataSource()
+        dataSource = App.getApp().appComponent.receiptDataSource()
 
         val a = AccountBuilder().build()
         assertTrue(accountDataSource.save(a).blockingFirst().isValid)
 
         val s = SourceBuilder().build()
-        assertTrue(sourceRepository.save(s).isValid)
+        assertTrue(sourceDataSource.save(s).isValid)
 
         receipt = ReceiptBuilder()
                 .date(DateTime.now().minusDays(1))
                 .account(a)
                 .source(s)
                 .build()
-        assertTrue(repository.save(receipt).isValid)
+        assertTrue(dataSource.save(receipt).isValid)
     }
 
     @After
@@ -97,9 +95,9 @@ class EditReceiptTest {
 
         matchToolbarTitle(showReceiptTitle + " changed")
 
-        receipt = repository.find(receipt.uuid!!)!!
+        receipt = dataSource.find(receipt.uuid!!)!!
 
         onView(withId(R.id.act_show_receipt_name)).check(matches(withText(receipt.name)))
-        assertThat(repository.all().size, `is`(1))
+        assertThat(dataSource.all().size, `is`(1))
     }
 }

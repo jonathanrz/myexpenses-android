@@ -46,6 +46,7 @@ class ShowReceiptActivityTest {
     @Throws(Exception::class)
     fun setUp() {
         App.resetDatabase()
+
         dataSource = App.getApp().appComponent.receiptDataSource()
         accountDataSource = App.getApp().appComponent.accountDataSource()
         sourceDataSource = App.getApp().appComponent.sourceDataSource()

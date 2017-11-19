@@ -9,7 +9,6 @@ import android.support.test.espresso.matcher.ViewMatchers.withText
 import android.support.test.filters.MediumTest
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
-import br.com.jonathanzanella.TestApp
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.source.ShowSourceActivity
@@ -20,7 +19,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import javax.inject.Inject
 
 @RunWith(AndroidJUnit4::class)
 @MediumTest
@@ -28,15 +26,15 @@ class ShowSourceActivityTest {
     @Rule @JvmField
     var activityTestRule = ActivityTestRule(ShowSourceActivity::class.java, true, false)
 
-    @Inject
     internal lateinit var dataSource: SourceDataSource
     private lateinit var source: Source
 
     @Before
     @Throws(Exception::class)
     fun setUp() {
-        TestApp.getTestComponent().inject(this)
         App.resetDatabase()
+
+        dataSource = App.getApp().appComponent.sourceDataSource()
 
         source = Source()
         source.name = "test"

@@ -10,7 +10,6 @@ import android.support.test.filters.MediumTest
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import android.view.View
-import br.com.jonathanzanella.TestApp
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.Account
@@ -27,6 +26,8 @@ import br.com.jonathanzanella.myexpenses.receipt.ReceiptDataSource
 import br.com.jonathanzanella.myexpenses.source.SourceDataSource
 import br.com.jonathanzanella.myexpenses.ui.helpers.ActivityLifecycleHelper
 import br.com.jonathanzanella.myexpenses.ui.helpers.UIHelper.matchToolbarTitle
+import org.hamcrest.MatcherAssert.assertThat
+import org.hamcrest.Matchers.`is`
 import org.hamcrest.core.AllOf.allOf
 import org.joda.time.DateTime
 import org.junit.After
@@ -35,7 +36,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import javax.inject.Inject
 
 @RunWith(AndroidJUnit4::class)
 @MediumTest
@@ -43,15 +43,10 @@ class ShowAccountActivityTest {
     @Rule @JvmField
     var activityTestRule = ActivityTestRule(ShowAccountActivity::class.java, true, false)
 
-    @Inject
     lateinit var dataSource: AccountDataSource
-    @Inject
     lateinit var expenseDataSource: ExpenseDataSource
-    @Inject
     lateinit var receiptDataSource: ReceiptDataSource
-    @Inject
     lateinit var sourceDataSource: SourceDataSource
-    @Inject
     lateinit var cardDataSource: CardDataSource
 
     private lateinit var account: Account
@@ -59,14 +54,20 @@ class ShowAccountActivityTest {
     @Before
     @Throws(Exception::class)
     fun setUp() {
-        TestApp.getTestComponent().inject(this)
-
         App.resetDatabase()
+
+        dataSource = App.getApp().appComponent.accountDataSource()
+        expenseDataSource = App.getApp().appComponent.expenseDataSource()
+        receiptDataSource = App.getApp().appComponent.receiptDataSource()
+        sourceDataSource = App.getApp().appComponent.sourceDataSource()
+        cardDataSource = App.getApp().appComponent.cardDataSource()
 
         account = Account()
         account.name = "test"
         account.balance = ACCOUNT_BALANCE
         account.accountToPayCreditCard = true
+
+        assertThat(dataSource.all().blockingFirst().size, `is`(0))
         assertTrue(dataSource.save(account).blockingFirst().isValid)
     }
 

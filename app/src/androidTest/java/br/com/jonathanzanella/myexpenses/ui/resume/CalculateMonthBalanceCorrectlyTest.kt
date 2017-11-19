@@ -15,10 +15,7 @@ import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.account.AccountDataSource
 import br.com.jonathanzanella.myexpenses.bill.BillDataSource
 import br.com.jonathanzanella.myexpenses.expense.ExpenseDataSource
-import br.com.jonathanzanella.myexpenses.helpers.builder.BillBuilder
-import br.com.jonathanzanella.myexpenses.helpers.builder.ExpenseBuilder
-import br.com.jonathanzanella.myexpenses.helpers.builder.ReceiptBuilder
-import br.com.jonathanzanella.myexpenses.helpers.builder.SourceBuilder
+import br.com.jonathanzanella.myexpenses.helpers.builder.*
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.receipt.ReceiptDataSource
 import br.com.jonathanzanella.myexpenses.resume.MonthlyPagerAdapterHelper
@@ -27,7 +24,6 @@ import br.com.jonathanzanella.myexpenses.source.SourceDataSource
 import br.com.jonathanzanella.myexpenses.ui.helpers.ActivityLifecycleHelper
 import br.com.jonathanzanella.myexpenses.ui.helpers.UIHelper.clickIntoView
 import br.com.jonathanzanella.myexpenses.views.MainActivity
-import io.reactivex.disposables.Disposable
 import junit.framework.Assert.assertTrue
 import org.hamcrest.Matchers.allOf
 import org.joda.time.DateTime
@@ -56,13 +52,14 @@ class CalculateMonthBalanceCorrectlyTest {
     @Throws(Exception::class)
     fun setUp() {
         App.resetDatabase()
+
         billDataSource = App.getApp().appComponent.billDataSource()
         sourceDataSource = App.getApp().appComponent.sourceDataSource()
         accountDataSource = App.getApp().appComponent.accountDataSource()
         receiptDataSource = App.getApp().appComponent.receiptDataSource()
         expenseDataSource = App.getApp().appComponent.expenseDataSource()
 
-        val a = br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder().build()
+        val a = AccountBuilder().build()
         assertTrue(accountDataSource.save(a).blockingFirst().isValid)
 
         val s = SourceBuilder().build()

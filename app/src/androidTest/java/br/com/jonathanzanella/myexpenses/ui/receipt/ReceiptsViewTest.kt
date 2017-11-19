@@ -12,7 +12,6 @@ import android.support.test.filters.MediumTest
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import android.view.View
-import br.com.jonathanzanella.TestApp
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.AccountDataSource
@@ -34,7 +33,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import javax.inject.Inject
 
 @RunWith(AndroidJUnit4::class)
 @MediumTest
@@ -42,11 +40,8 @@ class ReceiptsViewTest {
     @Rule @JvmField
     var activityTestRule = ActivityTestRule(MainActivity::class.java, true, false)
 
-    @Inject
     lateinit var dataSource: ReceiptDataSource
-    @Inject
     lateinit var sourceDataSource: SourceDataSource
-    @Inject
     lateinit var accountDataSource: AccountDataSource
 
     private lateinit var receipt: Receipt
@@ -55,8 +50,11 @@ class ReceiptsViewTest {
     @Before
     @Throws(Exception::class)
     fun setUp() {
-        TestApp.getTestComponent().inject(this)
         App.resetDatabase()
+
+        dataSource = App.getApp().appComponent.receiptDataSource()
+        sourceDataSource = App.getApp().appComponent.sourceDataSource()
+        accountDataSource = App.getApp().appComponent.accountDataSource()
 
         val s = SourceBuilder().build()
         assertTrue(sourceDataSource.save(s).isValid)
