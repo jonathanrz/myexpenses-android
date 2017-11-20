@@ -1,9 +1,22 @@
 package br.com.jonathanzanella.myexpenses.database
 
+import android.arch.persistence.db.framework.FrameworkSQLiteOpenHelperFactory
+import android.arch.persistence.room.testing.MigrationTestHelper
+import android.content.ContentValues
+import android.database.sqlite.SQLiteDatabase
+import android.support.test.InstrumentationRegistry
+import android.support.test.runner.AndroidJUnit4
+import org.hamcrest.Matchers.`is`
+import org.junit.Assert.assertThat
+import org.junit.Rule
+import org.junit.Test
+import org.junit.runner.RunWith
+
 @RunWith(AndroidJUnit4::class)
 @Suppress("IllegalIdentifier")
 class MigrationTest {
-    @Rule @JvmField
+    @Rule
+    @JvmField
     val testHelper = MigrationTestHelper(InstrumentationRegistry.getInstrumentation(),
                                             MyDatabase::class.java.canonicalName,
                                             FrameworkSQLiteOpenHelperFactory())
