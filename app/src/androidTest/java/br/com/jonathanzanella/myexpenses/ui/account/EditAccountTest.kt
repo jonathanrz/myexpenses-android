@@ -28,7 +28,7 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 @MediumTest
 class EditAccountTest {
-    @Rule
+    @Rule @JvmField
     var activityTestRule = ActivityTestRule(ShowAccountActivity::class.java, true, false)
 
     internal lateinit var dataSource: AccountDataSource

@@ -25,7 +25,7 @@ import org.junit.Rule
 import org.junit.Test
 
 class AccountViewTest {
-    @Rule
+    @Rule @JvmField
     var activityTestRule = ActivityTestRule(MainActivity::class.java)
     internal lateinit var dataSource: AccountDataSource
 
