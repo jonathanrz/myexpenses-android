@@ -13,7 +13,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-@Suppress("IllegalIdentifier")
 class MigrationTest {
     @Rule
     @JvmField
@@ -22,7 +21,7 @@ class MigrationTest {
                                             FrameworkSQLiteOpenHelperFactory())
 
     @Test
-    fun `migration from version 1 to 2 and check if contains the correct data`() {
+    fun migrationFromVersion1to2AndCheckIfContainsTheCorrectData() {
         val db = testHelper.createDatabase(DB_NAME, 1)
 
         val values = ContentValues()
