@@ -29,6 +29,14 @@ class MigrationTest {
         values.put("id", 1)
         values.put("name", "test")
         values.put("uuid", "uuid")
+        values.put("balance", 0)
+        values.put("sync", false)
+        values.put("accountToPayCreditCard", false)
+        values.put("accountToPayBills", false)
+        values.put("showInResume", false)
+        values.put("serverId", "")
+        values.put("createdAt", 0L)
+        values.put("updatedAt", 0L)
 
         db.insert("Account", SQLiteDatabase.CONFLICT_ABORT, values)
 
