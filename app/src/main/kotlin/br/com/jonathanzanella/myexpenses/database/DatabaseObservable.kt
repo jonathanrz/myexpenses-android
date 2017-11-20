@@ -16,6 +16,14 @@ class DatabaseObservable<T>(private val generateData: () -> T) {
     }
 
     fun emit() {
-        doAsync { bs?.onNext(generateData()) }
+        doAsync {
+            bs?.let {
+                try {
+                    it.onNext(generateData())
+                } catch (e: Exception) {
+                    it.onError(e)
+                }
+            }
+        }
     }
 }

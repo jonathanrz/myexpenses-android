@@ -7,13 +7,13 @@ import android.arch.persistence.room.Query
 
 @Dao
 interface AccountDao {
-    @Query("SELECT * FROM Account ORDER BY name")
+    @Query("SELECT * FROM Account WHERE removed = 0 ORDER BY name")
     fun all(): List<Account>
 
     @Query("SELECT * FROM Account WHERE sync = 0 ORDER BY name")
     fun unsync(): List<Account>
 
-    @Query("SELECT * FROM Account WHERE showInResume <> 0 ORDER BY name")
+    @Query("SELECT * FROM Account WHERE removed = 0 AND showInResume <> 0 ORDER BY name")
     fun showInResume(): List<Account>
 
     @Query("SELECT * FROM Account WHERE uuid = :uuid")

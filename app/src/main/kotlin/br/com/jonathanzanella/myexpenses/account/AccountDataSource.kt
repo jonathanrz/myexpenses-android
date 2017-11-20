@@ -1,6 +1,7 @@
 package br.com.jonathanzanella.myexpenses.account
 
 import android.support.annotation.WorkerThread
+import br.com.jonathanzanella.myexpenses.database.DatabaseObjectObservable
 import br.com.jonathanzanella.myexpenses.database.DatabaseObservable
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult
@@ -28,11 +29,17 @@ class AccountRepository @Inject constructor(val dao: AccountDao): AccountDataSou
     private val allData: DatabaseObservable<List<Account>> = DatabaseObservable { dao.all() }
     private val resumeScreenData: DatabaseObservable<List<Account>> = DatabaseObservable  { dao.showInResume() }
     private val unsyncData: DatabaseObservable<List<Account>> = DatabaseObservable  { dao.unsync() }
+    private val findData: DatabaseObjectObservable<String, Account> = DatabaseObjectObservable { id -> dao.find(id).firstOrNull() ?: throw AccountNotFoundException() }
 
-    private fun refreshObservables() {
+    private fun refreshObservables(account: Account? = null) {
         allData.emit()
         resumeScreenData.emit()
         unsyncData.emit()
+        if(account == null) {
+            findData.clear()
+        } else {
+            findData.emit(account.uuid!!)
+        }
     }
 
     @WorkerThread
@@ -42,9 +49,7 @@ class AccountRepository @Inject constructor(val dao: AccountDao): AccountDataSou
 
     override fun unsync(): Observable<List<Account>> = unsyncData.cache()
 
-    override fun find(uuid: String): Observable<Account> = Observable.fromCallable {
-        dao.find(uuid).firstOrNull() ?: throw AccountNotFoundException()
-    }
+    override fun find(uuid: String): Observable<Account> = findData.cache(uuid)
 
     override fun greaterUpdatedAt(): Observable<Long> =
             Observable.fromCallable { dao.greaterUpdatedAt().firstOrNull()?.updatedAt ?:0 }
@@ -58,7 +63,7 @@ class AccountRepository @Inject constructor(val dao: AccountDao): AccountDataSou
                 account.sync = false
                 account.id = dao.saveAtDatabase(account)
 
-                refreshObservables()
+                refreshObservables(account)
             }
             result
         }
@@ -93,7 +98,7 @@ class AccountRepository @Inject constructor(val dao: AccountDao): AccountDataSou
                 unsync.sync = true
                 unsync.id = dao.saveAtDatabase(unsync)
 
-                refreshObservables()
+                refreshObservables(unsync)
 
                 result
             }

@@ -1,8 +1,10 @@
 package br.com.jonathanzanella.myexpenses.account
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.Snackbar
+import android.support.design.widget.Snackbar.LENGTH_LONG
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
@@ -11,11 +13,14 @@ import android.widget.TextView
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.transactions.TransactionsView
+import br.com.jonathanzanella.myexpenses.extensions.fromIOToMainThread
 import br.com.jonathanzanella.myexpenses.helpers.firstDayOfMonth
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.views.anko.*
+import io.reactivex.disposables.CompositeDisposable
 import org.jetbrains.anko.*
 import org.joda.time.DateTime
+import timber.log.Timber
 import javax.inject.Inject
 
 class ShowAccountActivity : AppCompatActivity(), AccountContract.View {
@@ -23,6 +28,7 @@ class ShowAccountActivity : AppCompatActivity(), AccountContract.View {
     @Inject
     lateinit var presenter: AccountPresenter
     private val ui = ShowAccountActivityUi()
+    private val compositeDisposable = CompositeDisposable()
 
     init {
         App.getAppComponent().inject(this)
@@ -41,7 +47,10 @@ class ShowAccountActivity : AppCompatActivity(), AccountContract.View {
     fun storeBundle(extras: Bundle?) {
         if (extras == null)
             return
-        presenter.loadAccount(extras.getString(KEY_ACCOUNT_UUID))
+        compositeDisposable.add(presenter.loadAccount(extras.getString(KEY_ACCOUNT_UUID))
+                .fromIOToMainThread()
+                .doOnError { Timber.e(it) }
+                .subscribe { presenter.updateView() })
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -60,12 +69,13 @@ class ShowAccountActivity : AppCompatActivity(), AccountContract.View {
     }
 
     override fun onStop() {
-        super.onStop()
         presenter.detachView()
+        compositeDisposable.dispose()
+        super.onStop()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.edit, menu)
+        menuInflater.inflate(R.menu.edit_delete, menu)
         return true
     }
 
@@ -76,8 +86,31 @@ class ShowAccountActivity : AppCompatActivity(), AccountContract.View {
                 i.putExtra(EditAccountActivity.KEY_ACCOUNT_UUID, presenter.uuid)
                 startActivityForResult(i, EDIT_ACCOUNT)
             }
+            R.id.action_delete -> {
+                delete()
+            }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun delete() {
+        AlertDialog.Builder(act)
+                .setTitle(android.R.string.dialog_alert_title)
+                .setMessage(R.string.message_confirm_deletion)
+                .setPositiveButton(android.R.string.yes) { dialog, _ ->
+                    dialog.dismiss()
+
+                    compositeDisposable.add(presenter.delete()
+                            .fromIOToMainThread()
+                            .subscribe {
+                                if(it.isValid)
+                                    finish()
+                                else
+                                    Snackbar.make(window.decorView, R.string.error_message_deletion, LENGTH_LONG).show()
+                    })
+                }
+                .setNegativeButton(android.R.string.no) { dialog, _ -> dialog.dismiss() }
+                .show()
     }
 
     override fun showAccount(account: Account) {
@@ -91,12 +124,6 @@ class ShowAccountActivity : AppCompatActivity(), AccountContract.View {
 
     override fun setTitle(string: String) {
         ui.toolbar.title = string
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == EDIT_ACCOUNT && resultCode == Activity.RESULT_OK)
-            presenter.reloadAccount()
     }
 
     companion object {

@@ -3,8 +3,8 @@ package br.com.jonathanzanella.myexpenses.account
 import android.support.annotation.UiThread
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException
-import br.com.jonathanzanella.myexpenses.extensions.fromIOToMainThread
-import timber.log.Timber
+import br.com.jonathanzanella.myexpenses.validations.ValidationResult
+import io.reactivex.Observable
 import javax.inject.Inject
 
 class AccountPresenter @Inject constructor(private val dataSource: AccountDataSource) {
@@ -15,6 +15,7 @@ class AccountPresenter @Inject constructor(private val dataSource: AccountDataSo
 
     fun attachView(view: AccountContract.View) {
         this.view = view
+        updateView()
     }
 
     fun attachView(view: AccountContract.EditView) {
@@ -39,37 +40,24 @@ class AccountPresenter @Inject constructor(private val dataSource: AccountDataSo
     }
 
     @UiThread
-    private fun updateView() {
+    fun updateView() {
         val v = editView
         if (v != null) {
             v.setTitle(R.string.edit_account_title)
         } else {
-            view!!.let {
-                val title = it.context.getString(R.string.account)
-                it.setTitle(title + " " + account!!.name)
-            }
+            val title = view!!.context.getString(R.string.account)
+            account?.let { view!!.setTitle(title + " " + it.name) }
         }
-        view!!.showAccount(account!!)
+        account?.let { view!!.showAccount(it) }
+    }
+
+    fun loadAccount(uuid: String): Observable<Account> {
+        return dataSource.find(uuid)
+                .doOnNext { account = it }
     }
 
     @UiThread
-    fun reloadAccount() {
-        loadAccount(account!!.uuid!!)
-    }
-
-    fun loadAccount(uuid: String) {
-        //TODO: check disposable
-        dataSource.find(uuid)
-                .fromIOToMainThread()
-                .doOnError { Timber.e(it) }
-                .subscribe {
-                    account = it
-                    account?.let { updateView() }
-                }
-    }
-
-    @UiThread
-    fun save() {
+    fun save(): Observable<ValidationResult> {
         val v = editView ?: throw InvalidMethodCallException("save", javaClass.toString(), "View should be a Edit View")
 
         if (account == null)
@@ -77,17 +65,12 @@ class AccountPresenter @Inject constructor(private val dataSource: AccountDataSo
 
         account = v.fillAccount(account!!)
 
-        dataSource.save(account!!)
-                .fromIOToMainThread()
-                .doOnError { Timber.e(it) }
-                .subscribe {
-                    if (it.isValid) {
-                        v.finishView()
-                    } else {
-                        for (validationError in it.errors)
-                            v.showError(validationError)
-                    }
-                }
+        return dataSource.save(account!!)
+    }
+
+    fun delete(): Observable<ValidationResult> {
+        account!!.removed = true
+        return dataSource.save(account!!)
     }
 
     val uuid: String?

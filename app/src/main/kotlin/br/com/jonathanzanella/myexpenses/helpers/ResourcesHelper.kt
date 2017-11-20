@@ -5,10 +5,8 @@ import android.support.annotation.StringRes
 
 import java.lang.ref.WeakReference
 
-class ResourcesHelper(context: Context) {
+open class ResourcesHelper(context: Context) {
     private val contextWeakReference: WeakReference<Context> = WeakReference(context)
 
-    fun getString(@StringRes string: Int): String {
-        return contextWeakReference.get()!!.getString(string)
-    }
+    fun getString(@StringRes string: Int): String = contextWeakReference.get()!!.getString(string)
 }
