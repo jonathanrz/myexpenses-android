@@ -7,10 +7,12 @@ import android.database.sqlite.SQLiteDatabase
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
 import org.hamcrest.Matchers.`is`
-import org.junit.*
 import org.junit.Assert.assertThat
+import org.junit.Rule
+import org.junit.Test
 import org.junit.runner.RunWith
 
+const val TEST_DB_NAME = "test-data.db"
 
 @RunWith(AndroidJUnit4::class)
 class MigrationTest {
@@ -22,7 +24,7 @@ class MigrationTest {
 
     @Test
     fun migrationFromVersion1to2AndCheckIfContainsTheCorrectData() {
-        val db = testHelper.createDatabase(DB_NAME, 1)
+        val db = testHelper.createDatabase(TEST_DB_NAME, 1)
 
         val values = ContentValues()
         values.put("id", 1)
@@ -41,7 +43,7 @@ class MigrationTest {
 
         db.close()
 
-        testHelper.runMigrationsAndValidate(DB_NAME, 2, true, MyDatabase.MIGRATION_1_2)
+        testHelper.runMigrationsAndValidate(TEST_DB_NAME, 2, true, MyDatabase.MIGRATION_1_2)
 
         val accountDao = MyDatabase.buildDatabase(InstrumentationRegistry.getInstrumentation().targetContext).accountDao()
 
