@@ -7,14 +7,12 @@ import android.database.sqlite.SQLiteDatabase
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
 import org.hamcrest.Matchers.`is`
+import org.junit.*
 import org.junit.Assert.assertThat
-import org.junit.Ignore
-import org.junit.Rule
-import org.junit.Test
 import org.junit.runner.RunWith
 
+
 @RunWith(AndroidJUnit4::class)
-@Ignore
 class MigrationTest {
     @Rule
     @JvmField
@@ -40,6 +38,8 @@ class MigrationTest {
         values.put("updatedAt", 0L)
 
         db.insert("Account", SQLiteDatabase.CONFLICT_ABORT, values)
+
+        db.close()
 
         testHelper.runMigrationsAndValidate(DB_NAME, 2, true, MyDatabase.MIGRATION_1_2)
 
