@@ -38,8 +38,8 @@ abstract class MyDatabase : RoomDatabase() {
     abstract fun sourceDao(): SourceDao
 
     companion object {
-        fun buildDatabase(context: Context): MyDatabase =
-                Room.databaseBuilder(context, MyDatabase::class.java, DB_NAME)
+        fun buildDatabase(context: Context, dbName: String = DB_NAME): MyDatabase =
+                Room.databaseBuilder(context, MyDatabase::class.java, dbName)
                         .addMigrations(MIGRATION_1_2)
                         .build()
 

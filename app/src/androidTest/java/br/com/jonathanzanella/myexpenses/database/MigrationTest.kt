@@ -3,6 +3,7 @@ package br.com.jonathanzanella.myexpenses.database
 import android.arch.persistence.db.framework.FrameworkSQLiteOpenHelperFactory
 import android.arch.persistence.room.testing.MigrationTestHelper
 import android.content.ContentValues
+import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
@@ -22,12 +23,14 @@ class MigrationTest {
                                             MyDatabase::class.java.canonicalName,
                                             FrameworkSQLiteOpenHelperFactory())
 
+    val context: Context
+        get() = InstrumentationRegistry.getInstrumentation().targetContext
+
     @Test
     fun migrationFromVersion1to2AndCheckIfContainsTheCorrectData() {
         val db = testHelper.createDatabase(TEST_DB_NAME, 1)
 
         val values = ContentValues()
-        values.put("id", 1)
         values.put("name", "test")
         values.put("uuid", "uuid")
         values.put("balance", 0)
@@ -39,13 +42,13 @@ class MigrationTest {
         values.put("createdAt", 0L)
         values.put("updatedAt", 0L)
 
-        db.insert("Account", SQLiteDatabase.CONFLICT_ABORT, values)
+        assertThat(db.insert("Account", SQLiteDatabase.CONFLICT_ABORT, values), `is`(1L))
 
         db.close()
 
         testHelper.runMigrationsAndValidate(TEST_DB_NAME, 2, true, MyDatabase.MIGRATION_1_2)
 
-        val accountDao = MyDatabase.buildDatabase(InstrumentationRegistry.getInstrumentation().targetContext).accountDao()
+        val accountDao = MyDatabase.buildDatabase(context, TEST_DB_NAME).accountDao()
 
         val accounts = accountDao.find("uuid")
 
