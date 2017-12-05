@@ -22,7 +22,6 @@ class MonthTransactionsView@JvmOverloads constructor(
     private var singleRowHeight = context.resources.getDimensionPixelSize(R.dimen.single_row_height)
     private val monthTransactionsTemplate = resources.getString(R.string.month_transactions)
     private val presenter = MonthTransactionsPresenter(this)
-    private var loadTransactionsCallback: LoadTransactionsCallback? = null
 
     init {
         View.inflate(context, R.layout.view_account_month_transactions, this)
@@ -43,12 +42,6 @@ class MonthTransactionsView@JvmOverloads constructor(
         this.balance.text = balance.toCurrencyFormatted()
         this.balance.setTextColor(ResourcesCompat.getColor(resources, (if (balance >= 0) R.color.value_unreceived else R.color.value_unpaid), null))
 
-        loadTransactionsCallback?.onTransactionsLoaded(balance)
-
         list.minimumHeight = list.adapter.itemCount * singleRowHeight
-    }
-
-    fun setLoadTransactionsCallback(loadTransactionsCallback: LoadTransactionsCallback) {
-        this.loadTransactionsCallback = loadTransactionsCallback
     }
 }

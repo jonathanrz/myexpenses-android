@@ -5,21 +5,8 @@
 	android:layout_height="match_parent"
 	android:paddingTop="@dimen/default_spacing">
 
-	<LinearLayout
-		android:orientation="vertical"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content">
-
 		<br.com.jonathanzanella.myexpenses.account.transactions.MonthTransactionsView
 			android:id="@+id/thisMonth"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"/>
-
-		<br.com.jonathanzanella.myexpenses.account.transactions.MonthTransactionsView
-			android:id="@+id/nextMonth"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_marginTop="@dimen/default_spacing"/>
-
-	</LinearLayout>
 </ScrollView>
