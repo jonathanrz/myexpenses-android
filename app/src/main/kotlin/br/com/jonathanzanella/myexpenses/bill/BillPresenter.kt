@@ -5,7 +5,7 @@ import android.content.Context
 import android.support.annotation.UiThread
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException
-import br.com.jonathanzanella.myexpenses.extensions.fromIOToMainThread
+import br.com.jonathanzanella.myexpenses.extensions.fromComputationToMainThread
 import io.reactivex.disposables.CompositeDisposable
 import org.joda.time.DateTime
 import timber.log.Timber
@@ -99,7 +99,7 @@ class BillPresenter @Inject constructor(private val dataSource: BillDataSource) 
     fun loadBill(uuid: String) {
         //TODO: check disposable
         dataSource.find(uuid)
-            .fromIOToMainThread()
+            .fromComputationToMainThread()
             .doOnError { Timber.e(it) }
             .subscribe {
                 bill = it
@@ -125,7 +125,7 @@ class BillPresenter @Inject constructor(private val dataSource: BillDataSource) 
         b.endDate = endDate
 
         dataSource.save(b)
-                .fromIOToMainThread()
+                .fromComputationToMainThread()
                 .doOnError { Timber.e(it) }
                 .subscribe {
                     if (it.isValid) {

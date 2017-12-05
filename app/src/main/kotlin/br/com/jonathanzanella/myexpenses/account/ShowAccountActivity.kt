@@ -13,7 +13,7 @@ import android.widget.TextView
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.transactions.TransactionsView
-import br.com.jonathanzanella.myexpenses.extensions.fromIOToMainThread
+import br.com.jonathanzanella.myexpenses.extensions.fromComputationToMainThread
 import br.com.jonathanzanella.myexpenses.helpers.firstDayOfMonth
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.views.anko.*
@@ -48,7 +48,7 @@ class ShowAccountActivity : AppCompatActivity(), AccountContract.View {
         if (extras == null)
             return
         compositeDisposable.add(presenter.loadAccount(extras.getString(KEY_ACCOUNT_UUID))
-                .fromIOToMainThread()
+                .fromComputationToMainThread()
                 .doOnError { Timber.e(it) }
                 .subscribe { presenter.updateView() })
     }
@@ -101,7 +101,7 @@ class ShowAccountActivity : AppCompatActivity(), AccountContract.View {
                     dialog.dismiss()
 
                     compositeDisposable.add(presenter.delete()
-                            .fromIOToMainThread()
+                            .fromComputationToMainThread()
                             .subscribe {
                                 if(it.isValid)
                                     finish()

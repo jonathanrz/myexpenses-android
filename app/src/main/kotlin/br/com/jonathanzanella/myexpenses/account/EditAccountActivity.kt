@@ -11,7 +11,7 @@ import android.view.MenuItem
 import android.widget.CheckBox
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.extensions.fromIOToMainThread
+import br.com.jonathanzanella.myexpenses.extensions.fromComputationToMainThread
 import br.com.jonathanzanella.myexpenses.helpers.CurrencyTextWatch
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
@@ -52,7 +52,7 @@ class EditAccountActivity : AppCompatActivity(), AccountContract.EditView {
     fun storeBundle(extras: Bundle?) {
         if (extras != null && extras.containsKey(KEY_ACCOUNT_UUID))
             compositeDisposable.add(presenter.loadAccount(extras.getString(KEY_ACCOUNT_UUID))
-                    .fromIOToMainThread()
+                    .fromComputationToMainThread()
                     .doOnError { Timber.e(it) }
                     .subscribe {
                         presenter.updateView()
@@ -89,7 +89,7 @@ class EditAccountActivity : AppCompatActivity(), AccountContract.EditView {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_save -> compositeDisposable.add(presenter.save()
-                    .fromIOToMainThread()
+                    .fromComputationToMainThread()
                     .doOnError { Timber.e(it) }
                     .subscribe {
                         if (it.isValid) {
