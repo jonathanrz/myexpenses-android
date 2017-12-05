@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.R
-import br.com.jonathanzanella.myexpenses.extensions.fromIOToMainThread
+import br.com.jonathanzanella.myexpenses.extensions.fromComputationToMainThread
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
 import br.com.jonathanzanella.myexpenses.views.anko.resumeRowCell
@@ -88,7 +88,7 @@ class BillMonthlyResumeAdapter : RecyclerView.Adapter<BillMonthlyResumeAdapter.V
                     bills = it
                     totalValue = it.sumBy { it.amount }
                 }
-                .fromIOToMainThread()
+                .fromComputationToMainThread()
                 .subscribe { notifyDataSetChanged() }
     }
 }

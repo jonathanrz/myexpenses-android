@@ -1,8 +1,8 @@
 package br.com.jonathanzanella.myexpenses.database
 
+import br.com.jonathanzanella.myexpenses.extensions.fromIoToComputation
 import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
-import org.jetbrains.anko.doAsync
 
 class DatabaseObservable<T>(private val generateData: () -> T) {
     private var bs: BehaviorSubject<T>? = null
@@ -16,14 +16,10 @@ class DatabaseObservable<T>(private val generateData: () -> T) {
     }
 
     fun emit() {
-        doAsync {
-            bs?.let {
-                try {
-                    it.onNext(generateData())
-                } catch (e: Exception) {
-                    it.onError(e)
-                }
-            }
-        }
+        Observable
+            .fromCallable { generateData() }
+            .fromIoToComputation()
+            .doOnError { e -> bs?.onError(e) }
+            .subscribe { bs?.onNext(it) }
     }
 }

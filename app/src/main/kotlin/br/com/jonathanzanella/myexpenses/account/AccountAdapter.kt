@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.AccountAdapter.Format.NORMAL
-import br.com.jonathanzanella.myexpenses.extensions.fromIOToMainThread
+import br.com.jonathanzanella.myexpenses.extensions.fromComputationToMainThread
 import br.com.jonathanzanella.myexpenses.helpers.AdapterColorHelper
 import br.com.jonathanzanella.myexpenses.helpers.toCurrencyFormatted
 import br.com.jonathanzanella.myexpenses.views.anko.applyTemplateViewStyles
@@ -78,7 +78,7 @@ class AccountAdapter @Inject constructor(val dataSource: AccountDataSource) : Re
             else -> dataSource.all()
         }
                 .doOnNext { accounts = it }
-                .fromIOToMainThread()
+                .fromComputationToMainThread()
                 .doOnError { Timber.e(it) }
                 .subscribe { notifyDataSetChanged() }
     }

@@ -13,7 +13,7 @@ import br.com.jonathanzanella.myexpenses.R
 import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.account.AccountDataSource
 import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException
-import br.com.jonathanzanella.myexpenses.extensions.fromIOToMainThread
+import br.com.jonathanzanella.myexpenses.extensions.fromComputationToMainThread
 import br.com.jonathanzanella.myexpenses.source.Source
 import br.com.jonathanzanella.myexpenses.source.SourceDataSource
 import org.jetbrains.anko.doAsync
@@ -208,7 +208,7 @@ class ReceiptPresenter @Inject constructor(private val dataSource: ReceiptDataSo
         extras.let {
             if(it.containsKey(KEY_ACCOUNT_UUID)) {
                 accountDataSource.find(it.getString(KEY_ACCOUNT_UUID)!!)
-                        .fromIOToMainThread()
+                        .fromComputationToMainThread()
                         .subscribe { account = it }
             }
 
@@ -245,7 +245,7 @@ class ReceiptPresenter @Inject constructor(private val dataSource: ReceiptDataSo
     @UiThread
     fun onAccountSelected(accountUuid: String) {
         accountDataSource.find(accountUuid)
-                .fromIOToMainThread()
+                .fromComputationToMainThread()
                 .subscribe {
                     account = it
 

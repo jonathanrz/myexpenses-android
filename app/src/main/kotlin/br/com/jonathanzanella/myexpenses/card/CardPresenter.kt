@@ -13,7 +13,7 @@ import br.com.jonathanzanella.myexpenses.exceptions.InvalidMethodCallException
 import br.com.jonathanzanella.myexpenses.exceptions.ValidationException
 import br.com.jonathanzanella.myexpenses.expense.Expense
 import br.com.jonathanzanella.myexpenses.expense.ExpenseDataSource
-import br.com.jonathanzanella.myexpenses.extensions.fromIOToMainThread
+import br.com.jonathanzanella.myexpenses.extensions.fromComputationToMainThread
 import br.com.jonathanzanella.myexpenses.helpers.ResourcesHelper
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
@@ -143,7 +143,7 @@ class CardPresenter @Inject constructor(private val accountDataSource: AccountDa
     @UiThread
     private fun loadAccount(uuid: String) {
         accountDataSource.find(uuid)
-                .fromIOToMainThread()
+                .fromComputationToMainThread()
                 .subscribe {
                     account = it
 
