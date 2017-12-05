@@ -92,7 +92,7 @@ class ShowAccountActivityTest {
     fun show_credit_card_bill_in_account_show_activity() {
         val card = CardBuilder().account(account).build(dataSource)
         assert(cardDataSource.save(card).isValid)
-        val expense = ExpenseBuilder().chargeable(card).build()
+        val expense = ExpenseBuilder().date(DateTime.now().minusMonths(1)).chargeable(card).build()
         assert(expenseDataSource.save(expense).isValid)
 
         launchActivity()
