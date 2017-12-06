@@ -20,12 +20,6 @@ class TransactionsView: FrameLayout {
     }
 
     fun showTransactions(account: Account, monthToShow: DateTime) {
-        thisMonth.setLoadTransactionsCallback(object: LoadTransactionsCallback {
-            override fun onTransactionsLoaded(balance: Int) {
-                nextMonth.showBalance(account, monthToShow.plusMonths(1), balance)
-            }
-        })
-
         thisMonth.showBalance(account, monthToShow, account.balance)
     }
 }

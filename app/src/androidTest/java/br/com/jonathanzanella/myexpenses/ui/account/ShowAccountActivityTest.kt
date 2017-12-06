@@ -92,7 +92,7 @@ class ShowAccountActivityTest {
     fun show_credit_card_bill_in_account_show_activity() {
         val card = CardBuilder().account(account).build(dataSource)
         assert(cardDataSource.save(card).isValid)
-        val expense = ExpenseBuilder().chargeable(card).build()
+        val expense = ExpenseBuilder().date(DateTime.now().minusMonths(1)).chargeable(card).build()
         assert(expenseDataSource.save(expense).isValid)
 
         launchActivity()
@@ -114,21 +114,12 @@ class ShowAccountActivityTest {
 
         launchActivity()
 
-        var expectedBalance = ACCOUNT_BALANCE + RECEIPT_INCOME - EXPENSE_VALUE
-        var expectedValue = expectedBalance.toCurrencyFormatted()
+        val expectedBalance = ACCOUNT_BALANCE + RECEIPT_INCOME - EXPENSE_VALUE
+        val expectedValue = expectedBalance.toCurrencyFormatted()
         Thread.sleep(500)
         onView(allOf<View>(
                 ViewMatchers.withId(R.id.balance),
                 ViewMatchers.isDescendantOfA(ViewMatchers.withId(R.id.thisMonth))))
-                .check(matches(ViewMatchers.withText(expectedValue)))
-
-        expectedBalance = expectedBalance + RECEIPT_INCOME - EXPENSE_VALUE
-        expectedValue = expectedBalance.toCurrencyFormatted()
-
-        Thread.sleep(500)
-        onView(allOf<View>(
-                ViewMatchers.withId(R.id.balance),
-                ViewMatchers.isDescendantOfA(ViewMatchers.withId(R.id.nextMonth))))
                 .check(matches(ViewMatchers.withText(expectedValue)))
     }
 
