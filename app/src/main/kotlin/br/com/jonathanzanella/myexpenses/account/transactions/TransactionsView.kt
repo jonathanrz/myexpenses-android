@@ -20,6 +20,6 @@ class TransactionsView: FrameLayout {
     }
 
     fun showTransactions(account: Account, monthToShow: DateTime) {
-        thisMonth.showBalance(account, monthToShow, account.balance)
+        thisMonth.showBalance(account, monthToShow)
     }
 }

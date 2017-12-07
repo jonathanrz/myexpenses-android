@@ -42,7 +42,7 @@ interface ExpenseDao {
 
     @Query("SELECT * FROM Expense WHERE date >= :initDate AND date <= :endDate AND removed = 0 AND chargedNextMonth <> 0 AND " +
             "chargeableUuid = :chargeableUuid ORDER BY date")
-    fun nextMonth(initDate: Long, endDate: Long, chargeableUuid: String): Flowable<MutableList<Expense>>
+    fun nextMonth(initDate: Long, endDate: Long, chargeableUuid: String): Flowable<List<Expense>>
 
     @Query("SELECT * FROM Expense WHERE date >= :initDate AND date <= :endDate AND removed = 0 AND chargedNextMonth <> 0 AND " +
             "ignoreInOverview = 0 ORDER BY date")

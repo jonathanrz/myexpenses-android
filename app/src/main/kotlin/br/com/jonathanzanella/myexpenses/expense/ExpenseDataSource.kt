@@ -13,8 +13,11 @@ import br.com.jonathanzanella.myexpenses.helpers.firstMillisOfDay
 import br.com.jonathanzanella.myexpenses.helpers.lastDayOfMonth
 import br.com.jonathanzanella.myexpenses.helpers.lastMillisOfDay
 import br.com.jonathanzanella.myexpenses.overview.WeeklyPagerAdapter
+import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult
+import io.reactivex.Flowable
+import io.reactivex.Observable
 import org.apache.commons.lang3.StringUtils
 import org.joda.time.DateTime
 import timber.log.Timber
@@ -29,7 +32,7 @@ interface ExpenseDataSource {
     fun expenses(period: WeeklyPagerAdapter.Period, card: Card? = null): List<Expense>
     fun unpaidCardExpenses(month: DateTime, card: Card): List<Expense>
     fun expensesForResumeScreen(date: DateTime): List<Expense>
-    fun accountExpenses(account: Account, month: DateTime): List<Expense>
+    fun accountExpenses(account: Account, month: DateTime): Flowable<List<Transaction>>
     fun unsync(): List<Expense>
     fun creditCardBills(card: Card, month: DateTime): List<Expense>
 
@@ -142,52 +145,41 @@ class ExpenseRepository @Inject constructor(private val dao: ExpenseDao, val car
         return expenses
     }
 
-    @WorkerThread
-    override fun accountExpenses(account: Account, month: DateTime): List<Expense> {
-        val lastMonth = month.minusMonths(1)
-        var initOfMonth = lastMonth.firstDayOfMonth()
-        var endOfMonth = lastMonth.lastDayOfMonth()
-
+    override fun accountExpenses(account: Account, month: DateTime): Flowable<List<Transaction>> {
         val card = cardDataSource.accountDebitCard(account)
 
-        val expenses = dao.nextMonth(initOfMonth.millis, endOfMonth.millis, account.uuid!!).blockingFirst()
+        return dao.currentMonth(month.firstDayOfMonth().millis, month.lastDayOfMonth().millis, account.uuid!!)
+                .mergeWith {
+                    if(card != null)
+                        dao.nextMonth(month.firstDayOfMonth().millis, month.lastDayOfMonth().millis, card.uuid!!)
+                    else
+                        Flowable.just(emptyList<Expense>())
+                }
+                .mergeWith {
+                    Observable.fromCallable {
+                        val expenses = ArrayList<Expense>()
+                        if (account.accountToPayCreditCard) {
+                            val creditCardMonth = month.minusMonths(1)
+                            val cards = cardDataSource.creditCards()
+                            for (creditCard in cards) {
+                                val total = getInvoiceValue(creditCard, creditCardMonth)
+                                if (total == 0)
+                                    continue
 
-        if (card != null)
-            expenses.addAll(dao.nextMonth(initOfMonth.millis, endOfMonth.millis, card.uuid!!).blockingFirst())
-
-        initOfMonth = month.firstDayOfMonth()
-        endOfMonth = month.lastDayOfMonth()
-
-        expenses.addAll(dao.currentMonth(initOfMonth.millis, endOfMonth.millis, account.uuid!!).blockingFirst())
-
-        if (card != null)
-            expenses.addAll(dao.currentMonth(initOfMonth.millis, endOfMonth.millis, card.uuid!!).blockingFirst())
-
-        if (account.accountToPayCreditCard) {
-            val creditCardMonth = month.minusMonths(1)
-            val cards = cardDataSource.creditCards()
-            for (creditCard in cards) {
-                val total = getInvoiceValue(creditCard, creditCardMonth)
-                if (total == 0)
-                    continue
-
-                val expense = Expense()
-                expense.setChargeable(creditCard)
-                expense.name = App.getContext().getString(R.string.invoice) + " " + creditCard.name
-                expense.setDate(creditCardMonth.plusMonths(1))
-                expense.value = total
-                expense.creditCard = creditCard
-                expenses.add(expense)
-            }
-        }
-
-        Collections.sort(expenses, Comparator<Expense> { lhs, rhs ->
-            if (lhs.getDate().isAfter(rhs.getDate()))
-                return@Comparator 1
-            -1
-        })
-
-        return expenses
+                                val expense = Expense()
+                                expense.setChargeable(creditCard)
+                                expense.name = App.getContext().getString(R.string.invoice) + " " + creditCard.name
+                                expense.setDate(creditCardMonth.plusMonths(1))
+                                expense.value = total
+                                expense.creditCard = creditCard
+                                expenses.add(expense)
+                            }
+                        }
+                        expenses
+                    }
+                }.map {
+                    it.map { expense -> expense as Transaction }
+                }
     }
 
     @WorkerThread

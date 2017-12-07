@@ -3,6 +3,7 @@ package br.com.jonathanzanella.myexpenses.injection
 import android.content.Context
 import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.account.*
+import br.com.jonathanzanella.myexpenses.account.transactions.MonthTransactionsPresenter
 import br.com.jonathanzanella.myexpenses.bill.*
 import br.com.jonathanzanella.myexpenses.card.*
 import br.com.jonathanzanella.myexpenses.database.MyDatabase
@@ -93,6 +94,9 @@ class PresenterModule {
 
     @Provides
     fun providesSourcePresenter(dataSource: SourceDataSource) = SourcePresenter(dataSource)
+
+    @Provides
+    fun providesMonthTransactionsPresenter(billDataSource: BillDataSource, expenseDataSource: ExpenseDataSource, receiptDataSource: ReceiptDataSource) = MonthTransactionsPresenter(billDataSource, expenseDataSource, receiptDataSource)
 }
 
 @Module
