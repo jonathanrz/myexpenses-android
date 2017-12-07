@@ -1,6 +1,5 @@
 package br.com.jonathanzanella.myexpenses.account.transactions
 
-import android.util.Log
 import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.bill.BillDataSource
 import br.com.jonathanzanella.myexpenses.expense.ExpenseDataSource
@@ -21,7 +20,6 @@ class MonthTransactionsPresenter(val billDataSource: BillDataSource, val expense
                             list.addAll(billDataSource.monthly(month).blockingFirst())
                         list.addAll(receiptDataSource.monthly(month, account))
 
-                        Log.i("teste", "list of ${list.size}")
                         list
                     }
                 }
