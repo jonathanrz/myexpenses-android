@@ -6,20 +6,21 @@ import br.com.jonathanzanella.myexpenses.expense.ExpenseDataSource
 import br.com.jonathanzanella.myexpenses.receipt.ReceiptDataSource
 import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import io.reactivex.Flowable
+import io.reactivex.Single
 import org.joda.time.DateTime
 
 class MonthTransactionsPresenter(val billDataSource: BillDataSource, val expenseDataSource: ExpenseDataSource, val receiptDataSource: ReceiptDataSource) {
     fun getAccountTransactions(account: Account, month: DateTime) : Flowable<List<Transaction>> {
         return expenseDataSource.accountExpenses(account, month)
-                .map {
+                .flatMap {
                     val list = it.toMutableList()
 
                     if (account.accountToPayBills)
                         list.addAll(billDataSource.monthly(month).blockingFirst())
                     list.addAll(receiptDataSource.monthly(month, account))
 
-                    list.toList()
-                }
+                    Single.just(list.toList())
+                }.toFlowable()
     }
 
     fun calculateAccountBalance(account: Account, transactions: List<Transaction>): Flowable<Int> = Flowable.fromCallable {

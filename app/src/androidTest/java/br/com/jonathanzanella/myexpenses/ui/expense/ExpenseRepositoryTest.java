@@ -21,11 +21,12 @@ import br.com.jonathanzanella.myexpenses.card.Card;
 import br.com.jonathanzanella.myexpenses.card.CardDataSource;
 import br.com.jonathanzanella.myexpenses.card.CardType;
 import br.com.jonathanzanella.myexpenses.expense.Expense;
-import br.com.jonathanzanella.myexpenses.transaction.Transaction;
-import br.com.jonathanzanella.myexpenses.ui.helpers.ActivityLifecycleHelper;
+import br.com.jonathanzanella.myexpenses.expense.ExpenseDataSource;
 import br.com.jonathanzanella.myexpenses.helpers.builder.AccountBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.CardBuilder;
 import br.com.jonathanzanella.myexpenses.helpers.builder.ExpenseBuilder;
+import br.com.jonathanzanella.myexpenses.transaction.Transaction;
+import br.com.jonathanzanella.myexpenses.ui.helpers.ActivityLifecycleHelper;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static junit.framework.Assert.assertTrue;
@@ -41,7 +42,7 @@ public class ExpenseRepositoryTest {
 	@Inject
 	AccountDataSource accountDataSource;
 	@Inject
-	br.com.jonathanzanella.myexpenses.expense.ExpenseDataSource dataSource;
+	ExpenseDataSource dataSource;
 
 	private Account account;
 	private Card debitCard;
@@ -144,10 +145,10 @@ public class ExpenseRepositoryTest {
 				.build();
 		assertTrue(dataSource.save(accountExpense).isValid());
 
-		List<Transaction> expenses = dataSource.accountExpenses(account, dateTime).blockingFirst();
+		List<Transaction> expenses = dataSource.accountExpenses(account, dateTime).blockingGet();
 		assertThat(expenses.size(), is(2));
-		assertThat(expenses.get(0).getUuid(), is(debitCardExpense.getUuid()));
-		assertThat(expenses.get(1).getUuid(), is(accountExpense.getUuid()));
+		assertThat(expenses.get(0).getUuid(), is(accountExpense.getUuid()));
+		assertThat(expenses.get(1).getUuid(), is(debitCardExpense.getUuid()));
 	}
 
 	@Test

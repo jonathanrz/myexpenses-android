@@ -16,7 +16,7 @@ import br.com.jonathanzanella.myexpenses.overview.WeeklyPagerAdapter
 import br.com.jonathanzanella.myexpenses.transaction.Transaction
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult
-import io.reactivex.Flowable
+import io.reactivex.Single
 import org.apache.commons.lang3.StringUtils
 import org.joda.time.DateTime
 import timber.log.Timber
@@ -31,7 +31,7 @@ interface ExpenseDataSource {
     fun expenses(period: WeeklyPagerAdapter.Period, card: Card? = null): List<Expense>
     fun unpaidCardExpenses(month: DateTime, card: Card): List<Expense>
     fun expensesForResumeScreen(date: DateTime): List<Expense>
-    fun accountExpenses(account: Account, month: DateTime): Flowable<List<Transaction>>
+    fun accountExpenses(account: Account, month: DateTime): Single<List<Transaction>>
     fun unsync(): List<Expense>
     fun creditCardBills(card: Card, month: DateTime): List<Expense>
 
@@ -144,16 +144,14 @@ class ExpenseRepository @Inject constructor(private val dao: ExpenseDao, val car
         return expenses
     }
 
-    override fun accountExpenses(account: Account, month: DateTime): Flowable<List<Transaction>> {
+    override fun accountExpenses(account: Account, month: DateTime): Single<List<Transaction>> {
         val card = cardDataSource.accountDebitCard(account)
+        val firstDayOfMonth = month.firstDayOfMonth().millis
+        val lastDayOfMonth = month.lastDayOfMonth().millis
 
-        return dao.currentMonth(month.firstDayOfMonth().millis, month.lastDayOfMonth().millis, account.uuid!!)
-                .mergeWith {
-                    if(card != null)
-                        dao.currentMonth(month.firstDayOfMonth().millis, month.lastDayOfMonth().millis, card.uuid!!)
-                    else
-                        Flowable.just(emptyList<Expense>())
-                }
+        val cardTransactionsFlowable = card?.let { dao.currentMonth(firstDayOfMonth, lastDayOfMonth, card.uuid!!) } ?: Single.just(emptyList())
+
+        return dao.currentMonth(firstDayOfMonth, lastDayOfMonth, account.uuid!!)
                 .map {
                     if (account.accountToPayCreditCard) {
                         val expenses = it.toMutableList()
@@ -177,8 +175,13 @@ class ExpenseRepository @Inject constructor(private val dao: ExpenseDao, val car
                     } else {
                         it
                     }
-                }.map {
-                    it.map { expense -> expense as Transaction }.sortedBy { it.getDate() }
+                }
+                .mergeWith(cardTransactionsFlowable)
+                .toList()
+                .map {
+                    val newList = ArrayList<Expense>()
+                    it.forEach { newList.addAll(it) }
+                    newList
                 }
     }
 
