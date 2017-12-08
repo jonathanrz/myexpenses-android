@@ -1,7 +1,7 @@
 package br.com.jonathanzanella.myexpenses.injection
 
 import br.com.jonathanzanella.myexpenses.account.*
-import br.com.jonathanzanella.myexpenses.account.transactions.MonthTransactionsPresenter
+import br.com.jonathanzanella.myexpenses.account.transactions.MonthTransactionsView
 import br.com.jonathanzanella.myexpenses.bill.*
 import br.com.jonathanzanella.myexpenses.card.*
 import br.com.jonathanzanella.myexpenses.chargeable.ListChargeableActivity
@@ -20,7 +20,7 @@ import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = arrayOf(AppModule::class, DatabaseModule::class, RepositoryModule::class, PresenterModule::class, ServerModule::class, AccountModule::class, BillModule::class))
+@Component(modules = [(AppModule::class), (DatabaseModule::class), (RepositoryModule::class), (PresenterModule::class), (ServerModule::class), (AccountModule::class), (BillModule::class)])
 interface AppComponent {
     fun accountDataSource(): AccountDataSource
     fun billDataSource(): BillDataSource
@@ -32,7 +32,6 @@ interface AppComponent {
     fun inject(databaseHelper: DatabaseHelper)
 
     fun inject(accountView: AccountView)
-    fun inject(monthTransactionsPresenter: MonthTransactionsPresenter)
     fun inject(editAccountActivity: EditAccountActivity)
     fun inject(showAccountActivity: ShowAccountActivity)
     fun inject(listAccountActivity: ListAccountActivity)
@@ -67,6 +66,7 @@ interface AppComponent {
     fun inject(showReceiptActivity: ShowReceiptActivity)
 
     fun inject(resumeMonthlyView: ResumeMonthlyView)
+    fun inject(monthTransactionsView: MonthTransactionsView)
 
     fun inject(editSourceActivity: EditSourceActivity)
     fun inject(sourceAdapter: SourceAdapter)

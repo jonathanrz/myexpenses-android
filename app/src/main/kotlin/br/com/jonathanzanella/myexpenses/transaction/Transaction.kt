@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 interface Transaction {
+    var uuid: String?
     val name: String?
     val amount: Int
     fun credited(): Boolean

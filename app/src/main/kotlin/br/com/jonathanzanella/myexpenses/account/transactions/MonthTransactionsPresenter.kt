@@ -1,55 +1,38 @@
 package br.com.jonathanzanella.myexpenses.account.transactions
 
-import br.com.jonathanzanella.myexpenses.App
 import br.com.jonathanzanella.myexpenses.account.Account
 import br.com.jonathanzanella.myexpenses.bill.BillDataSource
 import br.com.jonathanzanella.myexpenses.expense.ExpenseDataSource
 import br.com.jonathanzanella.myexpenses.receipt.ReceiptDataSource
 import br.com.jonathanzanella.myexpenses.transaction.Transaction
-import br.com.jonathanzanella.myexpenses.transaction.TransactionAdapter
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
+import io.reactivex.Flowable
+import io.reactivex.Single
 import org.joda.time.DateTime
-import javax.inject.Inject
 
-class MonthTransactionsPresenter(private val view: MonthTransactionsContractView) {
-    val adapter = TransactionAdapter()
-    @Inject
-    lateinit var receiptDataSource: ReceiptDataSource
-    @Inject
-    lateinit var expenseDataSource: ExpenseDataSource
-    @Inject
-    lateinit var billDataSource: BillDataSource
-    private var currentBalance: Int = 0
+class MonthTransactionsPresenter(val billDataSource: BillDataSource, val expenseDataSource: ExpenseDataSource, val receiptDataSource: ReceiptDataSource) {
+    fun getAccountTransactions(account: Account, month: DateTime) : Flowable<List<Transaction>> {
+        return expenseDataSource.accountExpenses(account, month)
+                .flatMap {
+                    val list = it.toMutableList()
 
-    init {
-        App.getAppComponent().inject(this)
+                    if (account.accountToPayBills)
+                        list.addAll(billDataSource.monthly(month).blockingFirst())
+                    list.addAll(receiptDataSource.monthly(month, account))
+
+                    Single.just(list.toList())
+                }.toFlowable()
     }
 
-    fun showBalance(account: Account, month: DateTime, balance: Int) {
-        currentBalance = balance
+    fun calculateAccountBalance(account: Account, transactions: List<Transaction>): Flowable<Int> = Flowable.fromCallable {
+        var currentBalance = account.balance
 
-        doAsync {
-            val list = ArrayList<Transaction>()
-
-            if (account.accountToPayBills)
-                list.addAll(billDataSource.monthly(month).blockingFirst())
-            list.addAll(expenseDataSource.accountExpenses(account, month))
-            list.addAll(receiptDataSource.monthly(month, account))
-
-            adapter.setTransactions(list)
-
-            for (transaction in adapter.getTransactions()) {
-                with(transaction) {
-                    if (!credited()) currentBalance += amount
-                    if (!debited()) currentBalance -= amount
-                }
-            }
-
-            uiThread {
-                adapter.notifyDataSetChanged()
-                view.onBalanceUpdated(currentBalance)
+        for (transaction in transactions) {
+            with(transaction) {
+                if (!credited()) currentBalance += amount
+                if (!debited()) currentBalance -= amount
             }
         }
+
+        currentBalance
     }
 }
