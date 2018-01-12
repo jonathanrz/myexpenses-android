@@ -5,6 +5,7 @@ import android.arch.persistence.room.Insert
 import android.arch.persistence.room.OnConflictStrategy
 import android.arch.persistence.room.Query
 import io.reactivex.Flowable
+import io.reactivex.Single
 
 @Dao
 interface ReceiptDao {
@@ -15,7 +16,7 @@ interface ReceiptDao {
     fun monthly(initDate: Long, endDate: Long): Flowable<List<Receipt>>
 
     @Query("SELECT * FROM Receipt WHERE date >= :initDate AND date <= :endDate AND accountUuid = :accountUuid AND removed = 0 ORDER BY date")
-    fun monthly(initDate: Long, endDate: Long, accountUuid: String): Flowable<List<Receipt>>
+    fun monthly(initDate: Long, endDate: Long, accountUuid: String): Single<List<Receipt>>
 
     @Query("SELECT * FROM Receipt WHERE date >= :initDate AND date <= :endDate AND removed = 0 AND ignoreInResume = 0 ORDER BY date")
     fun resume(initDate: Long, endDate: Long): Flowable<List<Receipt>>

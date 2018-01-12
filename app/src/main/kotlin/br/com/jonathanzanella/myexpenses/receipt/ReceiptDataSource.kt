@@ -6,6 +6,7 @@ import br.com.jonathanzanella.myexpenses.helpers.firstDayOfMonth
 import br.com.jonathanzanella.myexpenses.helpers.lastDayOfMonth
 import br.com.jonathanzanella.myexpenses.validations.ValidationError
 import br.com.jonathanzanella.myexpenses.validations.ValidationResult
+import io.reactivex.Single
 import org.apache.commons.lang3.StringUtils
 import org.joda.time.DateTime
 import timber.log.Timber
@@ -15,7 +16,7 @@ import javax.inject.Inject
 interface ReceiptDataSource {
     fun all(): List<Receipt>
     fun monthly(month: DateTime): List<Receipt>
-    fun monthly(month: DateTime, account: Account): List<Receipt>
+    fun monthly(month: DateTime, account: Account): Single<List<Receipt>>
     fun resume(month: DateTime): List<Receipt>
     fun unsync(): List<Receipt>
 
@@ -40,9 +41,9 @@ class ReceiptRepository @Inject constructor(private val dao: ReceiptDao): Receip
     }
 
     @WorkerThread
-    override fun monthly(month: DateTime, account: Account): List<Receipt> {
+    override fun monthly(month: DateTime, account: Account): Single<List<Receipt>> {
         return dao.monthly(month.firstDayOfMonth().millis,
-                month.lastDayOfMonth().millis, account.uuid!!).blockingFirst()
+                month.lastDayOfMonth().millis, account.uuid!!)
     }
 
     @WorkerThread

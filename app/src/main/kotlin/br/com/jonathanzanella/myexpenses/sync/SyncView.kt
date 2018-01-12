@@ -18,8 +18,8 @@ class SyncView@JvmOverloads constructor(
     init {
         View.inflate(context, R.layout.view_sync, this)
 
-        serverUrlView.setText(serverData.serverUrl)
-        serverTokenView.setText(serverData.serverToken)
+        serverUrlView.setText("https://jonathanzanella-myexpenses.herokuapp.com/")
+        serverTokenView.setText("CRWzbZLr86VoVbKKGmxKBzd986xKHnv8jDHhn2t64pRkP%6]&g")
         syncBtn.setOnClickListener { sync() }
     }
 
