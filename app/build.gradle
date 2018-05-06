@@ -7,12 +7,10 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'jacoco-android'
 apply plugin: 'checkstyle'
 apply plugin: 'findbugs'
 apply plugin: 'pmd'
 apply plugin: 'io.fabric'
-apply plugin: 'com.getkeepsafe.dexcount'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -32,11 +30,6 @@ android {
                 arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
             }
         }
-    }
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     buildTypes {
@@ -106,7 +99,7 @@ dependencies {
     implementation "android.arch.lifecycle:extensions:$roomVersion"
     implementation "android.arch.persistence.room:runtime:$roomVersion"
     implementation "android.arch.persistence.room:rxjava2:$roomVersion"
-    androidTestCompile "android.arch.persistence.room:testing:$roomVersion"
+    androidTestImplementation "android.arch.persistence.room:testing:$roomVersion"
     kapt "android.arch.persistence.room:compiler:$roomVersion"
 
     // RXJava
@@ -150,9 +143,9 @@ configurations.all {
     resolutionStrategy.force "com.android.support:design:$rootProject.supportLibraryVersion"
 }
 
-configurations.compile.dependencies.each { compileDependency ->
+configurations.implementation.dependencies.each { compileDependency ->
     println "Excluding compile dependency: ${compileDependency.getName()}"
-    configurations.androidTestCompile.dependencies.each { androidTestCompileDependency ->
+    configurations.androidTestImplementation.dependencies.each { androidTestCompileDependency ->
         configurations.androidTestCompile.exclude module: "${compileDependency.getName()}"
     }
 }

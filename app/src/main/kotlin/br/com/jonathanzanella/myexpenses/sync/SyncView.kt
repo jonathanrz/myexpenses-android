@@ -18,7 +18,8 @@ class SyncView@JvmOverloads constructor(
     init {
         View.inflate(context, R.layout.view_sync, this)
 
-        serverUrlView.setText(serverData.serverUrl)
+        serverUrlView.setText(serverData.serverUrl
+        )
         serverTokenView.setText(serverData.serverToken)
         syncBtn.setOnClickListener { sync() }
     }
